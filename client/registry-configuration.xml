@@ -1,0 +1,14 @@
+<external-component-plugins>
+	<target-component>org.exoplatform.services.jcr.ext.registry.RegistryService</target-component>
+	<component-plugin>
+		<name>appConfig</name>
+		<set-method>addPlugin</set-method>
+		<type>org.exoplatform.services.jcr.ext.registry.RegistryInitializationEntryPlugin</type>
+		<init-params>
+			<value-param>
+				<name>DevTool</name>
+				<value><![CDATA[<DevTool><context>/portal/rest/jcr</context><groovyScriptServiceContext>/portal/rest/script/groovy</groovyScriptServiceContext><repository>repository</repository><workspace>collaboration</workspace><urlOfUploadService>/portal/rest/services/loopbackcontent</urlOfUploadService></DevTool>]]></value>
+			</value-param>
+		</init-params>
+	</component-plugin>
+</external-component-plugins>

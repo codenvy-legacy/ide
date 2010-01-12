@@ -1,0 +1,11 @@
+BODY {
+	background-color:#ebebeb;
+}
+
+.DevTool_contentEditorBorder {
+	border: 1px solid #A7ABB4;
+}
+
+.UploadFile-FileSelect {
+	cursor: hand;
+}

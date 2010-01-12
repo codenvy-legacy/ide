@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2003-2007 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ */
+package org.exoplatform.ideall.client.editor;
+
+import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
+import org.exoplatform.ideall.client.model.File;
+
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.tab.Tab;
+
+/**
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version @version $Id: $
+ */
+
+public class EditorTab extends Tab
+{
+
+   private SmartGWTCodeMirror codeMirror;
+
+   private File file;
+   
+   /**
+    * true, if Codemirror line numbers are shown in the current tab
+    */
+   private boolean isShowLineNumbers;
+
+   public EditorTab(File file)
+   {
+      this.file = file;
+      setTitle(getTabTitle());
+   }
+
+   public SmartGWTCodeMirror getCodeMirror()
+   {
+      return codeMirror;
+   }
+
+   public void setCodeMirror(SmartGWTCodeMirror codeMirror)
+   {
+      this.codeMirror = codeMirror;
+      setPane(codeMirror);
+   }
+
+   public File getFile()
+   {
+      return file;
+   }
+
+   public void setFile(File file)
+   {
+      this.file = file;
+   }
+
+   public String getTabTitle()
+   {
+      boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
+      String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+      String title =
+         "<span title=\"" + file.getPath() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + "</span>";
+      return title;
+   }
+
+   /**
+    * @return <b>true</b>, if Codemirror line numbers are shown in the current tab, or <b>false</b> otherwise
+    */
+   public boolean isShowLineNumbers()
+   {
+      return isShowLineNumbers;
+   }
+   
+   public void setShowLineNumbersFlag(boolean isShowLineNumbers)
+   {
+      this.isShowLineNumbers = isShowLineNumbers;
+   }
+}
