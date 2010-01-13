@@ -23,7 +23,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class GwtTestDevTool extends GWTTestCase
+public class GwtTestIDE extends GWTTestCase
 {
 
    /**
@@ -32,7 +32,7 @@ public class GwtTestDevTool extends GWTTestCase
    @Override
    public String getModuleName()
    {
-      return "org.exoplatform.gadgets.devtool.TestDevTool";
+      return "org.exoplatform.ideall.TestIDE";
    }
 
    public void testCreateFolder()

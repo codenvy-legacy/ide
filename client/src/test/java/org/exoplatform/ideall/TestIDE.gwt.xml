@@ -13,6 +13,6 @@
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
 	
 	<!-- Specify the app entry point class.                         -->
-	<source path="client" excludes="DevToolGadget.java"/>
+	<source path="client" excludes="IDEGadget.java"/>
 	
 </module>
