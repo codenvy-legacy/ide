@@ -381,8 +381,6 @@ public class GWTPopupMenu extends Composite
          String title = iterator.next();
          PopupMenuItem popupMenuItem = popupMenuItems.get(title);
 
-         System.out.println("item > " + popupMenuItem.getTitle());
-
          if (!title.startsWith("---"))
          {
             if (!popupMenuItem.getCommand().isVisible())
@@ -424,7 +422,6 @@ public class GWTPopupMenu extends Composite
       DOM.setElementAttribute(table.getElement(), "border", "0");
 
       ArrayList<PopupMenuItem> items = getFilteredItems();
-      System.out.println("items size: " + items.size());
       for (int i = 0; i < items.size(); i++)
       {
          PopupMenuItem popupMenuItem = items.get(i);

@@ -12,8 +12,8 @@ var appConfig = {
 	"gadgetServer" : "/gadgets/",
 	//"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
 	"publicContext" : "/rest",
-	"repository" : "repository1",
-	"workspace" : "production1"
+	"repository" : "repository",
+	"workspace" : "workspace"
 }
 
 //"gadgetServer" : "/eXoGadgetServer/oauthfree/gadgets/", /*for portal*/

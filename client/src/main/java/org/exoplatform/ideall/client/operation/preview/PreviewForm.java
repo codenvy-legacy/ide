@@ -16,11 +16,8 @@
  */
 package org.exoplatform.ideall.client.operation.preview;
 
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.operation.TabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -33,7 +30,7 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version @version $Id: $
  */
 
-public class PreviewForm extends TabPanel implements FileContentSavedHandler
+public class PreviewForm extends TabPanel
 {
 
    private static String TAB_ID = "Preview";
@@ -42,8 +39,6 @@ public class PreviewForm extends TabPanel implements FileContentSavedHandler
 
    private HTMLPane htmlPane;
 
-   private Handlers handlers;
-
    /**
     * @param eventBus
     */
@@ -51,8 +46,6 @@ public class PreviewForm extends TabPanel implements FileContentSavedHandler
    {
       super(eventBus, true);
       this.context = context;
-
-      handlers = new Handlers(eventBus);
    }
 
    /**
@@ -90,22 +83,12 @@ public class PreviewForm extends TabPanel implements FileContentSavedHandler
    public void onOpenTab()
    {
       super.onOpenTab();
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
    }
 
    @Override
    public void onCloseTab()
    {
       super.onCloseTab();
-      handlers.removeHandlers();
-   }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      if (event.getFile().getPath().equals(context.getActiveFile().getPath()))
-      {
-         showPreview(event.getPath());
-      }
    }
 
    @Override
