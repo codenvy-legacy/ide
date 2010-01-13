@@ -16,7 +16,7 @@
     <jcr.version>1.12.0-Beta04</jcr.version>
     <ws.version>2.1.0-Beta04</ws.version>
     <shindig.version>1.0-incubating</shindig.version>
-    <source.url>http://svn.exoplatform.org/exo-int/web-tools/trunk/applications/gwt/devtool</source.url>
+    <source.url>http://svn.exoplatform.org/exo-int/IDEall</source.url>
     <wiki.url>http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29</wiki.url>
   </properties>
   
