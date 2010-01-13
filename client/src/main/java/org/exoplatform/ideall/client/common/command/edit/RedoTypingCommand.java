@@ -71,6 +71,7 @@ public class RedoTypingCommand extends AbstractCommand implements EditorActiveFi
 
    public void onFileContentChanged(FileContentChangedEvent event)
    {
+      setVisible(true);
       setEnabled(event.hasRedoChanges());
    }
 

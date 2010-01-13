@@ -53,7 +53,7 @@ public class UndoTypingCommand extends AbstractCommand implements EditorActiveFi
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(FileContentChangedEvent.TYPE, this);
       addHandler(FileCreatedEvent.TYPE, this);
-      addHandler(FileContentReceivedEvent.TYPE, this);
+      addHandler(FileContentReceivedEvent.TYPE, this);      
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -71,6 +71,7 @@ public class UndoTypingCommand extends AbstractCommand implements EditorActiveFi
 
    public void onFileContentChanged(FileContentChangedEvent event)
    {
+      setVisible(true);
       setEnabled(event.hasUndoChanges());
    }
 
