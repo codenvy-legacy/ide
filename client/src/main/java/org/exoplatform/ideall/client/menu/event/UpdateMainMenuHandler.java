@@ -17,12 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu.bean;
+package org.exoplatform.ideall.client.menu.event;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
-
-import com.google.gwt.user.client.Element;
-
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,22 +28,9 @@ import com.google.gwt.user.client.Element;
  * @version $
  */
 
-public class PopupMenuItem extends MenuItem
+public interface UpdateMainMenuHandler extends EventHandler
 {
 
-   public PopupMenuItem(String title)
-   {
-      super(title);
-   }   
-
-   public PopupMenuItem(String title, AbstractCommand command)
-   {
-      super(title, command);
-   }   
-   
-   @Override
-   public void initElement(Element element)
-   {
-   }
+   void onUpdateMainMenu(UpdateMainMenuEvent event);
 
 }

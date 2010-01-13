@@ -17,13 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu.event;
-
-import java.util.List;
+package org.exoplatform.ideall.client.menu.bean;
 
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.Element;
+
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,33 +31,22 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class UpdateMainMenuEvent extends GwtEvent<UpdateMainMenuHandler>
+public class PopupMenuItem extends MenuItem
 {
 
-   public static final GwtEvent.Type<UpdateMainMenuHandler> TYPE = new GwtEvent.Type<UpdateMainMenuHandler>();
-
-   private List<AbstractCommand> commands;
-
-   public UpdateMainMenuEvent(List<AbstractCommand> commands)
+   public PopupMenuItem(String title)
    {
-      this.commands = commands;
-   }
+      super(title);
+   }   
 
-   public List<AbstractCommand> getCommands()
+   public PopupMenuItem(String title, AbstractCommand command)
    {
-      return commands;
-   }
-
+      super(title, command);
+   }   
+   
    @Override
-   protected void dispatch(UpdateMainMenuHandler handler)
+   public void initElement(Element element)
    {
-      handler.onUpdateMainMenu(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateMainMenuHandler> getAssociatedType()
-   {
-      return TYPE;
    }
 
 }

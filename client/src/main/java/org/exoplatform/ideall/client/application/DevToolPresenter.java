@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.menu.gwtmenu.event.UpdateMainMenuEvent;
+import org.exoplatform.ideall.client.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;

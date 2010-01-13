@@ -17,13 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu.bean;
+package org.exoplatform.ideall.client.menu;
 
-import java.util.LinkedHashMap;
-
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
-
-import com.google.gwt.user.client.Element;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
+import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,41 +31,24 @@ import com.google.gwt.user.client.Element;
  * @version $
  */
 
-public abstract class MenuItem
+public class GWTMenuWrapper extends Layout
 {
 
-   protected AbstractCommand command;
-
-   protected String title;
-
-   protected LinkedHashMap<String, PopupMenuItem> popupItems = new LinkedHashMap<String, PopupMenuItem>();
-
-   public LinkedHashMap<String, PopupMenuItem> getPopupItems()
+   public GWTMenuWrapper(HandlerManager eventBus)
    {
-      return popupItems;
-   }
+      setHeight(20);
 
-   public MenuItem(String title)
-   {
-      this.title = title;
-   }
+      final GWTMenuBar menu = new GWTMenuBar(eventBus);
+      addMember(menu);
 
-   public MenuItem(String title, AbstractCommand command)
-   {
-      this.title = title;
-      this.command = command;
-   }
+      addResizedHandler(new ResizedHandler()
+      {
+         public void onResized(ResizedEvent event)
+         {
+            menu.setWidth(getWidth() + "px");
+         }
+      });
 
-   public AbstractCommand getCommand()
-   {
-      return command;
    }
-
-   public String getTitle()
-   {
-      return title;
-   }
-
-   public abstract void initElement(Element element);
 
 }

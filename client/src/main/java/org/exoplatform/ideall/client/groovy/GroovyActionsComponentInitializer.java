@@ -23,7 +23,6 @@ import org.exoplatform.ideall.client.application.command.DummyCommand;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.groovy.command.DeployGroovyCommand;
 import org.exoplatform.ideall.client.groovy.command.PreviewGroovyOutputCommand;
-import org.exoplatform.ideall.client.groovy.command.RunCommand;
 import org.exoplatform.ideall.client.groovy.command.UndeployGroovyCommand;
 import org.exoplatform.ideall.client.groovy.command.ValidateGroovyCommand;
 
@@ -40,7 +39,7 @@ public class GroovyActionsComponentInitializer extends AbstractComponentInitiali
    @Override
    protected void onItitialize()
    {
-      addCommand(new RunCommand());
+      //addCommand(new RunCommand());
       
       /*
        * RUN GROUP

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.view;
+package org.exoplatform.ideall.client.common.command.run;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
@@ -38,7 +38,7 @@ public class ShowPreviewCommand extends AbstractCommand implements EditorActiveF
 
    public ShowPreviewCommand()
    {
-      super("View/Show Preview", "Show Preview", Images.MainMenu.PREVIEW, false, false, new PreviewFileEvent());
+      super("Run/Show Preview", "Show Preview", Images.MainMenu.PREVIEW, false, false, new PreviewFileEvent());
    }
 
    @Override

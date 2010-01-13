@@ -17,12 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu;
+package org.exoplatform.ideall.client.menu;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import org.exoplatform.ideall.client.menu.gwtmenu.bean.MenuBarItem;
+import org.exoplatform.ideall.client.menu.bean.MenuBarItem;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;

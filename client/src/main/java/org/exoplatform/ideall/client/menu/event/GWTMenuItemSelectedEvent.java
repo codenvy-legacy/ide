@@ -17,12 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu;
+package org.exoplatform.ideall.client.menu.event;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.Layout;
+import org.exoplatform.ideall.client.application.command.AbstractCommand;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,24 +30,33 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version $
  */
 
-public class GWTMenuWrapper extends Layout
+public class GWTMenuItemSelectedEvent extends GwtEvent<GWTMenuItemSelectedHandler>
 {
 
-   public GWTMenuWrapper(HandlerManager eventBus)
+   public static final GwtEvent.Type<GWTMenuItemSelectedHandler> TYPE = new GwtEvent.Type<GWTMenuItemSelectedHandler>();
+
+   private AbstractCommand command;
+
+   public GWTMenuItemSelectedEvent(AbstractCommand command)
    {
-      setHeight(20);
+      this.command = command;
+   }
 
-      final GWTMenuBar menu = new GWTMenuBar(eventBus);
-      addMember(menu);
+   public AbstractCommand getCommand()
+   {
+      return command;
+   }
 
-      addResizedHandler(new ResizedHandler()
-      {
-         public void onResized(ResizedEvent event)
-         {
-            menu.setWidth(getWidth() + "px");
-         }
-      });
+   @Override
+   protected void dispatch(GWTMenuItemSelectedHandler handler)
+   {
+      handler.onGWTMenuItemSelected(this);
+   }
 
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GWTMenuItemSelectedHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

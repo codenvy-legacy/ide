@@ -41,7 +41,7 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateComma
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
-import org.exoplatform.ideall.client.common.command.view.ShowPreviewCommand;
+import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
 
 /**
@@ -105,8 +105,14 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addToolbarDelimiter(true);
       addCommand(new ViewItemPropertiesCommand(), true, true);
-      addCommand(new ShowPreviewCommand(), true, true);
       addToolbarDelimiter(true);
+      
+      /*
+       * RUN GROUP
+       */
+      
+      addCommand(new ShowPreviewCommand(), true, true);
+      
    }
 
 }

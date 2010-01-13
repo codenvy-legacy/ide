@@ -17,11 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu.bean;
+package org.exoplatform.ideall.client.menu.bean;
 
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.application.command.CommandStateListener;
-import org.exoplatform.ideall.client.menu.gwtmenu.GWTMenuBar;
+import org.exoplatform.ideall.client.menu.GWTMenuBar;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

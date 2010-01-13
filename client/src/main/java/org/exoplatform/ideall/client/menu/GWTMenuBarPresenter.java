@@ -17,18 +17,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu;
+package org.exoplatform.ideall.client.menu;
 
 import java.util.LinkedHashMap;
 
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.menu.gwtmenu.bean.MenuBarItem;
-import org.exoplatform.ideall.client.menu.gwtmenu.bean.PopupMenuItem;
-import org.exoplatform.ideall.client.menu.gwtmenu.event.GWTMenuItemSelectedEvent;
-import org.exoplatform.ideall.client.menu.gwtmenu.event.GWTMenuItemSelectedHandler;
-import org.exoplatform.ideall.client.menu.gwtmenu.event.UpdateMainMenuEvent;
-import org.exoplatform.ideall.client.menu.gwtmenu.event.UpdateMainMenuHandler;
+import org.exoplatform.ideall.client.menu.bean.MenuBarItem;
+import org.exoplatform.ideall.client.menu.bean.PopupMenuItem;
+import org.exoplatform.ideall.client.menu.event.GWTMenuItemSelectedEvent;
+import org.exoplatform.ideall.client.menu.event.GWTMenuItemSelectedHandler;
+import org.exoplatform.ideall.client.menu.event.UpdateMainMenuEvent;
+import org.exoplatform.ideall.client.menu.event.UpdateMainMenuHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

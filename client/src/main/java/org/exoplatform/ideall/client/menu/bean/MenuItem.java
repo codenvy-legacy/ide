@@ -17,11 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.menu.gwtmenu.event;
+package org.exoplatform.ideall.client.menu.bean;
+
+import java.util.LinkedHashMap;
 
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,15 +32,28 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class GWTMenuItemSelectedEvent extends GwtEvent<GWTMenuItemSelectedHandler>
+public abstract class MenuItem
 {
 
-   public static final GwtEvent.Type<GWTMenuItemSelectedHandler> TYPE = new GwtEvent.Type<GWTMenuItemSelectedHandler>();
+   protected AbstractCommand command;
 
-   private AbstractCommand command;
+   protected String title;
 
-   public GWTMenuItemSelectedEvent(AbstractCommand command)
+   protected LinkedHashMap<String, PopupMenuItem> popupItems = new LinkedHashMap<String, PopupMenuItem>();
+
+   public LinkedHashMap<String, PopupMenuItem> getPopupItems()
    {
+      return popupItems;
+   }
+
+   public MenuItem(String title)
+   {
+      this.title = title;
+   }
+
+   public MenuItem(String title, AbstractCommand command)
+   {
+      this.title = title;
       this.command = command;
    }
 
@@ -47,16 +62,11 @@ public class GWTMenuItemSelectedEvent extends GwtEvent<GWTMenuItemSelectedHandle
       return command;
    }
 
-   @Override
-   protected void dispatch(GWTMenuItemSelectedHandler handler)
+   public String getTitle()
    {
-      handler.onGWTMenuItemSelected(this);
+      return title;
    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GWTMenuItemSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   public abstract void initElement(Element element);
 
 }

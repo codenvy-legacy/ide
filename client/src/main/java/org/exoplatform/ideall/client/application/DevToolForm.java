@@ -22,7 +22,7 @@ import org.exoplatform.ideall.client.browser.NavigationForm;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.ClearFocusHandler;
-import org.exoplatform.ideall.client.menu.gwtmenu.GWTMenuWrapper;
+import org.exoplatform.ideall.client.menu.GWTMenuWrapper;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.statusbar.StatusBarForm;
