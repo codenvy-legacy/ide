@@ -35,7 +35,7 @@
 	<entry-point class='org.exoplatform.ideall.client.IDEGadget' />
 
 	<!-- Specify the application specific style sheet. -->
-	<stylesheet src='DevTool.css' />
+	<stylesheet src='IDE.css' />
 	<stylesheet src='eXoStyle/eXoStyle.css' />
 
 	<!-- Load CodeMirror editor files.

@@ -87,9 +87,6 @@ public class ToolbarButton extends Composite implements ToolbarItem, CommandStat
       this.rightDocking = rightDocking;
       this.toolbar = toolbar;
 
-      System.out.println("command > " + command);
-      System.out.println("command id > " + command.getId());
-      
       iconNormal = command.getIcon();
       iconDisabled = iconNormal.substring(0, iconNormal.lastIndexOf("."));
       iconDisabled += DISABLED_SUFFIX;

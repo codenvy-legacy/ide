@@ -17,12 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,19 +29,12 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewXMLFileCommand extends AbstractCommand
+public class NewFileCommand extends AbstractCommand
 {
 
-   public NewXMLFileCommand()
+   public NewFileCommand()
    {
-      super("File/New/Create XML File", "Create New XML File", Images.FileTypes.XML, false, true,
-         new CreateNewFileEvent(MimeType.TEXT_XML));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setEnabled(true);
+      super("File/New", "New", Images.MainMenu.NEW, true, true, null);
    }
 
 }

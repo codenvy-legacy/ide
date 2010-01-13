@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ideall.client.menu;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -53,34 +54,29 @@ public class GWTPopupMenu extends Composite
 
       public final static String MENU_TABLE = "exo-popupMenuTable";
 
-      
       public final static String ICON_FIELD = "exo-popupMenuIconField";
 
       public final static String ICON_FIELD_OVER = "exo-popupMenuIconFieldOver";
-      
-      public final static String ICON_FIELD_DISABLED = "exo-popupMenuIconFieldDisabled";
 
+      public final static String ICON_FIELD_DISABLED = "exo-popupMenuIconFieldDisabled";
 
       public final static String TITLE_FIELD = "exo-popupMenuTitleField";
 
       public final static String TITLE_FIELD_OVER = "exo-popupMenuTitleFieldOver";
-      
+
       public final static String TITLE_FIELD_DISABLED = "exo-popupMenuTitleFieldDisabled";
 
-      
       public final static String KEY_FIELD = "exo-popupMenuHotKeyField";
 
       public final static String KEY_FIELD_OVER = "exo-popupMenuHotKeyFieldOver";
-      
+
       public final static String KEY_FIELD_DISABLED = "exo-popupMenuHotKeyFieldDisabled";
 
-      
       public final static String SUBMENU_FIELD = "exo-popupMenuSubMenuField";
 
       public final static String SUBMENU_FIELD_OVER = "exo-popupMenuSubMenuFieldOver";
-      
+
       public final static String SUBMENU_FIELD_DISABLED = "exo-popupMenuSubMenuFieldDisabled";
-      
 
       public final static String SUBMENU_IMAGE = "exo-popupMenuSubMenuImage";
 
@@ -101,7 +97,7 @@ public class GWTPopupMenu extends Composite
    protected PopupMenuTable table;
 
    private AbsolutePanel lockLayer;
-   
+
    private Timer parentRemoveSubPopupTimer;
 
    public GWTPopupMenu(HandlerManager eventBus, LinkedHashMap<String, PopupMenuItem> popupMenuItems,
@@ -111,10 +107,11 @@ public class GWTPopupMenu extends Composite
 
       this.popupMenuItems = popupMenuItems;
       this.lockLayer = lockLayer;
-      
+
       this.parentRemoveSubPopupTimer = parentRemoveSubPopupTimer;
-      if (parentRemoveSubPopupTimer != null) {
-         parentRemoveSubPopupTimer.cancel();         
+      if (parentRemoveSubPopupTimer != null)
+      {
+         parentRemoveSubPopupTimer.cancel();
       }
 
       absolutePanel = new SimplePanel();
@@ -181,10 +178,11 @@ public class GWTPopupMenu extends Composite
 
    protected void onOver(Element tr)
    {
-      if (parentRemoveSubPopupTimer != null) {
+      if (parentRemoveSubPopupTimer != null)
+      {
          parentRemoveSubPopupTimer.cancel();
       }
-      
+
       if (tr == overedTR)
       {
          return;
@@ -198,7 +196,8 @@ public class GWTPopupMenu extends Composite
 
       if (selectedTR != tr)
       {
-         if (!removeSubPopupTimer.isSheduled()) {
+         if (!removeSubPopupTimer.isSheduled())
+         {
             removeSubPopupTimer.schedule(500);
          }
          showSubPopupTimer.cancel();
@@ -260,7 +259,7 @@ public class GWTPopupMenu extends Composite
    private Element selectedTR;
 
    private GWTPopupMenu subPopup;
-   
+
    private RemoveSubPopupTimer removeSubPopupTimer = new RemoveSubPopupTimer();
 
    protected class RemoveSubPopupTimer extends Timer
@@ -288,10 +287,11 @@ public class GWTPopupMenu extends Composite
       @Override
       public void run()
       {
-         if (subPopup == null) {
+         if (subPopup == null)
+         {
             return;
          }
-         
+
          subPopup.removeFromParent();
          subPopup = null;
          selectedTR = null;
@@ -304,11 +304,12 @@ public class GWTPopupMenu extends Composite
       public void run()
       {
          removeSubPopupTimer.cancel();
-         
-         if (selectedTR == overedTR) {
+
+         if (selectedTR == overedTR)
+         {
             return;
          }
-         
+
          selectedTR = overedTR;
          if (subPopup != null)
          {
@@ -370,6 +371,50 @@ public class GWTPopupMenu extends Composite
       super.onDetach();
    }
 
+   private ArrayList<PopupMenuItem> getFilteredItems()
+   {
+      ArrayList<PopupMenuItem> items = new ArrayList<PopupMenuItem>();
+
+      Iterator<String> iterator = popupMenuItems.keySet().iterator();
+      while (iterator.hasNext())
+      {
+         String title = iterator.next();
+         PopupMenuItem popupMenuItem = popupMenuItems.get(title);
+
+         System.out.println("item > " + popupMenuItem.getTitle());
+
+         if (!title.startsWith("---"))
+         {
+            if (!popupMenuItem.getCommand().isVisible())
+            {
+               continue;
+            }
+         }
+
+         items.add(popupMenuItem);
+      }
+
+      while (true)
+      {
+         if (items.size() == 0)
+         {
+            break;
+         }
+
+         PopupMenuItem item = items.get(items.size() - 1);
+         if (item.getTitle().startsWith("---"))
+         {
+            items.remove(items.size() - 1);
+         }
+         else
+         {
+            break;
+         }
+      }
+
+      return items;
+   }
+
    private void createPopupMenu()
    {
       table = new PopupMenuTable();
@@ -378,12 +423,12 @@ public class GWTPopupMenu extends Composite
       table.setCellSpacing(0);
       DOM.setElementAttribute(table.getElement(), "border", "0");
 
-      Iterator<String> iterator = popupMenuItems.keySet().iterator();
-      int i = 0;
-      while (iterator.hasNext())
+      ArrayList<PopupMenuItem> items = getFilteredItems();
+      System.out.println("items size: " + items.size());
+      for (int i = 0; i < items.size(); i++)
       {
-         String title = iterator.next();
-         PopupMenuItem popupMenuItem = popupMenuItems.get(title);
+         PopupMenuItem popupMenuItem = items.get(i);
+         String title = popupMenuItem.getTitle();
 
          if (title.startsWith("---"))
          {
@@ -416,21 +461,20 @@ public class GWTPopupMenu extends Composite
             {
                table.setHTML(i, 3, "<img src=\"" + Images.imageUrl + "../eXoStyle/blank.gif" + "\" class=\""
                   + Style.SUBMENU_IMAGE + "\" />");
-               table.getCellFormatter().setStyleName(i, 3, enabled ? Style.SUBMENU_FIELD : Style.SUBMENU_FIELD_DISABLED);
+               table.getCellFormatter()
+                  .setStyleName(i, 3, enabled ? Style.SUBMENU_FIELD : Style.SUBMENU_FIELD_DISABLED);
             }
             else
             {
-               table.setHTML(i, 3, "<img src=\"" + Images.imageUrl + "../eXoStyle/popupMenu/submenu.gif\" class=\"" + Style.SUBMENU_IMAGE
-                  + "\" />");
-               table.getCellFormatter().setStyleName(i, 3, enabled ? Style.SUBMENU_FIELD : Style.SUBMENU_FIELD_DISABLED);
+               table.setHTML(i, 3, "<img src=\"" + Images.imageUrl + "../eXoStyle/popupMenu/submenu.gif\" class=\""
+                  + Style.SUBMENU_IMAGE + "\" />");
+               table.getCellFormatter()
+                  .setStyleName(i, 3, enabled ? Style.SUBMENU_FIELD : Style.SUBMENU_FIELD_DISABLED);
             }
 
             DOM.setElementAttribute(table.getRowFormatter().getElement(i), TITLE_PROPERTY, popupMenuItem.getTitle());
-            DOM.setElementAttribute(table.getRowFormatter().getElement(i), ENABLED_PROPERTY, "" + enabled);            
-
+            DOM.setElementAttribute(table.getRowFormatter().getElement(i), ENABLED_PROPERTY, "" + enabled);
          }
-
-         i++;
       }
 
       absolutePanel.add(table);

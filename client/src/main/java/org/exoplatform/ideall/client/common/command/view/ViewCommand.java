@@ -17,10 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.view;
 
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,12 +30,29 @@ import org.exoplatform.ideall.client.application.command.AbstractCommand;
  * @version $
  */
 
-public class NewFileCommand extends AbstractCommand
+public class ViewCommand extends AbstractCommand implements EditorActiveFileChangedHandler
 {
 
-   public NewFileCommand()
+   public ViewCommand()
    {
-      super("File/New", "New", Images.MainMenu.NEW, true, true, null);
+      super("View", "View", null, false, true, null);
+   }
+
+   @Override
+   protected void initialize()
+   {
+      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (event.getFile() == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      setEnabled(true);
    }
 
 }

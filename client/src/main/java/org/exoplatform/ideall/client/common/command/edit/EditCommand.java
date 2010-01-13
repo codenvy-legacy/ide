@@ -17,12 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,18 +30,28 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewJavaScriptFileCommand extends AbstractCommand
+public class EditCommand extends AbstractCommand implements EditorActiveFileChangedHandler
 {
 
-   public NewJavaScriptFileCommand()
+   public EditCommand()
    {
-      super("File/New/Create Java Script file", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, false,
-         true, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
+      super("Edit", "Edit", null, false, true, null);
    }
 
    @Override
    protected void initialize()
    {
+      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (event.getFile() == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
       setEnabled(true);
    }
 

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
@@ -31,13 +31,13 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewGroovyFileCommand extends AbstractCommand
+public class NewHTMLFileCommand extends AbstractCommand
 {
 
-   public NewGroovyFileCommand()
+   public NewHTMLFileCommand()
    {
-      super("File/New/Create GROOVY file", "Create New Groovy File", Images.FileTypes.GROOVY, false, true,
-         new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
+      super("File/New/Create HTML file", "Create New HTML File", Images.FileTypes.HTML, false, true,
+         new CreateNewFileEvent(MimeType.TEXT_HTML));
    }
    
    @Override

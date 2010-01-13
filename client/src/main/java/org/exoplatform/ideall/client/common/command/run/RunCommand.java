@@ -17,12 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.run;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,19 +31,38 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewTEXTFileCommand extends AbstractCommand
+public class RunCommand extends AbstractCommand implements EditorActiveFileChangedHandler
 {
 
-   public NewTEXTFileCommand()
+   public RunCommand()
    {
-      super("File/New/Create TEXT file", "Create New Text File", Images.FileTypes.TXT, false, true,
-         new CreateNewFileEvent(MimeType.TEXT_PLAIN));
+      super("Run", "Run", null, false, true, null);
    }
 
    @Override
    protected void initialize()
    {
-      setEnabled(true);
+      addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (event.getFile() == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         || MimeType.TEXT_HTML.equals(event.getFile().getContentType())
+         || MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+
+   }
 }

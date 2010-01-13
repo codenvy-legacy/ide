@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
@@ -31,15 +31,15 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewHTMLFileCommand extends AbstractCommand
+public class NewXMLFileCommand extends AbstractCommand
 {
 
-   public NewHTMLFileCommand()
+   public NewXMLFileCommand()
    {
-      super("File/New/Create HTML file", "Create New HTML File", Images.FileTypes.HTML, false, true,
-         new CreateNewFileEvent(MimeType.TEXT_HTML));
+      super("File/New/Create XML File", "Create New XML File", Images.FileTypes.XML, false, true,
+         new CreateNewFileEvent(MimeType.TEXT_XML));
    }
-   
+
    @Override
    protected void initialize()
    {

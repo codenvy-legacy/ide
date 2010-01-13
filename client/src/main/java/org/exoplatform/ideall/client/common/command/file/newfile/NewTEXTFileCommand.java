@@ -17,12 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy.command;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,37 +31,19 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
  * @version $
  */
 
-public class RunCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class NewTEXTFileCommand extends AbstractCommand
 {
 
-   public RunCommand()
+   public NewTEXTFileCommand()
    {
-      super("Run", "Run", null, false, true, null);
+      super("File/New/Create TEXT file", "Create New Text File", Images.FileTypes.TXT, false, true,
+         new CreateNewFileEvent(MimeType.TEXT_PLAIN));
    }
 
    @Override
    protected void initialize()
    {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-
+      setEnabled(true);
    }
 
 }

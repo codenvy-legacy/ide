@@ -21,19 +21,15 @@ package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.application.command.DummyCommand;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
+import org.exoplatform.ideall.client.common.command.edit.EditCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
+import org.exoplatform.ideall.client.common.command.file.FileCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
-import org.exoplatform.ideall.client.common.command.file.NewFileCommand;
-import org.exoplatform.ideall.client.common.command.file.NewGroovyFileCommand;
-import org.exoplatform.ideall.client.common.command.file.NewHTMLFileCommand;
-import org.exoplatform.ideall.client.common.command.file.NewJavaScriptFileCommand;
-import org.exoplatform.ideall.client.common.command.file.NewTEXTFileCommand;
-import org.exoplatform.ideall.client.common.command.file.NewXMLFileCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileAsCommand;
@@ -41,7 +37,15 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateComma
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
+import org.exoplatform.ideall.client.common.command.run.RunCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
+import org.exoplatform.ideall.client.common.command.view.ViewCommand;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
 
 /**
@@ -60,6 +64,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       /*
        * FILE GROUP
        */
+
+      addCommand(new FileCommand());
+
       addCommand(new NewFileCommand());
       addCommand(new NewXMLFileCommand(), true, false);
       addCommand(new NewGroovyFileCommand(), true, false);
@@ -95,6 +102,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addToolbarDelimiter(false);
 
+      addCommand(new EditCommand());
       addCommand(new UndoTypingCommand(), true, false);
       addCommand(new RedoTypingCommand(), true, false);
       addCommand(new FormatSourceCommand(), true, false);
@@ -104,15 +112,17 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        */
 
       addToolbarDelimiter(true);
+      addCommand(new ViewCommand());
       addCommand(new ViewItemPropertiesCommand(), true, true);
       addToolbarDelimiter(true);
-      
+
       /*
        * RUN GROUP
        */
-      
+
+      addCommand(new RunCommand());
       addCommand(new ShowPreviewCommand(), true, true);
-      
+
    }
 
 }
