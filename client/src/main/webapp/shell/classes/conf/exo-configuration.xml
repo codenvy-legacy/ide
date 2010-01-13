@@ -117,7 +117,7 @@
     <init-params>                                                                                                                      
       <value-param>                                                                                                                    
         <name>keyFile</name>                                                                                                 
-        <value>src/test/resources/conf/key.txt</value>                                                                                                           
+        <value>src/main/resources/conf/key.txt</value>                                                                                                           
       </value-param>
     </init-params>         
   </component>
