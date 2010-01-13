@@ -177,6 +177,10 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          display.addTab(file);
       }
 
+      if (context.getOpenedFiles().values().size() != 0) {
+         display.enableShowLineNumbers();    // fixed bug [WBT-305] "'Line Numbers' checkbox is disabled when the File Tab opened from the user settings."
+      }
+      
       registerHandlers();
 
       if (context.getActiveFile() != null)
