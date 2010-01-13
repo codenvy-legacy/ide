@@ -156,6 +156,8 @@ public interface Images
       
       public static final String JAVASCRIPT = imageUrl + "filetypes/javascript.gif";
       
+      public static final String CSS = imageUrl + "filetypes/css.png";
+
       public static final String GADGET = imageUrl + "filetypes/gadget1.png";
 
    }

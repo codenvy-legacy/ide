@@ -37,6 +37,7 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateComma
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewCSSFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileCommand;
@@ -73,6 +74,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new NewHTMLFileCommand(), true, false);
       addCommand(new NewTEXTFileCommand(), true, false);
       addCommand(new NewJavaScriptFileCommand(), true, false);
+      addCommand(new NewCSSFileCommand(), true, false);
 
       addCommand(new UploadFileCommand(), true, false);
       addCommand(new CreateFileFromTemplateCommand(), true, false);
