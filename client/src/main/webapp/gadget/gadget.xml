@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <gadgets>
-    <gadget name="DevTool">
-        <path>/org.exoplatform.gadgets.devtool.DevToolGadget/org.exoplatform.gadgets.devtool.client.DevToolGadget.gadget.xml</path>
+    <gadget name="IDEall">
+        <path>/org.exoplatform.ideall.IDEGadget/org.exoplatform.ideall.client.IDEGadget.gadget.xml</path>
     </gadget>
 </gadgets>
