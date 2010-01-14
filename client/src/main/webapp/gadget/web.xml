@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
-  <display-name>DevTool</display-name>
+  <display-name>IDEall</display-name>
 
   <context-param>
     <param-name>portalContainerName</param-name>
