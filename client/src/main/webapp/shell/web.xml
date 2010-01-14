@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
-	<display-name>DevTool</display-name>
+	<display-name>IDEall</display-name>
 	<listener>
 		<listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener</listener-class>
 	</listener>
@@ -119,7 +119,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>RestServer</servlet-name>
-		<url-pattern>/org.exoplatform.gadgets.devtool.DevToolApplication/rest/*</url-pattern>
+		<url-pattern>/org.exoplatform.ideall.IDEApplication/rest/*</url-pattern>
 	</servlet-mapping>
   
   <servlet-mapping>
@@ -177,7 +177,7 @@
 	
 	<filter-mapping>
 		<filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-		<url-pattern>/org.exoplatform.gadgets.devtool.DevToolApplication/*</url-pattern>
+		<url-pattern>/org.exoplatform.ideall.IDEApplication/*</url-pattern>
 	</filter-mapping>
 	
 </web-app>
