@@ -83,6 +83,7 @@ public class GadgetPreviewPane extends TabPanel
    @Override
    public void onOpenTab()
    {
+      super.onOpenTab();
       showGadget();
    }
 
@@ -94,11 +95,12 @@ public class GadgetPreviewPane extends TabPanel
    private void showGadget()
    {
       Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html");
-      frame.setWidth("98%");
-      frame.setHeight("98%");
-      addChild(frame);
+      frame.setWidth("100%");
+      frame.setHeight("100%");
+      addMember(frame);
       DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
       DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
+      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
    }
 
    /**

@@ -111,6 +111,8 @@ public abstract class TabPanel extends Layout implements ResizedHandler, LockIFr
 
    public void onOpenTab()
    {
+      System.out.println("opening tab: " + getTitle());
+      
       if (lockingEnabled)
       {
          lockingHandlers.addHandler(LockIFrameElementsEvent.TYPE, this);
@@ -146,7 +148,7 @@ public abstract class TabPanel extends Layout implements ResizedHandler, LockIFr
 
       lockCanvas = new Canvas();
       lockCanvas.setBackgroundColor("#3344FF");
-      lockCanvas.setOpacity(0);
+      lockCanvas.setOpacity(20);
       lockCanvas.setWidth100();
       lockCanvas.setHeight100();
       addChild(lockCanvas);

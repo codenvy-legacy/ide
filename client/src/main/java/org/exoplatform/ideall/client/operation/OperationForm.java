@@ -209,6 +209,8 @@ public class OperationForm extends Layout implements OperationPresenter.Display
          }
 
          previousTab = event.getTab().getTitle();
+         
+         System.out.println(">>>>>>> " + previousTab);
 
          for (Canvas c : tabSet.getChildren())
          {
