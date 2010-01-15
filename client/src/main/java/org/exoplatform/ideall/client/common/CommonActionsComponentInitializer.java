@@ -19,16 +19,13 @@
  */
 package org.exoplatform.ideall.client.common;
 
-import org.exoplatform.ideall.client.application.command.DummyCommand;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.edit.EditCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.FileCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
@@ -44,9 +41,7 @@ import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileComm
 import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
-import org.exoplatform.ideall.client.common.command.run.RunCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
-import org.exoplatform.ideall.client.common.command.view.ViewCommand;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
 
 /**
@@ -66,65 +61,47 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * FILE GROUP
        */
 
-      addCommand(new FileCommand());
+      addCommand(new NewFileCommand()).disable().hide();
+      addCommand(new NewXMLFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewGroovyFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewHTMLFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewTEXTFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewJavaScriptFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewCSSFileCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new NewFileCommand());
-      addCommand(new NewXMLFileCommand(), true, false);
-      addCommand(new NewGroovyFileCommand(), true, false);
-      addCommand(new NewHTMLFileCommand(), true, false);
-      addCommand(new NewTEXTFileCommand(), true, false);
-      addCommand(new NewJavaScriptFileCommand(), true, false);
-      addCommand(new NewCSSFileCommand(), true, false);
+      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new CreateFileFromTemplateCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new UploadFileCommand(), true, false);
-      addCommand(new CreateFileFromTemplateCommand(), true, false);
+      addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();
+      addCommand(new SaveAllFilesCommand()).disable().hide().dockOnToolbar();
+      addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
-      addToolbarDelimiter(false);
-
-      addCommand(new DummyCommand("File/---1"));
-
-      addCommand(new SaveFileCommand(), true, false);
-      addCommand(new SaveFileAsCommand(), true, false);
-      addCommand(new SaveAllFilesCommand(), true, false);
-      addCommand(new SaveFileAsTemplateCommand(), true, false);
-
-      addCommand(new DummyCommand("File/---2"));
-
-      addToolbarDelimiter(false);
-
-      addCommand(new CreateNewFolderCommand(), true, false);
-      addCommand(new DeleteItemCommand(), true, false);
-      addCommand(new MoveItemCommand(), true, false);
-      addCommand(new SearchFilesCommand(), true, false);
-      addCommand(new RefreshBrowserCommand(), true, false);
+      addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
+      addCommand(new MoveItemCommand()).disable().hide().dockOnToolbar();
+      addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
+      addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
 
       /*
        * EDIT GROUP
        */
 
-      addToolbarDelimiter(false);
-
-      addCommand(new EditCommand());
-      addCommand(new UndoTypingCommand(), true, false);
-      addCommand(new RedoTypingCommand(), true, false);
-      addCommand(new FormatSourceCommand(), true, false);
+      addCommand(new UndoTypingCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar();
+      addCommand(new RedoTypingCommand()).disable().hide().deselect().dockOnToolbar();
+      addCommand(new FormatSourceCommand()).disable().hide().deselect().dockOnToolbar();
 
       /*
        * VIEW GROUP
        */
 
-      addToolbarDelimiter(true);
-      addCommand(new ViewCommand());
-      addCommand(new ViewItemPropertiesCommand(), true, true);
-      addToolbarDelimiter(true);
+      addCommand(new ViewItemPropertiesCommand()).disable().hide().deselect().dockOnToolbar(true);
 
       /*
        * RUN GROUP
        */
 
-      addCommand(new RunCommand());
-      addCommand(new ShowPreviewCommand(), true, true);
-
+      addCommand(new ShowPreviewCommand()).disable().hide().deselect().dockOnToolbar(true);
    }
 
 }

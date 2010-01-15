@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
@@ -38,13 +38,13 @@ import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler
  * @version $
  */
 
-public class UndoTypingCommand extends AbstractCommand implements EditorActiveFileChangedHandler,
+public class UndoTypingCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
    FileContentChangedHandler, FileCreatedHandler, FileContentReceivedHandler
 {
 
    public UndoTypingCommand()
    {
-      super("Edit/Undo Typing", "Undo Typing", Images.MainMenu.UNDO, false, false, new UndoEditingEvent());
+      super("Edit/Undo Typing", "Undo Typing", Images.MainMenu.UNDO, new UndoEditingEvent());
    }
 
    @Override
@@ -53,7 +53,7 @@ public class UndoTypingCommand extends AbstractCommand implements EditorActiveFi
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(FileContentChangedEvent.TYPE, this);
       addHandler(FileCreatedEvent.TYPE, this);
-      addHandler(FileContentReceivedEvent.TYPE, this);      
+      addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -71,7 +71,6 @@ public class UndoTypingCommand extends AbstractCommand implements EditorActiveFi
 
    public void onFileContentChanged(FileContentChangedEvent event)
    {
-      setVisible(true);
       setEnabled(event.hasUndoChanges());
    }
 

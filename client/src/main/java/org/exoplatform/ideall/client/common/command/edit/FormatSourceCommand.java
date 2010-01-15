@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
@@ -33,12 +33,12 @@ import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
  * @version $
  */
 
-public class FormatSourceCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class FormatSourceCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
    public FormatSourceCommand()
    {
-      super("Edit/Format", "Format", Images.MainMenu.FORMAT, false, false, new FormatFileEvent());
+      super("Edit/Format", "Format", Images.MainMenu.FORMAT, new FormatFileEvent());
    }
 
    @Override

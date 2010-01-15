@@ -37,9 +37,9 @@ public class HelpActionsComponentInitializer extends AbstractComponentInitialize
    @Override
    protected void onItitialize()
    {
-      addCommand(new SelectWorkspaceCommand(), true, true);
-      addCommand(new CustomizeToolbarCommand(), true, true);
-      addCommand(new ShowAboutCommand(), true, true);
+      addCommand(new SelectWorkspaceCommand()).enable().show().deselect().setDelimiterBefore().dockOnToolbar(true);
+      addCommand(new CustomizeToolbarCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new ShowAboutCommand()).enable().show().deselect().dockOnToolbar(true);
    }
 
 }
