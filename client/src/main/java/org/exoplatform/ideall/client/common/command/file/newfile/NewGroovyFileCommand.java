@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,18 +31,19 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewGroovyFileCommand extends AbstractCommand
+public class NewGroovyFileCommand extends SimpleCommand
 {
 
    public NewGroovyFileCommand()
    {
-      super("File/New/Create GROOVY file", "Create New Groovy File", Images.FileTypes.GROOVY, false, true,
-         new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
+      super("File/New/Create GROOVY file", "Create New Groovy File", Images.FileTypes.GROOVY, new CreateNewFileEvent(
+         MimeType.SCRIPT_GROOVY));
    }
-   
+
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

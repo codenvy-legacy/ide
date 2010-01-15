@@ -70,7 +70,7 @@ public class AboutForm extends DialogWindow
 
    private final String COMPANY_NAME = "eXo Platform SAS";
 
-   private static final String NAME = "IDE";
+   private static final String NAME = "IDEall";
 
    private static final String YEAR = "2009-2010";
 

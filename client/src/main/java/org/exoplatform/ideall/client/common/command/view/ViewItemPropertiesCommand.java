@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
@@ -32,12 +32,12 @@ import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEv
  * @version $
  */
 
-public class ViewItemPropertiesCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class ViewItemPropertiesCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
    public ViewItemPropertiesCommand()
    {
-      super("View/Properties", "Show Properties", Images.MainMenu.PROPERTIES, false, false, new ShowPropertiesEvent());
+      super("View/Properties", "Show Properties", Images.MainMenu.PROPERTIES, new ShowPropertiesEvent());
    }
 
    @Override

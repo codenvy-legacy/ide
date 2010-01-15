@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.toolbar.event.CustomizeToolbarEvent;
 
 /**
@@ -30,18 +30,19 @@ import org.exoplatform.ideall.client.toolbar.event.CustomizeToolbarEvent;
  * @version $
  */
 
-public class CustomizeToolbarCommand extends AbstractCommand
+public class CustomizeToolbarCommand extends SimpleCommand
 {
 
    public CustomizeToolbarCommand()
    {
-      super("Window/Customize Toolbar...", "Customize Toolbar...", Images.MainMenu.CUSTOMIZE_TOOLBAR, false, true,
+      super("Window/Customize Toolbar...", "Customize Toolbar...", Images.MainMenu.CUSTOMIZE_TOOLBAR,
          new CustomizeToolbarEvent());
    }
-   
+
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

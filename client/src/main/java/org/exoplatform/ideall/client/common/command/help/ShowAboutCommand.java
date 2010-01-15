@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.help;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
 
 /**
@@ -30,12 +30,12 @@ import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
  * @version $
  */
 
-public class ShowAboutCommand extends AbstractCommand
+public class ShowAboutCommand extends SimpleCommand
 {
 
    public ShowAboutCommand()
    {
-      super("Help/About...", "About...", Images.MainMenu.ABOUT, true, true, new ShowAboutDialogEvent());
+      super("Help/About...", "About...", Images.MainMenu.ABOUT, new ShowAboutDialogEvent());
    }
 
 }
