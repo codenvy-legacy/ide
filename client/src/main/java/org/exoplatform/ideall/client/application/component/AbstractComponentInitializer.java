@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.application.component;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.solution.command.Command;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,46 +36,10 @@ public abstract class AbstractComponentInitializer
 
    private ApplicationContext context;
 
-   protected void addCommand(AbstractCommand command)
+   protected CommandRegistration addCommand(Command command)
    {
       context.getCommands().add(command);
-   }
-
-   protected void addCommand(AbstractCommand command, boolean showOnToolbar, boolean rightDocking)
-   {
-      context.getCommands().add(command);
-
-      if (showOnToolbar)
-      {
-         addToToolBar(command.getId(), rightDocking);
-      }
-   }
-
-   protected void addToToolBar(String id, boolean rightDocking)
-   {
-      if (rightDocking)
-      {
-         context.getToolBarItems().add(id);
-      }
-      else
-      {
-         int position = 0;
-         for (String curId : context.getToolBarItems())
-         {
-            if ("".equals(curId))
-            {
-               break;
-            }
-            position++;
-         }
-
-         context.getToolBarItems().add(position, id);
-      }
-   }
-
-   protected void addToolbarDelimiter(boolean toolbarRightDocking)
-   {
-      addToToolBar("---", toolbarRightDocking);
+      return new CommandRegistration(command, context);
    }
 
    public void initializeComponent(HandlerManager eventBus, ApplicationContext context)

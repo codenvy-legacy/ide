@@ -68,12 +68,8 @@ public class NavigationPresenter implements SearchResultReceivedHandler
 
    public void onSearchResultReceived(SearchResultReceivedEvent event)
    {
-      
       Folder searchResult = event.getFolder();
       display.showSearchResult(searchResult);
-      //      Folder folder = new Folder(Configuration.webDAVURL);
-      //      folder.setChildren(event.getSearchResult().getItems());
-      //      display.showSerchResult(folder);
    }
 
 }

@@ -80,7 +80,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
    {
       Tab browseTab = new Tab("<span>" + Canvas.imgHTML(Images.BrowserPanel.ICON) + "&nbsp;" + WORKSPACE);
       browseTab.setID("Browser");
-      BrowserForm browserForm = new BrowserForm(eventBus, context);
+      NavigatorForm browserForm = new NavigatorForm(eventBus, context);
       browseTab.setPane(browserForm);
       tabSet.addTab(browseTab);
    }

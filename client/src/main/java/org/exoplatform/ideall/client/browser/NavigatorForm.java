@@ -32,7 +32,7 @@ import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class BrowserForm extends VLayout implements BrowserPresenter.Display
+public class NavigatorForm extends VLayout implements NavigatorPresenter.Display
 {
 
    private ItemTreeGrid<Item> treeGridEx;
@@ -41,11 +41,11 @@ public class BrowserForm extends VLayout implements BrowserPresenter.Display
 
    private ApplicationContext context;
 
-   private BrowserPresenter presenter;
+   private NavigatorPresenter presenter;
 
    private Handlers handlers;
 
-   public BrowserForm(HandlerManager eventBus, ApplicationContext context)
+   public NavigatorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -58,13 +58,13 @@ public class BrowserForm extends VLayout implements BrowserPresenter.Display
       treeGridEx.setShowHeader(false);
       treeGridEx.setLeaveScrollbarGap(false);
       treeGridEx.setShowOpenIcons(true);
-      treeGridEx.setEmptyMessage("No any workspace selected!");
+      treeGridEx.setEmptyMessage("Root folder not found!");
 
       treeGridEx.setHeight100();
       treeGridEx.setWidth100();
       addMember(treeGridEx);
 
-      presenter = new BrowserPresenter(eventBus, context);
+      presenter = new NavigatorPresenter(eventBus, context);
       presenter.bindDisplay(this);
 
       addMouseDownHandler(new MouseDownHandler()

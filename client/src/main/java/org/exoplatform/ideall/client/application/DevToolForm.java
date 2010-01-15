@@ -96,7 +96,7 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       GWTMenuWrapper menuWrapper = new GWTMenuWrapper(eventBus);
       addMember(menuWrapper);
 
-      GWTToolbarWrapper toolbarWrapper = new GWTToolbarWrapper(eventBus, context);
+      GWTToolbarWrapper toolbarWrapper = new GWTToolbarWrapper(eventBus);
       addMember(toolbarWrapper);
 
       HLayout horizontalSplitLayout = new HLayout();

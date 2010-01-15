@@ -70,7 +70,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
+public class NavigatorPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
    InitializeApplicationHandler
 {
@@ -100,7 +100,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
 
    private String folderToUpdate;
 
-   public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
+   public NavigatorPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;

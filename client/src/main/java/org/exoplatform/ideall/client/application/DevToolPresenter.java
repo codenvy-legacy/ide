@@ -20,10 +20,9 @@ import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -36,7 +35,9 @@ import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHa
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
-import org.exoplatform.ideall.client.toolbar.event.UpdateToolbarEvent;
+import org.exoplatform.ideall.client.solution.command.Command;
+import org.exoplatform.ideall.client.solution.menu.event.UpdateMainMenuEvent;
+import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -101,9 +102,11 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       /*
        * Initializing handlers of menu items
        */
-      for (AbstractCommand command : context.getCommands())
+      for (Command command : context.getCommands())
       {
-         command.initialize(eventBus, context);
+         if (command instanceof SimpleCommand) {
+            ((SimpleCommand)command).initialize(eventBus, context);
+         }
       }
 
       /*
@@ -162,7 +165,10 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
          context.setWorkspace(Configuration.getInstance().getDefaultWorkspaceName());
       }
 
-      eventBus.fireEvent(new UpdateToolbarEvent());
+      context.getToolBarItems().clear();
+      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
+      
+      eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
       new WorkspaceChecker(eventBus, context);
    }
 
