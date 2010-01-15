@@ -92,7 +92,6 @@ public interface Images
    public interface ViewPanel
    {
 
-      //public static final String BUTTON_CLEAR = imageUrl + "view/but_clear_1.png";
       public static final String BUTTON_CLEAR = imageUrl + "view/buttonClear1.png";
 
    }
@@ -114,9 +113,15 @@ public interface Images
    public interface BrowserPanel
    {
 
-      //public static final String ICON = imageUrl + "browser/918-resources.png";
       public static final String ICON = imageUrl + "browser/workspace.png";
 
+   }
+   
+   public interface SearchPanel
+   {
+      
+      static final String ICON = imageUrl + "search/search.png";
+      
    }
 
    public interface MenuButton
