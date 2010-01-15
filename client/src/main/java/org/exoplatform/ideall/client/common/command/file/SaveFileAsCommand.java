@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
@@ -32,17 +32,19 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
  * @version $
  */
 
-public class SaveFileAsCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class SaveFileAsCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
    public SaveFileAsCommand()
    {
-      super("File/Save As...", "Save File As...", Images.MainMenu.SAVE_AS, false, true, new SaveFileAsEvent());
+      super("File/Save As...", "Save File As...", Images.MainMenu.SAVE_AS, new SaveFileAsEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
+      
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 

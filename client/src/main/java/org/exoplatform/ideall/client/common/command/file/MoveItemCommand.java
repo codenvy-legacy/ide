@@ -20,11 +20,13 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.browser.event.ItemSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemSelectedHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.model.Workspace;
+import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
+import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,18 +35,21 @@ import org.exoplatform.ideall.client.model.Workspace;
  * @version $
  */
 
-public class MoveItemCommand extends AbstractCommand implements ItemSelectedHandler
+public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandler, ItemDeletedHandler
 {
 
    public MoveItemCommand()
    {
-      super("File/Move...", "Move...", Images.MainMenu.MOVE, false, true, new MoveItemEvent());
+      super("File/Move...", "Move...", Images.MainMenu.MOVE, new MoveItemEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
+
       addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    public void onItemSelected(ItemSelectedEvent event)
@@ -57,6 +62,11 @@ public class MoveItemCommand extends AbstractCommand implements ItemSelectedHand
       {
          setEnabled(true);
       }
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      setEnabled(false);
    }
 
 }

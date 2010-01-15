@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
 
 /**
@@ -30,18 +30,19 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends AbstractCommand
+public class CreateFileFromTemplateCommand extends SimpleCommand
 {
 
    public CreateFileFromTemplateCommand()
    {
       super("File/Create new file from template...", "Create New File From Template...", Images.MainMenu.TEMPLATES,
-         false, true, new CreateFileFromTemplateEvent());
+         new CreateFileFromTemplateEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

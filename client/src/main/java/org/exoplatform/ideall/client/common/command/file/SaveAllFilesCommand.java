@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
@@ -35,17 +35,19 @@ import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
  * @version $
  */
 
-public class SaveAllFilesCommand extends AbstractCommand implements FileContentChangedHandler, FileContentSavedHandler
+public class SaveAllFilesCommand extends SimpleCommand implements FileContentChangedHandler, FileContentSavedHandler
 {
 
    public SaveAllFilesCommand()
    {
-      super("File/Save All", "Save All Files", Images.MainMenu.SAVE_ALL, false, true, new SaveAllFilesEvent());
+      super("File/Save All", "Save All Files", Images.MainMenu.SAVE_ALL, new SaveAllFilesEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
+      
       addHandler(FileContentChangedEvent.TYPE, this);
       addHandler(FileContentSavedEvent.TYPE, this);
    }

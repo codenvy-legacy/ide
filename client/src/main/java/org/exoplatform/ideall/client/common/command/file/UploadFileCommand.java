@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 
 /**
@@ -30,17 +30,18 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
  * @version $
  */
 
-public class UploadFileCommand extends AbstractCommand
+public class UploadFileCommand extends SimpleCommand
 {
 
    public UploadFileCommand()
    {
-      super("File/Upload file...", "Upload File...", Images.MainMenu.UPLOAD, false, true, new UploadFileEvent());
+      super("File/Upload file...", "Upload File...", Images.MainMenu.UPLOAD, new UploadFileEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

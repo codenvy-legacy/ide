@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 
 /**
@@ -30,17 +30,18 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
  * @version $
  */
 
-public class RefreshBrowserCommand extends AbstractCommand
+public class RefreshBrowserCommand extends SimpleCommand
 {
 
    public RefreshBrowserCommand()
    {
-      super("File/Refresh", "Refresh", Images.MainMenu.REFRESH, false, true, new RefreshBrowserEvent());
+      super("File/Refresh", "Refresh", Images.MainMenu.REFRESH, new RefreshBrowserEvent());
    }
-   
+
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

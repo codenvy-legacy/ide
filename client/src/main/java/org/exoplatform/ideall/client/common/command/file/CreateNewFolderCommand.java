@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
 
 /**
@@ -30,18 +30,18 @@ import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
  * @version $
  */
 
-public class CreateNewFolderCommand extends AbstractCommand
+public class CreateNewFolderCommand extends SimpleCommand
 {
 
    public CreateNewFolderCommand()
    {
-      super("File/Create folder...", "Create New Folder...", Images.MainMenu.NEW_FOLDER, false, true,
-         new CreateFolderEvent());
+      super("File/Create folder...", "Create New Folder...", Images.MainMenu.NEW_FOLDER, new CreateFolderEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 

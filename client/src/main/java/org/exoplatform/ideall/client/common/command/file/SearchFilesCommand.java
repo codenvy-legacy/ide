@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
 
 /**
@@ -30,17 +30,18 @@ import org.exoplatform.ideall.client.event.file.SearchFileEvent;
  * @version $
  */
 
-public class SearchFilesCommand extends AbstractCommand
+public class SearchFilesCommand extends SimpleCommand
 {
 
    public SearchFilesCommand()
    {
-      super("File/Search...", "Search...", Images.MainMenu.SEARCH, false, true, new SearchFileEvent());
+      super("File/Search...", "Search...", Images.MainMenu.SEARCH, new SearchFileEvent());
    }
 
    @Override
    protected void initialize()
    {
+      setVisible(true);
       setEnabled(true);
    }
 
