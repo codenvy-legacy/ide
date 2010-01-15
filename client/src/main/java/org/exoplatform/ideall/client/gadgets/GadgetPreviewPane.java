@@ -38,6 +38,8 @@ public class GadgetPreviewPane extends TabPanel
     * 
     */
    public static final String title = "Gadget Preview";
+   
+   private String string;
 
    /**
     * 
@@ -51,7 +53,8 @@ public class GadgetPreviewPane extends TabPanel
    public GadgetPreviewPane(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
    {
       super(eventBus, true);
-      setGadgetMetadata(getGadgetScript(gadgetMetadata), Configuration.getInstance().getGadgetServer());
+      string = getGadgetScript(gadgetMetadata);
+//      setGadgetMetadata(getGadgetScript(gadgetMetadata), Configuration.getInstance().getGadgetServer());
    }
 
    @Override
@@ -69,7 +72,7 @@ public class GadgetPreviewPane extends TabPanel
       String src =
          "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
             + ",title:\"" + metadata.getTitle() + "\",width:" + String.valueOf(metadata.getWidth()) + ",secureToken:\""
-            + metadata.getSecurityToken() + "\",view:\"home\"}";
+            + metadata.getSecurityToken() + "\",view:\"home\",server:\"" + Configuration.getInstance().getGadgetServer() + "\"}";
       return src;
    }
 
@@ -94,7 +97,7 @@ public class GadgetPreviewPane extends TabPanel
     */
    private void showGadget()
    {
-      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html");
+      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +string);
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
@@ -103,24 +106,7 @@ public class GadgetPreviewPane extends TabPanel
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
    }
 
-   /**
-    * Set value in document. 
-    * Then iframe with gadget inside onLoad read this value.
-    * 
-    * @param script
-    * @param server
-    */
-   public native void setGadgetMetadata(String script, String server) /*-{
-         var m = eval('(' + script + ')');
-         $wnd.metadata = {};
-         $wnd.metadata.url = m.specUrl;
-         $wnd.metadata.height = m.height;
-         $wnd.metadata.width = m.width;
-   //       $wnd.metadata.secureToken = 'john.doe:john.doe:appid:cont:url:0';
-         $wnd.metadata.secureToken = m.secureToken;
-         $wnd.metadata.server = server;
-         $wnd.metadata.view = m.view;
-       }-*/;
+
 
    @Override
    public String getId()

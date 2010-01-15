@@ -31,11 +31,18 @@
 
 <div id="preview-gadget" class="gadgets-gadget-chrome" name="gadgets"> 
 <script type="text/javascript">
-  gadgets.container.setView(parent.window.metadata.view);
-  var st = encodeURIComponent(parent.window.metadata.secureToken);
-  var enurl = encodeURI(parent.window.metadata.url);
-  var gadget = gadgets.container.createGadget({specUrl:enurl ,height: parent.window.metadata.height,width: parent.window.metadata.width, secureToken: st, view:parent.window.metadata.view});
-	gadget.setServerBase(parent.window.metadata.server);
+  var val = window.location.href.split("#");
+  var decodeVal = decodeURIComponent(val[1]);
+  alert(decodeVal);
+
+  var m = eval('(' + decodeVal + ')');
+  
+  
+  gadgets.container.setView(m.view);
+  var st = encodeURIComponent(m.secureToken);
+  var enurl = encodeURI(m.specUrl);
+  var gadget = gadgets.container.createGadget({specUrl:enurl ,height: m.height,width: m.width, secureToken: st, view:m.view});
+	gadget.setServerBase(m.server);
 	gadgets.container.addGadget(gadget);
 </script>
 </div>
