@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.menu;
 
+import org.exoplatform.ideall.client.solution.menu.GWTMenuBar;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;

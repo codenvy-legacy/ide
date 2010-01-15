@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
@@ -33,13 +33,12 @@ import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
  * @version $
  */
 
-public class UndeployGroovyCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class UndeployGroovyCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
    public UndeployGroovyCommand()
    {
-      super("Run/Undeploy", "Undeploy Groovy Script", Images.MainMenu.UNDEPLOY, false, false,
-         new UndeployGroovyScriptEvent());
+      super("Run/Undeploy", "Undeploy Groovy Script", Images.MainMenu.UNDEPLOY, new UndeployGroovyScriptEvent());
    }
 
    @Override

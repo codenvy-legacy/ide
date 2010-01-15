@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
@@ -33,13 +33,12 @@ import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
  * @version $
  */
 
-public class ValidateGroovyCommand extends AbstractCommand implements EditorActiveFileChangedHandler
+public class ValidateGroovyCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
    public ValidateGroovyCommand()
    {
-      super("Run/Validate", "Validate Groovy Script", Images.MainMenu.VALIDATE, false, false,
-         new ValidateGroovyScriptEvent());
+      super("Run/Validate", "Validate Groovy Script", Images.MainMenu.VALIDATE, new ValidateGroovyScriptEvent());
    }
 
    @Override
@@ -55,11 +54,11 @@ public class ValidateGroovyCommand extends AbstractCommand implements EditorActi
          setEnabled(false);
          setVisible(false);
          return;
-      }      
+      }
 
       if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
       {
-         setVisible(true);         
+         setVisible(true);
          setEnabled(true);
       }
       else

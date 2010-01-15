@@ -19,7 +19,6 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
-import org.exoplatform.ideall.client.application.command.DummyCommand;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.groovy.command.DeployGroovyCommand;
 import org.exoplatform.ideall.client.groovy.command.PreviewGroovyOutputCommand;
@@ -40,28 +39,20 @@ public class GroovyActionsComponentInitializer extends AbstractComponentInitiali
    protected void onItitialize()
    {
       //addCommand(new RunCommand());
-      
+
       /*
        * RUN GROUP
        */
 
-      addToolbarDelimiter(true);
-      addCommand(new ValidateGroovyCommand(), true, true);
-      addCommand(new DeployGroovyCommand(), true, true);
-      addCommand(new UndeployGroovyCommand(), true, true);
-
-      /*
-       * DELIMITER
-       */
-
-      addCommand(new DummyCommand("Run/---1"));
+      addCommand(new ValidateGroovyCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar(true);
+      addCommand(new DeployGroovyCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new UndeployGroovyCommand()).disable().hide().deselect().dockOnToolbar(true);
 
       /*
        * PREVIEW OUTPUT
        */
 
-      addCommand(new PreviewGroovyOutputCommand(), true, true);
-      addToolbarDelimiter(true);
+      addCommand(new PreviewGroovyOutputCommand()).disable().hide().deselect().dockOnToolbar(true);
    }
 
 }
