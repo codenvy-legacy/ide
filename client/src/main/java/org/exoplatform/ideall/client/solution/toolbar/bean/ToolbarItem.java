@@ -17,14 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
+package org.exoplatform.ideall.client.solution.toolbar.bean;
 
-import org.exoplatform.ideall.client.solution.toolbar.GWTToolbarForm;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.Layout;
+import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,24 +28,31 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version $
  */
 
-public class GWTToolbarWrapper extends Layout
+public class ToolbarItem
 {
 
-   public GWTToolbarWrapper(HandlerManager eventBus)
+   private Command command;
+
+   private boolean delimiter;
+
+   public ToolbarItem()
    {
-      setHeight(32);
+      this.delimiter = true;
+   }
 
-      final GWTToolbarForm toolbar = new GWTToolbarForm(eventBus);
-      addMember(toolbar);
+   public ToolbarItem(Command command)
+   {
+      this.command = command;
+   }
 
-      addResizedHandler(new ResizedHandler()
-      {
-         public void onResized(ResizedEvent event)
-         {
-            toolbar.setWidth(getWidth() + "px");
-         }
-      });
+   public Command getCommand()
+   {
+      return command;
+   }
 
+   public boolean isDelimiter()
+   {
+      return delimiter;
    }
 
 }

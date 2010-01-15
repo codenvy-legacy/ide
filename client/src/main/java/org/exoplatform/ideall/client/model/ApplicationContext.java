@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.template.TemplateList;
+import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -97,7 +97,7 @@ public class ApplicationContext
    /**
     * Registered commands
     */
-   private ArrayList<AbstractCommand> commands = new ArrayList<AbstractCommand>();
+   private ArrayList<Command> commands = new ArrayList<Command>();
 
    /**
     * Uses for storing the current state of toolbar
@@ -286,7 +286,7 @@ public class ApplicationContext
       this.searchContentType = searchContentType;
    }
 
-   public ArrayList<AbstractCommand> getCommands()
+   public ArrayList<Command> getCommands()
    {
       return commands;
    }

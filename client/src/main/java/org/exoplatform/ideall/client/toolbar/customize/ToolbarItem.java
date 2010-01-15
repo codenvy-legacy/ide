@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,14 +41,14 @@ public class ToolbarItem
 
    private String id;
 
-   private AbstractCommand command;
+   private Command command;
 
    public ToolbarItem(Type type)
    {
       this.type = type;
    }
 
-   public ToolbarItem(Type type, String id, AbstractCommand command)
+   public ToolbarItem(Type type, String id, Command command)
    {
       this.type = type;
       this.id = id;
@@ -65,7 +65,7 @@ public class ToolbarItem
       return id;
    }
 
-   public AbstractCommand getCommand()
+   public Command getCommand()
    {
       return command;
    }

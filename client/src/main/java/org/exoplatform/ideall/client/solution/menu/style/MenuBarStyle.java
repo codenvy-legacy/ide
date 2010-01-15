@@ -17,14 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
-
-import org.exoplatform.ideall.client.solution.toolbar.GWTToolbarForm;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.Layout;
+package org.exoplatform.ideall.client.solution.menu.style;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,24 +26,19 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version $
  */
 
-public class GWTToolbarWrapper extends Layout
+public interface MenuBarStyle
 {
 
-   public GWTToolbarWrapper(HandlerManager eventBus)
-   {
-      setHeight(32);
+   public final static String MENUBAR = "exo-menuBar";
 
-      final GWTToolbarForm toolbar = new GWTToolbarForm(eventBus);
-      addMember(toolbar);
+   public final static String MENUBAR_TABLE = "exo-menuBarTable";
 
-      addResizedHandler(new ResizedHandler()
-      {
-         public void onResized(ResizedEvent event)
-         {
-            toolbar.setWidth(getWidth() + "px");
-         }
-      });
+   public final static String ITEM = "exo-menuBarItem";
 
-   }
+   public final static String ITEM_OVER = "exo-menuBarItemOver";
+
+   public final static String ITEM_SELECTED = "exo-menuBarItemSelected";
+
+   public final static String ITEM_DISABLED = "exo-menuBarItemDisabled";
 
 }

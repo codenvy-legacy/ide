@@ -17,11 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.component;
+package org.exoplatform.ideall.client.solution.toolbar.component;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.application.command.CommandStateListener;
-import org.exoplatform.ideall.client.toolbar.GWTToolbar;
+import org.exoplatform.ideall.client.solution.command.Command;
+import org.exoplatform.ideall.client.solution.command.CommandStateListener;
+import org.exoplatform.ideall.client.solution.toolbar.GWTToolbar;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @version $
  */
 
-public class ToolbarButton extends Composite implements ToolbarItem, CommandStateListener
+public class ToolbarButton extends Composite implements ToolbarControl, CommandStateListener
 {
 
    public static interface Style
@@ -64,7 +64,7 @@ public class ToolbarButton extends Composite implements ToolbarItem, CommandStat
 
    private HandlerManager eventBus;
 
-   private AbstractCommand command;
+   private Command command;
 
    private SimplePanel simplePanel;
 
@@ -80,7 +80,7 @@ public class ToolbarButton extends Composite implements ToolbarItem, CommandStat
 
    private GWTToolbar toolbar;
 
-   public ToolbarButton(HandlerManager eventBus, AbstractCommand command, boolean rightDocking, GWTToolbar toolbar)
+   public ToolbarButton(HandlerManager eventBus, Command command, boolean rightDocking, GWTToolbar toolbar)
    {
       this.eventBus = eventBus;
       this.command = command;
@@ -108,7 +108,7 @@ public class ToolbarButton extends Composite implements ToolbarItem, CommandStat
       super.onDetach();
    }
 
-   public AbstractCommand getCommand()
+   public Command getCommand()
    {
       return command;
    }
@@ -183,6 +183,11 @@ public class ToolbarButton extends Composite implements ToolbarItem, CommandStat
       toolbar.checkDelimiters();
    };
    
+
+   public void updateCommandSelectedState(boolean selected)
+   {
+   }
+
    public boolean isVisible() {
       return command.isVisible();
    }

@@ -17,14 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
+package org.exoplatform.ideall.client.solution.menu.event;
 
-import org.exoplatform.ideall.client.solution.toolbar.GWTToolbarForm;
+import java.util.List;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.Layout;
+import org.exoplatform.ideall.client.solution.command.Command;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,24 +32,33 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version $
  */
 
-public class GWTToolbarWrapper extends Layout
+public class UpdateMainMenuEvent extends GwtEvent<UpdateMainMenuHandler>
 {
 
-   public GWTToolbarWrapper(HandlerManager eventBus)
+   public static final GwtEvent.Type<UpdateMainMenuHandler> TYPE = new GwtEvent.Type<UpdateMainMenuHandler>();
+
+   private List<Command> commands;
+
+   public UpdateMainMenuEvent(List<Command> commands)
    {
-      setHeight(32);
+      this.commands = commands;
+   }
 
-      final GWTToolbarForm toolbar = new GWTToolbarForm(eventBus);
-      addMember(toolbar);
+   public List<Command> getCommands()
+   {
+      return commands;
+   }
 
-      addResizedHandler(new ResizedHandler()
-      {
-         public void onResized(ResizedEvent event)
-         {
-            toolbar.setWidth(getWidth() + "px");
-         }
-      });
+   @Override
+   protected void dispatch(UpdateMainMenuHandler handler)
+   {
+      handler.onUpdateMainMenu(this);
+   }
 
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UpdateMainMenuHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

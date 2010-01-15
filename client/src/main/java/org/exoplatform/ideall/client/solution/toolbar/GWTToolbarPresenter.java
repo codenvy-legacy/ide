@@ -17,17 +17,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
+package org.exoplatform.ideall.client.solution.toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.application.command.DummyCommand;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ideall.client.toolbar.event.UpdateToolbarHandler;
+import org.exoplatform.ideall.client.solution.command.Command;
+import org.exoplatform.ideall.client.solution.toolbar.bean.ToolbarItem;
+import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
+import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -44,22 +43,19 @@ public class GWTToolbarPresenter implements UpdateToolbarHandler
    public interface Display
    {
 
-      void updateToolBar(List<AbstractCommand> leftDockedItems, List<AbstractCommand> rightDockedItems);
+      void updateToolBar(List<ToolbarItem> leftDockedItems, List<ToolbarItem> rightDockedItems);
 
    }
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
 
    private Display display;
 
-   public GWTToolbarPresenter(HandlerManager eventBus, ApplicationContext context)
+   public GWTToolbarPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
    }
 
@@ -69,9 +65,9 @@ public class GWTToolbarPresenter implements UpdateToolbarHandler
       handlers.addHandler(UpdateToolbarEvent.TYPE, this);
    }
 
-   private AbstractCommand getCommandById(String id)
+   private Command getCommandById(String id, ArrayList<Command> commands)
    {
-      for (AbstractCommand command : context.getCommands())
+      for (Command command : commands)
       {
          if (id.equals(command.getId()))
          {
@@ -84,11 +80,11 @@ public class GWTToolbarPresenter implements UpdateToolbarHandler
 
    public void onUpdateToolbar(UpdateToolbarEvent event)
    {
-      ArrayList<AbstractCommand> leftDockedItems = new ArrayList<AbstractCommand>();
-      ArrayList<AbstractCommand> rightDockedItems = new ArrayList<AbstractCommand>();
+      ArrayList<ToolbarItem> leftDockedItems = new ArrayList<ToolbarItem>();
+      ArrayList<ToolbarItem> rightDockedItems = new ArrayList<ToolbarItem>();
 
       boolean rightDocking = false;
-      for (String id : context.getToolBarItems())
+      for (String id : event.getToolBarItems())
       {
          if ("".equals(id))
          {
@@ -96,28 +92,44 @@ public class GWTToolbarPresenter implements UpdateToolbarHandler
          }
          else
          {
-            if (id.startsWith("---"))
+            Command command = getCommandById(id, event.getCommands());
+            if (rightDocking)
             {
-               if (rightDocking)
+               if (command.hasDelimiterBefore())
                {
-                  rightDockedItems.add(0, new DummyCommand(id));
+                  ToolbarItem delimiter = new ToolbarItem();
+                  rightDockedItems.add(0, delimiter);
                }
-               else
-               {
-                  leftDockedItems.add(new DummyCommand(id));
-               }
+
+               ToolbarItem commandItem = new ToolbarItem(command);
+               rightDockedItems.add(0, commandItem);
             }
             else
             {
-               AbstractCommand command = getCommandById(id);
-               if (rightDocking)
+               if (command.hasDelimiterBefore())
                {
-                  rightDockedItems.add(0, command);
+                  ToolbarItem delimiter = new ToolbarItem();
+                  leftDockedItems.add(delimiter);
                }
-               else
-               {
-                  leftDockedItems.add(command);
-               }
+
+               ToolbarItem commandItem = new ToolbarItem(command);
+               leftDockedItems.add(commandItem);
+            }
+
+            if (id.startsWith("---"))
+            {
+               //               if (rightDocking)
+               //               {
+               //                  rightDockedItems.add(0, new DummyCommand(id));
+               //               }
+               //               else
+               //               {
+               //                  leftDockedItems.add(new DummyCommand(id));
+               //               }
+            }
+            else
+            {
+
             }
          }
       }

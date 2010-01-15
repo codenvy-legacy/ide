@@ -17,9 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.component;
+package org.exoplatform.ideall.client.solution.toolbar.component;
 
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.solution.toolbar.style.ToolbarDelimiterStyle;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,21 +33,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @version $
  */
 
-public class ToolbarDelimiter extends Composite implements ToolbarItem
+public class ToolbarDelimiter extends Composite implements ToolbarControl
 {
-
-   public static interface Style
-   {
-
-      public final static String DELIMITER_LEFT = "exo-toolbar16Delimiter_Left";
-
-      public final static String DELIMITER_LEFT_HIDDEN = "exo-toolbar16Delimiter_LeftHidden";
-
-      public final static String DELIMITER_RIGHT = "exo-toolbar16Delimiter_Right";
-
-      public final static String DELIMITER_RIGHT_HIDDEN = "exo-toolbar16Delimiter_RightHidden";
-
-   }
 
    private SimplePanel simplePanel;
 
@@ -73,13 +61,13 @@ public class ToolbarDelimiter extends Composite implements ToolbarItem
    public void setVisible()
    {
       visible = true;
-      simplePanel.setStyleName(rightDocking ? Style.DELIMITER_RIGHT : Style.DELIMITER_LEFT);
+      simplePanel.setStyleName(rightDocking ? ToolbarDelimiterStyle.DELIMITER_RIGHT : ToolbarDelimiterStyle.DELIMITER_LEFT);
    }
 
    public void setHidden()
    {
       visible = false;
-      simplePanel.setStyleName(rightDocking ? Style.DELIMITER_RIGHT_HIDDEN : Style.DELIMITER_LEFT_HIDDEN);
+      simplePanel.setStyleName(rightDocking ? ToolbarDelimiterStyle.DELIMITER_RIGHT_HIDDEN : ToolbarDelimiterStyle.DELIMITER_LEFT_HIDDEN);
    }
 
 }

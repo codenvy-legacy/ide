@@ -17,17 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
+package org.exoplatform.ideall.client.solution.toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
-import org.exoplatform.ideall.client.application.command.DummyCommand;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.toolbar.component.ToolbarButton;
-import org.exoplatform.ideall.client.toolbar.component.ToolbarDelimiter;
-import org.exoplatform.ideall.client.toolbar.component.ToolbarItem;
+import org.exoplatform.ideall.client.solution.toolbar.bean.ToolbarItem;
+import org.exoplatform.ideall.client.solution.toolbar.component.ToolbarButton;
+import org.exoplatform.ideall.client.solution.toolbar.component.ToolbarControl;
+import org.exoplatform.ideall.client.solution.toolbar.component.ToolbarDelimiter;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -48,7 +46,7 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
    {
 
       public final static String TOOLBAR_PANEL = "exo-toolbar16Panel";
-      
+
       public final static String TOOLBAR_BUTTONS_PANEL = "exo-toolbar16ButtonsPanel";
 
       public final static String SPACER = "exo-toolbar16SpacerPanel";
@@ -60,41 +58,41 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
    private HandlerManager eventBus;
 
    private AbsolutePanel absolutePanel;
-   
+
    private AbsolutePanel buttonsPanel;
 
    private GWTToolbarPresenter presenter;
 
-   private List<ToolbarItem> leftItems;
+   private List<ToolbarControl> leftItems;
 
-   private List<ToolbarItem> rightItems;
+   private List<ToolbarControl> rightItems;
 
-   public GWTToolbarForm(HandlerManager eventBus, ApplicationContext context)
+   public GWTToolbarForm(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
       absolutePanel = new AbsolutePanel();
       initWidget(absolutePanel);
       absolutePanel.setStyleName(Style16.TOOLBAR_PANEL);
-      
+
       buttonsPanel = new AbsolutePanel();
       buttonsPanel.setStyleName(Style16.TOOLBAR_BUTTONS_PANEL);
       absolutePanel.add(buttonsPanel);
 
-      presenter = new GWTToolbarPresenter(eventBus, context);
+      presenter = new GWTToolbarPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
-   public void updateToolBar(List<AbstractCommand> leftDockedItems, List<AbstractCommand> rightDockedItems)
+   public void updateToolBar(List<ToolbarItem> leftDockedItems, List<ToolbarItem> rightDockedItems)
    {
       buttonsPanel.clear();
 
-      leftItems = new ArrayList<ToolbarItem>();
-      rightItems = new ArrayList<ToolbarItem>();
+      leftItems = new ArrayList<ToolbarControl>();
+      rightItems = new ArrayList<ToolbarControl>();
 
-      for (AbstractCommand command : leftDockedItems)
+      for (ToolbarItem toolbarItem : leftDockedItems)
       {
-         if (command instanceof DummyCommand)
+         if (toolbarItem.isDelimiter())
          {
             ToolbarDelimiter delimiter = new ToolbarDelimiter(false);
             buttonsPanel.add(delimiter);
@@ -102,7 +100,7 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
          }
          else
          {
-            ToolbarButton button = new ToolbarButton(eventBus, command, false, this);
+            ToolbarButton button = new ToolbarButton(eventBus, toolbarItem.getCommand(), false, this);
             buttonsPanel.add(button);
             leftItems.add(button);
          }
@@ -112,9 +110,9 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
       spacer.setStyleName(Style16.SPACER);
       buttonsPanel.add(spacer);
 
-      for (AbstractCommand command : rightDockedItems)
+      for (ToolbarItem toolbarItem : rightDockedItems)
       {
-         if (command instanceof DummyCommand)
+         if (toolbarItem.isDelimiter())
          {
             ToolbarDelimiter delimiter = new ToolbarDelimiter(true);
             buttonsPanel.add(delimiter);
@@ -122,7 +120,7 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
          }
          else
          {
-            ToolbarButton button = new ToolbarButton(eventBus, command, true, this);
+            ToolbarButton button = new ToolbarButton(eventBus, toolbarItem.getCommand(), true, this);
             buttonsPanel.add(button);
             rightItems.add(button);
          }
@@ -131,10 +129,10 @@ public class GWTToolbarForm extends Composite implements GWTToolbarPresenter.Dis
       checkDelimiters();
    }
 
-   public void checkDelimiters(List<ToolbarItem> items)
+   public void checkDelimiters(List<ToolbarControl> items)
    {
       boolean isPrevDelimiter = false;
-      for (ToolbarItem item : items)
+      for (ToolbarControl item : items)
       {
          if (item instanceof ToolbarDelimiter)
          {

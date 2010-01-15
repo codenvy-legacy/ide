@@ -79,7 +79,7 @@ POPUP MENU
 
 .exo-popupMenuMain
 {
-    background:#FFFFFF url(popupMenu/menu_background.png) repeat-y scroll;
+    background:#FFFFFF url(popupMenu/menu_background3.png) repeat-y scroll;
 	position:relative;
 }
 
@@ -92,6 +92,9 @@ POPUP MENU
     top:0px;
 }
 
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled,
 .exo-popupMenuIconField,
 .exo-popupMenuTitleField,
 .exo-popupMenuHotKeyField,
@@ -114,13 +117,21 @@ POPUP MENU
     font-style: normal;
 }
 
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled
+{
+	width:9px;
+	padding-right:4px;
+}
+
 .exo-popupMenuIconField,
 .exo-popupMenuIconFieldOver,
 .exo-popupMenuIconFieldDisabled
 {
 	width:23px;
 	padding-left:4px;
-	padding-right:4px; 
+	padding-right:1px; 
 }
 
 .exo-popupMenuTitleField
@@ -150,6 +161,7 @@ POPUP MENU
 	padding-right:6px;
 }
 
+.exo-popupMenuCheckFieldOver,
 .exo-popupMenuIconFieldOver,
 .exo-popupMenuTitleFieldOver,
 .exo-popupMenuHotKeyFieldOver,

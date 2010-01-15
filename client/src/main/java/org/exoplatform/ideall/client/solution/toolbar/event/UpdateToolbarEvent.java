@@ -17,7 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.event;
+package org.exoplatform.ideall.client.solution.toolbar.event;
+
+import java.util.ArrayList;
+
+import org.exoplatform.ideall.client.solution.command.Command;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -32,6 +36,26 @@ public class UpdateToolbarEvent extends GwtEvent<UpdateToolbarHandler>
 {
 
    public static final GwtEvent.Type<UpdateToolbarHandler> TYPE = new GwtEvent.Type<UpdateToolbarHandler>();
+
+   private ArrayList<String> toolBarItems;
+
+   private ArrayList<Command> commands;
+
+   public UpdateToolbarEvent(ArrayList<String> toolBarItems, ArrayList<Command> commands)
+   {
+      this.toolBarItems = toolBarItems;
+      this.commands = commands;
+   }
+
+   public ArrayList<String> getToolBarItems()
+   {
+      return toolBarItems;
+   }
+
+   public ArrayList<Command> getCommands()
+   {
+      return commands;
+   }
 
    @Override
    protected void dispatch(UpdateToolbarHandler handler)

@@ -17,9 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ideall.client.solution.menu.bean;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +26,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface UpdateToolbarHandler extends EventHandler
+public interface MenuItemStateListener
 {
 
-   void onUpdateToolbar(UpdateToolbarEvent event);
-
+   void updateMenuItemState();
+   
 }

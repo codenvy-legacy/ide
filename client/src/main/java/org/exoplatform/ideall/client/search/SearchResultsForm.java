@@ -49,21 +49,9 @@ public class SearchResultsForm extends Canvas implements SearchResultsPresenter.
       searchItemTreeGrid.setShowHeader(false);
       searchItemTreeGrid.setLeaveScrollbarGap(false);
       
-//      searchItemTreeGrid.setAutoFetchData(true);
-//      searchItemTreeGrid.setCanReorderRecords(false);
-//      searchItemTreeGrid.setCanAcceptDroppedRecords(false);
-//      searchItemTreeGrid.setCanFreezeFields(true);
-//      searchItemTreeGrid.setCanReparentNodes(false);
-//      searchItemTreeGrid.setShowOpenIcons(true);      
-//      searchItemTreeGrid.setShowRoot(true);
-      
       searchItemTreeGrid.setHeight100();
       searchItemTreeGrid.setWidth100();
       addChild(searchItemTreeGrid);
-
-      //      searchItemTreeGrid.clearRootItem();
-      //      searchItemTreeGrid.setValue(item);
-      //      searchItemTreeGrid.openAllNodes();
 
       SearchResultsPresenter presenter = new SearchResultsPresenter(eventBus, searchResult);
       presenter.bindDsplay(this);

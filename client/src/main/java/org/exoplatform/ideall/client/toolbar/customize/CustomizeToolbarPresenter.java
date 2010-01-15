@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.solution.command.Command;
+import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
-import org.exoplatform.ideall.client.toolbar.event.UpdateToolbarEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -223,7 +223,7 @@ public class CustomizeToolbarPresenter
 
       List<String> groups = new ArrayList<String>();
 
-      for (AbstractCommand command : context.getCommands())
+      for (Command command : context.getCommands())
       {
          if (command.getTitle() != null)
          {
@@ -250,9 +250,9 @@ public class CustomizeToolbarPresenter
       display.getCommandItemListGrid().setValue(commands);
    }
 
-   private AbstractCommand getCommandById(String id)
+   private Command getCommandById(String id)
    {
-      for (AbstractCommand command : context.getCommands())
+      for (Command command : context.getCommands())
       {
          if (id.equals(command.getId()))
          {
@@ -281,7 +281,7 @@ public class CustomizeToolbarPresenter
          }
          else
          {
-            AbstractCommand command = getCommandById(toolbarItem);
+            Command command = getCommandById(toolbarItem);
             ToolbarItem item = new ToolbarItem(Type.COMMAND, toolbarItem, command);
             toolbarItems.add(item);
          }
@@ -477,7 +477,7 @@ public class CustomizeToolbarPresenter
          }
       }
 
-      eventBus.fireEvent(new UpdateToolbarEvent());
+      eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
    }
 
    private void applyChanges()

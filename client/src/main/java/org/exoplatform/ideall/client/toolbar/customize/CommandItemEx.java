@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.ideall.client.application.command.AbstractCommand;
+import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,11 +33,11 @@ public class CommandItemEx
 
    private String title;
 
-   private AbstractCommand command;
+   private Command command;
 
    private boolean group = false;
 
-   public CommandItemEx(String title, AbstractCommand command)
+   public CommandItemEx(String title, Command command)
    {
       this.title = title;
       this.command = command;
@@ -54,7 +54,7 @@ public class CommandItemEx
       return title;
    }
 
-   public AbstractCommand getCommand()
+   public Command getCommand()
    {
       return command;
    }

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar;
+package org.exoplatform.ideall.client.solution.toolbar.style;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,9 +26,7 @@ package org.exoplatform.ideall.client.toolbar;
  * @version $
  */
 
-public interface GWTToolbar
+public interface ToolbarStyle
 {
 
-   void checkDelimiters();
-   
 }

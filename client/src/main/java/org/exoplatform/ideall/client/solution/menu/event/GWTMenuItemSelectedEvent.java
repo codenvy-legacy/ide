@@ -17,7 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.component;
+package org.exoplatform.ideall.client.solution.menu.event;
+
+import org.exoplatform.ideall.client.solution.command.Command;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,7 +30,33 @@ package org.exoplatform.ideall.client.toolbar.component;
  * @version $
  */
 
-public interface ToolbarItem
+public class GWTMenuItemSelectedEvent extends GwtEvent<GWTMenuItemSelectedHandler>
 {
+
+   public static final GwtEvent.Type<GWTMenuItemSelectedHandler> TYPE = new GwtEvent.Type<GWTMenuItemSelectedHandler>();
+
+   private Command command;
+
+   public GWTMenuItemSelectedEvent(Command command)
+   {
+      this.command = command;
+   }
+
+   public Command getCommand()
+   {
+      return command;
+   }
+
+   @Override
+   protected void dispatch(GWTMenuItemSelectedHandler handler)
+   {
+      handler.onGWTMenuItemSelected(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GWTMenuItemSelectedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }
