@@ -96,7 +96,6 @@ public class GWTMenuBarPresenter implements UpdateMainMenuHandler, GWTMenuItemSe
       if (workingId.indexOf("/") < 0)
       {
          // this is menu bar item
-         System.out.println("this is menu bar item!");
          MenuBarItem item = new MenuBarItem(workingId, command);
          menuBarItems.put(workingId, item);
       }
@@ -155,14 +154,9 @@ public class GWTMenuBarPresenter implements UpdateMainMenuHandler, GWTMenuItemSe
 
    public void onGWTMenuItemSelected(GWTMenuItemSelectedEvent event)
    {
-      System.out.println("GWTMenuBarPresenter.onGWTMenuItemSelected()");
       display.closeMenu();
-
-      System.out.println("event.getCommand() " + event.getCommand());
-
       if (event.getCommand() != null && event.getCommand().getEvent() != null)
       {
-         System.out.println("firing event");
          eventBus.fireEvent(event.getCommand().getEvent());
       }
    }

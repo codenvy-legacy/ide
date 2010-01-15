@@ -34,9 +34,13 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewCSSFileCommand extends SimpleCommand
 {
 
+   private static final String ID = "File/New/CSS file";
+   
+   private static final String TITLE = "Create New CSS File";
+
    public NewCSSFileCommand()
    {
-      super("File/New/Create CSS file", "Create CSS File", Images.FileTypes.CSS, new CreateNewFileEvent(
+      super(ID, TITLE, Images.FileTypes.CSS, new CreateNewFileEvent(
          MimeType.TEXT_CSS));
    }
 

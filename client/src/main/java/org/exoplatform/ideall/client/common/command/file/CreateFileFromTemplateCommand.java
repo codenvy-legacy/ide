@@ -32,10 +32,14 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
 
 public class CreateFileFromTemplateCommand extends SimpleCommand
 {
+   
+   private final static String ID = "File/New File From Template...";
+   
+   private final static String TITLE = "Create New File From Template...";
 
    public CreateFileFromTemplateCommand()
    {
-      super("File/Create new file from template...", "Create New File From Template...", Images.MainMenu.TEMPLATES,
+      super(ID, TITLE, Images.MainMenu.TEMPLATES,
          new CreateFileFromTemplateEvent());
    }
 

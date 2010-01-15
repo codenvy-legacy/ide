@@ -139,7 +139,6 @@ public class GWTMenuBar extends Composite implements GWTMenuBarPresenter.Display
       while (iterator.hasNext())
       {
          String title = iterator.next();
-         System.out.println("checking > " + title);
          MenuBarItem item = menuBarItems.get(title);
          item.updateMenuItemState();
       }
@@ -224,9 +223,6 @@ public class GWTMenuBar extends Composite implements GWTMenuBarPresenter.Display
       int y = selectedElement.getAbsoluteTop();
 
       String menuBarTitle = DOM.getElementAttribute(selectedElement, TITLE_PROPERTY);
-
-      System.out.println("showing popup for " + menuBarTitle);
-
       MenuBarItem menuBarItem = menuBarItems.get(menuBarTitle);
       LinkedHashMap<String, MenuItem> filteredItems = PopupItemsFilter.getFilteredItems(menuBarItem.getChildren());
       visiblePopup = new GWTPopupMenu(eventBus, filteredItems, lockLayer, null);

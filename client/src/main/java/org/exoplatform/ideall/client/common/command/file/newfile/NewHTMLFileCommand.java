@@ -34,9 +34,13 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewHTMLFileCommand extends SimpleCommand
 {
 
+   private static final String ID = "File/New/HTML file";
+   
+   private static final String TITLE = "Create New HTML File";
+
    public NewHTMLFileCommand()
    {
-      super("File/New/Create HTML file", "Create New HTML File", Images.FileTypes.HTML, new CreateNewFileEvent(
+      super(ID, TITLE, Images.FileTypes.HTML, new CreateNewFileEvent(
          MimeType.TEXT_HTML));
    }
 

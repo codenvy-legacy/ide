@@ -72,6 +72,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -112,9 +113,9 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       void redoEditing(String path);
 
       boolean hasUndoChanges(String path);
-      
+
       boolean hasRedoChanges(String path);
-      
+
       void formatFile(String path);
 
       HasValue<Boolean> getShowLineNumbersField();
@@ -177,10 +178,11 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          display.addTab(file);
       }
 
-      if (context.getOpenedFiles().values().size() != 0) {
-         display.enableShowLineNumbers();    // fixed bug [WBT-305] "'Line Numbers' checkbox is disabled when the File Tab opened from the user settings."
+      if (context.getOpenedFiles().values().size() != 0)
+      {
+         display.enableShowLineNumbers(); // fixed bug [WBT-305] "'Line Numbers' checkbox is disabled when the File Tab opened from the user settings."
       }
-      
+
       registerHandlers();
 
       if (context.getActiveFile() != null)
@@ -206,19 +208,31 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
    }
 
-   private void setFileAsActive(final File file)
+   private class UpdateActiveFileTimer extends Timer
+   {
+
+      private File file;
+
+      public UpdateActiveFileTimer(File file)
+      {
+         this.file = file;
+      }
+
+      @Override
+      public void run()
+      {
+         String path = file.getPath();
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.hasUndoChanges(path), display
+            .hasRedoChanges(path)));
+      }
+
+   }
+
+   private void setFileAsActive(File file)
    {
       display.selectTab(file.getPath());
-
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            String path = file.getPath();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.hasUndoChanges(path), display.hasRedoChanges(path)));
-         }
-      }.schedule(500);
+      new UpdateActiveFileTimer(file).schedule(1000);
+      new UpdateActiveFileTimer(file).schedule(500);
    }
 
    private void registerHandlers()
@@ -429,12 +443,12 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
    public void onUndoEditing(UndoEditingEvent event)
    {
-      display.undoEditing(context.getActiveFile().getPath()); 
+      display.undoEditing(context.getActiveFile().getPath());
    }
 
    public void onRedoEditing(RedoEditingEvent event)
    {
-      display.redoEditing(context.getActiveFile().getPath()); 
+      display.redoEditing(context.getActiveFile().getPath());
    }
 
    /*

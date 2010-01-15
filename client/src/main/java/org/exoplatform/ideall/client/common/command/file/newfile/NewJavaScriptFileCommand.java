@@ -33,10 +33,14 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 public class NewJavaScriptFileCommand extends SimpleCommand
 {
+   
+   private static final String ID = "File/New/Java Script file";
+   
+   private static final String TITLE = "Create New Java Script File";
 
    public NewJavaScriptFileCommand()
    {
-      super("File/New/Create Java Script file", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
+      super(ID, TITLE, Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
    }
 
    @Override

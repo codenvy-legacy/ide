@@ -145,12 +145,10 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
       if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
       {
-         System.out.println(">> preview gadget...");
          previewGadget();
       }
       else
       {
-         System.out.println(">> preview html...");
          display.showPreview(file.getPath());
       }
    }

@@ -43,7 +43,7 @@ public class CommandItem implements MenuItem, CommandStateListener, MenuItemStat
    private Element element;
 
    private LinkedHashMap<String, MenuItem> children = new LinkedHashMap<String, MenuItem>();
-   
+
    private MenuItemStateListener menuItemStateListener;
 
    public CommandItem(String title, Command command, MenuItemStateListener menuItemStateListener)
@@ -76,18 +76,15 @@ public class CommandItem implements MenuItem, CommandStateListener, MenuItemStat
 
    public void updateCommandEnabling(boolean enabled)
    {
-      System.out.println("CommandItem.updateCommandEnabling() " + command.getId());
       menuItemStateListener.updateMenuItemState();
    }
 
    public void updateCommandSelectedState(boolean selected)
    {
-      System.out.println("CommandItem.updateCommandSelectedState()");
    }
 
    public void updateCommandVisibility(boolean visible)
    {
-      System.out.println("CommandItem.updateCommandVisibility()");
       menuItemStateListener.updateMenuItemState();
    }
 

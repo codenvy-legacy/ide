@@ -33,10 +33,14 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 public class NewXMLFileCommand extends SimpleCommand
 {
+   
+   private final static String ID = "File/New/XML File";
+   
+   private final static String TITLE = "Create New XML File"; 
 
    public NewXMLFileCommand()
    {
-      super("File/New/Create XML File", "Create New XML File", Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML));
+      super(ID, TITLE, Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML));
    }
 
    @Override

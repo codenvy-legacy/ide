@@ -25,6 +25,8 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -48,6 +50,8 @@ public class ViewItemPropertiesCommand extends SimpleCommand implements EditorAc
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      Window.setTitle("file > " + event.getFile());
+      
       if (event.getFile() == null)
       {
          setVisible(false);

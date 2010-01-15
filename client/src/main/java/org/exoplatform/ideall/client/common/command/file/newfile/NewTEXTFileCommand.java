@@ -33,10 +33,14 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 public class NewTEXTFileCommand extends SimpleCommand
 {
+   
+   private final static String ID = "File/New/TEXT file";
+   
+   private final static String TITLE = "Create New Text File";
 
    public NewTEXTFileCommand()
    {
-      super("File/New/Create TEXT file", "Create New Text File", Images.FileTypes.TXT, new CreateNewFileEvent(
+      super(ID, TITLE, Images.FileTypes.TXT, new CreateNewFileEvent(
          MimeType.TEXT_PLAIN));
    }
 

@@ -98,11 +98,10 @@ public class MenuBarItem implements MenuItem, CommandStateListener, MenuItemStat
 
    public void updateMenuItemState()
    {
-      System.out.println("updating menu bar item state");
       boolean enabled = getPopupItemsState(children);
       updateCommandEnabling(enabled);
    }
-   
+
    /**
     * Calculating the count of visible children in menu bar item
     * 
@@ -118,8 +117,6 @@ public class MenuBarItem implements MenuItem, CommandStateListener, MenuItemStat
       {
          String title = iterator.next();
          MenuItem menuItem = menuItems.get(title);
-         System.out.println("menu item > " + menuItem);
-
          if (menuItem instanceof CommandItem)
          {
             allItems++;

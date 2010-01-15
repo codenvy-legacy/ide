@@ -33,9 +33,13 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 public class UploadFileCommand extends SimpleCommand
 {
 
+   private final static String ID = "File/Upload File...";
+   
+   private final static String TITLE = "Upload File...";
+   
    public UploadFileCommand()
    {
-      super("File/Upload file...", "Upload File...", Images.MainMenu.UPLOAD, new UploadFileEvent());
+      super(ID, TITLE, Images.MainMenu.UPLOAD, new UploadFileEvent());
    }
 
    @Override

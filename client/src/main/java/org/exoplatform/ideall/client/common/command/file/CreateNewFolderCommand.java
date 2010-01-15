@@ -33,9 +33,13 @@ import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
 public class CreateNewFolderCommand extends SimpleCommand
 {
 
+   private final static String ID = "File/Create Folder...";
+   
+   private final static String TITLE = "Create New Folder...";
+   
    public CreateNewFolderCommand()
    {
-      super("File/Create folder...", "Create New Folder...", Images.MainMenu.NEW_FOLDER, new CreateFolderEvent());
+      super(ID, TITLE, Images.MainMenu.NEW_FOLDER, new CreateFolderEvent());
    }
 
    @Override

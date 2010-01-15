@@ -34,9 +34,13 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewGroovyFileCommand extends SimpleCommand
 {
 
+   private static final String ID = "File/New/GROOVY file";
+   
+   private static final String TITLE = "Create New Groovy File";
+
    public NewGroovyFileCommand()
    {
-      super("File/New/Create GROOVY file", "Create New Groovy File", Images.FileTypes.GROOVY, new CreateNewFileEvent(
+      super(ID, TITLE, Images.FileTypes.GROOVY, new CreateNewFileEvent(
          MimeType.SCRIPT_GROOVY));
    }
 
