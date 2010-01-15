@@ -16,7 +16,7 @@
     <org.exoplatform.kernel.version>2.2.0-Beta05</org.exoplatform.kernel.version>
     <jcr.version>1.12.0-Beta04</jcr.version>
     <ws.version>2.1.0-Beta04</ws.version>
-    <shindig.version>SNAPSHOT-r790473</shindig.version>
+    <shindig.version>1.1-BETA5-incubating</shindig.version>
     <source.url>http://svn.exoplatform.org/exo-int/IDEall</source.url>
     <wiki.url>http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29</wiki.url>
   </properties>
@@ -291,7 +291,7 @@ source : "${source.url}"
         </dependency>
 
 
-	<dependency>
+	<!--dependency>
          <groupId>org.exoplatform.portal</groupId>
          <artifactId>exo.portal.gadgets-core</artifactId>
          <version>3.0.0-Beta04</version>
@@ -301,7 +301,8 @@ source : "${source.url}"
          <groupId>org.exoplatform.portal</groupId>
          <artifactId>exo.portal.component.portal</artifactId>
          <version>3.0.0-Beta04</version>
-      </dependency>
+      </dependency-->
+      
       <dependency>
          <groupId>log4j</groupId>
          <artifactId>log4j</artifactId>
