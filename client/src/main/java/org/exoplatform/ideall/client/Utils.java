@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ideall.client;
 
-import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS.
