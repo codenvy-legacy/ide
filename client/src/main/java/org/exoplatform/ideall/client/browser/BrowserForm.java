@@ -42,7 +42,6 @@ public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.
 
    private ApplicationContext context;
 
-   
    private BrowserPresenter presenter;
 
    private Handlers handlers;
