@@ -74,6 +74,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    InitializeApplicationHandler
 {
 
+   
    interface Display
    {
 
