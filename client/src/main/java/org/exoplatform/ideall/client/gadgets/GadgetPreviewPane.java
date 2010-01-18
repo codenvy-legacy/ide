@@ -39,7 +39,7 @@ public class GadgetPreviewPane extends TabPanel
     */
    public static final String title = "Gadget Preview";
    
-   private String string;
+   private String meta;
 
    /**
     * 
@@ -53,8 +53,7 @@ public class GadgetPreviewPane extends TabPanel
    public GadgetPreviewPane(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
    {
       super(eventBus, true);
-      string = getGadgetScript(gadgetMetadata);
-//      setGadgetMetadata(getGadgetScript(gadgetMetadata), Configuration.getInstance().getGadgetServer());
+      meta = parseMetadata(gadgetMetadata);
    }
 
    @Override
@@ -67,7 +66,7 @@ public class GadgetPreviewPane extends TabPanel
     * @param metadata
     * @return
     */
-   private String getGadgetScript(GadgetMetadata metadata)
+   private String parseMetadata(GadgetMetadata metadata)
    {
       String src =
          "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
@@ -97,7 +96,7 @@ public class GadgetPreviewPane extends TabPanel
     */
    private void showGadget()
    {
-      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +string);
+      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
