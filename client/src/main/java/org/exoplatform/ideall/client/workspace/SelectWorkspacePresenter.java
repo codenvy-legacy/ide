@@ -30,7 +30,10 @@ import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -53,6 +56,8 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
       HasValue<JCRConfigurationItem> getJCRItemsTreeGrid();
 
       HasSelectionHandlers<JCRConfigurationItem> getJCRItemsTreeGridSelectable();
+
+      HasDoubleClickHandlers getJCRItemsTreeGridClickable();
 
       void enableJCRItemsTreeGrid();
 
@@ -101,7 +106,7 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
       {
          public void onClick(ClickEvent event)
          {
-            save();
+            selectWorkspace();
          }
       });
 
@@ -118,6 +123,14 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
          public void onSelection(SelectionEvent<JCRConfigurationItem> event)
          {
             onItemSelected(event.getSelectedItem());
+         }
+      });
+
+      display.getJCRItemsTreeGridClickable().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            selectWorkspace();
          }
       });
 
@@ -154,9 +167,14 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
       }
    }
 
-   protected void save()
+   protected void selectWorkspace()
    {
       if (selectedItem == null)
+      {
+         return;
+      }
+
+      if (!(selectedItem.getEntry() instanceof Workspace))
       {
          return;
       }
@@ -177,7 +195,7 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
                {
                   context.getPreloadFiles().clear();
                   context.setSelectedItem(null);
-                  
+
                   context.setRepository(repository.getName());
                   context.setWorkspace(workspace.getName());
                   context.setInitialized(true);

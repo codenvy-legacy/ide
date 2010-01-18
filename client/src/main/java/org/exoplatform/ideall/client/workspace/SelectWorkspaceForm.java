@@ -22,6 +22,7 @@ import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
@@ -172,6 +173,11 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    public void enableOkButton()
    {
       okButton.enable();
+   }
+
+   public HasDoubleClickHandlers getJCRItemsTreeGridClickable()
+   {
+      return jcrItemsTreeGrid;
    }
 
 }
