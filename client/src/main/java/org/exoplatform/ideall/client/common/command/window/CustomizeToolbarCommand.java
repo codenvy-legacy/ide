@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
-import org.exoplatform.ideall.client.toolbar.event.CustomizeToolbarEvent;
+import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
 /**
  * Created by The eXo Platform SAS .
