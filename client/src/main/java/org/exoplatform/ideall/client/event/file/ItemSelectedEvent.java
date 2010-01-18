@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.browser.event;
+package org.exoplatform.ideall.client.event.file;
 
 import org.exoplatform.ideall.client.model.Item;
 

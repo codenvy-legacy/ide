@@ -20,15 +20,23 @@
 package org.exoplatform.ideall.client.groovy;
 
 import org.exoplatform.gwt.commons.exceptions.ServerException;
+import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
 import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputHandler;
+import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
+import org.exoplatform.ideall.client.groovy.event.SetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptHandler;
+import org.exoplatform.ideall.client.groovy.event.UnsetAutoloadEvent;
+import org.exoplatform.ideall.client.groovy.event.UnsetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
+import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Properties;
+import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
@@ -51,7 +59,7 @@ import org.exoplatform.ideall.client.operation.output.OutputMessage;
 public class GroovyActionsComponent extends AbstractApplicationComponent implements ValidateGroosyScriptHandler,
    DeployGroovyScriptHandler, UndeployGroovyScriptHandler, PreviewGroovyOutputHandler,
    GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler, GroovyUndeployResultReceivedHandler,
-   RestServiceOutputReceivedHandler
+   RestServiceOutputReceivedHandler, SetAutoloadHandler, UnsetAutoloadHandler
 {
 
    public GroovyActionsComponent()
@@ -73,6 +81,9 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
       handlers.addHandler(PreviewGroovyOutputEvent.TYPE, this);
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
+
+      handlers.addHandler(SetAutoloadEvent.TYPE, this);
+      handlers.addHandler(UnsetAutoloadEvent.TYPE, this);
    }
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
@@ -190,11 +201,41 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       else
       {
          ServerException exception = (ServerException)event.getException();
-         String message = "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;" + exception.getStatusText() + "<hr>" + exception.getMessage();
-         
+         String message =
+            "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
+               + exception.getStatusText() + "<hr>" + exception.getMessage();
+
          OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
          eventBus.fireEvent(errorEvent);
       }
+   }
+
+   public void onSetAutoload(SetAutoloadEvent event)
+   {
+      System.out.println("setting autoload");
+
+      updateAutoloadPropertyValue(true);
+   }
+
+   public void onUnsetAutoload(UnsetAutoloadEvent event)
+   {
+      System.out.println("unsetting autoload");
+
+      updateAutoloadPropertyValue(false);
+
+   }
+
+   private void updateAutoloadPropertyValue(boolean value)
+   {
+      File file = context.getActiveFile();
+      Property jcrContentProperty =
+         GroovyPropertyUtil.getProperty(file.getProperties(), Properties.JCRProperties.JCR_CONTENT);
+      Property autoloadProperty =
+         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), Properties.ExoProperties.EXO_AUTOLOAD);
+      autoloadProperty.setValue("" + value);
+
+      DataService.getInstance().saveProperties(file);
+
    }
 
 }

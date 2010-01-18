@@ -33,7 +33,6 @@ import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
-import org.exoplatform.ideall.client.browser.event.ItemSelectedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -48,6 +47,7 @@ import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.UndoEditingHandler;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
+import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -72,7 +72,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -429,7 +428,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
                else
                {
                   file.setContent(display.getTabContent(file.getPath()));
-                  DataService.getInstance().saveFileContent(file, file.getPath());
+                  eventBus.fireEvent(new SaveFileEvent());
                }
             }
             else
@@ -456,6 +455,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
     */
    private void updateTabTitle(String path)
    {
+      System.out.println("updating tab title for > " + path);
       display.updateTabTitle(path);
    }
 
@@ -472,41 +472,29 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       {
          File currentOpenedFile = context.getActiveFile();
          File savedFile = event.getFile();
-         if (currentOpenedFile.equals(savedFile))
+
+         System.out.println("saved file path > " + savedFile.getPath());
+         System.out.println("new file path > " + event.getPath());
+
+         System.out.println("content changed > " + savedFile.isContentChanged());
+         System.out.println("properties changed > " + savedFile.isPropertiesChanged());
+
+         if (event.isSaveAs() || event.isNewFile())
          {
-            updateTabTitle(savedFile.getPath());
-            return;
+            savedFile.setPath(event.getPath());
+            context.getOpenedFiles().remove(context.getActiveFile().getPath());
+            context.setActiveFile(savedFile);
+            context.getOpenedFiles().put(savedFile.getPath(), savedFile);
+            display.relocateFile(currentOpenedFile, savedFile);
          }
-         else
-         {
-            if (event.isNewFile() || event.isSaveAs())
-            {
-               savedFile.setPath(event.getPath());
-               context.getOpenedFiles().remove(context.getActiveFile().getPath());
-               context.setActiveFile(savedFile);
-               context.getOpenedFiles().put(savedFile.getPath(), savedFile);
 
-               display.relocateFile(currentOpenedFile, savedFile);
-
-               updateTabTitle(savedFile.getPath());
-
-               if (savedFile.isPropertiesChanged())
-               {
-                  DataService.getInstance().saveProperties(savedFile);
-               }
-            }
-            else
-            {
-               updateTabTitle(savedFile.getPath());
-            }
-
-         }
+         updateTabTitle(savedFile.getPath());
       }
 
-      if (event.isNewFile())
-      {
-         DataService.getInstance().getProperties(event.getFile());
-      }
+      //      if (event.isNewFile())
+      //      {
+      //         DataService.getInstance().getProperties(event.getFile());
+      //      }
 
    }
 
@@ -525,12 +513,18 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          return;
       }
 
-      display.updateTabTitle(event.getItem().getPath());
+      System.out.println("updating item title after saving of properties....");
+
+      System.out.println("content changed > " + ((File)event.getItem()).isContentChanged());
+      System.out.println("properties changed > " + event.getItem().isPropertiesChanged());
+
+      updateTabTitle(event.getItem().getPath());
+
    }
 
    public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
    {
-      display.updateTabTitle(event.getFile().getPath());
+      updateTabTitle(event.getFile().getPath());
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

@@ -21,8 +21,8 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
-import org.exoplatform.ideall.client.browser.event.ItemSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.model.Workspace;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;

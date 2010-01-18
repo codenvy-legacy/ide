@@ -50,6 +50,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
    public void unmarshal(String body)
    {
+      System.out.println("-------------------------------------------------");
+      
       String context = Configuration.getInstance().getContext() + "/jcr";
       if (context.endsWith("/"))
       {
@@ -83,6 +85,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
          {
             path = path.substring(0, path.length() - 1);
          }
+         
+         System.out.println(">> " + path);
 
          Item item;
          if (child.isCollection())

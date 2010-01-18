@@ -17,7 +17,6 @@
 package org.exoplatform.ideall.client.search;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.event.BrowserFormSelectedEvent;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
@@ -85,7 +84,9 @@ public class SearchResultsPresenter
       {
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new BrowserFormSelectedEvent());
+            //
+            //eventBus.fireEvent(new BrowserFormSelectedEvent());
+            System.out.println("search panel selected!!!!!!!!!");
          }
       });
 

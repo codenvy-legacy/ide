@@ -18,12 +18,12 @@ package org.exoplatform.ideall.client.application;
 
 import org.exoplatform.gwt.commons.component.event.LockIFrameElementsEvent;
 import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
-import org.exoplatform.ideall.client.browser.NavigationForm;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.ClearFocusHandler;
 import org.exoplatform.ideall.client.menu.GWTMenuWrapper;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.statusbar.StatusBarForm;
 import org.exoplatform.ideall.client.toolbar.GWTToolbarWrapper;

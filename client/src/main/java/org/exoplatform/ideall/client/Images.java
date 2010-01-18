@@ -86,6 +86,10 @@ public interface Images
       public static final String UNDEPLOY = imageUrl + "menu/groovy/undeploy.png";
 
       public static final String GROOVY_OUTPUT = imageUrl + "menu/groovy/output.png";
+      
+      public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload1.png";
+      
+      public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload1.png";
 
    }
 

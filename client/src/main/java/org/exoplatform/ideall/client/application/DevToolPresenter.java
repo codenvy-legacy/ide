@@ -104,7 +104,8 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        */
       for (Command command : context.getCommands())
       {
-         if (command instanceof SimpleCommand) {
+         if (command instanceof SimpleCommand)
+         {
             ((SimpleCommand)command).initialize(eventBus, context);
          }
       }
@@ -165,9 +166,9 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
          context.setWorkspace(Configuration.getInstance().getDefaultWorkspaceName());
       }
 
-      context.getToolBarItems().clear();
-      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
-      
+      //      context.getToolBarItems().clear();
+      //      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
+
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
       new WorkspaceChecker(eventBus, context);
    }

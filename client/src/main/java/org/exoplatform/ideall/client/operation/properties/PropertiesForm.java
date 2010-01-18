@@ -20,7 +20,6 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.operation.TabPanel;
 import org.exoplatform.ideall.client.operation.properties.propertyeditor.DefaultPropertyEditor;
-import org.exoplatform.ideall.client.operation.properties.propertyeditor.ExoGroovyResoursePropertyEditor;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Alignment;
@@ -64,14 +63,7 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
       }
       else
       {
-         if (file.getJcrContentNodeType().equals("exo:groovyResourceContainer"))
-         {
-            content = new ExoGroovyResoursePropertyEditor(eventBus, file);
-         }
-         else
-         {
-            content = new DefaultPropertyEditor(file);
-         }
+         content = new DefaultPropertyEditor(file);
       }
 
       addMember(content);
@@ -80,9 +72,7 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
    @Override
    public String getTitle()
    {
-      return "<span>" 
-         + Canvas.imgHTML(Images.PropertiesPanel.ICON) 
-         + "&nbsp;Properties</span>";
+      return "<span>" + Canvas.imgHTML(Images.PropertiesPanel.ICON) + "&nbsp;Properties</span>";
    }
 
    @Override

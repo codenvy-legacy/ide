@@ -24,10 +24,9 @@ import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserFormSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
@@ -70,7 +69,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class NavigatorPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
+public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
    InitializeApplicationHandler
 {
@@ -100,7 +99,7 @@ public class NavigatorPresenter implements FolderCreatedHandler, ItemDeletedHand
 
    private String folderToUpdate;
 
-   public NavigatorPresenter(HandlerManager eventBus, ApplicationContext context)
+   public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -145,7 +144,8 @@ public class NavigatorPresenter implements FolderCreatedHandler, ItemDeletedHand
       {
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new BrowserFormSelectedEvent());
+            //eventBus.fireEvent(new BrowserFormSelectedEvent());
+            System.out.println("navigator panel selected");
          }
       });
    }
@@ -246,6 +246,12 @@ public class NavigatorPresenter implements FolderCreatedHandler, ItemDeletedHand
    public void onFolderContentReceivedEx(FolderContentReceivedEvent event)
    {
       Collections.sort(event.getFolder().getChildren(), comparator);
+
+      for (Item i : event.getFolder().getChildren())
+      {
+         System.out.println("item [" + i.getPath() + "]");
+      }
+
       display.getBrowserTree().setValue(event.getFolder());
 
       if (folderToUpdate != null)

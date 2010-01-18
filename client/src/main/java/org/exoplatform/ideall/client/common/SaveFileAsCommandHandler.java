@@ -90,8 +90,14 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
             newFile.setContentType(file.getContentType());
             newFile.setJcrContentNodeType(file.getJcrContentNodeType());
             newFile.setNewFile(true);
-            newFile.getProperties().addAll(file.getProperties());
-            newFile.setPropertiesChanged(true);
+            if (file.isNewFile())
+            {
+            }
+            else
+            {
+               newFile.getProperties().addAll(file.getProperties());
+               newFile.setPropertiesChanged(true);
+            }
             newFile.setIcon(file.getIcon());
             DataService.getInstance().saveFileContent(newFile, pathToSave);
          }
@@ -112,14 +118,30 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (event.isSaveAs())
+      System.out.println("save as: " + event.isSaveAs());
+      if (event.isNewFile())
       {
-         event.getFile().setPath(event.getPath());
-         DataService.getInstance().saveProperties(event.getFile());
+         handlers.removeHandlers();
+         DataService.getInstance().getProperties(event.getFile());
       }
       else
       {
-         handlers.removeHandlers();
+         if (event.isSaveAs())
+         {
+            event.getFile().setPath(event.getPath());
+            DataService.getInstance().saveProperties(event.getFile());
+         }
+         else
+         {
+            if (event.getFile().isPropertiesChanged())
+            {
+               DataService.getInstance().saveProperties(event.getFile());
+            }
+            else
+            {
+               handlers.removeHandlers();
+            }
+         }
       }
    }
 

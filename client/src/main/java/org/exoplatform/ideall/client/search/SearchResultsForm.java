@@ -19,12 +19,13 @@ package org.exoplatform.ideall.client.search;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.navigation.SelectableTabPanel;
+import org.exoplatform.ideall.client.search.event.SearchPanelSelectedEvent;
 
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 /**
@@ -32,23 +33,24 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsForm extends Canvas implements SearchResultsPresenter.Display
+public class SearchResultsForm extends SelectableTabPanel implements SearchResultsPresenter.Display
 {
+
+   public static final String TITLE = "Search";
 
    private ItemTreeGrid<Item> searchItemTreeGrid;
 
-   private HandlerManager eventBus;
-   
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
 
    public SearchResultsForm(HandlerManager eventBus, Folder searchResult)
    {
-      this.eventBus = eventBus;
+      super(eventBus, new SearchPanelSelectedEvent());
+
       searchItemTreeGrid = new ItemTreeGrid<Item>(true);
       searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
       searchItemTreeGrid.setShowHeader(false);
       searchItemTreeGrid.setLeaveScrollbarGap(false);
-      
+
       searchItemTreeGrid.setHeight100();
       searchItemTreeGrid.setWidth100();
       addChild(searchItemTreeGrid);

@@ -42,25 +42,11 @@ public abstract class PropertyEditor extends Layout
       propertiesForm.setTitleWidth(200);
       propertiesForm.setLayoutAlign(VerticalAlignment.TOP);
       propertiesForm.setLayoutAlign(Alignment.LEFT);
-      //propertiesForm.setWidth100();
-      //propertiesForm.setColWidths("50%", "50%");
-      //propertiesForm.setAutoWidth();
-
-      //propertiesForm.setCellBorder(1);
 
       addMember(propertiesForm);
    }
 
    public abstract DynamicForm getPropertiesForm(Collection<Property> properties);
-
-   //   protected TextItem getTextItem(String name, String value)
-   //   {
-   //      TextItem textItem = new TextItem();
-   //      textItem.setWrapTitle(false);
-   //      textItem.setTitle(name);
-   //      textItem.setValue(value);
-   //      return textItem;
-   //   }
 
    protected CheckboxItem getBooleanItem(String name, boolean value, boolean isReadOnly)
    {
@@ -69,7 +55,6 @@ public abstract class PropertyEditor extends Layout
       booleanItem.setTitle("<b>" + name + "</b>");
       booleanItem.setValue(value);
       booleanItem.setDisabled(isReadOnly);
-      //booleanItem.setWidth("100%");
       booleanItem.setLabelAsTitle(true);
       return booleanItem;
    }
@@ -80,7 +65,6 @@ public abstract class PropertyEditor extends Layout
       staticTextItem.setWrapTitle(false);
       staticTextItem.setTitle("<b>" + name + "</b>");
       staticTextItem.setValue(value);
-      //staticTextItem.setWidth("100%");
       staticTextItem.setTitleAlign(Alignment.RIGHT);
 
       staticTextItem.setWrap(false);

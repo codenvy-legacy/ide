@@ -18,9 +18,11 @@
 package org.exoplatform.ideall.client.browser;
 
 import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.navigation.SelectableTabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
@@ -30,29 +32,27 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.layout.VLayout;
 
-public class NavigatorForm extends VLayout implements NavigatorPresenter.Display
+public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.Display
 {
+
+   public static final String TITLE = "Workspace";
 
    private ItemTreeGrid<Item> treeGridEx;
 
-   private HandlerManager eventBus;
-
    private ApplicationContext context;
 
-   private NavigatorPresenter presenter;
+   private BrowserPresenter presenter;
 
    private Handlers handlers;
 
-   public NavigatorForm(HandlerManager eventBus, ApplicationContext context)
+   public BrowserForm(HandlerManager eventBus, ApplicationContext context)
    {
-      this.eventBus = eventBus;
+      super(eventBus, new BrowserPanelSelectedEvent());
+
       this.context = context;
 
       handlers = new Handlers(eventBus);
-
-      setMembersMargin(3);
 
       treeGridEx = new ItemTreeGrid<Item>();
       treeGridEx.setShowHeader(false);
@@ -64,7 +64,7 @@ public class NavigatorForm extends VLayout implements NavigatorPresenter.Display
       treeGridEx.setWidth100();
       addMember(treeGridEx);
 
-      presenter = new NavigatorPresenter(eventBus, context);
+      presenter = new BrowserPresenter(eventBus, context);
       presenter.bindDisplay(this);
 
       addMouseDownHandler(new MouseDownHandler()

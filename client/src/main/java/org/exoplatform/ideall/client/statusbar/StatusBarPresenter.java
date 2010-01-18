@@ -3,8 +3,8 @@ package org.exoplatform.ideall.client.statusbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.browser.event.ItemSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
 import org.exoplatform.ideall.client.model.File;
 
 import com.google.gwt.event.shared.HandlerManager;

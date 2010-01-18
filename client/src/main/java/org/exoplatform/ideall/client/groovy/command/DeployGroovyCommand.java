@@ -35,10 +35,14 @@ import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 
 public class DeployGroovyCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
+   
+   private static final String ID = "Run/Deploy";
+   
+   private static final String TITLE = "Deploy Groovy Script";
 
    public DeployGroovyCommand()
    {
-      super("Run/Deploy", "Deploy Groovy Script", Images.MainMenu.DEPLOY, new DeployGroovyScriptEvent());
+      super(ID, TITLE, Images.MainMenu.DEPLOY, new DeployGroovyScriptEvent());
    }
 
    @Override
