@@ -17,12 +17,12 @@
 
 package org.exoplatform.ideall.client.browser;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.navigation.SelectableTabPanel;
+import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
@@ -33,10 +33,12 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 
-public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.Display
+public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Display
 {
 
    public static final String TITLE = "Workspace";
+
+   public static final String ID = "Workspace";
 
    private ItemTreeGrid<Item> treeGridEx;
 
@@ -44,15 +46,11 @@ public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.
 
    private BrowserPresenter presenter;
 
-   private Handlers handlers;
-
    public BrowserForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, new BrowserPanelSelectedEvent());
+      super(eventBus);
 
       this.context = context;
-
-      handlers = new Handlers(eventBus);
 
       treeGridEx = new ItemTreeGrid<Item>();
       treeGridEx.setShowHeader(false);
@@ -79,9 +77,8 @@ public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.
    @Override
    public void destroy()
    {
-      handlers.removeHandlers();
-      presenter.destroy();
       super.destroy();
+      presenter.destroy();
    }
 
    public HasValue<Item> getBrowserTree()
@@ -107,6 +104,20 @@ public class BrowserForm extends SelectableTabPanel implements BrowserPresenter.
    public HasClickHandlers getBrowserClickable()
    {
       return treeGridEx;
+   }
+
+   @Override
+   protected void onSelected()
+   {
+      eventBus.fireEvent(new BrowserPanelSelectedEvent());
+      super.onSelected();
+   }
+
+   @Override
+   protected void onDeselected()
+   {
+      eventBus.fireEvent(new BrowserPanelDeselectedEvent());
+      super.onDeselected();
    }
 
 }

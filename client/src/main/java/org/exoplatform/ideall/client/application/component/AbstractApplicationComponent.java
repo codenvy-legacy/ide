@@ -20,8 +20,8 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -36,7 +36,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public abstract class AbstractApplicationComponent implements InitializeApplicationHandler
+public abstract class AbstractApplicationComponent implements RegisterEventHandlersHandler
 {
 
    protected HandlerManager eventBus;
@@ -61,7 +61,7 @@ public abstract class AbstractApplicationComponent implements InitializeApplicat
       handlers = new Handlers(eventBus);
       initializer.initializeComponent(eventBus, context);
 
-      initializeApplicationHandler = eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      initializeApplicationHandler = eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
 
       onInitializeComponent();
    }
@@ -80,7 +80,7 @@ public abstract class AbstractApplicationComponent implements InitializeApplicat
 
    protected abstract void registerHandlers();
 
-   public void onInitializeApplication(InitializeApplicationEvent event)
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       initializeApplicationHandler.removeHandler();
       registerHandlers();

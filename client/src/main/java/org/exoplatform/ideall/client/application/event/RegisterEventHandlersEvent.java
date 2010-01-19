@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.application.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +28,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface InitializeApplicationHandler extends EventHandler
+public class RegisterEventHandlersEvent extends GwtEvent<RegisterEventHandlersHandler>
 {
 
-   void onInitializeApplication(InitializeApplicationEvent event);
+   public static final GwtEvent.Type<RegisterEventHandlersHandler> TYPE = new GwtEvent.Type<RegisterEventHandlersHandler>();
+
+   @Override
+   protected void dispatch(RegisterEventHandlersHandler handler)
+   {
+      handler.onRegisterEventHandlers(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RegisterEventHandlersHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

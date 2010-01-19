@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.search.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +28,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface SearchPanelSelectedHandler extends EventHandler
+public class SearchResultPanelSelectedEvent extends GwtEvent<SearchPanelSelectedHandler>
 {
 
-   void onSearchPanelSelected(SearchResultPanelSelectedEvent event);
+   public static final GwtEvent.Type<SearchPanelSelectedHandler> TYPE = new GwtEvent.Type<SearchPanelSelectedHandler>();
+
+   @Override
+   protected void dispatch(SearchPanelSelectedHandler handler)
+   {
+      handler.onSearchPanelSelected(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SearchPanelSelectedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

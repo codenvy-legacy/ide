@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,23 +30,16 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewXMLFileCommand extends SimpleCommand
+public class NewXMLFileCommand extends AbstractNewFileCommand
 {
-   
+
    private final static String ID = "File/New/XML File";
-   
-   private final static String TITLE = "Create New XML File"; 
+
+   private final static String TITLE = "Create New XML File";
 
    public NewXMLFileCommand()
    {
       super(ID, TITLE, Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

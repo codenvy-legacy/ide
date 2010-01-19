@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,24 +30,16 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewTEXTFileCommand extends SimpleCommand
+public class NewTEXTFileCommand extends AbstractNewFileCommand
 {
-   
+
    private final static String ID = "File/New/TEXT file";
-   
+
    private final static String TITLE = "Create New Text File";
 
    public NewTEXTFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.TXT, new CreateNewFileEvent(
-         MimeType.TEXT_PLAIN));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
+      super(ID, TITLE, Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN));
    }
 
 }

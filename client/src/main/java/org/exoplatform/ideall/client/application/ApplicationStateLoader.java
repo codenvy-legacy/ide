@@ -23,7 +23,7 @@ import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
@@ -78,10 +78,10 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
          {
             fileToLoad = null;
             handlers.removeHandlers();
+            
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-
-            context.setInitialized(true);
-            eventBus.fireEvent(new InitializeApplicationEvent());
+            
+            new ApplicationInitializer(eventBus, context);
             return;
          }
 

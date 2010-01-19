@@ -22,8 +22,8 @@ import java.util.Comparator;
 
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
@@ -71,7 +71,7 @@ import com.google.gwt.user.client.ui.HasValue;
 */
 public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
-   InitializeApplicationHandler
+   RegisterEventHandlersHandler
 {
 
    interface Display
@@ -104,7 +104,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
    }
 
    public void destroy()
@@ -316,7 +316,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
    }
 
-   public void onInitializeApplication(InitializeApplicationEvent event)
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       registerHandlers();
       switchWorkspace();

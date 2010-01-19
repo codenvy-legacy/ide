@@ -17,9 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.search.event;
+package org.exoplatform.ideall.client.application;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +32,19 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface SearchPanelSelectedHandler extends EventHandler
+public class ApplicationInitializer
 {
 
-   void onSearchPanelSelected(SearchResultPanelSelectedEvent event);
+   private HandlerManager eventBus;
+
+   private ApplicationContext context;
+   
+   private Handlers handlers;
+
+   public ApplicationInitializer(HandlerManager eventBus, ApplicationContext context)
+   {
+      context.setInitialized(true);
+      eventBus.fireEvent(new RegisterEventHandlersEvent());
+   }
 
 }

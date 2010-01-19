@@ -19,7 +19,8 @@
  */
 package org.exoplatform.ideall.client.navigation;
 
-import com.google.gwt.event.shared.GwtEvent;
+import org.exoplatform.ideall.client.Handlers;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.layout.Layout;
 
@@ -30,25 +31,51 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version $
  */
 
-public class SelectableTabPanel extends Layout
+public class SimpleTabPanel extends Layout
 {
 
    protected HandlerManager eventBus;
 
-   private GwtEvent<?> selectionEvent;
+   protected Handlers handlers;
 
-   public SelectableTabPanel(HandlerManager eventBus, GwtEvent<?> selectionEvent)
+   public SimpleTabPanel(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.selectionEvent = selectionEvent;
+      handlers = new Handlers(eventBus);
    }
 
-   public void onPanelSelected()
+   @Override
+   protected void onDestroy()
    {
-      if (selectionEvent != null)
-      {
-         eventBus.fireEvent(selectionEvent);
-      }
+      handlers.removeHandlers();
+      super.onDestroy();
    }
-   
+
+   public final void setSelected()
+   {
+      onSelected();
+   }
+
+   protected void onSelected()
+   {
+   }
+
+   public final void setDeselected()
+   {
+      onDeselected();
+   }
+
+   protected void onDeselected()
+   {
+   }
+
+   public final void setClosed()
+   {
+      onClosed();
+   }
+
+   protected void onClosed()
+   {
+   }
+
 }

@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,24 +30,16 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewHTMLFileCommand extends SimpleCommand
+public class NewHTMLFileCommand extends AbstractNewFileCommand
 {
 
    private static final String ID = "File/New/HTML file";
-   
+
    private static final String TITLE = "Create New HTML File";
 
    public NewHTMLFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.HTML, new CreateNewFileEvent(
-         MimeType.TEXT_HTML));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
+      super(ID, TITLE, Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML));
    }
 
 }

@@ -20,8 +20,8 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.solution.command.Command;
 
@@ -38,7 +38,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class SimpleCommand extends Command implements InitializeApplicationHandler
+public class SimpleCommand extends Command implements RegisterEventHandlersHandler
 {
 
    protected HandlerManager eventBus;
@@ -59,7 +59,7 @@ public class SimpleCommand extends Command implements InitializeApplicationHandl
 
       handlers = new Handlers(eventBus);
 
-      initializeApplicationHandler = eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      initializeApplicationHandler = eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
    }
 
    /**
@@ -78,9 +78,9 @@ public class SimpleCommand extends Command implements InitializeApplicationHandl
    /**
     * Uses for initializing event handlers in the command.
     * 
-    * @see org.exoplatform.ideall.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ideall.client.application.event.InitializeApplicationEvent)
+    * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
     */
-   public void onInitializeApplication(InitializeApplicationEvent event)
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       initializeApplicationHandler.removeHandler();
       initialize();

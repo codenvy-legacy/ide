@@ -31,8 +31,8 @@ import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -85,7 +85,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    CodeMirrorInitializedHandler, CodeMirrorActivityHandler, CodeMirrorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
    FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
-   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, InitializeApplicationHandler
+   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler
 {
 
    public interface Display
@@ -155,7 +155,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    {
       display = d;
 
-      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
 
       display.getShowLineNumbersChangeable().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
@@ -169,7 +169,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
    }
 
-   public void onInitializeApplication(InitializeApplicationEvent event)
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       for (File file : context.getOpenedFiles().values())
       {

@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,23 +30,16 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewJavaScriptFileCommand extends SimpleCommand
+public class NewJavaScriptFileCommand extends AbstractNewFileCommand
 {
-   
+
    private static final String ID = "File/New/Java Script file";
-   
+
    private static final String TITLE = "Create New Java Script File";
 
    public NewJavaScriptFileCommand()
    {
       super(ID, TITLE, Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

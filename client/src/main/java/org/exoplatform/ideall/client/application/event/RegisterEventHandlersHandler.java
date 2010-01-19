@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.search.event;
+package org.exoplatform.ideall.client.application.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SearchPanelSelectedEvent extends GwtEvent<SearchPanelSelectedHandler>
+public interface RegisterEventHandlersHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<SearchPanelSelectedHandler> TYPE = new GwtEvent.Type<SearchPanelSelectedHandler>();
-
-   @Override
-   protected void dispatch(SearchPanelSelectedHandler handler)
-   {
-      handler.onSearchPanelSelected(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SearchPanelSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onRegisterEventHandlers(RegisterEventHandlersEvent event);
 
 }

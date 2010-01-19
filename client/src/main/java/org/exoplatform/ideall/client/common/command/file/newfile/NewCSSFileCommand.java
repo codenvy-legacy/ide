@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**
@@ -31,24 +30,16 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewCSSFileCommand extends SimpleCommand
+public class NewCSSFileCommand extends AbstractNewFileCommand
 {
 
    private static final String ID = "File/New/CSS file";
-   
+
    private static final String TITLE = "Create New CSS File";
 
    public NewCSSFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.CSS, new CreateNewFileEvent(
-         MimeType.TEXT_CSS));
-   }
-
-   @Override
-   protected void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
+      super(ID, TITLE, Images.FileTypes.CSS, new CreateNewFileEvent(MimeType.TEXT_CSS));
    }
 
 }
