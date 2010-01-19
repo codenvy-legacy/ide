@@ -36,9 +36,13 @@ import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 public class FormatSourceCommand extends SimpleCommand implements EditorActiveFileChangedHandler
 {
 
+   private static final String ID = "Edit/Format";
+   
+   private static final String TITLE = "Format";
+   
    public FormatSourceCommand()
    {
-      super("Edit/Format", "Format", Images.MainMenu.FORMAT, new FormatFileEvent());
+      super(ID, TITLE, Images.Edit.FORMAT, new FormatFileEvent());
    }
 
    @Override

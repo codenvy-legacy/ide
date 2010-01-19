@@ -84,9 +84,10 @@ public class CommandRegistration
       return this;
    }
 
-   public void dockOnToolbar()
+   public CommandRegistration dockOnToolbar()
    {
       dockOnToolbar(false);
+      return this;
    }
 
    public void dockOnToolbar(boolean rightDocking)

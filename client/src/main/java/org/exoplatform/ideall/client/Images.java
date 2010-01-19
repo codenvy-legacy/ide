@@ -51,10 +51,6 @@ public interface Images
 
       public static final String SEARCH = imageUrl + "menu/next_edition/search.png";
 
-      public static final String UNDO = imageUrl + "menu/editing/undo.png";
-
-      public static final String REDO = imageUrl + "menu/editing/redo.png";
-
       public static final String PROPERTIES = imageUrl + "menu/next_edition/properties.png";
 
       public static final String PREVIEW = imageUrl + "menu/next_edition/preview.png";
@@ -67,12 +63,10 @@ public interface Images
 
       public static final String TOOLS = imageUrl + "menu/tools2.png";
 
-      public static final String FORMAT = imageUrl + "menu/next_edition/format.png";
-
       public static final String ABOUT = imageUrl + "menu/about.png";
 
       public static final String CUSTOMIZE_TOOLBAR = imageUrl + "menu/customizeToolBar.png";
-      
+
       public static final String TEMPLATES = imageUrl + "menu/next_edition/templates.png";
 
       /*
@@ -86,10 +80,25 @@ public interface Images
       public static final String UNDEPLOY = imageUrl + "menu/groovy/undeploy.png";
 
       public static final String GROOVY_OUTPUT = imageUrl + "menu/groovy/output.png";
-      
+
       public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload1.png";
-      
+
       public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload1.png";
+
+   }
+
+   public interface Edit
+   {
+
+      public static final String UNDO = imageUrl + "menu/editing/undo.png";
+
+      public static final String REDO = imageUrl + "menu/editing/redo.png";
+
+      public static final String FORMAT = imageUrl + "menu/next_edition/format.png";
+
+      public static final String SHOW_LINE_NUMBERS = imageUrl + "edit/showLineNumbers1.png";
+
+      public static final String HIDE_LINE_NUMBERS = imageUrl + "edit/hideLineNumbers1.png";
 
    }
 
@@ -120,12 +129,12 @@ public interface Images
       public static final String ICON = imageUrl + "browser/workspace.png";
 
    }
-   
+
    public interface SearchPanel
    {
-      
+
       static final String ICON = imageUrl + "search/search.png";
-      
+
    }
 
    public interface MenuButton
@@ -162,9 +171,9 @@ public interface Images
       public static final String XML = imageUrl + "filetypes/xml.png";
 
       public static final String GROOVY = imageUrl + "filetypes/groovy.png";
-      
+
       public static final String JAVASCRIPT = imageUrl + "filetypes/javascript.gif";
-      
+
       public static final String CSS = imageUrl + "filetypes/css.png";
 
       public static final String GADGET = imageUrl + "filetypes/gadget1.png";

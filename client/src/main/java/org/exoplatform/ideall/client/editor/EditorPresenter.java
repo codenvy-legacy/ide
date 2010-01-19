@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityEvent;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityHandler;
@@ -43,8 +44,12 @@ import org.exoplatform.ideall.client.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileHandler;
+import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
+import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.RedoEditingHandler;
+import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
+import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.UndoEditingHandler;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
@@ -69,12 +74,8 @@ import org.exoplatform.ideall.client.model.data.event.MoveCompleteHandler;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -88,13 +89,13 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
    FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
    MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
-   InitializeApplicationHandler
+   InitializeApplicationHandler, ShowLineNumbersHandler, HideLineNumbersHandler
 {
 
    public interface Display
    {
 
-      void addTab(File file);
+      void addTab(File file, boolean lineNumbers);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -120,19 +121,10 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       void formatFile(String path);
 
-      HasValue<Boolean> getShowLineNumbersField();
-
-      HasValueChangeHandlers<Boolean> getShowLineNumbersChangeable();
-
-      void enableShowLineNumbers();
-
-      void disableShowLineNumbers();
-
       void setLineNumbers(String path, boolean lineNumbers);
 
       void setCodemirrorFocus(String path);
 
-      void updateShowLineNumbersCheckbox(String string);
    }
 
    private HandlerManager eventBus;
@@ -159,35 +151,27 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    public void bindDisplay(Display d)
    {
       display = d;
-
-      display.getShowLineNumbersChangeable().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            updateLineNumbers(event.getValue());
-         }
-      });
-
-      display.disableShowLineNumbers();
-
    }
 
+   /**
+    * Registration event handlers
+    * 
+    */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       for (File file : context.getOpenedFiles().values())
       {
          ignoreContentChangedList.add(file.getPath());
-         display.addTab(file);
-      }
-
-      if (context.getOpenedFiles().values().size() != 0)
-      {
-         display.enableShowLineNumbers(); // fixed bug [WBT-305] "'Line Numbers' checkbox is disabled when the File Tab opened from the user settings."
+         display.addTab(file, context.isShowLineNumbers());
       }
 
       registerHandlers();
    }
 
+   /**
+    * Initializing application handler
+    * 
+    */
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       if (context.getActiveFile() != null)
@@ -240,6 +224,9 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       new UpdateActiveFileTimer(file).schedule(500);
    }
 
+   /**
+    * Registering event handlers
+    */
    private void registerHandlers()
    {
       handlers.addHandler(CodeMirrorContentChangedEvent.TYPE, this);
@@ -263,17 +250,17 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
       handlers.addHandler(FormatFileEvent.TYPE, this);
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
+
+      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
+      handlers.addHandler(HideLineNumbersEvent.TYPE, this);
    }
 
+   /**
+    * Destroy 
+    */
    public void destroy()
    {
       handlers.removeHandlers();
-   }
-
-   protected void updateLineNumbers(boolean lineNumbers)
-   {
-      display.setLineNumbers(context.getActiveFile().getPath(), lineNumbers);
-      display.setCodemirrorFocus(context.getActiveFile().getPath());
    }
 
    /* 
@@ -311,9 +298,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          ignoreContentChangedList.add(file.getPath());
          context.setActiveFile(file);
          context.getOpenedFiles().put(file.getPath(), file);
-         display.addTab(file);
+         display.addTab(file, context.isShowLineNumbers());
          display.selectTab(file.getPath());
-         display.enableShowLineNumbers();
       }
       catch (Exception exc)
       {
@@ -381,13 +367,11 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       if (curentFile == null)
       {
          context.setActiveFile(null);
-         display.disableShowLineNumbers();
          return;
       }
 
       context.setActiveFile(curentFile);
       display.setCodemirrorFocus(curentFile.getPath());
-      display.updateShowLineNumbersCheckbox(curentFile.getPath());
    }
 
    public void onCodeMirrorSaveContent(CodeMirrorSaveContentEvent event)
@@ -456,12 +440,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       display.redoEditing(context.getActiveFile().getPath());
    }
 
-   /*
-    * SAVING FILE CONTENT
-    */
    private void updateTabTitle(String path)
    {
-      System.out.println("updating tab title for > " + path);
       display.updateTabTitle(path);
    }
 
@@ -479,12 +459,6 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          File currentOpenedFile = context.getActiveFile();
          File savedFile = event.getFile();
 
-         System.out.println("saved file path > " + savedFile.getPath());
-         System.out.println("new file path > " + event.getPath());
-
-         System.out.println("content changed > " + savedFile.isContentChanged());
-         System.out.println("properties changed > " + savedFile.isPropertiesChanged());
-
          if (event.isSaveAs() || event.isNewFile())
          {
             savedFile.setPath(event.getPath());
@@ -496,21 +470,11 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
          updateTabTitle(savedFile.getPath());
       }
-
-      //      if (event.isNewFile())
-      //      {
-      //         DataService.getInstance().getProperties(event.getFile());
-      //      }
-
    }
 
    /*
     * File properties saved handler
     * 
-    * @seeorg.exoplatform.gadgets.devtool.client.model.service.event.
-    * ItemPropertiesSavedHandler
-    * #onItemPropertiesSaved(org.exoplatform.gadgets.devtool
-    * .client.model.service.event.ItemPropertiesSavedEvent)
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
@@ -519,13 +483,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          return;
       }
 
-      System.out.println("updating item title after saving of properties....");
-
-      System.out.println("content changed > " + ((File)event.getItem()).isContentChanged());
-      System.out.println("properties changed > " + event.getItem().isPropertiesChanged());
-
       updateTabTitle(event.getItem().getPath());
-
    }
 
    public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
@@ -546,11 +504,9 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          //ignoreCodeMirrorContentChanged = true;
          context.setActiveFile(file);
          context.getOpenedFiles().put(file.getPath(), file);
-         display.addTab(file);
+         display.addTab(file, context.isShowLineNumbers());
          display.selectTab(file.getPath());
       }
-
-      display.enableShowLineNumbers();
    }
 
    public void onMoveComplete(MoveCompleteEvent event)
@@ -622,6 +578,27 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       context.setSelectedItem(folder);
 
       eventBus.fireEvent(new ItemSelectedEvent(folder));
+   }
+
+   private void updateLineNumbers(boolean lineNumbers)
+   {
+      Iterator<String> iterator = context.getOpenedFiles().keySet().iterator();
+      while (iterator.hasNext())
+      {
+         String path = iterator.next();
+         display.setLineNumbers(path, lineNumbers);
+      }
+      display.setCodemirrorFocus(context.getActiveFile().getPath());
+   }
+
+   public void onShowLineNumbers(ShowLineNumbersEvent event)
+   {
+      updateLineNumbers(true);
+   }
+
+   public void onHideLineNumbers(HideLineNumbersEvent event)
+   {
+      updateLineNumbers(false);
    }
 
 }

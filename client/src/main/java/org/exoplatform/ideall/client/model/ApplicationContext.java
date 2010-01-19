@@ -109,6 +109,8 @@ public class ApplicationContext
     */
    private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
 
+   private boolean showLineNumbers = true;
+
    private boolean initialized;
 
    public ApplicationContext()
@@ -309,6 +311,16 @@ public class ApplicationContext
    public void setInitialized(boolean initialized)
    {
       this.initialized = initialized;
+   }
+
+   public boolean isShowLineNumbers()
+   {
+      return showLineNumbers;
+   }
+
+   public void setShowLineNumbers(boolean showLineNumbers)
+   {
+      this.showLineNumbers = showLineNumbers;
    }
 
 }

@@ -24,6 +24,10 @@ import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
+import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
+import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
+import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
+import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateHandler;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
@@ -42,6 +46,8 @@ import org.exoplatform.ideall.client.event.file.SearchFileHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.template.FileTemplates;
 import org.exoplatform.ideall.client.model.template.TemplateService;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
@@ -63,7 +69,8 @@ import org.exoplatform.ideall.client.upload.UploadForm;
 
 public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
    CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
-   SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler
+   SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler,
+   HideLineNumbersHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -89,6 +96,9 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(SearchFileEvent.TYPE, this);
       addHandler(SaveAsTemplateEvent.TYPE, this);
       addHandler(TemplateListReceivedEvent.TYPE, this);
+
+      addHandler(ShowLineNumbersEvent.TYPE, this);
+      addHandler(HideLineNumbersEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -175,6 +185,20 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       context.setTemplateList(event.getTemplateList());
       new CreateFileFromTemplateForm(eventBus, context);
+   }
+
+   public void onShowLineNumbers(ShowLineNumbersEvent event)
+   {
+      System.out.println("CommonActionsComponent.onShowLineNumbers()");
+      context.setShowLineNumbers(true);
+      SettingsService.getInstance().saveSetting(context);
+   }
+
+   public void onHideLineNumbers(HideLineNumbersEvent event)
+   {
+      System.out.println("CommonActionsComponent.onHideLineNumbers()");
+      context.setShowLineNumbers(false);
+      SettingsService.getInstance().saveSetting(context);
    }
 
 }

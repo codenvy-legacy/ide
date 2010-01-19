@@ -23,13 +23,10 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
-import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
-import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
+import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,52 +35,66 @@ import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler
  * @version $
  */
 
-public class RedoTypingCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
-   FileContentChangedHandler, FileCreatedHandler, FileContentReceivedHandler
+public class ShowLineNumbersCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
+   ApplicationContextSavedHandler
 {
 
-   public RedoTypingCommand()
+   private static final String ID = "Edit/Show Line Numbers";
+
+   private static final String TITLE = "Show Line Numbers";
+
+   private File activeFile;
+
+   public ShowLineNumbersCommand()
    {
-      super("Edit/Redo Typing", "Redo Typing", Images.Edit.REDO, new RedoEditingEvent());
+      super(ID, TITLE, Images.Edit.SHOW_LINE_NUMBERS, new ShowLineNumbersEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(FileContentChangedEvent.TYPE, this);
-      addHandler(FileCreatedEvent.TYPE, this);
-      addHandler(FileContentReceivedEvent.TYPE, this);
+      addHandler(ApplicationContextSavedEvent.TYPE, this);
+   }
+
+   @Override
+   protected void onInitializeApplication()
+   {
+      updateState();
+   }
+
+   private void updateState()
+   {
+      System.out.println("context show line numbers: " + context.isShowLineNumbers());
+
+      if (context.isShowLineNumbers())
+      {
+         // hide
+         setVisible(false);
+         return;
+      }
+      
+      // verify and show
+      setVisible(true);
+      if (activeFile == null)
+      {
+         setEnabled(false);
+      }
+      else
+      {
+         setEnabled(true);
+      }      
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      setVisible(true);
-      setEnabled(event.hasRedoChanges());
+      activeFile = event.getFile();
+      updateState();
    }
 
-   public void onFileContentChanged(FileContentChangedEvent event)
+   public void onApplicationContextSaved(ApplicationContextSavedEvent event)
    {
-      setEnabled(event.hasRedoChanges());
-   }
-
-   public void onFileCreated(FileCreatedEvent event)
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      setVisible(true);
-      setEnabled(false);
+      updateState();
    }
 
 }

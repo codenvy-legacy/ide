@@ -36,11 +36,6 @@ public class EditorTab extends Tab
    private SmartGWTCodeMirror codeMirror;
 
    private File file;
-   
-   /**
-    * true, if Codemirror line numbers are shown in the current tab
-    */
-   private boolean isShowLineNumbers;
 
    public EditorTab(File file)
    {
@@ -78,16 +73,4 @@ public class EditorTab extends Tab
       return title;
    }
 
-   /**
-    * @return <b>true</b>, if Codemirror line numbers are shown in the current tab, or <b>false</b> otherwise
-    */
-   public boolean isShowLineNumbers()
-   {
-      return isShowLineNumbers;
-   }
-   
-   public void setShowLineNumbersFlag(boolean isShowLineNumbers)
-   {
-      this.isShowLineNumbers = isShowLineNumbers;
-   }
 }

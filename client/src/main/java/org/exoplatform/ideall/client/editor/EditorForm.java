@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ideall.client.editor;
 
-import org.exoplatform.gwt.commons.smartgwt.component.CheckboxItem;
 import org.exoplatform.ideall.client.editor.codemirror.CodeMirrorConfig;
 import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
@@ -24,13 +23,9 @@ import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -50,14 +45,12 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 {
 
    private HandlerManager eventBus;
-
+   
    private EditorPresenter presenter;
 
    private TabSet tabSet;
 
    private EditorTab activeTab;
-
-   private CheckboxItem showLineNumbersItemCheckbox;
 
    /**
     * @param eventBus
@@ -67,7 +60,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display
       this.eventBus = eventBus;
 
       tabSet = new TabSet();
-      createTabBarControls();
       addMember(tabSet);
 
       presenter = new EditorPresenter(eventBus, context);
@@ -86,27 +78,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 
       tabSet.addTabSelectedHandler(tabSelectedHandler);
       tabSet.addCloseClickHandler(closeClickHandler);
-   }
-
-   private void createTabBarControls()
-   {
-      Layout l = new Layout();
-      DynamicForm form = new DynamicForm();
-      form.setCellPadding(0);
-
-      showLineNumbersItemCheckbox = new CheckboxItem();
-      showLineNumbersItemCheckbox.setTitle("Line numbers");
-      showLineNumbersItemCheckbox.setValue(true);
-      form.setItems(showLineNumbersItemCheckbox);
-
-      form.setAutoHeight();
-      form.setAutoWidth();
-
-      l.addMember(form);
-      l.setAutoWidth();
-      l.setAutoHeight();
-
-      tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, l);
    }
 
    private TabSelectedHandler tabSelectedHandler = new TabSelectedHandler()
@@ -143,17 +114,18 @@ public class EditorForm extends Layout implements EditorPresenter.Display
       }
    };
 
-   public void addTab(File file)
+   public void addTab(File file, boolean lineNumbers)
    {
       EditorTab tab = new EditorTab(file);
 
-      // set showLineNumbersItem checkbox
-      tab.setShowLineNumbersFlag(true);
-      showLineNumbersItemCheckbox.setValue(true);      
-      
+//      // set showLineNumbersItem checkbox
+//      tab.setShowLineNumbersFlag(true);
+//      showLineNumbersItemCheckbox.setValue(true);      
+//      
       tab.setCanClose(true);
       
       CodeMirrorConfig config = new CodeMirrorConfig(file.getContentType());
+      config.setLineNumbers(lineNumbers);
       SmartGWTCodeMirror codemirror = new SmartGWTCodeMirror(eventBus, config);
       tab.setCodeMirror(codemirror);
       redraw();
@@ -270,43 +242,16 @@ public class EditorForm extends Layout implements EditorPresenter.Display
       }
    }
 
-   public HasValue<Boolean> getShowLineNumbersField()
-   {
-      return showLineNumbersItemCheckbox;
-   }
-
-   public HasValueChangeHandlers<Boolean> getShowLineNumbersChangeable()
-   {
-      return showLineNumbersItemCheckbox;
-   }
-
-   public void disableShowLineNumbers()
-   {
-      showLineNumbersItemCheckbox.disable();
-   }
-
-   public void enableShowLineNumbers()
-   {
-      showLineNumbersItemCheckbox.enable();
-   }
-
    public void setLineNumbers(String path, boolean lineNumbers)
    {
       EditorTab tab = getEditorTab(path);
       tab.getCodeMirror().setLineNumbers(lineNumbers);
-      tab.setShowLineNumbersFlag(lineNumbers);
    }
 
    public void setCodemirrorFocus(String path)
    {
       EditorTab tab = getEditorTab(path);
       tab.getCodeMirror().setFocus(); // fix bug "Just after switching on a new tab, the cursor is not appeared in the content pane." [WBT-244]
-   }
-
-   public void updateShowLineNumbersCheckbox(String path)
-   {
-      EditorTab tab = getEditorTab(path);
-      showLineNumbersItemCheckbox.setValue(tab.isShowLineNumbers());      
    }
 
    public boolean hasRedoChanges(String path)

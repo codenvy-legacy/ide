@@ -44,7 +44,7 @@ public class UndoTypingCommand extends SimpleCommand implements EditorActiveFile
 
    public UndoTypingCommand()
    {
-      super("Edit/Undo Typing", "Undo Typing", Images.MainMenu.UNDO, new UndoEditingEvent());
+      super("Edit/Undo Typing", "Undo Typing", Images.Edit.UNDO, new UndoEditingEvent());
    }
 
    @Override

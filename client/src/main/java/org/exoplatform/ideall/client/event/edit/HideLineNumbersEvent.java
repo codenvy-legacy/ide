@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings;
+package org.exoplatform.ideall.client.event.edit;
 
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,23 +28,21 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
  * @version $
  */
 
-public abstract class SettingsService
+public class HideLineNumbersEvent extends GwtEvent<HideLineNumbersHandler>
 {
 
-   private static SettingsService instance;
+   public static final GwtEvent.Type<HideLineNumbersHandler> TYPE = new GwtEvent.Type<HideLineNumbersHandler>();
 
-   public static SettingsService getInstance()
+   @Override
+   protected void dispatch(HideLineNumbersHandler handler)
    {
-      return instance;
+      handler.onHideLineNumbers(this);
    }
 
-   protected SettingsService()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<HideLineNumbersHandler> getAssociatedType()
    {
-      instance = this;
+      return TYPE;
    }
-   
-   public abstract void getSettings(ApplicationContext context);
 
-   public abstract void saveSetting(ApplicationContext context);
-   
 }

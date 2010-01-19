@@ -21,7 +21,9 @@ package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
+import org.exoplatform.ideall.client.common.command.edit.HideLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
+import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
@@ -90,6 +92,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new UndoTypingCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar();
       addCommand(new RedoTypingCommand()).disable().hide().deselect().dockOnToolbar();
       addCommand(new FormatSourceCommand()).disable().hide().deselect().dockOnToolbar();
+
+      addCommand(new ShowLineNumbersCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar();
+      addCommand(new HideLineNumbersCommand()).disable().hide().deselect().dockOnToolbar();
 
       /*
        * VIEW GROUP

@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings;
+package org.exoplatform.ideall.client.event.edit;
 
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,23 +28,9 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
  * @version $
  */
 
-public abstract class SettingsService
+public interface ShowLineNumbersHandler extends EventHandler
 {
 
-   private static SettingsService instance;
+   void onShowLineNumbers(ShowLineNumbersEvent event);
 
-   public static SettingsService getInstance()
-   {
-      return instance;
-   }
-
-   protected SettingsService()
-   {
-      instance = this;
-   }
-   
-   public abstract void getSettings(ApplicationContext context);
-
-   public abstract void saveSetting(ApplicationContext context);
-   
 }
