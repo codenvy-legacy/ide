@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.operation.properties;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.operation.TabPanel;
-import org.exoplatform.ideall.client.operation.properties.propertyeditor.DefaultPropertyEditor;
+import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Alignment;
@@ -63,7 +63,7 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
       }
       else
       {
-         content = new DefaultPropertyEditor(file);
+         content = new PropertyEditor(file);
       }
 
       addMember(content);

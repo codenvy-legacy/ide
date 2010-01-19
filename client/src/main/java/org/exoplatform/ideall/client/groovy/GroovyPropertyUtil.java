@@ -21,11 +21,10 @@ package org.exoplatform.ideall.client.groovy;
 
 import java.util.Collection;
 
-import org.exoplatform.gwt.commons.xml.QName;
-
 import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwt.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Properties;
+import org.exoplatform.ideall.client.model.property.ItemProperty;
 
 /**
  * Created by The eXo Platform SAS .
@@ -55,12 +54,12 @@ public class GroovyPropertyUtil
       for (Property property : file.getProperties())
       {
          QName propertyName = property.getName();
-         if (propertyName.equals(Properties.JCRProperties.JCR_CONTENT))
+         if (propertyName.equals(ItemProperty.JCR_CONTENT))
          {
             Collection<Property> children = property.getChildProperties();
             for (Property child : children)
             {
-               if (child.getName().equals(Properties.ExoProperties.EXO_AUTOLOAD))
+               if (child.getName().equals(ItemProperty.EXO_AUTOLOAD))
                {
                   return child.getValue();
                }

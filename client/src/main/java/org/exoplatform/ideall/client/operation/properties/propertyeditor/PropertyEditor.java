@@ -17,12 +17,16 @@
 
 package org.exoplatform.ideall.client.operation.properties.propertyeditor;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 
 import org.exoplatform.gwt.commons.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwt.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.property.PropertyTitle;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -31,7 +35,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.Layout;
 
-public abstract class PropertyEditor extends Layout
+public class PropertyEditor extends Layout
 {
 
    public PropertyEditor(File file)
@@ -46,7 +50,34 @@ public abstract class PropertyEditor extends Layout
       addMember(propertiesForm);
    }
 
-   public abstract DynamicForm getPropertiesForm(Collection<Property> properties);
+   public DynamicForm getPropertiesForm(Collection<Property> properties)
+   {
+      DynamicForm propertiesForm = new DynamicForm();
+
+      if (properties == null)
+      {
+         return propertiesForm;
+      }
+
+      ArrayList<FormItem> formItems = new ArrayList<FormItem>();
+
+      for (Property property : properties)
+      {
+         QName propertyName = property.getName();
+         if (!PropertyTitle.containsTitleFor(propertyName))
+         {
+            continue;
+         }
+
+         String propertyTitle = PropertyTitle.getPropertyTitle(propertyName);
+         formItems.add(getStaticTextItem(propertyTitle, property.getValue()));
+      }
+
+      Collections.sort(formItems, itemsComparator);
+      propertiesForm.setFields(formItems.toArray(new FormItem[formItems.size()]));
+
+      return propertiesForm;
+   }
 
    protected CheckboxItem getBooleanItem(String name, boolean value, boolean isReadOnly)
    {

@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.model.data.marshal;
 import org.exoplatform.gwt.commons.rest.Marshallable;
 import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.Properties;
+import org.exoplatform.ideall.client.model.property.ItemProperty;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,14 +48,14 @@ public class ItemPropertiesMarshaller implements Marshallable
       {
          String propertyValue = property.getValue();
 
-         if (property.getName().equals(Properties.JCRProperties.JCR_CONTENT))
+         if (property.getName().equals(ItemProperty.JCR_CONTENT))
          {
 
             xml += "<jcr:content xmlns:jcr='http://www.jcp.org/jcr/1.0'>\n";
 
             for (Property prop : property.getChildProperties())
             {
-               if (prop.getName().equals(Properties.ExoProperties.EXO_AUTOLOAD))
+               if (prop.getName().equals(ItemProperty.EXO_AUTOLOAD))
                {
                   xml +=
                      "<exo:autoload xmlns:exo='http://www.exoplatform.com/jcr/exo/1.0'>" + prop.getValue()

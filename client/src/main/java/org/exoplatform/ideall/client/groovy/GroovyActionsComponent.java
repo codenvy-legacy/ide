@@ -35,7 +35,6 @@ import org.exoplatform.ideall.client.groovy.event.UnsetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Properties;
 import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
@@ -46,6 +45,7 @@ import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultRece
 import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedHandler;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
 
@@ -228,10 +228,9 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
    private void updateAutoloadPropertyValue(boolean value)
    {
       File file = context.getActiveFile();
-      Property jcrContentProperty =
-         GroovyPropertyUtil.getProperty(file.getProperties(), Properties.JCRProperties.JCR_CONTENT);
+      Property jcrContentProperty = GroovyPropertyUtil.getProperty(file.getProperties(), ItemProperty.JCR_CONTENT);
       Property autoloadProperty =
-         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), Properties.ExoProperties.EXO_AUTOLOAD);
+         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
       autoloadProperty.setValue("" + value);
 
       DataService.getInstance().saveProperties(file);

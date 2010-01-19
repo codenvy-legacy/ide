@@ -26,8 +26,8 @@ import org.exoplatform.gwt.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.Properties;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
+import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 
@@ -103,7 +103,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
          if (item instanceof File)
          {
-            String contentType = getProperty(item, Properties.DavProperties.GETCONTENTTYPE).getValue();
+            String contentType = getProperty(item, ItemProperty.GETCONTENTTYPE).getValue();
             ((File)item).setContentType(contentType);
             String jcrNodeType = NodeTypeUtil.getContentNodeType(contentType);
             ((File)item).setJcrContentNodeType(jcrNodeType);
