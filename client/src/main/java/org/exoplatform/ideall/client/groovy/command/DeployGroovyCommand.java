@@ -46,7 +46,7 @@ public class DeployGroovyCommand extends SimpleCommand implements EditorActiveFi
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }

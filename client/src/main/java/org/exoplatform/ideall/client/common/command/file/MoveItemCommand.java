@@ -21,9 +21,14 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
 import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.Workspace;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
@@ -35,26 +40,67 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandler, ItemDeletedHandler
+public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandler, ItemDeletedHandler,
+   BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
+
+   private static final String ID = "File/Move...";
+
+   private static final String TITLE = "Move...";
+
+   private boolean browserPanelSelected = true;
+
+   private Item selectedItem;
 
    public MoveItemCommand()
    {
-      super("File/Move...", "Move...", Images.MainMenu.MOVE, new MoveItemEvent());
+      super(ID, TITLE, Images.MainMenu.MOVE, new MoveItemEvent());
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
-      setVisible(true);
-
       addHandler(ItemSelectedEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
+
+      addHandler(BrowserPanelSelectedEvent.TYPE, this);
+      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+   }
+
+   @Override
+   protected void onInitializeApplication()
+   {
+      setVisible(true);
+      updateEnabling();
    }
 
    public void onItemSelected(ItemSelectedEvent event)
    {
-      if (event.getSelectedItem() instanceof Workspace)
+      selectedItem = event.getSelectedItem();
+      updateEnabling();
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      selectedItem = null;
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+      if (!browserPanelSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem instanceof Workspace)
       {
          setEnabled(false);
       }
@@ -64,9 +110,16 @@ public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandle
       }
    }
 
-   public void onItemDeleted(ItemDeletedEvent event)
+   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
    {
-      setEnabled(false);
+      browserPanelSelected = true;
+      updateEnabling();
+   }
+
+   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
+   {
+      browserPanelSelected = false;
+      updateEnabling();
    }
 
 }

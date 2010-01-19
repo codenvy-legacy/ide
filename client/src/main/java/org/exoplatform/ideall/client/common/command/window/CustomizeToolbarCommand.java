@@ -40,7 +40,7 @@ public class CustomizeToolbarCommand extends SimpleCommand
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       setVisible(true);
       setEnabled(true);

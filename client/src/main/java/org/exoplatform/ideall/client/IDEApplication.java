@@ -44,6 +44,8 @@ public class IDEApplication implements EntryPoint
       });
 
       new IDE();
+
+      //new Sample();
    }
 
 }

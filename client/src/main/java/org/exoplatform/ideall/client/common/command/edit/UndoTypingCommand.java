@@ -48,7 +48,7 @@ public class UndoTypingCommand extends SimpleCommand implements EditorActiveFile
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(FileContentChangedEvent.TYPE, this);

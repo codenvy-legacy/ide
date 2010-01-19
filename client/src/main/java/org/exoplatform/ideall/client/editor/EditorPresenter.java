@@ -31,6 +31,8 @@ import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
@@ -85,7 +87,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    CodeMirrorInitializedHandler, CodeMirrorActivityHandler, CodeMirrorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
    FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
-   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler
+   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
+   InitializeApplicationHandler
 {
 
    public interface Display
@@ -149,13 +152,13 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
-
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
 
       display.getShowLineNumbersChangeable().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
@@ -183,7 +186,10 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
 
       registerHandlers();
+   }
 
+   public void onInitializeApplication(InitializeApplicationEvent event)
+   {
       if (context.getActiveFile() != null)
       {
          try

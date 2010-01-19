@@ -20,6 +20,8 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -38,7 +40,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class SimpleCommand extends Command implements RegisterEventHandlersHandler
+public class SimpleCommand extends Command implements RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    protected HandlerManager eventBus;
@@ -46,20 +48,33 @@ public class SimpleCommand extends Command implements RegisterEventHandlersHandl
    protected ApplicationContext context;
 
    protected Handlers handlers;
-   
+
+   private HandlerRegistration registerEventHandlersHandler;
+
+   private HandlerRegistration initializeApplicationHandler;
+
    protected SimpleCommand(String id, String title, String icon, GwtEvent<?> event)
    {
       super(id, title, icon, event);
    }
 
-   public void initialize(HandlerManager eventBus, ApplicationContext context)
+   public final void initialize(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
 
       handlers = new Handlers(eventBus);
 
-      initializeApplicationHandler = eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      registerEventHandlersHandler = eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      initializeApplicationHandler = eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      onInitializeCommand();
+   }
+
+   /**
+    * Override this method to complete handling of initialization
+    */
+   protected void onInitializeCommand()
+   {
    }
 
    /**
@@ -68,28 +83,39 @@ public class SimpleCommand extends Command implements RegisterEventHandlersHandl
     * @param type
     * @param handler
     */
-   protected void addHandler(Type type, EventHandler handler)
+   protected final <H extends EventHandler> void addHandler(Type<H> type, H handler)
    {
       handlers.addHandler(type, handler);
    }
-
-   private HandlerRegistration initializeApplicationHandler;
 
    /**
     * Uses for initializing event handlers in the command.
     * 
     * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
     */
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
+   public final void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      initializeApplicationHandler.removeHandler();
-      initialize();
+      registerEventHandlersHandler.removeHandler();
+      onRegisterHandlers();
    }
 
    /**
     * Override this method to complete registration of the handlers
     */
-   protected void initialize()
+   protected void onRegisterHandlers()
+   {
+   }
+
+   public final void onInitializeApplication(InitializeApplicationEvent event)
+   {
+      initializeApplicationHandler.removeHandler();
+      onInitializeApplication();
+   }
+
+   /**
+    * Override this handler to complete handling of initialization of application
+    */
+   protected void onInitializeApplication()
    {
    }
 

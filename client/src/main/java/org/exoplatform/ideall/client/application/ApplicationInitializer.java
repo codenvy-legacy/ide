@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.application;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -35,16 +35,12 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ApplicationInitializer
 {
 
-   private HandlerManager eventBus;
-
-   private ApplicationContext context;
-   
-   private Handlers handlers;
-
-   public ApplicationInitializer(HandlerManager eventBus, ApplicationContext context)
+   public ApplicationInitializer(final HandlerManager eventBus, ApplicationContext context)
    {
-      context.setInitialized(true);
       eventBus.fireEvent(new RegisterEventHandlersEvent());
+
+      context.setInitialized(true);
+      eventBus.fireEvent(new InitializeApplicationEvent());
    }
 
 }

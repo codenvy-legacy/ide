@@ -22,8 +22,11 @@ import java.util.Comparator;
 
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
@@ -71,7 +74,7 @@ import com.google.gwt.user.client.ui.HasValue;
 */
 public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
-   RegisterEventHandlersHandler
+   RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    interface Display
@@ -105,6 +108,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       this.context = context;
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    public void destroy()
@@ -303,7 +307,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       return source.equals(destination);
    }
 
-   private void registerHandlers()
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       handlers.addHandler(FolderCreatedEvent.TYPE, this);
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
@@ -316,10 +320,11 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
    }
 
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
+   public void onInitializeApplication(InitializeApplicationEvent event)
    {
-      registerHandlers();
+      System.out.println("BrowserPresenter.onInitializeApplication()");
       switchWorkspace();
+      eventBus.fireEvent(new BrowserPanelSelectedEvent());
    }
 
 }

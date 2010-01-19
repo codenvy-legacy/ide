@@ -51,7 +51,7 @@ public class SaveFileCommand extends SimpleCommand implements EditorActiveFileCh
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       setVisible(true);
       

@@ -21,6 +21,10 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
 
 /**
@@ -30,24 +34,57 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends SimpleCommand
+public class CreateFileFromTemplateCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+   BrowserPanelDeselectedHandler
 {
-   
+
+   private boolean browserPanelSelected = true;
+
    private final static String ID = "File/New File From Template...";
-   
+
    private final static String TITLE = "Create New File From Template...";
 
    public CreateFileFromTemplateCommand()
    {
-      super(ID, TITLE, Images.MainMenu.TEMPLATES,
-         new CreateFileFromTemplateEvent());
+      super(ID, TITLE, Images.MainMenu.TEMPLATES, new CreateFileFromTemplateEvent());
    }
 
    @Override
-   protected void initialize()
+   protected void onInitializeApplication()
    {
       setVisible(true);
-      setEnabled(true);
+      updateEnabling();
+   }
+
+   @Override
+   protected void onRegisterHandlers()
+   {
+      addHandler(BrowserPanelSelectedEvent.TYPE, this);
+      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+   }
+
+   private void updateEnabling()
+   {
+      if (browserPanelSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
+   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
+   {
+      browserPanelSelected = true;
+      updateEnabling();
+   }
+
+   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
+   {
+      browserPanelSelected = false;
+      updateEnabling();
    }
 
 }

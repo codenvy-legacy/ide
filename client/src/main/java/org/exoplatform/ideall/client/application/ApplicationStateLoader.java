@@ -23,7 +23,6 @@ import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.Handlers;
-import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
@@ -73,25 +72,31 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    protected void preloadNextFile()
    {
-      try {
+      try
+      {
          if (context.getPreloadFiles().size() == 0)
          {
             fileToLoad = null;
             handlers.removeHandlers();
-            
+
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-            
+
+            System.out.println("initializing.......");
+
             new ApplicationInitializer(eventBus, context);
+
             return;
          }
 
          fileToLoad = context.getPreloadFiles().values().iterator().next();
          context.getPreloadFiles().remove(fileToLoad.getPath());
          DataService.getInstance().getProperties(fileToLoad);
-         
-      } catch (Exception exc) {
+
+      }
+      catch (Exception exc)
+      {
          exc.printStackTrace();
-      }      
+      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
@@ -104,12 +109,32 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
       context.getOpenedFiles().put(fileToLoad.getPath(), fileToLoad);
+
+      //      new Timer()
+      //      {
+      //         @Override
+      //         public void run()
+      //         {
+      //            preloadNextFile();
+      //         }
+      //      }.schedule(100);
+
       preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)
    {
       preloadNextFile();
+
+      //      new Timer()
+      //      {
+      //         @Override
+      //         public void run()
+      //         {
+      //            preloadNextFile();
+      //         }
+      //      }.schedule(100);
+
    }
 
 }

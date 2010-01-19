@@ -43,8 +43,7 @@ public class Handlers
       this.eventBus = eventBus;
    }
 
-   @SuppressWarnings("unchecked")
-   public HandlerRegistration addHandler(Type type, EventHandler handler)
+   public <H extends EventHandler> HandlerRegistration addHandler(Type<H> type, H handler)
    {
       HandlerRegistration h = eventBus.addHandler(type, handler);
       handlers.add(h);

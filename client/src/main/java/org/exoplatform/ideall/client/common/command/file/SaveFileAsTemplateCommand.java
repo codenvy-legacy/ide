@@ -42,7 +42,7 @@ public class SaveFileAsTemplateCommand extends SimpleCommand implements EditorAc
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       setVisible(true);
 

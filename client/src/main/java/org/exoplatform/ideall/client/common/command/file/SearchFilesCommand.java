@@ -39,7 +39,7 @@ public class SearchFilesCommand extends SimpleCommand
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       setVisible(true);
       setEnabled(true);

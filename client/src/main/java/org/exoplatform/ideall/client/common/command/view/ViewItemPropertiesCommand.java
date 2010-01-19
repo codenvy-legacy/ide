@@ -41,7 +41,7 @@ public class ViewItemPropertiesCommand extends SimpleCommand implements EditorAc
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }

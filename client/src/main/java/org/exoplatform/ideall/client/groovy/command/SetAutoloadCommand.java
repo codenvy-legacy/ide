@@ -53,10 +53,10 @@ public class SetAutoloadCommand extends SimpleCommand implements EditorActiveFil
    /**
     * Initializing handlers
     * 
-    * @see org.exoplatform.ideall.client.application.component.SimpleCommand#initialize()
+    * @see org.exoplatform.ideall.client.application.component.SimpleCommand#onRegisterHandlers()
     */
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(ItemPropertiesSavedEvent.TYPE, this);

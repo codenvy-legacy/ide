@@ -38,27 +38,49 @@ public class AbstractNewFileCommand extends SimpleCommand implements BrowserPane
    BrowserPanelDeselectedHandler
 {
 
+   private boolean browserSelected = true;
+
    public AbstractNewFileCommand(String id, String title, String icon, GwtEvent<?> event)
    {
       super(id, title, icon, event);
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
-      setVisible(true);
-      setEnabled(true);
-
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
       addHandler(BrowserPanelDeselectedEvent.TYPE, this);
    }
 
+   @Override
+   protected void onInitializeApplication()
+   {
+      setVisible(true);
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+      if (browserSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
    public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
    {
+      browserSelected = true;
+      updateEnabling();
    }
 
    public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
    {
+      browserSelected = false;
+      updateEnabling();
    }
 
 }

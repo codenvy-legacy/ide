@@ -17,10 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.newfile;
+package org.exoplatform.ideall.client.application.event;
 
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,23 +28,21 @@ import org.exoplatform.ideall.client.application.component.SimpleCommand;
  * @version $
  */
 
-public class NewFileCommand extends SimpleCommand
+public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler>
 {
 
-   public static final String ID = "File/New";
+   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE = new GwtEvent.Type<InitializeApplicationHandler>();
 
-   public static final String TITLE = "New";
-
-   public NewFileCommand()
+   @Override
+   protected void dispatch(InitializeApplicationHandler handler)
    {
-      super(ID, TITLE, Images.MainMenu.NEW, null);
+      handler.onInitializeApplication(this);
    }
 
    @Override
-   protected void onRegisterHandlers()
+   public com.google.gwt.event.shared.GwtEvent.Type<InitializeApplicationHandler> getAssociatedType()
    {
-      setVisible(true);
-      setEnabled(true);
+      return TYPE;
    }
 
 }

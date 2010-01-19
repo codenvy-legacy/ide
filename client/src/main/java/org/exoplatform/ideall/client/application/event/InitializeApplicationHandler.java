@@ -17,10 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.newfile;
+package org.exoplatform.ideall.client.application.event;
 
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,23 +28,9 @@ import org.exoplatform.ideall.client.application.component.SimpleCommand;
  * @version $
  */
 
-public class NewFileCommand extends SimpleCommand
+public interface InitializeApplicationHandler extends EventHandler
 {
 
-   public static final String ID = "File/New";
-
-   public static final String TITLE = "New";
-
-   public NewFileCommand()
-   {
-      super(ID, TITLE, Images.MainMenu.NEW, null);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+   void onInitializeApplication(InitializeApplicationEvent event);
 
 }

@@ -21,6 +21,10 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 
 /**
@@ -30,23 +34,57 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
  * @version $
  */
 
-public class UploadFileCommand extends SimpleCommand
+public class UploadFileCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+   BrowserPanelDeselectedHandler
 {
 
    private final static String ID = "File/Upload File...";
-   
+
    private final static String TITLE = "Upload File...";
-   
+
+   private boolean browserPanelSelected = true;
+
    public UploadFileCommand()
    {
       super(ID, TITLE, Images.MainMenu.UPLOAD, new UploadFileEvent());
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
+   {
+      addHandler(BrowserPanelSelectedEvent.TYPE, this);
+      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+   }
+
+   @Override
+   protected void onInitializeApplication()
    {
       setVisible(true);
-      setEnabled(true);
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+      if (browserPanelSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
+   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
+   {
+      browserPanelSelected = true;
+      updateEnabling();
+   }
+
+   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
+   {
+      browserPanelSelected = false;
+      updateEnabling();
    }
 
 }

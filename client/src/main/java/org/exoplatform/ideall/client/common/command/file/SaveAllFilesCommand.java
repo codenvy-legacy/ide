@@ -44,7 +44,7 @@ public class SaveAllFilesCommand extends SimpleCommand implements FileContentCha
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       setVisible(true);
       

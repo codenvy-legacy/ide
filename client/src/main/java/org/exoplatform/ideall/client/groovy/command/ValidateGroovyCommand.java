@@ -42,7 +42,7 @@ public class ValidateGroovyCommand extends SimpleCommand implements EditorActive
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }

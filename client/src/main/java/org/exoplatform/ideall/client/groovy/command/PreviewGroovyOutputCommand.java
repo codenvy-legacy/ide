@@ -43,7 +43,7 @@ public class PreviewGroovyOutputCommand extends SimpleCommand implements EditorA
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }

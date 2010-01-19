@@ -46,7 +46,7 @@ public class ShowPreviewCommand extends SimpleCommand implements EditorActiveFil
    }
 
    @Override
-   protected void initialize()
+   protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
