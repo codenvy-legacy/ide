@@ -73,6 +73,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
          parseWorkspace(configurationNode);
          parseOpenedFiles(configurationNode);
          parseActiveFile(configurationNode);
+         parseLineNumbers(configurationNode);
          parseToolbar(configurationNode);
       }
       catch (Exception exc)
@@ -124,6 +125,16 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       }
    }
 
+   private void parseLineNumbers(Node configurationNode) {
+      if (getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().getLength() == 0)
+      {
+         return;
+      }
+
+      String lineNumbers = getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().item(0).getNodeValue();
+      context.setShowLineNumbers(Boolean.parseBoolean(lineNumbers));
+   }
+   
    private void parseToolbar(Node configurationNode)
    {
       Node toolbar = getChildNode(configurationNode, TOOLBAR);

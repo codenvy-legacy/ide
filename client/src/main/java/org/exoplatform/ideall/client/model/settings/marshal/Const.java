@@ -41,6 +41,8 @@ public interface Const
 
    public static final String ACTIVE_FILE = "active-file";
    
+   public static final String LINE_NUMBERS = "line-numbers";
+   
    public static final String TOOLBAR = "toolbar";
    
    public static final String TOOLBAR_ITEM = "toolbar-item";

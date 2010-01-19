@@ -47,6 +47,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       xml += getWorkspace();
       xml += getOpenedFiles();
       xml += getActiveFile();
+      xml += getLineNumbers();
       xml += getToolbar();
       xml += "</" + SETTINGS + ">";
 
@@ -84,6 +85,11 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    {
       String activeFile = context.getActiveFile() == null ? "" : context.getActiveFile().getPath();
       String xml = "<" + ACTIVE_FILE + ">" + activeFile + "</" + ACTIVE_FILE + ">";
+      return xml;
+   }
+   
+   private String getLineNumbers() {
+      String xml = "<" + LINE_NUMBERS + ">" + context.isShowLineNumbers() + "</" + LINE_NUMBERS + ">";
       return xml;
    }
 

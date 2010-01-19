@@ -60,8 +60,7 @@ public class HideLineNumbersCommand extends SimpleCommand implements EditorActiv
    @Override
    protected void onInitializeApplication()
    {
-      setVisible(true);
-      setEnabled(true);
+      updateState();
    }
 
    private void updateState()
