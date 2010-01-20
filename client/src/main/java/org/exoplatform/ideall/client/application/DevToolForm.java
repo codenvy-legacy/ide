@@ -19,12 +19,15 @@ package org.exoplatform.ideall.client.application;
 import org.exoplatform.gwt.commons.component.event.LockIFrameElementsEvent;
 import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
 import org.exoplatform.ideall.client.editor.EditorForm;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.ClearFocusHandler;
 import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelHandler;
 import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
 import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelHandler;
+import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelHandler;
 import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
@@ -55,7 +58,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 
 public class DevToolForm extends VLayout implements DevToolPresenter.Display, ClearFocusHandler,
-   MaximizeEditorPanelHandler, RestoreEditorPanelHandler, MaximizeOperationPanelHandler, RestoreOperationPanelHandler
+   MaximizeEditorPanelHandler, RestoreEditorPanelHandler, MaximizeOperationPanelHandler, RestoreOperationPanelHandler,
+   EditorActiveFileChangedHandler
 {
 
    private static final int MARGIN = 3;
@@ -98,6 +102,7 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       eventBus.addHandler(RestoreEditorPanelEvent.TYPE, this);
       eventBus.addHandler(MaximizeOperationPanelEvent.TYPE, this);
       eventBus.addHandler(RestoreOperationPanelEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       draw();
 
@@ -187,7 +192,11 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
 
    private int operationPanelHeight;
 
-   public void onMaximizeEditorPanel(MaximizeEditorPanelEvent event)
+   private boolean editorPanelMaximized;
+
+   private boolean operationPanelMaximized;
+
+   private void maximizeEditorPanel()
    {
       navigationPanelVisible = navigationForm.isVisible();
       operationPanelVisible = operationForm.isVisible();
@@ -199,9 +208,11 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       verticalSplitLayout.setResizeBarSize(0);
 
       statusBar.hide();
+
+      editorPanelMaximized = true;
    }
 
-   public void onRestoreEditorPanel(RestoreEditorPanelEvent event)
+   private void restoreEditorPanel()
    {
       if (navigationPanelVisible)
       {
@@ -216,9 +227,11 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       verticalSplitLayout.setResizeBarSize(9);
 
       statusBar.show();
+
+      editorPanelMaximized = false;
    }
 
-   public void onMaximizeOperationPanel(MaximizeOperationPanelEvent event)
+   private void maximizeOperationPanel()
    {
       navigationPanelVisible = navigationForm.isVisible();
       navigationForm.hide();
@@ -234,9 +247,11 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       statusBar.hide();
 
       onClearFocus(null);
+
+      operationPanelMaximized = true;
    }
 
-   public void onRestoreOperationPanel(RestoreOperationPanelEvent event)
+   private void restoreOperationPanel()
    {
       if (navigationPanelVisible)
       {
@@ -251,6 +266,37 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       operationForm.setHeight(operationPanelHeight);
 
       statusBar.show();
+
+      operationPanelMaximized = false;
+   }
+
+   public void onMaximizeEditorPanel(MaximizeEditorPanelEvent event)
+   {
+      maximizeEditorPanel();
+   }
+
+   public void onRestoreEditorPanel(RestoreEditorPanelEvent event)
+   {
+      restoreEditorPanel();
+   }
+
+   public void onMaximizeOperationPanel(MaximizeOperationPanelEvent event)
+   {
+      maximizeOperationPanel();
+   }
+
+   public void onRestoreOperationPanel(RestoreOperationPanelEvent event)
+   {
+      restoreOperationPanel();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (operationPanelMaximized)
+      {
+         restoreOperationPanel();
+         eventBus.fireEvent(new OperationPanelRestoredEvent());
+      }
    }
 
 }

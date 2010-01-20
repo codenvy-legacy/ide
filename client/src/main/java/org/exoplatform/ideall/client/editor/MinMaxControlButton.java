@@ -61,6 +61,12 @@ public class MinMaxControlButton extends ImgButton implements ClickHandler
       updateVisualState();
       addClickHandler(this);
    }
+   
+   public void setMaximize(boolean maximize)
+   {
+      this.maximize = maximize;
+      updateVisualState();
+   }
 
    private void updateVisualState()
    {

@@ -19,8 +19,11 @@ package org.exoplatform.ideall.client.operation;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.editor.MinMaxControlButton;
 import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
+import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
 import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -50,10 +53,12 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version @version $Id: $
  */
 
-public class OperationForm extends Layout implements OperationPresenter.Display
+public class OperationForm extends Layout implements OperationPresenter.Display, OperationPanelRestoredHandler
 {
 
    private HandlerManager eventBus;
+
+   private Handlers handlers;
 
    private ApplicationContext context;
 
@@ -77,10 +82,13 @@ public class OperationForm extends Layout implements OperationPresenter.Display
 
    protected String previousTab = null;
 
+   protected MinMaxControlButton minMaxControlButton;
+
    public OperationForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
+      handlers = new Handlers(eventBus);
 
       setHeight(INITIAL_HEIGHT);
 
@@ -110,12 +118,15 @@ public class OperationForm extends Layout implements OperationPresenter.Display
 
       tabSet.addTabSelectedHandler(tabSelectedHandler);
       tabSet.addCloseClickHandler(closeClickhandler);
+
+      handlers.addHandler(OperationPanelRestoredEvent.TYPE, this);
    }
 
    @Override
    public void destroy()
    {
       presenter.destroy();
+      handlers.removeHandlers();
       super.destroy();
    }
 
@@ -125,9 +136,9 @@ public class OperationForm extends Layout implements OperationPresenter.Display
       tabBarColtrols.setHeight(18);
       tabBarColtrols.setAutoWidth();
 
-      MinMaxControlButton minMax =
+      minMaxControlButton =
          new MinMaxControlButton(eventBus, true, new MaximizeOperationPanelEvent(), new RestoreOperationPanelEvent());
-      tabBarColtrols.addMember(minMax);
+      tabBarColtrols.addMember(minMaxControlButton);
 
       tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
    }
@@ -331,6 +342,11 @@ public class OperationForm extends Layout implements OperationPresenter.Display
          gadgetPreviewTab = addTab(gadgetPreviewPane, true);
       }
       tabSet.selectTab(gadgetPreviewTab);
+   }
+
+   public void onOperationPanelRestored(OperationPanelRestoredEvent event)
+   {
+      minMaxControlButton.setMaximize(true);
    }
 
 }
