@@ -109,7 +109,7 @@
  
  
  <component>
-    <type>org.exoplatform.rest.shindig.oauth.RestSecurityTokenGenerator</type>
+    <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>
     <init-params>                                                                                                                      
       <value-param>                                                                                                                    
         <name>keyFile</name>                                                                                                 
