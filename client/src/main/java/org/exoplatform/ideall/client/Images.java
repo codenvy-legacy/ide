@@ -96,10 +96,19 @@ public interface Images
 
       public static final String FORMAT = imageUrl + "menu/next_edition/format.png";
 
-      public static final String SHOW_LINE_NUMBERS = imageUrl + "edit/showLineNumbers1.png";
+      public static final String SHOW_LINE_NUMBERS = imageUrl + "edit/showLineNumbers2.png";
 
-      public static final String HIDE_LINE_NUMBERS = imageUrl + "edit/hideLineNumbers1.png";
-
+      public static final String HIDE_LINE_NUMBERS = imageUrl + "edit/hideLineNumbers2.png";
+      
+   }
+   
+   public interface ControlButtons
+   {
+      
+      public static final String MAXIMIZE = imageUrl + "buttons/minmax/maximize2.png";
+      
+      public static final String RESTORE = imageUrl + "buttons/minmax/minimize2.png";
+      
    }
 
    public interface ViewPanel

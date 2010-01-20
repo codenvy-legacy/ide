@@ -20,10 +20,13 @@ import org.exoplatform.ideall.client.editor.codemirror.CodeMirrorConfig;
 import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
+import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -45,7 +48,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 {
 
    private HandlerManager eventBus;
-   
+
    private EditorPresenter presenter;
 
    private TabSet tabSet;
@@ -55,12 +58,55 @@ public class EditorForm extends Layout implements EditorPresenter.Display
    /**
     * @param eventBus
     */
+
+   protected Layout maxLayout;
+
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
 
       tabSet = new TabSet();
+      createControlButtons();
       addMember(tabSet);
+
+      //      /*
+      //       * HAK
+      //       */
+      //
+      //      KeyIdentifier debugKey = new KeyIdentifier();
+      //      debugKey.setCtrlKey(true);
+      //      debugKey.setKeyName("E");
+      //      Page.registerKey(debugKey, new KeyCallback()
+      //      {
+      //         public void execute(String keyName)
+      //         {
+      //            maxLayout = new Layout();
+      //            maxLayout.setBackgroundColor("#FFEEAA");
+      //            maxLayout.setWidth100();
+      //            maxLayout.setHeight100();
+      //            maxLayout.draw();
+      //
+      //            maxLayout.addMember(tabSet);
+      //            
+      ////            tabSet.setPosition(Positioning.ABSOLUTE);
+      ////            tabSet.setLeft(0);
+      ////            tabSet.setTop(0);
+      //            
+      //         }
+      //      });
+      //
+      //      KeyIdentifier debugKey2 = new KeyIdentifier();
+      //      debugKey2.setCtrlKey(true);
+      //      debugKey2.setKeyName("J");
+      //      Page.registerKey(debugKey2, new KeyCallback()
+      //      {
+      //         public void execute(String keyName)
+      //         {
+      //            System.out.println(".execute()");
+      //            addMember(tabSet);
+      //            maxLayout.destroy();
+      //         }
+      //      });
 
       presenter = new EditorPresenter(eventBus, context);
       presenter.bindDisplay(this);
@@ -80,15 +126,33 @@ public class EditorForm extends Layout implements EditorPresenter.Display
       tabSet.addCloseClickHandler(closeClickHandler);
    }
 
+   private void createControlButtons()
+   {
+      Layout controlButtons = new Layout();
+      controlButtons.setWidth(20);
+      controlButtons.setHeight(18);
+      //controlButtons.setBackgroundColor("#FFAAEE");
+
+      MinMaxControlButton minMax =
+         new MinMaxControlButton(eventBus, true, new MaximizeEditorPanelEvent(), new RestoreEditorPanelEvent());
+      controlButtons.addMember(minMax);
+
+      tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, controlButtons);
+   }
+
    private TabSelectedHandler tabSelectedHandler = new TabSelectedHandler()
    {
       public void onTabSelected(TabSelectedEvent event)
       {
-         try {
+         try
+         {
             activeTab = (EditorTab)event.getTab();
-            String path = activeTab.getFile().getPath(); 
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), hasUndoChanges(path), hasRedoChanges(path)));            
-         } catch (Exception exc) {
+            String path = activeTab.getFile().getPath();
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), hasUndoChanges(path),
+               hasRedoChanges(path)));
+         }
+         catch (Exception exc)
+         {
             exc.printStackTrace();
          }
       }
@@ -117,13 +181,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display
    public void addTab(File file, boolean lineNumbers)
    {
       EditorTab tab = new EditorTab(file);
-
-//      // set showLineNumbersItem checkbox
-//      tab.setShowLineNumbersFlag(true);
-//      showLineNumbersItemCheckbox.setValue(true);      
-//      
       tab.setCanClose(true);
-      
+
       CodeMirrorConfig config = new CodeMirrorConfig(file.getContentType());
       config.setLineNumbers(lineNumbers);
       SmartGWTCodeMirror codemirror = new SmartGWTCodeMirror(eventBus, config);
@@ -147,13 +206,14 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 
    public void setTabContent(String path, String text)
    {
-      try {
-         getEditorTab(path).getCodeMirror().setText(text);         
-      } catch (Exception exc) {
+      try
+      {
+         getEditorTab(path).getCodeMirror().setText(text);
+      }
+      catch (Exception exc)
+      {
          exc.printStackTrace();
       }
-
-      //activeTab.getCodeMirror()
    }
 
    public void closeTab(String path)
@@ -236,7 +296,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display
          {
             editorTab.setFile(newFile);
             String newFilePath = newFile.getPath();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath), hasRedoChanges(newFilePath)));
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
+               hasRedoChanges(newFilePath)));
             return;
          }
       }

@@ -21,6 +21,14 @@ import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.ClearFocusHandler;
+import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
+import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelHandler;
+import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
+import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelHandler;
+import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
+import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelHandler;
+import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
+import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelHandler;
 import org.exoplatform.ideall.client.menu.GWTMenuWrapper;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
@@ -46,7 +54,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @version @version $Id: $
  */
 
-public class DevToolForm extends VLayout implements DevToolPresenter.Display, ClearFocusHandler
+public class DevToolForm extends VLayout implements DevToolPresenter.Display, ClearFocusHandler,
+   MaximizeEditorPanelHandler, RestoreEditorPanelHandler, MaximizeOperationPanelHandler, RestoreOperationPanelHandler
 {
 
    private static final int MARGIN = 3;
@@ -61,7 +70,7 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
 
    private EditorForm editorForm;
 
-   private OperationForm viewForm;
+   private OperationForm operationForm;
 
    private TextItem clearFocusItem;
 
@@ -85,11 +94,22 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       clearFocusForm.setTop(-100);
       eventBus.addHandler(ClearFocusEvent.TYPE, this);
 
+      eventBus.addHandler(MaximizeEditorPanelEvent.TYPE, this);
+      eventBus.addHandler(RestoreEditorPanelEvent.TYPE, this);
+      eventBus.addHandler(MaximizeOperationPanelEvent.TYPE, this);
+      eventBus.addHandler(RestoreOperationPanelEvent.TYPE, this);
+
       draw();
 
       presenter = new DevToolPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
+
+   protected HLayout horizontalSplitLayout;
+
+   protected VLayout verticalSplitLayout;
+
+   protected StatusBarForm statusBar;
 
    public void buildLayout()
    {
@@ -99,7 +119,7 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       GWTToolbarWrapper toolbarWrapper = new GWTToolbarWrapper(eventBus);
       addMember(toolbarWrapper);
 
-      HLayout horizontalSplitLayout = new HLayout();
+      horizontalSplitLayout = new HLayout();
       horizontalSplitLayout.setMargin(MARGIN);
       addMember(horizontalSplitLayout);
       navigationForm = new NavigationForm(eventBus, context);
@@ -123,7 +143,7 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
          }
       });
 
-      VLayout verticalSplitLayout = new VLayout();
+      verticalSplitLayout = new VLayout();
       verticalSplitLayout.setOverflow(Overflow.HIDDEN);
       horizontalSplitLayout.addMember(verticalSplitLayout);
 
@@ -132,9 +152,9 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       editorForm.setResizeBarTarget("next");
       verticalSplitLayout.addMember(editorForm);
 
-      viewForm = new OperationForm(eventBus, context);
-      verticalSplitLayout.addMember(viewForm);
-      viewForm.hide();
+      operationForm = new OperationForm(eventBus, context);
+      verticalSplitLayout.addMember(operationForm);
+      operationForm.hide();
 
       verticalSplitLayout.addMouseDownHandler(new MouseDownHandler()
       {
@@ -152,13 +172,85 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
          }
       });
 
-      StatusBarForm statusBar = new StatusBarForm(eventBus);
+      statusBar = new StatusBarForm(eventBus);
       addMember(statusBar);
    }
 
    public void onClearFocus(ClearFocusEvent event)
    {
       clearFocusItem.selectValue();
+   }
+
+   private boolean navigationPanelVisible;
+
+   private boolean operationPanelVisible;
+
+   private int operationPanelHeight;
+
+   public void onMaximizeEditorPanel(MaximizeEditorPanelEvent event)
+   {
+      navigationPanelVisible = navigationForm.isVisible();
+      operationPanelVisible = operationForm.isVisible();
+
+      navigationForm.hide();
+      horizontalSplitLayout.setResizeBarSize(0);
+
+      operationForm.hide();
+      verticalSplitLayout.setResizeBarSize(0);
+
+      statusBar.hide();
+   }
+
+   public void onRestoreEditorPanel(RestoreEditorPanelEvent event)
+   {
+      if (navigationPanelVisible)
+      {
+         navigationForm.show();
+      }
+      horizontalSplitLayout.setResizeBarSize(9);
+
+      if (operationPanelVisible)
+      {
+         operationForm.show();
+      }
+      verticalSplitLayout.setResizeBarSize(9);
+
+      statusBar.show();
+   }
+
+   public void onMaximizeOperationPanel(MaximizeOperationPanelEvent event)
+   {
+      navigationPanelVisible = navigationForm.isVisible();
+      navigationForm.hide();
+      horizontalSplitLayout.setResizeBarSize(0);
+
+      editorForm.hide();
+
+      verticalSplitLayout.setResizeBarSize(0);
+
+      operationPanelHeight = operationForm.getHeight();
+      operationForm.setHeight100();
+
+      statusBar.hide();
+
+      onClearFocus(null);
+   }
+
+   public void onRestoreOperationPanel(RestoreOperationPanelEvent event)
+   {
+      if (navigationPanelVisible)
+      {
+         navigationForm.show();
+      }
+
+      horizontalSplitLayout.setResizeBarSize(9);
+
+      editorForm.show();
+      verticalSplitLayout.setResizeBarSize(9);
+
+      operationForm.setHeight(operationPanelHeight);
+
+      statusBar.show();
    }
 
 }

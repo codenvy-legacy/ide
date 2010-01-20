@@ -19,6 +19,9 @@ package org.exoplatform.ideall.client.operation;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.ideall.client.editor.MinMaxControlButton;
+import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
+import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
 import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
@@ -51,7 +54,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display
 {
 
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
 
    private static final int INITIAL_HEIGHT = 200;
@@ -78,7 +81,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display
    {
       this.eventBus = eventBus;
       this.context = context;
-      
+
       setHeight(INITIAL_HEIGHT);
 
       tabSet = new TabSet();
@@ -122,6 +125,10 @@ public class OperationForm extends Layout implements OperationPresenter.Display
       tabBarColtrols.setHeight(18);
       tabBarColtrols.setAutoWidth();
 
+      MinMaxControlButton minMax =
+         new MinMaxControlButton(eventBus, true, new MaximizeOperationPanelEvent(), new RestoreOperationPanelEvent());
+      tabBarColtrols.addMember(minMax);
+
       tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
    }
 
@@ -147,9 +154,11 @@ public class OperationForm extends Layout implements OperationPresenter.Display
       }
 
       tabColtrolButtons.put(tabPanel.getTitle(), tabPanel.getColtrolButtons());
+      int position = 0;
       for (Canvas button : tabColtrolButtons.get(tabPanel.getTitle()))
       {
-         tabBarColtrols.addMember(button);
+         tabBarColtrols.addMember(button, position);
+         position++;
       }
 
       Tab tab = new Tab(tabPanel.getTitle());
@@ -200,7 +209,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display
             }
          }
 
-         int buttonsWidth = 0;
+         int buttonsWidth = 20;
          List<Canvas> buttonsToShow = tabColtrolButtons.get(event.getTab().getTitle());
          for (Canvas button : buttonsToShow)
          {
@@ -209,7 +218,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display
          }
 
          previousTab = event.getTab().getTitle();
-         
+
          for (Canvas c : tabSet.getChildren())
          {
             if (c.getID().equals(tabSet.getID() + "_tabBar"))
