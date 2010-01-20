@@ -18,8 +18,6 @@ package org.exoplatform.ideall.client.model.data.marshal;
 
 import org.exoplatform.gwt.commons.rest.Marshallable;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -32,11 +30,14 @@ public class SearchRequestMarshaller implements Marshallable
 
    private String query;
 
+   //andFlag shows whether this is the first condition or not
+   //if andFlag has true value, than "AND" must be put before condition
    private boolean andFlag = false;
 
    public SearchRequestMarshaller(String content, String name, String contentType, String path)
    {
       content = escapeRegisteredSymbols(content);
+
       String statement = "SELECT * FROM nt:base";
 
       if (content != null && content.length() > 0)
@@ -79,7 +80,9 @@ public class SearchRequestMarshaller implements Marshallable
          }
          else
          {
-            statement += " WHERE jcr:path LIKE '" + path + "/" + "%'";
+            // This is made with purpose to get only files (not with folders)
+            statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "/" + "%'";
+            andFlag = true;
          }
       }
 
@@ -100,7 +103,6 @@ public class SearchRequestMarshaller implements Marshallable
       query =
          "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
             + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
-
    }
 
    private String escapeRegisteredSymbols(String request)

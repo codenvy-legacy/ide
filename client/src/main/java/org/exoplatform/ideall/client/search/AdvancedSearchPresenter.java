@@ -21,6 +21,7 @@ package org.exoplatform.ideall.client.search;
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -53,6 +54,8 @@ public class AdvancedSearchPresenter
 
       void setMimeTypeValues(String[] mimeTypes);
 
+      void disablePathItem();
+
       void closeForm();
 
    }
@@ -68,8 +71,8 @@ public class AdvancedSearchPresenter
    public AdvancedSearchPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      this.path = context.getSelectedItem().getPath();
       this.context = context;
+      getPathValue();
    }
 
    public void bindDisplay(Display d)
@@ -94,6 +97,7 @@ public class AdvancedSearchPresenter
       });
 
       display.getPathItem().setValue(path);
+      display.disablePathItem();
 
       fillMimeTypes();
 
@@ -117,7 +121,7 @@ public class AdvancedSearchPresenter
    {
       String content = display.getSearchContentItem().getValue();
       String mainPath = display.getPathItem().getValue();
-      String path = display.getPathItem().getValue();
+      String searchPath = display.getPathItem().getValue();
       String fileName = display.getFileNameItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
@@ -127,7 +131,7 @@ public class AdvancedSearchPresenter
          return;
       }
 
-      String[] parts = path.split("/");
+      String[] parts = searchPath.split("/");
       int i = 3;
       if (parts[0].length() != 0)
       {
@@ -135,10 +139,10 @@ public class AdvancedSearchPresenter
       }
 
       // Get path of the folder where to search
-      path = "";
+      searchPath = "";
       while (i <= parts.length - 1)
       {
-         path += "/" + parts[i];
+         searchPath += "/" + parts[i];
          i++;
       }
 
@@ -157,7 +161,7 @@ public class AdvancedSearchPresenter
          context.setSearchContentType(contentType);
       }
 
-      DataService.getInstance().search(mainPath, content, fileName, contentType, path);
+      DataService.getInstance().search(mainPath, content, fileName, contentType, searchPath);
       display.closeForm();
    }
 
@@ -172,6 +176,26 @@ public class AdvancedSearchPresenter
       mimeTypes[5] = MimeType.SCRIPT_GROOVY;
       mimeTypes[6] = MimeType.GOOGLE_GADGET;
       display.setMimeTypeValues(mimeTypes);
+   }
+
+   private void getPathValue()
+   {
+      //if file was selected then delete it's name from path
+      if (context.getSelectedItem() instanceof File)
+      {
+         String filePath = context.getSelectedItem().getPath();
+         String fileName = ((File)context.getSelectedItem()).getName();
+         int index = filePath.lastIndexOf(fileName);
+         if (index > 0)
+         {
+            // remove file's name plus dilimeter before it
+            path = filePath.substring(0, index - 1);
+         }
+      }
+      else
+      {
+         path = context.getSelectedItem().getPath();
+      }
    }
 
 }

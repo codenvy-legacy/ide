@@ -29,13 +29,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -44,28 +43,31 @@ import com.smartgwt.client.widgets.form.fields.ToolbarItem;
  */
 public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPresenter.Display
 {
-   private static final int WIDTH = 420;
+   private static final int WIDTH = 320;
 
-   private static final int HEIGHT = 370;
+   private static final int HEIGHT = 350;
 
-   private static int FIELD_WIDTH = 350;
+   private final int BUTTON_WIDTH = 90;
+
+   private final int BUTTON_HEIGHT = 22;
+
+   private static int FIELD_WIDTH = 250;
+
+   private static int FIELD_HEIGHT = 20;
 
    private TextField contentField;
-   
+
    private TextField pathField;
-   
+
    private TextField fileNameField;
 
    private IButton searchButton;
 
    private IButton cancelButton;
-   
-   private DynamicForm paramForm;
-   
+
    private ComboBoxField mimeTypesField;
-   
-   private FormItem[] paramFormItemArray; 
-   
+
+   private FormItem[] paramFormItemArray;
 
    /**
     * {@inheritDoc}
@@ -95,49 +97,51 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    {
       super(eventBus, WIDTH, HEIGHT);
       setTitle("Advanced Search");
-      
-      createSearchForm();
-      
-     // createValueFields();
-      createButtonsForm();
+
+      VLayout mainLayout = new VLayout();
+      mainLayout.setWidth100();
+      mainLayout.setHeight100();
+      mainLayout.setPadding(10);
+      mainLayout.setMembersMargin(15);
+
+      mainLayout.addMember(createSearchForm());
+      mainLayout.addMember(createButtonsLayout());
+
+      addItem(mainLayout);
 
       show();
-      paramForm.focus();
-      
       AdvancedSearchPresenter advancedSearchPresenter = new AdvancedSearchPresenter(eventBus, context);
       advancedSearchPresenter.bindDisplay(this);
    }
-   
-   private void createSearchForm(){
-      paramForm = new DynamicForm();
+
+   private DynamicForm createSearchForm()
+   {
+      DynamicForm paramForm = new DynamicForm();
       paramForm.setLayoutAlign(Alignment.CENTER);
-      paramForm.setLayoutAlign(VerticalAlignment.CENTER);
-      paramForm.setMargin(15);
-      
-    //  paramForm.setCellSpacing();
-      
-      paramFormItemArray = new FormItem[16]; 
-      
+      paramForm.setPadding(10);
+      paramForm.setWidth(FIELD_WIDTH + 20);
+      paramForm.setIsGroup(true);
+      paramForm.setGroupTitle("Search parameters");
+
+      paramFormItemArray = new FormItem[12];
+
       contentField = new TextField();
       createValueField("Text:", contentField, 0);
-      
+
       pathField = new TextField();
-      createValueField("Path:", pathField, 4);
-      
+      createValueField("Path:", pathField, 3);
+
       fileNameField = new TextField();
-      createValueField("File name:", fileNameField, 8);
-      
-      createSelectField(12);
-      
-      paramForm.setAutoWidth();
-      addItem(paramForm);
-      
+      createValueField("File name:", fileNameField, 6);
+
+      createSelectField(9);
+
       paramForm.setItems(paramFormItemArray);
       paramForm.setAutoFocus(true);
-      
+
+      return paramForm;
    }
-   
-   
+
    private void createValueField(String title, TextField textField, int position)
    {
       StaticTextItem fieldTitle = new StaticTextItem();
@@ -146,74 +150,66 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       fieldTitle.setColSpan(2);
       fieldTitle.setWrap(false);
 
-      SpacerItem spacerItem = new SpacerItem();
-      spacerItem.setHeight(3);
-
       SpacerItem fieldSpacerItem = new SpacerItem();
       fieldSpacerItem.setHeight(10);
-      
+
       textField.setShowTitle(false);
       textField.setColSpan(2);
+      textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
       textField.setSelectOnFocus(true);
-      
+
       paramFormItemArray[position] = fieldTitle;
-      paramFormItemArray[position+1] = spacerItem;
-      paramFormItemArray[position+2] = textField;
-      paramFormItemArray[position+3] = fieldSpacerItem;
+      paramFormItemArray[position + 1] = textField;
+      paramFormItemArray[position + 2] = fieldSpacerItem;
    }
-   
-   
-   private void createSelectField(int position){
+
+   private void createSelectField(int position)
+   {
       StaticTextItem title = new StaticTextItem();
       title.setValue("Mime Type:");
       title.setShowTitle(false);
       title.setColSpan(2);
 
-      SpacerItem spacer = new SpacerItem();
-      spacer.setHeight(3);
-      
       mimeTypesField = new ComboBoxField();
       mimeTypesField.setWidth(FIELD_WIDTH);
+      mimeTypesField.setHeight(FIELD_HEIGHT);
       mimeTypesField.setShowTitle(false);
       mimeTypesField.setColSpan(2);
-      
+
       SpacerItem fieldSpacerItem = new SpacerItem();
       fieldSpacerItem.setHeight(10);
-      
+
       paramFormItemArray[position] = title;
-      paramFormItemArray[position+1] = spacer;
-      paramFormItemArray[position+2] = mimeTypesField;
-      paramFormItemArray[position+3] = fieldSpacerItem;
-      
+      paramFormItemArray[position + 1] = mimeTypesField;
+      paramFormItemArray[position + 2] = fieldSpacerItem;
+
    }
-   
 
-   private void createButtonsForm()
+   private HLayout createButtonsLayout()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setHeight(BUTTON_HEIGHT);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setMembersMargin(10);
 
-      searchButton = new IButton("Search");
-      searchButton.setWidth(90);
-      searchButton.setHeight(22);
-      searchButton.setIcon(Images.Buttons.SEARCH);
+      searchButton = createButton("Search", Images.Buttons.SEARCH);
+      cancelButton = createButton("Cancel", Images.Buttons.CANCEL);
 
-      cancelButton = new IButton("Cancel");
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      buttonsLayout.addMember(searchButton);
+      buttonsLayout.addMember(cancelButton);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(searchButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
+      return buttonsLayout;
+   }
 
-      buttonsForm.setAutoWidth();
-      addItem(buttonsForm);
+   private IButton createButton(String title, String icon)
+   {
+      IButton button = new IButton(title);
+      button.setIcon(icon);
+      button.setWidth(BUTTON_WIDTH);
+      button.setHeight(BUTTON_HEIGHT);
+      return button;
    }
 
    public void closeForm()
@@ -236,7 +232,6 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    {
       return contentField;
    }
-   
 
    /**
     * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#getFileNameItem()
@@ -260,5 +255,13 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    public void setMimeTypeValues(String[] mimeTypes)
    {
       mimeTypesField.setValueMap(mimeTypes);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#disablePathItem()
+    */
+   public void disablePathItem()
+   {
+      pathField.disable();
    }
 }
