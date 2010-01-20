@@ -106,11 +106,7 @@
     <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
   </component>
 
-
-
- <component>                                                                                                                          
-     <type>org.exoplatform.ws.frameworks.application.rest.LoopbackContentService</type>                                                 
- </component>   
+ 
  
  <component>
     <type>org.exoplatform.rest.shindig.oauth.RestSecurityTokenGenerator</type>
