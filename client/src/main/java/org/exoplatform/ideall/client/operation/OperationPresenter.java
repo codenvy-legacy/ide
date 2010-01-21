@@ -23,6 +23,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
+import org.exoplatform.ideall.client.event.layout.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -130,6 +131,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onOutput(OutputEvent event)
    {
+      eventBus.fireEvent(new RestorePerspectiveEvent());
       display.showOutput();
    }
 

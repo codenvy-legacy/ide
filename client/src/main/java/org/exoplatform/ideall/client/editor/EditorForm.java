@@ -16,10 +16,13 @@
  */
 package org.exoplatform.ideall.client.editor;
 
+import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.editor.codemirror.CodeMirrorConfig;
 import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.event.layout.EditorPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.layout.EditorPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -44,10 +47,12 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version @version $Id: $
  */
 
-public class EditorForm extends Layout implements EditorPresenter.Display
+public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler
 {
 
    private HandlerManager eventBus;
+
+   private Handlers handlers;
 
    private EditorPresenter presenter;
 
@@ -55,58 +60,16 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 
    private EditorTab activeTab;
 
-   /**
-    * @param eventBus
-    */
-
-   protected Layout maxLayout;
+   private MinMaxControlButton minMaxControlButton;
 
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
+      handlers = new Handlers(eventBus);
 
       tabSet = new TabSet();
       createControlButtons();
       addMember(tabSet);
-
-      //      /*
-      //       * HAK
-      //       */
-      //
-      //      KeyIdentifier debugKey = new KeyIdentifier();
-      //      debugKey.setCtrlKey(true);
-      //      debugKey.setKeyName("E");
-      //      Page.registerKey(debugKey, new KeyCallback()
-      //      {
-      //         public void execute(String keyName)
-      //         {
-      //            maxLayout = new Layout();
-      //            maxLayout.setBackgroundColor("#FFEEAA");
-      //            maxLayout.setWidth100();
-      //            maxLayout.setHeight100();
-      //            maxLayout.draw();
-      //
-      //            maxLayout.addMember(tabSet);
-      //            
-      ////            tabSet.setPosition(Positioning.ABSOLUTE);
-      ////            tabSet.setLeft(0);
-      ////            tabSet.setTop(0);
-      //            
-      //         }
-      //      });
-      //
-      //      KeyIdentifier debugKey2 = new KeyIdentifier();
-      //      debugKey2.setCtrlKey(true);
-      //      debugKey2.setKeyName("J");
-      //      Page.registerKey(debugKey2, new KeyCallback()
-      //      {
-      //         public void execute(String keyName)
-      //         {
-      //            System.out.println(".execute()");
-      //            addMember(tabSet);
-      //            maxLayout.destroy();
-      //         }
-      //      });
 
       presenter = new EditorPresenter(eventBus, context);
       presenter.bindDisplay(this);
@@ -124,6 +87,16 @@ public class EditorForm extends Layout implements EditorPresenter.Display
 
       tabSet.addTabSelectedHandler(tabSelectedHandler);
       tabSet.addCloseClickHandler(closeClickHandler);
+
+      handlers.addHandler(EditorPanelRestoredEvent.TYPE, this);
+   }
+
+   @Override
+   protected void onDestroy()
+   {
+      handlers.removeHandlers();
+      presenter.destroy();
+      super.onDestroy();
    }
 
    private void createControlButtons()
@@ -133,9 +106,9 @@ public class EditorForm extends Layout implements EditorPresenter.Display
       controlButtons.setHeight(18);
       //controlButtons.setBackgroundColor("#FFAAEE");
 
-      MinMaxControlButton minMax =
+      minMaxControlButton =
          new MinMaxControlButton(eventBus, true, new MaximizeEditorPanelEvent(), new RestoreEditorPanelEvent());
-      controlButtons.addMember(minMax);
+      controlButtons.addMember(minMaxControlButton);
 
       tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, controlButtons);
    }
@@ -323,6 +296,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display
    public boolean hasUndoChanges(String path)
    {
       return getEditorTab(path).getCodeMirror().hasUndoChanges();
+   }
+
+   public void onEditorPanelRestored(EditorPanelRestoredEvent event)
+   {
+      minMaxControlButton.setMaximize(true);
    }
 
 }

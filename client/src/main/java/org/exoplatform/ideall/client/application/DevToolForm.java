@@ -16,39 +16,16 @@
  */
 package org.exoplatform.ideall.client.application;
 
-import org.exoplatform.gwt.commons.component.event.LockIFrameElementsEvent;
-import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
-import org.exoplatform.ideall.client.editor.EditorForm;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.application.perspective.DefaultPerspective;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.ClearFocusHandler;
-import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
-import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelHandler;
-import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
-import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelHandler;
-import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
-import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelHandler;
-import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
-import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelHandler;
-import org.exoplatform.ideall.client.menu.GWTMenuWrapper;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.navigation.NavigationForm;
-import org.exoplatform.ideall.client.operation.OperationForm;
-import org.exoplatform.ideall.client.statusbar.StatusBarForm;
-import org.exoplatform.ideall.client.toolbar.GWTToolbarWrapper;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.events.MouseUpEvent;
-import com.smartgwt.client.widgets.events.MouseUpHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,24 +34,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @version @version $Id: $
  */
 
-public class DevToolForm extends VLayout implements DevToolPresenter.Display, ClearFocusHandler,
-   MaximizeEditorPanelHandler, RestoreEditorPanelHandler, MaximizeOperationPanelHandler, RestoreOperationPanelHandler,
-   EditorActiveFileChangedHandler
+public class DevToolForm extends Layout implements DevToolPresenter.Display, ClearFocusHandler
 {
-
-   private static final int MARGIN = 3;
 
    private DevToolPresenter presenter;
 
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   private NavigationForm navigationForm;
-
-   private EditorForm editorForm;
-
-   private OperationForm operationForm;
 
    private TextItem clearFocusItem;
 
@@ -98,205 +65,20 @@ public class DevToolForm extends VLayout implements DevToolPresenter.Display, Cl
       clearFocusForm.setTop(-100);
       eventBus.addHandler(ClearFocusEvent.TYPE, this);
 
-      eventBus.addHandler(MaximizeEditorPanelEvent.TYPE, this);
-      eventBus.addHandler(RestoreEditorPanelEvent.TYPE, this);
-      eventBus.addHandler(MaximizeOperationPanelEvent.TYPE, this);
-      eventBus.addHandler(RestoreOperationPanelEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
       draw();
 
       presenter = new DevToolPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
 
-   protected HLayout horizontalSplitLayout;
-
-   protected VLayout verticalSplitLayout;
-
-   protected StatusBarForm statusBar;
-
-   public void buildLayout()
+   public void showDefaultPerspective()
    {
-      GWTMenuWrapper menuWrapper = new GWTMenuWrapper(eventBus);
-      addMember(menuWrapper);
-
-      GWTToolbarWrapper toolbarWrapper = new GWTToolbarWrapper(eventBus);
-      addMember(toolbarWrapper);
-
-      horizontalSplitLayout = new HLayout();
-      horizontalSplitLayout.setMargin(MARGIN);
-      addMember(horizontalSplitLayout);
-      navigationForm = new NavigationForm(eventBus, context);
-      navigationForm.setWidth("30%");
-      navigationForm.setShowResizeBar(true);
-      horizontalSplitLayout.addMember(navigationForm);
-
-      horizontalSplitLayout.addMouseDownHandler(new MouseDownHandler()
-      {
-         public void onMouseDown(MouseDownEvent event)
-         {
-            eventBus.fireEvent(new LockIFrameElementsEvent());
-         }
-      });
-
-      horizontalSplitLayout.addMouseUpHandler(new MouseUpHandler()
-      {
-         public void onMouseUp(MouseUpEvent event)
-         {
-            eventBus.fireEvent(new UnlockIFrameElementsEvent());
-         }
-      });
-
-      verticalSplitLayout = new VLayout();
-      verticalSplitLayout.setOverflow(Overflow.HIDDEN);
-      horizontalSplitLayout.addMember(verticalSplitLayout);
-
-      editorForm = new EditorForm(eventBus, context);
-      editorForm.setShowResizeBar(true);
-      editorForm.setResizeBarTarget("next");
-      verticalSplitLayout.addMember(editorForm);
-
-      operationForm = new OperationForm(eventBus, context);
-      verticalSplitLayout.addMember(operationForm);
-      operationForm.hide();
-
-      verticalSplitLayout.addMouseDownHandler(new MouseDownHandler()
-      {
-         public void onMouseDown(MouseDownEvent event)
-         {
-            eventBus.fireEvent(new LockIFrameElementsEvent());
-         }
-      });
-
-      verticalSplitLayout.addMouseUpHandler(new MouseUpHandler()
-      {
-         public void onMouseUp(MouseUpEvent event)
-         {
-            eventBus.fireEvent(new UnlockIFrameElementsEvent());
-         }
-      });
-
-      statusBar = new StatusBarForm(eventBus);
-      addMember(statusBar);
+      addMember(new DefaultPerspective(eventBus, context));
    }
 
    public void onClearFocus(ClearFocusEvent event)
    {
       clearFocusItem.selectValue();
-   }
-
-   private boolean navigationPanelVisible;
-
-   private boolean operationPanelVisible;
-
-   private int operationPanelHeight;
-
-   private boolean editorPanelMaximized;
-
-   private boolean operationPanelMaximized;
-
-   private void maximizeEditorPanel()
-   {
-      navigationPanelVisible = navigationForm.isVisible();
-      operationPanelVisible = operationForm.isVisible();
-
-      navigationForm.hide();
-      horizontalSplitLayout.setResizeBarSize(0);
-
-      operationForm.hide();
-      verticalSplitLayout.setResizeBarSize(0);
-
-      statusBar.hide();
-
-      editorPanelMaximized = true;
-   }
-
-   private void restoreEditorPanel()
-   {
-      if (navigationPanelVisible)
-      {
-         navigationForm.show();
-      }
-      horizontalSplitLayout.setResizeBarSize(9);
-
-      if (operationPanelVisible)
-      {
-         operationForm.show();
-      }
-      verticalSplitLayout.setResizeBarSize(9);
-
-      statusBar.show();
-
-      editorPanelMaximized = false;
-   }
-
-   private void maximizeOperationPanel()
-   {
-      navigationPanelVisible = navigationForm.isVisible();
-      navigationForm.hide();
-      horizontalSplitLayout.setResizeBarSize(0);
-
-      editorForm.hide();
-
-      verticalSplitLayout.setResizeBarSize(0);
-
-      operationPanelHeight = operationForm.getHeight();
-      operationForm.setHeight100();
-
-      statusBar.hide();
-
-      onClearFocus(null);
-
-      operationPanelMaximized = true;
-   }
-
-   private void restoreOperationPanel()
-   {
-      if (navigationPanelVisible)
-      {
-         navigationForm.show();
-      }
-
-      horizontalSplitLayout.setResizeBarSize(9);
-
-      editorForm.show();
-      verticalSplitLayout.setResizeBarSize(9);
-
-      operationForm.setHeight(operationPanelHeight);
-
-      statusBar.show();
-
-      operationPanelMaximized = false;
-   }
-
-   public void onMaximizeEditorPanel(MaximizeEditorPanelEvent event)
-   {
-      maximizeEditorPanel();
-   }
-
-   public void onRestoreEditorPanel(RestoreEditorPanelEvent event)
-   {
-      restoreEditorPanel();
-   }
-
-   public void onMaximizeOperationPanel(MaximizeOperationPanelEvent event)
-   {
-      maximizeOperationPanel();
-   }
-
-   public void onRestoreOperationPanel(RestoreOperationPanelEvent event)
-   {
-      restoreOperationPanel();
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (operationPanelMaximized)
-      {
-         restoreOperationPanel();
-         eventBus.fireEvent(new OperationPanelRestoredEvent());
-      }
    }
 
 }

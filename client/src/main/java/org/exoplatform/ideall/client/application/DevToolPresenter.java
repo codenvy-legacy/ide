@@ -55,8 +55,8 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    public interface Display
    {
 
-      void buildLayout();
-
+      void showDefaultPerspective();
+      
    }
 
    private HandlerManager eventBus;
@@ -79,7 +79,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    {
       display = d;
 
-      display.buildLayout();
+      display.showDefaultPerspective();
 
       handlers.addHandler(InvalidConfigurationRecievedEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
