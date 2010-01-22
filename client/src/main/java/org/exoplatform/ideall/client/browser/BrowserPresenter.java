@@ -32,6 +32,7 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
@@ -251,7 +252,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       }
    };
 
-   public void onFolderContentReceivedEx(FolderContentReceivedEvent event)
+   public void onFolderContentReceived(FolderContentReceivedEvent event)
    {
       Collections.sort(event.getFolder().getChildren(), comparator);
 
@@ -261,6 +262,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       }
 
       display.getBrowserTree().setValue(event.getFolder());
+      eventBus.fireEvent(new RestorePerspectiveEvent());
 
       if (folderToUpdate != null)
       {

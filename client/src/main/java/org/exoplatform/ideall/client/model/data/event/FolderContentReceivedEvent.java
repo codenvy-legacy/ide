@@ -46,7 +46,7 @@ public class FolderContentReceivedEvent extends GwtEvent<FolderContentReceivedHa
    @Override
    protected void dispatch(FolderContentReceivedHandler handler)
    {
-      handler.onFolderContentReceivedEx(this);
+      handler.onFolderContentReceived(this);
    }
 
    @Override

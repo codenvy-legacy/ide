@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.event.perspective;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class RestorePerspectiveEvent extends GwtEvent<RestorePerspectiveHandler>
+public interface RestorePerspectiveHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<RestorePerspectiveHandler> TYPE = new GwtEvent.Type<RestorePerspectiveHandler>();
-
-   @Override
-   protected void dispatch(RestorePerspectiveHandler handler)
-   {
-      handler.onRestorePerspective(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestorePerspectiveHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onRestorePerspective(RestorePerspectiveEvent event);
 
 }

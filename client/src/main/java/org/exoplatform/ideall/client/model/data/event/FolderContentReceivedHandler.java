@@ -28,6 +28,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface FolderContentReceivedHandler extends EventHandler
 {
    
-   void onFolderContentReceivedEx(FolderContentReceivedEvent event);
+   void onFolderContentReceived(FolderContentReceivedEvent event);
 
 }

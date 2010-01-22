@@ -98,7 +98,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
       DataService.getInstance().getFolderContent(pathToOpen);
    }
 
-   public void onFolderContentReceivedEx(FolderContentReceivedEvent event)
+   public void onFolderContentReceived(FolderContentReceivedEvent event)
    {
       System.out.println("folder content received...... opening next folder............");
 
