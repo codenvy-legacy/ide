@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.editor.MinMaxControlButton;
-import org.exoplatform.ideall.client.event.layout.MaximizeOperationPanelEvent;
-import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.layout.OperationPanelRestoredHandler;
-import org.exoplatform.ideall.client.event.layout.RestoreOperationPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredHandler;
+import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEvent;
 import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;

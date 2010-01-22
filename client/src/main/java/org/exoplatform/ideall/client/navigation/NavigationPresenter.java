@@ -16,60 +16,65 @@
  */
 package org.exoplatform.ideall.client.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
+import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelHandler;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.data.event.SearchResultReceivedEvent;
 import org.exoplatform.ideall.client.model.data.event.SearchResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class NavigationPresenter implements SearchResultReceivedHandler
+public class NavigationPresenter implements SearchResultReceivedHandler, SelectBrowserPanelHandler
 {
 
    interface Display
    {
 
       void showSearchResult(Folder searchResult);
+      
+      void selectBrowserPanel();
 
    }
 
    protected Display display;
 
    private HandlerManager eventBus;
-
-   private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
+   
+   private Handlers handlers;
 
    public NavigationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
    {
       this.display = d;
-      handlers.add(eventBus.addHandler(SearchResultReceivedEvent.TYPE, this));
+      handlers.addHandler(SearchResultReceivedEvent.TYPE, this);
+      handlers.addHandler(SelectBrowserPanelEvent.TYPE, this);
    }
 
    public void destroy()
    {
-      for (HandlerRegistration handler : handlers)
-      {
-         handler.removeHandler();
-      }
+      handlers.removeHandlers();
    }
 
    public void onSearchResultReceived(SearchResultReceivedEvent event)
    {
       Folder searchResult = event.getFolder();
       display.showSearchResult(searchResult);
+   }
+
+   public void onSelectBrowserPanel(SelectBrowserPanelEvent event)
+   {
+      display.selectBrowserPanel();
    }
 
 }

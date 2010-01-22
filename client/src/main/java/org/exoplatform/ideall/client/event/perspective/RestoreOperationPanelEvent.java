@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.event.perspective;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -28,19 +28,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class MaximizeEditorPanelEvent extends GwtEvent<MaximizeEditorPanelHandler>
+public class RestoreOperationPanelEvent extends GwtEvent<RestoreOperationPanelHandler>
 {
 
-   public static final GwtEvent.Type<MaximizeEditorPanelHandler> TYPE = new GwtEvent.Type<MaximizeEditorPanelHandler>();
+   public static final GwtEvent.Type<RestoreOperationPanelHandler> TYPE = new GwtEvent.Type<RestoreOperationPanelHandler>();
 
    @Override
-   protected void dispatch(MaximizeEditorPanelHandler handler)
+   protected void dispatch(RestoreOperationPanelHandler handler)
    {
-      handler.onMaximizeEditorPanel(this);
+      handler.onRestoreOperationPanel(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<MaximizeEditorPanelHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<RestoreOperationPanelHandler> getAssociatedType()
    {
       return TYPE;
    }

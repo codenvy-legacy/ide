@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.browser.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -28,19 +28,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class RestoreOperationPanelEvent extends GwtEvent<RestoreOperationPanelHandler>
+public class SelectBrowserPanelEvent extends GwtEvent<SelectBrowserPanelHandler>
 {
 
-   public static final GwtEvent.Type<RestoreOperationPanelHandler> TYPE = new GwtEvent.Type<RestoreOperationPanelHandler>();
+   public static final GwtEvent.Type<SelectBrowserPanelHandler> TYPE = new GwtEvent.Type<SelectBrowserPanelHandler>();
 
    @Override
-   protected void dispatch(RestoreOperationPanelHandler handler)
+   protected void dispatch(SelectBrowserPanelHandler handler)
    {
-      handler.onRestoreOperationPanel(this);
+      handler.onSelectBrowserPanel(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestoreOperationPanelHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectBrowserPanelHandler> getAssociatedType()
    {
       return TYPE;
    }

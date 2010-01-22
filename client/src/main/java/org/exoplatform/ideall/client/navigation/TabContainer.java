@@ -70,6 +70,7 @@ public class TabContainer extends TabSet
 
    public void selectTabPanel(String tabId)
    {
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selecting tab : " + tabId);
       selectTab(tabId);
    }
 
@@ -77,7 +78,7 @@ public class TabContainer extends TabSet
    {
       public void onTabSelected(TabSelectedEvent event)
       {
-         System.out.println("tab selected > " + event.getTab().getID());
+         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! tab selected > " + event.getTab().getID());
          SimpleTabPanel tabPanel = (SimpleTabPanel)event.getTab().getPane();
          tabPanel.setSelected();
       }

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.event.perspective;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -28,9 +28,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface RestoreEditorPanelHandler extends EventHandler
+public interface MaximizeOperationPanelHandler extends EventHandler
 {
 
-   void onRestoreEditorPanel(RestoreEditorPanelEvent event);
+   void onMaximizeOperationPanel(MaximizeOperationPanelEvent event);
 
 }

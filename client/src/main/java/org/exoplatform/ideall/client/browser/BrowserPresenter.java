@@ -29,6 +29,7 @@ import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHand
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
@@ -263,6 +264,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
 
       display.getBrowserTree().setValue(event.getFolder());
       eventBus.fireEvent(new RestorePerspectiveEvent());
+      eventBus.fireEvent(new SelectBrowserPanelEvent());
 
       if (folderToUpdate != null)
       {

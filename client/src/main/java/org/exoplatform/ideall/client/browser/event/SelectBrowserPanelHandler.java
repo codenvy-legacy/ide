@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.browser.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -28,9 +28,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface MaximizeEditorPanelHandler extends EventHandler
+public interface SelectBrowserPanelHandler extends EventHandler
 {
 
-   void onMaximizeEditorPanel(MaximizeEditorPanelEvent event);
+   void onSelectBrowserPanel(SelectBrowserPanelEvent event);
 
 }

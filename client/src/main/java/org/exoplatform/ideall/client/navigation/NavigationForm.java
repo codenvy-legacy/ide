@@ -79,4 +79,10 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
          Images.SearchPanel.ICON, true);
       tabContainer.selectTabPanel(SearchResultsForm.ID);
    }
+
+   public void selectBrowserPanel()
+   {
+      tabContainer.selectTabPanel(BrowserForm.ID);
+   }
+
 }

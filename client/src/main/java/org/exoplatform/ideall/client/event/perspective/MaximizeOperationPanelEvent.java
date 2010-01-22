@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.event.perspective;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +28,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface MaximizeOperationPanelHandler extends EventHandler
+public class MaximizeOperationPanelEvent extends GwtEvent<MaximizeOperationPanelHandler>
 {
 
-   void onMaximizeOperationPanel(MaximizeOperationPanelEvent event);
+   public static final GwtEvent.Type<MaximizeOperationPanelHandler> TYPE = new GwtEvent.Type<MaximizeOperationPanelHandler>();
+
+   @Override
+   protected void dispatch(MaximizeOperationPanelHandler handler)
+   {
+      handler.onMaximizeOperationPanel(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<MaximizeOperationPanelHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

@@ -21,10 +21,10 @@ import org.exoplatform.ideall.client.editor.codemirror.CodeMirrorConfig;
 import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.event.layout.EditorPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.layout.EditorPanelRestoredHandler;
-import org.exoplatform.ideall.client.event.layout.MaximizeEditorPanelEvent;
-import org.exoplatform.ideall.client.event.layout.RestoreEditorPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredHandler;
+import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 

@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.layout;
+package org.exoplatform.ideall.client.event.perspective;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class EditorPanelRestoredEvent extends GwtEvent<EditorPanelRestoredHandler>
+public interface RestoreEditorPanelHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<EditorPanelRestoredHandler> TYPE = new GwtEvent.Type<EditorPanelRestoredHandler>();
-
-   @Override
-   protected void dispatch(EditorPanelRestoredHandler handler)
-   {
-      handler.onEditorPanelRestored(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorPanelRestoredHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onRestoreEditorPanel(RestoreEditorPanelEvent event);
 
 }
