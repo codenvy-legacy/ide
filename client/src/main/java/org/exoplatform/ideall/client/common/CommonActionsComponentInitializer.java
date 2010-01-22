@@ -28,6 +28,7 @@ import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
+import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
@@ -81,9 +82,10 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
+      addCommand(new GetFileURLCommand()).disable().hide().dockOnToolbar();
       addCommand(new MoveItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
+      addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
 

@@ -81,7 +81,7 @@ public class CookieManager
    {
       //      logCookies();
       storeOpenedFiles(context.getOpenedFiles());
-      storeActiveFile(context.getActiveFile().getPath());
+      storeActiveFile(context.getActiveFile());
       //      logCookies();
    }
 
@@ -119,16 +119,16 @@ public class CookieManager
     *      
     * @param activeFile
     */
-   private static void storeActiveFile(String activeFile)
+   private static void storeActiveFile(File file)
    {
-      if (activeFile == null)
+      if (file == null)
       {
          Cookies.removeCookie(Cookie.ACTIVE_FILE);
       }
       else
       {
-         String file = javaScriptEncodeURIComponent(activeFile);
-         Cookies.setCookie(Cookie.ACTIVE_FILE, file);
+         String filePath = javaScriptEncodeURIComponent(file.getPath());
+         Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
       }
    }
 

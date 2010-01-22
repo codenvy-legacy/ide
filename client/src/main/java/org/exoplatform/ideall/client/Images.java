@@ -70,6 +70,8 @@ public interface Images
       public static final String TEMPLATES = imageUrl + "menu/next_edition/templates.png";
       
       public static final String GOTOFOLDER = imageUrl + "menu/goToFile3.png";
+      
+      public static final String GET_URL = imageUrl + "menu/url1.png";
 
       /*
        * GROOVY
