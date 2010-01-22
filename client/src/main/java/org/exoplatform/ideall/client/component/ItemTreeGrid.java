@@ -25,6 +25,7 @@ import org.exoplatform.ideall.client.model.Item;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeNode;
@@ -50,6 +51,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpen
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
       setData(tree);
+      
+      setSelectionType(SelectionStyle.SINGLE);
 
       setCanFocus(false);
       setShowConnectors(false);
@@ -256,6 +259,14 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpen
       FolderOpenedHandlerImpl<T> openedHandler = new FolderOpenedHandlerImpl<T>(openHandler, getValuePropertyName());
       addFolderOpenedHandler(openedHandler);
       return null;
+   }
+
+   public void selectItem(String path)
+   {
+      System.out.println("selecting : " + path);
+      TreeNode node = getNodeByPath(path);
+      deselectAllRecords();
+      selectRecord(node);
    }
 
 }

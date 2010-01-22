@@ -162,6 +162,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       for (File file : context.getOpenedFiles().values())
       {
          ignoreContentChangedList.add(file.getPath());
+         System.out.println("adding tab > " + file.getPath());
          display.addTab(file, context.isShowLineNumbers());
       }
 

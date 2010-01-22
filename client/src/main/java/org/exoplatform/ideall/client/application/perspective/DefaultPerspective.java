@@ -224,8 +224,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar.show();
 
-      editorPanelMaximized = false;      
-      
+      editorPanelMaximized = false;
+
       eventBus.fireEvent(new EditorPanelRestoredEvent());
    }
 
@@ -266,7 +266,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       statusBar.show();
 
       operationPanelMaximized = false;
-      
+
       eventBus.fireEvent(new OperationPanelRestoredEvent());
    }
 
@@ -292,7 +292,14 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      restorePerspective();
+      System.out.println("changing active file..............");
+
+      if (operationPanelMaximized)
+      {
+         restoreOperationPanel();
+
+         return;
+      }
    }
 
    private void restorePerspective()
@@ -300,14 +307,14 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       if (editorPanelMaximized)
       {
          restoreEditorPanel();
-         
+
          return;
       }
 
       if (operationPanelMaximized)
       {
          restoreOperationPanel();
-         
+
          return;
       }
    }

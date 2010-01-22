@@ -73,6 +73,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       {
          if (!file.isNewFile())
          {
+            System.out.println("storing > " + file.getPath());
             xml += "<" + FILE + ">" + file.getPath() + "</" + FILE + ">";
          }
       }

@@ -29,6 +29,8 @@ import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHand
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
+import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
@@ -74,7 +76,7 @@ import com.google.gwt.user.client.ui.HasValue;
 */
 public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
-   RegisterEventHandlersHandler, InitializeApplicationHandler
+   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler
 {
 
    interface Display
@@ -89,6 +91,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       HasDoubleClickHandlers getBrowserTreeDClickable();
 
       HasClickHandlers getBrowserClickable();
+      
+      void selectItem(String path);
 
    }
 
@@ -318,6 +322,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
       handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
+      
+      handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
    }
 
    public void onInitializeApplication(InitializeApplicationEvent event)
@@ -325,6 +331,13 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       System.out.println("BrowserPresenter.onInitializeApplication()");
       switchWorkspace();
       eventBus.fireEvent(new BrowserPanelSelectedEvent());
+   }
+
+   public void onSetFocusOnItem(SetFocusOnItemEvent event)
+   {
+      System.out.println("BrowserPresenter.onSetFocusOnItem()");
+      System.out.println("try to select item : " + event.getPath());
+      display.selectItem(event.getPath());
    }
 
 }

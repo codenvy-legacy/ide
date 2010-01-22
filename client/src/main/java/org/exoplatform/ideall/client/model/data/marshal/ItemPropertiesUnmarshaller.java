@@ -66,7 +66,6 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
          String icon = ImageUtil.getIcon(contentType);
          item.setIcon(icon);
       }
-
    }
 
    private Property getProperty(Item item, QName name)

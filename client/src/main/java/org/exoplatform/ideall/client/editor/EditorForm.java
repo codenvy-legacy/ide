@@ -290,11 +290,15 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public boolean hasRedoChanges(String path)
    {
+      System.out.println("try get redo changes for " + path);
+      System.out.println("codemirror: " + getEditorTab(path).getCodeMirror());
       return getEditorTab(path).getCodeMirror().hasRedoChanges();
    }
 
    public boolean hasUndoChanges(String path)
    {
+      System.out.println("try get undo changes for " + path);
+      System.out.println("codemirror: " + getEditorTab(path).getCodeMirror());
       return getEditorTab(path).getCodeMirror().hasUndoChanges();
    }
 

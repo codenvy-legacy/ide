@@ -120,4 +120,9 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
       super.onDeselected();
    }
 
+   public void selectItem(String path)
+   {
+      treeGridEx.selectItem(path);
+   }
+
 }

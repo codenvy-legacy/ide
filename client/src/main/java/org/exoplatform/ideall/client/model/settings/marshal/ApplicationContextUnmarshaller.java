@@ -104,6 +104,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       {
          Node fileNode = files.getChildNodes().item(i);
          String path = fileNode.getChildNodes().item(0).getNodeValue();
+         System.out.println("restoring > " + path);
          File file = new File(path);
          context.getPreloadFiles().put(file.getPath(), file);
       }
