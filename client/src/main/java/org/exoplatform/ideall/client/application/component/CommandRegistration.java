@@ -108,6 +108,11 @@ public class CommandRegistration
             position++;
          }
 
+         if (command.hasDelimiterBefore()) {
+            context.getToolBarItems().add(position, "---");
+            position++;
+         }
+         
          context.getToolBarItems().add(position, command.getId());
       }
 

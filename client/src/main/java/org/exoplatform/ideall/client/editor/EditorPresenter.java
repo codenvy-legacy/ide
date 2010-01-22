@@ -36,6 +36,7 @@ import org.exoplatform.ideall.client.application.event.InitializeApplicationEven
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -301,12 +302,15 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          context.getOpenedFiles().put(file.getPath(), file);
          display.addTab(file, context.isShowLineNumbers());
          display.selectTab(file.getPath());
+
+         CookieManager.storeOpenedFiles(context);
       }
       catch (Exception exc)
       {
          exc.printStackTrace();
       }
 
+      CookieManager.storeOpenedFiles(context);      
    }
 
    /* Fired when codemirror is initialized
@@ -372,6 +376,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
 
       context.setActiveFile(curentFile);
+      CookieManager.storeOpenedFiles(context);      
       display.setCodemirrorFocus(curentFile.getPath());
    }
 
@@ -395,6 +400,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       if (!file.isContentChanged() && !file.isPropertiesChanged())
       {
          context.getOpenedFiles().remove(file.getPath());
+         CookieManager.storeOpenedFiles(context);         
          return;
       }
 
@@ -426,6 +432,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
             {
                display.closeTab(file.getPath());
                context.getOpenedFiles().remove(file.getPath());
+               CookieManager.storeOpenedFiles(context);               
             }
          }
       });
@@ -453,7 +460,6 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          closeFileAfterSaving = false;
          display.closeTab(event.getFile().getPath());
          context.getOpenedFiles().remove(event.getFile().getPath());
-         return;
       }
       else
       {
@@ -469,8 +475,13 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
             display.relocateFile(currentOpenedFile, savedFile);
          }
 
+         System.out.println("saved file content changed: " + savedFile.isContentChanged());
+         System.out.println("saved file properties changed: " + savedFile.isPropertiesChanged());
+
          updateTabTitle(savedFile.getPath());
       }
+
+      CookieManager.storeOpenedFiles(context);
    }
 
    /*
@@ -502,12 +513,13 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       else
       {
          ignoreContentChangedList.add(file.getPath());
-         //ignoreCodeMirrorContentChanged = true;
-         context.setActiveFile(file);
          context.getOpenedFiles().put(file.getPath(), file);
          display.addTab(file, context.isShowLineNumbers());
          display.selectTab(file.getPath());
       }
+
+      context.setActiveFile(file);
+      CookieManager.storeOpenedFiles(context);
    }
 
    public void onMoveComplete(MoveCompleteEvent event)
@@ -536,6 +548,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          }
       }
 
+      CookieManager.storeOpenedFiles(context);
    }
 
    public void onFormatFile(FormatFileEvent event)
@@ -579,6 +592,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       context.setSelectedItem(folder);
 
       eventBus.fireEvent(new ItemSelectedEvent(folder));
+
+      CookieManager.storeOpenedFiles(context);
    }
 
    private void updateLineNumbers(boolean lineNumbers)

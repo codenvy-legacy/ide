@@ -144,7 +144,9 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
          Dialogs.showInfo("You should save the file!");
          return;
       }
-
+      
+      eventBus.fireEvent(new RestorePerspectiveEvent());
+      
       if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
       {
          previewGadget();

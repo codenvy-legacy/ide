@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.solution.command.Command;
 import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
@@ -478,6 +479,7 @@ public class CustomizeToolbarPresenter
       }
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
+      SettingsService.getInstance().saveSetting(context);      
    }
 
    private void applyChanges()

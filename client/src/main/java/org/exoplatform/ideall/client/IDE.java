@@ -13,14 +13,10 @@ import org.exoplatform.ideall.client.model.data.DataServiceImpl;
 import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.client.model.jcrservice.RepositoryServiceImpl;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -78,15 +74,6 @@ public class IDE
       new DevToolForm(eventBus, context);
 
       Configuration.getInstance().loadConfiguration(eventBus);
-
-      Window.addCloseHandler(new CloseHandler<Window>()
-      {
-         public void onClose(CloseEvent<Window> event)
-         {
-            SettingsService.getInstance().saveSetting(context);
-         }
-      });
-
    }
 
 }

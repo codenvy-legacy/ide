@@ -284,21 +284,38 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void setCodemirrorFocus(String path)
    {
+      System.out.println("TAAAAAAAAAAAAAAAAAAAAAAAAAABBB for " + path);
+
       EditorTab tab = getEditorTab(path);
+      System.out.println("taB: " + tab);
+      if (tab == null)
+      {
+         return;
+      }
       tab.getCodeMirror().setFocus(); // fix bug "Just after switching on a new tab, the cursor is not appeared in the content pane." [WBT-244]
    }
 
    public boolean hasRedoChanges(String path)
    {
       System.out.println("try get redo changes for " + path);
-      System.out.println("codemirror: " + getEditorTab(path).getCodeMirror());
+      EditorTab editorTab = getEditorTab(path);
+      if (editorTab == null)
+      {
+         return false;
+      }
+      System.out.println("codemirror: " + editorTab.getCodeMirror());
       return getEditorTab(path).getCodeMirror().hasRedoChanges();
    }
 
    public boolean hasUndoChanges(String path)
    {
       System.out.println("try get undo changes for " + path);
-      System.out.println("codemirror: " + getEditorTab(path).getCodeMirror());
+      EditorTab editorTab = getEditorTab(path);
+      if (editorTab == null)
+      {
+         return false;
+      }
+      System.out.println("codemirror: " + editorTab.getCodeMirror());
       return getEditorTab(path).getCodeMirror().hasUndoChanges();
    }
 

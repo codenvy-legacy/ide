@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.workspace;
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.ApplicationInitializer;
-import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.jcrservice.RepositoryService;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Repository;
@@ -198,6 +198,9 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
                   context.setSelectedItem(null);
                   context.setRepository(repository.getName());
                   context.setWorkspace(workspace.getName());
+
+                  CookieManager.storeRepository(repository.getName());
+                  CookieManager.storeWorkspace(workspace.getName());
 
                   new ApplicationInitializer(eventBus, context);
                }

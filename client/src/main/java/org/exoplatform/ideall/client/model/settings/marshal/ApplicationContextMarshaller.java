@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.model.settings.marshal;
 
 import org.exoplatform.gwt.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,10 +42,6 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    public String marshal()
    {
       String xml = "<" + SETTINGS + ">";
-      xml += getRepository();
-      xml += getWorkspace();
-      xml += getOpenedFiles();
-      xml += getActiveFile();
       xml += getLineNumbers();
       xml += getToolbar();
       xml += "</" + SETTINGS + ">";
@@ -54,42 +49,8 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       return xml;
    }
 
-   private String getRepository()
+   private String getLineNumbers()
    {
-      String repository = context.getRepository() == null ? "" : context.getRepository();
-      return "<" + REPOSITORY + ">" + repository + "</" + REPOSITORY + ">";
-   }
-
-   private String getWorkspace()
-   {
-      String workspace = context.getWorkspace() == null ? "" : context.getWorkspace();
-      return "<" + WORKSPACE + ">" + workspace + "</" + WORKSPACE + ">";
-   }
-
-   private String getOpenedFiles()
-   {
-      String xml = "<" + OPENED_FILES + ">";
-      for (File file : context.getOpenedFiles().values())
-      {
-         if (!file.isNewFile())
-         {
-            System.out.println("storing > " + file.getPath());
-            xml += "<" + FILE + ">" + file.getPath() + "</" + FILE + ">";
-         }
-      }
-      xml += "</" + OPENED_FILES + ">";
-
-      return xml;
-   }
-
-   private String getActiveFile()
-   {
-      String activeFile = context.getActiveFile() == null ? "" : context.getActiveFile().getPath();
-      String xml = "<" + ACTIVE_FILE + ">" + activeFile + "</" + ACTIVE_FILE + ">";
-      return xml;
-   }
-   
-   private String getLineNumbers() {
       String xml = "<" + LINE_NUMBERS + ">" + context.isShowLineNumbers() + "</" + LINE_NUMBERS + ">";
       return xml;
    }

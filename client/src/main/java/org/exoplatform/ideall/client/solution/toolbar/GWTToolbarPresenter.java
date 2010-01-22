@@ -92,45 +92,35 @@ public class GWTToolbarPresenter implements UpdateToolbarHandler
          }
          else
          {
-            Command command = getCommandById(id, event.getCommands());
-            if (rightDocking)
+            if (id.startsWith("---"))
             {
-               if (command.hasDelimiterBefore())
+               if (rightDocking)
                {
                   ToolbarItem delimiter = new ToolbarItem();
                   rightDockedItems.add(0, delimiter);
                }
-
-               ToolbarItem commandItem = new ToolbarItem(command);
-               rightDockedItems.add(0, commandItem);
-            }
-            else
-            {
-               if (command.hasDelimiterBefore())
+               else
                {
                   ToolbarItem delimiter = new ToolbarItem();
                   leftDockedItems.add(delimiter);
                }
-
-               ToolbarItem commandItem = new ToolbarItem(command);
-               leftDockedItems.add(commandItem);
-            }
-
-            if (id.startsWith("---"))
-            {
-               //               if (rightDocking)
-               //               {
-               //                  rightDockedItems.add(0, new DummyCommand(id));
-               //               }
-               //               else
-               //               {
-               //                  leftDockedItems.add(new DummyCommand(id));
-               //               }
             }
             else
             {
-
+               Command command = getCommandById(id, event.getCommands());
+               
+               if (rightDocking)
+               {
+                  ToolbarItem commandItem = new ToolbarItem(command);
+                  rightDockedItems.add(0, commandItem);
+               }
+               else
+               {
+                  ToolbarItem commandItem = new ToolbarItem(command);
+                  leftDockedItems.add(commandItem);
+               }
             }
+
          }
       }
 

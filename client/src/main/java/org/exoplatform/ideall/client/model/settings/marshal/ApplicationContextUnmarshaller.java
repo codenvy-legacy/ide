@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import org.exoplatform.gwt.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
@@ -69,10 +68,6 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
 
          Node configurationNode = dom.getElementsByTagName(SETTINGS).item(0);
 
-         parseRepository(configurationNode);
-         parseWorkspace(configurationNode);
-         parseOpenedFiles(configurationNode);
-         parseActiveFile(configurationNode);
          parseLineNumbers(configurationNode);
          parseToolbar(configurationNode);
       }
@@ -82,51 +77,8 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       }
    }
 
-   private void parseRepository(Node configurationNode)
+   private void parseLineNumbers(Node configurationNode)
    {
-      String repository = getChildNode(configurationNode, REPOSITORY).getChildNodes().item(0).getNodeValue();
-      context.setRepository(repository);
-   }
-
-   private void parseWorkspace(Node configurationNode)
-   {
-      String workspace = getChildNode(configurationNode, WORKSPACE).getChildNodes().item(0).getNodeValue();
-      context.setWorkspace(workspace);
-   }
-
-   private void parseOpenedFiles(Node configurationNode)
-   {
-      Node files = getChildNode(configurationNode, OPENED_FILES);
-
-      context.getPreloadFiles().clear();
-
-      for (int i = 0; i < files.getChildNodes().getLength(); i++)
-      {
-         Node fileNode = files.getChildNodes().item(i);
-         String path = fileNode.getChildNodes().item(0).getNodeValue();
-         System.out.println("restoring > " + path);
-         File file = new File(path);
-         context.getPreloadFiles().put(file.getPath(), file);
-      }
-   }
-
-   private void parseActiveFile(Node configurationNode)
-   {
-      if (getChildNode(configurationNode, ACTIVE_FILE).getChildNodes().getLength() == 0)
-      {
-         return;
-      }
-
-      String activeFile = getChildNode(configurationNode, ACTIVE_FILE).getChildNodes().item(0).getNodeValue();
-
-      if (context.getPreloadFiles().get(activeFile) != null)
-      {
-         File file = context.getPreloadFiles().get(activeFile);
-         context.setActiveFile(file);
-      }
-   }
-
-   private void parseLineNumbers(Node configurationNode) {
       if (getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().getLength() == 0)
       {
          return;
@@ -135,7 +87,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       String lineNumbers = getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().item(0).getNodeValue();
       context.setShowLineNumbers(Boolean.parseBoolean(lineNumbers));
    }
-   
+
    private void parseToolbar(Node configurationNode)
    {
       Node toolbar = getChildNode(configurationNode, TOOLBAR);

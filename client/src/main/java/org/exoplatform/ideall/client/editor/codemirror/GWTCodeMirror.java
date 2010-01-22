@@ -256,6 +256,9 @@ public class GWTCodeMirror extends Composite
 
    public native void setLineNumbers(boolean isShowLineNumbers)/*-{
       var editor = this.@org.exoplatform.ideall.client.editor.codemirror.GWTCodeMirror::editorObject;
+      if (editor == null) {
+         return;
+      }
       editor.setLineNumbers(isShowLineNumbers);            
    }-*/;
 

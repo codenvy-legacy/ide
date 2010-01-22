@@ -101,11 +101,6 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
       return treeGridEx;
    }
 
-   public HasClickHandlers getBrowserClickable()
-   {
-      return treeGridEx;
-   }
-
    @Override
    protected void onSelected()
    {

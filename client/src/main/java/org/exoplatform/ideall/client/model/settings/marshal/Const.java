@@ -31,20 +31,10 @@ public interface Const
 
    public static final String SETTINGS = "settings";
 
-   public static final String REPOSITORY = "repository";
-
-   public static final String WORKSPACE = "workspace";
-
-   public static final String OPENED_FILES = "opened-files";
-
-   public static final String FILE = "file";
-
-   public static final String ACTIVE_FILE = "active-file";
-   
    public static final String LINE_NUMBERS = "line-numbers";
-   
+
    public static final String TOOLBAR = "toolbar";
-   
+
    public static final String TOOLBAR_ITEM = "toolbar-item";
 
 }

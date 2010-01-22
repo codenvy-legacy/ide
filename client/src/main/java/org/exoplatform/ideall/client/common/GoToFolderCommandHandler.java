@@ -21,6 +21,8 @@ package org.exoplatform.ideall.client.common;
 
 import java.util.ArrayList;
 
+import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
+import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
 import org.exoplatform.ideall.client.event.browse.GoToFolderHandler;
@@ -39,7 +41,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GoToFolderCommandHandler implements GoToFolderHandler, FolderContentReceivedHandler
+public class GoToFolderCommandHandler implements GoToFolderHandler, FolderContentReceivedHandler,
+   ExceptionThrownHandler
 {
 
    private HandlerManager eventBus;
@@ -47,6 +50,10 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
    private ApplicationContext context;
 
    private Handlers handlers;
+
+   private String pathToOpen;
+
+   private ArrayList<String> pathes;
 
    public GoToFolderCommandHandler(HandlerManager eventBus, ApplicationContext context)
    {
@@ -57,10 +64,10 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
       eventBus.addHandler(GoToFolderEvent.TYPE, this);
    }
 
-   private String pathToOpen;
-
-   private ArrayList<String> pathes;
-
+   /**
+    * Go To Folder command handler
+    * 
+    */
    public void onGoToFolder(GoToFolderEvent event)
    {
       System.out.println("GoToFolderCommandHandler.onGoToFolder()");
@@ -95,9 +102,15 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
       System.out.println("pathes length > " + pathes.size());
 
       handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       DataService.getInstance().getFolderContent(pathToOpen);
    }
 
+   /**
+    * Folder content received handler.
+    * Get subfolder content here
+    * 
+    */
    public void onFolderContentReceived(FolderContentReceivedEvent event)
    {
       System.out.println("folder content received...... opening next folder............");
@@ -114,12 +127,20 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
       else
       {
          // try to select file.........
-         handlers.removeHandlers();         
+         handlers.removeHandlers();
 
          eventBus.fireEvent(new SetFocusOnItemEvent(context.getActiveFile().getPath()));
 
       }
 
+   }
+
+   /**
+    * Handling any errors here!
+    */
+   public void onError(ExceptionThrownEvent event)
+   {
+      handlers.removeHandlers();
    }
 
 }

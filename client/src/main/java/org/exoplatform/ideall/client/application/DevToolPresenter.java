@@ -22,6 +22,7 @@ import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -56,7 +57,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    {
 
       void showDefaultPerspective();
-      
+
    }
 
    private HandlerManager eventBus;
@@ -156,6 +157,8 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
     */
    public void onApplicationContextReceived(ApplicationContextReceivedEvent event)
    {
+      CookieManager.getApplicationState(context);
+      
       if (context.getRepository() == null)
       {
          context.setRepository(Configuration.getInstance().getDefaultRepositoryName());
@@ -166,8 +169,8 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
          context.setWorkspace(Configuration.getInstance().getDefaultWorkspaceName());
       }
 
-      //      context.getToolBarItems().clear();
-      //      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
+      //context.getToolBarItems().clear();
+      //context.getToolBarItems().addAll(context.getToolBarDefaultItems());
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
       new WorkspaceChecker(eventBus, context);
