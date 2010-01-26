@@ -113,6 +113,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onShowProperties(ShowPropertiesEvent event)
    {
+      eventBus.fireEvent(new RestorePerspectiveEvent());
       display.showProperties(context.getActiveFile());
    }
 
