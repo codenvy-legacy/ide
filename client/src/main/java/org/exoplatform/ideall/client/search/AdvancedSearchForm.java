@@ -31,8 +31,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -43,17 +41,19 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPresenter.Display
 {
-   private static final int WIDTH = 320;
+   private static final int WIDTH = 490;
 
-   private static final int HEIGHT = 350;
+   private static final int HEIGHT = 270;
 
    private final int BUTTON_WIDTH = 90;
 
    private final int BUTTON_HEIGHT = 22;
 
-   private static int FIELD_WIDTH = 250;
+   private static int FIELD_WIDTH = 300;
 
    private static int FIELD_HEIGHT = 20;
+   
+   private final int FORM_WIDTH = 430;
 
    private TextField contentField;
 
@@ -96,12 +96,12 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    public AdvancedSearchForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, WIDTH, HEIGHT);
-      setTitle("Advanced Search");
+      setTitle("Search");
 
       VLayout mainLayout = new VLayout();
       mainLayout.setWidth100();
       mainLayout.setHeight100();
-      mainLayout.setPadding(10);
+      mainLayout.setPadding(20);
       mainLayout.setMembersMargin(15);
 
       mainLayout.addMember(createSearchForm());
@@ -121,20 +121,25 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       paramForm.setPadding(10);
       paramForm.setWidth(FIELD_WIDTH + 20);
       paramForm.setIsGroup(true);
+      paramForm.setWidth(FORM_WIDTH);
+      paramForm.setCellSpacing(5);
+      paramForm.setLayoutAlign(Alignment.CENTER);
+      
       paramForm.setGroupTitle("Search parameters");
 
-      paramFormItemArray = new FormItem[12];
+      paramFormItemArray = new FormItem[4];
 
-      contentField = new TextField();
-      createValueField("Text:", contentField, 0);
+      contentField = createValueField("Containing text");
+      paramFormItemArray[0] = contentField;
 
-      pathField = new TextField();
-      createValueField("Path:", pathField, 3);
+      pathField = createValueField("Path");
+      paramFormItemArray[1] = pathField;
 
-      fileNameField = new TextField();
-      createValueField("File name:", fileNameField, 6);
+      fileNameField = createValueField("File name");
+      paramFormItemArray[2] = fileNameField;
 
-      createSelectField(9);
+      mimeTypesField = createSelectField("Mime type");
+      paramFormItemArray[3] = mimeTypesField;
 
       paramForm.setItems(paramFormItemArray);
       paramForm.setAutoFocus(true);
@@ -142,48 +147,24 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       return paramForm;
    }
 
-   private void createValueField(String title, TextField textField, int position)
+   private TextField createValueField(String title)
    {
-      StaticTextItem fieldTitle = new StaticTextItem();
-      fieldTitle.setShowTitle(false);
-      fieldTitle.setValue(title);
-      fieldTitle.setColSpan(2);
-      fieldTitle.setWrap(false);
-
-      SpacerItem fieldSpacerItem = new SpacerItem();
-      fieldSpacerItem.setHeight(10);
-
-      textField.setShowTitle(false);
-      textField.setColSpan(2);
+      TextField textField = new TextField();
+      textField.setTitle("<NOBR>"+title+"</NOBR>");
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
       textField.setSelectOnFocus(true);
-
-      paramFormItemArray[position] = fieldTitle;
-      paramFormItemArray[position + 1] = textField;
-      paramFormItemArray[position + 2] = fieldSpacerItem;
+      return textField;
    }
 
-   private void createSelectField(int position)
+   private ComboBoxField createSelectField(String title)
    {
-      StaticTextItem title = new StaticTextItem();
-      title.setValue("Mime Type:");
-      title.setShowTitle(false);
-      title.setColSpan(2);
-
-      mimeTypesField = new ComboBoxField();
-      mimeTypesField.setWidth(FIELD_WIDTH);
-      mimeTypesField.setHeight(FIELD_HEIGHT);
-      mimeTypesField.setShowTitle(false);
-      mimeTypesField.setColSpan(2);
-
-      SpacerItem fieldSpacerItem = new SpacerItem();
-      fieldSpacerItem.setHeight(10);
-
-      paramFormItemArray[position] = title;
-      paramFormItemArray[position + 1] = mimeTypesField;
-      paramFormItemArray[position + 2] = fieldSpacerItem;
-
+      ComboBoxField comboboxField = new ComboBoxField();
+      comboboxField.setTitle("<NOBR>"+title+"</NOBR>");
+      comboboxField.setWidth(FIELD_WIDTH);
+      comboboxField.setHeight(FIELD_HEIGHT);
+      comboboxField.setColSpan(2);
+      return comboboxField;
    }
 
    private HLayout createButtonsLayout()

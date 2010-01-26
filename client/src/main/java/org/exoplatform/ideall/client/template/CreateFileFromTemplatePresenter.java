@@ -132,7 +132,7 @@ public class CreateFileFromTemplatePresenter
          }
       });
 
-      display.getFileNameField().setValue("New File");
+      display.getFileNameField().setValue("Untitled file");
 
       display.getTemplateListGrid().setValue(context.getTemplateList().getTemplates());
 
