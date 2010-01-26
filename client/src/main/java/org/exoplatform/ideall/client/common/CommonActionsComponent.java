@@ -106,7 +106,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(ShowLineNumbersEvent.TYPE, this);
       addHandler(HideLineNumbersEvent.TYPE, this);
-      
+
       addHandler(GetFileURLEvent.TYPE, this);
 
       /*
@@ -211,10 +211,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onGetFileURL(GetFileURLEvent event)
    {
-      String url = Location.getProtocol() + "//" + Location.getHost() + 
-         //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
+      new GetItemURLForm(eventBus, getURL());
+   }
+
+   private String getURL()
+   {
+      String url = Location.getProtocol() + "//" + Location.getHost() +
+      //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
          Configuration.getInstance().getContext() + "/jcr" + context.getSelectedItem().getPath();
-      new GetItemURLForm(eventBus, url);
+      return url;
    }
 
 }

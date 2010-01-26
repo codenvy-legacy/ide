@@ -21,8 +21,6 @@ import java.util.HashMap;
 import org.exoplatform.gwt.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 
-import com.google.gwt.user.client.ui.Image;
-
 /**
  * Created by The eXo Platform SAS .
  * 

@@ -18,7 +18,6 @@ package org.exoplatform.ideall.client.groovy;
 
 import java.util.List;
 
-import org.exoplatform.gwt.commons.rest.HTTPHeader;
 import org.exoplatform.gwt.commons.rest.HTTPMethod;
 import org.exoplatform.gwt.commons.smartgwt.component.IButton;
 import org.exoplatform.gwt.commons.smartgwt.component.SelectItem;
@@ -60,10 +59,6 @@ public class RestServiceOutputPreviewForm extends DialogWindow implements RestSe
    private static final int WIDTH = 500;
 
    private static final int HEIGHT = 370;
-
-   private static final String METHOD_NOTE =
-      "If you will use method not equals GET or POST, " + "will be automatically added  Header:"
-         + HTTPHeader.X_HTTP_METHOD_OVERRIDE + "= \"yuor method\"";
 
    private static final String TITLE = "REST Service output preview";
 

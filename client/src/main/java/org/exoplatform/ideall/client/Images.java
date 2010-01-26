@@ -45,8 +45,6 @@ public interface Images
 
       public static final String NEW = imageUrl + "menu/newDocument.png";
 
-      public static final String UPLOAD = imageUrl + "menu/next_edition/uploadDocument.png";
-
       public static final String NEW_FOLDER = imageUrl + "menu/newFolder.png";
 
       public static final String SEARCH = imageUrl + "menu/next_edition/search.png";
@@ -72,6 +70,15 @@ public interface Images
       public static final String GOTOFOLDER = imageUrl + "menu/goToFile3.png";
       
       public static final String GET_URL = imageUrl + "menu/url1.png";
+      
+
+      public static final String UPLOAD = imageUrl + "menu/next_edition/upload1.png";
+      
+      public static final String DOWNLOAD = imageUrl + "menu/next_edition/download1.png";
+      
+      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/next_edition/downloadZipped1.png";
+      
+      
 
       /*
        * GROOVY

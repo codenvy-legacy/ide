@@ -28,6 +28,8 @@ import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
+import org.exoplatform.ideall.client.common.command.file.DownloadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
@@ -73,8 +75,11 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new NewJavaScriptFileCommand()).disable().hide().dockOnToolbar();
       addCommand(new NewCSSFileCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new CreateFileFromTemplateCommand()).disable().hide().dockOnToolbar();
+      addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new UploadFileCommand()).disable().hide().dockOnToolbar();
+      
+      addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();

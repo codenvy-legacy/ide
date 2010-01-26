@@ -75,7 +75,7 @@ public class GetItemURLForm extends DialogWindow
             itemURLField.selectValue();
          }
 
-      }.schedule(100);
+      }.schedule(500);
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -107,6 +107,8 @@ public class GetItemURLForm extends DialogWindow
       itemURLField = new TextField();
       itemURLField.setShowTitle(false);
       itemURLField.setWidth(450);
+      
+      itemURLField.setSelectOnFocus(true);
 
       paramsForm.setFields(caption, delimiter, itemURLField);
 

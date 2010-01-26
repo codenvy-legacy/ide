@@ -17,14 +17,11 @@
 package org.exoplatform.ideall.client.application;
 
 import org.exoplatform.ideall.client.application.perspective.DefaultPerspective;
-import org.exoplatform.ideall.client.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.event.ClearFocusHandler;
+import org.exoplatform.ideall.client.download.DownloadContentForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.Layout;
 
 /**
@@ -34,7 +31,7 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version @version $Id: $
  */
 
-public class DevToolForm extends Layout implements DevToolPresenter.Display, ClearFocusHandler
+public class DevToolForm extends Layout implements DevToolPresenter.Display
 {
 
    private DevToolPresenter presenter;
@@ -42,8 +39,6 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display, Cle
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   private TextItem clearFocusItem;
 
    public DevToolForm(HandlerManager eventBus, ApplicationContext context)
    {
@@ -54,16 +49,8 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display, Cle
       setHeight100();
       setOverflow(Overflow.HIDDEN);
 
-      DynamicForm clearFocusForm = new DynamicForm();
-      clearFocusItem = new TextItem();
-      clearFocusForm.setItems(clearFocusItem);
-      clearFocusForm.setWidth(1);
-      clearFocusForm.setHeight(1);
-      addChild(clearFocusForm);
-      clearFocusForm.setOverflow(Overflow.HIDDEN);
-      clearFocusForm.setLeft(-100);
-      clearFocusForm.setTop(-100);
-      eventBus.addHandler(ClearFocusEvent.TYPE, this);
+      new ClearFocusForm(eventBus);
+      new DownloadContentForm(eventBus, context);
 
       draw();
 
@@ -74,11 +61,6 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display, Cle
    public void showDefaultPerspective()
    {
       addMember(new DefaultPerspective(eventBus, context));
-   }
-
-   public void onClearFocus(ClearFocusEvent event)
-   {
-      clearFocusItem.selectValue();
    }
 
 }
