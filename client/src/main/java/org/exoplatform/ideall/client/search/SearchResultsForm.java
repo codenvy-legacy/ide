@@ -61,11 +61,6 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultsPr
       presenter.bindDsplay(this);
    }
 
-   public HasClickHandlers getSearchResultClickHandler()
-   {
-      return searchItemTreeGrid;
-   }
-
    public HasDoubleClickHandlers getSearchResultDoubleClickHandler()
    {
       return searchItemTreeGrid;

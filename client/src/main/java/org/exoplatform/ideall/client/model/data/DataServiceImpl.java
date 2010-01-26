@@ -68,8 +68,9 @@ public class DataServiceImpl extends DataService
    {
       this.eventBus = eventbus;
    }
-   
-   private String getURL(String path) {
+
+   private String getURL(String path)
+   {
       String url = Configuration.getInstance().getContext() + CONTEXT + path;
       url = TextUtils.javaScriptEncodeURI(url);
       return url;
@@ -78,17 +79,16 @@ public class DataServiceImpl extends DataService
    @Override
    public void getFileContent(File file)
    {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + file.getPath();
-//      url = TextUtils.javaScriptEncodeURI(url);
+      //      String url = Configuration.getInstance().getContext() + CONTEXT + file.getPath();
+      //      url = TextUtils.javaScriptEncodeURI(url);
       String url = getURL(file.getPath());
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
       FileContentReceivedEvent event = new FileContentReceivedEvent(file);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET).send(
+         callback);
    }
 
    @Override
@@ -99,66 +99,41 @@ public class DataServiceImpl extends DataService
       {
          url += "/";
       }
-      
-      System.out.println("folder content URL [" + url + "]");
-      
-//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
-//      if (!url.endsWith("/"))
-//      {
-//         url += "/";
-//      }
-//      url = TextUtils.javaScriptEncodeURI(url);
 
       Folder folder = new Folder(path);
       FolderContentReceivedEvent event = new FolderContentReceivedEvent(folder);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder);
-      
-      int []acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+
+      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
-      AsyncRequest.build(RequestBuilder.GET, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
-         .header(HTTPHeader.DEPTH, "1")
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
+         .header(HTTPHeader.DEPTH, "1").send(callback);
    }
 
    @Override
    public void createFolder(String path)
    {
       String url = getURL(path);
-//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
-//      url = TextUtils.javaScriptEncodeURI(url);
-
       FolderCreatedEvent event = new FolderCreatedEvent(path);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
-         .header(HTTPHeader.CONTENT_LENGTH, "0")
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL).header(
+         HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
    @Override
    public void deleteItem(Item item)
    {
       String url = getURL(item.getPath());
-      
-//      String url = Configuration.getInstance().getContext() + CONTEXT + item.getPath();
-//      url = TextUtils.javaScriptEncodeURI(url);
-
       ItemDeletedEvent event = new ItemDeletedEvent(item);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
-         .header(HTTPHeader.CONTENT_LENGTH, "0")
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).header(
+         HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
    @Override
    public void saveFileContent(File file, String path)
    {
       String url = getURL(path);
-//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
-//      url = TextUtils.javaScriptEncodeURI(url);
-
       boolean isNewFile = file.isNewFile();
       boolean isSaveAs = !file.getPath().equals(path);
 
@@ -167,37 +142,28 @@ public class DataServiceImpl extends DataService
       FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-         .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-         .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-         .data(marshaller)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT).header(
+         HTTPHeader.CONTENT_TYPE, file.getContentType()).header(HTTPHeader.CONTENT_NODETYPE,
+         file.getJcrContentNodeType()).data(marshaller).send(callback);
    }
 
    @Override
    public void getProperties(Item item)
    {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + item.getPath();
-//      url = TextUtils.javaScriptEncodeURI(url);
       String url = getURL(item.getPath());
 
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item);
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
-      int []acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
-         .header(HTTPHeader.DEPTH, "infinity")
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
+         .header(HTTPHeader.DEPTH, "infinity").send(callback);
    }
 
    @Override
    public void saveProperties(Item item)
    {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + item.getPath();
-//      url = TextUtils.javaScriptEncodeURI(url);
       String url = getURL(item.getPath());
 
       ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
@@ -205,17 +171,13 @@ public class DataServiceImpl extends DataService
       ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
-         .data(marshaller)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
+         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
    }
 
    @Override
    public void search(String content, String path)
    {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
       String url = getURL(path);
 
       SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(content);
@@ -223,11 +185,8 @@ public class DataServiceImpl extends DataService
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml")
-         .data(requestMarshaller)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
 
    /**
@@ -236,29 +195,22 @@ public class DataServiceImpl extends DataService
    @Override
    public void search(String path, String contentText, String name, String contentType, String searchPath)
    {
-      //String url = Configuration.getInstance().getContext() + CONTEXT + folderPath;
       String url = getURL(path);
-    
+
       SearchRequestMarshaller requestMarshaller =
          new SearchRequestMarshaller(contentText, name, contentType, searchPath);
       Folder folder = new Folder(path);
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml")
-         .data(requestMarshaller)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
 
    @Override
    public void move(Item item, String destination)
    {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + item.getPath();
-//      url = TextUtils.javaScriptEncodeURI(url);
       String url = getURL(item.getPath());
-
       String host = GWT.getModuleBaseURL();
 
       String destinationURL = host.substring(0, host.indexOf("//") + 2);
@@ -281,20 +233,14 @@ public class DataServiceImpl extends DataService
          }
 
          AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-         AsyncRequest.build(RequestBuilder.POST, url)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destinationURL)
-            .header(HTTPHeader.CONTENT_LENGTH, "0")
-            .send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
       else
       {
          AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-         AsyncRequest.build(RequestBuilder.POST, url)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destinationURL)
-            .header(HTTPHeader.CONTENT_LENGTH, "0")
-            .send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
 
    }

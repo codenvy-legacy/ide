@@ -212,17 +212,12 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
    public void onSetAutoload(SetAutoloadEvent event)
    {
-      System.out.println("setting autoload");
-
       updateAutoloadPropertyValue(true);
    }
 
    public void onUnsetAutoload(UnsetAutoloadEvent event)
    {
-      System.out.println("unsetting autoload");
-
       updateAutoloadPropertyValue(false);
-
    }
 
    private void updateAutoloadPropertyValue(boolean value)
@@ -234,7 +229,6 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       autoloadProperty.setValue("" + value);
 
       DataService.getInstance().saveProperties(file);
-
    }
 
 }

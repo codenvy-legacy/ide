@@ -6,6 +6,7 @@ import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
 import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
+import org.exoplatform.ideall.client.history.HistoryManager;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
@@ -31,7 +32,7 @@ public class IDE
       for (int i = 0; i < 30; i++)
       {
          System.out.println();
-      }
+      }      
 
       new SmartGWTLoader();
 
@@ -71,9 +72,11 @@ public class IDE
       context.getComponents().add(new GroovyActionsComponent());
       context.getComponents().add(new HelpActionsComponent());
 
+      new HistoryManager(eventBus);
+      
       new DevToolForm(eventBus, context);
 
-      Configuration.getInstance().loadConfiguration(eventBus);
+      Configuration.getInstance().loadConfiguration(eventBus);      
    }
 
 }

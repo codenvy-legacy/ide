@@ -163,7 +163,6 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       for (File file : context.getOpenedFiles().values())
       {
          ignoreContentChangedList.add(file.getPath());
-         System.out.println("adding tab > " + file.getPath());
          display.addTab(file, context.isShowLineNumbers());
       }
 
@@ -310,7 +309,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          exc.printStackTrace();
       }
 
-      CookieManager.storeOpenedFiles(context);      
+      CookieManager.storeOpenedFiles(context);
    }
 
    /* Fired when codemirror is initialized
@@ -376,7 +375,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
 
       context.setActiveFile(curentFile);
-      CookieManager.storeOpenedFiles(context);      
+      CookieManager.storeOpenedFiles(context);
       display.setCodemirrorFocus(curentFile.getPath());
    }
 
@@ -400,7 +399,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       if (!file.isContentChanged() && !file.isPropertiesChanged())
       {
          context.getOpenedFiles().remove(file.getPath());
-         CookieManager.storeOpenedFiles(context);         
+         CookieManager.storeOpenedFiles(context);
          return;
       }
 
@@ -432,7 +431,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
             {
                display.closeTab(file.getPath());
                context.getOpenedFiles().remove(file.getPath());
-               CookieManager.storeOpenedFiles(context);               
+               CookieManager.storeOpenedFiles(context);
             }
          }
       });
@@ -474,9 +473,6 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
             context.getOpenedFiles().put(savedFile.getPath(), savedFile);
             display.relocateFile(currentOpenedFile, savedFile);
          }
-
-         System.out.println("saved file content changed: " + savedFile.isContentChanged());
-         System.out.println("saved file properties changed: " + savedFile.isPropertiesChanged());
 
          updateTabTitle(savedFile.getPath());
       }

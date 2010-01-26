@@ -292,8 +292,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("changing active file..............");
-
       if (operationPanelMaximized)
       {
          restoreOperationPanel();

@@ -53,23 +53,12 @@ public class CookieManager
    private static final String OPENED_FILES_DELIMITER = "#";
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-      return decodeURIComponent(text);
-   }-*/;
+        return decodeURIComponent(text);
+     }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-      return encodeURIComponent(text);
-   }-*/;
-
-   //   private static void logCookies()
-   //   {
-   //      System.out.println("COOOOOOOOOOOOOOOKIES!!!!!!!!!!!!");
-   //      for (String cookieName : Cookies.getCookieNames())
-   //      {
-   //         System.out.println("cookie name > " + cookieName);
-   //         String cookieValue = Cookies.getCookie(cookieName);
-   //         System.out.println("cookie value: " + cookieValue);
-   //      }
-   //   }
+        return encodeURIComponent(text);
+     }-*/;
 
    /**
     * Storing Application context to browser cookies.
@@ -79,10 +68,8 @@ public class CookieManager
     */
    public static void storeOpenedFiles(ApplicationContext context)
    {
-      //      logCookies();
       storeOpenedFiles(context.getOpenedFiles());
       storeActiveFile(context.getActiveFile());
-      //      logCookies();
    }
 
    /**
@@ -178,20 +165,12 @@ public class CookieManager
       context.setRepository(repository);
       context.setWorkspace(workspace);
 
-      System.out.println("RESTORED --------------------------------------------------------------");
-      System.out.println("repository: " + repository);
-      System.out.println("workspace: " + workspace);
-      System.out.println("-----------------------------------------------------------------------");
-
       restoreOpenedFiles(context);
       restoreActiveFile(context);
    }
 
    private static void restoreOpenedFiles(ApplicationContext context)
    {
-      //    File file = new File(path);
-      //    context.getPreloadFiles().put(file.getPath(), file);
-
       String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
       if (openedFilesCookie == null)
       {
@@ -202,7 +181,6 @@ public class CookieManager
       for (String f : files)
       {
          String path = javaScriptDecodeURIComponent(f);
-         System.out.println("preloaded file > " + path);
          if ("".equals(path))
          {
             continue;

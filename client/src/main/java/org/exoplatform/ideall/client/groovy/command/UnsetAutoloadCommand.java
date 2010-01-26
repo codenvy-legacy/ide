@@ -102,8 +102,6 @@ public class UnsetAutoloadCommand extends SimpleCommand implements EditorActiveF
    private void checkEnablingFor(File file)
    {
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
-      System.out.println("autoload [" + autoloadPropertyValue + "]");
-
       if (autoloadPropertyValue == null)
       {
          disableUnsetAutoload();
@@ -142,7 +140,6 @@ public class UnsetAutoloadCommand extends SimpleCommand implements EditorActiveF
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      System.out.println("item properties saved!!!!!!!!!!!");
       if (!(event.getItem() instanceof File))
       {
          return;

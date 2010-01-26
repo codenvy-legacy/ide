@@ -118,7 +118,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      System.out.println("save as: " + event.isSaveAs());
       if (event.isNewFile())
       {
          handlers.removeHandlers();

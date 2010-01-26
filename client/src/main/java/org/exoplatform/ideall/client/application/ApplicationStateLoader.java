@@ -81,8 +81,6 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
 
-            System.out.println("initializing.......");
-
             new ApplicationInitializer(eventBus, context);
 
             return;
@@ -90,9 +88,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
          fileToLoad = context.getPreloadFiles().values().iterator().next();
          context.getPreloadFiles().remove(fileToLoad.getPath());
-         System.out.println(">>>>>> preload properties for > " + fileToLoad.getPath());
          DataService.getInstance().getProperties(fileToLoad);
-
       }
       catch (Exception exc)
       {
@@ -104,48 +100,19 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    {
       fileToLoad.setNewFile(false);
       fileToLoad.setContentChanged(false);
-      
-      System.out.println(">>>>>> peload content for > " + fileToLoad.getPath());
-      
       DataService.getInstance().getFileContent(fileToLoad);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
-      System.out.println(">>> content received for > " + event.getFile().getPath());
       context.getOpenedFiles().put(fileToLoad.getPath(), fileToLoad);
-
-      //      new Timer()
-      //      {
-      //         @Override
-      //         public void run()
-      //         {
-      //            preloadNextFile();
-      //         }
-      //      }.schedule(100);
-
       preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      System.out.println(">>> error loading > " + fileToLoad.getPath());
-      
-      System.out.println("Error: " + event.getError());
-      
       context.getOpenedFiles().remove(fileToLoad.getPath());
-      
       preloadNextFile();
-
-      //      new Timer()
-      //      {
-      //         @Override
-      //         public void run()
-      //         {
-      //            preloadNextFile();
-      //         }
-      //      }.schedule(100);
-
    }
 
 }

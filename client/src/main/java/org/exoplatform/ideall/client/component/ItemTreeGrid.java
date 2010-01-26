@@ -51,7 +51,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpen
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
       setData(tree);
-      
+
       setSelectionType(SelectionStyle.SINGLE);
 
       setCanFocus(false);
@@ -263,7 +263,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpen
 
    public void selectItem(String path)
    {
-      System.out.println("selecting : " + path);
       TreeNode node = getNodeByPath(path);
       deselectAllRecords();
       selectRecord(node);

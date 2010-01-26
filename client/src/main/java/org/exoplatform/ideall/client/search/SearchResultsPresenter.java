@@ -29,9 +29,6 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,8 +42,6 @@ public class SearchResultsPresenter
    {
 
       HasDoubleClickHandlers getSearchResultDoubleClickHandler();
-
-      HasClickHandlers getSearchResultClickHandler();
 
       HasSelectionHandlers<Item> getSearchResultSelectionChangeHandler();
 
@@ -77,16 +72,6 @@ public class SearchResultsPresenter
          public void onDoubleClick(DoubleClickEvent arg0)
          {
             openFile(selectedItem);
-         }
-      });
-
-      display.getSearchResultClickHandler().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            //
-            //eventBus.fireEvent(new BrowserFormSelectedEvent());
-            System.out.println("search panel selected!!!!!!!!!");
          }
       });
 

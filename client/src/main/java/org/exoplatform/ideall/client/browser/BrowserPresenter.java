@@ -289,11 +289,6 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    {
       Collections.sort(event.getFolder().getChildren(), comparator);
 
-      for (Item i : event.getFolder().getChildren())
-      {
-         System.out.println("item [" + i.getPath() + "]");
-      }
-
       display.getBrowserTree().setValue(event.getFolder());
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectBrowserPanelEvent());
@@ -397,7 +392,6 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
     */
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
-      System.out.println("BrowserPresenter.onInitializeApplication()");
       switchWorkspace();
       eventBus.fireEvent(new BrowserPanelSelectedEvent());
    }
@@ -409,8 +403,6 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
     */
    public void onSetFocusOnItem(SetFocusOnItemEvent event)
    {
-      System.out.println("BrowserPresenter.onSetFocusOnItem()");
-      System.out.println("try to select item : " + event.getPath());
       display.selectItem(event.getPath());
    }
 

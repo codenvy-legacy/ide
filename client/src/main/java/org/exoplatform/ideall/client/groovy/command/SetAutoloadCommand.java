@@ -99,8 +99,6 @@ public class SetAutoloadCommand extends SimpleCommand implements EditorActiveFil
    private void checkEnablingFor(File file)
    {
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
-      System.out.println("autoload [" + autoloadPropertyValue + "]");
-
       if (autoloadPropertyValue == null)
       {
          enableAutoload();
@@ -144,13 +142,13 @@ public class SetAutoloadCommand extends SimpleCommand implements EditorActiveFil
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      System.out.println("item properties saved!!!!!!!!!!!");
       if (!(event.getItem() instanceof File))
       {
          return;
       }
-      
-      if (context.getActiveFile() != (File)event.getItem()) {
+
+      if (context.getActiveFile() != (File)event.getItem())
+      {
          return;
       }
 

@@ -70,11 +70,8 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
-      System.out.println("GoToFolderCommandHandler.onGoToFolder()");
-
       if (context.getActiveFile() == null)
       {
-         System.out.println("no any file selected!");
          return;
       }
 
@@ -84,13 +81,10 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
          workingPath = workingPath.substring(1);
       }
       workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
-      System.out.println("working path: " + workingPath);
 
       String p[] = workingPath.split("/");
       pathes = new ArrayList<String>();
       pathToOpen = "/" + p[0] + "/" + p[1];
-
-      System.out.println("path to open > " + pathToOpen);
 
       if (p.length > 2)
       {
@@ -99,7 +93,6 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
             pathes.add(p[i]);
          }
       }
-      System.out.println("pathes length > " + pathes.size());
 
       handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -113,24 +106,19 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
     */
    public void onFolderContentReceived(FolderContentReceivedEvent event)
    {
-      System.out.println("folder content received...... opening next folder............");
-
       if (pathes.size() > 0)
       {
          String name = pathes.get(0);
          pathes.remove(0);
          pathToOpen += "/" + name;
 
-         System.out.println("now path to open > " + pathToOpen);
          DataService.getInstance().getFolderContent(pathToOpen);
       }
       else
       {
          // try to select file.........
          handlers.removeHandlers();
-
          eventBus.fireEvent(new SetFocusOnItemEvent(context.getActiveFile().getPath()));
-
       }
 
    }

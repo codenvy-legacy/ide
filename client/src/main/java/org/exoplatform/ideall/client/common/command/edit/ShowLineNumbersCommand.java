@@ -65,15 +65,13 @@ public class ShowLineNumbersCommand extends SimpleCommand implements EditorActiv
 
    private void updateState()
    {
-      System.out.println("context show line numbers: " + context.isShowLineNumbers());
-
       if (context.isShowLineNumbers())
       {
          // hide
          setVisible(false);
          return;
       }
-      
+
       // verify and show
       setVisible(true);
       if (activeFile == null)
@@ -83,7 +81,7 @@ public class ShowLineNumbersCommand extends SimpleCommand implements EditorActiv
       else
       {
          setEnabled(true);
-      }      
+      }
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

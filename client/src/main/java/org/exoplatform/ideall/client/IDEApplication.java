@@ -17,8 +17,6 @@
 package org.exoplatform.ideall.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.util.KeyCallback;
 import com.smartgwt.client.util.Page;
@@ -34,11 +32,6 @@ public class IDEApplication implements EntryPoint
 
    public void onModuleLoad()
    {
-//      RootPanel.get().add(new Label("Started!"));
-//      if (true) {
-//         return;
-//      }
-      
       KeyIdentifier debugKey = new KeyIdentifier();
       debugKey.setCtrlKey(true);
       debugKey.setKeyName("D");
@@ -51,8 +44,6 @@ public class IDEApplication implements EntryPoint
       });
 
       new IDE();
-
-      //new Sample();
    }
 
 }
