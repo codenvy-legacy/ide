@@ -53,46 +53,9 @@
           </lock-manager>
         </workspace>
         
-        <workspace name="backup">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
-            <properties>
-              <property name="source-name" value="jdbcjcr" />
-              <property name="dialect" value="hsqldb" />
-              <property name="multi-db" value="false" />
-              <property name="update-storage" value="false" />
-              <property name="max-buffer-size" value="200k" />
-              <property name="swap-directory" value="target/temp/swap/backup" />
-            </properties>
-						<value-storages>
-              <value-storage id="draft" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
-                <properties>
-                  <property name="path" value="target/temp/values/backup" />
-                </properties>
-                <filters>
-                  <filter property-type="Binary"/>
-                </filters>
-              </value-storage>
-            </value-storages>
-          </container>
-          <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
-            <properties>
-              <property name="root-nodetype" value="nt:unstructured" />
-            </properties>
-          </initializer>
-          <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
-            <properties>
-              <property name="max-size" value="10k" />
-              <property name="live-time" value="1h" />
-            </properties>
-          </cache>
-          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
-            <properties>
-              <property name="index-dir" value="target/temp/jcrlucenedb/backup" />
-            </properties>
-          </query-handler>
-        </workspace>
+       
         
-				<workspace name="digital-assets">
+				<workspace name="dev-monit">
           <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr" />
@@ -100,12 +63,12 @@
               <property name="multi-db" value="false" />
               <property name="update-storage" value="false" />
               <property name="max-buffer-size" value="200k" />
-              <property name="swap-directory" value="target/temp/swap/digital-assets" />
+              <property name="swap-directory" value="target/temp/swap/dev-monit" />
             </properties>
 						<value-storages>
               <value-storage id="digital-assets" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="target/temp/values/digital-assets" />
+                  <property name="path" value="target/temp/values/dev-monit" />
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -126,7 +89,7 @@
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
-              <property name="index-dir" value="target/temp/jcrlucenedb/digital-assets" />
+              <property name="index-dir" value="target/temp/jcrlucenedb/dev-monit" />
             </properties>
           </query-handler>
         </workspace>
