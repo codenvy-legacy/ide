@@ -1,0 +1,27 @@
+*****************
+* BUILD
+*****************
+
+* mvn clean install
+
+**********************
+* MAVEN CONFIGURATION:
+**********************
+
+  * ${exo.projects.directory.dependencies} directory contains :
+  ** ${exo.projects.app.tomcat.version}/ a clean Tomcat installation, to be used as packaging template
+  ** ${exo.projects.app.jboss.version}/ a clean JBoss installation, to be used as packaging template
+
+Alternatively you can edit your local settings.xml to add the information
+provided in profiles.xml. It will override what's in the provided file.
+
+*****************
+* PACKAGING:
+*****************
+Go to assembly/gatein/pkg
+* mvn clean install -Ppkg-tomcat
+** Creates a Tomcat delivery in packaging/pkg/target/tomcat/
+
+//not support yet
+* mvn install -Ppkg-jbossas
+** Creates a JBossAS delivery in packaging/pkg/target/jboss/
