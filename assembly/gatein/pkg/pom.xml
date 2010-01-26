@@ -271,7 +271,14 @@
 						<configuration>
 							<tasks>
 								<delete file="${project.build.directory}/tomcat/webapps/portal.war" />
-								<echo message="Deploying WAR" />
+								<delete file="${project.build.directory}/tomcat/lib/exo.portal.component.application-registry-3.0.0-Beta04.jar" />
+								
+								<copy file="${basedir}/src/main/resources/patch/exo.portal.component.application-registry-3.0.0-Beta04.jar"	
+								tofile="${project.build.directory}/tomcat/lib/exo.portal.component.application-registry-3.0.0-Beta04.jar" />
+								
+								<copy file="${project.build.directory}/packager-conf/war/portal.war"
+									tofile="${project.build.directory}/tomcat/webapps/portal.war" />
+								
 								<copy file="${project.build.directory}/packager-conf/war/portal.war"
 									tofile="${project.build.directory}/tomcat/webapps/portal.war" />
 								<copy

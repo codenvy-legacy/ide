@@ -170,7 +170,7 @@
             <collection type="java.util.ArrayList">
               <value>
 <!--                <string>collaboration</string>-->
-                <string>production</string>
+                <string>dev-monit</string>
               </value>
             </collection>
           </field>
