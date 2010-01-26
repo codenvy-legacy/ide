@@ -21,7 +21,7 @@
 
     <component>
           <type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
-     </component>
+    </component>
 
 
   

@@ -4,13 +4,8 @@
 
 
   <listener>
-   <listener-class>org.exoplatform.container.web.PortalContainerConfigOwner</listener-class>^
+   <listener-class>org.exoplatform.container.web.PortalContainerConfigOwner</listener-class>
   </listener>
-
-  <context-param>
-    <param-name>portalContainerName</param-name>
-    <param-value>portal</param-value>
-  </context-param>
 
   <filter>
     <filter-name>ResourceRequestFilter</filter-name>
