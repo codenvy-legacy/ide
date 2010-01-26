@@ -7,6 +7,10 @@
   <component>
     <type>org.exoplatform.ideall.upload.LoopbackContentService</type>
   </component>
+
+  <component>
+    <type>org.exoplatform.ideall.download.DownloadContentService</type>
+  </component>
   
   <component>
     <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>

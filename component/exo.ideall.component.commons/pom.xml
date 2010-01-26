@@ -14,6 +14,16 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<dependencies>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.core</artifactId>
+         <version>${org.exoplatform.jcr.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.ext</artifactId>
+         <version>${org.exoplatform.jcr.version}</version>
+      </dependency>
 		<dependency>
 			<groupId>org.exoplatform.ws</groupId>
 			<artifactId>exo.ws.rest.core</artifactId>
