@@ -66,60 +66,51 @@
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>portal.packaging.module</artifactId>
-			<version>3.0.0-Beta04</version>
+			<version>${org.exoplatform.gatein.version}</version>
 			<type>js</type>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>portal.packaging.product</artifactId>
-			<version>3.0.0-Beta04</version>
+			<version>${org.exoplatform.gatein.version}</version>
 			<type>js</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.component.commons</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${org.exoplatform.ideall.version}</version>
 			<type>jar</type>
 		</dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.gwt</groupId>
-			<artifactId>exo.smartgwt</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<type>war</type>
-		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.client</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${org.exoplatform.ideall.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.extension.config</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${org.exoplatform.ideall.version}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.component.commons</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${org.exoplatform.ideall.version}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.gatein.gadget.register</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${org.exoplatform.ideall.version}</version>
 			<type>jar</type>
 		</dependency>
-
-
-
 
 
 
@@ -130,17 +121,11 @@
 			<type>war</type>
 		</dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.portal</groupId>
-			<artifactId>exo.portal.web.portal</artifactId>
-			<version>3.0.0-Beta04</version>
-			<type>war</type>
-		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>exo.portal.starter.war</artifactId>
-			<version>3.0.0-Beta04</version>
+			<version>${org.exoplatform.gatein.version}</version>
 			<type>war</type>
 		</dependency>
 
@@ -216,7 +201,7 @@
 						</goals>
 						<configuration>
 							<includeTypes>war</includeTypes>
-							<includeArtifactIds>exo.ideall.client,exo.gwt.smartgwt,exo.portal.web.portal,exo.portal.starter.war</includeArtifactIds>
+							<includeArtifactIds>exo.ideall.client,exo.gwt.smartgwt,exo.portal.starter.war</includeArtifactIds>
 							<stripVersion>false</stripVersion>
 							<outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
 						</configuration>

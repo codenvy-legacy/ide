@@ -9,7 +9,7 @@
       <value-param> 
         <name>workspace</name> 
         <description>dev workspace</description> 
-        <value>collaboration</value> 
+        <value>dev-monit</value> 
       </value-param> 
       <value-param> 
         <name>host</name> 

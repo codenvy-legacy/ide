@@ -10,10 +10,10 @@
   
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ideall</groupId>
-  <artifactId>exo.ideall</artifactId>
+  <artifactId>exo.ideall.client</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>eXo IDE :: Application</name>
+  <name>eXo IDE :: Client</name>
   
   
   
