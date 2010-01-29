@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ideall.client.operation.properties;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,30 +31,54 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter
+public class PropertiesPresenter implements ItemPropertiesSavedHandler
 {
 
-   public interface Display {
-      
+   public interface Display
+   {
+
       void refreshProperties(File file);
-      
+
    }
-   
+
    private HandlerManager eventBus;
-   
+
+   private ApplicationContext context;
+
    private Display display;
-   
-   private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
-   
-   public PropertiesPresenter(HandlerManager eventBus) {
+
+   private Handlers handlers;
+
+   public PropertiesPresenter(HandlerManager eventBus, ApplicationContext context)
+   {
       this.eventBus = eventBus;
+      this.context = context;
+      handlers = new Handlers(eventBus);
    }
-   
-   public void bindDisplay(Display d) {
+
+   public void bindDisplay(Display d)
+   {
       display = d;
+      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
    }
-   
-   public void destroy() {
+
+   public void destroy()
+   {
+      handlers.removeHandlers();
    }
-   
+
+   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   {
+      if (!(event.getItem() instanceof File))
+      {
+         return;
+      }
+
+      File file = (File)event.getItem();
+      if (context.getActiveFile() == file)
+      {
+         display.refreshProperties(file);
+      }
+   }
+
 }

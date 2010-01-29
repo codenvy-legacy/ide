@@ -26,6 +26,7 @@ import org.exoplatform.gwt.commons.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwt.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.property.PropertyTitle;
 
 import com.smartgwt.client.types.Alignment;
@@ -64,13 +65,31 @@ public class PropertyEditor extends Layout
       for (Property property : properties)
       {
          QName propertyName = property.getName();
-         if (!PropertyTitle.containsTitleFor(propertyName))
-         {
-            continue;
-         }
 
-         String propertyTitle = PropertyTitle.getPropertyTitle(propertyName);
-         formItems.add(getStaticTextItem(propertyTitle, property.getValue()));
+         if (ItemProperty.JCR_CONTENT.equals(propertyName))
+         {
+            for (Property p : property.getChildProperties())
+            {
+               if (!PropertyTitle.containsTitleFor(p.getName()))
+               {
+                  continue;
+               }
+
+               String propertyTitle = PropertyTitle.getPropertyTitle(p.getName());
+               formItems.add(getStaticTextItem(propertyTitle, p.getValue()));
+            }
+
+         }
+         else
+         {
+            if (!PropertyTitle.containsTitleFor(propertyName))
+            {
+               continue;
+            }
+
+            String propertyTitle = PropertyTitle.getPropertyTitle(propertyName);
+            formItems.add(getStaticTextItem(propertyTitle, property.getValue()));
+         }
       }
 
       Collections.sort(formItems, itemsComparator);

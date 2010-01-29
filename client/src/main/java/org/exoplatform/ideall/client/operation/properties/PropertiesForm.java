@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.operation.properties;
 
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.operation.TabPanel;
 import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
@@ -40,10 +41,20 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
 
    private PropertiesPresenter presenter;
 
-   public PropertiesForm(HandlerManager eventBus)
+   public PropertiesForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, false);
       this.eventBus = eventBus;
+      
+      presenter = new PropertiesPresenter(eventBus, context);
+      presenter.bindDisplay(this);
+   }
+   
+   @Override
+   public void destroy()
+   {
+      presenter.destroy();
+      super.destroy();
    }
 
    public void refreshProperties(File file)

@@ -96,7 +96,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       createButtons();
       addMember(tabSet);
 
-      propertiesForm = new PropertiesForm(eventBus);
+      propertiesForm = new PropertiesForm(eventBus, context);
       outputForm = new OutputForm(eventBus);
       previewForm = new PreviewForm(eventBus, context);
 

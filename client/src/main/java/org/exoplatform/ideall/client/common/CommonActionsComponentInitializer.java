@@ -68,12 +68,12 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        */
 
       addCommand(new NewFileCommand()).disable().hide();
-      addCommand(new NewXMLFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new NewGroovyFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new NewHTMLFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new NewTEXTFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new NewJavaScriptFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new NewCSSFileCommand()).disable().hide().dockOnToolbar();
+      addCommand(new NewXMLFileCommand()).disable().hide();
+      addCommand(new NewGroovyFileCommand()).disable().hide();
+      addCommand(new NewHTMLFileCommand()).disable().hide();
+      addCommand(new NewTEXTFileCommand()).disable().hide();
+      addCommand(new NewJavaScriptFileCommand()).disable().hide();
+      addCommand(new NewCSSFileCommand()).disable().hide();
 
       addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new UploadFileCommand()).disable().hide().dockOnToolbar();

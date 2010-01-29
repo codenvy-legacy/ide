@@ -31,7 +31,7 @@ import org.exoplatform.gwt.commons.xml.QName;
 public class ItemProperty
 {
 
-   private interface Namespaces
+   public interface Namespace
    {
 
       static final String DAV = "DAV:";
@@ -46,34 +46,34 @@ public class ItemProperty
     * WebDAV properties
     */
 
-   public static QName DISPLAYNAME = new QName("displayname", Namespaces.DAV);
+   public static QName DISPLAYNAME = new QName("displayname", Namespace.DAV);
 
-   public static QName CREATIONDATE = new QName("creationdate", Namespaces.DAV);
+   public static QName CREATIONDATE = new QName("creationdate", Namespace.DAV);
 
-   public static QName GETCONTENTTYPE = new QName("getcontenttype", Namespaces.DAV);
+   public static QName GETCONTENTTYPE = new QName("getcontenttype", Namespace.DAV);
 
-   public static QName GETLASTMODIFIED = new QName("getlastmodified", Namespaces.DAV);
+   public static QName GETLASTMODIFIED = new QName("getlastmodified", Namespace.DAV);
 
-   public static QName GETCONTENTLENGTH = new QName("getcontentlength", Namespaces.DAV);
+   public static QName GETCONTENTLENGTH = new QName("getcontentlength", Namespace.DAV);
 
-   public static QName RESOURCETYPE = new QName("resourcetype", Namespaces.DAV);
+   public static QName RESOURCETYPE = new QName("resourcetype", Namespace.DAV);
 
    /*
     * JCR_PROPERTIES
     */
 
-   public static QName JCR_CONTENT = new QName("content", Namespaces.JCR);
+   public static QName JCR_CONTENT = new QName("content", Namespace.JCR);
 
-   public static QName JCR_NODETYPE = new QName("nodeType", Namespaces.JCR);
+   public static QName JCR_NODETYPE = new QName("nodeType", Namespace.JCR);
 
-   public static QName JCR_PRIMARYTYPE = new QName("primaryType", Namespaces.JCR);
+   public static QName JCR_PRIMARYTYPE = new QName("primaryType", Namespace.JCR);
 
-   public static QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespaces.JCR);
+   public static QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespace.JCR);
 
    /*
     * EXO PROPERTIES
     */
 
-   public static QName EXO_AUTOLOAD = new QName("autoload", Namespaces.EXO);
+   public static QName EXO_AUTOLOAD = new QName("autoload", Namespace.EXO);
 
 }
