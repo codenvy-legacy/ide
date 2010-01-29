@@ -224,24 +224,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    protected void submit(SubmitEvent event)
    {
-//      String mimeType = display.getMimeType().getValue();
-//      if (MimeType.APPLICATION_OCTET_STREAM.equals(mimeType))
-//      {
-//         String types = "";
-//         for (String extension : MimeTypeResolver.getExtensions())
-//         {
-//            if (!"".equals(types))
-//            {
-//               types += ", ";
-//            }
-//            types += extension;
-//         }
-//
-//         Dialogs.showError("Only " + types + " files are available to upload!");
-//         event.cancel();
-//         return;
-//      }
-
       Loader.getInstance().show();
    }
 
