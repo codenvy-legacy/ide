@@ -72,13 +72,14 @@ public class HideLineNumbersCommand extends SimpleCommand implements EditorActiv
       }
 
       // verify and show
-      setVisible(true);
       if (activeFile == null)
       {
+         setVisible(false);
          setEnabled(false);
       }
       else
       {
+         setVisible(true);
          setEnabled(true);
       }
    }

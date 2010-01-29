@@ -34,7 +34,7 @@ import com.google.gwt.user.client.Window.Location;
 public class Configuration implements ApplicationConfigurationReceivedHandler
 {
 
-   public final static String APPLICATION = "DevTool";
+   public final static String APPLICATION = "IDEall";
 
    private static final String CONFIG_NODENAME = "configuration";
 
