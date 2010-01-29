@@ -155,6 +155,15 @@ public class DownloadContentService implements Const, ResourceContainer
       return repoPath.split("/")[0];
    }
 
+   /**
+    * Return JCR session for selected repository and workspace.
+    * 
+    * @param repoName
+    * @param repoPath
+    * @return
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
    private Session getSession(String repoName, String repoPath) throws RepositoryException,
       RepositoryConfigurationException
    {
