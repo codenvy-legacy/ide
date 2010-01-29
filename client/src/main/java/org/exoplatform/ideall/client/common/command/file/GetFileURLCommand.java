@@ -21,9 +21,14 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
 import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
+import org.exoplatform.ideall.client.model.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,12 +37,17 @@ import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
  * @version $
  */
 
-public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHandler
+public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHandler, BrowserPanelSelectedHandler,
+   BrowserPanelDeselectedHandler
 {
 
    private static final String ID = "File/Get File URL";
 
    private static final String TITLE = "Get File URL";
+
+   private boolean browserPanelSelected = true;
+
+   private Item selectedItem;
 
    public GetFileURLCommand()
    {
@@ -48,6 +58,8 @@ public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHand
    protected void onRegisterHandlers()
    {
       addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(BrowserPanelSelectedEvent.TYPE, this);
+      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
    }
 
    @Override
@@ -59,7 +71,39 @@ public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHand
 
    public void onItemSelected(ItemSelectedEvent event)
    {
-      setEnabled(true);
+      selectedItem = event.getSelectedItem();
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+      if (!browserPanelSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+      }
+      else
+      {
+         setEnabled(true);
+      }
+
+   }
+
+   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
+   {
+      browserPanelSelected = true;
+      updateEnabling();
+   }
+
+   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
+   {
+      browserPanelSelected = false;
+      updateEnabling();
    }
 
 }
