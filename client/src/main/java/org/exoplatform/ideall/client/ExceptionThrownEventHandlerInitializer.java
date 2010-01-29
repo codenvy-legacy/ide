@@ -20,11 +20,12 @@
 package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
+import org.exoplatform.gwt.commons.smartgwt.ExceptionThrownHandlerImpl;
 import org.exoplatform.gwt.commons.smartgwt.ExceptionThrownHandlerImplEx;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,7 +51,11 @@ public class ExceptionThrownEventHandlerInitializer
          return;
       }
       
-      handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImplEx());
+      if (GWT.isScript()) {
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
+      } else {
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImplEx());         
+      }
    }
 
    public static void clear()
