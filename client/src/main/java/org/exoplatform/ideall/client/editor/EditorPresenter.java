@@ -37,6 +37,8 @@ import org.exoplatform.ideall.client.application.event.InitializeApplicationHand
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.cookie.CookieManager;
+import org.exoplatform.ideall.client.editor.event.ChangeActiveFileEvent;
+import org.exoplatform.ideall.client.editor.event.ChangeActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -90,7 +92,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
    FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
    MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
-   InitializeApplicationHandler, ShowLineNumbersHandler, HideLineNumbersHandler
+   InitializeApplicationHandler, ShowLineNumbersHandler, HideLineNumbersHandler, ChangeActiveFileHandler
 {
 
    public interface Display
@@ -179,7 +181,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       {
          try
          {
-            setFileAsActive(context.getActiveFile());
+            setFileAsActive();
          }
          catch (Exception exc)
          {
@@ -192,37 +194,11 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          {
             String fileName = (String)context.getOpenedFiles().keySet().toArray()[0];
             File file = context.getOpenedFiles().get(fileName);
-            setFileAsActive(file);
+            context.setActiveFile(file);
+            setFileAsActive();
          }
 
       }
-   }
-
-   private class UpdateActiveFileTimer extends Timer
-   {
-
-      private File file;
-
-      public UpdateActiveFileTimer(File file)
-      {
-         this.file = file;
-      }
-
-      @Override
-      public void run()
-      {
-         String path = file.getPath();
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.hasUndoChanges(path), display
-            .hasRedoChanges(path)));
-      }
-
-   }
-
-   private void setFileAsActive(File file)
-   {
-      display.selectTab(file.getPath());
-      new UpdateActiveFileTimer(file).schedule(1000);
-      new UpdateActiveFileTimer(file).schedule(500);
    }
 
    /**
@@ -254,6 +230,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
       handlers.addHandler(HideLineNumbersEvent.TYPE, this);
+
+      handlers.addHandler(ChangeActiveFileEvent.TYPE, this);
    }
 
    /**
@@ -611,6 +589,61 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
    public void onHideLineNumbers(HideLineNumbersEvent event)
    {
       updateLineNumbers(false);
+   }
+
+   public void onChangeActiveFile(ChangeActiveFileEvent event)
+   {
+      //ignoreContentChangedList.add(file.getPath());
+      if (timer1 != null)
+      {
+         timer1.cancel();
+      }
+
+      if (timer2 != null)
+      {
+         timer2.cancel();
+      }
+
+      context.setActiveFile(event.getFile());
+      //context.getOpenedFiles().put(file.getPath(), file);
+      //display.addTab(file, context.isShowLineNumbers());
+      display.selectTab(event.getFile().getPath());
+
+      CookieManager.storeOpenedFiles(context);
+      // TODO Auto-generated method stub
+   }
+
+   private class UpdateActiveFileTimer extends Timer
+   {
+
+      @Override
+      public void run()
+      {
+         if (context.getActiveFile() == null) {
+            return;
+         }
+         
+         String path = context.getActiveFile().getPath();
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(path), display
+            .hasRedoChanges(path)));
+      }
+
+   }
+
+   private UpdateActiveFileTimer timer1;
+
+   private UpdateActiveFileTimer timer2;
+
+   private void setFileAsActive()
+   {
+      if (context.getActiveFile() == null) {
+         return;
+      }
+      display.selectTab(context.getActiveFile().getPath());
+      timer1 = new UpdateActiveFileTimer();
+      timer1.schedule(1000);
+      timer2 = new UpdateActiveFileTimer();
+      timer2.schedule(500);
    }
 
 }

@@ -59,7 +59,7 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
    {
       super(eventBus, false);
       setCanFocus(false);
-
+      
       setOverflow(Overflow.HIDDEN);
 
       outputLayout = new VLayout();

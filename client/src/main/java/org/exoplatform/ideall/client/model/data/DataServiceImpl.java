@@ -17,6 +17,7 @@
 
 package org.exoplatform.ideall.client.model.data;
 
+import org.exoplatform.gwt.commons.component.Loader;
 import org.exoplatform.gwt.commons.rest.AsyncRequest;
 import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwt.commons.rest.HTTPHeader;
@@ -60,6 +61,33 @@ import com.google.gwt.http.client.RequestBuilder;
 public class DataServiceImpl extends DataService
 {
 
+   public interface Messages
+   {
+
+      static final String GET_FILE_CONTENT = "Reading file content...";
+
+      static final String GET_FOLDER_CONTENT = "Reading folder content...";
+
+      static final String CREATE_FOLDER = "Creating folder...";
+
+      static final String DELETE_FOLDER = "Deleting folder...";
+
+      static final String DELETE_FILE = "Deleting file...";
+
+      static final String SAVE_FILE_CONTENT = "Saving file...";
+
+      static final String GET_PROPERTIES = "Reading properties...";
+
+      static final String SAVE_PROPERTIES = "Saving properties...";
+
+      static final String SEARCH = "Searching...";
+
+      static final String MOVE_FILE = "Moving file...";
+
+      static final String MOVE_FOLDER = "Moving folder...";
+
+   }
+
    public static final String CONTEXT = "/jcr";
 
    private HandlerManager eventBus;
@@ -87,6 +115,9 @@ public class DataServiceImpl extends DataService
       FileContentReceivedEvent event = new FileContentReceivedEvent(file);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      Loader.getInstance().setMessage(Messages.GET_FILE_CONTENT);
+
       AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET).send(
          callback);
    }
@@ -106,6 +137,9 @@ public class DataServiceImpl extends DataService
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+
+      Loader.getInstance().setMessage(Messages.GET_FOLDER_CONTENT);
+
       AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
          .header(HTTPHeader.DEPTH, "1").send(callback);
    }
@@ -115,7 +149,11 @@ public class DataServiceImpl extends DataService
    {
       String url = getURL(path);
       FolderCreatedEvent event = new FolderCreatedEvent(path);
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+
+      Loader.getInstance().setMessage(Messages.CREATE_FOLDER);
+
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL).header(
          HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
@@ -125,7 +163,17 @@ public class DataServiceImpl extends DataService
    {
       String url = getURL(item.getPath());
       ItemDeletedEvent event = new ItemDeletedEvent(item);
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+
+      if (item instanceof File)
+      {
+         Loader.getInstance().setMessage(Messages.DELETE_FILE);
+      }
+      else
+      {
+         Loader.getInstance().setMessage(Messages.DELETE_FOLDER);
+      }
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).header(
          HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
@@ -142,6 +190,8 @@ public class DataServiceImpl extends DataService
       FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
+      Loader.getInstance().setMessage(Messages.SAVE_FILE_CONTENT);
+
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT).header(
          HTTPHeader.CONTENT_TYPE, file.getContentType()).header(HTTPHeader.CONTENT_NODETYPE,
          file.getJcrContentNodeType()).data(marshaller).send(callback);
@@ -157,6 +207,9 @@ public class DataServiceImpl extends DataService
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+
+      Loader.getInstance().setMessage(Messages.GET_PROPERTIES);
+
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
          .header(HTTPHeader.DEPTH, "infinity").send(callback);
    }
@@ -170,6 +223,8 @@ public class DataServiceImpl extends DataService
       ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
       ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      Loader.getInstance().setMessage(Messages.SAVE_PROPERTIES);
 
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
@@ -185,6 +240,9 @@ public class DataServiceImpl extends DataService
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      Loader.getInstance().setMessage(Messages.SEARCH);
+
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
          HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
@@ -203,6 +261,9 @@ public class DataServiceImpl extends DataService
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      Loader.getInstance().setMessage(Messages.SEARCH);
+
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
          HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
@@ -220,7 +281,16 @@ public class DataServiceImpl extends DataService
 
       MoveCompleteEvent event = new MoveCompleteEvent(item, destination);
 
-      if (item instanceof Folder)
+      if (item instanceof File)
+      {
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+
+         Loader.getInstance().setMessage(Messages.MOVE_FILE);
+
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      }
+      else
       {
          if (!url.endsWith("/"))
          {
@@ -233,12 +303,9 @@ public class DataServiceImpl extends DataService
          }
 
          AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-      }
-      else
-      {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+
+         Loader.getInstance().setMessage(Messages.MOVE_FOLDER);
+
          AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
             .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }

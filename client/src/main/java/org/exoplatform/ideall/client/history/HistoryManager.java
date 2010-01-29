@@ -19,14 +19,28 @@
  */
 package org.exoplatform.ideall.client.history;
 
+import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
+import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
+import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.editor.event.ChangeActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedHandler;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,20 +49,29 @@ import com.google.gwt.user.client.HistoryListener;
  * @version $
  */
 
-public class HistoryManager implements HistoryListener, RegisterEventHandlersHandler, EditorActiveFileChangedHandler
+public class HistoryManager implements RegisterEventHandlersHandler, EditorActiveFileChangedHandler,
+   ValueChangeHandler<String>, ItemPropertiesReceivedHandler, InitializeApplicationHandler,
+   ExceptionThrownHandler
 {
 
    private HandlerManager eventBus;
 
-   public HistoryManager(HandlerManager eventBus)
+   private ApplicationContext context;
+
+   private String currentHistoryToken;
+
+   private String pathToLoad;
+
+   private Handlers handlers;
+
+   public HistoryManager(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      History.addHistoryListener(this);
-   }
+      this.context = context;
+      handlers = new Handlers(eventBus);
 
-   public void onHistoryChanged(String historyToken)
-   {
-      System.out.println("on history changed > " + historyToken);
+      eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
@@ -58,9 +81,81 @@ public class HistoryManager implements HistoryListener, RegisterEventHandlersHan
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("changing active file > " + event.getFile());
       String path = event.getFile() != null ? event.getFile().getPath() : "";
+      if (path.equals(currentHistoryToken))
+      {
+         return;
+      }
+
+      currentHistoryToken = path;
       History.newItem(path);
+   }
+
+   public void onValueChange(ValueChangeEvent<String> value)
+   {
+      //System.out.println("history value changed: " + value);
+
+      String path = value.getValue();
+      if ("".equals(path))
+      {
+         return;
+      }
+
+      File file = context.getOpenedFiles().get(path);
+
+      if (file == null)
+      {
+         loadFileAndSwitch(path);
+      }
+      else
+      {
+         if (file == context.getActiveFile())
+         {
+            return;
+         }
+
+         context.setActiveFile(file);
+         eventBus.fireEvent(new ChangeActiveFileEvent(file));
+      }
+
+   }
+
+   private void loadFileAndSwitch(String path)
+   {
+      pathToLoad = path;
+
+      ExceptionThrownEventHandlerInitializer.clear();
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+
+      File file = new File(path);
+      DataService.getInstance().getProperties(file);
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      stopHandling();
+      DataService.getInstance().getFileContent((File)event.getItem());
+   }
+
+   public void onInitializeApplication(InitializeApplicationEvent event)
+   {
+      // init history state here!
+      currentHistoryToken = History.getToken();
+      History.addValueChangeHandler(this);
+      History.fireCurrentHistoryState();
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      stopHandling();
+      Dialogs.showError("Can't open file <b>" + pathToLoad + "</b>!");
+   }
+
+   private void stopHandling()
+   {
+      handlers.removeHandlers();
+      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
    }
 
 }

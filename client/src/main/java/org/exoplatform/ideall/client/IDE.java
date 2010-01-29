@@ -72,7 +72,7 @@ public class IDE
       context.getComponents().add(new GroovyActionsComponent());
       context.getComponents().add(new HelpActionsComponent());
 
-      new HistoryManager(eventBus);
+      new HistoryManager(eventBus, context);
       
       new DevToolForm(eventBus, context);
 

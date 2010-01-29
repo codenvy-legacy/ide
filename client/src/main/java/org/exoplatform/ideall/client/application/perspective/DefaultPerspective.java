@@ -129,6 +129,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       horizontalSplitLayout = new HLayout();
       horizontalSplitLayout.setMargin(MARGIN);
+      horizontalSplitLayout.setWidth100();
       addMember(horizontalSplitLayout);
       navigationForm = new NavigationForm(eventBus, context);
       navigationForm.setWidth("30%");
@@ -152,6 +153,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       });
 
       verticalSplitLayout = new VLayout();
+      verticalSplitLayout.setHeight100();
       verticalSplitLayout.setOverflow(Overflow.HIDDEN);
       horizontalSplitLayout.addMember(verticalSplitLayout);
 
@@ -161,6 +163,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       verticalSplitLayout.addMember(editorForm);
 
       operationForm = new OperationForm(eventBus, context);
+      operationForm.setHeight(180);
       verticalSplitLayout.addMember(operationForm);
       operationForm.hide();
 
@@ -182,7 +185,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar = new StatusBarForm(eventBus);
       addMember(statusBar);
-
    }
 
    @Override
@@ -231,6 +233,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    private void maximizeOperationPanel()
    {
+      System.out.println("maximizing operation panel");
+      
       navigationPanelVisible = navigationForm.isVisible();
       navigationForm.hide();
       horizontalSplitLayout.setResizeBarSize(0);
@@ -241,12 +245,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       operationPanelHeight = operationForm.getHeight();
       operationForm.setHeight100();
+      System.out.println("operation panel height: " + operationPanelHeight);
 
       statusBar.hide();
 
       eventBus.fireEvent(new ClearFocusEvent());
 
       operationPanelMaximized = true;
+      
+      System.out.println("end maximizing......");
    }
 
    private void restoreOperationPanel()

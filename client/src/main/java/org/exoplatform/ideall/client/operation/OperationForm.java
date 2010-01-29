@@ -267,7 +267,6 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    /*
     * Show Output
     */
-
    public void showOutput()
    {
       show();
@@ -278,7 +277,6 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    /*
     * Show Properties
     */
-
    public void showProperties(File file)
    {
       show();

@@ -104,18 +104,25 @@ public class GroovyServiceImpl extends GroovyService
       if (params != null && params.size() > 0)
       {
          if (!url.contains("?"))
+         {
             url += "?";
+         }
          for (SimpleParameterEntry param : params)
          {
             url += param.getName() + "=" + param.getValue() + "&";
          }
          url.substring(0, url.lastIndexOf("&"));
       }
+
       Method httpMethod;
       if (method.equals(HTTPMethod.GET))
+      {
          httpMethod = RequestBuilder.GET;
+      }
       else
+      {
          httpMethod = RequestBuilder.POST;
+      }
       RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(output);
       RestServiceOutputUnmarshaller unmarshaller = new RestServiceOutputUnmarshaller(output);
 
@@ -129,7 +136,9 @@ public class GroovyServiceImpl extends GroovyService
          }
       }
       if (body != null && body.length() > 0)
+      {
          request.data(body);
+      }
       request.send(callback);
 
    }
