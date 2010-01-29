@@ -39,16 +39,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class OutputForm extends TabPanel implements OutputPresenter.Display
 {
 
-   private static final String LOG_COLOR = "#000077";
-
-   private static final String INFO_COLOR = "#007700";
-
-   private static final String WARNING_COLOR = "#AA0077";
-
-   private static final String ERROR_COLOR = "#880000";
-
-   private static final String OUTPUT_COLOR = "#000088";
-
    private OutputPresenter presenter;
 
    private VLayout outputLayout;
@@ -59,7 +49,7 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
    {
       super(eventBus, false);
       setCanFocus(false);
-      
+
       setOverflow(Overflow.HIDDEN);
 
       outputLayout = new VLayout();
@@ -94,49 +84,9 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
 
    public void outMessage(OutputMessage message)
    {
-      Label label = new Label();
-
-      if (message.getType() == OutputMessage.Type.LOG)
-      {
-         label.setContents("<font color=\"" + LOG_COLOR + "\">[" + OutputMessage.Type.LOG.name() + "] "
-            + message.getMessage() + "</font>");
-
-      }
-      else if (message.getType() == OutputMessage.Type.INFO)
-      {
-         label.setContents("<font color=\"" + INFO_COLOR + "\">[" + OutputMessage.Type.INFO.name() + "] "
-            + message.getMessage() + "</font>");
-
-      }
-      else if (message.getType() == OutputMessage.Type.WARNING)
-      {
-         label.setContents("<font color=\"" + WARNING_COLOR + "\">[" + OutputMessage.Type.WARNING.name() + "] "
-            + message.getMessage() + "</font>");
-
-      }
-      else if (message.getType() == OutputMessage.Type.ERROR)
-      {
-         label.setContents("<font color=\"" + ERROR_COLOR + "\">[" + OutputMessage.Type.ERROR.name() + "] "
-            + message.getMessage() + "</font>");
-      }
-      else if (message.getType() == OutputMessage.Type.OUTPUT)
-      {
-         label.setContents("<font color=\"" + OUTPUT_COLOR + "\">[" + OutputMessage.Type.OUTPUT.name() + "] "
-            + message.getMessage() + "</font>");
-      }
-
-      if (odd)
-      {
-         label.setBackgroundColor("#f8f8f8");
-      }
+      OutputRecord record = new OutputRecord(message, odd);
       odd = !odd;
-
-      label.setWidth100();
-      label.setAutoHeight();
-      label.setPadding(4);
-      label.setCanSelectText(true);
-      label.setCursor(Cursor.TEXT);
-      outputLayout.addMember(label);
+      outputLayout.addMember(record);
       scrollToBottomTimer.schedule(100);
    }
 

@@ -201,12 +201,21 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       else
       {
          ServerException exception = (ServerException)event.getException();
-         String message =
-            "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
-               + exception.getStatusText() + "<hr>" + exception.getMessage();
+         
+         if (exception.isErrorMessageProvided()) {
+            String message =
+               "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
+                  + exception.getStatusText() + "<hr>" + exception.getMessage();
 
-         OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
-         eventBus.fireEvent(errorEvent);
+            OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
+            eventBus.fireEvent(errorEvent);            
+         } else {
+            String message =
+               "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
+                  + exception.getStatusText();
+            OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
+            eventBus.fireEvent(errorEvent);
+         }
       }
    }
 
