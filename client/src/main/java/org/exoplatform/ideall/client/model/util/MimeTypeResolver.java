@@ -70,17 +70,17 @@ public class MimeTypeResolver
       return mimeTypes.keySet();
    }
 
-   public static List<String> getMimeType(String fileName)
+   public static List<String> getMimeTypes(String fileName)
    {
       String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
 
       List<String> mimeType = mimeTypes.get(fileExtension);
-      if (mimeType == null)
-      {
-         List<String> list = new ArrayList<String>();
-         list.add(MimeType.APPLICATION_OCTET_STREAM);
-         return list;
-      }
+//      if (mimeType == null)
+//      {
+//         List<String> list = new ArrayList<String>();
+//         //list.add(MimeType.APPLICATION_OCTET_STREAM);
+//         return list;
+//      }
 
       return mimeType;
    }

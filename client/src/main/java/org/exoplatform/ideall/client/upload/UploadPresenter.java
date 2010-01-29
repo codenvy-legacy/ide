@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.upload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwt.commons.component.Loader;
@@ -65,17 +66,17 @@ public class UploadPresenter implements UploadFileSelectedHandler
       FormPanel getUploadForm();
 
       HasValue<String> getFileNameField();
-      
+
       void setMimeTypes(String[] mimeTypes);
-      
+
       HasValue<String> getMimeType();
-      
+
       void enableMimeTypeSelect();
 
       void disableMimeTypeSelect();
-      
+
       void setDefaultMimeType(String mimeType);
-      
+
    }
 
    private HandlerManager eventBus;
@@ -178,24 +179,42 @@ public class UploadPresenter implements UploadFileSelectedHandler
    {
       String fileName = event.getFileName();
       fileName = fileName.replace('\\', '/');
-      
-      if (fileName.indexOf('/') >= 0) {
+
+      if (fileName.indexOf('/') >= 0)
+      {
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
-      
+
       display.getFileNameField().setValue(fileName);
       display.enableUploadButton();
       display.enableMimeTypeSelect();
-      List<String> mimeTypes = MimeTypeResolver.getMimeType(event.getFileName());
+
+      List<String> mimeTypes = new ArrayList<String>();
+      mimeTypes.add(MimeType.TEXT_PLAIN);
+      mimeTypes.add(MimeType.TEXT_XML);
+      mimeTypes.add(MimeType.TEXT_HTML);
+      mimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+      mimeTypes.add(MimeType.TEXT_CSS);
+      mimeTypes.add(MimeType.APPLICATION_GROOVY);
+      mimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+      mimeTypes.add(MimeType.APPLICATION_XML);
+      mimeTypes.add(MimeType.GOOGLE_GADGET);
+
+      List<String> proposalMimeTypes = MimeTypeResolver.getMimeTypes(event.getFileName());
+
       String[] valueMap = new String[mimeTypes.size()];
       int i = 0;
       for (String mimeType : mimeTypes)
       {
-         valueMap[i++]=mimeType;
+         valueMap[i++] = mimeType;
       }
       display.setMimeTypes(valueMap);
-      display.setDefaultMimeType(valueMap[0]);
-      
+
+      if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
+      {
+         String mimeTYpe = proposalMimeTypes.get(0);
+         display.setDefaultMimeType(mimeTYpe);
+      }
    }
 
    protected void uploadFile()
@@ -205,23 +224,23 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    protected void submit(SubmitEvent event)
    {
-      String mimeType =  display.getMimeType().getValue();
-      if (MimeType.APPLICATION_OCTET_STREAM.equals(mimeType))
-      {
-         String types = "";
-         for (String extension : MimeTypeResolver.getExtensions())
-         {
-            if (!"".equals(types))
-            {
-               types += ", ";
-            }
-            types += extension;
-         }
-
-         Dialogs.showError("Only " + types + " files are available to upload!");
-         event.cancel();
-         return;
-      }
+//      String mimeType = display.getMimeType().getValue();
+//      if (MimeType.APPLICATION_OCTET_STREAM.equals(mimeType))
+//      {
+//         String types = "";
+//         for (String extension : MimeTypeResolver.getExtensions())
+//         {
+//            if (!"".equals(types))
+//            {
+//               types += ", ";
+//            }
+//            types += extension;
+//         }
+//
+//         Dialogs.showError("Only " + types + " files are available to upload!");
+//         event.cancel();
+//         return;
+//      }
 
       Loader.getInstance().show();
    }
@@ -253,7 +272,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.closeDisplay();
 
       String fileName = display.getFileNameField().getValue();
-     
+
       String mimeType = display.getMimeType().getValue();
       File submittedFile = new File(path + "/" + fileName);
       submittedFile.setNewFile(true);
