@@ -73,6 +73,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       void changeActiveFile(File file);
 
       void showGadget(GadgetMetadata metadata);
+      
+      void closeGadgetPreviewTab();
 
    }
 
@@ -120,6 +122,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       display.closePreviewTab();
+      display.closeGadgetPreviewTab();
+      
       if (event.getFile() == null)
       {
          display.closePropertiesTab();

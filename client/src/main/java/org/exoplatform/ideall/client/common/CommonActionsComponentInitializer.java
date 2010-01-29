@@ -42,6 +42,7 @@ import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewCSSFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewGadgetCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
@@ -74,6 +75,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new NewTEXTFileCommand()).disable().hide();
       addCommand(new NewJavaScriptFileCommand()).disable().hide();
       addCommand(new NewCSSFileCommand()).disable().hide();
+      addCommand(new NewGadgetCommand()).disable().hide();
 
       addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new UploadFileCommand()).disable().hide().dockOnToolbar();
