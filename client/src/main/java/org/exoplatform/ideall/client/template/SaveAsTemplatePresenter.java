@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ideall.client.template;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;

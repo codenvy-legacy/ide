@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.editor;
 
+import org.exoplatform.gwt.commons.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.editor.codemirror.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.model.File;
 
 import com.smartgwt.client.widgets.Canvas;

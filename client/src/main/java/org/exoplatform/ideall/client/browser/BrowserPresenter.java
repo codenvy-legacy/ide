@@ -20,7 +20,7 @@ package org.exoplatform.ideall.client.browser;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;

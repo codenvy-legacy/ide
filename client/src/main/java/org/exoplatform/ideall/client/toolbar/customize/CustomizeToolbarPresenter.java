@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.toolbar.customize;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.solution.command.Command;

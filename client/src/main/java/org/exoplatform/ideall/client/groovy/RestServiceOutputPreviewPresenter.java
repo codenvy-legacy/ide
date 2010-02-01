@@ -19,10 +19,10 @@ package org.exoplatform.ideall.client.groovy;
 import java.util.List;
 import java.util.Vector;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.rest.HTTPHeader;
 import org.exoplatform.gwt.commons.rest.HTTPMethod;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.configuration.Configuration;

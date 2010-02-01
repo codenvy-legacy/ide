@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ideall.client.action;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.application.component;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;

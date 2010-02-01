@@ -19,9 +19,9 @@
  */
 package org.exoplatform.ideall.client.application.perspective;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.component.event.LockIFrameElementsEvent;
 import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;

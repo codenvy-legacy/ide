@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.sample;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 
 import com.google.gwt.event.shared.HandlerManager;
 

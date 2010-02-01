@@ -19,11 +19,11 @@
  */
 package org.exoplatform.ideall.client.history;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;

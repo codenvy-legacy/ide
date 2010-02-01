@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.ApplicationInitializer;
 import org.exoplatform.ideall.client.cookie.CookieManager;

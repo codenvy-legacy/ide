@@ -19,8 +19,8 @@ package org.exoplatform.ideall.client.editor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityEvent;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityHandler;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorContentChangedEvent;
@@ -31,7 +31,6 @@ import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorSaveContent
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorSaveContentHandler;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;

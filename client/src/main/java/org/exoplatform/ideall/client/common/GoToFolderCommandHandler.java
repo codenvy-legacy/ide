@@ -21,9 +21,9 @@ package org.exoplatform.ideall.client.common;
 
 import java.util.ArrayList;
 
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.Handlers;
 import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
 import org.exoplatform.ideall.client.event.browse.GoToFolderHandler;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;

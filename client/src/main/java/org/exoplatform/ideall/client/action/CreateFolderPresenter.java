@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.data.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.data.event.FolderCreatedHandler;

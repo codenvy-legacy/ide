@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.navigation;
 
-import org.exoplatform.ideall.client.Handlers;
+import org.exoplatform.gwt.commons.client.Handlers;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.layout.Layout;
