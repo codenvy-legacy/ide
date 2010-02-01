@@ -19,6 +19,7 @@ package org.exoplatform.ideall.client.editor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityEvent;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityHandler;
@@ -371,6 +372,16 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
    }
 
+   private void closeFile(File file)
+   {
+      display.closeTab(file.getPath());
+      file.setContent(null);
+      file.setContentChanged(false);
+
+      context.getOpenedFiles().remove(file.getPath());
+      CookieManager.storeOpenedFiles(context);
+   }
+
    public void onEditorCloseFile(EditorCloseFileEvent event)
    {
       final File file = event.getFile();
@@ -407,9 +418,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
             }
             else
             {
-               display.closeTab(file.getPath());
-               context.getOpenedFiles().remove(file.getPath());
-               CookieManager.storeOpenedFiles(context);
+               closeFile(file);
             }
          }
       });
@@ -435,8 +444,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       if (closeFileAfterSaving)
       {
          closeFileAfterSaving = false;
-         display.closeTab(event.getFile().getPath());
-         context.getOpenedFiles().remove(event.getFile().getPath());
+         closeFile(event.getFile());
       }
       else
       {
@@ -537,20 +545,25 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       if (event.getItem() instanceof File)
       {
-         display.closeTab(path); // trying to close tab with the same path
-         context.getOpenedFiles().remove(path);
+         closeFile((File)event.getItem());
       }
       else
       {
          //find out the files are been in the removed folder
          HashMap<String, File> openedFiles = context.getOpenedFiles();
 
-         for (File openedFile : openedFiles.values())
+         HashMap<String, File> copy = new HashMap<String, File>();
+         for (String key : openedFiles.keySet())
          {
-            if (Utils.match(openedFile.getPath(), "^" + path + ".*", ""))
+            File file = openedFiles.get(key);
+            copy.put(key, file);
+         }
+
+         for (File file : copy.values())
+         {
+            if (Utils.match(file.getPath(), "^" + path + ".*", ""))
             {
-               display.closeTab(openedFile.getPath());
-               context.getOpenedFiles().remove(path);
+               closeFile(file);
             }
          }
       }
@@ -619,13 +632,14 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       @Override
       public void run()
       {
-         if (context.getActiveFile() == null) {
+         if (context.getActiveFile() == null)
+         {
             return;
          }
-         
+
          String path = context.getActiveFile().getPath();
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(path), display
-            .hasRedoChanges(path)));
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(path),
+            display.hasRedoChanges(path)));
       }
 
    }
@@ -636,7 +650,8 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
    private void setFileAsActive()
    {
-      if (context.getActiveFile() == null) {
+      if (context.getActiveFile() == null)
+      {
          return;
       }
       display.selectTab(context.getActiveFile().getPath());

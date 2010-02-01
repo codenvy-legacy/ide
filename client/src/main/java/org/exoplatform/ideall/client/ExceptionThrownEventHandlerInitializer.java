@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
 import org.exoplatform.gwt.commons.smartgwt.ExceptionThrownHandlerImpl;
-import org.exoplatform.gwt.commons.smartgwt.ExceptionThrownHandlerImplEx;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -54,7 +53,11 @@ public class ExceptionThrownEventHandlerInitializer
       if (GWT.isScript()) {
          handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
       } else {
-         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImplEx());         
+         /*
+          * shell mode
+          */
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
+         //handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImplEx());         
       }
    }
 
