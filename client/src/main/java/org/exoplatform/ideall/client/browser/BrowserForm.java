@@ -17,6 +17,7 @@
 
 package org.exoplatform.ideall.client.browser;
 
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
@@ -24,12 +25,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasOpenHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 
@@ -81,22 +77,7 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
       presenter.destroy();
    }
 
-   public HasValue<Item> getBrowserTree()
-   {
-      return treeGridEx;
-   }
-
-   public HasOpenHandlers<Item> getBrowserTreeNavigator()
-   {
-      return treeGridEx;
-   }
-
-   public HasSelectionHandlers<Item> getBrowserTreeSelectable()
-   {
-      return treeGridEx;
-   }
-
-   public HasDoubleClickHandlers getBrowserTreeDClickable()
+   public TreeGridItem<Item> getBrowserTree()
    {
       return treeGridEx;
    }

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.search;
 
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
@@ -24,11 +25,8 @@ import org.exoplatform.ideall.client.model.data.DataService;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,11 +39,7 @@ public class SearchResultsPresenter
    interface Display
    {
 
-      HasDoubleClickHandlers getSearchResultDoubleClickHandler();
-
-      HasSelectionHandlers<Item> getSearchResultSelectionChangeHandler();
-
-      HasValue<Item> getSearchResultTree();
+      TreeGridItem<Item> getSearchResultTree();
 
    }
 
@@ -67,7 +61,7 @@ public class SearchResultsPresenter
    {
       this.display = d;
 
-      display.getSearchResultDoubleClickHandler().addDoubleClickHandler(new DoubleClickHandler()
+      display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler()
       {
          public void onDoubleClick(DoubleClickEvent arg0)
          {
@@ -75,7 +69,7 @@ public class SearchResultsPresenter
          }
       });
 
-      display.getSearchResultSelectionChangeHandler().addSelectionHandler(new SelectionHandler<Item>()
+      display.getSearchResultTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
          {
@@ -85,9 +79,9 @@ public class SearchResultsPresenter
 
       if (searchresult.getChildren() != null && !searchresult.getChildren().isEmpty())
       {
-        searchresult.setIcon(Images.FileTypes.WORKSPACE);
-        display.getSearchResultTree().setValue(searchresult);
-      } 
+         searchresult.setIcon(Images.FileTypes.WORKSPACE);
+         display.getSearchResultTree().setValue(searchresult);
+      }
    }
 
    private void openFile(Item item)

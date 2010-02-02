@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
@@ -56,15 +57,11 @@ import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasOpenHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -82,13 +79,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    interface Display
    {
 
-      HasValue<Item> getBrowserTree();
-
-      HasOpenHandlers<Item> getBrowserTreeNavigator();
-
-      HasSelectionHandlers<Item> getBrowserTreeSelectable();
-
-      HasDoubleClickHandlers getBrowserTreeDClickable();
+      TreeGridItem<Item> getBrowserTree();
 
       void selectItem(String path);
 
@@ -122,7 +113,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    {
       this.display = display;
 
-      display.getBrowserTreeNavigator().addOpenHandler(new OpenHandler<Item>()
+      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
       {
          public void onOpen(OpenEvent<Item> event)
          {
@@ -130,7 +121,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
          }
       });
 
-      display.getBrowserTreeSelectable().addSelectionHandler(new SelectionHandler<Item>()
+      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          public void onSelection(SelectionEvent<Item> event)
          {
@@ -138,7 +129,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
          }
       });
 
-      display.getBrowserTreeDClickable().addDoubleClickHandler(new DoubleClickHandler()
+      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
       {
          public void onDoubleClick(DoubleClickEvent event)
          {

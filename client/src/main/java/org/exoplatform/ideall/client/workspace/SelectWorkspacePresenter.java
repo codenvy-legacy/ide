@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.workspace;
 
 import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.ApplicationInitializer;
 import org.exoplatform.ideall.client.cookie.CookieManager;
@@ -34,12 +35,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -54,11 +52,7 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
    public interface Display
    {
 
-      HasValue<JCRConfigurationItem> getJCRItemsTreeGrid();
-
-      HasSelectionHandlers<JCRConfigurationItem> getJCRItemsTreeGridSelectable();
-
-      HasDoubleClickHandlers getJCRItemsTreeGridClickable();
+      TreeGridItem<JCRConfigurationItem> getJCRItemsTreeGrid();
 
       void enableJCRItemsTreeGrid();
 
@@ -119,7 +113,7 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
          }
       });
 
-      display.getJCRItemsTreeGridSelectable().addSelectionHandler(new SelectionHandler<JCRConfigurationItem>()
+      display.getJCRItemsTreeGrid().addSelectionHandler(new SelectionHandler<JCRConfigurationItem>()
       {
          public void onSelection(SelectionEvent<JCRConfigurationItem> event)
          {
@@ -127,7 +121,7 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
          }
       });
 
-      display.getJCRItemsTreeGridClickable().addDoubleClickHandler(new DoubleClickHandler()
+      display.getJCRItemsTreeGrid().addDoubleClickHandler(new DoubleClickHandler()
       {
          public void onDoubleClick(DoubleClickEvent event)
          {

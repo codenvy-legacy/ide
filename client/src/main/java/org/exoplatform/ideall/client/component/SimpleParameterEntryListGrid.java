@@ -63,12 +63,6 @@ public class SimpleParameterEntryListGrid extends ListGrid<SimpleParameterEntry>
    }
 
    @Override
-   protected String getValuePropertyName()
-   {
-      return "param";
-   }
-
-   @Override
    protected void setRecordFields(ListGridRecord record, SimpleParameterEntry item)
    {
       record.setAttribute("name", item.getName());

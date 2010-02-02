@@ -237,6 +237,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       }
 
       // extract uploaded file content from response
+      //final String submittedFileContent = uploadServiceResponse; // extractRecievedContent(uploadServiceResponse);
       final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
       if (submittedFileContent == null)
       {

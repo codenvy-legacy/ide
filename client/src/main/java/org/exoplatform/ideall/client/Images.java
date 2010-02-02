@@ -157,15 +157,6 @@ public interface Images
 
    }
 
-   public interface MenuButton
-   {
-      public static final String BACKGROUND = imageUrl + "menu/button/background.png";
-
-      public static final String OVER = imageUrl + "menu/button/over.png";
-
-      public static final String DOWN = imageUrl + "menu/button/down.png";
-   }
-
    public interface StatusBar
    {
 

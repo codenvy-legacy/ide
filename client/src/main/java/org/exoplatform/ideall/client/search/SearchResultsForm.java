@@ -16,17 +16,14 @@
  */
 package org.exoplatform.ideall.client.search;
 
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
 import org.exoplatform.ideall.client.search.event.SearchResultPanelSelectedEvent;
 
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 /**
  * Created by The eXo Platform SAS.
@@ -61,17 +58,7 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultsPr
       presenter.bindDsplay(this);
    }
 
-   public HasDoubleClickHandlers getSearchResultDoubleClickHandler()
-   {
-      return searchItemTreeGrid;
-   }
-
-   public HasSelectionHandlers<Item> getSearchResultSelectionChangeHandler()
-   {
-      return searchItemTreeGrid;
-   }
-
-   public HasValue<Item> getSearchResultTree()
+   public TreeGridItem<Item> getSearchResultTree()
    {
       return searchItemTreeGrid;
    }

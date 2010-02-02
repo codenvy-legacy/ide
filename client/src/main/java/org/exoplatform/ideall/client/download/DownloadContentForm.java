@@ -27,6 +27,7 @@ import org.exoplatform.ideall.client.event.file.DownloadFileHandler;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -76,7 +77,20 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
    private void downloadResource()
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT_DOWNLOAD + context.getSelectedItem().getPath();
+      String fileName = context.getSelectedItem().getPath();
+      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+      if (!(context.getSelectedItem() instanceof File))
+      {
+         fileName += ".zip";
+      }
+
+      String path = context.getSelectedItem().getPath();
+
+      System.out.println("file name: [" + fileName + "]");
+      System.out.println("path: [" + path + "]");
+
+      String url = Configuration.getInstance().getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
+      System.out.println("url: " + url);
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";

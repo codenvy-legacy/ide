@@ -22,9 +22,6 @@ import org.exoplatform.gwt.commons.smartgwt.component.TreeGrid;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
 
-import com.google.gwt.event.logical.shared.HasOpenHandlers;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.tree.Tree;
@@ -37,7 +34,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @version @version $Id: $
  */
 
-public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpenHandlers<T>
+public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 {
 
    private Tree tree;
@@ -246,19 +243,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T> implements HasOpen
       }
 
       tree.openFolder(parentNode);
-   }
-
-   @Override
-   protected String getValuePropertyName()
-   {
-      return "itemBean";
-   }
-
-   public HandlerRegistration addOpenHandler(OpenHandler<T> openHandler)
-   {
-      FolderOpenedHandlerImpl<T> openedHandler = new FolderOpenedHandlerImpl<T>(openHandler, getValuePropertyName());
-      addFolderOpenedHandler(openedHandler);
-      return null;
    }
 
    public void selectItem(String path)

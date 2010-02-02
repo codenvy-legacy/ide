@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
+import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
 import org.exoplatform.gwt.commons.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
@@ -23,9 +24,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -145,12 +144,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
       return okButton;
    }
 
-   public HasValue<JCRConfigurationItem> getJCRItemsTreeGrid()
-   {
-      return jcrItemsTreeGrid;
-   }
-
-   public HasSelectionHandlers<JCRConfigurationItem> getJCRItemsTreeGridSelectable()
+   public TreeGridItem<JCRConfigurationItem> getJCRItemsTreeGrid()
    {
       return jcrItemsTreeGrid;
    }
