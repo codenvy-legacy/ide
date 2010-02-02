@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwt.commons.component.ui.ListGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.solution.command.Command;
@@ -29,11 +30,9 @@ import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,13 +49,9 @@ public class CustomizeToolbarPresenter
 
       void closeForm();
 
-      HasValue<List<CommandItemEx>> getCommandItemListGrid();
+      ListGridItem<CommandItemEx> getCommandItemListGrid();
 
-      HasSelectionHandlers<CommandItemEx> getCommandItemListGridSelectable();
-
-      HasValue<List<ToolbarItem>> getToolbarItemsListGrid();
-
-      HasSelectionHandlers<ToolbarItem> getToolbarItemsListGridSelectable();
+      ListGridItem<ToolbarItem> getToolbarItemsListGrid();
 
       void toolbarItemsListGridSelectItem(ToolbarItem item);
 
@@ -192,7 +187,7 @@ public class CustomizeToolbarPresenter
          }
       });
 
-      display.getCommandItemListGridSelectable().addSelectionHandler(new SelectionHandler<CommandItemEx>()
+      display.getCommandItemListGrid().addSelectionHandler(new SelectionHandler<CommandItemEx>()
       {
          public void onSelection(SelectionEvent<CommandItemEx> event)
          {
@@ -200,7 +195,7 @@ public class CustomizeToolbarPresenter
          }
       });
 
-      display.getToolbarItemsListGridSelectable().addSelectionHandler(new SelectionHandler<ToolbarItem>()
+      display.getToolbarItemsListGrid().addSelectionHandler(new SelectionHandler<ToolbarItem>()
       {
          public void onSelection(SelectionEvent<ToolbarItem> event)
          {
@@ -479,7 +474,7 @@ public class CustomizeToolbarPresenter
       }
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
-      SettingsService.getInstance().saveSetting(context);      
+      SettingsService.getInstance().saveSetting(context);
    }
 
    private void applyChanges()

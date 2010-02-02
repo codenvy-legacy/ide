@@ -16,17 +16,14 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import java.util.List;
-
+import org.exoplatform.gwt.commons.component.ui.ListGridItem;
 import org.exoplatform.gwt.commons.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -279,23 +276,13 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    {
       return moveUpButton;
    }
-
-   public HasValue<List<CommandItemEx>> getCommandItemListGrid()
+   
+   public ListGridItem<CommandItemEx> getCommandItemListGrid()
    {
       return commandItemListGrid;
    }
 
-   public HasValue<List<org.exoplatform.ideall.client.toolbar.customize.ToolbarItem>> getToolbarItemsListGrid()
-   {
-      return toolbarItemListGrid;
-   }
-
-   public HasSelectionHandlers<CommandItemEx> getCommandItemListGridSelectable()
-   {
-      return commandItemListGrid;
-   }
-
-   public HasSelectionHandlers<org.exoplatform.ideall.client.toolbar.customize.ToolbarItem> getToolbarItemsListGridSelectable()
+   public ListGridItem<org.exoplatform.ideall.client.toolbar.customize.ToolbarItem> getToolbarItemsListGrid()
    {
       return toolbarItemListGrid;
    }
