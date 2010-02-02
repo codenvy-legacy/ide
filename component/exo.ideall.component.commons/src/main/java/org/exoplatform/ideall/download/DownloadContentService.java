@@ -20,6 +20,8 @@
 package org.exoplatform.ideall.download;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +35,7 @@ import javax.jcr.Session;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
@@ -177,18 +180,20 @@ public class DownloadContentService implements Const, ResourceContainer
       return sp.getSession(workspaceName(repoPath), repo);
    }
 
-   /**
-    * Download resource.
-    * 
-    * @param repoName
-    * @param repoPath
-    * @return
-    */
    @GET
-   @Path("/{repoName}/{repoPath:.*}/")
-   public Response download(@PathParam("repoName") String repoName, @PathParam("repoPath") String repoPath)
+   @Path("/{fileName:.*}/")
+   public Response download(@PathParam("fileName") String fileName, @QueryParam("repoPath") String repoPath)
    {
+      if (repoPath.startsWith("/"))
+      {
+         repoPath = repoPath.substring(1);
+      }
       repoPath = normalizePath(repoPath);
+
+      String repoName = repoPath.substring(0, repoPath.indexOf("/"));
+
+      repoPath = repoPath.substring(1);
+      repoPath = repoPath.substring(repoPath.indexOf("/") + 1);
 
       try
       {
@@ -224,7 +229,7 @@ public class DownloadContentService implements Const, ResourceContainer
     * @return
     * @throws RepositoryException
     */
-   private Response getFile(Node node) throws RepositoryException
+   private Response getFile(Node node) throws RepositoryException, UnsupportedEncodingException, URISyntaxException
    {
       long contentLength = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getLength();
       String contentType = node.getNode(JCR_CONTENT).getProperty(JCR_MIMETYPE).getString();
@@ -236,7 +241,7 @@ public class DownloadContentService implements Const, ResourceContainer
 
       InputStream inputStream = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getStream();
 
-      String contentDisposition = "attachment; filename=\"" + node.getName() + "\"";
+      String contentDisposition = "attachment";
 
       return Response.ok().header(HttpHeaders.CONTENT_LENGTH, Long.toString(contentLength)).header(
          HttpHeaders.LAST_MODIFIED, modifiedValue).header(HEADER_CONTENT_DISPOSITION, contentDisposition).entity(
@@ -253,17 +258,7 @@ public class DownloadContentService implements Const, ResourceContainer
     */
    private Response getFolder(Node node, String repoPath) throws RepositoryException
    {
-      String zipFileName;
-      if ("/".equals(node.getPath()))
-      {
-         zipFileName = workspaceName(repoPath) + ".zip";
-      }
-      else
-      {
-         zipFileName = node.getName() + ".zip";
-      }
-
-      String contentDisposition = "attachment; filename=\"" + zipFileName + "\"";
+      String contentDisposition = "attachment";
 
       DirectoryContentEntity entity = new DirectoryContentEntity(node);
 

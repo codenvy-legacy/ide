@@ -94,7 +94,6 @@ public class DirectoryContentEntity implements StreamingOutput, Const
 
          ZipEntry zipEntry = new ZipEntry(path);
          zipOutputStream.putNextEntry(zipEntry);
-
          flushJCRData(inputStream, zipOutputStream);
 
          zipOutputStream.closeEntry();
