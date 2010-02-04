@@ -72,7 +72,7 @@ public class IDE
       context.getComponents().add(new GroovyActionsComponent());
       context.getComponents().add(new HelpActionsComponent());
 
-      new HistoryManager(eventBus, context);
+      // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
       
       new DevToolForm(eventBus, context);
 
