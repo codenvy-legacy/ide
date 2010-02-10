@@ -60,8 +60,7 @@ public class FormatSourceCommand extends SimpleCommand implements EditorActiveFi
          return;
       }
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
-         || MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+      if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
       {
          setVisible(false);
          setEnabled(false);
