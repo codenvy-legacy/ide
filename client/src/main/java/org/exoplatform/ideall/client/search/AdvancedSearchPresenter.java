@@ -167,14 +167,16 @@ public class AdvancedSearchPresenter
 
    private void fillMimeTypes()
    {
-      String[] mimeTypes = new String[7];
+      String[] mimeTypes = new String[9];
       mimeTypes[0] = MimeType.TEXT_HTML;
       mimeTypes[1] = MimeType.TEXT_CSS;
       mimeTypes[2] = MimeType.TEXT_PLAIN;
       mimeTypes[3] = MimeType.APPLICATION_X_JAVASCRIPT;
-      mimeTypes[4] = MimeType.TEXT_XML;
-      mimeTypes[5] = MimeType.SCRIPT_GROOVY;
-      mimeTypes[6] = MimeType.GOOGLE_GADGET;
+      mimeTypes[4] = MimeType.APPLICATION_JAVASCRIPT;
+      mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
+      mimeTypes[6] = MimeType.TEXT_XML;
+      mimeTypes[7] = MimeType.SCRIPT_GROOVY;
+      mimeTypes[8] = MimeType.GOOGLE_GADGET;
       display.setMimeTypeValues(mimeTypes);
    }
 
