@@ -17,8 +17,8 @@
 package org.exoplatform.ideall.client.action;
 
 import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwt.commons.smartgwt.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
@@ -132,7 +132,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       String selectedItemPath = context.getSelectedItem().getPath();
       if (hasOpenedFiles(selectedItemPath))
       {
-         Dialogs.ask("Move", "Save opened files?", new BooleanReceivedCallback()
+         Dialogs.ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
          {
             public void execute(Boolean value)
             {

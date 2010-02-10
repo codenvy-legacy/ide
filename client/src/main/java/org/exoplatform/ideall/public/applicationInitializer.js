@@ -1,4 +1,5 @@
 var registryURL = "/portal/rest/registry/repository";
+var proxyServiceContext = "/rest/private/proxy";
 
 // for the shell the configuration is being placed in the
 // /src/main/webapp/shell/classes/conf/exo-configuration.xml

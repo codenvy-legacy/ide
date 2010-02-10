@@ -29,8 +29,8 @@ import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorInitialized
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorInitializedHandler;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorSaveContentEvent;
 import org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorSaveContentHandler;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.BooleanReceivedCallback;
 import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwt.commons.smartgwt.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
@@ -392,7 +392,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
 
       String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-      Dialogs.ask("DevTool", message, new BooleanReceivedCallback()
+      Dialogs.ask("DevTool", message, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
          {

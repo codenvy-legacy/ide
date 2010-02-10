@@ -178,6 +178,10 @@
       </object-param>
     </init-params>
   </component>
+  
+  <component>
+  	<type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>
+  </component>
 
 <external-component-plugins>
  		<target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
