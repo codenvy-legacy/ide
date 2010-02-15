@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 
 /**
  * Created by The eXo Platform SAS .

@@ -17,12 +17,12 @@
 
 package org.exoplatform.ideall.client.model.data;
 
-import org.exoplatform.gwt.commons.component.Loader;
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwt.commons.rest.HTTPHeader;
-import org.exoplatform.gwt.commons.rest.HTTPMethod;
-import org.exoplatform.gwt.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;

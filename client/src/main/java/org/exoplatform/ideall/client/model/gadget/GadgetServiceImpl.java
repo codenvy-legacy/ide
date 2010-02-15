@@ -16,10 +16,10 @@
  */
 package org.exoplatform.ideall.client.model.gadget;
 
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwt.commons.rest.HTTPHeader;
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedEvent;
 import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedEvent;

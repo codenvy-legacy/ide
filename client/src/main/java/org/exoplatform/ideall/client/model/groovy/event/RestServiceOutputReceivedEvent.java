@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.groovy.event;
 
-import org.exoplatform.gwt.commons.exceptions.ServerExceptionEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ideall.client.model.groovy.RestServiceOutput;
 
 import com.google.gwt.event.shared.GwtEvent;

@@ -16,11 +16,11 @@
  */
 package org.exoplatform.ideall.client.model.data.marshal;
 
-import org.exoplatform.gwt.commons.rest.Unmarshallable;
-import org.exoplatform.gwt.commons.webdav.PropfindResponse;
-import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
-import org.exoplatform.gwt.commons.webdav.PropfindResponse.Resource;
-import org.exoplatform.gwt.commons.xml.QName;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.property.ItemProperty;

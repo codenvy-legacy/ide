@@ -18,9 +18,9 @@ package org.exoplatform.ideall.client.model.groovy;
 
 import java.util.List;
 
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwt.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.conversation.marshal;
 
-import org.exoplatform.gwt.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 
 /**

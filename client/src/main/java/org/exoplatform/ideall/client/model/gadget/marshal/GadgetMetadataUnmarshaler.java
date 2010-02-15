@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.gadget.marshal;
 
-import org.exoplatform.gwt.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 
 import com.google.gwt.core.client.JavaScriptObject;

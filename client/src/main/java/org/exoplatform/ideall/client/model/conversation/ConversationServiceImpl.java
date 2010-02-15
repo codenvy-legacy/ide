@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.model.conversation;
 
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
 import org.exoplatform.ideall.client.model.conversation.marshal.UserInfoUnmarshaller;
