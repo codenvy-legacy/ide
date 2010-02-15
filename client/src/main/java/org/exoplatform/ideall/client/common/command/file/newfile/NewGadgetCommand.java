@@ -19,9 +19,8 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.common.command.file.newfile.AbstractNewFileCommand;
 import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 
 /**

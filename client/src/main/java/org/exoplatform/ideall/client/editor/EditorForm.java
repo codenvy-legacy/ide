@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ideall.client.editor;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.editor.codemirror.CodeMirrorConfig;
-import org.exoplatform.gwt.commons.editor.codemirror.SmartGWTCodeMirror;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.editor.codemirror.CodeMirrorConfig;
+import org.exoplatform.gwtframework.ui.editor.SmartGWTCodeMirror;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;

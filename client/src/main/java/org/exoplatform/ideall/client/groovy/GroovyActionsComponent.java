@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
-import org.exoplatform.gwt.commons.exceptions.ServerException;
-import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptHandler;

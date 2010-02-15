@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.editor;
 
-import org.exoplatform.gwt.commons.smartgwt.component.ImgButton;
+import org.exoplatform.gwtframework.ui.component.ImgButton;
 import org.exoplatform.ideall.client.Images;
 
 import com.google.gwt.event.shared.GwtEvent;

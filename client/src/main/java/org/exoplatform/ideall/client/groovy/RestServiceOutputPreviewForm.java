@@ -18,11 +18,11 @@ package org.exoplatform.ideall.client.groovy;
 
 import java.util.List;
 
-import org.exoplatform.gwt.commons.rest.HTTPMethod;
-import org.exoplatform.gwt.commons.smartgwt.component.IButton;
-import org.exoplatform.gwt.commons.smartgwt.component.SelectItem;
-import org.exoplatform.gwt.commons.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwt.commons.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.ui.component.IButton;
+import org.exoplatform.gwtframework.ui.component.SelectItem;
+import org.exoplatform.gwtframework.ui.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.component.SimpleParameterEntryListGrid;

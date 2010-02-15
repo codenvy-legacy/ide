@@ -21,8 +21,8 @@ package org.exoplatform.ideall.client.groovy;
 
 import java.util.Collection;
 
-import org.exoplatform.gwt.commons.webdav.PropfindResponse.Property;
-import org.exoplatform.gwt.commons.xml.QName;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.property.ItemProperty;
 
