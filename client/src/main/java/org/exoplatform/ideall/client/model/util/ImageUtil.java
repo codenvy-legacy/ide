@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.model.util;
 
 import java.util.HashMap;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 
 /**

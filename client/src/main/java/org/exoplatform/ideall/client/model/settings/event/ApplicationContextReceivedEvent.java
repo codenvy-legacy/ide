@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.settings.event;
 
-import org.exoplatform.gwt.commons.exceptions.ServerExceptionEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.GwtEvent;

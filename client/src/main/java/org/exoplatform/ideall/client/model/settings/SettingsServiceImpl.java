@@ -19,11 +19,11 @@
  */
 package org.exoplatform.ideall.client.model.settings;
 
-import org.exoplatform.gwt.commons.initializer.RegistryConstants;
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwt.commons.rest.HTTPHeader;
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;

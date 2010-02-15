@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.model.jcrservice;
 
-import org.exoplatform.gwt.commons.rest.AsyncRequest;
-import org.exoplatform.gwt.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.jcrservice.event.RepositoryConfigurationReceivedEvent;

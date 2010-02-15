@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Created by The eXo Platform SAS .

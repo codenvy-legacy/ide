@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.model.template;
 
 import java.util.HashMap;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Created by The eXo Platform SAS .

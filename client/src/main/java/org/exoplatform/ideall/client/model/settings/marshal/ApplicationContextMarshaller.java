@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
-import org.exoplatform.gwt.commons.rest.Marshallable;
+import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 /**

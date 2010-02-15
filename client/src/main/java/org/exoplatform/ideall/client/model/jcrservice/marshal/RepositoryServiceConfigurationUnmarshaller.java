@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.jcrservice.marshal;
 
-import org.exoplatform.gwt.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Repository;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Workspace;

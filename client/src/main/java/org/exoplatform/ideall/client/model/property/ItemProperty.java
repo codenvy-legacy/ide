@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.property;
 
-import org.exoplatform.gwt.commons.xml.QName;
+import org.exoplatform.gwtframework.commons.xml.QName;
 
 /**
  * Created by The eXo Platform SAS .

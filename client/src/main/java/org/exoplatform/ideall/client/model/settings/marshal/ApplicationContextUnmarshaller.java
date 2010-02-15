@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.model.settings.marshal;
 
 import java.util.ArrayList;
 
-import org.exoplatform.gwt.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.user.client.Window;
