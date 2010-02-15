@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ideall.client.search;
 
-import org.exoplatform.gwt.commons.rest.MimeType;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;

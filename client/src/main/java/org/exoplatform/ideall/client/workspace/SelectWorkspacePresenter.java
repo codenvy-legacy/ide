@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.ApplicationInitializer;
 import org.exoplatform.ideall.client.cookie.CookieManager;

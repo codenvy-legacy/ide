@@ -19,8 +19,8 @@ package org.exoplatform.ideall.client.toolbar.customize;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.component.ui.ListGridItem;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.solution.command.Command;

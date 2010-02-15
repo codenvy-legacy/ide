@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ideall.client.operation;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.rest.MimeType;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;

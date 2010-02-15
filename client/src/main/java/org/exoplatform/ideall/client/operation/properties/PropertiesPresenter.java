@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.operation.properties;
 
-import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;

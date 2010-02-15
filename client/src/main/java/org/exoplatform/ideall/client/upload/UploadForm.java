@@ -17,9 +17,9 @@
 
 package org.exoplatform.ideall.client.upload;
 
-import org.exoplatform.gwt.commons.smartgwt.component.ComboBoxField;
-import org.exoplatform.gwt.commons.smartgwt.component.TextField;
-import org.exoplatform.gwt.commons.util.UIHelper;
+import org.exoplatform.gwtframework.ui.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.component.TextField;
+import org.exoplatform.gwtframework.ui.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.configuration.Configuration;

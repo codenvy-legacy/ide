@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.operation;
 import java.util.HashMap;
 import java.util.List;
 
-import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.editor.MinMaxControlButton;
 import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredEvent;

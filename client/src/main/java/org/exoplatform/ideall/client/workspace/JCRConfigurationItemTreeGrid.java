@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.workspace;
 
 import java.util.ArrayList;
 
-import org.exoplatform.gwt.commons.smartgwt.component.TreeGrid;
+import org.exoplatform.gwtframework.ui.component.TreeGrid;
 
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.tree.Tree;

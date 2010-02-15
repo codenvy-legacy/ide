@@ -16,17 +16,15 @@
  */
 package org.exoplatform.ideall.client.operation.output;
 
-import org.exoplatform.gwt.commons.smartgwt.component.ImgButton;
+import org.exoplatform.gwtframework.ui.component.ImgButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.operation.TabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**

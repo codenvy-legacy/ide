@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwt.commons.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;

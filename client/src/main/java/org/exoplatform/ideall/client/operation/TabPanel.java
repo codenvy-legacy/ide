@@ -19,11 +19,11 @@ package org.exoplatform.ideall.client.operation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.component.event.LockIFrameElementsEvent;
-import org.exoplatform.gwt.commons.component.event.LockIFrameElementsHandler;
-import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsEvent;
-import org.exoplatform.gwt.commons.component.event.UnlockIFrameElementsHandler;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.event.LockIFrameElementsEvent;
+import org.exoplatform.gwtframework.ui.event.LockIFrameElementsHandler;
+import org.exoplatform.gwtframework.ui.event.UnlockIFrameElementsEvent;
+import org.exoplatform.gwtframework.ui.event.UnlockIFrameElementsHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.Canvas;

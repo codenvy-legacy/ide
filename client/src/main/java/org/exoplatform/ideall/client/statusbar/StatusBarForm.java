@@ -1,6 +1,6 @@
 package org.exoplatform.ideall.client.statusbar;
 
-import org.exoplatform.gwt.commons.smartgwt.component.Label;
+import org.exoplatform.gwtframework.ui.component.Label;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;

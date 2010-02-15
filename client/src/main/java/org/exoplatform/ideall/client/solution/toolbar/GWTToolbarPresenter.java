@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.solution.toolbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.solution.command.Command;
 import org.exoplatform.ideall.client.solution.toolbar.bean.ToolbarItem;
 import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;

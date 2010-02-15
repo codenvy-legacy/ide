@@ -19,9 +19,9 @@ package org.exoplatform.ideall.client.upload;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwt.commons.component.Loader;
-import org.exoplatform.gwt.commons.rest.MimeType;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.model.File;

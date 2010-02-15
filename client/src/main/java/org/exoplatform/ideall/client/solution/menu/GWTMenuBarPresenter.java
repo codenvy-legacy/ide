@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.solution.menu;
 
 import java.util.LinkedHashMap;
 
-import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.solution.command.Command;
 import org.exoplatform.ideall.client.solution.menu.bean.CommandItem;
 import org.exoplatform.ideall.client.solution.menu.bean.DelimiterItem;

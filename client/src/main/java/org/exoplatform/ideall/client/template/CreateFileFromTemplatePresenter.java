@@ -16,10 +16,9 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import java.util.List;
-
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
@@ -33,8 +32,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -53,11 +50,7 @@ public class CreateFileFromTemplatePresenter
    public interface Display
    {
 
-      HasValue<List<Template>> getTemplateListGrid();
-
-      HasSelectionHandlers<Template> getTemplateListSelectionGrid();
-      
-      HasDoubleClickHandlers getTemplateListClickable();
+      ListGridItem<Template> getTemplateListGrid();
 
       HasValue<String> getFileNameField();
 
@@ -117,7 +110,7 @@ public class CreateFileFromTemplatePresenter
          }
       });
 
-      display.getTemplateListSelectionGrid().addSelectionHandler(new SelectionHandler<Template>()
+      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<Template>()
       {
          public void onSelection(SelectionEvent<Template> event)
          {
@@ -125,7 +118,7 @@ public class CreateFileFromTemplatePresenter
          }
       });
       
-      display.getTemplateListClickable().addDoubleClickHandler(new DoubleClickHandler() {
+      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler() {
          public void onDoubleClick(DoubleClickEvent event)
          {
             createFile();

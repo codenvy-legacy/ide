@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.navigation;
 
-import org.exoplatform.gwt.commons.client.Handlers;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
 import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelHandler;
 import org.exoplatform.ideall.client.model.Folder;

@@ -16,18 +16,15 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import java.util.List;
-
-import org.exoplatform.gwt.commons.smartgwt.component.IButton;
-import org.exoplatform.gwt.commons.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.component.IButton;
+import org.exoplatform.gwtframework.ui.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
@@ -161,8 +158,8 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       presenter.destroy();
       super.onDestroy();
    }
-
-   public HasValue<List<Template>> getTemplateListGrid()
+   
+   public ListGridItem<Template> getTemplateListGrid()
    {
       return templateListGrid;
    }
@@ -187,11 +184,6 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       return fileNameField;
    }
 
-   public HasSelectionHandlers<Template> getTemplateListSelectionGrid()
-   {
-      return templateListGrid;
-   }
-
    public void disableCreateButton()
    {
       createButton.disable();
@@ -200,11 +192,6 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    public void enableCreateButton()
    {
       createButton.enable();
-   }
-
-   public HasDoubleClickHandlers getTemplateListClickable()
-   {
-      return templateListGrid;
    }
 
 }

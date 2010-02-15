@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import org.exoplatform.gwt.commons.smartgwt.component.IButton;
-import org.exoplatform.gwt.commons.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwt.commons.smartgwt.component.TextField;
-import org.exoplatform.gwt.commons.util.UIHelper;
+import org.exoplatform.gwtframework.ui.component.IButton;
+import org.exoplatform.gwtframework.ui.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.component.TextField;
+import org.exoplatform.gwtframework.ui.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.File;
@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
