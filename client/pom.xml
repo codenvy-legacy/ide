@@ -115,15 +115,13 @@
 						<phase>process-resources</phase>
 						<configuration>
 							<tasks>
-								<echo
-									file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties"
-									append="false">
-									buildNumber: ${buildNumber}
-									buildTime: ${timestamp}
-									version: ${project.version}
-									wiki : "${wiki.url}"
-									source : "${source.url}"
-                        </echo>
+<echo file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties" append="false">
+buildNumber: ${buildNumber}
+buildTime: ${timestamp}
+version: ${project.version}
+wiki : "${wiki.url}"
+source : "${source.url}"
+</echo>
 							</tasks>
 						</configuration>
 					</execution>
