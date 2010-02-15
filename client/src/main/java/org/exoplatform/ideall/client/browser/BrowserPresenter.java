@@ -20,8 +20,8 @@ package org.exoplatform.ideall.client.browser;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.component.ui.TreeGridItem;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;

@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import org.exoplatform.gwt.commons.smartgwt.component.IButton;
-import org.exoplatform.gwt.commons.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.component.IButton;
+import org.exoplatform.gwtframework.ui.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;

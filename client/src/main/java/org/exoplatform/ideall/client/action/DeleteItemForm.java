@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import org.exoplatform.gwt.commons.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.Item;
@@ -27,7 +27,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;

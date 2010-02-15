@@ -6,8 +6,6 @@
 	<!-- the theme of your GWT application by uncommenting          -->
 	<!-- any one of the following lines.                            -->
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 	<inherits name="com.google.gwt.http.HTTP" />
 	<inherits name='com.google.gwt.user.Debug' />
 	<inherits name='com.google.gwt.xml.XML' />
@@ -28,7 +26,9 @@
 	-->
 
 	<!-- load GWT Commons Libraries -->
-	<inherits name='org.exoplatform.gwt.commons.Commons' />
+	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
+	<inherits name='org.exoplatform.gwtframework.editor.Editor' />
+	<inherits name='org.exoplatform.gwtframework.ui.UI' />	
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.exoplatform.ideall.client.IDEApplication' />
@@ -37,10 +37,5 @@
 	<!-- Specify the application specific style sheet. -->
 	<stylesheet src='IDE.css' />
 	<stylesheet src='eXoStyle/eXoStyle.css' />
-
-	<!-- Load CodeMirror editor files.
-  <stylesheet src='codemirror-0.65/css/editor.css' />
-  <script src="codemirror-0.65/js/codemirror.js" />   
-	-->
 
 </module>

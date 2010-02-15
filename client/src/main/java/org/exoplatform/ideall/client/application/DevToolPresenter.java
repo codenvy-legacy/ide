@@ -16,10 +16,10 @@
  */
 package org.exoplatform.ideall.client.application;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
-import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
-import org.exoplatform.gwt.commons.smartgwt.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;

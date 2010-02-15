@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client;
 
-import org.exoplatform.gwt.commons.util.UIHelper;
+import org.exoplatform.gwtframework.ui.util.UIHelper;
 
 /**
  * Created by The eXo Platform SAS .

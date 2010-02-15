@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client;
 
-import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
-import org.exoplatform.gwt.commons.smartgwt.ExceptionThrownHandlerImpl;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.handler.ExceptionThrownHandlerImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;

@@ -19,9 +19,9 @@
  */
 package org.exoplatform.ideall.client.common;
 
-import org.exoplatform.gwt.commons.client.Handlers;
-import org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent;
-import org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
