@@ -257,7 +257,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void formatFile(String path)
    {
-      getEditorTab(path).getCodeMirror().reindentEditor();
+      getEditorTab(path).getCodeMirror().formatSource();
    }
 
    public void relocateFile(File oldFile, File newFile)

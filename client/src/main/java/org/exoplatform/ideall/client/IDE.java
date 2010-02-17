@@ -1,6 +1,6 @@
 package org.exoplatform.ideall.client;
 
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationReceivedEvent;
+import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.ui.loader.SmartGWTLoader;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;

@@ -17,9 +17,9 @@
 
 package org.exoplatform.ideall.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationReceivedEvent;
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
+import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
+import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
