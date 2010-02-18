@@ -67,7 +67,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      Dialogs.showError("Workspace <b>" + context.getRepository() + "/" + context.getWorkspace() + "</b> not found!");
+      Dialogs.getInstance().showError("Workspace <b>" + context.getRepository() + "/" + context.getWorkspace() + "</b> not found!");
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)

@@ -127,7 +127,7 @@ public class AdvancedSearchPresenter
 
       if (mainPath == null || mainPath.length() == 0)
       {
-         Dialogs.showError("Path must not be empty!");
+         Dialogs.getInstance().showError("Path must not be empty!");
          return;
       }
 

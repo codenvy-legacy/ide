@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.component.ListGrid;
+import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
@@ -40,7 +40,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    {
 
       final static String TOOLBAR_SPACER = "exo-customizeToolbar-spacer";
-      
+
       final static String TOOLBAR_DELIMITER = "exo-customizeToolbar-delimiter";
 
    }
@@ -52,54 +52,29 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       setCanSort(false);
       setCanGroupBy(false);
       setCanFocus(false);
-      setSelectionType(SelectionStyle.SINGLE);      
+      setSelectionType(SelectionStyle.SINGLE);
 
       ListGridField toolBarItemsField = new ListGridField(TOOLBAR, TOOLBAR);
       setFields(toolBarItemsField);
    }
 
-   //private ListGridRecord selectedRecord;
-
-//   public void setValue(List<ToolbarItem> items)
-//   {
-//      //selectedRecord = getSelectedRecord();
-//      super.setValue(items);
-//
-//      if (selectedRecord != null)
-//      {
-//         restoreSelectedRecord();
-//      }
-//      
-//   }
-   
-   public void selectItem(ToolbarItem item) {
-      for (ListGridRecord record : getRecords()) {
+   public void selectItem(ToolbarItem item)
+   {
+      for (ListGridRecord record : getRecords())
+      {
          ToolbarItem recordItem = (ToolbarItem)record.getAttributeAsObject(getValuePropertyName());
-         if (item == recordItem) {
+         if (item == recordItem)
+         {
             selectRecord(record);
             return;
          }
       }
-      
+
       deselectAllRecords();
    }
 
-//   private void restoreSelectedRecord()
-//   {
-//      ToolbarItem selectedToolbarItem = (ToolbarItem)selectedRecord.getAttributeAsObject(getValuePropertyName());
-//
-//      for (ListGridRecord record : getRecords())
-//      {
-//         ToolbarItem recordItem = (ToolbarItem)record.getAttributeAsObject(getValuePropertyName());
-//         if (recordItem == selectedToolbarItem)
-//         {
-//            selectRecord(record);
-//            return;
-//         }
-//      }
-//   }
-
-   private String getDivider(String title, String style) {
+   private String getDivider(String title, String style)
+   {
       String divider =
          "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
             + "<tr><td><hr></td><td class=\"" + style + "\">&nbsp;" + title + "&nbsp;</td><td><hr></td></tr>"
@@ -107,7 +82,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
       return divider;
    }
-   
+
    @Override
    protected void setRecordFields(ListGridRecord record, ToolbarItem item)
    {

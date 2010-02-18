@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ideall.client.search;
 
-import org.exoplatform.gwtframework.ui.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.component.IButton;
-import org.exoplatform.gwtframework.ui.component.TextField;
+import org.exoplatform.gwtframework.ui.smartgwt.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;

@@ -22,11 +22,10 @@ package org.exoplatform.ideall.client.component;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.component.ListGrid;
-import org.exoplatform.gwtframework.ui.component.event.ValueChangeEventImpl;
+import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.smartgwt.component.event.ValueChangeEventImpl;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;

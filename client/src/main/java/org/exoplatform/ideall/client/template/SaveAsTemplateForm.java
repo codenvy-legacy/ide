@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import org.exoplatform.gwtframework.ui.component.IButton;
-import org.exoplatform.gwtframework.ui.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.component.TextField;
+import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;

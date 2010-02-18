@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.operation.output;
 
-import org.exoplatform.gwtframework.ui.component.ImgButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.ImgButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.operation.TabPanel;
 

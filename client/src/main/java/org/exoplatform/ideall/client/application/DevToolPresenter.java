@@ -126,7 +126,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
     */
    public void onInvalidConfigurationReceived(InvalidConfigurationRecievedEvent event)
    {
-      Dialogs.showError("Invalid configuration", event.getMessage());
+      Dialogs.getInstance().showError("Invalid configuration", event.getMessage());
    }
 
    /**

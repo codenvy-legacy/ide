@@ -248,7 +248,7 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
    {
       if ("".equals(display.getGroovyScriptURLField().getValue()))
       {
-         Dialogs.showError("URL field can not be empty!");
+         Dialogs.getInstance().showError("URL field can not be empty!");
          return;
       }
 

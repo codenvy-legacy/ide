@@ -17,8 +17,8 @@
 
 package org.exoplatform.ideall.client.component;
 
-import org.exoplatform.gwtframework.ui.component.IButton;
-import org.exoplatform.gwtframework.ui.component.Label;
+import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.Label;
 import org.exoplatform.ideall.client.BuildNumber;
 import org.exoplatform.ideall.client.Images;
 

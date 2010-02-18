@@ -232,7 +232,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       if (uploadServiceResponse == null)
       {
          // error - displaying behind the window
-         Dialogs.showError("There is an error of file '" + display.getFileNameField().getValue() + "' loading.");
+         Dialogs.getInstance().showError("There is an error of file '" + display.getFileNameField().getValue() + "' loading.");
          return;
       }
 
@@ -241,7 +241,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
       if (submittedFileContent == null)
       {
-         Dialogs.showError("There is an error of parsing of loopback service response with file '"
+         Dialogs.getInstance().showError("There is an error of parsing of loopback service response with file '"
             + display.getFileNameField().getValue() + "' content.");
          // error - displaying behind the window
          return;

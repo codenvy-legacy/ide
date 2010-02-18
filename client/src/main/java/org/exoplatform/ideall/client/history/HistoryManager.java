@@ -149,7 +149,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
    public void onError(ExceptionThrownEvent event)
    {
       stopHandling();
-      Dialogs.showError("Can't open file <b>" + pathToLoad + "</b>!");
+      Dialogs.getInstance().showError("Can't open file <b>" + pathToLoad + "</b>!");
    }
 
    private void stopHandling()

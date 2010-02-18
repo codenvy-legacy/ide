@@ -86,7 +86,7 @@ public class SearchPresenter
 
       if (content.equals(""))
       {
-         Dialogs.showError("You must enter text!");
+         Dialogs.getInstance().showError("You must enter text!");
          return;
       }
 

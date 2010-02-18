@@ -109,7 +109,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
    public void onTemplateCreated(TemplateCreatedEvent event)
    {
       display.closeForm();
-      Dialogs.showInfo("Template created successfully!");
+      Dialogs.getInstance().showInfo("Template created successfully!");
    }
 
    void createTemplate()
@@ -117,7 +117,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
       String name = display.getNameField().getValue().trim();
       if ("".equals(name))
       {
-         Dialogs.showError("You should specify the name of template!");
+         Dialogs.getInstance().showError("You should specify the name of template!");
          return;
       }
 

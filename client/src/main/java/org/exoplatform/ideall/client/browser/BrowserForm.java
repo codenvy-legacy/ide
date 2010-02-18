@@ -17,7 +17,7 @@
 
 package org.exoplatform.ideall.client.browser;
 
-import org.exoplatform.gwtframework.ui.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.component.TreeGridItem;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;

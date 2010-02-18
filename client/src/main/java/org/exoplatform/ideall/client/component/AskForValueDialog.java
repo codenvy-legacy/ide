@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.component;
 
-import org.exoplatform.gwtframework.ui.component.IButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 
 import com.google.gwt.event.dom.client.ClickEvent;

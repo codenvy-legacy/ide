@@ -125,14 +125,14 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
       if (path.equals(context.getSelectedItem().getPath()))
       {
-         Dialogs.showError("Can't move / rename resource!");
+         Dialogs.getInstance().showError("Can't move / rename resource!");
          return;
       }
 
       String selectedItemPath = context.getSelectedItem().getPath();
       if (hasOpenedFiles(selectedItemPath))
       {
-         Dialogs.ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
+         Dialogs.getInstance().ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
          {
             public void execute(Boolean value)
             {

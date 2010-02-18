@@ -392,7 +392,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
 
       String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-      Dialogs.ask("DevTool", message, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("DevTool", message, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
          {
