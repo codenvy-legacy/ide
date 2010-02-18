@@ -21,14 +21,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorActivityEvent;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorActivityHandler;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorContentChangedEvent;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorContentChangedHandler;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorInitializedEvent;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorInitializedHandler;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorSaveContentEvent;
-import org.exoplatform.gwtframework.editor.codemirror.event.CodeMirrorSaveContentHandler;
+import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
+import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
+import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
+import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
+import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
+import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
+import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
+import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.Utils;
@@ -87,8 +87,8 @@ import com.google.gwt.user.client.Timer;
  * @version @version $Id: $
  */
 
-public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentChangedHandler,
-   CodeMirrorInitializedHandler, CodeMirrorActivityHandler, CodeMirrorSaveContentHandler,
+public class EditorPresenter implements FileCreatedHandler, EditorContentChangedHandler,
+   EditorInitializedHandler, EditorActivityHandler, EditorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
    FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
    MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
@@ -112,7 +112,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       void updateTabTitle(String path);
 
-      String getPathByEditorId(String codeMirrorId);
+      String getPathByEditorId(String editorId);
 
       void undoEditing(String path);
 
@@ -126,7 +126,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       void setLineNumbers(String path, boolean lineNumbers);
 
-      void setCodemirrorFocus(String path);
+      void setEditorFocus(String path);
 
    }
 
@@ -206,16 +206,16 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
     */
    private void registerHandlers()
    {
-      handlers.addHandler(CodeMirrorContentChangedEvent.TYPE, this);
-      handlers.addHandler(CodeMirrorInitializedEvent.TYPE, this);
-      handlers.addHandler(CodeMirrorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
+      handlers.addHandler(EditorInitializedEvent.TYPE, this);
+      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorSaveContentEvent.TYPE, this);
 
       handlers.addHandler(FileCreatedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
 
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      handlers.addHandler(CodeMirrorSaveContentEvent.TYPE, this);
+      
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
 
       handlers.addHandler(UndoEditingEvent.TYPE, this);
@@ -290,16 +290,15 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       CookieManager.storeOpenedFiles(context);
    }
 
-   /* Fired when codemirror is initialized
-    * (non-Javadoc)
-    * @see org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorInitializedHandler#onCodeMirrorInitialized(org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorInitializedEvent)
+   /*
+    *  Fired when editor is initialized
     */
-   public void onCodeMirrorInitialized(CodeMirrorInitializedEvent event)
+   public void onEditorInitialized(EditorInitializedEvent event)
    {
       try
       {
-         String codeMirrorId = event.getCodemirrorId();
-         String path = display.getPathByEditorId(codeMirrorId);
+         String editorId = event.getEditorId();
+         String path = display.getPathByEditorId(editorId);
          File file = context.getOpenedFiles().get(path);
          display.setTabContent(file.getPath(), file.getContent());
       }
@@ -309,14 +308,13 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       }
    }
 
-   /* Editor content changed handler
-    * (non-Javadoc)
-    * @see org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorContentChangedHandler#onCodemirrorContentChanged(org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorContentChangedEvent)
+   /* 
+    * Editor content changed handler
     */
-   public void onCodemirrorContentChanged(CodeMirrorContentChangedEvent event)
+   public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      String codeMirrorId = event.getCodeMirrorId();
-      String path = display.getPathByEditorId(codeMirrorId);
+      String editorId = event.getEditorId();
+      String path = display.getPathByEditorId(editorId);
 
       if (ignoreContentChangedList.contains(path))
       {
@@ -331,11 +329,10 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
       eventBus.fireEvent(new FileContentChangedEvent(file, display.hasUndoChanges(path), display.hasRedoChanges(path)));
    }
 
-   /* 
-    * (non-Javadoc)
-    * @see org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityHandler#onCodeMirrorActivity(org.exoplatform.gwt.commons.editor.codemirror.event.CodeMirrorActivityEvent)
+   /**
+    * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
     */
-   public void onCodeMirrorActivity(CodeMirrorActivityEvent event)
+   public void onEditorActivity(EditorActivityEvent event)
    {
       eventBus.fireEvent(new EditorSetFocusEvent());
    }
@@ -354,10 +351,10 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
 
       context.setActiveFile(curentFile);
       CookieManager.storeOpenedFiles(context);
-      display.setCodemirrorFocus(curentFile.getPath());
+      display.setEditorFocus(curentFile.getPath());
    }
 
-   public void onCodeMirrorSaveContent(CodeMirrorSaveContentEvent event)
+   public void onEditorSaveContent(EditorSaveContentEvent event)
    {
       File file = context.getActiveFile();
       file.setContent(display.getTabContent(file.getPath()));
@@ -590,7 +587,7 @@ public class EditorPresenter implements FileCreatedHandler, CodeMirrorContentCha
          String path = iterator.next();
          display.setLineNumbers(path, lineNumbers);
       }
-      display.setCodemirrorFocus(context.getActiveFile().getPath());
+      display.setEditorFocus(context.getActiveFile().getPath());
    }
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)

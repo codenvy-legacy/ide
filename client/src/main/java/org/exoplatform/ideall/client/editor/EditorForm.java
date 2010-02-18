@@ -242,12 +242,12 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       return tab.getTextEditor().getText();
    }
 
-   public String getPathByEditorId(String codeMirrorId)
+   public String getPathByEditorId(String editorId)
    {
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getTextEditor().getEditorId().equals(codeMirrorId))
+         if (editorTab.getTextEditor().getEditorId().equals(editorId))
          {
             return editorTab.getFile().getPath();
          }
@@ -299,7 +299,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       tab.getTextEditor().setLineNumbers(lineNumbers);
    }
 
-   public void setCodemirrorFocus(String path)
+   public void setEditorFocus(String path)
    {
       EditorTab tab = getEditorTab(path);
       if (tab == null)
