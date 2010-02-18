@@ -17,8 +17,13 @@
 package org.exoplatform.ideall.client.editor;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.codemirror.CodeMirrorConfig;
-import org.exoplatform.gwtframework.ui.smartgwt.editor.SmartGWTCodeMirror;
+import org.exoplatform.gwtframework.editor.api.Editor;
+import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
+import org.exoplatform.gwtframework.editor.api.EditorFactory;
+import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
+import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
@@ -153,13 +158,25 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void addTab(File file, boolean lineNumbers)
    {
+      Editor editor;
+      
+      try {
+         editor = EditorFactory.getDefaultEditor(file.getContentType());
+      } catch (EditorNotFoundException exc) {
+         Dialogs.getInstance().showError("Can't find editor for type <b>" + file.getContentType() + "</b>");
+         return;
+      }
+      
       EditorTab tab = new EditorTab(file);
       tab.setCanClose(true);
-
-      CodeMirrorConfig config = new CodeMirrorConfig(file.getContentType());
-      config.setLineNumbers(lineNumbers);
-      SmartGWTCodeMirror codemirror = new SmartGWTCodeMirror(eventBus, config);
-      tab.setCodeMirror(codemirror);
+      
+      EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
+      configuration.setLineNumbers(lineNumbers);
+      
+      GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
+      SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
+      
+      tab.setTextEditor(smartGwtTextEditor);
       redraw();
 
       tabSet.addTab(tab);
@@ -181,7 +198,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       try
       {
-         getEditorTab(path).getCodeMirror().setText(text);
+         getEditorTab(path).getTextEditor().setText(text);
       }
       catch (Exception exc)
       {
@@ -222,7 +239,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public String getTabContent(String path)
    {
       EditorTab tab = getEditorTab(path);
-      return tab.getCodeMirror().getText();
+      return tab.getTextEditor().getText();
    }
 
    public String getPathByEditorId(String codeMirrorId)
@@ -230,7 +247,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getCodeMirror().getEditorId().equals(codeMirrorId))
+         if (editorTab.getTextEditor().getEditorId().equals(codeMirrorId))
          {
             return editorTab.getFile().getPath();
          }
@@ -247,17 +264,17 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void redoEditing(String path)
    {
-      getEditorTab(path).getCodeMirror().redo();
+      getEditorTab(path).getTextEditor().redo();
    }
 
    public void undoEditing(String path)
    {
-      getEditorTab(path).getCodeMirror().undo();
+      getEditorTab(path).getTextEditor().undo();
    }
 
    public void formatFile(String path)
    {
-      getEditorTab(path).getCodeMirror().formatSource();
+      getEditorTab(path).getTextEditor().formatSource();
    }
 
    public void relocateFile(File oldFile, File newFile)
@@ -279,7 +296,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public void setLineNumbers(String path, boolean lineNumbers)
    {
       EditorTab tab = getEditorTab(path);
-      tab.getCodeMirror().setLineNumbers(lineNumbers);
+      tab.getTextEditor().setLineNumbers(lineNumbers);
    }
 
    public void setCodemirrorFocus(String path)
@@ -289,7 +306,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          return;
       }
-      tab.getCodeMirror().setFocus(); // fix bug "Just after switching on a new tab, the cursor is not appeared in the content pane." [WBT-244]
+      tab.getTextEditor().setFocus(); // fix bug "Just after switching on a new tab, the cursor is not appeared in the content pane." [WBT-244]
    }
 
    public boolean hasRedoChanges(String path)
@@ -299,7 +316,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          return false;
       }
-      return getEditorTab(path).getCodeMirror().hasRedoChanges();
+      return getEditorTab(path).getTextEditor().hasRedoChanges();
    }
 
    public boolean hasUndoChanges(String path)
@@ -309,7 +326,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          return false;
       }
-      return getEditorTab(path).getCodeMirror().hasUndoChanges();
+      return getEditorTab(path).getTextEditor().hasUndoChanges();
    }
 
    public void onEditorPanelRestored(EditorPanelRestoredEvent event)

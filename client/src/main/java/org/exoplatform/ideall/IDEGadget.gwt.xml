@@ -31,7 +31,8 @@
 	<!-- load GWT Commons Libraries -->
 	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
 	<inherits name='org.exoplatform.gwtframework.editor.Editor' />
-	<inherits name='org.exoplatform.gwtframework.ui.UI' />	
+	<inherits name='org.exoplatform.gwtframework.ui.UI' />
+	<inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />	
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.exoplatform.ideall.client.IDEGadget' />

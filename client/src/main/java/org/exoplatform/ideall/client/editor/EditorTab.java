@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.editor;
 
-import org.exoplatform.gwtframework.ui.smartgwt.editor.SmartGWTCodeMirror;
+import org.exoplatform.gwtframework.ui.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.model.File;
 
@@ -33,7 +33,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 public class EditorTab extends Tab
 {
 
-   private SmartGWTCodeMirror codeMirror;
+   private SmartGWTTextEditor textEditor;
 
    private File file;
 
@@ -43,15 +43,15 @@ public class EditorTab extends Tab
       setTitle(getTabTitle());
    }
 
-   public SmartGWTCodeMirror getCodeMirror()
+   public SmartGWTTextEditor getTextEditor()
    {
-      return codeMirror;
+      return textEditor;
    }
 
-   public void setCodeMirror(SmartGWTCodeMirror codeMirror)
+   public void setTextEditor(SmartGWTTextEditor textEditor)
    {
-      this.codeMirror = codeMirror;
-      setPane(codeMirror);
+      this.textEditor = textEditor;
+      setPane(textEditor);
    }
 
    public File getFile()
