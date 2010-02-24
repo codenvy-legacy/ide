@@ -7,7 +7,7 @@
 	<inherits name='com.google.gwt.xml.XML' />
 	<inherits name='com.google.gwt.junit.JUnit' />
 	<inherits name="com.smartgwt.SmartGwt" />
-	<inherits name="org.exoplatform.gwt.commons.Commons" />
+  <inherits name='org.exoplatform.gwtframework.commons.Commons' />
 	
 	<!--  inherit css based theme -->
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
