@@ -114,15 +114,17 @@
 						<goals>
 							<goal>run</goal>
 						</goals>
-						<phase>process-resources</phase>
+						<phase>initialize</phase>
 						<configuration>
 							<tasks>
+							<delete file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties"/>
+							<echo>${source.url}</echo>
 <echo file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties" append="false">
 buildNumber: ${buildNumber}
 buildTime: ${timestamp}
 version: ${project.version}
-wiki : "${wiki.url}"
-source : "${source.url}"
+wiki : ${wiki.url}
+source : ${source.url}
 </echo>
 							</tasks>
 						</configuration>

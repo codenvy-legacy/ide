@@ -90,13 +90,13 @@ public class AboutForm extends DialogWindow
       super(eventBus, WINDOW_WIDTH, WINDOW_HEIGHT);
 
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
-
+      
       REVISION = "Revision: " + buildNumber.buildNumber();
       VERSION = "Version: " + buildNumber.version();
       BUILD_TIME = "Build Time: " + buildNumber.buildTime();
       WIKI = buildNumber.wiki();
       SRC = buildNumber.source();
-
+      
       setShowMinimizeButton(false);
       setTitle(ABOUT);
 
@@ -174,7 +174,7 @@ public class AboutForm extends DialogWindow
       infoLabel.setCanSelectText(true);
       infoLabel.setValue("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
          + "&nbsp;" + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + "<a href=\"" + WIKI
-         + " \" target=\"_blank\" >Wiki</a>" + "<br>" + "<b>" + "<a href=\"" + SRC
+         + " \" target=\"_blank\" >Wiki</a>" + "<br>" + "<b>"   + "<a href=\"" + SRC
          + " \" target=\"_blank\">Code Source</a>" + "<br>" + "</b>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
          + BUILD_TIME + "</b>");
       infoLayout.addMember(infoLabel);
