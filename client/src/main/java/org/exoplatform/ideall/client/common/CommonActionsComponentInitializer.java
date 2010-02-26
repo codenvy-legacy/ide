@@ -79,7 +79,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new UploadFileCommand()).disable().hide().dockOnToolbar();
-      
+
       addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
       addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
 
@@ -100,24 +100,24 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * EDIT GROUP
        */
 
-      addCommand(new UndoTypingCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar();
-      addCommand(new RedoTypingCommand()).disable().hide().deselect().dockOnToolbar();
-      addCommand(new FormatSourceCommand()).disable().hide().deselect().dockOnToolbar();
+      addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
+      addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new ShowLineNumbersCommand()).disable().hide().deselect().setDelimiterBefore();
-      addCommand(new HideLineNumbersCommand()).disable().hide().deselect();
+      addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
+      addCommand(new HideLineNumbersCommand()).disable().hide();
 
       /*
        * VIEW GROUP
        */
 
-      addCommand(new ViewItemPropertiesCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true);
 
       /*
        * RUN GROUP
        */
 
-      addCommand(new ShowPreviewCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new ShowPreviewCommand()).disable().hide().dockOnToolbar(true);
    }
 
 }

@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
-import org.exoplatform.gwtframework.ui.component.TreeGridItem;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;

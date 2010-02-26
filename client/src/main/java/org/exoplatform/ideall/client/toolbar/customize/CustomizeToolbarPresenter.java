@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.component.ListGridItem;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.component.command.Command;
+import org.exoplatform.gwtframework.ui.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.solution.command.Command;
-import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
 
 import com.google.gwt.event.dom.client.ClickEvent;

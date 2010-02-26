@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import org.exoplatform.gwtframework.ui.component.ListGridItem;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;

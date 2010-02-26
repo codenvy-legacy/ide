@@ -46,18 +46,18 @@ public class GroovyActionsComponentInitializer extends AbstractComponentInitiali
        * RUN GROUP
        */
 
-      addCommand(new SetAutoloadCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar(true);
-      addCommand(new UnsetAutoloadCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new SetAutoloadCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+      addCommand(new UnsetAutoloadCommand()).disable().hide().dockOnToolbar(true);
 
-      addCommand(new ValidateGroovyCommand()).disable().hide().deselect().setDelimiterBefore().dockOnToolbar(true);
-      addCommand(new DeployGroovyCommand()).disable().hide().deselect().dockOnToolbar(true);
-      addCommand(new UndeployGroovyCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new ValidateGroovyCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+      addCommand(new DeployGroovyCommand()).disable().hide().dockOnToolbar(true);
+      addCommand(new UndeployGroovyCommand()).disable().hide().dockOnToolbar(true);
 
       /*
        * PREVIEW OUTPUT
        */
 
-      addCommand(new PreviewGroovyOutputCommand()).disable().hide().deselect().dockOnToolbar(true);
+      addCommand(new PreviewGroovyOutputCommand()).disable().hide().dockOnToolbar(true);
    }
 
 }

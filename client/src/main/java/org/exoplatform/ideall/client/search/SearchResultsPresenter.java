@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.search;
 
-import org.exoplatform.gwtframework.ui.component.TreeGridItem;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.Folder;

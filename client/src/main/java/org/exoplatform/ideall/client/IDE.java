@@ -32,10 +32,10 @@ public class IDE
       for (int i = 0; i < 30; i++)
       {
          System.out.println();
-      }      
+      }
 
       new SmartGWTLoader();
-      
+
       new SmartGWTDialogs();
 
       HandlerManager eventBus = new HandlerManager(null);
@@ -75,10 +75,10 @@ public class IDE
       context.getComponents().add(new HelpActionsComponent());
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
-      
+
       new DevToolForm(eventBus, context);
 
-      Configuration.getInstance().loadConfiguration(eventBus);      
+      Configuration.getInstance().loadConfiguration(eventBus);
    }
 
 }

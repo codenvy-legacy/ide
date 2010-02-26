@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.component.TreeGridItem;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;

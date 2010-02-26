@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.application.perspective;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.event.UnlockIFrameElementsEvent;
+import org.exoplatform.gwtframework.ui.smartgwt.GWTMenuWrapper;
+import org.exoplatform.gwtframework.ui.smartgwt.GWTToolbarWrapper;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -38,12 +40,10 @@ import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEven
 import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveHandler;
-import org.exoplatform.ideall.client.menu.GWTMenuWrapper;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.statusbar.StatusBarForm;
-import org.exoplatform.ideall.client.toolbar.GWTToolbarWrapper;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Overflow;

@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.application.component;
 
+import org.exoplatform.gwtframework.ui.component.command.Command;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -63,18 +63,6 @@ public class CommandRegistration
    public CommandRegistration hide()
    {
       command.setVisible(false);
-      return this;
-   }
-
-   public CommandRegistration select()
-   {
-      command.setSelected(true);
-      return this;
-   }
-
-   public CommandRegistration deselect()
-   {
-      command.setSelected(false);
       return this;
    }
 

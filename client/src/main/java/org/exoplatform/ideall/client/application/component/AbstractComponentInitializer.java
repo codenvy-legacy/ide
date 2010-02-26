@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.application.component;
 
+import org.exoplatform.gwtframework.ui.component.command.Command;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.solution.command.Command;
 
 import com.google.gwt.event.shared.HandlerManager;
 

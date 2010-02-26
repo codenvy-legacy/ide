@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.template;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.component.ListGridItem;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;

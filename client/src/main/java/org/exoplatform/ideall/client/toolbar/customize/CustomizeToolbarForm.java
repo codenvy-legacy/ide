@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.component.ListGridItem;
+import org.exoplatform.gwtframework.ui.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;

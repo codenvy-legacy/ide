@@ -39,7 +39,6 @@
 
 	<!-- Specify the application specific style sheet. -->
 	<stylesheet src='IDE.css' />
-	<stylesheet src='eXoStyle/eXoStyle.css' />
 
 	<!-- Load CodeMirror editor files.
   <stylesheet src='codemirror-0.65/css/editor.css' />

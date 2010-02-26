@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.exoplatform.gwtframework.ui.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.client.solution.command.Command;
 
 /**
  * Created by The eXo Platform SAS .

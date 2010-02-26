@@ -19,6 +19,9 @@ package org.exoplatform.ideall.client.application;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.ui.component.command.Command;
+import org.exoplatform.gwtframework.ui.component.menu.event.UpdateMainMenuEvent;
+import org.exoplatform.gwtframework.ui.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
@@ -36,9 +39,6 @@ import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHa
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
-import org.exoplatform.ideall.client.solution.command.Command;
-import org.exoplatform.ideall.client.solution.menu.event.UpdateMainMenuEvent;
-import org.exoplatform.ideall.client.solution.toolbar.event.UpdateToolbarEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
