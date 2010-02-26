@@ -109,7 +109,8 @@ public class GroovyServiceImpl extends GroovyService
          }
          for (SimpleParameterEntry param : params)
          {
-            url += param.getName() + "=" + param.getValue() + "&";
+            if (param.getName() != null && param.getName().length() != 0)
+               url += param.getName() + "=" + param.getValue() + "&";
          }
          url.substring(0, url.lastIndexOf("&"));
       }
@@ -132,7 +133,8 @@ public class GroovyServiceImpl extends GroovyService
       {
          for (SimpleParameterEntry header : headers)
          {
-            request.header(header.getName(), header.getValue());
+            if (header.getName() != null && header.getName().length() != 0)
+                  request.header(header.getName(), header.getValue());
          }
       }
       if (body != null && body.length() > 0)
