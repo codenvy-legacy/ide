@@ -142,6 +142,5 @@ public class GroovyServiceImpl extends GroovyService
          request.data(body);
       }
       request.send(callback);
-
    }
 }
