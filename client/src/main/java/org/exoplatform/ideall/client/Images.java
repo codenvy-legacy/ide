@@ -78,7 +78,7 @@ public interface Images
       
       public static final String DOWNLOAD_FOLDER = imageUrl + "menu/next_edition/downloadZipped1.png";
       
-      public static final String WADL = imageUrl + "groovy/wadl.png";
+      public static final String WADL = imageUrl + "groovy/wadl1.png";
       
       
 
