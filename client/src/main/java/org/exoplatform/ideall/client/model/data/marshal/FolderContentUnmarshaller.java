@@ -116,7 +116,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
    {
       for (Property property : item.getProperties())
       {
-         if (property.getName().getLocalName().equals(name.getLocalName()))
+         if (property.getName().equals(name))
          {
             return property;
          }
