@@ -56,7 +56,7 @@ public class RepositoryServiceImpl extends RepositoryService
 
       RepositoryConfigurationReceivedEvent event = new RepositoryConfigurationReceivedEvent(configuration);
       RepositoryServiceConfigurationUnmarshaller unmarshaller =
-         new RepositoryServiceConfigurationUnmarshaller(configuration);
+         new RepositoryServiceConfigurationUnmarshaller(eventBus, configuration);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);

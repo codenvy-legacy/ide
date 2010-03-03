@@ -133,7 +133,7 @@ public class DataServiceImpl extends DataService
 
       Folder folder = new Folder(path);
       FolderContentReceivedEvent event = new FolderContentReceivedEvent(folder);
-      FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder);
+      FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(eventBus, folder);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
@@ -202,7 +202,7 @@ public class DataServiceImpl extends DataService
    {
       String url = getURL(item.getPath());
 
-      ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item);
+      ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(eventBus, item);
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
@@ -237,7 +237,7 @@ public class DataServiceImpl extends DataService
 
       SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(content);
       Folder folder = new Folder(path);
-      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
+      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
@@ -258,7 +258,7 @@ public class DataServiceImpl extends DataService
       SearchRequestMarshaller requestMarshaller =
          new SearchRequestMarshaller(contentText, name, contentType, searchPath);
       Folder folder = new Folder(path);
-      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(folder);
+      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 

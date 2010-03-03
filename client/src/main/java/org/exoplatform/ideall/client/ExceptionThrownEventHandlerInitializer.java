@@ -51,6 +51,7 @@ public class ExceptionThrownEventHandlerInitializer
       }
       
       if (GWT.isScript()) {
+         // browser
          handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
       } else {
          /*

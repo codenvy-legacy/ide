@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.model.data.marshal;
 
 import java.util.ArrayList;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
@@ -33,6 +34,8 @@ import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -43,14 +46,30 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 public class SearchResultUnmarshaller implements Unmarshallable
 {
 
+   private HandlerManager eventBus;
+
    private Folder folder;
 
-   public SearchResultUnmarshaller(Folder folder)
+   public SearchResultUnmarshaller(HandlerManager eventBus, Folder folder)
    {
       this.folder = folder;
+      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body)
+   {
+      try
+      {
+         parseSearchResult(body);
+      }
+      catch (Exception exc)
+      {
+         String message = "Can't parse search result at <b>" + folder.getPath() + "</b>";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
+   }
+
+   private void parseSearchResult(String body)
    {
       String context = Configuration.getInstance().getContext();
 
@@ -76,6 +95,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
       {
          addResource(folder, child, context);
       }
+
    }
 
    private void addResource(Folder folder, Resource resource, String context)
@@ -91,7 +111,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
       {
          return;
       }
-      
+
       if (path.endsWith("/"))
       {
          path = path.substring(0, path.length() - 1);

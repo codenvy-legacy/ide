@@ -54,6 +54,11 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
       {
          eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
+      catch (Exception exc)
+      {
+         String message = "Can't parse output wadl service output!";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
    }
 
 }

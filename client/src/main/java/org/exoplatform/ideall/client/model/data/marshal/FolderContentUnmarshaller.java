@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.model.data.marshal;
 
 import java.util.ArrayList;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
@@ -31,6 +32,8 @@ import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -41,14 +44,30 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 public class FolderContentUnmarshaller implements Unmarshallable
 {
 
+   private HandlerManager eventBus;
+
    private Folder folder;
 
-   public FolderContentUnmarshaller(Folder folder)
+   public FolderContentUnmarshaller(HandlerManager eventBus, Folder folder)
    {
+      this.eventBus = eventBus;
       this.folder = folder;
    }
 
    public void unmarshal(String body)
+   {
+      try
+      {
+         parseFolderContent(body);
+      }
+      catch (Exception exc)
+      {
+         String message = "Can't parse folder content at <b>" + folder.getPath() + "</b>!";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
+   }
+
+   private void parseFolderContent(String body)
    {
       String context = Configuration.getInstance().getContext() + "/jcr";
       if (context.endsWith("/"))
@@ -63,7 +82,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
       Resource resource = response.getResource();
       folder.setChildren(new ArrayList<Item>());
 
-      if (resource== null) {
+      if (resource == null)
+      {
          return;
       }
 
@@ -83,7 +103,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
          {
             path = path.substring(0, path.length() - 1);
          }
-         
+
          Item item;
          if (child.isCollection())
          {
@@ -109,7 +129,6 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
          folder.getChildren().add(item);
       }
-
    }
 
    private Property getProperty(Item item, QName name)

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.data.marshal;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
@@ -27,6 +28,9 @@ import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 
+import com.google.gwt.event.shared.HandlerManager;
+
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,14 +41,30 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 public class ItemPropertiesUnmarshaller implements Unmarshallable
 {
 
+   private HandlerManager eventBus;
+
    private Item item;
 
-   public ItemPropertiesUnmarshaller(Item item)
+   public ItemPropertiesUnmarshaller(HandlerManager eventBus, Item item)
    {
       this.item = item;
+      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body)
+   {
+      try
+      {
+         parseItemProperties(body);
+      }
+      catch (Exception exc)
+      {
+         String message = "Can't parse properties item - <b>" + item.getName() + " </b>";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
+   }
+
+   private void parseItemProperties(String body)
    {
       item.getProperties().clear();
 

@@ -52,21 +52,24 @@ public class GadgetServiceImpl extends GadgetService
       // Send data
       GadgetMetadata metadata = new GadgetMetadata();
       metadata.setSecurityToken(tokenResponse.getSecurityToken());
-      GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(metadata);
+      GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(eventBus, metadata);
       GadgetMetadaRecievedEvent event = new GadgetMetadaRecievedEvent(metadata);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.POST, Configuration.getInstance().getGadgetServer() + "metadata").data(data).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, Configuration.getInstance().getGadgetServer() + "metadata").data(data)
+         .send(callback);
    }
-   
-   public void getSecurityToken(TokenRequest request) {
+
+   public void getSecurityToken(TokenRequest request)
+   {
       TokenResponse tokenResponse = new TokenResponse();
       SecurityTokenRecievedEvent postEvent = new SecurityTokenRecievedEvent(tokenResponse);
-      TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(tokenResponse);
+      TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(eventBus, tokenResponse);
       TokenRequestMarshaler marshaler = new TokenRequestMarshaler(request);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshal, postEvent);
-      AsyncRequest.build(RequestBuilder.POST, Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken").
-                   header(HTTPHeader.CONTENT_TYPE,MimeType.APPLICATION_JSON).data(marshaler).send(callback);
-   
+      AsyncRequest.build(RequestBuilder.POST,
+         Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken").header(
+         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaler).send(callback);
+
    }
 
 }

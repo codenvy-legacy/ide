@@ -68,7 +68,7 @@ public class SettingsServiceImpl extends SettingsService
       String url = getURL(context) + "/?nocache=" + Random.nextInt();
 
       ApplicationContextReceivedEvent event = new ApplicationContextReceivedEvent(context);
-      ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(context);
+      ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(eventBus, context);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);

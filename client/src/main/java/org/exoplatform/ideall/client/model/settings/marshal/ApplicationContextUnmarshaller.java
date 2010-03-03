@@ -21,9 +21,11 @@ package org.exoplatform.ideall.client.model.settings.marshal;
 
 import java.util.ArrayList;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -39,11 +41,14 @@ import com.google.gwt.xml.client.XMLParser;
 public class ApplicationContextUnmarshaller implements Const, Unmarshallable
 {
 
+   private HandlerManager eventBus;
+
    private ApplicationContext context;
 
-   public ApplicationContextUnmarshaller(ApplicationContext context)
+   public ApplicationContextUnmarshaller(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
+      this.eventBus = eventBus;
    }
 
    private Node getChildNode(Node node, String name)
@@ -73,7 +78,8 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       }
       catch (Exception exc)
       {
-         Window.alert("Can't parse user settings!");
+         String message = "Can't parse user settings!";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
    }
 

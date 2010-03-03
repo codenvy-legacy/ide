@@ -16,11 +16,13 @@
  */
 package org.exoplatform.ideall.client.model.jcrservice.marshal;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Repository;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Workspace;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -47,12 +49,29 @@ public class RepositoryServiceConfigurationUnmarshaller implements Unmarshallabl
 
    private RepositoryServiceConfiguration configuration;
 
-   public RepositoryServiceConfigurationUnmarshaller(RepositoryServiceConfiguration configuration)
+   private HandlerManager eventBus;
+
+   public RepositoryServiceConfigurationUnmarshaller(HandlerManager eventBus,
+      RepositoryServiceConfiguration configuration)
    {
       this.configuration = configuration;
+      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body)
+   {
+      try
+      {
+         parseReposytoryServiceConfiguration(body);
+      }
+      catch (Exception exc)
+      {
+         String message = "Can't parse repository service configuration";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
+   }
+
+   private void parseReposytoryServiceConfiguration(String body)
    {
       JSONObject json = JSONParser.parse(body).isObject();
 

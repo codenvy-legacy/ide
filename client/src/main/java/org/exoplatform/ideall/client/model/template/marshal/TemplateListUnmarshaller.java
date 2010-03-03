@@ -19,11 +19,13 @@
  */
 package org.exoplatform.ideall.client.model.template.marshal;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 import org.exoplatform.ideall.client.model.util.TextUtils;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -39,23 +41,34 @@ import com.google.gwt.xml.client.XMLParser;
 public class TemplateListUnmarshaller implements Unmarshallable, Const
 {
 
+   private HandlerManager eventBus;
+   
    private TemplateList templateList;
 
-   public TemplateListUnmarshaller(TemplateList templateList)
+   public TemplateListUnmarshaller(HandlerManager eventBus, TemplateList templateList)
    {
       this.templateList = templateList;
+      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body)
    {
-      Document dom = XMLParser.parse(body);
-      Node templatesNode = dom.getElementsByTagName(TEMPLATES).item(0);
-
-      NodeList templateNodes = templatesNode.getChildNodes();
-      for (int i = 0; i < templateNodes.getLength(); i++)
+      try
       {
-         Node templateNode = templateNodes.item(i);
-         parseTemplate(templateNode);
+         Document dom = XMLParser.parse(body);
+         Node templatesNode = dom.getElementsByTagName(TEMPLATES).item(0);
+
+         NodeList templateNodes = templatesNode.getChildNodes();
+         for (int i = 0; i < templateNodes.getLength(); i++)
+         {
+            Node templateNode = templateNodes.item(i);
+            parseTemplate(templateNode);
+         }
+      }
+      catch (Exception exc)
+      {
+        String message = "Can't parse template!";
+        eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
 
    }
@@ -67,7 +80,8 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       Node node = getChildNode(templateNode, TEMPLATE);
 
       Node descriptionNode = getChildNode(node, DESCRIPTION);
-      String description = TextUtils.javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
+      String description =
+         TextUtils.javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
 
       Node mimeTypeNode = getChildNode(node, MIME_TYPE);
       String mimeType = TextUtils.javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());

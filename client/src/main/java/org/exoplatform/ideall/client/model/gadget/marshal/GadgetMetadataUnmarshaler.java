@@ -16,10 +16,12 @@
  */
 package org.exoplatform.ideall.client.model.gadget.marshal;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 
@@ -31,14 +33,30 @@ import com.google.gwt.json.client.JSONObject;
 public class GadgetMetadataUnmarshaler implements Unmarshallable
 {
 
+   private HandlerManager eventBus;
+
    private GadgetMetadata metadata;
 
-   public GadgetMetadataUnmarshaler(GadgetMetadata gadgetMetadata)
+   public GadgetMetadataUnmarshaler(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
    {
       this.metadata = gadgetMetadata;
+      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body)
+   {
+      try
+      {
+         parseGadgetMetadata(body);
+      }
+      catch (Exception exc)
+      {
+         String message = "Can't parse gadget meta data at <b>" + metadata.getTitle() + "</b>";
+         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+      }
+   }
+
+   private void parseGadgetMetadata(String body)
    {
       JSONObject jsonObj = new JSONObject(toJsonObject(body));
 
@@ -118,8 +136,9 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
       if (gm.containsKey(GadgetMetadata.WIDTH))
          metadata.setWidth((gm.get(GadgetMetadata.WIDTH).isNumber().doubleValue()));
-      
+
       metadata.setSource(body);
+
    }
 
    private String[] toArray(JSONArray jsonArray)
@@ -133,7 +152,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
    }
 
    private static native JavaScriptObject toJsonObject(String jsonString) /*-{
-      return eval('(' + jsonString + ')');
-   }-*/;
+                                                                          return eval('(' + jsonString + ')');
+                                                                          }-*/;
 
 }

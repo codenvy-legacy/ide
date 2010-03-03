@@ -56,18 +56,15 @@ public class TemplateServiceImpl extends TemplateService
       String templateName = template.getName();
 
       String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION + CONTEXT + "/" + templateName
-            + "/?createIfNotExist=true";
+         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
+            + CONTEXT + "/" + templateName + "/?createIfNotExist=true";
 
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML)
-         .data(marshaller)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
+         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }
 
    @Override
@@ -79,7 +76,8 @@ public class TemplateServiceImpl extends TemplateService
    public void getTemplates()
    {
       String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION + CONTEXT + "/?noCache=" + Random.nextInt();
+         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
+            + CONTEXT + "/?noCache=" + Random.nextInt();
 
       TemplateList templateList = new TemplateList();
 
@@ -93,17 +91,17 @@ public class TemplateServiceImpl extends TemplateService
 
       templateList.getTemplates().add(
          new Template(MimeType.TEXT_PLAIN, "Empty TEXT", "Create empty TEXT file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_PLAIN)));      
-      
-      templateList.getTemplates().add(
-         new Template(MimeType.GOOGLE_GADGET, "Google Gadget",
-            "Sample of Google Gadget", FileTemplates.getTemplateFor(MimeType.GOOGLE_GADGET)));
+            .getTemplateFor(MimeType.TEXT_PLAIN)));
 
       templateList.getTemplates().add(
-         new Template(MimeType.SCRIPT_GROOVY, "Groovy REST Service", "Sample of Groovy REST service.",
-            FileTemplates.getTemplateFor(MimeType.SCRIPT_GROOVY)));
+         new Template(MimeType.GOOGLE_GADGET, "Google Gadget", "Sample of Google Gadget", FileTemplates
+            .getTemplateFor(MimeType.GOOGLE_GADGET)));
 
-      TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(templateList);
+      templateList.getTemplates().add(
+         new Template(MimeType.SCRIPT_GROOVY, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
+            .getTemplateFor(MimeType.SCRIPT_GROOVY)));
+
+      TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       TemplateListReceivedEvent event = new TemplateListReceivedEvent(templateList);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
