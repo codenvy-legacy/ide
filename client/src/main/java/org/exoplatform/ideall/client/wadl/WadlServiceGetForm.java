@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.wadl;
 
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.component.TreeGridItem;
+import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.smartgwt.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;

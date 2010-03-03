@@ -10,8 +10,8 @@ var proxyServiceContext = "/rest/private/proxy";
 // default configuration for the gadget under the GateIn-beta03 - URL of WebDAV:
 var appConfig = {
 	"context" : "/rest/private",
-	"gadgetServer" : "/gadgets/",/*under GWT Shell*/
-	//"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
+	//"gadgetServer" : "/gadgets/",/*under GWT Shell*/
+	"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
 	"publicContext" : "/rest",
 	"repository" : "repository",
 	"workspace" : "dev-monit"

@@ -11,7 +11,7 @@ public interface BuildNumber extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "4417"
    */
-  @DefaultMessage("4417")
+  @DefaultMessage("")
   @Key("buildNumber")
   String buildNumber();
 
@@ -20,7 +20,7 @@ public interface BuildNumber extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "2009-12-21 15:05:49"
    */
-  @DefaultMessage("2009-12-21 15:05:49")
+  @DefaultMessage("")
   @Key("buildTime")
   String buildTime();
 
@@ -29,7 +29,7 @@ public interface BuildNumber extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "\"http://svn.exoplatform.org/exo-int/web-tools/trunk/applications/gwt/devtool\""
    */
-  @DefaultMessage("\"http://svn.exoplatform.org/exo-int/web-tools/trunk/applications/gwt/devtool\"")
+  @DefaultMessage("")
   @Key("source")
   String source();
 
@@ -47,7 +47,7 @@ public interface BuildNumber extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\""
    */
-  @DefaultMessage("\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\"")
+  @DefaultMessage("")
   @Key("wiki")
   String wiki();
 }
