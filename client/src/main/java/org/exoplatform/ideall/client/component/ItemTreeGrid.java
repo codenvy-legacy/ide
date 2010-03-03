@@ -89,13 +89,14 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
          selectRecord(rootNode);
       }
-
+      
       if (((Folder)getValue()).getChildren() == null)
       {
          return;
       }
 
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
+            
       if (getValue().getPath().startsWith(rootFolder.getPath()))
       {
          TreeNode parent = getNodeByPath(getValue().getPath());
@@ -208,6 +209,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          {
             tree.remove(childNode);
          }
+         tree.closeAll(childNode);
       }
 
       for (Item child : children)
