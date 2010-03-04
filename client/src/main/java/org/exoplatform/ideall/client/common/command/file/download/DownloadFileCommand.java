@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.download;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.model.File;
 public class DownloadFileCommand extends SimpleCommand implements ItemSelectedHandler
 {
 
-   private final static String ID = "File/Download File...";
+   private final static String ID = "File/Download/Download File...";
 
    private final static String TITLE = "Download File";
 

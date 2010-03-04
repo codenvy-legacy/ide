@@ -25,14 +25,16 @@ import org.exoplatform.ideall.client.common.command.edit.HideLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
-import org.exoplatform.ideall.client.common.command.file.CreateFileFromTemplateCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.DownloadFileCommand;
-import org.exoplatform.ideall.client.common.command.file.DownloadZippedFolderCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
+import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileAsCommand;
@@ -76,13 +78,22 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new NewJavaScriptFileCommand()).disable().hide();
       addCommand(new NewCSSFileCommand()).disable().hide();
       addCommand(new NewGadgetCommand()).disable().hide();
-
       addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new UploadFileCommand()).disable().hide().dockOnToolbar();
 
+      addCommand(new OpenFileWithCommand()).disable().hide();
+      
+      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+
+      /*
+       * DOWNLOAD GROUP
+       */
+      addCommand(new DownloadCommand()).disable().hide();
       addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
       addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
-
+      /*
+       * END DOWNLOAD GROUP
+       */
+      
       addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();
       addCommand(new SaveAllFilesCommand()).disable().hide().dockOnToolbar();

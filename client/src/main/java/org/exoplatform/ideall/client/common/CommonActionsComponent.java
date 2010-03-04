@@ -24,6 +24,7 @@ import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
@@ -42,6 +43,8 @@ import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.event.file.MoveItemHander;
+import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
+import org.exoplatform.ideall.client.event.file.OpenFileWithHandler;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateHandler;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
@@ -64,6 +67,7 @@ import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
 
 import com.google.gwt.user.client.Window.Location;
+import com.smartgwt.client.util.SC;
 
 /**
  * Created by The eXo Platform SAS .
@@ -75,7 +79,7 @@ import com.google.gwt.user.client.Window.Location;
 public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
    CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
    SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler,
-   HideLineNumbersHandler, GetFileURLHandler
+   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -108,6 +112,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(HideLineNumbersEvent.TYPE, this);
 
       addHandler(GetFileURLEvent.TYPE, this);
+      
+      addHandler(OpenFileWithEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -220,6 +226,11 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
          Configuration.getInstance().getContext() + "/jcr" + context.getSelectedItem().getPath();
       return url;
+   }
+
+   public void onOpenFileWith(OpenFileWithEvent event)
+   {
+      new OpenFileWithForm(eventBus, context);      
    }
 
 }

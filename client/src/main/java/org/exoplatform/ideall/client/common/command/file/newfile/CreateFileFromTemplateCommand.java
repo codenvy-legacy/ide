@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
@@ -40,7 +40,7 @@ public class CreateFileFromTemplateCommand extends SimpleCommand implements Brow
 
    private boolean browserPanelSelected = true;
 
-   private final static String ID = "File/New File From Template...";
+   private final static String ID = "File/New/New File From Template...";
 
    private final static String TITLE = "Create New File From Template...";
 
