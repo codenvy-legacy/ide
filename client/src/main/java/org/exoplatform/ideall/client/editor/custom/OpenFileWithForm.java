@@ -33,6 +33,8 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private IButton cancelButton;
    
    private VLayout vLayout;
+   
+   private OpenFileWithPresenter presenter;
 
    public OpenFileWithForm(HandlerManager eventBus, ApplicationContext context)
    {

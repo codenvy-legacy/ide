@@ -26,9 +26,8 @@ import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
-import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
@@ -87,7 +86,6 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       /*
        * DOWNLOAD GROUP
        */
-      addCommand(new DownloadCommand()).disable().hide();
       addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
       addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
       /*
@@ -100,7 +98,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new GetFileURLCommand()).disable().hide().dockOnToolbar();
+      addCommand(new GetFileURLCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new MoveItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();

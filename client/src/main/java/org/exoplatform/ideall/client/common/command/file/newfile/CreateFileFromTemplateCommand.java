@@ -40,9 +40,9 @@ public class CreateFileFromTemplateCommand extends SimpleCommand implements Brow
 
    private boolean browserPanelSelected = true;
 
-   private final static String ID = "File/New/New File From Template...";
+   private final static String ID = "File/New/From Template...";
 
-   private final static String TITLE = "Create New File From Template...";
+   private final static String TITLE = "Create File From Template...";
 
    public CreateFileFromTemplateCommand()
    {

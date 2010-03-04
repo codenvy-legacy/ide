@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
@@ -40,9 +40,9 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
 
    private boolean browserPanelSelected = true;
 
-   private final static String ID = "File/Create Folder...";
+   private final static String ID = "File/New/Folder...";
 
-   private final static String TITLE = "Create New Folder...";
+   private final static String TITLE = "Create Folder...";
 
    public CreateNewFolderCommand()
    {

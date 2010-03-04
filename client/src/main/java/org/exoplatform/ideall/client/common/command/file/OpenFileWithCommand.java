@@ -18,7 +18,10 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
+import org.exoplatform.ideall.client.model.File;
 
 
 
@@ -27,21 +30,37 @@ import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends SimpleCommand
+public class OpenFileWithCommand extends SimpleCommand implements ItemSelectedHandler
 {
-   public static final String ID = "File/Open File With...";
+   public static final String ID = "File/Open With...";
 
-   public static final String TITLE = "Open File With...";
+   public static final String TITLE = "Open With...";
    
    public OpenFileWithCommand()
    {
-      super(ID, TITLE, Images.MainMenu.ABOUT, new OpenFileWithEvent());
+      super(ID, TITLE, Images.MainMenu.OPENWITH, new OpenFileWithEvent());
    }
    
    @Override
    protected void onInitializeApplication()
    {
       setVisible(true);
+      setEnabled(false);
+   }
+   
+   @Override
+   protected void onRegisterHandlers()
+   {
+      addHandler(ItemSelectedEvent.TYPE, this);
+   }
+
+   public void onItemSelected(ItemSelectedEvent event)
+   {
+      if (!(event.getSelectedItem() instanceof File))
+      {
+         setEnabled(false);
+         return;
+      }
       setEnabled(true);
    }
 }

@@ -71,7 +71,8 @@ public interface Images
       
       public static final String GET_URL = imageUrl + "menu/url1.png";
       
-
+      public static final String OPENWITH = imageUrl + "menu/openwith.png";
+      
       public static final String UPLOAD = imageUrl + "menu/next_edition/upload1.png";
       
       public static final String DOWNLOAD = imageUrl + "menu/next_edition/download1.png";

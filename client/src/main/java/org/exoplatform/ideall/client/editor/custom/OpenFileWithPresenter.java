@@ -18,7 +18,6 @@ package org.exoplatform.ideall.client.editor.custom;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.wadl.WadlServiceGetPresenter.Display;
 
 import com.google.gwt.event.shared.HandlerManager;
 
