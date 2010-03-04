@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
@@ -73,7 +75,7 @@ import com.google.gwt.event.shared.HandlerManager;
 */
 public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
-   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler
+   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler
 {
 
    interface Display
@@ -94,6 +96,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    private ApplicationContext context;
 
    private String folderToUpdate;
+
+   private String forlderToSelect;
 
    public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -284,6 +288,12 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectBrowserPanelEvent());
 
+      if (forlderToSelect != null)
+      {
+         display.selectItem(forlderToSelect);
+         forlderToSelect = null;
+      }
+
       if (folderToUpdate != null)
       {
          String path = folderToUpdate;
@@ -301,6 +311,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    public void onFolderCreated(FolderCreatedEvent event)
    {
       String path = event.getPath();
+      forlderToSelect = path;
       path = path.substring(0, path.lastIndexOf("/"));
       DataService.getInstance().getFolderContent(context.getSelectedItem().getPath());
    }
@@ -374,6 +385,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
       handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
 
       handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
+
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
    /**
@@ -395,6 +408,11 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    public void onSetFocusOnItem(SetFocusOnItemEvent event)
    {
       display.selectItem(event.getPath());
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      forlderToSelect = null;
    }
 
 }
