@@ -247,5 +247,7 @@ public interface Images
       public static final String ASK = imageUrl + "dialog/ask.png";
 
    }
+   
+   public static final String BLANK = imageUrl + "blank.png";
 
 }

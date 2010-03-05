@@ -70,6 +70,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
+
       handlers = new Handlers(eventBus);
 
       tabSet = new TabSet();
@@ -156,26 +157,17 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    };
 
-   public void addTab(File file, boolean lineNumbers)
+   public void addTab(File file, boolean lineNumbers, Editor editor)
    {
-      Editor editor;
-      
-      try {
-         editor = EditorFactory.getDefaultEditor(file.getContentType());
-      } catch (EditorNotFoundException exc) {
-         Dialogs.getInstance().showError("Can't find editor for type <b>" + file.getContentType() + "</b>");
-         return;
-      }
-      
       EditorTab tab = new EditorTab(file);
       tab.setCanClose(true);
-      
+
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
-      
+
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-      
+
       tab.setTextEditor(smartGwtTextEditor);
       redraw();
 

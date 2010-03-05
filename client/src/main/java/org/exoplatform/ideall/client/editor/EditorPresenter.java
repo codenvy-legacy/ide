@@ -19,8 +19,14 @@ package org.exoplatform.ideall.client.editor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.editor.api.Editor;
+import org.exoplatform.gwtframework.editor.api.EditorFactory;
+import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
@@ -87,18 +93,18 @@ import com.google.gwt.user.client.Timer;
  * @version @version $Id: $
  */
 
-public class EditorPresenter implements FileCreatedHandler, EditorContentChangedHandler,
-   EditorInitializedHandler, EditorActivityHandler, EditorSaveContentHandler,
-   EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler, RedoEditingHandler,
-   FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler, FileContentReceivedHandler,
-   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
-   InitializeApplicationHandler, ShowLineNumbersHandler, HideLineNumbersHandler, ChangeActiveFileHandler
+public class EditorPresenter implements FileCreatedHandler, EditorContentChangedHandler, EditorInitializedHandler,
+   EditorActivityHandler, EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler,
+   UndoEditingHandler, RedoEditingHandler, FileContentSavedHandler, ItemPropertiesSavedHandler,
+   FilePropertiesChangedHandler, FileContentReceivedHandler, MoveCompleteHandler, FormatFileHandler,
+   ItemDeletedHandler, RegisterEventHandlersHandler, InitializeApplicationHandler, ShowLineNumbersHandler,
+   HideLineNumbersHandler, ChangeActiveFileHandler, ExceptionThrownHandler
 {
 
    public interface Display
    {
 
-      void addTab(File file, boolean lineNumbers);
+      void addTab(File file, boolean lineNumbers, Editor editor);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -165,7 +171,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       for (File file : context.getOpenedFiles().values())
       {
          ignoreContentChangedList.add(file.getPath());
-         display.addTab(file, context.isShowLineNumbers());
+         openFile(file);
       }
 
       registerHandlers();
@@ -215,7 +221,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
 
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
 
       handlers.addHandler(UndoEditingEvent.TYPE, this);
@@ -232,6 +238,8 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       handlers.addHandler(HideLineNumbersEvent.TYPE, this);
 
       handlers.addHandler(ChangeActiveFileEvent.TYPE, this);
+
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
    /**
@@ -277,7 +285,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          ignoreContentChangedList.add(file.getPath());
          context.setActiveFile(file);
          context.getOpenedFiles().put(file.getPath(), file);
-         display.addTab(file, context.isShowLineNumbers());
+         openFile(file);
          display.selectTab(file.getPath());
 
          CookieManager.storeOpenedFiles(context);
@@ -492,7 +500,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       {
          ignoreContentChangedList.add(file.getPath());
          context.getOpenedFiles().put(file.getPath(), file);
-         display.addTab(file, context.isShowLineNumbers());
+         openFile(file);
          display.selectTab(file.getPath());
       }
 
@@ -655,6 +663,69 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       timer1.schedule(1000);
       timer2 = new UpdateActiveFileTimer();
       timer2.schedule(500);
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      context.setSelectedEditor(null);
+   }
+
+   protected void openFile(File file)
+   {
+      Editor editor;
+      
+      String mimeType = file.getContentType();
+      
+      try
+      {
+         String defaultEditorDescription;
+         if (context.getSelectedEditor() != null)
+         {
+            System.out.println("context.getSelectedEditor() "+ context.getSelectedEditor());
+            defaultEditorDescription = context.getSelectedEditor();
+         }
+         else
+         {
+            defaultEditorDescription = context.getDefaultEditors().get(mimeType);
+         }
+         
+         editor = getEditor(mimeType, defaultEditorDescription);
+      }
+      catch (EditorNotFoundException exc)
+      {
+         Dialogs.getInstance().showError("Can't find editor for type <b>" + mimeType + "</b>");
+         return;
+      }
+
+      display.addTab(file, context.isShowLineNumbers(), editor);
+   }
+
+   private Editor getEditor(String mimeType, String defaultEditorDescription) throws EditorNotFoundException
+   {
+      Editor editor = null;
+
+      if (defaultEditorDescription == null)
+      {
+         editor = EditorFactory.getDefaultEditor(mimeType);
+      }
+      else
+      {
+         List<Editor> editors = EditorFactory.getEditors(mimeType);
+         for (Editor e : editors)
+         {
+            if (e.getDescription().equals(context.getSelectedEditor()))
+            {
+               editor = e;
+               break;
+            }
+         }         
+      }
+      
+      if (editor == null) {
+         throw new EditorNotFoundException();
+      }
+      
+      return editor;
    }
 
 }

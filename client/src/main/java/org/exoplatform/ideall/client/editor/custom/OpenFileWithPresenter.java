@@ -44,10 +44,10 @@ import com.google.gwt.user.client.ui.HasValue;
 */
 public class OpenFileWithPresenter implements FileContentReceivedHandler
 {
-   
+
    public interface Display
    {
-      
+
       void closeForm();
 
       EditorsListGrid getEditorsListGrid();
@@ -55,11 +55,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
       HasValue<Boolean> getIsDefaultCheckItem();
 
       HasClickHandlers getOkButton();
-      
+
       void enableOpenButton();
 
       HasClickHandlers getCancelButton();
-      
+
    }
 
    private HandlerManager eventBus;
@@ -69,7 +69,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
    private Display display;
 
    private Handlers handlers;
-   
+
    private Editor selectedEditor;
 
    public OpenFileWithPresenter(HandlerManager eventBus, ApplicationContext context)
@@ -79,15 +79,16 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
 
       handlers = new Handlers(eventBus);
    }
-   
-   public void destroy() {
+
+   public void destroy()
+   {
       handlers.removeHandlers();
    }
 
    public void bindDisplay(Display d)
    {
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      
+
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -96,16 +97,17 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
             display.closeForm();
          }
       });
-      
-      
-      display.getOkButton().addClickHandler(new ClickHandler(){
+
+      display.getOkButton().addClickHandler(new ClickHandler()
+      {
          public void onClick(ClickEvent arg0)
          {
-            openFile();            
+            openFile();
          }
       });
-      
-      display.getEditorsListGrid().addSelectionHandler(new SelectionHandler<Editor>(){
+
+      display.getEditorsListGrid().addSelectionHandler(new SelectionHandler<Editor>()
+      {
 
          public void onSelection(SelectionEvent<Editor> event)
          {
@@ -113,22 +115,22 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
             {
                return;
             }
-            
+
             selectedEditor = event.getSelectedItem();
             display.enableOpenButton();
          }
-         
+
       });
-      
+
       fillEditorsListGrid();
 
    }
 
    private void fillEditorsListGrid()
    {
-      
+
       String mimeType = ((File)context.getSelectedItem()).getContentType();
-      
+
       try
       {
          List<Editor> editorsItems = EditorFactory.getEditors(mimeType);
@@ -140,10 +142,20 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
    }
-   
+
    private void openFile()
    {
-      DataService.getInstance().getFileContent((File)context.getSelectedItem());
+      if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
+      {
+         System.out.println("OpenFileWithPresenter.openFile()");
+         context.setSelectedEditor(selectedEditor.getDescription());
+         DataService.getInstance().getFileContent((File)context.getSelectedItem());
+      }
+      else
+      {
+         
+      }
+   
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

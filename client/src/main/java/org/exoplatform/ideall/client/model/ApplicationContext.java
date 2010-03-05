@@ -113,6 +113,8 @@ public class ApplicationContext
     * Uses for storing the current state of defaults editors
     */
    private HashMap<String, String> defaultEditors = new HashMap<String, String>();
+   
+   private String selectedEditor;
 
    private boolean showLineNumbers = true;
 
@@ -336,6 +338,18 @@ public class ApplicationContext
    {
       return defaultEditors;
    }
+
+   public String getSelectedEditor()
+   {
+      return selectedEditor;
+   }
+
+   public void setSelectedEditor(String selectedEditor)
+   {
+      this.selectedEditor = selectedEditor;
+   }
+   
+   
 
    
 }
