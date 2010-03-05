@@ -65,6 +65,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
          String message = "Can't parse folder content at <b>" + folder.getPath() + "</b>!";
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
+      
    }
 
    private void parseFolderContent(String body)

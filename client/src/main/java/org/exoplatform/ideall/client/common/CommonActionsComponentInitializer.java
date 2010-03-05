@@ -26,7 +26,7 @@ import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.CreateNewFolderCommand;
+import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;

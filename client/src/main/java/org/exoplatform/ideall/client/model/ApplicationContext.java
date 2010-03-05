@@ -108,6 +108,11 @@ public class ApplicationContext
     * Uses for storing default state of toolbar
     */
    private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
+   
+   /**
+    * Uses for storing the current state of defaults editors
+    */
+   private HashMap<String, String> defaultEditors = new HashMap<String, String>();
 
    private boolean showLineNumbers = true;
 
@@ -323,4 +328,14 @@ public class ApplicationContext
       this.showLineNumbers = showLineNumbers;
    }
 
+   /**
+    * 
+    * @return Defaults editors
+    */
+   public HashMap<String, String> getDefaultEditors()
+   {
+      return defaultEditors;
+   }
+
+   
 }
