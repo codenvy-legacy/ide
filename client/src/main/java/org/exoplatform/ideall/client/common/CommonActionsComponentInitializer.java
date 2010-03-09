@@ -28,6 +28,7 @@ import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadFile;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
@@ -86,6 +87,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       /*
        * DOWNLOAD GROUP
        */
+      addCommand(new DownloadFile()).disable().hide();
       addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
       addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
       /*

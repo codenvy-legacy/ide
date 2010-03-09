@@ -67,7 +67,6 @@ import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
 
 import com.google.gwt.user.client.Window.Location;
-import com.smartgwt.client.util.SC;
 
 /**
  * Created by The eXo Platform SAS .
