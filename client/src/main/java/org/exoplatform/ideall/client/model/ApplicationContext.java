@@ -114,7 +114,7 @@ public class ApplicationContext
     */
    private HashMap<String, String> defaultEditors = new HashMap<String, String>();
    
-   private String selectedEditor;
+   private String selectedEditorDescriptor;
 
    private boolean showLineNumbers = true;
 
@@ -339,14 +339,14 @@ public class ApplicationContext
       return defaultEditors;
    }
 
-   public String getSelectedEditor()
+   public String getSelectedEditorDescriptor()
    {
-      return selectedEditor;
+      return selectedEditorDescriptor;
    }
 
-   public void setSelectedEditor(String selectedEditor)
+   public void setSelectedEditorDescriptor(String selectedEditor)
    {
-      this.selectedEditor = selectedEditor;
+      this.selectedEditorDescriptor = selectedEditor;
    }
    
    

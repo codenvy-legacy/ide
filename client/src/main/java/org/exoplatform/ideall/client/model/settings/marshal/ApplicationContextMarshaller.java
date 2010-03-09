@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -44,6 +46,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       String xml = "<" + SETTINGS + ">";
       xml += getLineNumbers();
       xml += getToolbar();
+      xml += getEditors();
       xml += "</" + SETTINGS + ">";
 
       return xml;
@@ -67,4 +70,23 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       return xml;
    }
 
+   private String getEditors()
+   {
+      String xml = "<" + EDITORS + ">";
+      for (String key : context.getDefaultEditors().keySet())
+      {
+         xml += "<" + EDITOR + ">";
+         xml += "<" + MIME_TYPE + ">";
+         xml += key;
+         xml += "</" + MIME_TYPE + ">";
+         xml += "<" + EDITOR_DESCRIPTION + ">";
+         xml += context.getDefaultEditors().get(key);
+         xml += "</" + EDITOR_DESCRIPTION + ">";
+         xml += "</" + EDITOR + ">";
+
+      }
+      xml += "</" + EDITORS + ">";
+
+      return xml;
+   }
 }

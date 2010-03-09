@@ -667,28 +667,27 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
 
    public void onError(ExceptionThrownEvent event)
    {
-      context.setSelectedEditor(null);
+      context.setSelectedEditorDescriptor(null);
    }
 
    protected void openFile(File file)
    {
       Editor editor;
-      
+
       String mimeType = file.getContentType();
-      
+
       try
       {
          String defaultEditorDescription;
-         if (context.getSelectedEditor() != null)
+         if (context.getSelectedEditorDescriptor() != null)
          {
-            System.out.println("context.getSelectedEditor() "+ context.getSelectedEditor());
-            defaultEditorDescription = context.getSelectedEditor();
+            defaultEditorDescription = context.getSelectedEditorDescriptor();
          }
          else
          {
             defaultEditorDescription = context.getDefaultEditors().get(mimeType);
          }
-         
+
          editor = getEditor(mimeType, defaultEditorDescription);
       }
       catch (EditorNotFoundException exc)
@@ -713,18 +712,20 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          List<Editor> editors = EditorFactory.getEditors(mimeType);
          for (Editor e : editors)
          {
-            if (e.getDescription().equals(context.getSelectedEditor()))
+
+            if (e.getDescription().equals(defaultEditorDescription))
             {
                editor = e;
                break;
             }
-         }         
+         }
       }
-      
-      if (editor == null) {
+
+      if (editor == null)
+      {
          throw new EditorNotFoundException();
       }
-      
+
       return editor;
    }
 

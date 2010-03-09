@@ -20,13 +20,14 @@
 package org.exoplatform.ideall.client.model.settings.marshal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
@@ -75,12 +76,30 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
 
          parseLineNumbers(configurationNode);
          parseToolbar(configurationNode);
+         parseEditors(configurationNode);
       }
       catch (Exception exc)
       {
          String message = "Can't parse user settings!";
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
+   }
+
+   private void parseEditors(Node configurationNode)
+   {
+      Node editors = getChildNode(configurationNode, EDITORS);
+      HashMap<String, String> editorsMap = new HashMap<String, String>();
+      for (int i = 0; i < editors.getChildNodes().getLength(); i++)
+      {
+         Node editorItemNode = editors.getChildNodes().item(i);
+         
+         String itemKey = getChildNode(editorItemNode, MIME_TYPE).getChildNodes().item(0).getNodeValue();
+         String itemValue = getChildNode(editorItemNode, EDITOR_DESCRIPTION).getChildNodes().item(0).getNodeValue();
+         
+         editorsMap.put(itemKey, itemValue);
+      }
+      context.getDefaultEditors().clear();
+      context.getDefaultEditors().putAll(editorsMap);
    }
 
    private void parseLineNumbers(Node configurationNode)

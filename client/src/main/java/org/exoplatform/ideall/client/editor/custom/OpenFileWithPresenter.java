@@ -28,6 +28,9 @@ import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.model.settings.SettingsService;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -42,7 +45,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithPresenter implements FileContentReceivedHandler
+public class OpenFileWithPresenter implements FileContentReceivedHandler, ApplicationContextSavedHandler
 {
 
    public interface Display
@@ -88,7 +91,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
    public void bindDisplay(Display d)
    {
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-
+      handlers.addHandler(ApplicationContextSavedEvent.TYPE, this);
+      
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -138,7 +142,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
       }
       catch (EditorNotFoundException e)
       {
-         String message = "Editors not dound";
+         String message = "Editors not found";
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
    }
@@ -147,20 +151,28 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
-         System.out.println("OpenFileWithPresenter.openFile()");
-         context.setSelectedEditor(selectedEditor.getDescription());
+         context.setSelectedEditorDescriptor(selectedEditor.getDescription());
          DataService.getInstance().getFileContent((File)context.getSelectedItem());
       }
       else
       {
+         String mimeType = ((File)context.getSelectedItem()).getContentType();
          
+         context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
+         
+         SettingsService.getInstance().saveSetting(context);
       }
-   
+
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
       display.closeForm();
+   }
+
+   public void onApplicationContextSaved(ApplicationContextSavedEvent event)
+   {
+      DataService.getInstance().getFileContent((File)context.getSelectedItem());
    }
 
 }
