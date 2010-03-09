@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.model.gadget.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.TokenResponse;
 
@@ -44,7 +45,7 @@ public class TokenResponseUnmarshal implements Unmarshallable
    /**
     * {@inheritDoc}
     */
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -53,7 +54,7 @@ public class TokenResponseUnmarshal implements Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse token response";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);       
       }
    }
 

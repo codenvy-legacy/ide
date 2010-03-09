@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.model.jcrservice.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Repository;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
@@ -58,7 +59,7 @@ public class RepositoryServiceConfigurationUnmarshaller implements Unmarshallabl
       this.eventBus = eventBus;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -67,7 +68,7 @@ public class RepositoryServiceConfigurationUnmarshaller implements Unmarshallabl
       catch (Exception exc)
       {
          String message = "Can't parse repository service configuration";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);
       }
    }
 

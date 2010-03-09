@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -66,7 +67,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       return null;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -81,7 +82,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse user settings!";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);
       }
    }
 

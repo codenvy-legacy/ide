@@ -20,6 +20,7 @@
 package org.exoplatform.ideall.client.model.template.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateList;
@@ -51,7 +52,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       this.eventBus = eventBus;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -68,7 +69,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       catch (Exception exc)
       {
         String message = "Can't parse template!";
-        eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+        throw new UnmarshallerException(message);
       }
 
    }

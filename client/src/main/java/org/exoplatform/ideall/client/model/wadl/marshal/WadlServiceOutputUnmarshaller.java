@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.model.wadl.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
@@ -42,7 +43,7 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
       this.application = application;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       WadlProcessor processor;
       try
@@ -57,7 +58,7 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse output wadl service output!";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);
       }
    }
 

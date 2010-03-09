@@ -19,6 +19,7 @@ package org.exoplatform.ideall.client.model.data.marshal;
 import java.util.ArrayList;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
@@ -54,7 +55,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
       this.folder = folder;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -63,7 +64,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse folder content at <b>" + folder.getPath() + "</b>!";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);
       }
       
    }

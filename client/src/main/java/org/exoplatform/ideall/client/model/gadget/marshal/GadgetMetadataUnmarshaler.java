@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.model.gadget.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 
@@ -43,7 +44,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       this.eventBus = eventBus;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(String body) throws UnmarshallerException
    {
       try
       {
@@ -52,7 +53,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse gadget meta data at <b>" + metadata.getTitle() + "</b>";
-         eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
+         throw new UnmarshallerException(message);
       }
    }
 
