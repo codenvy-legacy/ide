@@ -6,6 +6,7 @@ import org.exoplatform.gwtframework.ui.smartgwt.loader.SmartGWTLoader;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
+import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
 import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -77,6 +78,9 @@ public class IDE
 
       context.getComponents().add(new CommonActionsComponent());
       context.getComponents().add(new GroovyActionsComponent());
+      
+      context.getComponents().add(new GadgetActionsComponent());
+      
       context.getComponents().add(new HelpActionsComponent());
       
       context.getComponents().add(new WadlActionsComponent()); 

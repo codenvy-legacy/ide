@@ -59,6 +59,8 @@ public class GadgetMetadata
    private String authorLink;
 
    private String url;
+   
+   private String iframeUrl;
 
    private boolean scaling;
 
@@ -113,6 +115,8 @@ public class GadgetMetadata
    public static final String AUTHOR_LINK = "authorLink";
 
    public static final String URL = "url";
+   
+   public static final String IFRAME_URL = "iframeUrl";
 
    public static final String SCALING = "scaling";
 
@@ -386,6 +390,23 @@ public class GadgetMetadata
    public void setUrl(String url)
    {
       this.url = url;
+   }
+   
+
+   /**
+    * @return the iframeUrl
+    */
+   public String getIframeUrl()
+   {
+      return iframeUrl;
+   }
+
+   /**
+    * @param iframeUrl the iframeUrl to set
+    */
+   public void setIframeUrl(String iframeUrl)
+   {
+      this.iframeUrl = iframeUrl;
    }
 
    /**

@@ -25,6 +25,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -46,6 +47,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
    public void unmarshal(String body) throws UnmarshallerException
    {
+      Window.alert(body);
       try
       {
          parseGadgetMetadata(body);
@@ -128,6 +130,9 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
       if (gm.containsKey(GadgetMetadata.URL))
          metadata.setUrl((gm.get(GadgetMetadata.URL).isString().stringValue()));
+      
+      if (gm.containsKey(GadgetMetadata.IFRAME_URL))
+         metadata.setIframeUrl((gm.get(GadgetMetadata.IFRAME_URL).isString().stringValue()));
 
       if (gm.containsKey(GadgetMetadata.USER_PREFS))
          metadata.setUserPrefs((gm.get(GadgetMetadata.USER_PREFS).isObject()));

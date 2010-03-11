@@ -20,9 +20,7 @@ import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.operation.TabPanel;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Frame;
 
@@ -40,6 +38,8 @@ public class GadgetPreviewPane extends TabPanel
    public static final String title = "Gadget Preview";
    
    private String meta;
+   
+   private GadgetMetadata metadata;
 
    /**
     * 
@@ -53,7 +53,8 @@ public class GadgetPreviewPane extends TabPanel
    public GadgetPreviewPane(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
    {
       super(eventBus, true);
-      meta = parseMetadata(gadgetMetadata);
+      metadata = gadgetMetadata;
+//      meta = parseMetadata(gadgetMetadata);
    }
 
    @Override
@@ -62,18 +63,18 @@ public class GadgetPreviewPane extends TabPanel
       return title;
    }
 
-   /**
-    * @param metadata
-    * @return
-    */
-   private String parseMetadata(GadgetMetadata metadata)
-   {
-      String src =
-         "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
-            + ",title:\"" + metadata.getTitle() + "\",width:" + String.valueOf(metadata.getWidth()) + ",secureToken:\""
-            + metadata.getSecurityToken() + "\",view:\"home\",server:\"" + Configuration.getInstance().getGadgetServer() + "\"}";
-      return src;
-   }
+//   /**
+//    * @param metadata
+//    * @return
+//    */
+//   private String parseMetadata(GadgetMetadata metadata)
+//   {
+//      String src =
+//         "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
+//            + ",title:\"" + metadata.getTitle() + "\",width:" + String.valueOf(metadata.getWidth()) + ",secureToken:\""
+//            + metadata.getSecurityToken() + "\",view:\"home\",server:\"" + Configuration.getInstance().getGadgetServer() + "\"}";
+//      return src;
+//   }
 
    @Override
    public void onCloseTab()
@@ -96,13 +97,27 @@ public class GadgetPreviewPane extends TabPanel
     */
    private void showGadget()
    {
-      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
+      String url = metadata.getIframeUrl();
+      url = url.replace("?container=", "?container=default");
+      url = url.replace("&view=", "&view=canvas");
+
+      url = Configuration.getInstance().getGadgetServer() + "ifr" + url;
+      Frame frame = new Frame(url);
+      DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
-      DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
-      DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
-      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
+      
+//      return frame;
+
+      
+//      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
+//      frame.setWidth("100%");
+//      frame.setHeight("100%");
+//      addMember(frame);
+//      DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
+//      DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
+//      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
    }
 
 

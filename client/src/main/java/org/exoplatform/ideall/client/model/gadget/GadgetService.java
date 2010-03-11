@@ -44,5 +44,11 @@ public abstract class GadgetService
    public abstract void getGadgetMetadata(TokenResponse tokenResponse);
    
    public abstract void getSecurityToken(TokenRequest request);
+   
+   public abstract void deployGadget(String gadgetUrl);
+   
+   public abstract void undeployGadget(String gadgetUrl);
+   
+   
 
 }
