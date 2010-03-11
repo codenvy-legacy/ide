@@ -231,7 +231,7 @@ public class WadlServiceGetPresenter
       handlers.removeHandlers();
    }
 
-   private void fillPathParameters(Resource resource)
+   private void fillParameters(Resource resource)
    {
       display.getParametersQueryListGrid().setValue(new ArrayList<WadlParameterEntry>());
       display.getParametersHeaderListGrid().setValue(new ArrayList<WadlParameterEntry>());
@@ -350,7 +350,7 @@ public class WadlServiceGetPresenter
    {
       Resource resource = findResource(path, method);
       
-      fillPathParameters(resource);
+      fillParameters(resource);
 
       if (resource.getMethodOrResource().get(0) instanceof Method)
       {
