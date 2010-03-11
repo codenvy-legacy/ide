@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -40,8 +39,8 @@ import org.exoplatform.ideall.client.operation.output.OutputMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -69,10 +68,6 @@ public class WadlServiceGetPresenter
 
       HasValue<String> getResponseMediaTypeField();
 
-      TreeGridItem<Resource> getWadlResourceTreeGrid();
-
-      WadlParameterEntryListGrid getParametersPathListGrid();
-
       WadlParameterEntryListGrid getParametersQueryListGrid();
 
       HasValue<String> getRequestBody();
@@ -80,7 +75,11 @@ public class WadlServiceGetPresenter
       WadlParameterEntryListGrid getParametersHeaderListGrid();
       
       void setBodyDisabled(boolean value);
-
+      
+      void setPaths(String[] paths);
+      
+      void setMethods(String[] methods);
+      
    }
 
    private HandlerManager eventBus;
@@ -98,7 +97,13 @@ public class WadlServiceGetPresenter
    private List<SimpleParameterEntry> queryParams = new Vector<SimpleParameterEntry>();
 
    private boolean isMaySendRequest = false;
-
+   
+   private ArrayList<String> pathArray = new ArrayList<String>();
+   
+   private ArrayList<Resource> resourceArray = new ArrayList<Resource>();
+   
+   private ArrayList<String> methodArray = new ArrayList<String>();
+   
    public WadlServiceGetPresenter(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
       this.eventBus = eventBus;
@@ -128,24 +133,32 @@ public class WadlServiceGetPresenter
          {
             if (isMaySendRequest)
             {
+               display.closeForm();
                sendRequest();
             }
          }
       });
 
-      display.getWadlResourceTreeGrid().addSelectionHandler(new SelectionHandler<Resource>()
+      display.getPathField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
-         public void onSelection(SelectionEvent<Resource> event)
+         public void onValueChange(ValueChangeEvent<String> event)
          {
-            if (!event.getSelectedItem().getPath().equals(wadlApplication.getResources().getBase()))
-            {
-               setResourceInfo(event.getSelectedItem());
-               isMaySendRequest = true;
-            }
+            if (isPathExists(event.getValue()))
+               onPathValueChanged(event.getValue());
          }
       });
+      
+      display.getMethodField().addValueChangeHandler(new ValueChangeHandler<String>()
+         {
 
+            public void onValueChange(ValueChangeEvent<String> event)
+            {
+               //eventBus.fireEvent(new HttpMethodChangedEvent(event.getValue()));
+               setResourceInfo(display.getPathField().getValue(), event.getValue());
+            }
+         });
+      
       Resource res = new Resource();
       res.setPath(wadlApplication.getResources().getBase());
 
@@ -153,7 +166,10 @@ public class WadlServiceGetPresenter
       {
          res.getMethodOrResource().add(r);
       }
-      display.getWadlResourceTreeGrid().setValue(res);
+      
+      initResourcesAndPaths(res);
+      
+      display.setPaths(pathArray.toArray(new String[pathArray.size()]));
 
    }
 
@@ -164,14 +180,14 @@ public class WadlServiceGetPresenter
          queryParams = getQueryParams();
          headers = getHeadersParams();
 
-         String fullPath = "/rest" + getPahtToResource();
+         String fullPath = "/rest" + display.getPathField().getValue();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers,
             queryParams, display.getRequestBody().getValue());
       }
       catch (IllegalArgumentException e)
       {
-    	 eventBus.fireEvent(new OutputEvent(e.getMessage(), OutputMessage.Type.ERROR));
+         eventBus.fireEvent(new OutputEvent(e.getMessage(), OutputMessage.Type.ERROR));
       }
    }
 
@@ -192,25 +208,6 @@ public class WadlServiceGetPresenter
       }
 
       return headersParam;
-   }
-
-   private String getPahtToResource()
-   {
-      String pathPattern = display.getPathField().getValue();
-
-      for (SimpleParameterEntry p : display.getParametersPathListGrid().getValue())
-      {
-         if (!p.getValue().equals(""))
-    	 {
-            pathPattern = pathPattern.replace("{" + p.getName() + "}", p.getValue());
-         }
-         else
-         {
-            throw new IllegalArgumentException("Parameter " + p.getName() + ", not have value");
-         }
-      }
-
-      return pathPattern;
    }
 
    private List<SimpleParameterEntry> getQueryParams()
@@ -236,15 +233,12 @@ public class WadlServiceGetPresenter
 
    private void fillPathParameters(Resource resource)
    {
-	  display.getParametersPathListGrid().setValue(new ArrayList<WadlParameterEntry>());
       display.getParametersQueryListGrid().setValue(new ArrayList<WadlParameterEntry>());
       display.getParametersHeaderListGrid().setValue(new ArrayList<WadlParameterEntry>());
 
-      List<WadlParameterEntry> itemsPath = new ArrayList<WadlParameterEntry>();
       List<WadlParameterEntry> itemsQuery = new ArrayList<WadlParameterEntry>();
       List<WadlParameterEntry> itemsHeader = new ArrayList<WadlParameterEntry>();
       
-      //overrides header if method name not equals GET or POST
       if (resource.getMethodOrResource().get(0) instanceof Method)
       {
          Method m = (Method)resource.getMethodOrResource().get(0);
@@ -257,11 +251,6 @@ public class WadlServiceGetPresenter
 
          for (Param p : resource.getParam())
          {
-
-            if (p.getStyle() == ParamStyle.TEMPLATE)
-            {
-               itemsPath.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
-            }
 
             if (p.getStyle() == ParamStyle.QUERY)
             {
@@ -312,29 +301,69 @@ public class WadlServiceGetPresenter
       display.getParametersQueryListGrid().getFields()[0].setCanEdit(false);
       display.getParametersQueryListGrid().getFields()[1].setCanEdit(false);
 
-      display.getParametersPathListGrid().setValue(itemsPath);
-      display.getParametersPathListGrid().getFields()[0].setCanEdit(false);
-      display.getParametersPathListGrid().getFields()[1].setCanEdit(false);
    }
 
-   private void setResourceInfo(Resource resource)
+   private void initResourcesAndPaths(Resource resource)
    {
-	   fillPathParameters(resource);
+      if (!resource.getPath().equals(wadlApplication.getResources().getBase()))
+      {
+         pathArray.add(resource.getPath());
+         resourceArray.add(resource);
+      }
+      for (Object res : resource.getMethodOrResource())
+      {
+         if (res instanceof Resource)
+            initResourcesAndPaths((Resource)res);
+      }
+   }
+   
+   private boolean isPathExists(String path)
+   {
+      for (Resource resource : resourceArray)
+         if (path.equals(resource.getPath()))
+            return true;
+      
+      return false;
+   }
+   
+   private void onPathValueChanged(String path)
+   {
+      methodArray.clear();
+      for (Resource resource : resourceArray)
+      {
+         if (path.equals(resource.getPath()))
+            for (Object obj : resource.getMethodOrResource())
+            {
+               if (obj instanceof Method)
+               {
+                  methodArray.add(((Method)obj).getName());
+               }
+            }
+      }
+      display.setMethods(methodArray.toArray(new String[methodArray.size()]));
+      display.getMethodField().setValue(methodArray.get(0));
+      
+      setResourceInfo(path, display.getMethodField().getValue());
+   }
+   
+   private void setResourceInfo(String path, String method)
+   {
+      Resource resource = findResource(path, method);
+      
+      fillPathParameters(resource);
 
-      display.getPathField().setValue(resource.getPath());
       if (resource.getMethodOrResource().get(0) instanceof Method)
       {
          Method m = (Method)resource.getMethodOrResource().get(0);
-         display.getMethodField().setValue(m.getName());
          
          //you can add check for other methods, where request body is disabled
          if (HTTPMethod.GET.equals(display.getMethodField().getValue())
-        		 || HTTPMethod.DELETE.equals(display.getMethodField().getValue())
-        		 || HTTPMethod.HEAD.equals(display.getMethodField().getValue())
-        		 || HTTPMethod.OPTIONS.equals(display.getMethodField().getValue()))
-        	 display.setBodyDisabled(true);
+             || HTTPMethod.DELETE.equals(display.getMethodField().getValue())
+             || HTTPMethod.HEAD.equals(display.getMethodField().getValue())
+             || HTTPMethod.OPTIONS.equals(display.getMethodField().getValue()))
+          display.setBodyDisabled(true);
          else
-        	 display.setBodyDisabled(false);
+          display.setBodyDisabled(false);
 
          if (m.getRequest() != null)
          {
@@ -360,8 +389,22 @@ public class WadlServiceGetPresenter
          }
          else
             display.getResponseMediaTypeField().setValue("");
-
+         
+         isMaySendRequest = true;
       }
    }
-
+   
+   private Resource findResource(String path, String method)
+   {
+      for (Resource res : resourceArray)
+      {
+         if (path.equals(res.getPath()))
+            for (Object obj : res.getMethodOrResource()) 
+            {
+               if ((obj instanceof Method) && ((Method)obj).getName().equals(method) )
+                  return res;
+            }
+      }
+      return null;
+   }
 }

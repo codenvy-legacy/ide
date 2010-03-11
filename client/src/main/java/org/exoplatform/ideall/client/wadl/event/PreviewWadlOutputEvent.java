@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ideall.client.wadl.event;
 
-import org.exoplatform.ideall.client.model.ApplicationContext;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 
@@ -30,18 +28,6 @@ import com.google.gwt.event.shared.GwtEvent;
 public class PreviewWadlOutputEvent extends GwtEvent<PreviewWadlOutputHandler>
 {
    public static final GwtEvent.Type<PreviewWadlOutputHandler> TYPE = new GwtEvent.Type<PreviewWadlOutputHandler>();
-   
-   //private String path;
-   
-//   public PreviewWadlOutputEvent(String path)
-//   {
-//      this.path = path;
-//   }
-//   
-//   public String getPath()
-//   {
-//      return path;
-//   }
    
    @Override
    protected void dispatch(PreviewWadlOutputHandler hendler)

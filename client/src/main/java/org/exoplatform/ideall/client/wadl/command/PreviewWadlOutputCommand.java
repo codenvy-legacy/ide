@@ -21,10 +21,7 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.wadl.event.PreviewWadlOutputEvent;
-
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,13 +32,11 @@ public class PreviewWadlOutputCommand extends SimpleCommand implements EditorAct
 {
    private static final String ID = "Run/Wadl";
 
-   private static final String TITLE = "Wadl";
+   private static final String TITLE = "Preview REST Service Output...";
 
    public PreviewWadlOutputCommand()
    {
-      //TODO parse Groovy script and get base path
-	   //super(ID, TITLE, Images.MainMenu.WADL, new PreviewWadlOutputEvent("/rest/jcr-service"));
-	   super(ID, TITLE, Images.MainMenu.WADL, new PreviewWadlOutputEvent());
+	   super(ID, TITLE, Images.MainMenu.GROOVY_OUTPUT, new PreviewWadlOutputEvent());
    }
 
    @Override

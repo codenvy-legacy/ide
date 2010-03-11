@@ -16,28 +16,26 @@
  */
 package org.exoplatform.ideall.client.wadl;
 
-import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.wadl.component.WadlResourcesTreeGrid;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -52,11 +50,11 @@ import com.smartgwt.client.widgets.tab.TabSet;
 */
 public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPresenter.Display
 {
-   private static final int WIDTH = 600;
+   private static final int WIDTH = 530;
 
    private static final int HEIGHT = 400;
 
-   private static final String TITLE = "Wadl Service";
+   private static final String TITLE = "REST Service output preview";
 
    private IButton sendRequestButton;
 
@@ -68,17 +66,13 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
 
    private VLayout vLayout;
 
-   private TextField pathField;
+   private SelectItem pathField;
 
-   private TextField methodField;
-
-   private WadlParameterEntryListGrid parametersPathGrid;
+   private SelectItem methodField;
 
    private TextField requestMediaTypeField;
 
    private TextField responseMediaTypeField;
-
-   private WadlResourcesTreeGrid wadlResourcesTreeGrid;
 
    private WadlParameterEntryListGrid parametersQueryGrid;
 
@@ -95,26 +89,16 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       vLayout.setMargin(2);
 
       hLayout = new HLayout();
-      hLayout.setMargin(5);
+      hLayout.setMargin(8);
       hLayout.setHeight("*");
 
       vLayout.addMember(hLayout);
 
       addItem(vLayout);
 
-      wadlResourcesTreeGrid = new WadlResourcesTreeGrid();
-      wadlResourcesTreeGrid.setWidth(150);
-      wadlResourcesTreeGrid.setHeight100();
-      wadlResourcesTreeGrid.setShowResizeBar(true);
-
-      hLayout.addMember(wadlResourcesTreeGrid);
-
       createParamsForm();
-
       createButtonsForm();
-      setShowMaximizeButton(true);
-      setCanDragResize(true);
-
+      
       show();
 
       presenter = new WadlServiceGetPresenter(eventBus, context, wadlApplication);
@@ -130,7 +114,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       });
 
    }
-
+   
    private Tab createParametersHeaderTab()
    {
       parameterHeaderGrid = new WadlParameterEntryListGrid();
@@ -151,12 +135,14 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       DynamicForm form = new DynamicForm();
       form.setWidth100();
       form.setHeight100();
+      form.setLayoutAlign(Alignment.CENTER);
+      form.setLayoutAlign(VerticalAlignment.CENTER);
       
       requestbody = new TextAreaItem();
       requestbody.setShowTitle(false);
 
-      requestbody.setWidth("350");
-      requestbody.setHeight("*");
+      requestbody.setWidth(465);
+      requestbody.setHeight("100%");
       requestbody.setValue("");
 
       form.setLayoutAlign(Alignment.CENTER);
@@ -181,63 +167,50 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       return queryTab;
    }
 
-   private Tab createParametersPathTab()
-   {
-      parametersPathGrid = new WadlParameterEntryListGrid();
-      parametersPathGrid.setHeight100();
-      parametersPathGrid.setCanEdit(true);
-
-      Tab pathTab = new Tab("Path Parameter");
-      pathTab.setPane(parametersPathGrid);
-
-      return pathTab;
-   }
-
    private TabSet createParametersTabSet()
    {
       TabSet parametersTabSet = new TabSet();
       parametersTabSet.setHeight100();
+      parametersTabSet.setLayoutAlign(Alignment.CENTER);
+      parametersTabSet.setWidth(480);
 
-      parametersTabSet.addTab(createParametersPathTab());
       parametersTabSet.addTab(createParametersQueryTab());
       parametersTabSet.addTab(createParametersHeaderTab());
       parametersTabSet.addTab(createBodyTab());
 
       return parametersTabSet;
    }
-
+   
    private void createParamsForm()
    {
-      TabSet paramsTabSet = new TabSet();
-      paramsTabSet.setTabBarPosition(Side.TOP);
-
-      Tab paramsTab = new Tab("Resource Parameters");
-
       DynamicForm form = new DynamicForm();
 
       VLayout vLay = new VLayout();
+      
+      vLay.setMargin(8);
+      vLay.setWidth(480);
+      vLay.setAlign(Alignment.CENTER);
 
       StaticTextItem pathTitle = new StaticTextItem();
       pathTitle.setColSpan(2);
       pathTitle.setShowTitle(false);
       pathTitle.setDefaultValue("Path:");
 
-      pathField = new TextField();
+      pathField = new SelectItem();
       pathField.setShowTitle(false);
+      pathField.setWidth(480);
       pathField.setColSpan(2);
-      pathField.setWidth("*");
-      pathField.setDisabled(true);
+      pathField.setType("comboBox");
 
       StaticTextItem methodTitle = new StaticTextItem();
       methodTitle.setColSpan(2);
       methodTitle.setShowTitle(false);
       methodTitle.setDefaultValue("Method:");
 
-      methodField = new TextField();
+      methodField = new SelectItem();
       methodField.setShowTitle(false);
+      methodField.setWidth(480);
       methodField.setColSpan(2);
-      methodField.setWidth("*");
-      methodField.setDisabled(true);
 
       StaticTextItem requestTitle = new StaticTextItem();
       requestTitle.setColSpan(2);
@@ -247,7 +220,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       requestMediaTypeField = new TextField();
       requestMediaTypeField.setShowTitle(false);
       requestMediaTypeField.setColSpan(2);
-      requestMediaTypeField.setWidth("*");
+      requestMediaTypeField.setWidth(480);
       requestMediaTypeField.setDisabled(true);
 
       StaticTextItem responseTitle = new StaticTextItem();
@@ -258,24 +231,22 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       responseMediaTypeField = new TextField();
       responseMediaTypeField.setShowTitle(false);
       responseMediaTypeField.setColSpan(2);
-      responseMediaTypeField.setWidth("*");
+      responseMediaTypeField.setWidth(480);
       responseMediaTypeField.setDisabled(true);
+      
+      SpacerItem spacer = new SpacerItem();
+      spacer.setHeight(5);
 
       form.setItems(pathTitle, pathField, methodTitle, methodField, requestTitle, requestMediaTypeField, responseTitle,
-         responseMediaTypeField);
+         responseMediaTypeField, spacer);
 
       vLay.addMember(form);
 
       vLay.addMember(createParametersTabSet());
 
-      paramsTab.setPane(vLay);
-
-      paramsTabSet.addTab(paramsTab);
-
-      hLayout.addMember(paramsTabSet);
-
+      hLayout.addMember(vLay);
    }
-
+   
    private void createButtonsForm()
    {
       DynamicForm buttonsForm = new DynamicForm();
@@ -303,7 +274,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       buttonsForm.setAutoWidth();
       vLayout.addMember(buttonsForm);
    }
-
+   
    public void closeForm()
    {
       destroy();
@@ -340,7 +311,19 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
    {
       return pathField;
    }
-
+   
+   public void setPaths(String[] paths)
+   {
+      pathField.clearValue();
+      pathField.setValueMap(paths);
+   }
+   
+   public void setMethods(String[] methods)
+   {
+      methodField.clearValue();
+      methodField.setValueMap(methods);
+   }
+   
    public HasValue<String> getRequestMediaTypeField()
    {
       return requestMediaTypeField;
@@ -349,16 +332,6 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
    public HasValue<String> getResponseMediaTypeField()
    {
       return responseMediaTypeField;
-   }
-
-   public WadlParameterEntryListGrid getParametersPathListGrid()
-   {
-      return parametersPathGrid;
-   }
-
-   public TreeGridItem<Resource> getWadlResourceTreeGrid()
-   {
-      return wadlResourcesTreeGrid;
    }
 
    public WadlParameterEntryListGrid getParametersHeaderListGrid()
@@ -376,8 +349,9 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       return requestbody;
    }
    
-   public void setBodyDisabled(boolean value) {
-	   requestbody.setDisabled(value);
+   public void setBodyDisabled(boolean value)
+   {
+      requestbody.setDisabled(value);
    }
 
 }
