@@ -19,6 +19,9 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
@@ -26,12 +29,14 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.Workspace;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
+
+import com.smartgwt.client.docs.Enable;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,7 +45,7 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class DeleteItemCommand extends SimpleCommand implements ItemSelectedHandler, ItemDeletedHandler,
+public class DeleteItemCommand extends SimpleCommand implements SelectedItemsHandler, ItemDeletedHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
@@ -60,7 +65,7 @@ public class DeleteItemCommand extends SimpleCommand implements ItemSelectedHand
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
@@ -74,9 +79,19 @@ public class DeleteItemCommand extends SimpleCommand implements ItemSelectedHand
       updateEnabling();
    }
 
-   public void onItemSelected(ItemSelectedEvent event)
+   public void onItemsSelected(SelectedItemsEvent event)
    {
-      selectedItem = event.getSelectedItem();
+      //      if (event.getSelectedItems().size() != 1)
+      //      {
+      //         setEnabled(false);
+      //         return;
+      //      }
+      if (!isItemsInSameFolder(event.getSelectedItems()))
+      {
+         setEnabled(false);
+         return;
+      }
+      selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
    }
 
@@ -122,4 +137,29 @@ public class DeleteItemCommand extends SimpleCommand implements ItemSelectedHand
       updateEnabling();
    }
 
+   public boolean isItemsInSameFolder(List<Item> items)
+   {
+      List<String> paths = new ArrayList<String>();
+      for (Item i : items)
+      {
+         String p = i.getPath();
+         p = p.substring(0, p.lastIndexOf("/"));
+         paths.add(p);
+
+      }
+
+      for (int i = 0; i < paths.size(); i++)
+      {
+         String path = paths.get(i);
+         for (int j = i + 1; j < paths.size(); j++)
+         {
+            if (!path.equals(paths.get(j)))
+            {
+               return false;
+            }
+         }
+      }
+
+      return true;
+   }
 }

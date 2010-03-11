@@ -114,6 +114,12 @@ public interface Images
 
       public static final String HIDE_LINE_NUMBERS = imageUrl + "edit/hideLineNumbers2.png";
       
+      public static final String COPY_FILE = imageUrl + "menu/editing/copy.png";
+      
+      public static final String CUT_FILE = imageUrl + "menu/editing/cut.png";
+      
+      public static final String PASTE_FILE = imageUrl + "menu/editing/paste.png";
+      
    }
    
    public interface ControlButtons

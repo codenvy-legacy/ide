@@ -16,12 +16,26 @@
  */
 package org.exoplatform.ideall.client.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
+import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,7 +44,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
  * @version @version $Id: $
  */
 
-public class DeleteItemPresenter
+public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler
 {
 
    public interface Display
@@ -42,15 +56,29 @@ public class DeleteItemPresenter
 
       void closeForm();
 
+      void hideForm();
+
    }
 
    private Display display;
+
+   private List<Item> items;
+
+   private ApplicationContext context;
    
-   private Item item;
- 
-   public DeleteItemPresenter(Item item)
+   private Handlers handlers;
+   
+   private HandlerManager eventBus;
+   
+   private Item lastDeletedItem;
+
+   public DeleteItemPresenter(HandlerManager eventBus, ApplicationContext context)
    {
-      this.item = item;
+      this.context = context;
+      this.eventBus = eventBus;
+      items = new ArrayList<Item>();
+      items.addAll(context.getSelectedItems());
+      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -69,15 +97,64 @@ public class DeleteItemPresenter
       {
          public void onClick(ClickEvent event)
          {
-            display.closeForm();
-            DataService.getInstance().deleteItem(item);
+            display.hideForm();
+            deleteNextItem();
          }
       });
+
+      handlers.addHandler(ItemDeletedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
    }
 
    public void destroy()
    {
+      handlers.removeHandlers();
+   }
+
+   private void deleteNextItem()
+   {
+      if (items.size() == 0)
+      {
+         display.closeForm();
+         deleteItemsComplete();
+         return;
+      }
+
+      Item item = items.get(0);
+      items.remove(0);
+      DataService.getInstance().deleteItem(item);
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      lastDeletedItem = event.getItem();
+      deleteNextItem();
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      display.closeForm();
+   }
+
+   private void deleteItemsComplete()
+   {
+      if (lastDeletedItem == null) {
+         return;
+      }
+      
+       String selectedItemPath = lastDeletedItem.getPath();
+      
+       selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
+      
+       Folder folder = new Folder(selectedItemPath);
+       DataService.getInstance().getFolderContent(folder.getPath());
+      
+       context.getSelectedItems().clear();
+       context.getSelectedItems().add(folder);
+      
+       eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
+       //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 
 }

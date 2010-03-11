@@ -25,8 +25,8 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.Workspace;
@@ -40,7 +40,7 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandler, ItemDeletedHandler,
+public class MoveItemCommand extends SimpleCommand implements SelectedItemsHandler, ItemDeletedHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
@@ -60,7 +60,7 @@ public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandle
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
@@ -74,9 +74,16 @@ public class MoveItemCommand extends SimpleCommand implements ItemSelectedHandle
       updateEnabling();
    }
 
-   public void onItemSelected(ItemSelectedEvent event)
+   public void onItemsSelected(SelectedItemsEvent event)
    {
-      selectedItem = event.getSelectedItem();
+      if(context.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      
+     // setEnabled(true);
+      selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
    }
 

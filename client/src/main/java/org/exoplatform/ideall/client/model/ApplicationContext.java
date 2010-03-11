@@ -19,6 +19,7 @@ package org.exoplatform.ideall.client.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
@@ -42,9 +43,9 @@ public class ApplicationContext
    private UserInfo userInfo;
 
    /**
-    * Selected file in browser
+    * Selected items in browser
     */
-   private Item selectedItem;
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * Current edited file
@@ -165,19 +166,11 @@ public class ApplicationContext
    }
 
    /**
-    * @return the selectedItem
+    * @return the selectedItems
     */
-   public Item getSelectedItem()
+   public List<Item> getSelectedItems()
    {
-      return selectedItem;
-   }
-
-   /**
-    * @param selectedItem the selectedItem to set
-    */
-   public void setSelectedItem(Item selectedItem)
-   {
-      this.selectedItem = selectedItem;
+      return selectedItems;
    }
 
    /**

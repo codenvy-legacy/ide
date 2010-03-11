@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,7 +37,7 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  */
 
 public class CreateFileFromTemplateCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler
+   BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -61,6 +63,7 @@ public class CreateFileFromTemplateCommand extends SimpleCommand implements Brow
    {
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
       addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -85,6 +88,20 @@ public class CreateFileFromTemplateCommand extends SimpleCommand implements Brow
    {
       browserPanelSelected = false;
       updateEnabling();
+   }
+
+   public void onItemsSelected(SelectedItemsEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         browserPanelSelected = false;
+         updateEnabling();
+      }
+      else
+      {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
    }
 
 }

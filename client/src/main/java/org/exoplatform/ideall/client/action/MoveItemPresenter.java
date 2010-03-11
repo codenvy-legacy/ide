@@ -21,6 +21,7 @@ import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
@@ -55,7 +56,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       HasClickHandlers getMoveButton();
 
       HasClickHandlers getCancelButton();
-      
+
       HasKeyPressHandlers getItemPathFieldKeyPressHandler();
 
       void closeForm();
@@ -83,7 +84,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
    {
       display = d;
 
-      display.getItemPathField().setValue(context.getSelectedItem().getPath());
+      display.getItemPathField().setValue(context.getSelectedItems().get(0).getPath());
 
       display.getMoveButton().addClickHandler(new ClickHandler()
       {
@@ -100,17 +101,18 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
             display.closeForm();
          }
       });
-      
-      display.getItemPathFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler() {
+
+      display.getItemPathFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
+      {
 
          public void onKeyPress(KeyPressEvent event)
          {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER) 
+            if (event.getCharCode() == KeyCodes.KEY_ENTER)
             {
-               move();            
-            }             
+               move();
+            }
          }
-         
+
       });
    }
 
@@ -121,15 +123,17 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    protected void move()
    {
+      Item item = context.getSelectedItems().get(0);
+
       String path = display.getItemPathField().getValue();
 
-      if (path.equals(context.getSelectedItem().getPath()))
+      if (path.equals(item.getPath()))
       {
          Dialogs.getInstance().showError("Can't move / rename resource!");
          return;
       }
 
-      String selectedItemPath = context.getSelectedItem().getPath();
+      String selectedItemPath = item.getPath();
       if (hasOpenedFiles(selectedItemPath))
       {
          Dialogs.getInstance().ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
@@ -138,7 +142,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
             {
                if (value != null && value == true)
                {
-                  saveNextOpenedFile(context.getSelectedItem().getPath());
+                  saveNextOpenedFile(context.getSelectedItems().get(0).getPath());
                }
             }
 
@@ -147,7 +151,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          return;
       }
 
-      DataService.getInstance().move(context.getSelectedItem(), path);
+      DataService.getInstance().move(item, path);
    }
 
    private boolean hasOpenedFiles(String path)
@@ -192,13 +196,13 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (saveNextOpenedFile(context.getSelectedItem().getPath()))
+      if (context.getSelectedItems().size() != 1 && saveNextOpenedFile(context.getSelectedItems().get(0).getPath()))
       {
          return;
       }
 
       String path = display.getItemPathField().getValue();
-      DataService.getInstance().move(context.getSelectedItem(), path);
+      DataService.getInstance().move(context.getSelectedItems().get(0), path);
    }
 
 }

@@ -20,17 +20,16 @@
 package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
+import org.exoplatform.ideall.client.common.command.edit.CopyCommand;
+import org.exoplatform.ideall.client.common.command.edit.CutCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.HideLineNumbersCommand;
+import org.exoplatform.ideall.client.common.command.edit.PasteCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadFile;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
@@ -42,6 +41,10 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateComma
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadFile;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
+import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewCSSFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewGadgetCommand;
@@ -81,7 +84,8 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
 
       addCommand(new OpenFileWithCommand()).disable().hide();
-      
+
+
       addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
 
       /*
@@ -93,7 +97,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       /*
        * END DOWNLOAD GROUP
        */
-      
+
       addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();
       addCommand(new SaveAllFilesCommand()).disable().hide().dockOnToolbar();
@@ -114,6 +118,12 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
+      /*
+       * COPY, CUT, PASTE COMMAND
+       */
+      addCommand(new CutCommand()).disable().hide().setDelimiterBefore();
+      addCommand(new CopyCommand()).disable().hide();
+      addCommand(new PasteCommand()).disable().hide();
 
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
       addCommand(new HideLineNumbersCommand()).disable().hide();

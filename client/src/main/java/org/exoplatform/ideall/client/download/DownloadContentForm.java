@@ -28,6 +28,7 @@ import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -77,14 +78,16 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
    private void downloadResource()
    {
-      String fileName = context.getSelectedItem().getPath();
+      Item item = context.getSelectedItems().get(0);
+      
+      String fileName = item.getPath();
       fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      if (!(context.getSelectedItem() instanceof File))
+      if (!(item instanceof File))
       {
          fileName += ".zip";
       }
 
-      String path = context.getSelectedItem().getPath();
+      String path = item.getPath();
 
       System.out.println("file name: [" + fileName + "]");
       System.out.println("path: [" + path + "]");

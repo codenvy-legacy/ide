@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.smartgwt.component.TreeGrid;
@@ -24,6 +25,7 @@ import org.exoplatform.ideall.client.model.Item;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
@@ -87,6 +89,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
 
+         System.out.println("ItemTreeGrid.doUpdateValue() select record");
          selectRecord(rootNode);
       }
 
@@ -254,4 +257,14 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       selectRecord(node);
    }
 
+   public List<Item> getSelectedItems() {
+      List<Item> selectedItems = new ArrayList<Item>();
+      
+      for (ListGridRecord record : getSelection()) {
+         selectedItems.add((Item)record.getAttributeAsObject(getValuePropertyName()));
+      }
+      
+      return selectedItems;      
+   }
+   
 }

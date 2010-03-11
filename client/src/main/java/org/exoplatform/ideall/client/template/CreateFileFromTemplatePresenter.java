@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
@@ -167,9 +168,11 @@ public class CreateFileFromTemplatePresenter
          Dialogs.getInstance().showError("You must enter file name the first!");
          return;
       }
-
-      String path = context.getSelectedItem().getPath();
-      if (context.getSelectedItem() instanceof File)
+      
+      Item item = context.getSelectedItems().get(0);
+      
+      String path = item.getPath();
+      if (item instanceof File)
       {
          path = path.substring(0, path.lastIndexOf("/"));
       }

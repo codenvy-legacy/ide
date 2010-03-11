@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,7 +37,7 @@ import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
  */
 
 public class CreateNewFolderCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler
+   BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -54,6 +56,7 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
    {
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
       addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
    }
 
    @Override
@@ -65,7 +68,7 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
 
    private void updateEnabling()
    {
-      if (browserPanelSelected)
+      if (browserPanelSelected )
       {
          setEnabled(true);
       }
@@ -85,6 +88,22 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
    {
       browserPanelSelected = false;
       updateEnabling();
+   }
+
+   public void onItemsSelected(SelectedItemsEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         browserPanelSelected = false;
+         updateEnabling();
+      }
+      else
+      {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
+
+      
    }
 
 }

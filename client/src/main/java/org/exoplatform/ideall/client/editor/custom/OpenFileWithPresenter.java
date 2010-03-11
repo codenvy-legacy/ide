@@ -133,7 +133,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    private void fillEditorsListGrid()
    {
 
-      String mimeType = ((File)context.getSelectedItem()).getContentType();
+      String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
 
       try
       {
@@ -152,11 +152,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
          context.setSelectedEditorDescriptor(selectedEditor.getDescription());
-         DataService.getInstance().getFileContent((File)context.getSelectedItem());
+         DataService.getInstance().getFileContent((File)context.getSelectedItems().get(0));
       }
       else
       {
-         String mimeType = ((File)context.getSelectedItem()).getContentType();
+         String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
          
          context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
          
@@ -172,7 +172,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void onApplicationContextSaved(ApplicationContextSavedEvent event)
    {
-      DataService.getInstance().getFileContent((File)context.getSelectedItem());
+      DataService.getInstance().getFileContent((File)context.getSelectedItems().get(0));
    }
 
 }

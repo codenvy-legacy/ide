@@ -25,6 +25,8 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 
 /**
@@ -35,7 +37,7 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
  */
 
 public class UploadFileCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler
+   BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
    private final static String ID = "File/Upload File...";
@@ -54,6 +56,7 @@ public class UploadFileCommand extends SimpleCommand implements BrowserPanelSele
    {
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
       addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
    }
 
    @Override
@@ -87,4 +90,17 @@ public class UploadFileCommand extends SimpleCommand implements BrowserPanelSele
       updateEnabling();
    }
 
+   public void onItemsSelected(SelectedItemsEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         browserPanelSelected = false;
+         updateEnabling();
+      }
+      else
+      {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
+   }
 }

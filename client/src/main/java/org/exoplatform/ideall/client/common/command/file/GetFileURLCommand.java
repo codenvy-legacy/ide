@@ -26,8 +26,8 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.Item;
 
 /**
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.model.Item;
  * @version $
  */
 
-public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHandler, BrowserPanelSelectedHandler,
+public class GetFileURLCommand extends SimpleCommand implements SelectedItemsHandler, BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler
 {
 
@@ -57,7 +57,7 @@ public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHand
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
       addHandler(BrowserPanelSelectedEvent.TYPE, this);
       addHandler(BrowserPanelDeselectedEvent.TYPE, this);
    }
@@ -69,9 +69,14 @@ public class GetFileURLCommand extends SimpleCommand implements ItemSelectedHand
       setEnabled(false);
    }
 
-   public void onItemSelected(ItemSelectedEvent event)
+   public void onItemsSelected(SelectedItemsEvent event)
    {
-      selectedItem = event.getSelectedItem();
+      if(event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
    }
 

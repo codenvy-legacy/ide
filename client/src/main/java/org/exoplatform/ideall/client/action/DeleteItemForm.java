@@ -16,9 +16,12 @@
  */
 package org.exoplatform.ideall.client.action;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -59,11 +62,18 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private DeleteItemPresenter presenter;
 
-   public DeleteItemForm(HandlerManager eventBus, Item item)
+   public DeleteItemForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, WIDTH, HEIGHT);
-      
-      prompt = "<br>Do you want to delete  <b>" + item.getPath() + "</b> ?";
+
+      if (context.getSelectedItems().size() == 1)
+      {
+         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems().get(0).getPath() + "</b> ?";
+      }
+      else
+      {
+         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems().size() + "</b> items?";
+      }
       setTitle("Delete Repository");
 
       hLayout = new HLayout();
@@ -83,7 +93,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
          }
       });
 
-      presenter = new DeleteItemPresenter(item);
+      presenter = new DeleteItemPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
 
@@ -165,6 +175,12 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    public void closeForm()
    {
       destroy();
+   }
+
+   public void hideForm()
+   {
+      hide();
+
    }
 
 }

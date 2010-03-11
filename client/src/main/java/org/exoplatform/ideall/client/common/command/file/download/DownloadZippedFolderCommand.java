@@ -22,8 +22,8 @@ package org.exoplatform.ideall.client.common.command.file.download;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
-import org.exoplatform.ideall.client.event.file.ItemSelectedHandler;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.Folder;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.model.Folder;
  * @version $
  */
 
-public class DownloadZippedFolderCommand extends SimpleCommand implements ItemSelectedHandler
+public class DownloadZippedFolderCommand extends SimpleCommand implements SelectedItemsHandler
 {
 
    private final static String ID = "File/Download/Download Zipped Folder";
@@ -57,18 +57,18 @@ public class DownloadZippedFolderCommand extends SimpleCommand implements ItemSe
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(ItemSelectedEvent.TYPE, this);
+      addHandler(SelectedItemsEvent.TYPE, this);
    }
 
-   public void onItemSelected(ItemSelectedEvent event)
+   public void onItemsSelected(SelectedItemsEvent event)
    {
-      if (!(event.getSelectedItem() instanceof Folder))
+      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
       {
          setEnabled(false);
          return;
       }
 
-      selectedFolder = (Folder)event.getSelectedItem();
+      selectedFolder = (Folder)event.getSelectedItems().get(0);
       setEnabled(true);
    }
 

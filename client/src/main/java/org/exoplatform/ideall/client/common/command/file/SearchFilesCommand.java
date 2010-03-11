@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.common.command.file;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.SimpleCommand;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,7 +32,7 @@ import org.exoplatform.ideall.client.event.file.SearchFileEvent;
  * @version $
  */
 
-public class SearchFilesCommand extends SimpleCommand
+public class SearchFilesCommand extends SimpleCommand implements SelectedItemsHandler
 {
 
    public SearchFilesCommand()
@@ -41,8 +43,21 @@ public class SearchFilesCommand extends SimpleCommand
    @Override
    protected void onRegisterHandlers()
    {
+      addHandler(SelectedItemsEvent.TYPE, this);
       setVisible(true);
       setEnabled(true);
+   }
+
+   public void onItemsSelected(SelectedItemsEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+      }
+      else
+      {
+         setEnabled(true);
+      }
    }
 
 }

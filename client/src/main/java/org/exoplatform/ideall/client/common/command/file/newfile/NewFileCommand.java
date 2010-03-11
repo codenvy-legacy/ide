@@ -47,5 +47,6 @@ public class NewFileCommand extends SimpleCommand
       setVisible(true);
       setEnabled(true);
    }
+   
 
 }

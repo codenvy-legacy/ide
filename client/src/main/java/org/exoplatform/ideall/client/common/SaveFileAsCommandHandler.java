@@ -83,7 +83,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
                return;
             }
 
-            String pathToSave = getFilePath(context.getSelectedItem()) + "/" + value;
+            String pathToSave = getFilePath(context.getSelectedItems().get(0)) + "/" + value;
 
             File newFile = new File(file.getPath());
             newFile.setContent(file.getContent());

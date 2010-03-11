@@ -189,7 +189,8 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
                else
                {
                   context.getPreloadFiles().clear();
-                  context.setSelectedItem(null);
+                  //context.setSelectedItem(null);
+                  context.getSelectedItems().clear();
                   context.setRepository(repository.getName());
                   context.setWorkspace(workspace.getName());
 

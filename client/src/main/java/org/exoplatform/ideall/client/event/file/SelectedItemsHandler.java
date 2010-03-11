@@ -16,9 +16,7 @@
  */
 package org.exoplatform.ideall.client.event.file;
 
-import org.exoplatform.ideall.client.model.Item;
-
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,33 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class ItemSelectedEvent extends GwtEvent<ItemSelectedHandler>
+public interface SelectedItemsHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<ItemSelectedHandler> TYPE = new GwtEvent.Type<ItemSelectedHandler>();
-
-   private Item selectedItem;
-
-   public ItemSelectedEvent(Item selectdItem)
-   {
-      this.selectedItem = selectdItem;
-   }
-
-   @Override
-   protected void dispatch(ItemSelectedHandler handler)
-   {
-      handler.onItemSelected(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   public Item getSelectedItem()
-   {
-      return selectedItem;
-   }
+   
+   void onItemsSelected(SelectedItemsEvent event);
 
 }

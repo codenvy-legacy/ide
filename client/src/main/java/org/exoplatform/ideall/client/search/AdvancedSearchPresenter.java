@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.data.DataService;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -182,21 +183,23 @@ public class AdvancedSearchPresenter
 
    private void getPathValue()
    {
+      Item item = context.getSelectedItems().get(0);
+      
       //if file was selected then delete it's name from path
-      if (context.getSelectedItem() instanceof File)
+      if (item instanceof File)
       {
-         String filePath = context.getSelectedItem().getPath();
-         String fileName = ((File)context.getSelectedItem()).getName();
+         String filePath = item.getPath();
+         String fileName = ((File)item).getName();
          int index = filePath.lastIndexOf(fileName);
          if (index > 0)
          {
-            // remove file's name plus dilimeter before it
+            // remove file's name plus delimiter before it
             path = filePath.substring(0, index - 1);
          }
       }
       else
       {
-         path = context.getSelectedItem().getPath();
+         path = item.getPath();
       }
    }
 

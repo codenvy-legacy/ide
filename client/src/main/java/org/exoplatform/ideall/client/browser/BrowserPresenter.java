@@ -17,8 +17,10 @@
 
 package org.exoplatform.ideall.client.browser;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -36,7 +38,7 @@ import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
@@ -64,6 +66,8 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -73,7 +77,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandler, FileContentSavedHandler,
+public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler
 {
@@ -82,6 +86,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    {
 
       TreeGridItem<Item> getBrowserTree();
+      
+      List<Item> getSelectedItems();
 
       void selectItem(String path);
 
@@ -98,6 +104,8 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    private String folderToUpdate;
 
    private String forlderToSelect;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -154,7 +162,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
          DataService.getInstance().getFolderContent(openedFolder.getPath());
       }
    }
-
+   
    /**
     * 
     * Handling item selected event from browser
@@ -162,28 +170,51 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
     */
    protected void onItemSelected(Item item)
    {
-      if (item == context.getSelectedItem())
-      {
-         return;
-      }
-
-      context.setSelectedItem(item);
-      eventBus.fireEvent(new ItemSelectedEvent(item));
+      updateSelectionTimer.cancel();
+      updateSelectionTimer.schedule(10);
+      
+//      System.out.println(" >>>> " + item.getPath());
+//      updateSelectionTimer.cancel();
+//      
+//      if (selectedItems.contains(item)) {
+//         selectedItems.remove(item);
+//      } else {
+//         selectedItems.add(item);
+//      }
+//      
+//      updateSelectionTimer.schedule(10);
    }
+   
+   private Timer updateSelectionTimer = new Timer() {
+
+      @Override
+      public void run()
+      {
+         selectedItems = display.getSelectedItems();
+         
+         context.getSelectedItems().clear();
+         context.getSelectedItems().addAll(selectedItems);
+         
+         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+      }
+      
+   };
 
    /**
     * Handling of mouse double clicking
     */
    protected void onBrowserDoubleClicked()
    {
-      if (context.getSelectedItem() == null)
+      if (context.getSelectedItems().size() != 1)
       {
          return;
       }
 
-      if (context.getSelectedItem() instanceof File)
+      Item item = selectedItems.get(0);
+      
+      if (item instanceof File)
       {
-         DataService.getInstance().getFileContent((File)context.getSelectedItem());
+         DataService.getInstance().getFileContent((File)item);
       }
    }
 
@@ -194,8 +225,13 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
     */
    public void onRefreshBrowser()
    {
-      String selectedItemPath = context.getSelectedItem().getPath();
-      if (context.getSelectedItem() instanceof File)
+      if (context.getSelectedItems().size() != 1)
+      {
+         return;
+      }
+      Item item = context.getSelectedItems().get(0);
+      String selectedItemPath = item.getPath();
+      if (item instanceof File)
       {
          selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
       }
@@ -231,10 +267,15 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
 
       Workspace workspace = new Workspace(path);
       workspace.setIcon(Images.FileTypes.WORKSPACE);
-      context.setSelectedItem(workspace);
+      
+      selectedItems.clear();
+      selectedItems.add(workspace);
+      context.getSelectedItems().clear();
+      context.getSelectedItems().add(workspace);
+      
       display.getBrowserTree().setValue(workspace);
 
-      eventBus.fireEvent(new ItemSelectedEvent(workspace));
+      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
 
       DataService.getInstance().getFolderContent(workspace.getPath());
    }
@@ -310,24 +351,30 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
     */
    public void onFolderCreated(FolderCreatedEvent event)
    {
+      if(context.getSelectedItems().size() != 1)
+      {
+         return;
+      }
+   
+      Item item = context.getSelectedItems().get(0);
       String path = event.getPath();
       forlderToSelect = path;
       path = path.substring(0, path.lastIndexOf("/"));
-      DataService.getInstance().getFolderContent(context.getSelectedItem().getPath());
+      DataService.getInstance().getFolderContent(item.getPath());
    }
 
-   /**
-    * Handling item deleted event.
-    * Browser should be refreshed.
-    * 
-    * @see org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent)
-    */
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      String path = event.getItem().getPath();
-      path = path.substring(0, path.lastIndexOf("/"));
-      DataService.getInstance().getFolderContent(path);
-   }
+//   /**
+//    * Handling item deleted event.
+//    * Browser should be refreshed.
+//    * 
+//    * @see org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent)
+//    */
+//   public void onItemDeleted(ItemDeletedEvent event)
+//   {
+//      String path = event.getItem().getPath();
+//      path = path.substring(0, path.lastIndexOf("/"));
+//      DataService.getInstance().getFolderContent(path);
+//   }
 
    /**
     * Handling item moved event.
@@ -375,7 +422,7 @@ public class BrowserPresenter implements FolderCreatedHandler, ItemDeletedHandle
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
       handlers.addHandler(FolderCreatedEvent.TYPE, this);
-      handlers.addHandler(ItemDeletedEvent.TYPE, this);
+      //handlers.addHandler(ItemDeletedEvent.TYPE, this);
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
 
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);

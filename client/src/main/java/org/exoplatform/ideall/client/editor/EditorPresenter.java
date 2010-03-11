@@ -63,7 +63,7 @@ import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.UndoEditingHandler;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
-import org.exoplatform.ideall.client.event.file.ItemSelectedEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -572,17 +572,6 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          }
       }
 
-      // set selectedItem on parent folder (fix of bug (WBT-231))
-      String selectedItemPath = context.getSelectedItem().getPath();
-
-      selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-
-      Folder folder = new Folder(selectedItemPath);
-      DataService.getInstance().getFolderContent(folder.getPath());
-
-      context.setSelectedItem(folder);
-
-      eventBus.fireEvent(new ItemSelectedEvent(folder));
 
       CookieManager.storeOpenedFiles(context);
    }

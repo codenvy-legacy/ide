@@ -26,6 +26,10 @@ import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
+import org.exoplatform.ideall.client.event.edit.CopyFileEvent;
+import org.exoplatform.ideall.client.event.edit.CopyFileHandler;
+import org.exoplatform.ideall.client.event.edit.CutFileEvent;
+import org.exoplatform.ideall.client.event.edit.CutFileHandler;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
@@ -52,6 +56,7 @@ import org.exoplatform.ideall.client.event.file.SearchFileHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.template.FileTemplates;
@@ -78,7 +83,7 @@ import com.google.gwt.user.client.Window.Location;
 public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
    CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
    SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler,
-   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler
+   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyFileHandler, CutFileHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -111,8 +116,11 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(HideLineNumbersEvent.TYPE, this);
 
       addHandler(GetFileURLEvent.TYPE, this);
-      
+
       addHandler(OpenFileWithEvent.TYPE, this);
+
+      addHandler(CopyFileEvent.TYPE, this);
+      addHandler(CutFileEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -125,10 +133,12 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
+      Item item = context.getSelectedItems().get(0);
+
       String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
 
-      String path = context.getSelectedItem().getPath();
-      if (context.getSelectedItem() instanceof File)
+      String path = item.getPath();
+      if (item instanceof File)
       {
          path = path.substring(0, path.lastIndexOf("/"));
       }
@@ -155,8 +165,11 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onUploadFile(UploadFileEvent event)
    {
-      String path = context.getSelectedItem().getPath();
-      if (context.getSelectedItem() instanceof File)
+
+      Item item = context.getSelectedItems().get(0);
+
+      String path = item.getPath();
+      if (item instanceof File)
       {
          path = path.substring(path.lastIndexOf("/"));
       }
@@ -166,8 +179,10 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onCreateFolder(CreateFolderEvent event)
    {
-      String path = context.getSelectedItem().getPath();
-      if (context.getSelectedItem() instanceof File)
+      Item item = context.getSelectedItems().get(0);
+      
+      String path = item.getPath();
+      if (item instanceof File)
       {
          path = path.substring(0, path.lastIndexOf("/"));
       }
@@ -177,7 +192,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onDeleteItem(DeleteItemEvent event)
    {
-      new DeleteItemForm(eventBus, context.getSelectedItem());
+      new DeleteItemForm(eventBus, context);
    }
 
    public void onMoveItem(MoveItemEvent event)
@@ -223,13 +238,25 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       String url = Location.getProtocol() + "//" + Location.getHost() +
       //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
-         Configuration.getInstance().getContext() + "/jcr" + context.getSelectedItem().getPath();
+         Configuration.getInstance().getContext() + "/jcr" + context.getSelectedItems().get(0).getPath();
       return url;
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)
    {
-      new OpenFileWithForm(eventBus, context);      
+      new OpenFileWithForm(eventBus, context);
+   }
+
+   public void onCopyFile(CopyFileEvent event)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   public void onCutFile(CutFileEvent event)
+   {
+      // TODO Auto-generated method stub
+
    }
 
 }
