@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -222,7 +223,7 @@ public class CustomizeToolbarPresenter
 
       for (Command command : context.getCommands())
       {
-         if (!(command instanceof SimpleCommand)) {
+         if (!(command instanceof SimpleCommand) && !(command instanceof PopupMenuCommand)) {
             continue;
          }
          

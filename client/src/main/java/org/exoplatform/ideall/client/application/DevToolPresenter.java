@@ -20,9 +20,12 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
@@ -87,6 +90,15 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationContextReceivedEvent.TYPE, this);
 
+      PopupMenuCommand popupMenuCommand = PopupMenuCommandBuilder.newCommand("File/New Item")
+         .prompt("New")
+         .icon(Images.MainMenu.NEW)
+         .show()
+         .enable()
+         .setDelimiterBefore()
+         .create();
+      context.getCommands().add(popupMenuCommand);
+
       /*
        * Intializing application components
        */
@@ -100,6 +112,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(context.getCommands()));
 
+      
       /*
        * Initializing handlers of menu items
        */
