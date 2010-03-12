@@ -65,7 +65,6 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
-      setEnabled(true);
       pastePrepere = true;
    }
 
