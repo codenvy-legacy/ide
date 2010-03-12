@@ -94,6 +94,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    private SaveAllFilesCommandHandler saveAllFilesCommandHandler;
 
    private GoToFolderCommandHandler goToFolderCommandHandler;
+   
+   private PasteItemsCommandHandler pasteItemsCommandHandler;
 
    public CommonActionsComponent()
    {
@@ -130,6 +132,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       saveFileAsCommandHandler = new SaveFileAsCommandHandler(eventBus, context);
       saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);
+      pasteItemsCommandHandler = new PasteItemsCommandHandler(eventBus, context);
    }
 
    public void onCreateNewFile(CreateNewFileEvent event)
