@@ -98,10 +98,11 @@ public class DownloadContentService implements Const, ResourceContainer
       {
          try
          {
-            if (element.contains(":"))
-            {
-               element = element.replaceAll(":", URLEncoder.encode(":", "UTF-8"));
-            }
+            //WBT:358
+//            if (element.contains(":"))
+//            {
+//               element = element.replaceAll(":", URLEncoder.encode(":", "UTF-8"));
+//            }
             if (element.contains("["))
             {
                element = element.replaceAll("\\[", URLEncoder.encode("[", "UTF-8"));
