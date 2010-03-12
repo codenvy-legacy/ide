@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 public class SaveFileAsCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "File/Save As...";
+   public static final String ID = "File/Save File As...";
 
    public static final String TITLE = "Save File As...";
 

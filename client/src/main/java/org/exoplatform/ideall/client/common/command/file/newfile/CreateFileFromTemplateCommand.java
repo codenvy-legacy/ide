@@ -42,7 +42,7 @@ public class CreateFileFromTemplateCommand extends IDECommand implements Browser
 
    private boolean browserPanelSelected = true;
 
-   private final static String ID = "File/New/From Template...";
+   private final static String ID = "File/New/Create File From Template...";
 
    public CreateFileFromTemplateCommand()
    {

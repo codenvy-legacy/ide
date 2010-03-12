@@ -17,10 +17,12 @@
 package org.exoplatform.ideall.client.toolbar.customize;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
@@ -214,23 +216,22 @@ public class CustomizeToolbarPresenter
 
    private void fillCommandListGrid()
    {
-//      List<CommandItemEx> commands = new ArrayList<CommandItemEx>();
-//
-//      List<String> groups = new ArrayList<String>();
-//
-//      for (Command command : context.getCommands())
-//      {
-//         if (!(command instanceof SimpleCommand)) {
-//            continue;
-//         }
-//         
-//         SimpleCommand simpleCommand = (SimpleCommand)command;
-//         
-//         String commandId = simpleCommand.getId();
-//         if (commandId.indexOf("/") >= 0) {
-//            commandId = commandId.substring(commandId.lastIndexOf("/"));
-//         }
-//         
+      List<CommandItemEx> commands = new ArrayList<CommandItemEx>();
+
+      List<String> groups = new ArrayList<String>();
+
+      for (Command command : context.getCommands())
+      {
+         if (!(command instanceof SimpleCommand)) {
+            continue;
+         }
+         
+         String commandId = command.getId();
+         System.out.println("command > " + commandId);
+         if (commandId.indexOf("/") >= 0) {
+            commandId = commandId.substring(commandId.lastIndexOf("/"));
+         }
+         
 //         if (simpleCommand.getTitle() != null)
 //         {
 //            String groupName = simpleCommand.getId();
@@ -250,9 +251,9 @@ public class CustomizeToolbarPresenter
 //               commands.add(new CommandItemEx(command.getTitle(), command));
 //            }
 //         }
-//      }
-//
-//      display.getCommandItemListGrid().setValue(commands);
+      }
+
+      display.getCommandItemListGrid().setValue(commands);
    }
 
    private Command getCommandById(String id)

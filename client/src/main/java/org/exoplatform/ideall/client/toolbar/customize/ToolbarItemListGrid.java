@@ -90,7 +90,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       {
          String commandId = item.getCommand().getId();
          if (commandId.indexOf("/") >= 0) {
-            commandId = commandId.substring(commandId.lastIndexOf("/"));
+            commandId = commandId.substring(commandId.lastIndexOf("/") + 1);
          }
          
          String title =

@@ -42,7 +42,7 @@ public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSe
 
    private boolean browserPanelSelected = true;
 
-   private final static String ID = "File/New/Folder...";
+   private final static String ID = "File/New/Create Folder...";
 
    public CreateNewFolderCommand()
    {

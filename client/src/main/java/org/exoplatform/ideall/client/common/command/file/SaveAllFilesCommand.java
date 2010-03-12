@@ -38,7 +38,7 @@ import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
 public class SaveAllFilesCommand extends IDECommand implements FileContentChangedHandler, FileContentSavedHandler
 {
 
-   public static final String ID = "File/Save All";
+   public static final String ID = "File/Save All Files";
 
    public static final String TITLE = "Save All Files";
 

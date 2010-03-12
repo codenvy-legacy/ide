@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
 public class SaveFileAsTemplateCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "File/Save As Template...";
+   public static final String ID = "File/Save File As Template...";
 
    public static final String TITLE = "Save File As Template...";
 
