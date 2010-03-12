@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
  * @version $
  */
 
-public class DeployGroovyCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class DeployGroovyCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
    
    private static final String ID = "Run/Deploy";
@@ -42,7 +42,11 @@ public class DeployGroovyCommand extends SimpleCommand implements EditorActiveFi
 
    public DeployGroovyCommand()
    {
-      super(ID, TITLE, Images.MainMenu.DEPLOY, new DeployGroovyScriptEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.DEPLOY);
+      setEvent(new DeployGroovyScriptEvent());
    }
 
    @Override

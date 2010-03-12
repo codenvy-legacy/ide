@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
@@ -41,20 +41,28 @@ import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesCh
  * @version $
  */
 
-public class SaveFileCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
-   ItemPropertiesSavedHandler, FileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
+public class SaveFileCommand extends IDECommand implements EditorActiveFileChangedHandler, ItemPropertiesSavedHandler,
+   FileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
 {
+
+   public static final String ID = "File/Save";
+
+   public static final String TITLE = "Save File";
 
    public SaveFileCommand()
    {
-      super("File/Save", "Save File", Images.MainMenu.SAVE, new SaveFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.SAVE);
+      setEvent(new SaveFileEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       setVisible(true);
-      
+
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(ItemPropertiesSavedEvent.TYPE, this);
       addHandler(FileContentChangedEvent.TYPE, this);
@@ -113,18 +121,24 @@ public class SaveFileCommand extends SimpleCommand implements EditorActiveFileCh
 
    public void onFileContentChanged(FileContentChangedEvent event)
    {
-      if (event.getFile().isNewFile()) {
+      if (event.getFile().isNewFile())
+      {
          setEnabled(false);
-      } else {
+      }
+      else
+      {
          setEnabled(true);
-      }      
+      }
    }
 
    public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
    {
-      if (event.getFile().isNewFile()) {
+      if (event.getFile().isNewFile())
+      {
          setEnabled(false);
-      } else {
+      }
+      else
+      {
          setEnabled(true);
       }
    }

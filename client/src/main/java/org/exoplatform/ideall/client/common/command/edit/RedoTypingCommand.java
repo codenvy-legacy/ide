@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
@@ -38,13 +38,21 @@ import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler
  * @version $
  */
 
-public class RedoTypingCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
+public class RedoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
    FileContentChangedHandler, FileCreatedHandler, FileContentReceivedHandler
 {
+   
+   public static final String ID = "Edit/Redo Typing";
+   
+   public static final String TITLE = "Redo Typing";
 
    public RedoTypingCommand()
    {
-      super("Edit/Redo Typing", "Redo Typing", Images.Edit.REDO, new RedoEditingEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.REDO);
+      setEvent(new RedoEditingEvent());
    }
 
    @Override

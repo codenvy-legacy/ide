@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
@@ -32,13 +32,20 @@ import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
  * @version $
  */
 
-public class SaveFileAsTemplateCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class SaveFileAsTemplateCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
+
+   public static final String ID = "File/Save As Template...";
+
+   public static final String TITLE = "Save File As Template...";
 
    public SaveFileAsTemplateCommand()
    {
-      super("File/Save As Template...", "Save File As Template...", Images.MainMenu.SAVE_AS_TEMPLATE,
-         new SaveAsTemplateEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.SAVE_AS_TEMPLATE);
+      setEvent(new SaveAsTemplateEvent());
    }
 
    @Override

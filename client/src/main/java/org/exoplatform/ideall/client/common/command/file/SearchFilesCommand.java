@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -32,12 +32,20 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class SearchFilesCommand extends SimpleCommand implements SelectedItemsHandler
+public class SearchFilesCommand extends IDECommand implements SelectedItemsHandler
 {
+
+   public static final String ID = "File/Search...";
+
+   public static final String TITLE = "Search...";
 
    public SearchFilesCommand()
    {
-      super("File/Search...", "Search...", Images.MainMenu.SEARCH, new SearchFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.SEARCH);
+      setEvent(new SearchFileEvent());
    }
 
    @Override

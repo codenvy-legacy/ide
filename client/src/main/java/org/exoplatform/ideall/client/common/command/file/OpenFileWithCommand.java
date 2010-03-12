@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.model.File;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends SimpleCommand implements SelectedItemsHandler
+public class OpenFileWithCommand extends IDECommand implements SelectedItemsHandler
 {
    public static final String ID = "File/Open With...";
 
@@ -38,7 +38,11 @@ public class OpenFileWithCommand extends SimpleCommand implements SelectedItemsH
    
    public OpenFileWithCommand()
    {
-      super(ID, TITLE, Images.MainMenu.OPENWITH, new OpenFileWithEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.OPENWITH);
+      setEvent(new OpenFileWithEvent());
    }
    
    @Override

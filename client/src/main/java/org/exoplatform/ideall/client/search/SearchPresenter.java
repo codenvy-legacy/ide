@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.search;
 
-import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.data.DataService;
 
 import com.google.gwt.event.dom.client.ClickEvent;

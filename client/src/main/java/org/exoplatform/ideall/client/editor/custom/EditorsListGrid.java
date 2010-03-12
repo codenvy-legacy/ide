@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.editor.custom;
 
 import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.grid.ListGridField;

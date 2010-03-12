@@ -16,13 +16,10 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

@@ -35,11 +35,13 @@ public class NewCSSFileCommand extends AbstractNewFileCommand
 
    private static final String ID = "File/New/CSS file";
 
-   private static final String TITLE = "Create New CSS File";
-
    public NewCSSFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.CSS, new CreateNewFileEvent(MimeType.TEXT_CSS));
+      super(ID, 
+         "CSS file",
+         "Create New CSS File", 
+         Images.FileTypes.CSS,
+         new CreateNewFileEvent(MimeType.TEXT_CSS));
    }
 
 }

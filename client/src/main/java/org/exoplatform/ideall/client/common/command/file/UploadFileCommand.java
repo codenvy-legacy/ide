@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
  * @version $
  */
 
-public class UploadFileCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+public class UploadFileCommand extends IDECommand implements BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
@@ -48,7 +48,11 @@ public class UploadFileCommand extends SimpleCommand implements BrowserPanelSele
 
    public UploadFileCommand()
    {
-      super(ID, TITLE, Images.MainMenu.UPLOAD, new UploadFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.UPLOAD);
+      setEvent(new UploadFileEvent());
    }
 
    @Override

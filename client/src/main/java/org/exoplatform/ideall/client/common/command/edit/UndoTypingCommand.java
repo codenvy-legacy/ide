@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
@@ -38,13 +38,21 @@ import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler
  * @version $
  */
 
-public class UndoTypingCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
+public class UndoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
    FileContentChangedHandler, FileCreatedHandler, FileContentReceivedHandler
 {
+   
+   public static final String ID = "Edit/Undo Typing";
+   
+   public static final String TITLE = "Undo Typing";
 
    public UndoTypingCommand()
    {
-      super("Edit/Undo Typing", "Undo Typing", Images.Edit.UNDO, new UndoEditingEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.UNDO);
+      setEvent(new UndoEditingEvent());
    }
 
    @Override

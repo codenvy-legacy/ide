@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.edit.CutFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -27,7 +27,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CutCommand extends SimpleCommand implements SelectedItemsHandler
+public class CutCommand extends IDECommand implements SelectedItemsHandler
 {
 
    private static final String ID = "Edit/Cut File(s)";
@@ -36,7 +36,11 @@ public class CutCommand extends SimpleCommand implements SelectedItemsHandler
 
    public CutCommand()
    {
-      super(ID, TITLE, Images.Edit.CUT_FILE, new CutFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.CUT_FILE);
+      setEvent(new CutFileEvent());
    }
 
    @Override
@@ -56,4 +60,5 @@ public class CutCommand extends SimpleCommand implements SelectedItemsHandler
    {
       setEnabled(true);
    }
+
 }

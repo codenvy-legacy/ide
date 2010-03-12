@@ -18,18 +18,16 @@ package org.exoplatform.ideall.client.gadgets;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DeployGadgetCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class DeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
    
    private static final String ID = "Run/Deploy Gadget";
@@ -38,7 +36,11 @@ public class DeployGadgetCommand extends SimpleCommand implements EditorActiveFi
 
    public DeployGadgetCommand()
    {
-      super(ID, TITLE, Images.MainMenu.DEPLOY, new DeployGadgetEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.DEPLOY);
+      setEvent(new DeployGadgetEvent());
    }
    
    @Override

@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.download;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.file.DownloadFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -33,18 +33,20 @@ import org.exoplatform.ideall.client.model.File;
  * @version $
  */
 
-public class DownloadFileCommand extends SimpleCommand implements SelectedItemsHandler
+public class DownloadFileCommand extends IDECommand implements SelectedItemsHandler
 {
 
    private final static String ID = "File/Download/Download File...";
 
    private final static String TITLE = "Download File";
 
-   private File selectedFile;
-
    public DownloadFileCommand()
    {
-      super(ID, TITLE, Images.MainMenu.DOWNLOAD, new DownloadFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.DOWNLOAD);
+      setEvent(new DownloadFileEvent());
    }
 
    @Override
@@ -68,9 +70,7 @@ public class DownloadFileCommand extends SimpleCommand implements SelectedItemsH
          return;
       }
 
-      selectedFile = (File)event.getSelectedItems().get(0);
       setEnabled(true);
-
    }
 
 }

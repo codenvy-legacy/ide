@@ -20,14 +20,14 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.Workspace;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
@@ -40,7 +40,7 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class MoveItemCommand extends SimpleCommand implements SelectedItemsHandler, ItemDeletedHandler,
+public class MoveItemCommand extends IDECommand implements SelectedItemsHandler, ItemDeletedHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
@@ -54,7 +54,11 @@ public class MoveItemCommand extends SimpleCommand implements SelectedItemsHandl
 
    public MoveItemCommand()
    {
-      super(ID, TITLE, Images.MainMenu.MOVE, new MoveItemEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.MOVE);
+      setEvent(new MoveItemEvent());
    }
 
    @Override
@@ -76,13 +80,13 @@ public class MoveItemCommand extends SimpleCommand implements SelectedItemsHandl
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if(context.getSelectedItems().size() != 1)
+      if (context.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;
       }
-      
-     // setEnabled(true);
+
+      // setEnabled(true);
       selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
    }

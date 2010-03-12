@@ -35,11 +35,13 @@ public class NewXMLFileCommand extends AbstractNewFileCommand
 
    private final static String ID = "File/New/XML File";
 
-   private final static String TITLE = "Create New XML File";
-
    public NewXMLFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML));
+      super(ID,
+         "XML File",
+         "Create New XML File",
+         Images.FileTypes.XML,
+         new CreateNewFileEvent(MimeType.TEXT_XML));
    }
 
 }

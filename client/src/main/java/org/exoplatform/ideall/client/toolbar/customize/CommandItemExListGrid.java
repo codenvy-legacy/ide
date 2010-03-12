@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
@@ -49,7 +49,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    {
       setCanSort(false);
       setCanGroupBy(false);
-      setCanFocus(false);      
+      setCanFocus(false);
       setSelectionType(SelectionStyle.SINGLE);
 
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
@@ -76,9 +76,13 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       }
       else
       {
-         String title =
-            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + item.getCommand().getTitle()
-               + "</span>";
+         String commandId = item.getCommand().getId();
+         if (commandId.indexOf("/") >= 0)
+         {
+            commandId = commandId.substring(commandId.lastIndexOf("/"));
+         }
+
+         String title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandId + "</span>";
          record.setAttribute(TITLE, title);
       }
 

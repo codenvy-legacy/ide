@@ -25,7 +25,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
@@ -52,8 +52,6 @@ import org.exoplatform.ideall.client.model.data.event.FolderContentReceivedEvent
 import org.exoplatform.ideall.client.model.data.event.FolderContentReceivedHandler;
 import org.exoplatform.ideall.client.model.data.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.data.event.FolderCreatedHandler;
-import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.model.data.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.data.event.MoveCompleteHandler;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
@@ -67,7 +65,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.

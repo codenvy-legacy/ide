@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+public class CreateFileFromTemplateCommand extends IDECommand implements BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
@@ -48,7 +48,11 @@ public class CreateFileFromTemplateCommand extends SimpleCommand implements Brow
 
    public CreateFileFromTemplateCommand()
    {
-      super(ID, TITLE, Images.MainMenu.TEMPLATES, new CreateFileFromTemplateEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.TEMPLATES);
+      setEvent(new CreateFileFromTemplateEvent());
    }
 
    @Override

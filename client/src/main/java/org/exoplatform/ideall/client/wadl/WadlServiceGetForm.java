@@ -17,10 +17,10 @@
 package org.exoplatform.ideall.client.wadl;
 
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.smartgwt.component.SelectItem;
-import org.exoplatform.gwtframework.ui.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;

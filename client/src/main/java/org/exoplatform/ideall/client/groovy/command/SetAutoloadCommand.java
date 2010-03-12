@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.GroovyPropertyUtil;
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler
  * @version $
  */
 
-public class SetAutoloadCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
+public class SetAutoloadCommand extends IDECommand implements EditorActiveFileChangedHandler,
    ItemPropertiesSavedHandler
 {
 
@@ -47,13 +47,17 @@ public class SetAutoloadCommand extends SimpleCommand implements EditorActiveFil
 
    public SetAutoloadCommand()
    {
-      super(ID, TITLE, Images.MainMenu.SET_AUTOLOAD, new SetAutoloadEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.SET_AUTOLOAD);
+      setEvent(new SetAutoloadEvent());
    }
 
    /**
     * Initializing handlers
     * 
-    * @see org.exoplatform.ideall.client.application.component.SimpleCommand#onRegisterHandlers()
+    * @see org.exoplatform.ideall.client.application.component.IDECommand#onRegisterHandlers()
     */
    @Override
    protected void onRegisterHandlers()

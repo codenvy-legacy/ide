@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
@@ -88,8 +88,13 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    {
       if (item.getType() == ToolbarItem.Type.COMMAND)
       {
+         String commandId = item.getCommand().getId();
+         if (commandId.indexOf("/") >= 0) {
+            commandId = commandId.substring(commandId.lastIndexOf("/"));
+         }
+         
          String title =
-            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + item.getCommand().getTitle()
+            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandId
                + "</span>";
          record.setAttribute(TOOLBAR, title);
       }

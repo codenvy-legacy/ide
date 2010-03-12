@@ -35,11 +35,13 @@ public class NewHTMLFileCommand extends AbstractNewFileCommand
 
    private static final String ID = "File/New/HTML file";
 
-   private static final String TITLE = "Create New HTML File";
-
    public NewHTMLFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML));
+      super(ID,
+         "HTML File",
+         "Create New HTML File",
+         Images.FileTypes.HTML,
+         new CreateNewFileEvent(MimeType.TEXT_HTML));
    }
 
 }

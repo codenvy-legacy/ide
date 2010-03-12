@@ -35,11 +35,13 @@ public class NewGroovyFileCommand extends AbstractNewFileCommand
 
    private static final String ID = "File/New/GROOVY file";
 
-   private static final String TITLE = "Create New Groovy File";
-
    public NewGroovyFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.GROOVY, new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
+      super(ID,
+         "Groovy File",
+         "Create New Groovy File",
+         Images.FileTypes.GROOVY,
+         new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
    }
 
 }

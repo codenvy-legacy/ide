@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
@@ -28,7 +28,6 @@ import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHand
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -40,7 +39,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class SimpleCommand extends Command implements RegisterEventHandlersHandler, InitializeApplicationHandler
+public class IDECommand extends SimpleCommand implements RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    protected HandlerManager eventBus;
@@ -53,9 +52,9 @@ public class SimpleCommand extends Command implements RegisterEventHandlersHandl
 
    private HandlerRegistration initializeApplicationHandler;
 
-   protected SimpleCommand(String id, String title, String icon, GwtEvent<?> event)
+   protected IDECommand(String id)
    {
-      super(id, title, icon, event);
+      super(id);
    }
 
    public final void initialize(HandlerManager eventBus, ApplicationContext context)

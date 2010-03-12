@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
  * @version $
  */
 
-public class GoToFolderCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class GoToFolderCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "File/Go to Folder";
@@ -41,7 +41,11 @@ public class GoToFolderCommand extends SimpleCommand implements EditorActiveFile
 
    public GoToFolderCommand()
    {
-      super(ID, TITLE, Images.MainMenu.GOTOFOLDER, new GoToFolderEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.GOTOFOLDER);
+      setEvent(new GoToFolderEvent());
    }
 
    @Override
@@ -59,11 +63,12 @@ public class GoToFolderCommand extends SimpleCommand implements EditorActiveFile
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null) {
+      if (event.getFile() == null)
+      {
          setEnabled(false);
          return;
       }
-      
+
       setEnabled(true);
    }
 

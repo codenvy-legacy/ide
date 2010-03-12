@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 

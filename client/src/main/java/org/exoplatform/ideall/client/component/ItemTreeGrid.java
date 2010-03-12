@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.smartgwt.component.TreeGrid;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ideall.client.model.Folder;
 import org.exoplatform.ideall.client.model.Item;
 

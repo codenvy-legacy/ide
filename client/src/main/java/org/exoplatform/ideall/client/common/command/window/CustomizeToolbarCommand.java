@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
 /**
@@ -30,13 +30,20 @@ import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEve
  * @version $
  */
 
-public class CustomizeToolbarCommand extends SimpleCommand
+public class CustomizeToolbarCommand extends IDECommand
 {
+   
+   public static final String ID = "Window/Customize Toolbar...";
+   
+   public static final String TITLE = "Customize Toolbar...";
 
    public CustomizeToolbarCommand()
    {
-      super("Window/Customize Toolbar...", "Customize Toolbar...", Images.MainMenu.CUSTOMIZE_TOOLBAR,
-         new CustomizeToolbarEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.CUSTOMIZE_TOOLBAR);
+      setEvent(new CustomizeToolbarEvent());
    }
 
    @Override

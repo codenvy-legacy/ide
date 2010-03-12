@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,8 +36,6 @@ import org.exoplatform.ideall.client.model.Workspace;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
 
-import com.smartgwt.client.docs.Enable;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -45,7 +43,7 @@ import com.smartgwt.client.docs.Enable;
  * @version $
  */
 
-public class DeleteItemCommand extends SimpleCommand implements SelectedItemsHandler, ItemDeletedHandler,
+public class DeleteItemCommand extends IDECommand implements SelectedItemsHandler, ItemDeletedHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
@@ -59,7 +57,11 @@ public class DeleteItemCommand extends SimpleCommand implements SelectedItemsHan
 
    public DeleteItemCommand()
    {
-      super(ID, TITLE, Images.MainMenu.DELETE, new DeleteItemEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.DELETE);
+      setEvent(new DeleteItemEvent());
    }
 
    @Override

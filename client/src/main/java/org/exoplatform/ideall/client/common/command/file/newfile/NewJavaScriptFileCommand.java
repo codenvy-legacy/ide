@@ -35,11 +35,13 @@ public class NewJavaScriptFileCommand extends AbstractNewFileCommand
 
    private static final String ID = "File/New/Java Script file";
 
-   private static final String TITLE = "Create New Java Script File";
-
    public NewJavaScriptFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
+      super(ID,
+         "JavaScript File",
+         "Create New Java Script File",
+         Images.FileTypes.JAVASCRIPT,
+         new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT));
    }
 
 }

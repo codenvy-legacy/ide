@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
@@ -26,7 +26,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteCommand extends SimpleCommand implements SelectedItemsHandler
+public class PasteCommand extends IDECommand implements SelectedItemsHandler
 {
    private static final String ID = "Edit/Paste File(s)";
 
@@ -34,7 +34,10 @@ public class PasteCommand extends SimpleCommand implements SelectedItemsHandler
 
    public PasteCommand()
    {
-      super(ID, TITLE, Images.Edit.PASTE_FILE, null);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.PASTE_FILE);
    }
 
    @Override
@@ -54,5 +57,5 @@ public class PasteCommand extends SimpleCommand implements SelectedItemsHandler
    {
        setEnabled(true);     
    }
+   
 }
- 

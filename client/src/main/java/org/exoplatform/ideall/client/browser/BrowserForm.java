@@ -17,10 +17,9 @@
 
 package org.exoplatform.ideall.client.browser;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
@@ -32,9 +31,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 
 public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Display
 {

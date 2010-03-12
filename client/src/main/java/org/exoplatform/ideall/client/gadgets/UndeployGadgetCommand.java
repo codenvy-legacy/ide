@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.gadgets;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class UndeployGadgetCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class UndeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/UnDeploy Gadget";
@@ -37,7 +37,11 @@ public class UndeployGadgetCommand extends SimpleCommand implements EditorActive
    
    public UndeployGadgetCommand()
    {
-      super(ID, TITLE, Images.MainMenu.UNDEPLOY, new UndeployGadgetEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.UNDEPLOY);
+      setEvent(new UndeployGadgetEvent());
    }
    
    @Override

@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
 
 /**
@@ -30,12 +30,20 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
  * @version $
  */
 
-public class SelectWorkspaceCommand extends SimpleCommand
+public class SelectWorkspaceCommand extends IDECommand
 {
+
+   public static final String ID = "Window/Workspace...";
+
+   public static final String TITLE = "Select Workspace...";
 
    public SelectWorkspaceCommand()
    {
-      super("Window/Workspace...", "Select Workspace...", Images.BrowserPanel.ICON, new SelectWorkspaceEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.BrowserPanel.ICON);
+      setEvent(new SelectWorkspaceEvent());
    }
 
 }

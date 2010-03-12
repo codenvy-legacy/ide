@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class RefreshBrowserCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+public class RefreshBrowserCommand extends IDECommand implements BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
@@ -48,7 +48,11 @@ public class RefreshBrowserCommand extends SimpleCommand implements BrowserPanel
 
    public RefreshBrowserCommand()
    {
-      super(ID, TITLE, Images.MainMenu.REFRESH, new RefreshBrowserEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.REFRESH);
+      setEvent(new RefreshBrowserEvent());
    }
 
    @Override
@@ -92,7 +96,7 @@ public class RefreshBrowserCommand extends SimpleCommand implements BrowserPanel
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if(event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() != 1)
       {
          browserPanelSelected = false;
          updateEnabling();

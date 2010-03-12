@@ -33,13 +33,15 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewGadgetCommand extends AbstractNewFileCommand
 {
 
-   private static final String ID = "File/New/Google Gadget";
-
-   private static final String TITLE = "Create New Google Gadget";
-
+   private static final String ID = "File/New/New Google Gadget";
+   
    public NewGadgetCommand()
    {
-      super(ID, TITLE, Images.FileTypes.GADGET, new CreateNewFileEvent(MimeType.GOOGLE_GADGET));
+      super(ID,
+         "Google Gadget",
+         "Create New Google Gadget",
+         Images.FileTypes.GADGET,
+         new CreateNewFileEvent(MimeType.GOOGLE_GADGET));
    }
 
 }

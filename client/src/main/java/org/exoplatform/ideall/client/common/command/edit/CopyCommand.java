@@ -17,8 +17,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.edit.CopyFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -28,7 +27,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CopyCommand extends SimpleCommand implements SelectedItemsHandler
+public class CopyCommand extends IDECommand implements SelectedItemsHandler
 {
 
    private static final String ID = "Edit/Copy File(s)";
@@ -37,7 +36,11 @@ public class CopyCommand extends SimpleCommand implements SelectedItemsHandler
 
    public CopyCommand()
    {
-      super(ID, TITLE, Images.Edit.COPY_FILE, new CopyFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.COPY_FILE);
+      setEvent(new CopyFileEvent());
    }
 
    @Override

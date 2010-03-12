@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;

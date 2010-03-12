@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
@@ -32,12 +32,20 @@ import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEv
  * @version $
  */
 
-public class ViewItemPropertiesCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class ViewItemPropertiesCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
+
+   public static final String ID = "View/Properties";
+
+   public static final String TITLE = "Show Properties";
 
    public ViewItemPropertiesCommand()
    {
-      super("View/Properties", "Show Properties", Images.MainMenu.PROPERTIES, new ShowPropertiesEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.PROPERTIES);
+      setEvent(new ShowPropertiesEvent());
    }
 
    @Override
@@ -56,7 +64,7 @@ public class ViewItemPropertiesCommand extends SimpleCommand implements EditorAc
       }
 
       setVisible(true);
-      
+
       if (event.getFile().isNewFile())
       {
          setEnabled(false);

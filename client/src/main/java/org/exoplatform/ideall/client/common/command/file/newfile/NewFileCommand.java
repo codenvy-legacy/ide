@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,7 +29,7 @@ import org.exoplatform.ideall.client.application.component.SimpleCommand;
  * @version $
  */
 
-public class NewFileCommand extends SimpleCommand
+public class NewFileCommand extends IDECommand
 {
 
    public static final String ID = "File/New";
@@ -38,7 +38,10 @@ public class NewFileCommand extends SimpleCommand
 
    public NewFileCommand()
    {
-      super(ID, TITLE, Images.MainMenu.NEW, null);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.NEW);
    }
 
    @Override
@@ -47,6 +50,5 @@ public class NewFileCommand extends SimpleCommand
       setVisible(true);
       setEnabled(true);
    }
-   
 
 }

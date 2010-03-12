@@ -20,10 +20,10 @@
 package org.exoplatform.ideall.client.application.perspective;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.event.LockIFrameElementsEvent;
-import org.exoplatform.gwtframework.ui.event.UnlockIFrameElementsEvent;
-import org.exoplatform.gwtframework.ui.smartgwt.GWTMenuWrapper;
-import org.exoplatform.gwtframework.ui.smartgwt.GWTToolbarWrapper;
+import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
+import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
+import org.exoplatform.gwtframework.ui.client.smartgwt.GWTMenuWrapper;
+import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;

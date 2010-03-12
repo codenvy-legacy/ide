@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.wadl.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.wadl.event.PreviewWadlOutputEvent;
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.wadl.event.PreviewWadlOutputEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PreviewWadlOutputCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class PreviewWadlOutputCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
    private static final String ID = "Run/Wadl";
 
@@ -36,7 +36,12 @@ public class PreviewWadlOutputCommand extends SimpleCommand implements EditorAct
 
    public PreviewWadlOutputCommand()
    {
-	   super(ID, TITLE, Images.MainMenu.GROOVY_OUTPUT, new PreviewWadlOutputEvent());
+      super(ID);
+      setTitle(TITLE);
+      setIcon(Images.MainMenu.GROOVY_OUTPUT);
+      setEvent(new PreviewWadlOutputEvent());
+
+      //super(ID, TITLE, Images.MainMenu.GROOVY_OUTPUT, new PreviewWadlOutputEvent());
    }
 
    @Override

@@ -17,14 +17,14 @@
 package org.exoplatform.ideall.client.common.command.file.download;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class DownloadFile extends SimpleCommand
+public class DownloadFile extends IDECommand
 {
    private final static String ID = "File/Download";
 
@@ -32,7 +32,10 @@ public class DownloadFile extends SimpleCommand
 
    public DownloadFile()
    {
-      super(ID, TITLE, Images.BLANK, null);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.BLANK);
    }
 
    @Override

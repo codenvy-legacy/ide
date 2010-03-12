@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class CreateNewFolderCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
@@ -48,7 +48,11 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
 
    public CreateNewFolderCommand()
    {
-      super(ID, TITLE, Images.MainMenu.NEW_FOLDER, new CreateFolderEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.NEW_FOLDER);
+      setEvent(new CreateFolderEvent());
    }
 
    @Override
@@ -68,7 +72,7 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
 
    private void updateEnabling()
    {
-      if (browserPanelSelected )
+      if (browserPanelSelected)
       {
          setEnabled(true);
       }
@@ -102,8 +106,6 @@ public class CreateNewFolderCommand extends SimpleCommand implements BrowserPane
          browserPanelSelected = true;
          updateEnabling();
       }
-
-      
    }
 
 }

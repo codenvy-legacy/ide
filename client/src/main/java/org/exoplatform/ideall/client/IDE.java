@@ -1,8 +1,8 @@
 package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
-import org.exoplatform.gwtframework.ui.smartgwt.dialogs.SmartGWTDialogs;
-import org.exoplatform.gwtframework.ui.smartgwt.loader.SmartGWTLoader;
+import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
+import org.exoplatform.gwtframework.ui.client.smartgwt.loader.SmartGWTLoader;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;

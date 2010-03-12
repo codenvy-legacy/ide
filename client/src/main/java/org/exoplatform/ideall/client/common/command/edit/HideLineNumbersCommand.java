@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSave
  * @version $
  */
 
-public class HideLineNumbersCommand extends SimpleCommand implements EditorActiveFileChangedHandler,
+public class HideLineNumbersCommand extends IDECommand implements EditorActiveFileChangedHandler,
    ApplicationContextSavedHandler
 {
 
@@ -47,7 +47,11 @@ public class HideLineNumbersCommand extends SimpleCommand implements EditorActiv
 
    public HideLineNumbersCommand()
    {
-      super(ID, TITLE, Images.Edit.HIDE_LINE_NUMBERS, new HideLineNumbersEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.Edit.HIDE_LINE_NUMBERS);
+      setEvent(new HideLineNumbersEvent());
    }
 
    @Override

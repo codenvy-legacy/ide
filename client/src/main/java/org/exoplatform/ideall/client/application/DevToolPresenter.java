@@ -19,12 +19,12 @@ package org.exoplatform.ideall.client.application;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.component.command.Command;
-import org.exoplatform.gwtframework.ui.component.menu.event.UpdateMainMenuEvent;
-import org.exoplatform.gwtframework.ui.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.gwtframework.ui.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
+import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
+import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -105,9 +105,9 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        */
       for (Command command : context.getCommands())
       {
-         if (command instanceof SimpleCommand)
+         if (command instanceof IDECommand)
          {
-            ((SimpleCommand)command).initialize(eventBus, context);
+            ((IDECommand)command).initialize(eventBus, context);
          }
       }
 

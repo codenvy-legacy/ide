@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.model.Item;
  * @version $
  */
 
-public class GetFileURLCommand extends SimpleCommand implements SelectedItemsHandler, BrowserPanelSelectedHandler,
+public class GetFileURLCommand extends IDECommand implements SelectedItemsHandler, BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler
 {
 
@@ -51,7 +51,11 @@ public class GetFileURLCommand extends SimpleCommand implements SelectedItemsHan
 
    public GetFileURLCommand()
    {
-      super(ID, TITLE, Images.MainMenu.GET_URL, new GetFileURLEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.GET_URL);
+      setEvent(new GetFileURLEvent());
    }
 
    @Override
@@ -71,7 +75,7 @@ public class GetFileURLCommand extends SimpleCommand implements SelectedItemsHan
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if(event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;
@@ -96,7 +100,6 @@ public class GetFileURLCommand extends SimpleCommand implements SelectedItemsHan
       {
          setEnabled(true);
       }
-
    }
 
    public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)

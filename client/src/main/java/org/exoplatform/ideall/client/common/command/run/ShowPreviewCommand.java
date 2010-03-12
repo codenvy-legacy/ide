@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common.command.run;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
  * @version $
  */
 
-public class ShowPreviewCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class ShowPreviewCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
    public static String ID = "Run/Show Preview";
@@ -42,7 +42,11 @@ public class ShowPreviewCommand extends SimpleCommand implements EditorActiveFil
 
    public ShowPreviewCommand()
    {
-      super(ID, TITLE, Images.MainMenu.PREVIEW, new PreviewFileEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.PREVIEW);
+      setEvent(new PreviewFileEvent());
    }
 
    @Override

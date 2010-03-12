@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ideall.client.template;
 
-import org.exoplatform.gwtframework.ui.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.smartgwt.component.TextField;
-import org.exoplatform.gwtframework.ui.util.UIHelper;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.File;

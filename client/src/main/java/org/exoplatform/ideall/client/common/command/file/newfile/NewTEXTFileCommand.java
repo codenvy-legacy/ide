@@ -35,11 +35,13 @@ public class NewTEXTFileCommand extends AbstractNewFileCommand
 
    private final static String ID = "File/New/TEXT file";
 
-   private final static String TITLE = "Create New Text File";
-
    public NewTEXTFileCommand()
    {
-      super(ID, TITLE, Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN));
+      super(ID,
+         "Text File",
+         "Create New Text File",
+         Images.FileTypes.TXT,
+         new CreateNewFileEvent(MimeType.TEXT_PLAIN));
    }
 
 }

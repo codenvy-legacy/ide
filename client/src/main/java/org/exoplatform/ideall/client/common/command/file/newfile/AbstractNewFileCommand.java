@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
@@ -36,15 +36,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class AbstractNewFileCommand extends SimpleCommand implements BrowserPanelSelectedHandler,
+public class AbstractNewFileCommand extends IDECommand implements BrowserPanelSelectedHandler,
    BrowserPanelDeselectedHandler, SelectedItemsHandler
 {
 
    private boolean browserSelected = true;
 
-   public AbstractNewFileCommand(String id, String title, String icon, GwtEvent<?> event)
+   public AbstractNewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
-      super(id, title, icon, event);
+      super(id);
+      setTitle(title);
+      setPrompt(prompt);
+      setIcon(icon);
+      setEvent(event);
    }
 
    @Override
@@ -88,7 +92,7 @@ public class AbstractNewFileCommand extends SimpleCommand implements BrowserPane
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if(event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() != 1)
       {
          browserSelected = false;
          updateEnabling();

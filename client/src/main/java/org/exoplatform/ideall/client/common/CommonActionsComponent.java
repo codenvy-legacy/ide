@@ -249,14 +249,10 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onCopyFile(CopyFileEvent event)
    {
-      // TODO Auto-generated method stub
-
    }
 
    public void onCutFile(CutFileEvent event)
    {
-      // TODO Auto-generated method stub
-
    }
 
 }

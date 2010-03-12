@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.component;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.smartgwt.*;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -33,7 +33,7 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class WadlParameterEntryListGrid extends org.exoplatform.gwtframework.ui.smartgwt.component.ListGrid<WadlParameterEntry> implements EditCompleteHandler
+public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> implements EditCompleteHandler
 {
 
    HandlerRegistration editCompleteHandler;

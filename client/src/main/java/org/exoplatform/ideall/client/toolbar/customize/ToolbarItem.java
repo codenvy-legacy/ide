@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Command;
 
 /**
  * Created by The eXo Platform SAS .

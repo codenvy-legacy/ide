@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.SimpleCommand;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
@@ -33,13 +33,20 @@ import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
  * @version $
  */
 
-public class PreviewGroovyOutputCommand extends SimpleCommand implements EditorActiveFileChangedHandler
+public class PreviewGroovyOutputCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
+
+   public static final String ID = "Run/Preview Output...";
+
+   public static final String TITLE = "Preview REST Service Output...";
 
    public PreviewGroovyOutputCommand()
    {
-      super("Run/Preview Output...", "Preview REST Service Output...", Images.MainMenu.GROOVY_OUTPUT,
-         new PreviewGroovyOutputEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.GROOVY_OUTPUT);
+      setEvent(new PreviewGroovyOutputEvent());
    }
 
    @Override
