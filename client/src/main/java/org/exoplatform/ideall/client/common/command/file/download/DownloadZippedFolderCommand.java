@@ -38,13 +38,11 @@ public class DownloadZippedFolderCommand extends IDECommand implements SelectedI
 
    private final static String ID = "File/Download/Download Zipped Folder";
 
-   private final static String TITLE = "Download Zipped Folder";
-
    public DownloadZippedFolderCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Zipped Folder");
+      setPrompt("Download Zipped Folder");
       setIcon(Images.MainMenu.DOWNLOAD_FOLDER);
       setEvent(new DownloadZippedFolderEvent());
    }

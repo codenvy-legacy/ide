@@ -44,13 +44,11 @@ public class CreateFileFromTemplateCommand extends IDECommand implements Browser
 
    private final static String ID = "File/New/From Template...";
 
-   private final static String TITLE = "Create File From Template...";
-
    public CreateFileFromTemplateCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("From Template...");
+      setPrompt("Create File From Template...");
       setIcon(Images.MainMenu.TEMPLATES);
       setEvent(new CreateFileFromTemplateEvent());
    }

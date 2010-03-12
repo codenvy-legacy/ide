@@ -9,3 +9,32 @@ BODY {
 .UploadFile-FileSelect {
 	cursor: hand;
 }
+
+/*
+CUSTOMIZE TOOLBAR
+*/
+.exo-customizeToolbar-delimiter,
+.exo-customizeToolbar-spacer,
+.exo-customizeToolbar-commandGroup
+{
+	width:10px;
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;	
+}
+
+.exo-customizeToolbar-delimiter
+{
+	color:blue;
+}
+
+.exo-customizeToolbar-spacer
+{
+	color:red;
+}
+
+.exo-customizeToolbar-commandGroup
+{
+	color:#333333;
+}

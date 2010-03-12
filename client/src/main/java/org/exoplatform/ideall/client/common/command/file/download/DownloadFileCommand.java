@@ -38,13 +38,11 @@ public class DownloadFileCommand extends IDECommand implements SelectedItemsHand
 
    private final static String ID = "File/Download/Download File...";
 
-   private final static String TITLE = "Download File";
-
    public DownloadFileCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("File");
+      setPrompt("Download File");
       setIcon(Images.MainMenu.DOWNLOAD);
       setEvent(new DownloadFileEvent());
    }

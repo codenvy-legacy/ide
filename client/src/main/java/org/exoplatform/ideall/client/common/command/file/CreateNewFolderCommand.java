@@ -44,13 +44,11 @@ public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSe
 
    private final static String ID = "File/New/Folder...";
 
-   private final static String TITLE = "Create Folder...";
-
    public CreateNewFolderCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Folder...");
+      setPrompt("Create Folder...");
       setIcon(Images.MainMenu.NEW_FOLDER);
       setEvent(new CreateFolderEvent());
    }
