@@ -31,11 +31,14 @@ import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.data.event.FolderContentReceivedEvent;
 import org.exoplatform.ideall.client.model.data.event.FolderCreatedEvent;
+import org.exoplatform.ideall.client.model.data.event.ItemCopyCompleteEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ideall.client.model.data.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.data.event.SearchResultReceivedEvent;
+import org.exoplatform.ideall.client.model.data.marshal.CopyRequestMarshaller;
+import org.exoplatform.ideall.client.model.data.marshal.CopyResponseUnmarshaller;
 import org.exoplatform.ideall.client.model.data.marshal.FileContentMarshaller;
 import org.exoplatform.ideall.client.model.data.marshal.FileContentSavingResultUnmarshaller;
 import org.exoplatform.ideall.client.model.data.marshal.FileContentUnmarshaller;
@@ -85,6 +88,10 @@ public class DataServiceImpl extends DataService
       static final String MOVE_FILE = "Moving file...";
 
       static final String MOVE_FOLDER = "Moving folder...";
+
+      static final String COPY_FILE = "Copying file...";
+
+      static final String COPY_FOLDER = "Copying folder...";
 
    }
 
@@ -310,6 +317,58 @@ public class DataServiceImpl extends DataService
             .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
 
+   }
+
+   @Override
+   public void copy(Item item, String destination)
+   {
+
+      String url = getURL(item.getPath());
+      String host = GWT.getModuleBaseURL();
+
+      String destinationURL = host.substring(0, host.indexOf("//") + 2);
+      host = host.substring(host.indexOf("//") + 2);
+      destinationURL += host.substring(0, host.indexOf("/"));
+      destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
+
+      System.out.println("destination " + destinationURL);
+
+      ItemCopyCompleteEvent event = new ItemCopyCompleteEvent(item, destination);
+
+      int[] acceptStatus = new int[]{HTTPStatus.CREATED};
+      CopyResponseUnmarshaller unmarshaller = new CopyResponseUnmarshaller();
+      CopyRequestMarshaller marshaller = new CopyRequestMarshaller();
+
+      if (item instanceof File)
+      {
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+
+         Loader.getInstance().setMessage(Messages.COPY_FILE);
+
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
+            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller)
+            .send(callback);
+      }
+      else
+      {
+         if (!url.endsWith("/"))
+         {
+            url += "/";
+         }
+
+         if (!destinationURL.endsWith("/"))
+         {
+            destinationURL += "/";
+         }
+
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+
+         Loader.getInstance().setMessage(Messages.COPY_FOLDER);
+
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
+            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller)
+            .send(callback);
+      }
    }
 
 }

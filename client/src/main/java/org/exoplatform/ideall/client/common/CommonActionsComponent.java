@@ -26,12 +26,13 @@ import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.event.edit.CopyFileEvent;
-import org.exoplatform.ideall.client.event.edit.CopyFileHandler;
-import org.exoplatform.ideall.client.event.edit.CutFileEvent;
-import org.exoplatform.ideall.client.event.edit.CutFileHandler;
+import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
+import org.exoplatform.ideall.client.event.edit.CopyItemsHandler;
+import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
+import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
+import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
@@ -83,7 +84,7 @@ import com.google.gwt.user.client.Window.Location;
 public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
    CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
    SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler,
-   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyFileHandler, CutFileHandler
+   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -119,8 +120,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(OpenFileWithEvent.TYPE, this);
 
-      addHandler(CopyFileEvent.TYPE, this);
-      addHandler(CutFileEvent.TYPE, this);
+      addHandler(CopyItemsEvent.TYPE, this);
+      addHandler(CutItemsEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -247,12 +248,21 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       new OpenFileWithForm(eventBus, context);
    }
 
-   public void onCopyFile(CopyFileEvent event)
+   public void onCopyItems(CopyItemsEvent event)
    {
+      context.getItemsToCopy().clear();
+      context.getItemsToCut().clear();
+      context.getItemsToCopy().addAll(context.getSelectedItems());
+      eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
-   public void onCutFile(CutFileEvent event)
+   public void onCutItems(CutItemsEvent event)
    {
+      context.getItemsToCut().clear();
+      context.getItemsToCopy().clear();
+      
+      context.getItemsToCut().addAll(context.getSelectedItems());
+      eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
 }

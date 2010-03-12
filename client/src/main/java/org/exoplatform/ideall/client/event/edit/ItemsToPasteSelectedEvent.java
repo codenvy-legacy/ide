@@ -16,9 +16,7 @@
  */
 package org.exoplatform.ideall.client.event.edit;
 
-import com.google.gwt.event.shared.EventHandler;
-
-
+import com.google.gwt.event.shared.GwtEvent;
 
 
 
@@ -27,8 +25,20 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface CopyFileHandler extends EventHandler
+public class ItemsToPasteSelectedEvent extends GwtEvent<ItemsToPasteSelectedHandler>
 {
-   void onCopyFile(CopyFileEvent event);
+   public static final GwtEvent.Type<ItemsToPasteSelectedHandler> TYPE = new GwtEvent.Type<ItemsToPasteSelectedHandler>();
+
+   @Override
+   protected void dispatch(ItemsToPasteSelectedHandler handler)
+   {
+      handler.onItemsToPasteSelected(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemsToPasteSelectedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 }
 

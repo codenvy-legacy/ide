@@ -19,15 +19,12 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -43,13 +40,11 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class DeleteItemCommand extends IDECommand implements SelectedItemsHandler, ItemDeletedHandler,
+public class DeleteItemCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler, ItemDeletedHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
    private static final String ID = "File/Delete...";
-
-   private static final String TITLE = "Delete...";
 
    private boolean browserPanelSelected = true;
 
@@ -58,8 +53,8 @@ public class DeleteItemCommand extends IDECommand implements SelectedItemsHandle
    public DeleteItemCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Delete...");
+      setPrompt("Delete Items...");
       setIcon(Images.MainMenu.DELETE);
       setEvent(new DeleteItemEvent());
    }
@@ -139,29 +134,5 @@ public class DeleteItemCommand extends IDECommand implements SelectedItemsHandle
       updateEnabling();
    }
 
-   public boolean isItemsInSameFolder(List<Item> items)
-   {
-      List<String> paths = new ArrayList<String>();
-      for (Item i : items)
-      {
-         String p = i.getPath();
-         p = p.substring(0, p.lastIndexOf("/"));
-         paths.add(p);
 
-      }
-
-      for (int i = 0; i < paths.size(); i++)
-      {
-         String path = paths.get(i);
-         for (int j = i + 1; j < paths.size(); j++)
-         {
-            if (!path.equals(paths.get(j)))
-            {
-               return false;
-            }
-         }
-      }
-
-      return true;
-   }
 }

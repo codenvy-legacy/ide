@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.edit;
+package org.exoplatform.ideall.client.model.data.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -25,8 +25,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface CutFileHandler extends EventHandler
+public interface ItemCopyCompleteHandler extends EventHandler
 {
-   void onCutFile(CutFileEvent event);
+   void onItemCopyComplete(ItemCopyCompleteEvent event);
 }
 

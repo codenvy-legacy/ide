@@ -64,11 +64,18 @@ public abstract class DataService
    public abstract void move(Item item, String destination);
 
    /**
+    * Copy item to another locations as path
+    * 
+    * @param item
+    * @param destination
+    */
+   public abstract void copy(Item item, String destination);
+   
+   /**
     * Get properties of file or folder
     * 
     * @param item
     */
-
    public abstract void getProperties(Item item);
 
    /**

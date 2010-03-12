@@ -20,11 +20,11 @@
 package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.edit.CopyCommand;
-import org.exoplatform.ideall.client.common.command.edit.CutCommand;
+import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
+import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.HideLineNumbersCommand;
-import org.exoplatform.ideall.client.common.command.edit.PasteCommand;
+import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
@@ -92,8 +92,8 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * DOWNLOAD GROUP
        */
       addCommand(new DownloadFile()).disable().hide();
-      addCommand(new DownloadFileCommand()).disable().hide().dockOnToolbar();
-      addCommand(new DownloadZippedFolderCommand()).disable().hide().dockOnToolbar();
+      addCommand(new DownloadFileCommand()).disable().hide();
+      addCommand(new DownloadZippedFolderCommand()).disable().hide();
       /*
        * END DOWNLOAD GROUP
        */
@@ -104,10 +104,17 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new GetFileURLCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new MoveItemCommand()).disable().hide().dockOnToolbar();
+      /*
+       * COPY, CUT, PASTE COMMAND
+       */
+      addCommand(new CutItemsCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
+      addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
+      
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
+      addCommand(new GetFileURLCommand()).disable().hide();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
 
@@ -118,12 +125,6 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
-      /*
-       * COPY, CUT, PASTE COMMAND
-       */
-      addCommand(new CutCommand()).disable().hide().setDelimiterBefore();
-      addCommand(new CopyCommand()).disable().hide();
-      addCommand(new PasteCommand()).disable().hide();
 
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
       addCommand(new HideLineNumbersCommand()).disable().hide();

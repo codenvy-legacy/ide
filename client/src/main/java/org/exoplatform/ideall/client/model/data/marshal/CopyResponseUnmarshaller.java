@@ -14,32 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.edit;
+package org.exoplatform.ideall.client.model.data.marshal;
 
-import com.google.gwt.event.shared.GwtEvent;
-
-
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CutFileEvent extends GwtEvent<CutFileHandler>
+public class CopyResponseUnmarshaller implements Unmarshallable
 {
-   public static final GwtEvent.Type<CutFileHandler> TYPE = new GwtEvent.Type<CutFileHandler>();
 
-   @Override
-   protected void dispatch(CutFileHandler handler)
+   public void unmarshal(String body) throws UnmarshallerException
    {
-      handler.onCutFile(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CutFileHandler> getAssociatedType()
-   {
-      return TYPE;
    }
 
 }
-

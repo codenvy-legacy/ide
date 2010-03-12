@@ -14,31 +14,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.edit;
+package org.exoplatform.ideall.client.model.data.event;
+
+import org.exoplatform.ideall.client.model.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CopyFileEvent extends GwtEvent<CopyFileHandler>
+public class ItemCopyCompleteEvent extends GwtEvent<ItemCopyCompleteHandler>
 {
-   public static final GwtEvent.Type<CopyFileHandler> TYPE = new GwtEvent.Type<CopyFileHandler>();
+   public static GwtEvent.Type<ItemCopyCompleteHandler> TYPE = new GwtEvent.Type<ItemCopyCompleteHandler>();
 
-   @Override
-   protected void dispatch(CopyFileHandler handler)
+   private Item copiedItem;
+
+   private String destination;
+
+   public ItemCopyCompleteEvent(Item item, String destination)
    {
-      handler.onCopyFile(this);
+      this.copiedItem = item;
+      this.destination = destination;
+   }
+
+   public Item getCopiedItem()
+   {
+      return copiedItem;
+   }
+
+   public String getDestination()
+   {
+      return destination;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CopyFileHandler> getAssociatedType()
+   protected void dispatch(ItemCopyCompleteHandler handler)
+   {
+      handler.onItemCopyComplete(this);
+   }
+
+   @Override
+   public GwtEvent.Type<ItemCopyCompleteHandler> getAssociatedType()
    {
       return TYPE;
    }
 }
-

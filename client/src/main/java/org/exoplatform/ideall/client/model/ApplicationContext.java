@@ -115,6 +115,26 @@ public class ApplicationContext
     */
    private HashMap<String, String> defaultEditors = new HashMap<String, String>();
    
+   /**
+    * Uses for storing items to need copy
+    */
+   private List<Item> itemsToCopy = new ArrayList<Item>();
+   
+   /**
+    * Uses to storing items to need cut
+    */
+   private List<Item> itemsToCut = new ArrayList<Item>();
+   
+   public List<Item> getItemsToCopy()
+   {
+      return itemsToCopy;
+   }
+
+   public List<Item> getItemsToCut()
+   {
+      return itemsToCut;
+   }
+
    private String selectedEditorDescriptor;
 
    private boolean showLineNumbers = true;
