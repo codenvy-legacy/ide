@@ -90,15 +90,6 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationContextReceivedEvent.TYPE, this);
 
-      PopupMenuCommand popupMenuCommand = PopupMenuCommandBuilder.newCommand("File/New Item")
-         .prompt("New")
-         .icon(Images.MainMenu.NEW)
-         .show()
-         .enable()
-         .setDelimiterBefore()
-         .create();
-      context.getCommands().add(popupMenuCommand);
-
       /*
        * Intializing application components
        */
@@ -182,8 +173,8 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
          context.setWorkspace(Configuration.getInstance().getDefaultWorkspaceName());
       }
 
-      //context.getToolBarItems().clear();
-      //context.getToolBarItems().addAll(context.getToolBarDefaultItems());
+      context.getToolBarItems().clear();
+      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
       new WorkspaceChecker(eventBus, context);

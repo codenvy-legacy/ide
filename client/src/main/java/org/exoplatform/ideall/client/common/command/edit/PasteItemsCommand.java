@@ -37,7 +37,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 {
    private static final String ID = "Edit/Paste Item(s)";
 
-   private boolean pastePrepere = false;
+   private boolean pastePrepared = false;
 
    public PasteItemsCommand()
    {
@@ -65,38 +65,37 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
-      pastePrepere = true;
+      pastePrepared = true;
    }
 
    public void onPasteItemsComlete(PasteItemsCompleteEvent event)
    {
       setEnabled(false);
-      pastePrepere = false;
+      pastePrepared = false;
    }
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-
       if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
+         return;
+      }
+
+      if (!pastePrepared)
+      {
+         return;
+      }
+
+      if (event.getSelectedItems().get(0) instanceof Folder)
+      {
+         setEnabled(true);
       }
       else
       {
-
-         if (pastePrepere && isItemsInSameFolder(event.getSelectedItems()))
-         {
-
-            if (event.getSelectedItems().get(0) instanceof Folder)
-            {
-               setEnabled(true);
-            }
-            else
-            {
-               setEnabled(false);
-            }
-         }
+         setEnabled(false);
       }
+      
    }
 
 }

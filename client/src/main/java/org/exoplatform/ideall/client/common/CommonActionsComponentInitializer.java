@@ -19,6 +19,9 @@
  */
 package org.exoplatform.ideall.client.common;
 
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
+import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
@@ -69,12 +72,24 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    @Override
    protected void onItitialize()
    {
+      PopupMenuCommand popupMenuCommand = PopupMenuCommandBuilder.newCommand("File/New Item")
+         .prompt("New")
+         .icon(Images.MainMenu.NEW)
+         .show()
+         .enable()
+         .setDelimiterBefore()
+         .create();
+      addCommand(popupMenuCommand).dockOnToolbar();    
+      
       /*
        * FILE GROUP
        */
 
       addCommand(new NewFileCommand()).disable().hide();
-      addCommand(new NewXMLFileCommand()).disable().hide();
+      
+      NewXMLFileCommand newXml = new NewXMLFileCommand();
+      addCommand(newXml).disable().hide();
+      
       addCommand(new NewGroovyFileCommand()).disable().hide();
       addCommand(new NewHTMLFileCommand()).disable().hide();
       addCommand(new NewTEXTFileCommand()).disable().hide();

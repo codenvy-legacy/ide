@@ -73,7 +73,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
 
       DynamicForm form = new DynamicForm();
-      form.setHeight(20);
+      form.setHeight(25);
      
       form.setMargin(5);
       form.setLayoutAlign(Alignment.LEFT);
