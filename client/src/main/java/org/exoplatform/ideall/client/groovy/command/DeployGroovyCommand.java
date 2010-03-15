@@ -38,13 +38,11 @@ public class DeployGroovyCommand extends IDECommand implements EditorActiveFileC
    
    private static final String ID = "Run/Deploy";
    
-   private static final String TITLE = "Deploy Groovy Script";
-
    public DeployGroovyCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Deploy");
+      setPrompt("Deploy Groovy Script");
       setIcon(Images.MainMenu.DEPLOY);
       setEvent(new DeployGroovyScriptEvent());
    }

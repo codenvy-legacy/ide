@@ -73,17 +73,17 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
 
       DynamicForm form = new DynamicForm();
-      form.setHeight(25);
+      form.setHeight(30);
      
-      form.setMargin(5);
+      //form.setMargin(5);
       form.setLayoutAlign(Alignment.LEFT);
       
       useAsDef = new CheckboxItem("&nbsp;Use as default editor");
       
       useAsDef.setAlign(Alignment.LEFT);
-      useAsDef.setShowTitle(false);
+      //useAsDef.setShowTitle(false);
       useAsDef.setColSpan(2);
-      //useAsDef.setWidth(350);
+      //useAsDef.setHeight(40);
       form.setItems(useAsDef);
       
       form.setAutoWidth();

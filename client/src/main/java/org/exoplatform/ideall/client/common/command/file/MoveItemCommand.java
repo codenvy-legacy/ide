@@ -44,9 +44,7 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
    BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
-   private static final String ID = "File/Move...";
-
-   private static final String TITLE = "Move...";
+   private static final String ID = "File/Move File\\Folder...";
 
    private boolean browserPanelSelected = true;
 
@@ -55,8 +53,8 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
    public MoveItemCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Move...");
+      setPrompt("Move Item...");
       setIcon(Images.MainMenu.MOVE);
       setEvent(new MoveItemEvent());
    }

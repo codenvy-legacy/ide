@@ -38,13 +38,11 @@ public class ValidateGroovyCommand extends IDECommand implements EditorActiveFil
 
    public static final String ID = "Run/Validate";
 
-   public static final String TITLE = "Validate Groovy Script";
-
    public ValidateGroovyCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Validate");
+      setPrompt("Validate Groovy Script");
       setIcon(Images.MainMenu.VALIDATE);
       setEvent(new ValidateGroovyScriptEvent());
    }

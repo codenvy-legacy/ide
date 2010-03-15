@@ -388,8 +388,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       final File file = event.getFile();
       if (!file.isContentChanged() && !file.isPropertiesChanged())
       {
-         context.getOpenedFiles().remove(file.getPath());
-         CookieManager.storeOpenedFiles(context);
+         closeFile(file);
          return;
       }
 

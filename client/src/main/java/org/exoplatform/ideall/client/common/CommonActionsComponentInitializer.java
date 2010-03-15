@@ -73,7 +73,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    protected void onItitialize()
    {
       PopupMenuCommand newFilePopupMenuCommand =
-         PopupMenuCommandBuilder.newCommand("File/New Item").prompt("New").icon(Images.MainMenu.NEW).show().enable()
+         PopupMenuCommandBuilder.newCommand("File/New *").prompt("New").icon(Images.MainMenu.NEW).show().enable()
             .setDelimiterBefore().create();
       addCommand(newFilePopupMenuCommand).dockOnToolbar();
 

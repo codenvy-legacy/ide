@@ -17,6 +17,9 @@
 package org.exoplatform.ideall.client.toolbar.customize;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -217,44 +220,55 @@ public class CustomizeToolbarPresenter
 
    private void fillCommandListGrid()
    {
-      List<CommandItemEx> commands = new ArrayList<CommandItemEx>();
-
-      List<String> groups = new ArrayList<String>();
+      HashMap<String, List<Command>> groups = new LinkedHashMap<String, List<Command>>();
 
       for (Command command : context.getCommands())
       {
-         if (!(command instanceof SimpleCommand) && !(command instanceof PopupMenuCommand)) {
-            continue;
+         if (command instanceof SimpleCommand)
+         {
+            if (((SimpleCommand)command).getEvent() != null)
+            {
+               addCommand(groups, command);
+            }
          }
-         
-         String commandId = command.getId();
-         System.out.println("command > " + commandId);
-         if (commandId.indexOf("/") >= 0) {
-            commandId = commandId.substring(commandId.lastIndexOf("/"));
+         else if (command instanceof PopupMenuCommand)
+         {
+            addCommand(groups, command);
          }
-         
-//         if (simpleCommand.getTitle() != null)
-//         {
-//            String groupName = simpleCommand.getId();
-//            if (groupName.indexOf("/") >= 0)
-//            {
-//               groupName = groupName.substring(0, groupName.indexOf("/"));
-//            }
-//
-//            if (!groups.contains(groupName))
-//            {
-//               groups.add(groupName);
-//               commands.add(new CommandItemEx(groupName, true));
-//            }
-//
-//            if (command.getEvent() != null)
-//            {
-//               commands.add(new CommandItemEx(command.getTitle(), command));
-//            }
-//         }
       }
 
-      display.getCommandItemListGrid().setValue(commands);
+      List<CommandItemEx> commandList = new ArrayList<CommandItemEx>();
+      Iterator<String> keyIter = groups.keySet().iterator();
+      while (keyIter.hasNext())
+      {
+         String groupName = keyIter.next();
+         commandList.add(new CommandItemEx(groupName));
+         List<Command> commands = groups.get(groupName);
+         for (Command command : commands)
+         {
+            commandList.add(new CommandItemEx(command));
+         }
+      }
+
+      display.getCommandItemListGrid().setValue(commandList);
+   }
+
+   private void addCommand(HashMap<String, List<Command>> groups, Command command)
+   {
+      String groupName = command.getId();
+      if (groupName.indexOf("/") >= 0)
+      {
+         groupName = groupName.substring(0, groupName.lastIndexOf("/"));
+      }
+
+      List<Command> commands = groups.get(groupName);
+      if (commands == null)
+      {
+         commands = new ArrayList<Command>();
+         groups.put(groupName, commands);
+      }
+
+      commands.add(command);
    }
 
    private Command getCommandById(String id)

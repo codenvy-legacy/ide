@@ -32,15 +32,13 @@ import org.exoplatform.ideall.client.model.File;
 */
 public class OpenFileWithCommand extends IDECommand implements SelectedItemsHandler
 {
-   public static final String ID = "File/Open With...";
+   public static final String ID = "File/Open File With...";
 
-   public static final String TITLE = "Open With...";
-   
    public OpenFileWithCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Open With...");
+      setPrompt("Open File With...");
       setIcon(Images.MainMenu.OPENWITH);
       setEvent(new OpenFileWithEvent());
    }

@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
@@ -71,7 +72,9 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    {
       if (item.isGroup())
       {
-         String title = getDivider(item.getTitle(), Style.GROUP);
+         String title = item.getTitle();
+         title = title.replace("/", "&nbsp;/&nbsp;");
+         title = getDivider(title, Style.GROUP);
          record.setAttribute(TITLE, title);
       }
       else
@@ -79,7 +82,11 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          String commandId = item.getCommand().getId();
          if (commandId.indexOf("/") >= 0)
          {
-            commandId = commandId.substring(commandId.lastIndexOf("/"));
+            commandId = commandId.substring(commandId.lastIndexOf("/") + 1);
+         }
+         
+         if (item.getCommand() instanceof PopupMenuCommand) {
+            commandId += "&nbsp;[Popup]";
          }
 
          String title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandId + "</span>";

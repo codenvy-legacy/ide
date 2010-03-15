@@ -38,13 +38,11 @@ public class PreviewGroovyOutputCommand extends IDECommand implements EditorActi
 
    public static final String ID = "Run/Preview Output...";
 
-   public static final String TITLE = "Preview REST Service Output...";
-
    public PreviewGroovyOutputCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle("Preview Output...");
+      setPrompt("Preview Groovy Service Output...");
       setIcon(Images.MainMenu.GROOVY_OUTPUT);
       setEvent(new PreviewGroovyOutputEvent());
    }

@@ -37,16 +37,15 @@ public class CommandItemEx
 
    private boolean group = false;
 
-   public CommandItemEx(String title, Command command)
+   public CommandItemEx(Command command)
    {
-      this.title = title;
       this.command = command;
    }
 
-   public CommandItemEx(String title, boolean group)
+   public CommandItemEx(String title)
    {
       this.title = title;
-      this.group = group;
+      group = true;
    }
 
    public String getTitle()

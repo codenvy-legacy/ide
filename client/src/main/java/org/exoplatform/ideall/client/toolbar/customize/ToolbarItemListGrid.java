@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.SelectionStyle;
@@ -88,13 +89,17 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    {
       if (item.getType() == ToolbarItem.Type.COMMAND)
       {
-         String commandId = item.getCommand().getId();
-         if (commandId.indexOf("/") >= 0) {
-            commandId = commandId.substring(commandId.lastIndexOf("/") + 1);
+         String title = item.getCommand().getId();
+         if (title.indexOf("/") >= 0) {
+            title = title.substring(title.lastIndexOf("/") + 1);
          }
          
-         String title =
-            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandId
+         if (item.getCommand() instanceof PopupMenuCommand) {
+            title += "&nbsp;[Popup]";
+         }
+         
+         title =
+            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title
                + "</span>";
          record.setAttribute(TOOLBAR, title);
       }

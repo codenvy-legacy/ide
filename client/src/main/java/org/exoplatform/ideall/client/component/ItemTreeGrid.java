@@ -89,7 +89,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
 
-         System.out.println("ItemTreeGrid.doUpdateValue() select record");
          selectRecord(rootNode);
       }
 
@@ -257,14 +256,16 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       selectRecord(node);
    }
 
-   public List<Item> getSelectedItems() {
+   public List<Item> getSelectedItems()
+   {
       List<Item> selectedItems = new ArrayList<Item>();
-      
-      for (ListGridRecord record : getSelection()) {
+
+      for (ListGridRecord record : getSelection())
+      {
          selectedItems.add((Item)record.getAttributeAsObject(getValuePropertyName()));
       }
-      
-      return selectedItems;      
+
+      return selectedItems;
    }
-   
+
 }
