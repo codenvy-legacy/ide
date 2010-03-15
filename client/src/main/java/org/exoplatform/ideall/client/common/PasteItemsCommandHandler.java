@@ -115,7 +115,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
    private void operationCompleted()
    {
       eventBus.fireEvent(new PasteItemsCompleteEvent());
-      // eventBus.fireEvent(new SetFocusOnItemEvent(context.getSelectedItems().get(0).getPath()));
+      //eventBus.fireEvent(new SetFocusOnItemEvent(context.getSelectedItems().get(0).getPath()));
       eventBus.fireEvent(new RefreshBrowserEvent());
       handlers.removeHandlers();
    }
@@ -166,7 +166,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
    {
       if (context.getItemsToCopy().size() != 0)
       {
-         //remove copied item
          context.getItemsToCopy().remove(event.getCopiedItem());
          copyNextItem();
       }
@@ -174,7 +173,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
 
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      System.out.println("move complete - " + context.getItemsToCut().size());
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());

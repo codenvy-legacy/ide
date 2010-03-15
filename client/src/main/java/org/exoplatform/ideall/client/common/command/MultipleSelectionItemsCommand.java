@@ -21,20 +21,33 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.model.Workspace;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class MultipleSelectionItemsCommand extends IDECommand 
+public class MultipleSelectionItemsCommand extends IDECommand
 {
-   
+
    public MultipleSelectionItemsCommand(String id)
    {
       super(id);
    }
-   
+
+   public boolean isSelectedWorkspace(List<Item> items)
+   {
+      for (Item i : items)
+      {
+         if (i instanceof Workspace)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
    public boolean isItemsInSameFolder(List<Item> items)
    {
       List<String> paths = new ArrayList<String>();
@@ -61,4 +74,3 @@ public class MultipleSelectionItemsCommand extends IDECommand
       return true;
    }
 }
-

@@ -40,8 +40,8 @@ import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
  * @version $
  */
 
-public class DeleteItemCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler, ItemDeletedHandler,
-   BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
+public class DeleteItemCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler,
+   ItemDeletedHandler, BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
 {
 
    private static final String ID = "File/Delete...";
@@ -78,11 +78,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      //      if (event.getSelectedItems().size() != 1)
-      //      {
-      //         setEnabled(false);
-      //         return;
-      //      }
+
       if (!isItemsInSameFolder(event.getSelectedItems()))
       {
          setEnabled(false);
@@ -133,6 +129,5 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       browserPanelSelected = false;
       updateEnabling();
    }
-
 
 }

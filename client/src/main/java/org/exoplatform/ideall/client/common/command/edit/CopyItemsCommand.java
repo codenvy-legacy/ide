@@ -47,14 +47,12 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
       setVisible(true);
       setEnabled(false);
    }
-   
 
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(SelectedItemsEvent.TYPE, this);
    }
-
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
@@ -63,6 +61,13 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
          setEnabled(false);
          return;
       }
+      
+      if (isSelectedWorkspace(event.getSelectedItems()))
+      {
+         setEnabled(false);
+         return;
+      }
+
       setEnabled(true);
    }
 }

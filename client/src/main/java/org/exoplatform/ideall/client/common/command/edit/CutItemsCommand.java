@@ -61,6 +61,13 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
          setEnabled(false);
          return;
       }
+
+      if (isSelectedWorkspace(event.getSelectedItems()))
+      {
+         setEnabled(false);
+         return;
+      }
+
       setEnabled(true);
    }
 }
