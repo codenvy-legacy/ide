@@ -211,6 +211,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       
       if (item instanceof File)
       {
+         context.setSelectedEditorDescriptor(null);
          DataService.getInstance().getFileContent((File)item);
       }
    }

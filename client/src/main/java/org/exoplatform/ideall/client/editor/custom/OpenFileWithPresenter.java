@@ -34,6 +34,8 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSave
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -92,7 +94,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationContextSavedEvent.TYPE, this);
-      
+
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -102,6 +104,15 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          }
       });
 
+      display.getEditorsListGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
+
+         public void onDoubleClick(DoubleClickEvent arg0)
+         {
+            openFile();
+         }
+
+      });
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
@@ -142,7 +153,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       }
       catch (EditorNotFoundException e)
       {
-         String message = "Editors not found";
+         String message = "Can't find editor for type <b>" + mimeType + "</b>";
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
    }
@@ -157,9 +168,9 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       else
       {
          String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
-         
+
          context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
-         
+
          SettingsService.getInstance().saveSetting(context);
       }
 
