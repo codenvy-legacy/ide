@@ -47,7 +47,6 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
    public void unmarshal(String body) throws UnmarshallerException
    {
-      Window.alert(body);
       try
       {
          parseGadgetMetadata(body);
