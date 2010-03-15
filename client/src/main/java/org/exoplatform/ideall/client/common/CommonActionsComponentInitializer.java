@@ -72,36 +72,44 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    @Override
    protected void onItitialize()
    {
-      PopupMenuCommand popupMenuCommand = PopupMenuCommandBuilder.newCommand("File/New Item")
-         .prompt("New")
-         .icon(Images.MainMenu.NEW)
-         .show()
-         .enable()
-         .setDelimiterBefore()
-         .create();
-      addCommand(popupMenuCommand).dockOnToolbar();    
-      
+      PopupMenuCommand newFilePopupMenuCommand =
+         PopupMenuCommandBuilder.newCommand("File/New Item").prompt("New").icon(Images.MainMenu.NEW).show().enable()
+            .setDelimiterBefore().create();
+      addCommand(newFilePopupMenuCommand).dockOnToolbar();
+
       /*
        * FILE GROUP
        */
 
       addCommand(new NewFileCommand()).disable().hide();
-      
-      NewXMLFileCommand newXml = new NewXMLFileCommand();
-      addCommand(newXml).disable().hide();
-      
-      addCommand(new NewGroovyFileCommand()).disable().hide();
-      addCommand(new NewHTMLFileCommand()).disable().hide();
-      addCommand(new NewTEXTFileCommand()).disable().hide();
-      addCommand(new NewJavaScriptFileCommand()).disable().hide();
-      addCommand(new NewCSSFileCommand()).disable().hide();
-      addCommand(new NewGadgetCommand()).disable().hide();
-      addCommand(new CreateFileFromTemplateCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+
+      NewXMLFileCommand newXmlFileCommand = new NewXMLFileCommand();
+      addCommand(newXmlFileCommand).disable().hide();
+
+      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
+      addCommand(newGroovyFileCommand).disable().hide();
+
+      NewHTMLFileCommand newHTMLFileCommand = new NewHTMLFileCommand();
+      addCommand(newHTMLFileCommand).disable().hide();
+
+      NewTEXTFileCommand newTEXTFileCommand = new NewTEXTFileCommand();
+      addCommand(newTEXTFileCommand).disable().hide();
+
+      NewJavaScriptFileCommand newJavaScriptFileCommand = new NewJavaScriptFileCommand();
+      addCommand(newJavaScriptFileCommand).disable().hide();
+
+      NewCSSFileCommand newCSSFileCommand = new NewCSSFileCommand();
+      addCommand(newCSSFileCommand).disable().hide();
+
+      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
+      addCommand(newGadgetCommand).disable().hide();
+
+      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
+      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
       addCommand(new OpenFileWithCommand()).disable().hide();
 
-
-      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
 
       /*
        * DOWNLOAD GROUP
@@ -126,7 +134,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new CutItemsCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
       addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
-      
+
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new GetFileURLCommand()).disable().hide();
@@ -155,6 +163,18 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        */
 
       addCommand(new ShowPreviewCommand()).disable().hide().dockOnToolbar(true);
+
+      /*
+       * filling new item popup menu
+       */
+      newFilePopupMenuCommand.getCommands().add(newXmlFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newGroovyFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newHTMLFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newTEXTFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newJavaScriptFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
+      newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
+      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
    }
 
 }
