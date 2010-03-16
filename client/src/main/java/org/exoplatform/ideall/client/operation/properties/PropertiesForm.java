@@ -50,12 +50,12 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
       presenter.bindDisplay(this);
    }
    
-   @Override
-   public void destroy()
-   {
-      presenter.destroy();
-      super.destroy();
-   }
+//   @Override
+//   public void destroy()
+//   {
+//      //presenter.destroy();
+//      super.destroy();
+//   }
 
    public void refreshProperties(File file)
    {

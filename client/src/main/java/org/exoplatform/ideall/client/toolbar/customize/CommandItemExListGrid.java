@@ -79,17 +79,21 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       }
       else
       {
-         String commandId = item.getCommand().getId();
-         if (commandId.indexOf("/") >= 0)
+         String commandName = item.getCommand().getId();
+         if (commandName.indexOf("/") >= 0)
          {
-            commandId = commandId.substring(commandId.lastIndexOf("/") + 1);
+            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
+         }
+         
+         while (commandName.indexOf("\\") >= 0) {
+            commandName = commandName.replace("\\", "/");
          }
          
          if (item.getCommand() instanceof PopupMenuCommand) {
-            commandId += "&nbsp;[Popup]";
+            commandName += "&nbsp;[Popup]";
          }
 
-         String title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandId + "</span>";
+         String title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
          record.setAttribute(TITLE, title);
       }
 

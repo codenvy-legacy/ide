@@ -94,6 +94,10 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
             title = title.substring(title.lastIndexOf("/") + 1);
          }
          
+         while (title.indexOf("\\") >= 0) {
+            title = title.replace("\\", "/");
+         }         
+         
          if (item.getCommand() instanceof PopupMenuCommand) {
             title += "&nbsp;[Popup]";
          }

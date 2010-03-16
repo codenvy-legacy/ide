@@ -41,17 +41,19 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
 
    private static final String ID = "Edit/Show Line Numbers";
 
-   private static final String TITLE = "Show Line Numbers";
+   private static final String TITLE_SHOW = "Show Line Numbers";
+   
+   private static final String TITLE_HIDE = "Hide Line Numbers";
 
    private File activeFile;
 
    public ShowLineNumbersCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setIcon(Images.Edit.SHOW_LINE_NUMBERS);
-      setEvent(new ShowLineNumbersEvent());
+      setTitle(TITLE_HIDE);
+      setPrompt(TITLE_HIDE);
+      setIcon(Images.Edit.HIDE_LINE_NUMBERS);
+      //setEvent(new ShowLineNumbersEvent());
    }
 
    @Override
@@ -72,8 +74,18 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
       if (context.isShowLineNumbers())
       {
          // hide
-         setVisible(false);
-         return;
+         setTitle(TITLE_HIDE);
+         setPrompt(TITLE_HIDE);
+         setIcon(Images.Edit.HIDE_LINE_NUMBERS);
+         setEvent(new ShowLineNumbersEvent(false));
+      }
+      else
+      {
+         //show
+         setTitle(TITLE_SHOW);
+         setPrompt(TITLE_SHOW);
+         setIcon(Images.Edit.SHOW_LINE_NUMBERS);
+         setEvent(new ShowLineNumbersEvent(true));
       }
 
       // verify and show

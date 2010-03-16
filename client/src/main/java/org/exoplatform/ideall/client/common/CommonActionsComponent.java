@@ -30,8 +30,6 @@ import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsHandler;
 import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
-import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
-import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
@@ -83,8 +81,8 @@ import com.google.gwt.user.client.Window.Location;
 
 public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
    CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
-   SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler,
-   HideLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
+   SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler,
+   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -94,7 +92,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    private SaveAllFilesCommandHandler saveAllFilesCommandHandler;
 
    private GoToFolderCommandHandler goToFolderCommandHandler;
-   
+
    private PasteItemsCommandHandler pasteItemsCommandHandler;
 
    public CommonActionsComponent()
@@ -116,7 +114,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(TemplateListReceivedEvent.TYPE, this);
 
       addHandler(ShowLineNumbersEvent.TYPE, this);
-      addHandler(HideLineNumbersEvent.TYPE, this);
 
       addHandler(GetFileURLEvent.TYPE, this);
 
@@ -184,7 +181,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onCreateFolder(CreateFolderEvent event)
    {
       Item item = context.getSelectedItems().get(0);
-      
+
       String path = item.getPath();
       if (item instanceof File)
       {
@@ -223,13 +220,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-      context.setShowLineNumbers(true);
-      SettingsService.getInstance().saveSetting(context);
-   }
-
-   public void onHideLineNumbers(HideLineNumbersEvent event)
-   {
-      context.setShowLineNumbers(false);
+      context.setShowLineNumbers(event.isShowLineNumber());
       SettingsService.getInstance().saveSetting(context);
    }
 
@@ -263,7 +254,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       context.getItemsToCut().clear();
       context.getItemsToCopy().clear();
-      
+
       context.getItemsToCut().addAll(context.getSelectedItems());
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }

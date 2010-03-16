@@ -150,7 +150,6 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
-      addCommand(new HideLineNumbersCommand()).disable().hide();
 
       /*
        * VIEW GROUP

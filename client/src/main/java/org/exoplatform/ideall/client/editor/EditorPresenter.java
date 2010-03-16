@@ -53,8 +53,6 @@ import org.exoplatform.ideall.client.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileHandler;
-import org.exoplatform.ideall.client.event.edit.HideLineNumbersEvent;
-import org.exoplatform.ideall.client.event.edit.HideLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.RedoEditingHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
@@ -95,7 +93,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
    UndoEditingHandler, RedoEditingHandler, FileContentSavedHandler, ItemPropertiesSavedHandler,
    FilePropertiesChangedHandler, FileContentReceivedHandler, MoveCompleteHandler, FormatFileHandler,
    ItemDeletedHandler, RegisterEventHandlersHandler, InitializeApplicationHandler, ShowLineNumbersHandler,
-   HideLineNumbersHandler, ChangeActiveFileHandler, ExceptionThrownHandler
+   ChangeActiveFileHandler, ExceptionThrownHandler
 {
 
    public interface Display
@@ -232,7 +230,6 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
 
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
-      handlers.addHandler(HideLineNumbersEvent.TYPE, this);
 
       handlers.addHandler(ChangeActiveFileEvent.TYPE, this);
 
@@ -568,7 +565,6 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          }
       }
 
-
       CookieManager.storeOpenedFiles(context);
    }
 
@@ -585,12 +581,7 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-      updateLineNumbers(true);
-   }
-
-   public void onHideLineNumbers(HideLineNumbersEvent event)
-   {
-      updateLineNumbers(false);
+      updateLineNumbers(event.isShowLineNumber());
    }
 
    public void onChangeActiveFile(ChangeActiveFileEvent event)

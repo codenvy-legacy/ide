@@ -33,6 +33,13 @@ public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
 
    public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
 
+   private boolean showLineNumber;
+
+   public ShowLineNumbersEvent(boolean showLineNumber)
+   {
+      this.showLineNumber = showLineNumber;
+   }
+
    @Override
    protected void dispatch(ShowLineNumbersHandler handler)
    {
@@ -43,6 +50,11 @@ public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
    public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   public boolean isShowLineNumber()
+   {
+      return showLineNumber;
    }
 
 }

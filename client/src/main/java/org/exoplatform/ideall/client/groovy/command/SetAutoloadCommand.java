@@ -41,7 +41,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
    ItemPropertiesSavedHandler
 {
 
-   private static final String ID = "Run/Set Autoload";
+   private static final String ID = "Run/Set \\ Unset Autoload";
 
    private static final String TITLE_SET = "Set Autoload";
    
@@ -58,7 +58,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
       setIcon(Images.MainMenu.SET_AUTOLOAD);
-      //setEvent(new AutoloadEvent());
+      setEvent(new SetAutoloadEvent(false));
    }
 
    /**

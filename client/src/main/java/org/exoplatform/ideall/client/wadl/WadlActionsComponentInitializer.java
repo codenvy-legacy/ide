@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.wadl;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.wadl.command.PreviewWadlOutputCommand;
+import org.exoplatform.ideall.client.groovy.command.PreviewWadlOutputCommand;
 
 /**
  * Created by The eXo Platform SAS.
