@@ -43,15 +43,22 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
 
    private static final String ID = "Run/Set Autoload";
 
-   private static final String TITLE = "Set Groovy Script Autoload";
+   private static final String TITLE_SET = "Set Autoload";
+   
+   private static final String PROMPT_SET = "Set Groovy Script Autoload";
+
+   private static final String TITLE_UNSET = "Unset Autoload";
+   
+   private static final String PROMPT_UNSET = "Unset Groovy Script Autoload";
+
 
    public SetAutoloadCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
+      setTitle(TITLE_SET);
+      setPrompt(TITLE_SET);
       setIcon(Images.MainMenu.SET_AUTOLOAD);
-      setEvent(new SetAutoloadEvent());
+      //setEvent(new AutoloadEvent());
    }
 
    /**
@@ -75,13 +82,13 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
    {
       if (event.getFile() == null)
       {
-         disableAutoload();
+         hideAutoload();
          return;
       }
 
       if (!MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
       {
-         disableAutoload();
+         hideAutoload();
          return;
       }
 
@@ -102,22 +109,24 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
     */
    private void checkEnablingFor(File file)
    {
+      enableAutoload();
+
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
-      if (autoloadPropertyValue == null)
+      if (autoloadPropertyValue == null || Boolean.parseBoolean(autoloadPropertyValue) != true)
       {
-         enableAutoload();
+         // is set autoload
+         setTitle(TITLE_SET);
+         setPrompt(PROMPT_SET);
+         setIcon(Images.MainMenu.SET_AUTOLOAD);
+         setEvent(new SetAutoloadEvent(true));
       }
       else
       {
-         boolean autoload = Boolean.parseBoolean(autoloadPropertyValue);
-         if (autoload)
-         {
-            disableAutoload();
-         }
-         else
-         {
-            enableAutoload();
-         }
+         // is unset autoload
+         setTitle(TITLE_UNSET);
+         setPrompt(PROMPT_UNSET+" - <br />"+file.getName());
+         setIcon(Images.MainMenu.UNSET_AUTOLOAD);
+         setEvent(new SetAutoloadEvent(false));
       }
    }
 
@@ -133,7 +142,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
    /**
     * Disabling autoload
     */
-   private void disableAutoload()
+   private void hideAutoload()
    {
       setVisible(false);
       setEnabled(false);

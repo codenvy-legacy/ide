@@ -331,7 +331,6 @@ public class DataServiceImpl extends DataService
       destinationURL += host.substring(0, host.indexOf("/"));
       destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
-      System.out.println("destination " + destinationURL);
 
       ItemCopyCompleteEvent event = new ItemCopyCompleteEvent(item, destination);
 

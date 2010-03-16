@@ -147,17 +147,17 @@ public class AdvancedSearchPresenter
          i++;
       }
 
-      if (content != null && content.length() > 0)
+      if (content != null )
       {
          context.setSearchContent(content);
       }
 
-      if (fileName != null && fileName.length() > 0)
+      if (fileName != null )
       {
          context.setSearchFileName(fileName);
       }
 
-      if (contentType != null && contentType.length() > 0)
+      if (contentType != null )
       {
          context.setSearchContentType(contentType);
       }

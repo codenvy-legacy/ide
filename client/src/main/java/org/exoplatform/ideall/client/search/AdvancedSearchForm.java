@@ -41,9 +41,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPresenter.Display
 {
-   private static final int WIDTH = 490;
+   private static final int WIDTH = 450;
 
-   private static final int HEIGHT = 270;
+   private static final int HEIGHT = 230;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -99,10 +99,11 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       setTitle("Search");
 
       VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
       mainLayout.setHeight100();
-      mainLayout.setPadding(20);
-      mainLayout.setMembersMargin(15);
+      mainLayout.setWidth100();
+      mainLayout.setMargin(5);
+      mainLayout.setPadding(1);
+      mainLayout.setMembersMargin(10);
 
       mainLayout.addMember(createSearchForm());
       mainLayout.addMember(createButtonsLayout());
@@ -118,22 +119,20 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    {
       DynamicForm paramForm = new DynamicForm();
       paramForm.setLayoutAlign(Alignment.CENTER);
-      paramForm.setPadding(10);
-      paramForm.setWidth(FIELD_WIDTH + 20);
-      paramForm.setIsGroup(true);
+      paramForm.setWidth100();
+      paramForm.setPadding(5);
+   
       paramForm.setWidth(FORM_WIDTH);
       paramForm.setCellSpacing(5);
       paramForm.setLayoutAlign(Alignment.CENTER);
-      
-      paramForm.setGroupTitle("Search parameters");
 
       paramFormItemArray = new FormItem[4];
+      
+      pathField = createValueField("Path");
+      paramFormItemArray[0] = pathField;
 
       contentField = createValueField("Containing text");
-      paramFormItemArray[0] = contentField;
-
-      pathField = createValueField("Path");
-      paramFormItemArray[1] = pathField;
+      paramFormItemArray[1] = contentField;
 
       fileNameField = createValueField("File name");
       paramFormItemArray[2] = fileNameField;
@@ -142,7 +141,6 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       paramFormItemArray[3] = mimeTypesField;
 
       paramForm.setItems(paramFormItemArray);
-      paramForm.setAutoFocus(true);
 
       return paramForm;
    }

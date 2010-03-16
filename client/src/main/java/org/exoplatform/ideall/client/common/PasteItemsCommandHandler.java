@@ -70,7 +70,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
       }
 
       Item item = context.getItemsToCopy().get(0);
-      System.out.println("copy > " + item.getPath());
 
       String pathFromCopy = item.getPath();
       pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));

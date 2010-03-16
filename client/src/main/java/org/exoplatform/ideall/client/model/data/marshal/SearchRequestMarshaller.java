@@ -116,7 +116,7 @@ public class SearchRequestMarshaller implements Marshallable
    }
 
    public String marshal()
-   {
+   {    
       return query;
    }
 

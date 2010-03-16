@@ -170,7 +170,6 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
       
-//      System.out.println(" >>>> " + item.getPath());
 //      updateSelectionTimer.cancel();
 //      
 //      if (selectedItems.contains(item)) {

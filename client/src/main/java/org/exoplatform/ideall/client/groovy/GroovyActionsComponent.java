@@ -30,8 +30,6 @@ import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ideall.client.groovy.event.SetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptHandler;
-import org.exoplatform.ideall.client.groovy.event.UnsetAutoloadEvent;
-import org.exoplatform.ideall.client.groovy.event.UnsetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ideall.client.model.File;
@@ -59,7 +57,7 @@ import org.exoplatform.ideall.client.operation.output.OutputMessage;
 public class GroovyActionsComponent extends AbstractApplicationComponent implements ValidateGroosyScriptHandler,
    DeployGroovyScriptHandler, UndeployGroovyScriptHandler, PreviewGroovyOutputHandler,
    GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler, GroovyUndeployResultReceivedHandler,
-   RestServiceOutputReceivedHandler, SetAutoloadHandler, UnsetAutoloadHandler
+   RestServiceOutputReceivedHandler, SetAutoloadHandler
 {
 
    public GroovyActionsComponent()
@@ -83,7 +81,7 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
 
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
-      handlers.addHandler(UnsetAutoloadEvent.TYPE, this);
+
    }
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
@@ -228,21 +226,11 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
    public void onSetAutoload(SetAutoloadEvent event)
    {
-      updateAutoloadPropertyValue(true);
-   }
-
-   public void onUnsetAutoload(UnsetAutoloadEvent event)
-   {
-      updateAutoloadPropertyValue(false);
-   }
-
-   private void updateAutoloadPropertyValue(boolean value)
-   {
       File file = context.getActiveFile();
       Property jcrContentProperty = GroovyPropertyUtil.getProperty(file.getProperties(), ItemProperty.JCR_CONTENT);
       Property autoloadProperty =
          GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
-      autoloadProperty.setValue("" + value);
+      autoloadProperty.setValue("" + event.isAutoload());
 
       DataService.getInstance().saveProperties(file);
    }
