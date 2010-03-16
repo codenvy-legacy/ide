@@ -21,6 +21,7 @@ package org.exoplatform.ideall.client.groovy;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.groovy.command.DeployGroovyCommand;
+import org.exoplatform.ideall.client.groovy.command.PreviewWadlOutputCommand;
 import org.exoplatform.ideall.client.groovy.command.SetAutoloadCommand;
 import org.exoplatform.ideall.client.groovy.command.UndeployGroovyCommand;
 import org.exoplatform.ideall.client.groovy.command.ValidateGroovyCommand;
@@ -56,6 +57,7 @@ public class GroovyActionsComponentInitializer extends AbstractComponentInitiali
 
       //addCommand(new PreviewGroovyOutputCommand()).disable().hide().dockOnToolbar(true);
       //addCommand(new PreviewGroovyOutputCommand()).disable().hide().dockOnToolbar(true);
+      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);
    }
 
 }

@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
 import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputHandler;
+import org.exoplatform.ideall.client.groovy.event.PreviewWadlOutputEvent;
+import org.exoplatform.ideall.client.groovy.event.PreviewWadlOutputHandler;
 import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ideall.client.groovy.event.SetAutoloadHandler;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
@@ -44,6 +46,9 @@ import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultRece
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ideall.client.model.property.ItemProperty;
+import org.exoplatform.ideall.client.model.wadl.WadlService;
+import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceiveHandler;
+import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
 
@@ -57,7 +62,8 @@ import org.exoplatform.ideall.client.operation.output.OutputMessage;
 public class GroovyActionsComponent extends AbstractApplicationComponent implements ValidateGroosyScriptHandler,
    DeployGroovyScriptHandler, UndeployGroovyScriptHandler, PreviewGroovyOutputHandler,
    GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler, GroovyUndeployResultReceivedHandler,
-   RestServiceOutputReceivedHandler, SetAutoloadHandler
+   RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
+   WadlServiceOutputReceiveHandler
 {
 
    public GroovyActionsComponent()
@@ -81,6 +87,9 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
 
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
+      
+      handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
+      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
 
    }
 
@@ -234,5 +243,19 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
       DataService.getInstance().saveProperties(file);
    }
+   
+   public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
+   {
+     String content = context.getActiveFile().getContent();
+      int indStart = content.indexOf("\"");
+      int indEnd = content.indexOf("\"", indStart + 1);
+      String url = "/rest" + content.substring(indStart + 1, indEnd);
+     WadlService.getInstance().getWadl(url);
+   }
+
+   public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
+   {
+      new GroovyServiceOutputPreviewForm(eventBus, context, event.getApplication());
+   }   
 
 }

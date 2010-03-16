@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandler
+public class RestServiceOutputPreviewPresenter
 {
 
    public interface Display
@@ -65,7 +65,7 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
       HasValue<List<SimpleParameterEntry>> getQueryParams();
 
       void setHttpHeaders(List<SimpleParameterEntry> headers);
-      
+
       void setQueryParams(List<SimpleParameterEntry> params);
 
       HasClickHandlers getSendRequestButton();
@@ -89,17 +89,17 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
       void deleteSelectedQueryParam();
 
       void setHttpMethods(String[] methods);
-      
+
       HasSelectionHandlers<SimpleParameterEntry> getHttHeadersListGridSelectable();
-      
+
       HasSelectionHandlers<SimpleParameterEntry> getQuereParameterListGridSelectable();
-      
+
       void enableDeleteHeaderButton();
-      
+
       void disableDeleteHeaderButton();
-      
+
       void enableDeleteQueryParameterButton();
-      
+
       void disableDeleteQueryParameterButton();
 
    }
@@ -109,7 +109,7 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
    private ApplicationContext context;
 
    private List<SimpleParameterEntry> headers = new Vector<SimpleParameterEntry>();
-   
+
    private List<SimpleParameterEntry> queryParams = new Vector<SimpleParameterEntry>();
 
    private Display display;
@@ -117,7 +117,7 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
    private Handlers handlers;
 
    private SimpleParameterEntry selectedHeader;
-   
+
    private SimpleParameterEntry selectedQueryParam;
 
    public RestServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context)
@@ -138,14 +138,12 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
    {
       display = d;
 
-      handlers.addHandler(HttpMethodChangedEvent.TYPE, this);
-      
       display.disableDeleteHeaderButton();
-      
+
       display.disableDeleteQueryParameterButton();
-     
+
       display.setHttpHeaders(headers);
-      
+
       display.setQueryParams(queryParams);
 
       display.getAddHeaderButton().addClickHandler(new ClickHandler()
@@ -156,7 +154,6 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
          }
       });
 
-      
       display.getHttHeadersListGridSelectable().addSelectionHandler(new SelectionHandler<SimpleParameterEntry>()
       {
          public void onSelection(SelectionEvent<SimpleParameterEntry> event)
@@ -165,19 +162,18 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
             display.enableDeleteHeaderButton();
          }
       });
-      
+
       display.getDeleteHeaderButton().addClickHandler(new ClickHandler()
       {
 
          public void onClick(ClickEvent event)
          {
-            headers.remove(selectedHeader);  
+            headers.remove(selectedHeader);
             display.disableDeleteHeaderButton();
             display.deleteSelectedHeader();
          }
       });
-      
-      
+
       display.getAddQueryParamButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -191,21 +187,20 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
 
          public void onClick(ClickEvent event)
          {
-            queryParams.remove(selectedQueryParam);  
+            queryParams.remove(selectedQueryParam);
             display.disableDeleteQueryParameterButton();
             display.deleteSelectedQueryParam();
          }
       });
-      
-      
+
       display.getQuereParameterListGridSelectable().addSelectionHandler(new SelectionHandler<SimpleParameterEntry>()
+      {
+         public void onSelection(SelectionEvent<SimpleParameterEntry> event)
          {
-            public void onSelection(SelectionEvent<SimpleParameterEntry> event)
-            {
-               selectedQueryParam = event.getSelectedItem();
-               display.enableDeleteQueryParameterButton();
-            }
-         });
+            selectedQueryParam = event.getSelectedItem();
+            display.enableDeleteQueryParameterButton();
+         }
+      });
 
       display.setHttpMethods(getHttpMethods());
 
@@ -214,10 +209,9 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
 
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            eventBus.fireEvent(new HttpMethodChangedEvent(event.getValue()));
+            httpMethodChanged(event.getValue());
          }
       });
-      
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -253,9 +247,9 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
       }
 
       context.setTestGroovyScriptURL(display.getGroovyScriptURLField().getValue());
-      
+
       GroovyService.getInstance().getOutput(display.getGroovyScriptURLField().getValue(),
-         display.getHttpMethod().getValue(),headers,queryParams, display.getRequestBody().getValue());
+         display.getHttpMethod().getValue(), headers, queryParams, display.getRequestBody().getValue());
       display.closeForm();
    }
 
@@ -266,29 +260,30 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
          HTTPMethod.CHECKOUT, HTTPMethod.COPY, HTTPMethod.LOCK, HTTPMethod.MOVE, HTTPMethod.UNLOCK, HTTPMethod.OPTIONS};
    }
 
-   public void onHttpMethodChanged(HttpMethodChangedEvent event)
+   private void httpMethodChanged(String method)
    {
-      if (!event.getHttpMethod().equals(HTTPMethod.GET) && !event.getHttpMethod().equals(HTTPMethod.POST)) 
+      if (!method.equals(HTTPMethod.GET) && !method.equals(HTTPMethod.POST))
       {
          SimpleParameterEntry entry;
          boolean flag = false;
          for (int i = 0; i < headers.size(); i++)
          {
-            entry = headers.get(i);  
+            entry = headers.get(i);
             if (entry.getName().equals(HTTPHeader.X_HTTP_METHOD_OVERRIDE))
             {
-               entry.setValue(event.getHttpMethod());
+               entry.setValue(method);
                headers.set(i, entry);
                flag = true;
             }
          }
-         if (!flag) headers.add(new SimpleParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, event.getHttpMethod()));
-      } 
-      else 
+         if (!flag)
+            headers.add(new SimpleParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, method));
+      }
+      else
       {
          for (int i = 0; i < headers.size(); i++)
          {
-            SimpleParameterEntry entry = headers.get(i);  
+            SimpleParameterEntry entry = headers.get(i);
             if (entry.getName().equals(HTTPHeader.X_HTTP_METHOD_OVERRIDE))
             {
                headers.remove(i);
@@ -298,8 +293,5 @@ public class RestServiceOutputPreviewPresenter implements HttpMethodChangedHandl
       }
       display.setHttpHeaders(headers);
    }
-   
-   
 
-      
 }

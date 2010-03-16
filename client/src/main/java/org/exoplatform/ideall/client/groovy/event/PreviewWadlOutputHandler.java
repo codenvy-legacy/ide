@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.wadl;
+package org.exoplatform.ideall.client.groovy.event;
 
-import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.groovy.command.PreviewWadlOutputCommand;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class WadlActionsComponentInitializer extends AbstractComponentInitializer
+public interface PreviewWadlOutputHandler extends EventHandler
 {
 
-   @Override
-   protected void onItitialize()
-   {
-      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);
-   }
-   
+   void onPreviewWadlOutput(PreviewWadlOutputEvent event);
+
 }

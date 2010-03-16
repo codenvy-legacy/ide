@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.wadl;
+package org.exoplatform.ideall.client.groovy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class WadlServiceGetPresenter
+public class GroovyServiceOutputPreviewPresenter
 {
    public interface Display
    {
@@ -104,7 +104,7 @@ public class WadlServiceGetPresenter
    
    private ArrayList<String> methodArray = new ArrayList<String>();
    
-   public WadlServiceGetPresenter(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
       this.eventBus = eventBus;
       this.context = context;

@@ -18,7 +18,6 @@ import org.exoplatform.ideall.client.model.jcrservice.RepositoryServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
-import org.exoplatform.ideall.client.wadl.WadlActionsComponent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -83,8 +82,6 @@ public class IDE
       
       context.getComponents().add(new HelpActionsComponent());
       
-      context.getComponents().add(new WadlActionsComponent()); 
-
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       new DevToolForm(eventBus, context);

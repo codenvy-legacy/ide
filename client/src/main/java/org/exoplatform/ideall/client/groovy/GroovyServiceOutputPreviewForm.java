@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.wadl;
+package org.exoplatform.ideall.client.groovy;
 
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
@@ -48,7 +48,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPresenter.Display
+public class GroovyServiceOutputPreviewForm extends DialogWindow implements GroovyServiceOutputPreviewPresenter.Display
 {
    private static final int WIDTH = 530;
 
@@ -60,7 +60,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
 
    private IButton cancelButton;
 
-   private WadlServiceGetPresenter presenter;
+   private GroovyServiceOutputPreviewPresenter presenter;
 
    private HLayout hLayout;
 
@@ -80,7 +80,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
 
    private TextAreaItem requestbody;
 
-   public WadlServiceGetForm(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
       super(eventBus, WIDTH, HEIGHT);
       setTitle(TITLE);
@@ -101,7 +101,7 @@ public class WadlServiceGetForm extends DialogWindow implements WadlServiceGetPr
       
       show();
 
-      presenter = new WadlServiceGetPresenter(eventBus, context, wadlApplication);
+      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, context, wadlApplication);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()

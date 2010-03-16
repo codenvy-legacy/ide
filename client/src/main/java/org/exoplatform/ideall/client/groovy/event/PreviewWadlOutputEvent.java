@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.wadl.event;
+package org.exoplatform.ideall.client.groovy.event;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,6 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class PreviewWadlOutputEvent extends GwtEvent<PreviewWadlOutputHandler>
 {
+   
    public static final GwtEvent.Type<PreviewWadlOutputHandler> TYPE = new GwtEvent.Type<PreviewWadlOutputHandler>();
    
    @Override

@@ -39,7 +39,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
    ApplicationContextSavedHandler
 {
 
-   private static final String ID = "Edit/Show Line Numbers";
+   private static final String ID = "Edit/Show \\ Hide Line Numbers";
 
    private static final String TITLE_SHOW = "Show Line Numbers";
    

@@ -26,7 +26,6 @@ import org.exoplatform.ideall.client.application.component.AbstractComponentInit
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
-import org.exoplatform.ideall.client.common.command.edit.HideLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
