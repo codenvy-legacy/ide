@@ -23,6 +23,9 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
+import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.data.DataService;
@@ -109,7 +112,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
          public void onDoubleClick(DoubleClickEvent arg0)
          {
-            openFile();
+            tryOpenFile();
          }
 
       });
@@ -117,7 +120,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       {
          public void onClick(ClickEvent arg0)
          {
-            openFile();
+            tryOpenFile();
          }
       });
 
@@ -137,11 +140,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
       });
 
-      fillEditorsListGrid();
+      fillEditorListGrid();
 
    }
 
-   private void fillEditorsListGrid()
+   private void fillEditorListGrid()
    {
 
       String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
@@ -172,6 +175,43 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
 
          SettingsService.getInstance().saveSetting(context);
+      }
+   }
+
+   private void tryOpenFile()
+   {
+
+      if (context.getOpenedFiles().containsValue(context.getSelectedItems().get(0)))
+      {
+
+         Dialogs.getInstance().ask("Info",
+            "File <b>" + context.getSelectedItems().get(0).getName() + "</b> is open, reopen in new editor?",
+            new BooleanValueReceivedCallback()
+            {
+
+               public void execute(Boolean value)
+               {
+                  
+                  if (value == null)
+                  {
+                     return;
+                  }
+
+                  if (value == true)
+                  {
+
+                     eventBus.fireEvent(new EditorCloseFileEvent((File)context.getSelectedItems().get(0)));
+                     openFile();
+                  }
+                  else
+                  {
+                     display.closeForm();
+                  }
+
+               }
+
+            });
+
       }
 
    }
