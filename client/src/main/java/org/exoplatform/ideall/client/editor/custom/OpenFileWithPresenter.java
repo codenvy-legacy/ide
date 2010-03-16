@@ -191,7 +191,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
                public void execute(Boolean value)
                {
-                  
+
                   if (value == null)
                   {
                      return;
@@ -212,6 +212,10 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
             });
 
+      }
+      else
+      {
+         openFile();
       }
 
    }
