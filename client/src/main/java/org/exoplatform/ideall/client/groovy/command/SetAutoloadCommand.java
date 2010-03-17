@@ -124,7 +124,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
       {
          // is unset autoload
          setTitle(TITLE_UNSET);
-         setPrompt(PROMPT_UNSET+" - <br />"+file.getName());
+         setPrompt(PROMPT_UNSET);
          setIcon(Images.MainMenu.UNSET_AUTOLOAD);
          setEvent(new SetAutoloadEvent(false));
       }
