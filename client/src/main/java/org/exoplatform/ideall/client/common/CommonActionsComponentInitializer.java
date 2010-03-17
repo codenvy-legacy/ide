@@ -126,7 +126,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new MoveItemCommand()).disable().hide().dockOnToolbar();
+      addCommand(new MoveItemCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       /*
        * COPY, CUT, PASTE COMMAND
        */

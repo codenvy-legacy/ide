@@ -37,13 +37,15 @@ public class ViewItemPropertiesCommand extends IDECommand implements EditorActiv
 
    public static final String ID = "View/Properties";
 
-   public static final String TITLE = "Show Properties";
+   public static final String TITLE = "Properties";
+   
+   public static final String PROMPT = "Show Properties";
 
    public ViewItemPropertiesCommand()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
+      setPrompt(PROMPT);
       setIcon(Images.MainMenu.PROPERTIES);
       setEvent(new ShowPropertiesEvent());
    }

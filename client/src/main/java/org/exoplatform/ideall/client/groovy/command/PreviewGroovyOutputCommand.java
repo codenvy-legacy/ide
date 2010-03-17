@@ -36,13 +36,13 @@ import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
 public class PreviewGroovyOutputCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Preview Output...";
+   public static final String ID = "Run/*Preview Output...";
 
    public PreviewGroovyOutputCommand()
    {
       super(ID);
-      setTitle("Preview Output...");
-      setPrompt("Preview Groovy Service Output...");
+      setTitle("*Preview Output...");
+      setPrompt("*Preview Groovy Service Output...");
       setIcon(Images.MainMenu.GROOVY_OUTPUT);
       setEvent(new PreviewGroovyOutputEvent());
    }

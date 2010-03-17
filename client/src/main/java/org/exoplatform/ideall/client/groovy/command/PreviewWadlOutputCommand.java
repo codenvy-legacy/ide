@@ -60,14 +60,25 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
 
       if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
       {
-         setVisible(true);
-         setEnabled(true);
+         if (event.getFile().isNewFile())
+         {
+            setEnabled(false);
+            setVisible(true);
+            return;
+         }
+         else
+         {
+            setVisible(true);
+            setEnabled(true);
+            return;
+         }
       }
       else
       {
          setVisible(false);
          setEnabled(false);
       }
+      
    }
 
 }
