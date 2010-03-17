@@ -28,8 +28,8 @@ import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
 import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .

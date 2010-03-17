@@ -34,8 +34,6 @@ import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.DataService;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
@@ -46,6 +44,8 @@ import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultRece
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ideall.client.model.property.ItemProperty;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.wadl.WadlService;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceiveHandler;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceivedEvent;
@@ -241,7 +241,7 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
          GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
       autoloadProperty.setValue("" + event.isAutoload());
 
-      DataService.getInstance().saveProperties(file);
+      VirtualFileSystem.getInstance().saveProperties(file);
    }
    
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)

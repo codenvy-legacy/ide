@@ -24,9 +24,9 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 
 /**
  * Created by The eXo Platform SAS .

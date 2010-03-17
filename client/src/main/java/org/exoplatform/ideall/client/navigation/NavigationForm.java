@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.navigation;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.BrowserForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.search.SearchResultsForm;
 
 import com.google.gwt.event.shared.HandlerManager;

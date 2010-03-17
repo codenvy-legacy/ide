@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.application.component.AbstractApplicationCo
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.template.TemplateList;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

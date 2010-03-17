@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
 import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;

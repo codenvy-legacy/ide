@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

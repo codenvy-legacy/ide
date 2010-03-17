@@ -25,7 +25,7 @@ import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.model.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 
 /**
  * Created by The eXo Platform SAS.

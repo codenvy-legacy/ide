@@ -25,7 +25,6 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
@@ -35,6 +34,7 @@ import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedEven
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputHandler;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;

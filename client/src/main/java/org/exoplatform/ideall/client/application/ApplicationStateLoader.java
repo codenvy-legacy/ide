@@ -24,12 +24,12 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -88,7 +88,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
          fileToLoad = context.getPreloadFiles().values().iterator().next();
          context.getPreloadFiles().remove(fileToLoad.getPath());
-         DataService.getInstance().getProperties(fileToLoad);
+         VirtualFileSystem.getInstance().getProperties(fileToLoad);
       }
       catch (Exception exc)
       {
@@ -100,7 +100,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    {
       fileToLoad.setNewFile(false);
       fileToLoad.setContentChanged(false);
-      DataService.getInstance().getFileContent(fileToLoad);
+      VirtualFileSystem.getInstance().getFileContent(fileToLoad);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

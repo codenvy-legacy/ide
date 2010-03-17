@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.editor;
 
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.Tab;

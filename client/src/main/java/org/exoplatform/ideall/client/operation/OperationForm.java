@@ -27,8 +27,8 @@ import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredHan
 import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEvent;
 import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.operation.output.OutputForm;
 import org.exoplatform.ideall.client.operation.preview.PreviewForm;
 import org.exoplatform.ideall.client.operation.properties.PropertiesForm;

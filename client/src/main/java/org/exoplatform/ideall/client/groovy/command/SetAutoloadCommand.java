@@ -26,9 +26,9 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.groovy.GroovyPropertyUtil;
 import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -151,7 +151,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
    /**
     * Handling item properties saved event
     * 
-    * @see org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent)
+    * @see org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent)
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {

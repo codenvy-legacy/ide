@@ -27,13 +27,13 @@ import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.ItemCopyCompleteEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemCopyCompleteHandler;
-import org.exoplatform.ideall.client.model.data.event.MoveCompleteEvent;
-import org.exoplatform.ideall.client.model.data.event.MoveCompleteHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemCopyCompleteEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemCopyCompleteHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -83,7 +83,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
 
       String destination = context.getSelectedItems().get(0).getPath() + "/" + item.getName();
 
-      DataService.getInstance().copy(item, destination);
+      VirtualFileSystem.getInstance().copy(item, destination);
    }
 
    private void cutNextItem()
@@ -108,7 +108,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
 
       String destination = context.getSelectedItems().get(0).getPath() + "/" + item.getName();
 
-      DataService.getInstance().move(item, destination);
+      VirtualFileSystem.getInstance().move(item, destination);
    }
 
    private void operationCompleted()

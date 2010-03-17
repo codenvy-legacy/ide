@@ -26,11 +26,11 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.Folder;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -123,7 +123,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       Item item = items.get(0);
       items.remove(0);
-      DataService.getInstance().deleteItem(item);
+      VirtualFileSystem.getInstance().deleteItem(item);
    }
 
    public void onItemDeleted(ItemDeletedEvent event)
@@ -148,7 +148,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
        selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
       
        Folder folder = new Folder(selectedItemPath);
-       DataService.getInstance().getFolderContent(folder.getPath());
+       VirtualFileSystem.getInstance().getFolderContent(folder.getPath());
       
        context.getSelectedItems().clear();
        context.getSelectedItems().add(folder);

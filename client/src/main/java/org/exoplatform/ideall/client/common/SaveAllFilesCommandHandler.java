@@ -25,12 +25,12 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -71,7 +71,7 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
-            DataService.getInstance().saveFileContent(file, file.getPath());
+            VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
             return;
          }
       }
@@ -83,7 +83,7 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
    {
       if (event.getFile().isPropertiesChanged())
       {
-         DataService.getInstance().saveProperties(event.getFile());
+         VirtualFileSystem.getInstance().saveProperties(event.getFile());
       }
       else
       {

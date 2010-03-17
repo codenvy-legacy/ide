@@ -21,12 +21,12 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

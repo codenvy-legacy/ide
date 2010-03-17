@@ -27,13 +27,13 @@ import org.exoplatform.ideall.client.component.ValueCallback;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -99,7 +99,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
                newFile.setPropertiesChanged(true);
             }
             newFile.setIcon(file.getIcon());
-            DataService.getInstance().saveFileContent(newFile, pathToSave);
+            VirtualFileSystem.getInstance().saveFileContent(newFile, pathToSave);
          }
 
       });
@@ -121,20 +121,20 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       if (event.isNewFile())
       {
          handlers.removeHandlers();
-         DataService.getInstance().getProperties(event.getFile());
+         VirtualFileSystem.getInstance().getProperties(event.getFile());
       }
       else
       {
          if (event.isSaveAs())
          {
             event.getFile().setPath(event.getPath());
-            DataService.getInstance().saveProperties(event.getFile());
+            VirtualFileSystem.getInstance().saveProperties(event.getFile());
          }
          else
          {
             if (event.getFile().isPropertiesChanged())
             {
-               DataService.getInstance().saveProperties(event.getFile());
+               VirtualFileSystem.getInstance().saveProperties(event.getFile());
             }
             else
             {

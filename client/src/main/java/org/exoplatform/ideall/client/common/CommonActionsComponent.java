@@ -54,8 +54,6 @@ import org.exoplatform.ideall.client.event.file.SearchFileEvent;
 import org.exoplatform.ideall.client.event.file.SearchFileHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.template.FileTemplates;
@@ -65,6 +63,8 @@ import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHa
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.search.AdvancedSearchForm;
 import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;

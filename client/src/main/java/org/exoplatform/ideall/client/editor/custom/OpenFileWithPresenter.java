@@ -27,13 +27,13 @@ import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentReceivedHandler;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -166,7 +166,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
          context.setSelectedEditorDescriptor(selectedEditor.getDescription());
-         DataService.getInstance().getFileContent((File)context.getSelectedItems().get(0));
+         VirtualFileSystem.getInstance().getFileContent((File)context.getSelectedItems().get(0));
       }
       else
       {
@@ -226,7 +226,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void onApplicationContextSaved(ApplicationContextSavedEvent event)
    {
-      DataService.getInstance().getFileContent((File)context.getSelectedItems().get(0));
+      VirtualFileSystem.getInstance().getFileContent((File)context.getSelectedItems().get(0));
    }
 
 }

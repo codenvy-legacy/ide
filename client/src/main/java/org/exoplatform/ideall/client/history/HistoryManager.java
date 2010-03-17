@@ -32,10 +32,10 @@ import org.exoplatform.ideall.client.editor.event.ChangeActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -129,13 +129,13 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       File file = new File(path);
-      DataService.getInstance().getProperties(file);
+      VirtualFileSystem.getInstance().getProperties(file);
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       stopHandling();
-      DataService.getInstance().getFileContent((File)event.getItem());
+      VirtualFileSystem.getInstance().getFileContent((File)event.getItem());
    }
 
    public void onInitializeApplication(InitializeApplicationEvent event)

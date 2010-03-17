@@ -17,7 +17,7 @@
 
 package org.exoplatform.ideall.client.event.file;
 
-import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

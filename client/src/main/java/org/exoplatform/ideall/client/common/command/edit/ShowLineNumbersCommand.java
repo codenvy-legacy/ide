@@ -24,9 +24,9 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 /**
  * Created by The eXo Platform SAS .

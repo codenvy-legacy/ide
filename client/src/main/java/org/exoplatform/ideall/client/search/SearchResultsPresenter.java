@@ -18,10 +18,10 @@ package org.exoplatform.ideall.client.search;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Folder;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -91,7 +91,7 @@ public class SearchResultsPresenter
          return;
       }
 
-      DataService.getInstance().getFileContent((File)item);
+      VirtualFileSystem.getInstance().getFileContent((File)item);
    }
 
 }

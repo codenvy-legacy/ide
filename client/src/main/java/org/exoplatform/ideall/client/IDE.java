@@ -11,12 +11,12 @@ import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ideall.client.model.data.DataServiceImpl;
 import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.client.model.jcrservice.RepositoryServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ideall.client.model.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -59,7 +59,7 @@ public class IDE
 
       new RepositoryServiceImpl(eventBus);
 
-      new DataServiceImpl(eventBus);
+      new WebDavVirtualFileSystem(eventBus);
 
       new GroovyServiceImpl(eventBus);
 

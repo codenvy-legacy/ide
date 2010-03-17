@@ -24,9 +24,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
 

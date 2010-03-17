@@ -21,9 +21,9 @@ package org.exoplatform.ideall.client.search;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -162,7 +162,7 @@ public class AdvancedSearchPresenter
          context.setSearchContentType(contentType);
       }
 
-      DataService.getInstance().search(mainPath, content, fileName, contentType, searchPath);
+      VirtualFileSystem.getInstance().search(mainPath, content, fileName, contentType, searchPath);
       display.closeForm();
    }
 

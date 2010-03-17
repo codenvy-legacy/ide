@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.model.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 
 /**
  * Created by The eXo Platform SAS .

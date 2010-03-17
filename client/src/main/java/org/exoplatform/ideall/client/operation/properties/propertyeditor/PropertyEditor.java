@@ -25,9 +25,9 @@ import java.util.Comparator;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.property.PropertyTitle;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;

@@ -20,13 +20,13 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.data.event.MoveCompleteEvent;
-import org.exoplatform.ideall.client.model.data.event.MoveCompleteHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -151,7 +151,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          return;
       }
 
-      DataService.getInstance().move(item, path);
+      VirtualFileSystem.getInstance().move(item, path);
    }
 
    private boolean hasOpenedFiles(String path)
@@ -180,7 +180,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
             File file = context.getOpenedFiles().get(key);
             if (file.isContentChanged())
             {
-               DataService.getInstance().saveFileContent(file, file.getPath());
+               VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
                return true;
             }
          }
@@ -202,7 +202,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       }
 
       String path = display.getItemPathField().getValue();
-      DataService.getInstance().move(context.getSelectedItems().get(0), path);
+      VirtualFileSystem.getInstance().move(context.getSelectedItems().get(0), path);
    }
 
 }

@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.search;
 
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
-import org.exoplatform.ideall.client.model.data.DataService;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -96,7 +96,7 @@ public class SearchPresenter
          path = "/" + names[1] + "/" + names[2];
       }
 
-      DataService.getInstance().search(content, path);
+      VirtualFileSystem.getInstance().search(content, path);
       display.closeForm();
    }
 

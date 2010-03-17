@@ -25,10 +25,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.Workspace;
-import org.exoplatform.ideall.client.model.data.DataService;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.Workspace;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -60,7 +60,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
 
       String path = "/" + context.getRepository() + "/" + context.getWorkspace();
       Workspace workspace = new Workspace(path);
-      DataService.getInstance().getProperties(workspace);
+      VirtualFileSystem.getInstance().getProperties(workspace);
    }
 
    public void onError(ExceptionThrownEvent event)

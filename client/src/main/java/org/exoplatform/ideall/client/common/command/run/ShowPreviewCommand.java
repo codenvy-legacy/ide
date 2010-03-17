@@ -83,4 +83,5 @@ public class ShowPreviewCommand extends IDECommand implements EditorActiveFileCh
          setEnabled(false);
       }
    }
+   
 }

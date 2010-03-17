@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.File;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.user.client.Cookies;
 

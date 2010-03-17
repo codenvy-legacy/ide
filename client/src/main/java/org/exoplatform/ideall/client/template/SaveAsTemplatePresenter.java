@@ -20,11 +20,11 @@ package org.exoplatform.ideall.client.template;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
-import org.exoplatform.ideall.client.model.File;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

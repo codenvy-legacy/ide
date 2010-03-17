@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.model.Item;
-import org.exoplatform.ideall.client.model.Workspace;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 
 /**
  * Created by The eXo Platform SAS.

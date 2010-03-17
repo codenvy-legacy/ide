@@ -26,11 +26,11 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
-import org.exoplatform.ideall.client.model.File;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.model.data.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
 

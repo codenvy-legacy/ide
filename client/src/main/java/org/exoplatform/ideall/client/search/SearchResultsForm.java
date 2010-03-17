@@ -18,8 +18,8 @@ package org.exoplatform.ideall.client.search;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
-import org.exoplatform.ideall.client.model.Folder;
-import org.exoplatform.ideall.client.model.Item;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
 import org.exoplatform.ideall.client.search.event.SearchResultPanelSelectedEvent;
 
