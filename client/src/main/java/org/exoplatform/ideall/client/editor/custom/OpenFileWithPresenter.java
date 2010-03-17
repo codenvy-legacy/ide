@@ -183,9 +183,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
       if (context.getOpenedFiles().containsValue(context.getSelectedItems().get(0)))
       {
-
          Dialogs.getInstance().ask("Info",
-            "File <b>" + context.getSelectedItems().get(0).getName() + "</b> is open, reopen in new editor?",
+            "Do you want to reopen file <b>" + context.getSelectedItems().get(0).getName() + "</b> in selected editor?",
             new BooleanValueReceivedCallback()
             {
 
