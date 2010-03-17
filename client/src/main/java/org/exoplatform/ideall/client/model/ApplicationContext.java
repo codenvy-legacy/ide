@@ -135,7 +135,7 @@ public class ApplicationContext
       return itemsToCut;
    }
 
-   private String selectedEditorDescriptor;
+   private String selectedEditorDescription;
 
    private boolean showLineNumbers = true;
 
@@ -352,17 +352,14 @@ public class ApplicationContext
       return defaultEditors;
    }
 
-   public String getSelectedEditorDescriptor()
+   public String getSelectedEditorDescription()
    {
-      return selectedEditorDescriptor;
+      return selectedEditorDescription;
    }
 
    public void setSelectedEditorDescriptor(String selectedEditor)
    {
-      this.selectedEditorDescriptor = selectedEditor;
+      this.selectedEditorDescription = selectedEditor;
    }
-   
-   
-
    
 }

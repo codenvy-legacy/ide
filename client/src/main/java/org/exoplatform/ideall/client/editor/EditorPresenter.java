@@ -649,15 +649,14 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
    protected void openFile(File file)
    {
       Editor editor;
-
       String mimeType = file.getContentType();
-
       try
       {
          String defaultEditorDescription;
-         if (context.getSelectedEditorDescriptor() != null)
+         if (context.getSelectedEditorDescription() != null)
          {
-            defaultEditorDescription = context.getSelectedEditorDescriptor();
+            defaultEditorDescription = context.getSelectedEditorDescription();
+            context.setSelectedEditorDescriptor(null);
          }
          else
          {
@@ -688,7 +687,6 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          List<Editor> editors = EditorFactory.getEditors(mimeType);
          for (Editor e : editors)
          {
-
             if (e.getDescription().equals(defaultEditorDescription))
             {
                editor = e;
