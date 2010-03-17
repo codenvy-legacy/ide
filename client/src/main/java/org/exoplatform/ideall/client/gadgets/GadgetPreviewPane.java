@@ -102,8 +102,9 @@ public class GadgetPreviewPane extends TabPanel
       url = url.replace("&view=", "&view=canvas");
 
       url = Configuration.getInstance().getGadgetServer() + "ifr" + url;
-      Frame frame = new Frame(url);
+      Frame frame = new Frame(url + "&nocache=1");
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
+      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
