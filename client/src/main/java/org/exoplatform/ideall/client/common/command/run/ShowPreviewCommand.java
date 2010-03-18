@@ -45,7 +45,7 @@ public class ShowPreviewCommand extends IDECommand implements EditorActiveFileCh
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.PREVIEW);
+      setIcon(Images.MainMenu.PREVIEW_HTML);
       setEvent(new PreviewFileEvent());
    }
 

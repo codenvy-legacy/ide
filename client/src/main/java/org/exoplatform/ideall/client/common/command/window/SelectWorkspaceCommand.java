@@ -42,7 +42,7 @@ public class SelectWorkspaceCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.BrowserPanel.ICON);
+      setIcon(Images.MainMenu.WORKSPACE);
       setEvent(new SelectWorkspaceEvent());
    }
 

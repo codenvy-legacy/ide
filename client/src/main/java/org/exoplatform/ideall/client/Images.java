@@ -33,170 +33,174 @@ public interface Images
    public interface MainMenu
    {
 
-      public static final String SAVE = imageUrl + "menu/next_edition/save.png";
+      public static final String SAVE = imageUrl + "menu/file/save.png";
 
-      public static final String SAVE_AS = imageUrl + "menu/next_edition/saveAs.png";
+      public static final String SAVE_AS = imageUrl + "menu/file/saveAs.png";
 
-      public static final String SAVE_ALL = imageUrl + "menu/next_edition/saveAll.png";
+      public static final String SAVE_ALL = imageUrl + "menu/file/saveAll.png";
 
-      public static final String SAVE_AS_TEMPLATE = imageUrl + "menu/next_edition/saveTemplate.png";
+      public static final String SAVE_AS_TEMPLATE = imageUrl + "menu/file/saveTemplate.png";
 
-      public static final String DELETE = imageUrl + "menu/delete.png";
+      public static final String DELETE = imageUrl + "menu/file/delete.png";
 
-      public static final String NEW = imageUrl + "menu/newDocument.png";
+      public static final String NEW = imageUrl + "menu/file/new.png";
 
-      public static final String NEW_FOLDER = imageUrl + "menu/newFolder.png";
+      public static final String NEW_FOLDER = imageUrl + "menu/file/newFolder.png";
 
-      public static final String SEARCH = imageUrl + "menu/next_edition/search.png";
+      public static final String SEARCH = imageUrl + "menu/file/search.png";
 
-      public static final String PROPERTIES = imageUrl + "menu/next_edition/properties.png";
+      public static final String PROPERTIES = imageUrl + "menu/view/properties.png";
 
-      public static final String PREVIEW = imageUrl + "menu/next_edition/preview.png";
+      public static final String REFRESH = imageUrl + "menu/file/refresh.png";
 
-      public static final String REFRESH = imageUrl + "menu/refresh.png";
-
-      public static final String MOVE = imageUrl + "menu/move.png";
+      public static final String MOVE = imageUrl + "menu/file/move.png";
 
       public static final String DELIMETER = imageUrl + "menu/delimeter.png";
 
       public static final String TOOLS = imageUrl + "menu/tools2.png";
 
-      public static final String ABOUT = imageUrl + "menu/about.png";
+      public static final String ABOUT = imageUrl + "menu/help/about.png";
 
-      public static final String CUSTOMIZE_TOOLBAR = imageUrl + "menu/customizeToolBar.png";
+      public static final String CUSTOMIZE_TOOLBAR = imageUrl + "menu/window/customizeToolBar.png";
 
-      public static final String TEMPLATES = imageUrl + "menu/next_edition/templates.png";
+      public static final String TEMPLATES = imageUrl + "menu/file/createFromTemplate.png";
       
-      public static final String GOTOFOLDER = imageUrl + "menu/goToFile3.png";
+      public static final String GOTOFOLDER = imageUrl + "menu/file/goToFolder.png";
       
-      public static final String GET_URL = imageUrl + "menu/url1.png";
+      public static final String GET_URL = imageUrl + "menu/file/url.png";
       
-      public static final String OPENWITH = imageUrl + "menu/openwith.png";
+      public static final String OPENWITH = imageUrl + "menu/file/openWith.png";
       
-      public static final String UPLOAD = imageUrl + "menu/next_edition/upload1.png";
+      public static final String UPLOAD = imageUrl + "menu/file/upload.png";
       
-      public static final String DOWNLOAD = imageUrl + "menu/next_edition/download1.png";
+      public static final String DOWNLOAD = imageUrl + "menu/file/download.png";
       
-      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/next_edition/downloadZipped1.png";
+      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/file/downloadZipped.png";
       
-      public static final String WADL = imageUrl + "groovy/wadl1.png";
+      public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
       
+      /*
+       * HTML
+       */
       
+      public static final String PREVIEW_HTML = imageUrl + "html/preview.png";
 
       /*
        * GROOVY
        */
+      
 
-      public static final String VALIDATE = imageUrl + "menu/groovy/validate.png";
+      public static final String VALIDATE = imageUrl + "groovy/validate.png";
 
-      public static final String DEPLOY = imageUrl + "menu/groovy/deploy.png";
+      public static final String DEPLOY_GROOVY = imageUrl + "groovy/deploy.png";
 
-      public static final String UNDEPLOY = imageUrl + "menu/groovy/undeploy.png";
+      public static final String UNDEPLOY_GROOVY = imageUrl + "groovy/undeploy.png";
 
-      public static final String GROOVY_OUTPUT = imageUrl + "menu/groovy/output.png";
+      public static final String GROOVY_OUTPUT = imageUrl + "groovy/output.png";
 
-      public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload1.png";
+      public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload.png";
 
-      public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload1.png";
-
+      public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload.png";
+      
+      /*
+       * GADGET
+       */
+      public static final String PREVIEW_GADGET = imageUrl + "gadget/preview.png";
+      
+      public static final String DEPLOY_GADGET = imageUrl + "gadget/deployGadget.png";
+      
+      public static final String UNDEPLOY_GADGET = imageUrl + "gadget/undeployGadget.png";
+      
    }
 
    public interface Edit
    {
 
-      public static final String UNDO = imageUrl + "menu/editing/undo.png";
+      public static final String UNDO = imageUrl + "menu/edit/undo.png";
 
-      public static final String REDO = imageUrl + "menu/editing/redo.png";
+      public static final String REDO = imageUrl + "menu/edit/redo.png";
 
-      public static final String FORMAT = imageUrl + "menu/next_edition/format.png";
+      public static final String FORMAT = imageUrl + "menu/edit/format.png";
 
-      public static final String SHOW_LINE_NUMBERS = imageUrl + "edit/showLineNumbers2.png";
+      public static final String SHOW_LINE_NUMBERS = imageUrl + "menu/edit/showLineNumbers.png";
 
-      public static final String HIDE_LINE_NUMBERS = imageUrl + "edit/hideLineNumbers2.png";
+      public static final String HIDE_LINE_NUMBERS = imageUrl + "menu/edit/hideLineNumbers.png";
       
-      public static final String COPY_FILE = imageUrl + "menu/editing/copy.png";
+      public static final String COPY_FILE = imageUrl + "menu/edit/copy.png";
       
-      public static final String CUT_FILE = imageUrl + "menu/editing/cut.png";
+      public static final String CUT_FILE = imageUrl + "menu/edit/cut.png";
       
-      public static final String PASTE_FILE = imageUrl + "menu/editing/paste.png";
+      public static final String PASTE_FILE = imageUrl + "menu/edit/paste.png";
       
    }
    
    public interface ControlButtons
    {
       
-      public static final String MAXIMIZE = imageUrl + "buttons/minmax/maximize2.png";
+      public static final String MAXIMIZE = imageUrl + "buttons/minmax/maximize.png";
       
-      public static final String RESTORE = imageUrl + "buttons/minmax/minimize2.png";
+      public static final String RESTORE = imageUrl + "buttons/minmax/minimize.png";
       
    }
 
    public interface ViewPanel
    {
 
-      public static final String BUTTON_CLEAR = imageUrl + "view/buttonClear1.png";
 
    }
 
    public interface PropertiesPanel
    {
 
-      public static final String ICON = imageUrl + "properties/tabIcon.png";
+      public static final String ICON = imageUrl + "panel/properties/properties.png";
 
    }
 
    public interface OutputPanel
    {
+      
+      public static final String BUTTON_CLEAR = imageUrl + "panel/output/buttonClear.png";
 
-      public static final String ICON = imageUrl + "output/output2.png";
+      public static final String ICON = imageUrl + "panel/output/output.png";
 
    }
 
    public interface BrowserPanel
    {
 
-      public static final String ICON = imageUrl + "browser/workspace.png";
+      public static final String ICON = imageUrl + "panel/workspace/workspace.png";
 
    }
 
+   
    public interface SearchPanel
    {
 
-      static final String ICON = imageUrl + "search/search.png";
+      static final String ICON = imageUrl + "panel/search/search.png";
 
    }
 
-   public interface StatusBar
-   {
-
-      public static final String VISIBILITY = imageUrl + "properties.png";
-
-      public static final String FODLER_OPENED = imageUrl + "folderOpened.png";
-
-      public static final String GRADIENT = imageUrl + "statusbar/gradient.png";
-
-   }
 
    public interface FileTypes
    {
 
-      public static final String WORKSPACE = imageUrl + "filetypes/workspace.png";
+      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
 
-      public static final String DEFAULT = imageUrl + "filetypes/default.png";
+      public static final String DEFAULT = imageUrl + "filetype/default.png";
 
-      public static final String TXT = imageUrl + "filetypes/txt.png";
+      public static final String TXT = imageUrl + "filetype/txt.png";
 
-      public static final String HTML = imageUrl + "filetypes/html.png";
+      public static final String HTML = imageUrl + "filetype/html.png";
 
-      public static final String XML = imageUrl + "filetypes/xml.png";
+      public static final String XML = imageUrl + "filetype/xml.png";
 
-      public static final String GROOVY = imageUrl + "filetypes/groovy.png";
+      public static final String GROOVY = imageUrl + "filetype/groovy.png";
 
-      public static final String JAVASCRIPT = imageUrl + "filetypes/javascript.gif";
+      public static final String JAVASCRIPT = imageUrl + "filetype/javascript.gif";
 
-      public static final String CSS = imageUrl + "filetypes/css.png";
+      public static final String CSS = imageUrl + "filetype/css.png";
 
-      public static final String GADGET = imageUrl + "filetypes/gadget1.png";
+      public static final String GADGET = imageUrl + "filetype/gadget.png";
 
    }
 
@@ -204,35 +208,31 @@ public interface Images
    {
 
       public static final String ABOUT_LOGO = imageUrl + "logo/exoplatform.gif";
+   
    }
 
    public interface Buttons
    {
 
-      public static final String OK = imageUrl + "buttons/yes1.png";
+      public static final String OK = imageUrl + "buttons/ok.png";
 
-      public static final String NO = imageUrl + "buttons/no1.png";
+      public static final String NO = imageUrl + "buttons/no.png";
 
-      public static final String CANCEL = imageUrl + "buttons/no1.png";
+      public static final String CANCEL = imageUrl + "buttons/cancel.png";
 
-      public static final String YES = imageUrl + "buttons/yes1.png";
+      public static final String YES = imageUrl + "buttons/yes.png";
 
-      public static final String SEARCH = imageUrl + "buttons/search2.png";
+      public static final String SEARCH = imageUrl + "buttons/search.png";
 
-      public static final String ADD = imageUrl + "buttons/add2.png";
+      public static final String ADD = imageUrl + "buttons/add.png";
 
-      public static final String DELETE = imageUrl + "buttons/remove2.png";
+      public static final String DELETE = imageUrl + "buttons/remove.png";
+      
+      public static final String UP = imageUrl + "buttons/up.png";
 
-   }
+      public static final String DOWN = imageUrl + "buttons/down.png";
 
-   public interface Toolbar
-   {
-
-      public static final String UP = imageUrl + "toolbar/move_up1.png";
-
-      public static final String DOWN = imageUrl + "toolbar/move_down1.png";
-
-      public static final String DEFAULTS = imageUrl + "toolbar/refresh1.png";
+      public static final String DEFAULTS = imageUrl + "buttons/defaults.png";
 
    }
 

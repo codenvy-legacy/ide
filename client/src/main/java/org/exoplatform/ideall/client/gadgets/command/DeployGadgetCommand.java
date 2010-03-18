@@ -40,7 +40,7 @@ public class DeployGadgetCommand extends IDECommand implements EditorActiveFileC
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.DEPLOY);
+      setIcon(Images.MainMenu.DEPLOY_GADGET);
       setEvent(new DeployGadgetEvent());
    }
    

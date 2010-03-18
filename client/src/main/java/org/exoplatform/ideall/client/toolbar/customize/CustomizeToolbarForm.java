@@ -170,12 +170,12 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       moveUpButton = new IButton(BUTTON_MOVEUP);
       moveUpButton.setWidth(BUTTONS_WIDTH);
       moveUpButton.setHeight(22);
-      moveUpButton.setIcon(Images.Toolbar.UP);
+      moveUpButton.setIcon(Images.Buttons.UP);
 
       moveDownButton = new IButton(BUTTON_MOVEDOWN);
       moveDownButton.setWidth(BUTTONS_WIDTH);
       moveDownButton.setHeight(22);
-      moveDownButton.setIcon(Images.Toolbar.DOWN);
+      moveDownButton.setIcon(Images.Buttons.DOWN);
 
       buttonsLayout.addMember(addCommandButton);
       buttonsLayout.addMember(addDelimiterButton);
@@ -215,7 +215,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       defaultsButton = new IButton(BUTTON_RESTOREDEFAULTS);
       defaultsButton.setWidth(CONTROL_BUTTONS_WIDTH);
       defaultsButton.setHeight(22);
-      defaultsButton.setIcon(Images.Toolbar.DEFAULTS);
+      defaultsButton.setIcon(Images.Buttons.DEFAULTS);
 
       ToolbarItem tbi = new ToolbarItem();
       StatefulCanvas delimiter1 = new StatefulCanvas();

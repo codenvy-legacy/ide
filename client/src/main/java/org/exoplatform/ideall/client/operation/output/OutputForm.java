@@ -58,7 +58,7 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
       addMember(outputLayout);
 
       clearOutputButton = new ImgButton();
-      clearOutputButton.setSrc(Images.ViewPanel.BUTTON_CLEAR);
+      clearOutputButton.setSrc(Images.OutputPanel.BUTTON_CLEAR);
       clearOutputButton.setWidth(20);
       clearOutputButton.setHeight(18);
       clearOutputButton.setCanFocus(false);

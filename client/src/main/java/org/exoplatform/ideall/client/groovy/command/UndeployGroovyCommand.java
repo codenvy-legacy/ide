@@ -43,7 +43,7 @@ public class UndeployGroovyCommand extends IDECommand implements EditorActiveFil
       super(ID);
       setTitle("Undeploy");
       setPrompt("Undeploy Groovy Script");
-      setIcon(Images.MainMenu.UNDEPLOY);
+      setIcon(Images.MainMenu.UNDEPLOY_GROOVY);
       setEvent(new UndeployGroovyScriptEvent());
    }
 

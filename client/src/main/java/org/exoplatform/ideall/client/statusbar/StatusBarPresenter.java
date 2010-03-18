@@ -68,7 +68,7 @@ public class StatusBarPresenter implements SelectedItemsHandler
       }
       else
       {
-         statusMessage = "Slected: <b>" + event.getSelectedItems().size() + "</b> items";
+         statusMessage = "Selected: <b>" + event.getSelectedItems().size() + "</b> items";
       }
 
       display.getPathInfoField().setValue(statusMessage);

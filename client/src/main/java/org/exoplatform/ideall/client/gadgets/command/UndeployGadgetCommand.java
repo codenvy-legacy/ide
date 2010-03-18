@@ -41,7 +41,7 @@ public class UndeployGadgetCommand extends IDECommand implements EditorActiveFil
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.UNDEPLOY);
+      setIcon(Images.MainMenu.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
    }
    

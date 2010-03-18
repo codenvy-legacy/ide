@@ -178,44 +178,48 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       }
    }
 
+   private void showDialog()
+   {
+      Dialogs.getInstance().ask("Info",
+         "Do you want to reopen file <b>" + context.getSelectedItems().get(0).getName() + "</b> in selected editor?",
+         new BooleanValueReceivedCallback()
+         {
+
+            public void execute(Boolean value)
+            {
+
+               if (value == null)
+               {
+                  return;
+               }
+
+               if (value == true)
+               {
+                  eventBus.fireEvent(new EditorCloseFileEvent((File)context.getSelectedItems().get(0)));
+                  openFile();
+               }
+               else
+               {
+                  display.closeForm();
+               }
+
+            }
+
+         });
+   }
+
    private void tryOpenFile()
    {
 
-      if (context.getOpenedFiles().containsValue(context.getSelectedItems().get(0)))
+      for (File f : context.getOpenedFiles().values())
       {
-         Dialogs.getInstance().ask("Info",
-            "Do you want to reopen file <b>" + context.getSelectedItems().get(0).getName() + "</b> in selected editor?",
-            new BooleanValueReceivedCallback()
-            {
-
-               public void execute(Boolean value)
-               {
-
-                  if (value == null)
-                  {
-                     return;
-                  }
-
-                  if (value == true)
-                  {
-
-                     eventBus.fireEvent(new EditorCloseFileEvent((File)context.getSelectedItems().get(0)));
-                     openFile();
-                  }
-                  else
-                  {
-                     display.closeForm();
-                  }
-
-               }
-
-            });
-
+         if (f.getPath().equals(context.getSelectedItems().get(0).getPath()))
+         {
+            showDialog();
+            return;
+         }
       }
-      else
-      {
-         openFile();
-      }
+      openFile();
 
    }
 
