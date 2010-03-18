@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.gadgets;
+package org.exoplatform.ideall.client.gadgets.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -23,9 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface GadgetPeviewHandler extends EventHandler
+public interface DeployGadgetHadndler extends EventHandler
 {
-
-   void onGadgetPreview(GadgetPeviewEvent event);
-
+   
+   void onDeployGadget(DeployGadgetEvent event);
+   
 }

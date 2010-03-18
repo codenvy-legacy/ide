@@ -18,6 +18,10 @@ package org.exoplatform.ideall.client.gadgets;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.gadgets.event.DeployGadgetEvent;
+import org.exoplatform.ideall.client.gadgets.event.DeployGadgetHadndler;
+import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetEvent;
+import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetHandler;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetDeployResultEvent;

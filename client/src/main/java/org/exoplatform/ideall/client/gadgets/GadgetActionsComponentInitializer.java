@@ -17,6 +17,8 @@
 package org.exoplatform.ideall.client.gadgets;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
+import org.exoplatform.ideall.client.gadgets.command.DeployGadgetCommand;
+import org.exoplatform.ideall.client.gadgets.command.UndeployGadgetCommand;
 
 
 /**

@@ -14,42 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.gadgets;
+package org.exoplatform.ideall.client.gadgets.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler>
+public interface GadgetPeviewHandler extends EventHandler
 {
 
-   public static Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
-
-   private String url;
-
-   public GadgetPeviewEvent(String url)
-   {
-      this.url = url;
-   }
-
-   @Override
-   protected void dispatch(GadgetPeviewHandler handler)
-   {
-      handler.onGadgetPreview(this);
-   }
-
-   @Override
-   public Type<GadgetPeviewHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   public String getUrl()
-   {
-      return url;
-   }
+   void onGadgetPreview(GadgetPeviewEvent event);
 
 }
