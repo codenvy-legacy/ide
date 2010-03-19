@@ -33,13 +33,13 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewGroovyFileCommand extends AbstractNewFileCommand
 {
 
-   private static final String ID = "File/New/GROOVY file";
+   private static final String ID = "File/New/REST Service";
 
    public NewGroovyFileCommand()
    {
       super(ID,
-         "Groovy File",
-         "Create New Groovy File",
+         "REST Service",
+         "Create New REST Service",
          Images.FileTypes.GROOVY,
          new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
    }

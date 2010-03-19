@@ -42,7 +42,7 @@ public class DeployGroovyCommand extends IDECommand implements EditorActiveFileC
    {
       super(ID);
       setTitle("Deploy");
-      setPrompt("Deploy Groovy Script");
+      setPrompt("Deploy REST Service");
       setIcon(Images.MainMenu.DEPLOY_GROOVY);
       setEvent(new DeployGroovyScriptEvent());
    }

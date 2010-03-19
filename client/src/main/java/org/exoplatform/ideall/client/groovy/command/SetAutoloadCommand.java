@@ -45,11 +45,11 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
 
    private static final String TITLE_SET = "Set Autoload";
    
-   private static final String PROMPT_SET = "Set Groovy Script Autoload";
+   private static final String PROMPT_SET = "Set REST Service Autoload";
 
    private static final String TITLE_UNSET = "Unset Autoload";
    
-   private static final String PROMPT_UNSET = "Unset Groovy Script Autoload";
+   private static final String PROMPT_UNSET = "Unset REST Service Autoload";
 
 
    public SetAutoloadCommand()

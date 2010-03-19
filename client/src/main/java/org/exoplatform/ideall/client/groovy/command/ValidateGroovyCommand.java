@@ -42,7 +42,7 @@ public class ValidateGroovyCommand extends IDECommand implements EditorActiveFil
    {
       super(ID);
       setTitle("Validate");
-      setPrompt("Validate Groovy Script");
+      setPrompt("Validate REST Service");
       setIcon(Images.MainMenu.VALIDATE);
       setEvent(new ValidateGroovyScriptEvent());
    }

@@ -36,7 +36,7 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
    {
       super(ID);
       setTitle("Preview Output...");
-      setPrompt("Preview Groovy Service Output...");
+      setPrompt("Preview REST Service Output...");
       setIcon(Images.MainMenu.GROOVY_OUTPUT);
       setEvent(new PreviewWadlOutputEvent());
 
