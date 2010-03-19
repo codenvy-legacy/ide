@@ -201,6 +201,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       pathField.setWidth(480);
       pathField.setColSpan(2);
       pathField.setType("comboBox");
+      pathField.setHideEmptyPickList(true);
 
       StaticTextItem methodTitle = new StaticTextItem();
       methodTitle.setColSpan(2);
@@ -259,6 +260,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       sendRequestButton.setWidth(90);
       sendRequestButton.setHeight(22);
       sendRequestButton.setIcon(Images.Buttons.YES);
+      sendRequestButton.setDisabled(true);
 
       cancelButton = new IButton("Cancel");
       cancelButton.setWidth(90);
@@ -352,6 +354,11 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    public void setBodyDisabled(boolean value)
    {
       requestbody.setDisabled(value);
+   }
+
+   public void setSendRequestButtonDisabled(boolean value)
+   {
+      sendRequestButton.setDisabled(value);
    }
 
 }

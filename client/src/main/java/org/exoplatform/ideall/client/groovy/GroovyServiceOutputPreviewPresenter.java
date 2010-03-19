@@ -16,10 +16,6 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
@@ -28,6 +24,7 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -35,6 +32,10 @@ import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -76,11 +77,17 @@ public class GroovyServiceOutputPreviewPresenter
       
       void setBodyDisabled(boolean value);
       
+      void setSendRequestButtonDisabled(boolean value);
+      
       void setPaths(String[] paths);
       
       void setMethods(String[] methods);
       
    }
+   
+   private static final String REPLACEMENT_REGEX = "\\{[^/]+}";
+   
+   private static final String PATH_REGEX = "[^/]+";
 
    private HandlerManager eventBus;
 
@@ -96,10 +103,6 @@ public class GroovyServiceOutputPreviewPresenter
 
    private List<SimpleParameterEntry> queryParams = new Vector<SimpleParameterEntry>();
 
-   private boolean isMaySendRequest = false;
-   
-   private ArrayList<String> pathArray = new ArrayList<String>();
-   
    private ArrayList<Resource> resourceArray = new ArrayList<Resource>();
    
    private ArrayList<String> methodArray = new ArrayList<String>();
@@ -131,11 +134,13 @@ public class GroovyServiceOutputPreviewPresenter
 
          public void onClick(ClickEvent event)
          {
-            if (isMaySendRequest)
+            if (! pathExists(display.getPathField().getValue()))
             {
-               display.closeForm();
-               sendRequest();
+               Dialogs.getInstance().showError("Path doesn't exist. Try to select past from the list");
+               return;
             }
+            display.closeForm();
+            sendRequest();
          }
       });
 
@@ -144,8 +149,19 @@ public class GroovyServiceOutputPreviewPresenter
 
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            if (isPathExists(event.getValue()))
-               onPathValueChanged(event.getValue());
+            if (event.getValue() != null && ! event.getValue().isEmpty())
+            {
+               display.setSendRequestButtonDisabled(false);
+               if (pathExists(event.getValue()))
+               {
+                  setMethodsOnPath(event.getValue());
+                  setResourceInfo(event.getValue(), display.getMethodField().getValue());
+               } 
+            }
+            else
+            {
+               display.setSendRequestButtonDisabled(true);
+            }
          }
       });
       
@@ -154,7 +170,6 @@ public class GroovyServiceOutputPreviewPresenter
 
             public void onValueChange(ValueChangeEvent<String> event)
             {
-               //eventBus.fireEvent(new HttpMethodChangedEvent(event.getValue()));
                setResourceInfo(display.getPathField().getValue(), event.getValue());
             }
          });
@@ -167,12 +182,12 @@ public class GroovyServiceOutputPreviewPresenter
          res.getMethodOrResource().add(r);
       }
       
-      initResourcesAndPaths(res);
+      initResources(res);
       
-      display.setPaths(pathArray.toArray(new String[pathArray.size()]));
+      display.setPaths(getPathArray());
 
    }
-
+   
    protected void sendRequest()
    {
       try
@@ -231,7 +246,13 @@ public class GroovyServiceOutputPreviewPresenter
       handlers.removeHandlers();
    }
 
-   private void fillParameters(Resource resource)
+   /**
+    * Fills query and header parameters in form
+    * 
+    * @param resource resource
+    * @param method method
+    */
+   private void fillParameters(Resource resource, Method method)
    {
       display.getParametersQueryListGrid().setValue(new ArrayList<WadlParameterEntry>());
       display.getParametersHeaderListGrid().setValue(new ArrayList<WadlParameterEntry>());
@@ -239,12 +260,12 @@ public class GroovyServiceOutputPreviewPresenter
       List<WadlParameterEntry> itemsQuery = new ArrayList<WadlParameterEntry>();
       List<WadlParameterEntry> itemsHeader = new ArrayList<WadlParameterEntry>();
       
-      if (resource.getMethodOrResource().get(0) instanceof Method)
+      
+      if (! "GET".equals(method.getName()) && ! "POST".equals(method.getName()))
       {
-         Method m = (Method)resource.getMethodOrResource().get(0);
-         if (! "GET".equals(m.getName()) && ! "POST".equals(m.getName()))
-        	 itemsHeader.add(new WadlParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "", m.getName()));
+         itemsHeader.add(new WadlParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "", method.getName()));
       }
+      
 
       if (resource.getParam().size() != 0)
       {
@@ -303,35 +324,154 @@ public class GroovyServiceOutputPreviewPresenter
 
    }
 
-   private void initResourcesAndPaths(Resource resource)
+   /**
+    * Set resource info by path to resource and method name
+    * 
+    * @param path path to resource
+    * @param methodName name of method
+    */
+   private void setResourceInfo(String path, String methodName)
    {
-      if (!resource.getPath().equals(wadlApplication.getResources().getBase()))
-      {
-         pathArray.add(resource.getPath());
-         resourceArray.add(resource);
-      }
-      for (Object res : resource.getMethodOrResource())
-      {
-         if (res instanceof Resource)
-            initResourcesAndPaths((Resource)res);
-      }
-   }
-   
-   private boolean isPathExists(String path)
-   {
-      for (Resource resource : resourceArray)
-         if (path.equals(resource.getPath()))
-            return true;
+      Resource resource = findResource(path, methodName);
       
-      return false;
+      Method method = findMethod(resource, methodName);
+      
+      fillParameters(resource, method);
+      
+      if (HTTPMethod.GET.equals(method.getName())
+               || HTTPMethod.DELETE.equals(method.getName())
+               || HTTPMethod.HEAD.equals(method.getName())
+               || HTTPMethod.OPTIONS.equals(method.getName()))
+      {
+         display.setBodyDisabled(true);
+      }
+      else
+      {
+         display.setBodyDisabled(false);
+      }
+
+      if (method.getRequest() != null)
+      {
+         if (method.getRequest().getRepresentation().size() != 0)
+         {
+            display.getRequestMediaTypeField().setValue(method.getRequest().getRepresentation().get(0).getMediaType());
+         }
+         else
+         {
+            display.getRequestMediaTypeField().setValue("");
+         }
+      }
+      else
+      {
+         display.getRequestMediaTypeField().setValue("");
+      }
+
+      if (method.getResponse() != null)
+      {
+         if (method.getResponse().getRepresentationOrFault().size() != 0)
+         {
+            display.getResponseMediaTypeField().setValue(
+               method.getResponse().getRepresentationOrFault().get(0).getMediaType());
+         }
+         else
+         {
+            display.getResponseMediaTypeField().setValue("");
+         }
+      }
+      else
+      {
+         display.getResponseMediaTypeField().setValue("");
+      }
+
    }
    
-   private void onPathValueChanged(String path)
+   /**
+    * Searches resource in resourceArray.
+    * 
+    * @param path path to resource
+    * @param method method of resource
+    * @return {@link Resource} if found, null if not found
+    */
+   private Resource findResource(String path, String method)
    {
+      for (Resource res : resourceArray)
+      {
+         if (path.equals(res.getPath()) 
+                  || path.matches(getPathRegex(res)))
+          for (Object obj : res.getMethodOrResource())
+          {
+             if ((obj instanceof Method) && ((Method)obj).getName().equals(method))
+                return res;
+          }
+      }
+      return null;
+   }
+   
+   /**
+    * Replaces all path parameters with regex string
+    * in order to match input path with existing paths
+    * 
+    * @param resource resource
+    * @return String
+    */
+   private String getPathRegex(Resource resource)
+   {
+      return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
+   }
+   
+   /**
+    * Extracts paths from resource array and put them into String array.
+    * 
+    * @return Array of {@link String}
+    */
+   private String[] getPathArray() 
+   {
+      String[] pathArray = new String[resourceArray.size()];
+      for (int i = 0; i < resourceArray.size(); i++)
+      {
+         pathArray[i] = resourceArray.get(i).getPath();
+      }
+      return pathArray;
+   }
+   
+   /**
+    * Finds method in resource by name.
+    * 
+    * @param resource resource
+    * @param methodName name of method to find
+    * @return {@link Method} if found, null if not found
+    */
+   private Method findMethod(Resource resource, String methodName)
+   {
+      for (Object obj : resource.getMethodOrResource())
+      {
+         if ((obj instanceof Method) && methodName.equals(((Method)obj).getName()))
+         {
+            return (Method) obj;
+         }
+      }
+      return null;
+   }
+   
+   /**
+    * Finds methods, corresponding to path
+    * and initializes the method field.
+    * 
+    * If old method field value belongs to new method array,
+    * then it stays, otherwise first value from method array
+    * sets to method field
+    * 
+    * @param path path to resource
+    */
+   private void setMethodsOnPath(String path)
+   {
+      String oldMethodName = display.getMethodField().getValue();
+      
       methodArray.clear();
       for (Resource resource : resourceArray)
       {
-         if (path.equals(resource.getPath()))
+         if (path.equals(resource.getPath())
+                  || path.matches(getPathRegex(resource)))
             for (Object obj : resource.getMethodOrResource())
             {
                if (obj instanceof Method)
@@ -340,71 +480,54 @@ public class GroovyServiceOutputPreviewPresenter
                }
             }
       }
+      
       display.setMethods(methodArray.toArray(new String[methodArray.size()]));
+      
+      for (String methodName : methodArray)
+         if (oldMethodName.equals(methodName))
+         {
+            display.getMethodField().setValue(oldMethodName);
+            return;
+         }
+      
       display.getMethodField().setValue(methodArray.get(0));
-      
-      setResourceInfo(path, display.getMethodField().getValue());
    }
    
-   private void setResourceInfo(String path, String method)
+   /**
+    * Finds recursively all resources in resource and 
+    * add them to resourceArray
+    * 
+    * @param resource resource
+    */
+   private void initResources(Resource resource)
    {
-      Resource resource = findResource(path, method);
-      
-      fillParameters(resource);
-
-      if (resource.getMethodOrResource().get(0) instanceof Method)
+      if (!resource.getPath().equals(wadlApplication.getResources().getBase()))
       {
-         Method m = (Method)resource.getMethodOrResource().get(0);
-         
-         //you can add check for other methods, where request body is disabled
-         if (HTTPMethod.GET.equals(display.getMethodField().getValue())
-             || HTTPMethod.DELETE.equals(display.getMethodField().getValue())
-             || HTTPMethod.HEAD.equals(display.getMethodField().getValue())
-             || HTTPMethod.OPTIONS.equals(display.getMethodField().getValue()))
-          display.setBodyDisabled(true);
-         else
-          display.setBodyDisabled(false);
-
-         if (m.getRequest() != null)
-         {
-            if (m.getRequest().getRepresentation().size() != 0)
-            {
-               display.getRequestMediaTypeField().setValue(m.getRequest().getRepresentation().get(0).getMediaType());
-            }
-            else
-               display.getRequestMediaTypeField().setValue("");
-         }
-         else
-            display.getRequestMediaTypeField().setValue("");
-
-         if (m.getResponse() != null)
-         {
-            if (m.getResponse().getRepresentationOrFault().size() != 0)
-            {
-               display.getResponseMediaTypeField().setValue(
-                  m.getResponse().getRepresentationOrFault().get(0).getMediaType());
-            }
-            else
-               display.getResponseMediaTypeField().setValue("");
-         }
-         else
-            display.getResponseMediaTypeField().setValue("");
-         
-         isMaySendRequest = true;
+         resourceArray.add(resource);
+      }
+      for (Object res : resource.getMethodOrResource())
+      {
+         if (res instanceof Resource)
+            initResources((Resource)res);
       }
    }
    
-   private Resource findResource(String path, String method)
+   /**
+    * Returns true if path exists in opened file.
+    *  
+    * @param path path to search
+    * 
+    * @return boolean
+    */
+   private boolean pathExists(String path)
    {
-      for (Resource res : resourceArray)
+      for (Resource resource : resourceArray)
       {
-         if (path.equals(res.getPath()))
-            for (Object obj : res.getMethodOrResource()) 
-            {
-               if ((obj instanceof Method) && ((Method)obj).getName().equals(method) )
-                  return res;
-            }
+         if (path.equals(resource.getPath()) || path.matches(getPathRegex(resource)))
+         {
+            return true;
+         }
       }
-      return null;
+      return false;
    }
 }
