@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ideall.client.editor.custom;
 
-import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
 import com.smartgwt.client.types.Alignment;
@@ -28,7 +27,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EditorsListGrid extends ListGrid<Editor>
+public class EditorsListGrid extends ListGrid<EditorInfo>
 {
 
    public EditorsListGrid()
@@ -46,9 +45,16 @@ public class EditorsListGrid extends ListGrid<Editor>
    }
 
    @Override
-   protected void setRecordFields(ListGridRecord record, Editor item)
+   protected void setRecordFields(ListGridRecord record, EditorInfo item)
    {
-      record.setAttribute("name", item.getDescription());
+      if(item.isDefault())
+      {
+         record.setAttribute("name", item.getEditor().getDescription()+"&nbsp;[Default]");         
+      }
+      else
+      {
+         record.setAttribute("name", item.getEditor().getDescription());
+      }
    }
 
 }

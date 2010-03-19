@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.editor.custom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -124,17 +125,17 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          }
       });
 
-      display.getEditorsListGrid().addSelectionHandler(new SelectionHandler<Editor>()
+      display.getEditorsListGrid().addSelectionHandler(new SelectionHandler<EditorInfo>()
       {
 
-         public void onSelection(SelectionEvent<Editor> event)
+         public void onSelection(SelectionEvent<EditorInfo> event)
          {
             if (event.getSelectedItem() == selectedEditor)
             {
                return;
             }
 
-            selectedEditor = event.getSelectedItem();
+            selectedEditor = event.getSelectedItem().getEditor();
             display.enableOpenButton();
          }
 
@@ -152,7 +153,44 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       try
       {
          List<Editor> editorsItems = EditorFactory.getEditors(mimeType);
-         display.getEditorsListGrid().setValue(editorsItems);
+
+         List<EditorInfo> editorInfoItems = new ArrayList<EditorInfo>();
+
+         Editor defaultEditor = null;
+
+         if (context.getDefaultEditors().get(mimeType) != null)
+         {
+            
+            String defaultEdotorDecription = context.getDefaultEditors().get(mimeType);
+
+            for (Editor e : editorsItems)
+            {
+               if (e.getDescription().equals(defaultEdotorDecription))
+               {
+                  defaultEditor = e;
+               }
+            }
+            
+         }
+         else
+         {
+            defaultEditor = EditorFactory.getDefaultEditor(mimeType);
+         }
+
+         
+         for (Editor e : editorsItems)
+         {
+            if (e.getDescription().equals(defaultEditor.getDescription()))
+            {
+               editorInfoItems.add(new EditorInfo(e, true));
+            }
+            else
+            {
+               editorInfoItems.add(new EditorInfo(e, false));
+            }
+         }
+
+         display.getEditorsListGrid().setValue(editorInfoItems);
       }
       catch (EditorNotFoundException e)
       {
@@ -195,7 +233,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
                if (value == true)
                {
-                  eventBus.fireEvent(new EditorCloseFileEvent((File)context.getSelectedItems().get(0)));
+                  File file = (File)context.getSelectedItems().get(0);
+                  eventBus.fireEvent(new EditorCloseFileEvent(file));
                   openFile();
                }
                else
@@ -210,10 +249,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private void tryOpenFile()
    {
+      File file = (File)context.getSelectedItems().get(0);
 
       for (File f : context.getOpenedFiles().values())
       {
-         if (f.getPath().equals(context.getSelectedItems().get(0).getPath()))
+         if (f.getPath().equals(file.getPath()))
          {
             showDialog();
             return;
