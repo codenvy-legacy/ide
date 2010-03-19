@@ -62,8 +62,7 @@ import org.exoplatform.ideall.client.operation.output.OutputMessage;
 public class GroovyActionsComponent extends AbstractApplicationComponent implements ValidateGroosyScriptHandler,
    DeployGroovyScriptHandler, UndeployGroovyScriptHandler, PreviewGroovyOutputHandler,
    GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler, GroovyUndeployResultReceivedHandler,
-   RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
-   WadlServiceOutputReceiveHandler
+   RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler, WadlServiceOutputReceiveHandler
 {
 
    public GroovyActionsComponent()
@@ -87,7 +86,7 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
 
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
-      
+
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
 
@@ -243,19 +242,19 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
       VirtualFileSystem.getInstance().saveProperties(file);
    }
-   
+
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
-     String content = context.getActiveFile().getContent();
+      String content = context.getActiveFile().getContent();
       int indStart = content.indexOf("\"");
       int indEnd = content.indexOf("\"", indStart + 1);
       String url = "/rest" + content.substring(indStart + 1, indEnd);
-     WadlService.getInstance().getWadl(url);
+      WadlService.getInstance().getWadl(url);
    }
 
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
       new GroovyServiceOutputPreviewForm(eventBus, context, event.getApplication());
-   }   
+   }
 
 }

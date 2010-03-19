@@ -138,13 +138,6 @@ public class RestServiceOutputPreviewPresenter
    {
       display = d;
 
-      display.disableDeleteHeaderButton();
-
-      display.disableDeleteQueryParameterButton();
-
-      display.setHttpHeaders(headers);
-
-      display.setQueryParams(queryParams);
 
       display.getAddHeaderButton().addClickHandler(new ClickHandler()
       {
@@ -228,6 +221,15 @@ public class RestServiceOutputPreviewPresenter
             sendRequest();
          }
       });
+      
+      display.disableDeleteHeaderButton();
+
+      display.disableDeleteQueryParameterButton();
+
+      display.setHttpHeaders(headers);
+
+      display.setQueryParams(queryParams);
+      
 
       String url = context.getTestGroovyScriptURL();
       if (url == null)
