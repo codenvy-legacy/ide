@@ -152,10 +152,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void createFolder(String path)
+   public void createFolder(Folder folder)
    {
-      String url = getURL(path);
-      FolderCreatedEvent event = new FolderCreatedEvent(path);
+      String url = getURL(folder.getPath());
+      FolderCreatedEvent event = new FolderCreatedEvent(folder);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
 

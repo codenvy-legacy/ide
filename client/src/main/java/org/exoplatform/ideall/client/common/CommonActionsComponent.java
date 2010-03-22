@@ -25,7 +25,11 @@ import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
+import org.exoplatform.ideall.client.command.GoToFolderCommandHandler;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
+import org.exoplatform.ideall.client.command.SaveAllFilesCommandHandler;
+import org.exoplatform.ideall.client.command.SaveFileAsCommandHandler;
+import org.exoplatform.ideall.client.command.SaveFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
@@ -76,7 +80,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
 {
 
-   private SaveFileCommandHandler saveFileCommandHandler;
+   private SaveFileCommandThread saveFileCommandHandler;
 
    private SaveFileAsCommandHandler saveFileAsCommandHandler;
 
@@ -125,7 +129,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       /*
        * Initializing Save, Save As, Save All Command Handlers
        */
-      saveFileCommandHandler = new SaveFileCommandHandler(eventBus, context);
+      saveFileCommandHandler = new SaveFileCommandThread(eventBus, context);
       saveFileAsCommandHandler = new SaveFileAsCommandHandler(eventBus, context);
       saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);

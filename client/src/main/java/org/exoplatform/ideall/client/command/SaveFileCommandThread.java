@@ -17,13 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common;
+package org.exoplatform.ideall.client.command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
-import org.exoplatform.ideall.client.event.file.SaveAllFilesHandler;
+import org.exoplatform.ideall.client.event.file.SaveFileEvent;
+import org.exoplatform.ideall.client.event.file.SaveFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
@@ -41,37 +41,39 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveAllFilesCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveAllFilesHandler
+public class SaveFileCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
+   ExceptionThrownHandler, SaveFileHandler
 {
 
    private ApplicationContext context;
 
    private Handlers handlers;
 
-   public SaveAllFilesCommandHandler(HandlerManager eventBus, ApplicationContext context)
+   public SaveFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
       handlers = new Handlers(eventBus);
-      eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
+      eventBus.addHandler(SaveFileEvent.TYPE, this);
    }
 
-   public void onSaveAllFiles(SaveAllFilesEvent event)
+   public void onSaveFile(SaveFileEvent event)
    {
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
-      saveNextUnsavedFile();
-   }
+      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
 
-   protected void saveNextUnsavedFile()
-   {
-      for (File file : context.getOpenedFiles().values())
+      if (file.isContentChanged())
       {
-         if (!file.isNewFile() && file.isContentChanged())
+         VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
+         return;
+      }
+      else
+      {
+         if (file.isPropertiesChanged())
          {
-            VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
+            VirtualFileSystem.getInstance().saveProperties(file);
             return;
          }
       }
@@ -87,13 +89,13 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
       }
       else
       {
-         saveNextUnsavedFile();
+         handlers.removeHandlers();
       }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      saveNextUnsavedFile();
+      handlers.removeHandlers();
    }
 
    public void onError(ExceptionThrownEvent event)

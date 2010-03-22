@@ -28,7 +28,7 @@ public abstract class VirtualFileSystem
     * 
     * @param path
     */
-   public abstract void createFolder(String path);
+   public abstract void createFolder(Folder folder);
 
    /**
     * Get content of the file

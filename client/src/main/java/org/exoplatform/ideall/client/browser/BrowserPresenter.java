@@ -347,24 +347,9 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       }
    
       Item item = context.getSelectedItems().get(0);
-      String path = event.getPath();
-      forlderToSelect = path;
-      path = path.substring(0, path.lastIndexOf("/"));
+      forlderToSelect = event.getFolder().getPath();
       VirtualFileSystem.getInstance().getChildren((Folder)item);
    }
-
-//   /**
-//    * Handling item deleted event.
-//    * Browser should be refreshed.
-//    * 
-//    * @see org.exoplatform.ideall.client.model.data.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ideall.client.model.data.event.ItemDeletedEvent)
-//    */
-//   public void onItemDeleted(ItemDeletedEvent event)
-//   {
-//      String path = event.getItem().getPath();
-//      path = path.substring(0, path.lastIndexOf("/"));
-//      DataService.getInstance().getFolderContent(path);
-//   }
 
    /**
     * Handling item moved event.

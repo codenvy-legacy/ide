@@ -21,11 +21,11 @@ package org.exoplatform.ideall.client.demo;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -38,36 +38,30 @@ import com.google.gwt.user.client.Window;
  * @version $
  */
 
-public class Sample implements ChildrenReceivedHandler, ExceptionThrownHandler
+public class Sample implements FileContentSavedHandler, ExceptionThrownHandler
 {
-
-   private HandlerManager eventBus;
 
    public Sample()
    {
       HandlerManager eventBus = new HandlerManager(null);
+      new EmptyLoader();
       new WebDavVirtualFileSystem(eventBus);
 
-      eventBus.addHandler(ChildrenReceivedEvent.TYPE, this);
+      eventBus.addHandler(FileContentSavedEvent.TYPE, this);
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
-      
-      /*
-       * Get children
-       */
-      String webDavPath = "http://....";
 
-      Folder folder = new Folder(webDavPath);
-      VirtualFileSystem.getInstance().getChildren(folder);
+      /*
+       * Create folder
+       */
+      String path = "http://host:port/some path/some file";
+
+      File file = new File(path);
+      VirtualFileSystem.getInstance().getFileContent(file);
    }
 
-   public void onChildrenReceived(ChildrenReceivedEvent event)
+   public void onFileContentSaved(FileContentSavedEvent event)
    {
-      // children received
-      Folder folder = event.getFolder();
-      for (Item item : folder.getChildren())
-      {
-         System.out.println("> " + item.getPath());
-      }
+      Window.alert("Content of the file " + event.getFile().getPath() + " saved successfully!");
    }
 
    public void onError(ExceptionThrownEvent event)

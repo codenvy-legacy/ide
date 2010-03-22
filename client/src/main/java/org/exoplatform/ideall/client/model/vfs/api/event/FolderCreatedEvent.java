@@ -17,6 +17,8 @@
 
 package org.exoplatform.ideall.client.model.vfs.api.event;
 
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -29,11 +31,11 @@ public class FolderCreatedEvent extends GwtEvent<FolderCreatedHandler>
 
    public static GwtEvent.Type<FolderCreatedHandler> TYPE = new GwtEvent.Type<FolderCreatedHandler>();
 
-   private String path;
+   private Folder folder;
 
-   public FolderCreatedEvent(String path)
+   public FolderCreatedEvent(Folder folder)
    {
-      this.path = path;
+      this.folder = folder;
    }
 
    @Override
@@ -48,9 +50,9 @@ public class FolderCreatedEvent extends GwtEvent<FolderCreatedHandler>
       return TYPE;
    }
 
-   public String getPath()
+   public Folder getFolder()
    {
-      return path;
+      return folder;
    }
 
 }

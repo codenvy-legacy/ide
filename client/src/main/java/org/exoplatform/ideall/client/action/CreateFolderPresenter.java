@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
@@ -114,9 +115,9 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    protected void createFolder()
    {
-      String folderPath = path + "/" + display.getFolderNameField().getValue();
-      VirtualFileSystem.getInstance().createFolder(folderPath);
-
+      String newFolderPath = path + "/" + display.getFolderNameField().getValue();
+      Folder newFolder = new Folder(newFolderPath);
+      VirtualFileSystem.getInstance().createFolder(newFolder);
    }
 
    public void onFolderCreated(FolderCreatedEvent event)
