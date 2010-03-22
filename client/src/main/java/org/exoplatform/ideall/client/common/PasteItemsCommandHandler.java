@@ -30,8 +30,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemCopyCompleteEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemCopyCompleteHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
@@ -42,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyCompleteHandler, MoveCompleteHandler,
+public class PasteItemsCommandHandler implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
    ExceptionThrownHandler
 {
    private HandlerManager eventBus;
@@ -155,7 +155,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
    {
       if (context.getItemsToCopy().size() != 0)
       {
-         handlers.addHandler(ItemCopyCompleteEvent.TYPE, this);
+         handlers.addHandler(CopyCompleteEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          copyNextItem();
       }
@@ -178,7 +178,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
 
    }
 
-   public void onItemCopyComplete(ItemCopyCompleteEvent event)
+   public void onCopyComplete(CopyCompleteEvent event)
    {
       if (context.getItemsToCopy().size() != 0)
       {

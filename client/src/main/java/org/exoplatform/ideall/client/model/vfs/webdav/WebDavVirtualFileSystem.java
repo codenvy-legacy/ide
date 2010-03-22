@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEven
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemCopyCompleteEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
@@ -131,15 +131,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void getFolderContent(String path)
+   public void getChildren(Folder folder)
    {
-      String url = getURL(path);
+      String url = getURL(folder.getPath());
       if (!url.endsWith("/"))
       {
          url += "/";
       }
 
-      Folder folder = new Folder(path);
       FolderContentReceivedEvent event = new FolderContentReceivedEvent(folder);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(eventBus, folder);
 
@@ -333,7 +332,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
 
-      ItemCopyCompleteEvent event = new ItemCopyCompleteEvent(item, destination);
+      CopyCompleteEvent event = new CopyCompleteEvent(item, destination);
 
       int[] acceptStatus = new int[]{HTTPStatus.CREATED};
       CopyResponseUnmarshaller unmarshaller = new CopyResponseUnmarshaller();

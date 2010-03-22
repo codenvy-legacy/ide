@@ -28,6 +28,7 @@ import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
 import org.exoplatform.ideall.client.event.browse.GoToFolderHandler;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedHandler;
@@ -96,7 +97,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
 
       handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getFolderContent(pathToOpen);
+      VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
    }
 
    /**
@@ -112,7 +113,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
          pathes.remove(0);
          pathToOpen += "/" + name;
 
-         VirtualFileSystem.getInstance().getFolderContent(pathToOpen);
+         VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
       }
       else
       {

@@ -157,7 +157,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    {
       if (openedFolder.getChildren() == null)
       {
-         VirtualFileSystem.getInstance().getFolderContent(openedFolder.getPath());
+         VirtualFileSystem.getInstance().getChildren(openedFolder);
       }
    }
    
@@ -226,7 +226,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       }
 
       Folder folder = new Folder(selectedItemPath);
-      VirtualFileSystem.getInstance().getFolderContent(folder.getPath());
+      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -244,7 +244,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       String path = event.getPath();
       path = path.substring(0, path.lastIndexOf("/")) + "/";
-      VirtualFileSystem.getInstance().getFolderContent(path);
+      Folder folder = new Folder(path);
+      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -266,7 +267,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
 
-      VirtualFileSystem.getInstance().getFolderContent(workspace.getPath());
+      VirtualFileSystem.getInstance().getChildren(workspace);
    }
 
    /**
@@ -328,7 +329,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       {
          String path = folderToUpdate;
          folderToUpdate = null;
-         VirtualFileSystem.getInstance().getFolderContent(path);
+         Folder folder = new Folder(path);
+         VirtualFileSystem.getInstance().getChildren(folder);
       }
    }
 
@@ -349,7 +351,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       String path = event.getPath();
       forlderToSelect = path;
       path = path.substring(0, path.lastIndexOf("/"));
-      VirtualFileSystem.getInstance().getFolderContent(item.getPath());
+      VirtualFileSystem.getInstance().getChildren((Folder)item);
    }
 
 //   /**
@@ -379,7 +381,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       if (isSameFolder(source, destination))
       {
          String path = source.substring(0, source.lastIndexOf("/"));
-         VirtualFileSystem.getInstance().getFolderContent(path);
+         VirtualFileSystem.getInstance().getChildren(new Folder(path));
       }
       else
       {
@@ -387,7 +389,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
          String path2 = destination.substring(0, destination.lastIndexOf("/"));
 
          folderToUpdate = path2;
-         VirtualFileSystem.getInstance().getFolderContent(path1);
+         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
       }
    }
 

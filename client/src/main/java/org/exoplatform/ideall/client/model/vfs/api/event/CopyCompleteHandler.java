@@ -25,8 +25,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface ItemCopyCompleteHandler extends EventHandler
+public interface CopyCompleteHandler extends EventHandler
 {
-   void onItemCopyComplete(ItemCopyCompleteEvent event);
+   void onCopyComplete(CopyCompleteEvent event);
 }
 

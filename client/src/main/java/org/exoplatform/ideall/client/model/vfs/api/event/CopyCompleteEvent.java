@@ -25,15 +25,15 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class ItemCopyCompleteEvent extends GwtEvent<ItemCopyCompleteHandler>
+public class CopyCompleteEvent extends GwtEvent<CopyCompleteHandler>
 {
-   public static GwtEvent.Type<ItemCopyCompleteHandler> TYPE = new GwtEvent.Type<ItemCopyCompleteHandler>();
+   public static GwtEvent.Type<CopyCompleteHandler> TYPE = new GwtEvent.Type<CopyCompleteHandler>();
 
    private Item copiedItem;
 
    private String destination;
 
-   public ItemCopyCompleteEvent(Item item, String destination)
+   public CopyCompleteEvent(Item item, String destination)
    {
       this.copiedItem = item;
       this.destination = destination;
@@ -50,13 +50,13 @@ public class ItemCopyCompleteEvent extends GwtEvent<ItemCopyCompleteHandler>
    }
 
    @Override
-   protected void dispatch(ItemCopyCompleteHandler handler)
+   protected void dispatch(CopyCompleteHandler handler)
    {
-      handler.onItemCopyComplete(this);
+      handler.onCopyComplete(this);
    }
 
    @Override
-   public GwtEvent.Type<ItemCopyCompleteHandler> getAssociatedType()
+   public GwtEvent.Type<CopyCompleteHandler> getAssociatedType()
    {
       return TYPE;
    }

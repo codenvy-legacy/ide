@@ -63,6 +63,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
+      System.out.println("CreateFileCommandThread.onCreateNewFile()");
       
       Item item = context.getSelectedItems().get(0);
 
@@ -77,6 +78,12 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       String content = FileTemplates.getTemplateFor(event.getMimeType());
 
       String fileName = "Untitled file." + extension;
+      int index = 1;
+      System.out.println("File path: " + path + "/" + fileName);
+      while (context.getOpenedFiles().get(path + "/" + fileName) != null) {
+         fileName = "Untitled file " + index + "." + extension;
+         index++;
+      }
 
       File newFile = new File(path + "/" + fileName);
       newFile.setContentType(event.getMimeType());

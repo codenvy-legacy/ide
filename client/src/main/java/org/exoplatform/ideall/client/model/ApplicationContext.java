@@ -144,6 +144,8 @@ public class ApplicationContext
    private boolean showLineNumbers = true;
 
    private boolean initialized;
+   
+   private Item cached;
 
    public ApplicationContext()
    {
@@ -370,5 +372,15 @@ public class ApplicationContext
    {
       this.selectedEditorDescription = selectedEditor;
    }
+
+   public Item getCache()
+   {
+      return cached;
+   }
+
+   public void setCache(Item cache)
+   {
+      this.cached = cache;
+   }   
 
 }

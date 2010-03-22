@@ -151,7 +151,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
 
       Folder folder = new Folder(selectedItemPath);
-      VirtualFileSystem.getInstance().getFolderContent(folder.getPath());
+      VirtualFileSystem.getInstance().getChildren(folder);
 
       context.getSelectedItems().clear();
       context.getSelectedItems().add(folder);
