@@ -31,7 +31,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
@@ -139,7 +139,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          url += "/";
       }
 
-      FolderContentReceivedEvent event = new FolderContentReceivedEvent(folder);
+      ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(eventBus, folder);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};

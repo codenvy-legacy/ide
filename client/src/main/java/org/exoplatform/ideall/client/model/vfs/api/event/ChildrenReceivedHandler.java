@@ -16,48 +16,18 @@
  */
 package org.exoplatform.ideall.client.model.vfs.api.event;
 
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
- * 
- * Event fired by DataService when folder content received from server.
- * 
  */
 
-public class FolderContentReceivedEvent extends GwtEvent<FolderContentReceivedHandler>
+public interface ChildrenReceivedHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<FolderContentReceivedHandler> TYPE =
-      new GwtEvent.Type<FolderContentReceivedHandler>();
-
-   private Folder folder;
-
-   public FolderContentReceivedEvent(Folder folder)
-   {
-      this.folder = folder;
-   }
-
-   @Override
-   protected void dispatch(FolderContentReceivedHandler handler)
-   {
-      handler.onFolderContentReceived(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FolderContentReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   public Folder getFolder()
-   {
-      return folder;
-   }
+   
+   void onChildrenReceived(ChildrenReceivedEvent event);
 
 }

@@ -49,8 +49,8 @@ import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
@@ -76,7 +76,7 @@ import com.google.gwt.user.client.Timer;
  * @version $Id: $
 */
 public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler,
-   RefreshBrowserHandler, FolderContentReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
+   RefreshBrowserHandler, ChildrenReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler
 {
 
@@ -309,9 +309,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     * Handling folder content receiving.
     * Browser subtree should be refreshed and browser panel should be selected.
     * 
-    * @see org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedHandler#onFolderContentReceived(org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent)
     */
-   public void onFolderContentReceived(FolderContentReceivedEvent event)
+   public void onChildrenReceived(ChildrenReceivedEvent event)
    {
       Collections.sort(event.getFolder().getChildren(), comparator);
 
@@ -418,7 +417,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
 
-      handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
       handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
 

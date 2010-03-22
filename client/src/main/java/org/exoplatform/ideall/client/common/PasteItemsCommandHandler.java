@@ -40,7 +40,6 @@ import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -65,21 +64,32 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(PasteItemsEvent.TYPE, this);
-
    }
-
-   private String getPathToPaste(Item item)
+   
+   public void onPasteItems(PasteItemsEvent event)
    {
-      if (context.getSelectedItems().get(0) instanceof File)
+      if (context.getItemsToCopy().size() != 0)
       {
-         String path = ((File)context.getSelectedItems().get(0)).getPath();
-         return path.substring(0, path.lastIndexOf("/"));
+         handlers.addHandler(CopyCompleteEvent.TYPE, this);
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         copyNextItem();
+         return;
       }
 
-      return context.getSelectedItems().get(0).getPath();
-
-   }
-
+      if (context.getItemsToCut().size() != 0)
+      {
+         handlers.addHandler(MoveCompleteEvent.TYPE, this);
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         handlers.addHandler(FileContentSavedEvent.TYPE, this);
+         
+         cutNextItem();
+      }
+   }   
+   
+   /****************************************************************************************************
+    * COPY
+    ****************************************************************************************************/
+   
    private void copyNextItem()
    {
       if (context.getItemsToCopy().size() == 0)
@@ -106,6 +116,58 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
       VirtualFileSystem.getInstance().copy(item, destination);
    }
+   
+   public void onCopyComplete(CopyCompleteEvent event)
+   {
+      if (context.getItemsToCopy().size() != 0)
+      {
+         context.getItemsToCopy().remove(event.getCopiedItem());
+         copyNextItem();
+      }
+   }
+   
+   
+   /****************************************************************************************************
+    * PASTE
+    ****************************************************************************************************/
+   
+
+   
+   
+   
+   /****************************************************************************************************
+    * FINALIZE
+    ****************************************************************************************************/
+   
+   public void onError(ExceptionThrownEvent event)
+   {
+      handlers.removeHandlers();
+   }
+
+   private void operationCompleted()
+   {
+      handlers.removeHandlers();
+      eventBus.fireEvent(new PasteItemsCompleteEvent());
+      eventBus.fireEvent(new RefreshBrowserEvent());
+   }
+   
+
+   
+   
+   
+   
+   private String getPathToPaste(Item item)
+   {
+      if (context.getSelectedItems().get(0) instanceof File)
+      {
+         String path = ((File)context.getSelectedItems().get(0)).getPath();
+         return path.substring(0, path.lastIndexOf("/"));
+      }
+
+      return context.getSelectedItems().get(0).getPath();
+
+   }
+
 
    private void cutNextItem()
    {
@@ -114,6 +176,38 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
          operationCompleted();
          return;
       }
+      
+      
+//      if (!isFilesChanged(context.getItemsToCut()))
+//      {
+//         cutNextItem();
+//      }
+//      else
+//      {
+//         Dialogs.getInstance().ask("Cut", "Save opened files?", new BooleanValueReceivedCallback()
+//         {
+//            public void execute(Boolean value)
+//            {
+//               if (value != null && value == true)
+//               {
+//                  handlers.addHandler(FileContentSavedEvent.TYPE, PasteItemsCommandHandler.this);
+//                  saveFileContent();
+//               }
+//               else
+//               {
+//                  handlers.removeHandlers();
+//               }
+//            }
+//
+//         });
+//      }
+      
+      
+      
+      
+      
+      
+      
 
       Item item = context.getItemsToCut().get(0);
 
@@ -132,14 +226,8 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
       VirtualFileSystem.getInstance().move(item, destination);
    }
-
-   private void operationCompleted()
-   {
-      eventBus.fireEvent(new PasteItemsCompleteEvent());
-      //eventBus.fireEvent(new SetFocusOnItemEvent(context.getSelectedItems().get(0).getPath()));
-      eventBus.fireEvent(new RefreshBrowserEvent());
-      handlers.removeHandlers();
-   }
+   
+   
 
    private boolean isFilesChanged(List<Item> items)
    {
@@ -164,46 +252,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       return fileChanged;
    }
 
-   public void onPasteItems(PasteItemsEvent event)
-   {
-      if (context.getItemsToCopy().size() != 0)
-      {
-         handlers.addHandler(CopyCompleteEvent.TYPE, this);
-         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-         copyNextItem();
-      }
-
-      if (context.getItemsToCut().size() != 0)
-      {
-         handlers.addHandler(MoveCompleteEvent.TYPE, this);
-         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
-         if (!isFilesChanged(context.getItemsToCut()))
-         {
-            cutNextItem();
-         }
-         else
-         {
-            Dialogs.getInstance().ask("Cut", "Save opened files?", new BooleanValueReceivedCallback()
-            {
-               public void execute(Boolean value)
-               {
-                  if (value != null && value == true)
-                  {
-                     handlers.addHandler(FileContentSavedEvent.TYPE, PasteItemsCommandHandler.this);
-                     saveFileContent();
-                  }
-                  else
-                  {
-                     handlers.removeHandlers();
-                  }
-               }
-
-            });
-         }
-      }
-
-   }
 
    private void saveFileContent()
    {
@@ -217,15 +265,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
    }
 
-   public void onCopyComplete(CopyCompleteEvent event)
-   {
-      if (context.getItemsToCopy().size() != 0)
-      {
-         context.getItemsToCopy().remove(event.getCopiedItem());
-         copyNextItem();
-      }
-   }
-
    public void onMoveComplete(MoveCompleteEvent event)
    {
       if (context.getItemsToCut().size() != 0)
@@ -236,10 +275,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
    }
 
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-   }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {

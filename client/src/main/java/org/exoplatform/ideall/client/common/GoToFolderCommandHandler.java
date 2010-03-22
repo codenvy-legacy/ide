@@ -30,8 +30,8 @@ import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderContentReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -42,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GoToFolderCommandHandler implements GoToFolderHandler, FolderContentReceivedHandler,
+public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenReceivedHandler,
    ExceptionThrownHandler
 {
 
@@ -95,7 +95,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
          }
       }
 
-      handlers.addHandler(FolderContentReceivedEvent.TYPE, this);
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
    }
@@ -105,7 +105,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, FolderConten
     * Get subfolder content here
     * 
     */
-   public void onFolderContentReceived(FolderContentReceivedEvent event)
+   public void onChildrenReceived(ChildrenReceivedEvent event)
    {
       if (pathes.size() > 0)
       {
