@@ -421,7 +421,7 @@ source : ${source.url}
 						<version>2.1-alpha-2</version>
 						<configuration>
 							<webXml>src/main/webapp/gadget/web.xml</webXml>
-							<packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadget/**,**/classes/**</packagingExcludes>
+							<packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadget,**/gadget/gadget.xml,**/gadget/web.xml,,**/classes/**</packagingExcludes>
 							<webResources>
 								<resource>
 									<directory>src/main/webapp/gadget</directory>

@@ -142,6 +142,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onPreviewFile(PreviewFileEvent event)
    {
+      display.closePreviewTab();
+      display.closeGadgetPreviewTab();
       File file = context.getActiveFile();
 
       if (file.isNewFile())

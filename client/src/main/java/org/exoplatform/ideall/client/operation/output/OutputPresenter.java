@@ -87,7 +87,6 @@ public class OutputPresenter implements OutputHandler
       {
          return;
       }
-
       messages.add(message);
       display.outMessage(message);
    }
