@@ -77,7 +77,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       this.context = context;
       handlers = new Handlers(eventBus);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
+      
    }
 
    public void bindDisplay(Display d)
@@ -150,7 +150,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
          return;
       }
-
+      handlers.addHandler(FileContentSavedEvent.TYPE, this);
       VirtualFileSystem.getInstance().move(item, path);
    }
 

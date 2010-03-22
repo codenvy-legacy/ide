@@ -16,12 +16,14 @@
  */
 package org.exoplatform.ideall.client.common;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
@@ -32,10 +34,13 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,13 +48,15 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class PasteItemsCommandHandler implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler
+   ExceptionThrownHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
    private Handlers handlers;
+
+   private List<File> fileToSaveContent = new ArrayList<File>();
 
    public PasteItemsCommandHandler(HandlerManager eventBus, ApplicationContext context)
    {
@@ -87,9 +94,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
 
       String pathToCopy = getPathToPaste(context.getSelectedItems().get(0));
-      
-      System.out.println(pathToCopy);
-      
+
       if (pathFromCopy.equals(pathToCopy))
       {
          String message = "Can't copy files in the same directory!";
@@ -136,19 +141,27 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       handlers.removeHandlers();
    }
 
-   private boolean isFilesOpen(List<Item> items)
+   private boolean isFilesChanged(List<Item> items)
    {
+      boolean fileChanged = false;
+      fileToSaveContent.clear();
       for (Item i : items)
       {
          if (i instanceof File)
          {
-            if (context.getOpenedFiles().containsValue(i))
+            File file = (File)i;
+            if (context.getOpenedFiles().get(file.getPath()) != null)
             {
-               return true;
+               if (context.getOpenedFiles().get(file.getPath()).isContentChanged())
+               {
+                  fileToSaveContent.add(context.getOpenedFiles().get(file.getPath()));
+                  fileChanged = true;
+               }
             }
          }
       }
-      return false;
+
+      return fileChanged;
    }
 
    public void onPasteItems(PasteItemsEvent event)
@@ -162,19 +175,45 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
       if (context.getItemsToCut().size() != 0)
       {
-         if (!isFilesOpen(context.getItemsToCut()))
+         handlers.addHandler(MoveCompleteEvent.TYPE, this);
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+
+         if (!isFilesChanged(context.getItemsToCut()))
          {
-            handlers.addHandler(MoveCompleteEvent.TYPE, this);
-            handlers.addHandler(ExceptionThrownEvent.TYPE, this);
             cutNextItem();
          }
          else
          {
-            String message = "You should close open files, before cut";
-            Dialogs.getInstance().showInfo(message);
-            return;
+            Dialogs.getInstance().ask("Cut", "Save opened files?", new BooleanValueReceivedCallback()
+            {
+               public void execute(Boolean value)
+               {
+                  if (value != null && value == true)
+                  {
+                     handlers.addHandler(FileContentSavedEvent.TYPE, PasteItemsCommandHandler.this);
+                     saveFileContent();
+                  }
+                  else
+                  {
+                     handlers.removeHandlers();
+                  }
+               }
+
+            });
          }
       }
+
+   }
+
+   private void saveFileContent()
+   {
+      if (fileToSaveContent.size() != 0)
+      {
+         VirtualFileSystem.getInstance().saveFileContent(fileToSaveContent.get(0), fileToSaveContent.get(0).getPath());
+         return;
+      }
+
+      cutNextItem();
 
    }
 
@@ -201,4 +240,11 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
    {
       handlers.removeHandlers();
    }
+
+   public void onFileContentSaved(FileContentSavedEvent event)
+   {
+      fileToSaveContent.remove(event.getFile());
+      saveFileContent();
+   }
+
 }
