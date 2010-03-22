@@ -44,7 +44,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -142,9 +141,13 @@ public class GroovyServiceOutputPreviewPresenter
          {
             if (! pathExists(display.getPathField().getValue()))
             {
-               Dialogs.getInstance().showError("Path doesn't exist. Try to select past from the list");
+               Dialogs.getInstance().showError("Path doesn't exist.<br>"
+                  + "May be you try to pass symbol <b>/</b> as parameter value.<br><br>"
+                  + "Try to select pass from the list");
                return;
             }
+            if (! validatePathParams())
+               return;
             display.closeForm();
             sendRequest();
          }
@@ -192,6 +195,70 @@ public class GroovyServiceOutputPreviewPresenter
       
       display.setPaths(getPathArray());
 
+   }
+   
+   /**
+    * Validates path parameter values.
+    * 
+    * @return true if validation passed and false otherwise
+    */
+   private boolean validatePathParams()
+   {
+      String entered = display.getPathField().getValue();
+      String path = resource.getPath();
+      String[] patterns = path.split(REPLACEMENT_REGEX);
+      ArrayList<String> parameters = getParams(entered, patterns);
+      for (String param : parameters)
+      {
+         if (param.contains("\\"))
+         {
+            Dialogs.getInstance().showError("Parameter value <b>" + param 
+               + "</b> can not contain symbol <b>\\</b>");
+            return false;
+         }
+      }
+      
+      return true;
+   }
+   
+   /**
+    * <p>Returns parameter values for str.</p>
+    * 
+    * <p>Extracts substrings, which contained in str between patterns.</p>
+    * 
+    * E.g. to get paramater values from path <code>/rest/hello/{name}/world</code>,
+    * you must pass as <code>str</code> your path and as <code>patterns</code> such array:
+    * 
+    * <pre>
+    * {
+    *  "/rest/hello/",
+    *  "/world"
+    * } 
+    * <pre>
+    * 
+    * @param str path
+    * @param patterns array of patterns
+    * @return {@link ArrayList}
+    */
+   private ArrayList<String> getParams(String str, String[] patterns)
+   {
+      ArrayList<String> params = new ArrayList<String>();
+      
+      if (str.indexOf(patterns[0]) > 0)
+         params.add(str.substring(0, str.indexOf(patterns[0])));
+      
+      for (int i = 0; i < patterns.length - 1; i++)
+      {
+         params.add(str.substring(str.indexOf(patterns[i]) + patterns[i].length(), 
+            str.indexOf(patterns[i + 1])));
+      }
+      
+      String lastPattern = patterns[patterns.length - 1];
+      
+      if (str.length() > str.indexOf(lastPattern) + lastPattern.length())
+         params.add(str.substring(str.indexOf(lastPattern) + lastPattern.length(), str.length()));
+      
+      return params;
    }
    
    protected void sendRequest()
