@@ -175,6 +175,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
       tab.setTextEditor(smartGwtTextEditor);
+      tab.setFile(file);
       
       if (addTab) {
          redraw();

@@ -89,11 +89,7 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
       String path = item.getPath();
 
-      System.out.println("file name: [" + fileName + "]");
-      System.out.println("path: [" + path + "]");
-
       String url = Configuration.getInstance().getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
-      System.out.println("url: " + url);
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";

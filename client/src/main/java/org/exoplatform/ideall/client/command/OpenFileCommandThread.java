@@ -59,7 +59,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onOpenFile(OpenFileEvent event)
    {
-      System.out.println("opening " + event.getFile().getPath());
       File file = event.getFile();
       if (file.getContent() != null)
       {
@@ -69,7 +68,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      //get file content
       VirtualFileSystem.getInstance().getFileContent(event.getFile());
    }
 
@@ -84,7 +82,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       try
       {
          Editor editor = EditorUtil.getEditor(file.getContentType(), context);
-         System.out.println("do open");
          eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
       }
       catch (EditorNotFoundException e)

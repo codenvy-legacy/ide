@@ -200,8 +200,6 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
          previewForm.showPreview(file.getPath());
       }
       
-      //System.out.println("closing preview tab!");
-
       Tab gadgetPreviewTab = tabSet.getTab(GadgetPreviewPane.ID);
       if (gadgetPreviewTab != null)
       {

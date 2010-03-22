@@ -82,13 +82,6 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
             
-//            System.out.println("handlers: " + eventBus.getHandlerCount(OpenFileEvent.TYPE));
-//
-//            for (File file : context.getOpenedFiles().values()) {
-//               System.out.println(">> " + file.getPath());
-//               eventBus.fireEvent(new OpenFileEvent(file));
-//            }
-
             new ApplicationInitializer(eventBus, context);
 
             return;

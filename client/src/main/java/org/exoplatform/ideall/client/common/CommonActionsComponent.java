@@ -129,41 +129,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       saveFileAsCommandHandler = new SaveFileAsCommandHandler(eventBus, context);
       saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);
-      pasteItemsCommandHandler = new PasteItemsCommandHandler(eventBus, context);
-      
+      pasteItemsCommandHandler = new PasteItemsCommandHandler(eventBus, context);      
    }
-
-//   public void onCreateNewFile(CreateNewFileEvent event)
-//   {
-//      Item item = context.getSelectedItems().get(0);
-//
-//      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
-//
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/"));
-//      }
-//
-//      String content = FileTemplates.getTemplateFor(event.getMimeType());
-//
-//      String fileName = "Untitled file." + extension;
-//
-//      File newFile = new File(path + "/" + fileName);
-//      newFile.setContentType(event.getMimeType());
-//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(event.getMimeType()));
-//      newFile.setIcon(ImageUtil.getIcon(event.getMimeType()));
-//      newFile.setNewFile(true);
-//      newFile.setContent(content);
-//      newFile.setContentChanged(true);
-//
-//      eventBus.fireEvent(new FileCreatedEvent(newFile));
-//   }
-//
-//   public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
-//   {
-//      TemplateService.getInstance().getTemplates();
-//   }
 
    public void onUploadFile(UploadFileEvent event)
    {

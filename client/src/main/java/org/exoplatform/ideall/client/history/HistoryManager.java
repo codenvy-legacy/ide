@@ -93,8 +93,6 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 
    public void onValueChange(ValueChangeEvent<String> value)
    {
-      //System.out.println("history value changed: " + value);
-
       String path = value.getValue();
       if ("".equals(path))
       {
