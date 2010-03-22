@@ -22,9 +22,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
@@ -65,11 +63,11 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
    private List<Item> items;
 
    private ApplicationContext context;
-   
+
    private Handlers handlers;
-   
+
    private HandlerManager eventBus;
-   
+
    private Item lastDeletedItem;
 
    public DeleteItemPresenter(HandlerManager eventBus, ApplicationContext context)
@@ -128,7 +126,11 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    public void onItemDeleted(ItemDeletedEvent event)
    {
-      lastDeletedItem = event.getItem();
+      Item item = event.getItem();
+
+      context.getItemsToCopy().remove(item);
+      context.getItemsToCut().remove(item);
+      lastDeletedItem = item;
       deleteNextItem();
    }
 
@@ -139,22 +141,23 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void deleteItemsComplete()
    {
-      if (lastDeletedItem == null) {
+      if (lastDeletedItem == null)
+      {
          return;
       }
-      
-       String selectedItemPath = lastDeletedItem.getPath();
-      
-       selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-      
-       Folder folder = new Folder(selectedItemPath);
-       VirtualFileSystem.getInstance().getFolderContent(folder.getPath());
-      
-       context.getSelectedItems().clear();
-       context.getSelectedItems().add(folder);
-      
-       eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
-       //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
+
+      String selectedItemPath = lastDeletedItem.getPath();
+
+      selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
+
+      Folder folder = new Folder(selectedItemPath);
+      VirtualFileSystem.getInstance().getFolderContent(folder.getPath());
+
+      context.getSelectedItems().clear();
+      context.getSelectedItems().add(folder);
+
+      eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
+      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 
 }

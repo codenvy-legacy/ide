@@ -73,7 +73,7 @@ import com.google.gwt.user.client.Window.Location;
 
 public class CommonActionsComponent extends AbstractApplicationComponent implements  UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
    SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler,
-   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler //CreateNewFileHandler, CreateFileFromTemplateHandler,
+   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
