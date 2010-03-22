@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
+import java.util.LinkedHashMap;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
@@ -308,6 +310,11 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
       return methodField;
    }
+   
+   public void setMethodFieldValue(String value)
+   {
+      methodField.setValue(value);
+   }
 
    public HasValue<String> getPathField()
    {
@@ -320,7 +327,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       pathField.setValueMap(paths);
    }
    
-   public void setMethods(String[] methods)
+   public void setMethods(LinkedHashMap<String, String> methods)
    {
       methodField.clearValue();
       methodField.setValueMap(methods);

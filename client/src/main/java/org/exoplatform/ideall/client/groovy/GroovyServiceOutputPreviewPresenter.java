@@ -34,6 +34,7 @@ import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -43,6 +44,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -81,7 +83,9 @@ public class GroovyServiceOutputPreviewPresenter
       
       void setPaths(String[] paths);
       
-      void setMethods(String[] methods);
+      void setMethods(LinkedHashMap<String, String> methods);
+      
+      void setMethodFieldValue(String value);
       
    }
    
@@ -106,6 +110,8 @@ public class GroovyServiceOutputPreviewPresenter
    private ArrayList<Resource> resourceArray = new ArrayList<Resource>();
    
    private ArrayList<String> methodArray = new ArrayList<String>();
+   
+   private Resource resource;
    
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
@@ -194,8 +200,10 @@ public class GroovyServiceOutputPreviewPresenter
       {
          queryParams = getQueryParams();
          headers = getHeadersParams();
-
-         String fullPath = "/rest" + display.getPathField().getValue();
+         
+         String base = wadlApplication.getResources().getBase();
+         String fullPath = base.substring(base.lastIndexOf("/")) 
+                         + display.getPathField().getValue();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers,
             queryParams, display.getRequestBody().getValue());
@@ -332,7 +340,7 @@ public class GroovyServiceOutputPreviewPresenter
     */
    private void setResourceInfo(String path, String methodName)
    {
-      Resource resource = findResource(path, methodName);
+      resource = findResource(path, methodName);
       
       Method method = findMethod(resource, methodName);
       
@@ -481,16 +489,20 @@ public class GroovyServiceOutputPreviewPresenter
             }
       }
       
-      display.setMethods(methodArray.toArray(new String[methodArray.size()]));
+      LinkedHashMap<String, String> methods = new LinkedHashMap<String, String>();
+      for (int i = 0; i < methodArray.size(); i++)
+      {
+         methods.put(methodArray.get(i), methodArray.get(i));
+      }
+      display.setMethods(methods);
       
       for (String methodName : methodArray)
          if (oldMethodName.equals(methodName))
          {
-            display.getMethodField().setValue(oldMethodName);
+            display.setMethodFieldValue(oldMethodName);
             return;
          }
-      
-      display.getMethodField().setValue(methodArray.get(0));
+      display.setMethodFieldValue(methodArray.get(0));
    }
    
    /**
