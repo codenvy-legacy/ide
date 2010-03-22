@@ -26,8 +26,6 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
-import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
 
@@ -39,7 +37,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHand
  */
 
 public class RedoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
-   FileContentChangedHandler, FileCreatedHandler, FileContentReceivedHandler
+   FileContentChangedHandler, FileContentReceivedHandler
 {
    
    public static final String ID = "Edit/Redo Typing";
@@ -60,7 +58,6 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(FileContentChangedEvent.TYPE, this);
-      addHandler(FileCreatedEvent.TYPE, this);
       addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
@@ -72,7 +69,13 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
          setEnabled(false);
          return;
       }
-
+      
+      if(event.getFile().isNewFile())
+      {
+         setVisible(true);
+         setEnabled(false);
+         return;
+      }
       setVisible(true);
       setEnabled(event.hasRedoChanges());
    }
@@ -80,12 +83,6 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
    public void onFileContentChanged(FileContentChangedEvent event)
    {
       setEnabled(event.hasRedoChanges());
-   }
-
-   public void onFileCreated(FileCreatedEvent event)
-   {
-      setVisible(true);
-      setEnabled(false);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

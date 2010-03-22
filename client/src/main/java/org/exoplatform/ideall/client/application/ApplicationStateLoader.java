@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
@@ -80,6 +81,13 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
             handlers.removeHandlers();
 
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+            
+//            System.out.println("handlers: " + eventBus.getHandlerCount(OpenFileEvent.TYPE));
+//
+//            for (File file : context.getOpenedFiles().values()) {
+//               System.out.println(">> " + file.getPath());
+//               eventBus.fireEvent(new OpenFileEvent(file));
+//            }
 
             new ApplicationInitializer(eventBus, context);
 

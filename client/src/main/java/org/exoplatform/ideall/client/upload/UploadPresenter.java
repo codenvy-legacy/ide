@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
+import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
@@ -232,7 +232,8 @@ public class UploadPresenter implements UploadFileSelectedHandler
       if (uploadServiceResponse == null)
       {
          // error - displaying behind the window
-         Dialogs.getInstance().showError("There is an error of file '" + display.getFileNameField().getValue() + "' loading.");
+         Dialogs.getInstance().showError(
+            "There is an error of file '" + display.getFileNameField().getValue() + "' loading.");
          return;
       }
 
@@ -241,8 +242,9 @@ public class UploadPresenter implements UploadFileSelectedHandler
       final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
       if (submittedFileContent == null)
       {
-         Dialogs.getInstance().showError("There is an error of parsing of loopback service response with file '"
-            + display.getFileNameField().getValue() + "' content.");
+         Dialogs.getInstance().showError(
+            "There is an error of parsing of loopback service response with file '"
+               + display.getFileNameField().getValue() + "' content.");
          // error - displaying behind the window
          return;
       }
@@ -264,7 +266,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       submittedFile.setContentType(mimeType);
       submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
 
-      eventBus.fireEvent(new FileCreatedEvent(submittedFile)); // to save file content
+      eventBus.fireEvent(new OpenFileEvent(submittedFile)); // to save file content
       Loader.getInstance().hide();
    }
 

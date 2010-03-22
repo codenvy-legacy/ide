@@ -61,6 +61,8 @@ public class ApplicationContext
     */
    private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
 
+   private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
+
    /**
     * List of available templates
     */
@@ -111,22 +113,22 @@ public class ApplicationContext
     * Uses for storing default state of toolbar
     */
    private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
-   
+
    /**
     * Uses for storing the current state of defaults editors
     */
    private HashMap<String, String> defaultEditors = new HashMap<String, String>();
-   
+
    /**
     * Uses for storing items to need copy
     */
    private List<Item> itemsToCopy = new ArrayList<Item>();
-   
+
    /**
     * Uses to storing items to need cut
     */
    private List<Item> itemsToCut = new ArrayList<Item>();
-   
+
    public List<Item> getItemsToCopy()
    {
       return itemsToCopy;
@@ -185,6 +187,11 @@ public class ApplicationContext
    public HashMap<String, File> getOpenedFiles()
    {
       return openedFiles;
+   }
+
+   public LinkedHashMap<String, String> getOpenedEditors()
+   {
+      return openedEditors;
    }
 
    /**
@@ -363,5 +370,5 @@ public class ApplicationContext
    {
       this.selectedEditorDescription = selectedEditor;
    }
-   
+
 }

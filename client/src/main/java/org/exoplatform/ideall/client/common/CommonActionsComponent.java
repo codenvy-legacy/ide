@@ -24,6 +24,8 @@ import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.command.CreateFileCommandThread;
+import org.exoplatform.ideall.client.command.OpenFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
@@ -33,15 +35,10 @@ import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
-import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
-import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateHandler;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
 import org.exoplatform.ideall.client.event.file.CreateFolderHandler;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
-import org.exoplatform.ideall.client.event.file.CreateNewFileHandler;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.DeleteItemHandler;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
@@ -56,13 +53,8 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.model.template.FileTemplates;
-import org.exoplatform.ideall.client.model.template.TemplateService;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
-import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.search.AdvancedSearchForm;
@@ -79,10 +71,9 @@ import com.google.gwt.user.client.Window.Location;
  * @version $
  */
 
-public class CommonActionsComponent extends AbstractApplicationComponent implements CreateNewFileHandler,
-   CreateFileFromTemplateHandler, UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
+public class CommonActionsComponent extends AbstractApplicationComponent implements  UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
    SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler,
-   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
+   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler //CreateNewFileHandler, CreateFileFromTemplateHandler,
 {
 
    private SaveFileCommandHandler saveFileCommandHandler;
@@ -95,16 +86,25 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    private PasteItemsCommandHandler pasteItemsCommandHandler;
 
+   private OpenFileCommandThread openFileCommandThread;
+   
+   private CreateFileCommandThread createFileCommandThread;
+   
    public CommonActionsComponent()
    {
       super(new CommonActionsComponentInitializer());
+   }
+   
+   @Override
+   protected void onInitializeComponent()
+   {
+      openFileCommandThread = new OpenFileCommandThread(eventBus, context);
+      createFileCommandThread = new CreateFileCommandThread(eventBus, context);
    }
 
    @Override
    protected void registerHandlers()
    {
-      addHandler(CreateNewFileEvent.TYPE, this);
-      addHandler(CreateFileFromTemplateEvent.TYPE, this);
       addHandler(UploadFileEvent.TYPE, this);
       addHandler(CreateFolderEvent.TYPE, this);
       addHandler(DeleteItemEvent.TYPE, this);
@@ -130,39 +130,40 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);
       pasteItemsCommandHandler = new PasteItemsCommandHandler(eventBus, context);
+      
    }
 
-   public void onCreateNewFile(CreateNewFileEvent event)
-   {
-      Item item = context.getSelectedItems().get(0);
-
-      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
-
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/"));
-      }
-
-      String content = FileTemplates.getTemplateFor(event.getMimeType());
-
-      String fileName = "Untitled file." + extension;
-
-      File newFile = new File(path + "/" + fileName);
-      newFile.setContentType(event.getMimeType());
-      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(event.getMimeType()));
-      newFile.setIcon(ImageUtil.getIcon(event.getMimeType()));
-      newFile.setNewFile(true);
-      newFile.setContent(content);
-      newFile.setContentChanged(true);
-
-      eventBus.fireEvent(new FileCreatedEvent(newFile));
-   }
-
-   public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
-   {
-      TemplateService.getInstance().getTemplates();
-   }
+//   public void onCreateNewFile(CreateNewFileEvent event)
+//   {
+//      Item item = context.getSelectedItems().get(0);
+//
+//      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
+//
+//      String path = item.getPath();
+//      if (item instanceof File)
+//      {
+//         path = path.substring(0, path.lastIndexOf("/"));
+//      }
+//
+//      String content = FileTemplates.getTemplateFor(event.getMimeType());
+//
+//      String fileName = "Untitled file." + extension;
+//
+//      File newFile = new File(path + "/" + fileName);
+//      newFile.setContentType(event.getMimeType());
+//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(event.getMimeType()));
+//      newFile.setIcon(ImageUtil.getIcon(event.getMimeType()));
+//      newFile.setNewFile(true);
+//      newFile.setContent(content);
+//      newFile.setContentChanged(true);
+//
+//      eventBus.fireEvent(new FileCreatedEvent(newFile));
+//   }
+//
+//   public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
+//   {
+//      TemplateService.getInstance().getTemplates();
+//   }
 
    public void onUploadFile(UploadFileEvent event)
    {

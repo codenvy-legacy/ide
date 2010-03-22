@@ -38,6 +38,7 @@ import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
+import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -211,7 +212,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       if (item instanceof File)
       {
          context.setSelectedEditorDescriptor(null);
-         VirtualFileSystem.getInstance().getFileContent((File)item);
+         //VirtualFileSystem.getInstance().getFileContent((File)item);
+         eventBus.fireEvent(new OpenFileEvent((File)item));
       }
    }
 

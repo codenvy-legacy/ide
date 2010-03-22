@@ -49,6 +49,8 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
@@ -59,14 +61,10 @@ import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
 import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.event.edit.UndoEditingHandler;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
-import org.exoplatform.ideall.client.event.file.FileCreatedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
@@ -88,18 +86,18 @@ import com.google.gwt.user.client.Timer;
  * @version @version $Id: $
  */
 
-public class EditorPresenter implements FileCreatedHandler, EditorContentChangedHandler, EditorInitializedHandler,
-   EditorActivityHandler, EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler,
-   UndoEditingHandler, RedoEditingHandler, FileContentSavedHandler, ItemPropertiesSavedHandler,
-   FilePropertiesChangedHandler, FileContentReceivedHandler, MoveCompleteHandler, FormatFileHandler,
-   ItemDeletedHandler, RegisterEventHandlersHandler, InitializeApplicationHandler, ShowLineNumbersHandler,
-   ChangeActiveFileHandler, ExceptionThrownHandler
+public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
+   EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
+   RedoEditingHandler, FileContentSavedHandler, ItemPropertiesSavedHandler, FilePropertiesChangedHandler,
+   MoveCompleteHandler, FormatFileHandler, ItemDeletedHandler, RegisterEventHandlersHandler,
+   InitializeApplicationHandler, ShowLineNumbersHandler, ChangeActiveFileHandler, ExceptionThrownHandler,
+   EditorOpenFileHandler
 {
 
    public interface Display
    {
 
-      void addTab(File file, boolean lineNumbers, Editor editor);
+      void openTab(File file, boolean lineNumbers, Editor editor);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -150,6 +148,8 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
+
+      handlers.addHandler(EditorOpenFileEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -166,10 +166,47 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       for (File file : context.getOpenedFiles().values())
       {
          ignoreContentChangedList.add(file.getPath());
-         openFile(file);
+         try
+         {
+            Editor editor = EditorUtil.getEditor(file.getContentType(), context);
+            context.getOpenedEditors().put(file.getPath(), editor.getDescription());
+            display.openTab(file, context.isShowLineNumbers(), editor);
+         }
+         catch (EditorNotFoundException e)
+         {
+            e.printStackTrace();
+         }
       }
 
-      registerHandlers();
+      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
+      handlers.addHandler(EditorInitializedEvent.TYPE, this);
+      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorSaveContentEvent.TYPE, this);
+
+      // handlers.addHandler(FileCreatedEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
+      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
+
+      handlers.addHandler(UndoEditingEvent.TYPE, this);
+      handlers.addHandler(RedoEditingEvent.TYPE, this);
+
+      handlers.addHandler(FileContentSavedEvent.TYPE, this);
+      handlers.addHandler(FilePropertiesChangedEvent.TYPE, this);
+
+      //handlers.addHandler(FileContentReceivedEvent.TYPE, this);
+
+      handlers.addHandler(MoveCompleteEvent.TYPE, this);
+      handlers.addHandler(FormatFileEvent.TYPE, this);
+      handlers.addHandler(ItemDeletedEvent.TYPE, this);
+
+      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
+
+      handlers.addHandler(ChangeActiveFileEvent.TYPE, this);
+
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
    /**
@@ -203,40 +240,6 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
    }
 
    /**
-    * Registering event handlers
-    */
-   private void registerHandlers()
-   {
-      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
-      handlers.addHandler(EditorInitializedEvent.TYPE, this);
-      handlers.addHandler(EditorActivityEvent.TYPE, this);
-      handlers.addHandler(EditorSaveContentEvent.TYPE, this);
-
-      handlers.addHandler(FileCreatedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
-
-      handlers.addHandler(UndoEditingEvent.TYPE, this);
-      handlers.addHandler(RedoEditingEvent.TYPE, this);
-
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      handlers.addHandler(FilePropertiesChangedEvent.TYPE, this);
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
-      handlers.addHandler(FormatFileEvent.TYPE, this);
-      handlers.addHandler(ItemDeletedEvent.TYPE, this);
-
-      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
-
-      handlers.addHandler(ChangeActiveFileEvent.TYPE, this);
-
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-   }
-
-   /**
     * Destroy 
     */
    public void destroy()
@@ -249,59 +252,59 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
     * (non-Javadoc)
     * @see org.exoplatform.gadgets.devtool.client.event.FileCreatedHandler#onFileCreated(org.exoplatform.gadgets.devtool.client.event.FileCreatedEvent)
     */
-   public void onFileCreated(FileCreatedEvent event)
-   {
-      try
-      {
-         File file = event.getFile();
-
-         if (context.getOpenedFiles().get(file.getPath()) != null)
-         {
-            String extension = file.getPath().substring(file.getPath().lastIndexOf("."));
-            String pathOnly = file.getPath().substring(0, file.getPath().lastIndexOf("."));
-
-            // changing file index
-            int fileIndex = 1;
-            while (true)
-            {
-               String path = pathOnly + " " + fileIndex + extension;
-
-               if (context.getOpenedFiles().get(path) == null)
-               {
-                  file.setPath(path);
-                  break;
-               }
-
-               fileIndex++;
-            }
-         }
-
-         ignoreContentChangedList.add(file.getPath());
-         context.setActiveFile(file);
-         context.getOpenedFiles().put(file.getPath(), file);
-         openFile(file);
-         display.selectTab(file.getPath());
-
-         CookieManager.storeOpenedFiles(context);
-      }
-      catch (Exception exc)
-      {
-         exc.printStackTrace();
-      }
-
-      CookieManager.storeOpenedFiles(context);
-   }
-
+   //   public void onFileCreated(FileCreatedEvent event)
+   //   {
+   //      try
+   //      {
+   //         File file = event.getFile();
+   //
+   //         if (context.getOpenedFiles().get(file.getPath()) != null)
+   //         {
+   //            String extension = file.getPath().substring(file.getPath().lastIndexOf("."));
+   //            String pathOnly = file.getPath().substring(0, file.getPath().lastIndexOf("."));
+   //
+   //            // changing file index
+   //            int fileIndex = 1;
+   //            while (true)
+   //            {
+   //               String path = pathOnly + " " + fileIndex + extension;
+   //
+   //               if (context.getOpenedFiles().get(path) == null)
+   //               {
+   //                  file.setPath(path);
+   //                  break;
+   //               }
+   //
+   //               fileIndex++;
+   //            }
+   //         }
+   //
+   //         ignoreContentChangedList.add(file.getPath());
+   //         context.setActiveFile(file);
+   //         context.getOpenedFiles().put(file.getPath(), file);
+   //         openFile(file);
+   //         display.selectTab(file.getPath());
+   //
+   //      }
+   //      catch (Exception exc)
+   //      {
+   //         exc.printStackTrace();
+   //      }
+   //
+   //      CookieManager.storeOpenedFiles(context);
+   //   }
    /*
     *  Fired when editor is initialized
     */
    public void onEditorInitialized(EditorInitializedEvent event)
    {
+      System.out.println("EditorPresenter.onEditorInitialized()");
       try
       {
          String editorId = event.getEditorId();
          String path = display.getPathByEditorId(editorId);
          File file = context.getOpenedFiles().get(path);
+         System.out.println("set editor content: " + file.getContent());
          display.setTabContent(file.getPath(), file.getContent());
       }
       catch (Exception exc)
@@ -315,7 +318,10 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
     */
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
+      System.out.println("EditorPresenter.onEditorContentChanged()");
       String editorId = event.getEditorId();
+      System.out.println("editor id: " + editorId);
+      
       String path = display.getPathByEditorId(editorId);
 
       if (ignoreContentChangedList.contains(path))
@@ -324,6 +330,8 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
          return;
       }
 
+      System.out.println("content changed > " + path);
+      
       File file = context.getOpenedFiles().get(path);
       file.setContentChanged(true);
       file.setContent(display.getTabContent(file.getPath()));
@@ -482,24 +490,24 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       updateTabTitle(event.getFile().getPath());
    }
 
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      File file = event.getFile();
-      if (context.getOpenedFiles().get(file.getPath()) != null)
-      {
-         display.selectTab(file.getPath());
-      }
-      else
-      {
-         ignoreContentChangedList.add(file.getPath());
-         context.getOpenedFiles().put(file.getPath(), file);
-         openFile(file);
-         display.selectTab(file.getPath());
-      }
-
-      context.setActiveFile(file);
-      CookieManager.storeOpenedFiles(context);
-   }
+   //   public void onFileContentReceived(FileContentReceivedEvent event)
+   //   {
+   //      File file = event.getFile();
+   //      if (context.getOpenedFiles().get(file.getPath()) != null)
+   //      {
+   //         display.selectTab(file.getPath());
+   //      }
+   //      else
+   //      {
+   //         ignoreContentChangedList.add(file.getPath());
+   //         context.getOpenedFiles().put(file.getPath(), file);
+   //         openFile(file);
+   //         display.selectTab(file.getPath());
+   //      }
+   //
+   //      context.setActiveFile(file);
+   //      CookieManager.storeOpenedFiles(context);
+   //   }
 
    public void onMoveComplete(MoveCompleteEvent event)
    {
@@ -646,61 +654,87 @@ public class EditorPresenter implements FileCreatedHandler, EditorContentChanged
       context.setSelectedEditorDescriptor(null);
    }
 
-   protected void openFile(File file)
+   //   //TODO Delete this method
+   //   protected void openFile(File file)
+   //   {
+   //      Editor editor;
+   //      String mimeType = file.getContentType();
+   //      try
+   //      {
+   //         String defaultEditorDescription;
+   //         if (context.getSelectedEditorDescription() != null)
+   //         {
+   //            defaultEditorDescription = context.getSelectedEditorDescription();
+   //            context.setSelectedEditorDescriptor(null);
+   //         }
+   //         else
+   //         {
+   //            defaultEditorDescription = context.getDefaultEditors().get(mimeType);
+   //         }
+   //
+   //         editor = getEditor(mimeType, defaultEditorDescription);
+   //      }
+   //      catch (EditorNotFoundException exc)
+   //      {
+   //         Dialogs.getInstance().showError("Can't find editor for type <b>" + mimeType + "</b>");
+   //         return;
+   //      }
+   //
+   //      display.openTab(file, context.isShowLineNumbers(), editor);
+   //   }
+
+   //   //TODO Delete this method
+   //   private Editor getEditor(String mimeType, String defaultEditorDescription) throws EditorNotFoundException
+   //   {
+   //      Editor editor = null;
+   //
+   //      if (defaultEditorDescription == null)
+   //      {
+   //         editor = EditorFactory.getDefaultEditor(mimeType);
+   //      }
+   //      else
+   //      {
+   //         List<Editor> editors = EditorFactory.getEditors(mimeType);
+   //         for (Editor e : editors)
+   //         {
+   //            if (e.getDescription().equals(defaultEditorDescription))
+   //            {
+   //               editor = e;
+   //               break;
+   //            }
+   //         }
+   //      }
+   //
+   //      if (editor == null)
+   //      {
+   //         throw new EditorNotFoundException();
+   //      }
+   //
+   //      return editor;
+   //   }
+
+   public void onEditorOpenFile(EditorOpenFileEvent event)
    {
-      Editor editor;
-      String mimeType = file.getContentType();
-      try
+      File file = event.getFile();
+      if (context.getOpenedFiles().get(file.getPath()) != null
+         && event.getEditor().getDescription().equals(context.getOpenedEditors().get(file.getPath())))
       {
-         String defaultEditorDescription;
-         if (context.getSelectedEditorDescription() != null)
-         {
-            defaultEditorDescription = context.getSelectedEditorDescription();
-            context.setSelectedEditorDescriptor(null);
-         }
-         else
-         {
-            defaultEditorDescription = context.getDefaultEditors().get(mimeType);
-         }
-
-         editor = getEditor(mimeType, defaultEditorDescription);
-      }
-      catch (EditorNotFoundException exc)
-      {
-         Dialogs.getInstance().showError("Can't find editor for type <b>" + mimeType + "</b>");
-         return;
-      }
-
-      display.addTab(file, context.isShowLineNumbers(), editor);
-   }
-
-   private Editor getEditor(String mimeType, String defaultEditorDescription) throws EditorNotFoundException
-   {
-      Editor editor = null;
-
-      if (defaultEditorDescription == null)
-      {
-         editor = EditorFactory.getDefaultEditor(mimeType);
+         System.out.println("set file as active");
       }
       else
       {
-         List<Editor> editors = EditorFactory.getEditors(mimeType);
-         for (Editor e : editors)
-         {
-            if (e.getDescription().equals(defaultEditorDescription))
-            {
-               editor = e;
-               break;
-            }
-         }
+         System.out.println("add / replace editor");
+
+         ignoreContentChangedList.add(file.getPath());
+         context.getOpenedFiles().put(file.getPath(), file);
+
+         context.getOpenedEditors().put(file.getPath(), event.getEditor().getDescription());
+         display.openTab(file, context.isShowLineNumbers(), event.getEditor());
       }
 
-      if (editor == null)
-      {
-         throw new EditorNotFoundException();
-      }
-
-      return editor;
+      display.selectTab(file.getPath());
+      context.setActiveFile(file);
+      CookieManager.storeOpenedFiles(context);
    }
 
 }

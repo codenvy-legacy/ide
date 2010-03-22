@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.template;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
-import org.exoplatform.ideall.client.event.file.FileCreatedEvent;
+import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
@@ -118,8 +118,9 @@ public class CreateFileFromTemplatePresenter
             templateSelected(event.getSelectedItem());
          }
       });
-      
-      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler() {
+
+      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
          public void onDoubleClick(DoubleClickEvent event)
          {
             createFile();
@@ -168,9 +169,9 @@ public class CreateFileFromTemplatePresenter
          Dialogs.getInstance().showError("You must enter file name the first!");
          return;
       }
-      
+
       Item item = context.getSelectedItems().get(0);
-      
+
       String path = item.getPath();
       if (item instanceof File)
       {
@@ -187,7 +188,7 @@ public class CreateFileFromTemplatePresenter
       newFile.setContent(selectedTemplate.getContent());
       newFile.setContentChanged(true);
 
-      eventBus.fireEvent(new FileCreatedEvent(newFile));
+      eventBus.fireEvent(new OpenFileEvent(newFile));
 
       display.closeForm();
    }

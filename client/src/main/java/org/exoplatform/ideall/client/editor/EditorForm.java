@@ -158,22 +158,29 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    };
 
-   public void addTab(File file, boolean lineNumbers, Editor editor)
+   public void openTab(File file, boolean lineNumbers, Editor editor)
    {
-      EditorTab tab = new EditorTab(file);
-      tab.setCanClose(true);
-
+      EditorTab tab = getEditorTab(file.getPath());
+      boolean addTab = false;
+      if (tab == null) {
+         tab = new EditorTab(file);
+         tab.setCanClose(true);
+         addTab = true;
+      }
+      
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
-
+      
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
       tab.setTextEditor(smartGwtTextEditor);
-      redraw();
-
-      tabSet.addTab(tab);
-      redraw();
+      
+      if (addTab) {
+         redraw();
+         tabSet.addTab(tab);
+         redraw();         
+      }
    }
 
    public void selectTab(String path)

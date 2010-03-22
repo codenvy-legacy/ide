@@ -21,6 +21,7 @@ import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.Tab;
 
 /**
@@ -33,6 +34,8 @@ import com.smartgwt.client.widgets.tab.Tab;
 public class EditorTab extends Tab
 {
 
+   private Layout tabPane;
+   
    private SmartGWTTextEditor textEditor;
 
    private File file;
@@ -41,6 +44,8 @@ public class EditorTab extends Tab
    {
       this.file = file;
       setTitle(getTabTitle());
+      tabPane = new Layout();
+      setPane(tabPane);
    }
 
    public SmartGWTTextEditor getTextEditor()
@@ -50,8 +55,12 @@ public class EditorTab extends Tab
 
    public void setTextEditor(SmartGWTTextEditor textEditor)
    {
+      if (this.textEditor != null) {
+         tabPane.removeMember(this.textEditor);
+      }
+      
       this.textEditor = textEditor;
-      setPane(textEditor);
+      tabPane.addMember(textEditor);
    }
 
    public File getFile()
