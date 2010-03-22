@@ -149,7 +149,7 @@ public class GroovyServiceOutputPreviewPresenter
 
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            if (event.getValue() != null && ! event.getValue().isEmpty())
+            if (event.getValue() != null && ! "".equals(event.getValue()))
             {
                display.setSendRequestButtonDisabled(false);
                if (pathExists(event.getValue()))
