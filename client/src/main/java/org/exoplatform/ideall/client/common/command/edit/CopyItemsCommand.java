@@ -56,12 +56,18 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
+      if (event.getSelectedItems().size() == 0)
+      {
+         setEnabled(false);
+         return;
+      }
+
       if (!isItemsInSameFolder(event.getSelectedItems()))
       {
          setEnabled(false);
          return;
       }
-      
+
       if (isSelectedWorkspace(event.getSelectedItems()))
       {
          setEnabled(false);

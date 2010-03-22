@@ -66,6 +66,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
       pastePrepared = true;
+      setEnabled(true);
    }
 
    public void onPasteItemsComlete(PasteItemsCompleteEvent event)
@@ -87,14 +88,14 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
          return;
       }
 
-      if (event.getSelectedItems().get(0) instanceof Folder)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+//      if (event.getSelectedItems().get(0) instanceof Folder)
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
+//         setEnabled(false);
+//      }
       
    }
 

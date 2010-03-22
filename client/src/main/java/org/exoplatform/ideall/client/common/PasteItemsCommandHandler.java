@@ -61,6 +61,18 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
 
    }
 
+   private String getPathToPaste(Item item)
+   {
+      if (context.getSelectedItems().get(0) instanceof File)
+      {
+         String path = ((File)context.getSelectedItems().get(0)).getPath();
+         return path.substring(0, path.lastIndexOf("/"));
+      }
+
+      return context.getSelectedItems().get(0).getPath();
+
+   }
+
    private void copyNextItem()
    {
       if (context.getItemsToCopy().size() == 0)
@@ -74,14 +86,18 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
       String pathFromCopy = item.getPath();
       pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
 
-      if (pathFromCopy.equals(context.getSelectedItems().get(0).getPath()))
+      String pathToCopy = getPathToPaste(context.getSelectedItems().get(0));
+      
+      System.out.println(pathToCopy);
+      
+      if (pathFromCopy.equals(pathToCopy))
       {
          String message = "Can't copy files in the same directory!";
          Dialogs.getInstance().showError(message);
          return;
       }
 
-      String destination = context.getSelectedItems().get(0).getPath() + "/" + item.getName();
+      String destination = pathToCopy + "/" + item.getName();
 
       VirtualFileSystem.getInstance().copy(item, destination);
    }
@@ -99,14 +115,15 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemCopyComp
       String pathFromCut = item.getPath();
       pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
 
-      if (pathFromCut.equals(context.getSelectedItems().get(0).getPath()))
+      String pathToCut = getPathToPaste(context.getSelectedItems().get(0));
+      if (pathFromCut.equals(pathToCut))
       {
          String message = "Can't move files in the same directory!";
          Dialogs.getInstance().showError(message);
          return;
       }
 
-      String destination = context.getSelectedItems().get(0).getPath() + "/" + item.getName();
+      String destination = pathToCut + "/" + item.getName();
 
       VirtualFileSystem.getInstance().move(item, destination);
    }

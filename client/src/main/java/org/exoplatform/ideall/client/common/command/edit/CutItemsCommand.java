@@ -56,6 +56,12 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
+      if (event.getSelectedItems().size() == 0)
+      {
+         setEnabled(false);
+         return;
+      }
+
       if (!isItemsInSameFolder(event.getSelectedItems()))
       {
          setEnabled(false);
