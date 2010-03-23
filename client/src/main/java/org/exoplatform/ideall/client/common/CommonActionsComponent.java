@@ -27,6 +27,7 @@ import org.exoplatform.ideall.client.application.component.AbstractApplicationCo
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandHandler;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
+import org.exoplatform.ideall.client.command.PasteItemsCommandThread;
 import org.exoplatform.ideall.client.command.SaveAllFilesCommandHandler;
 import org.exoplatform.ideall.client.command.SaveFileAsCommandHandler;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
@@ -88,7 +89,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    private GoToFolderCommandHandler goToFolderCommandHandler;
 
-   private PasteItemsCommandHandler pasteItemsCommandHandler;
+   private PasteItemsCommandThread pasteItemsCommandHandler;
 
    private OpenFileCommandThread openFileCommandThread;
    
@@ -133,7 +134,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       saveFileAsCommandHandler = new SaveFileAsCommandHandler(eventBus, context);
       saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);
-      pasteItemsCommandHandler = new PasteItemsCommandHandler(eventBus, context);      
+      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);      
    }
 
    public void onUploadFile(UploadFileEvent event)
