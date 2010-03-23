@@ -112,6 +112,8 @@ public class GroovyServiceOutputPreviewPresenter
    
    private Resource resource;
    
+   private Method method;
+   
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
       this.eventBus = eventBus;
@@ -164,7 +166,25 @@ public class GroovyServiceOutputPreviewPresenter
                if (pathExists(event.getValue()))
                {
                   setMethodsOnPath(event.getValue());
-                  setResourceInfo(event.getValue(), display.getMethodField().getValue());
+                  
+                  String oldPath = resource == null
+                                   ? null
+                                   : resource.getPath();
+                  String oldMethodName = method == null
+                                   ? null
+                                   : method.getName();
+                  
+                  resource = findResource(event.getValue(), display.getMethodField().getValue());
+                  method = findMethod(resource, display.getMethodField().getValue());
+                  
+                  //check if it is need to change resource info
+                  //If value if path field changed, but path and method stayed the same
+                  // there is no need to set resource info again
+                  if (! (oldPath != null && oldPath.equals(resource.getPath())
+                        && oldMethodName != null && oldMethodName.equals(method.getName())))
+                  {
+                     setResourceInfo();
+                  }
                } 
             }
             else
@@ -179,7 +199,9 @@ public class GroovyServiceOutputPreviewPresenter
 
             public void onValueChange(ValueChangeEvent<String> event)
             {
-               setResourceInfo(display.getPathField().getValue(), event.getValue());
+               resource = findResource(display.getPathField().getValue(), event.getValue());
+               method = findMethod(resource, event.getValue());
+               setResourceInfo();
             }
          });
       
@@ -210,7 +232,14 @@ public class GroovyServiceOutputPreviewPresenter
       ArrayList<String> parameters = getParams(entered, patterns);
       for (String param : parameters)
       {
-         if (param.contains("\\"))
+         if (param.contains("?"))
+         {
+            Dialogs.getInstance().showError("Parameter value <b>" + param 
+               + "</b> can not contain symbol <b>?</b><br><br>"
+               + "Set query parameter values in specified form");
+            return false;
+         }
+         else if (param.contains("\\"))
          {
             Dialogs.getInstance().showError("Parameter value <b>" + param 
                + "</b> can not contain symbol <b>\\</b>");
@@ -342,21 +371,17 @@ public class GroovyServiceOutputPreviewPresenter
       }
       
 
-      if (resource.getParam().size() != 0)
+      for (Param p : resource.getParam())
       {
 
-         for (Param p : resource.getParam())
+         if (p.getStyle() == ParamStyle.QUERY)
          {
+            itemsQuery.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
+         }
 
-            if (p.getStyle() == ParamStyle.QUERY)
-            {
-               itemsQuery.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
-            }
-
-            if (p.getStyle() == ParamStyle.HEADER)
-            {
-               itemsHeader.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
-            }
+         if (p.getStyle() == ParamStyle.HEADER)
+         {
+            itemsHeader.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
          }
       }
 
@@ -370,7 +395,7 @@ public class GroovyServiceOutputPreviewPresenter
             {
                Method m = (Method)j;
 
-               if (m.getRequest() != null)
+               if (m.getRequest() != null && m.getName().equals(display.getMethodField().getValue()))
                {
 
                   for (Param par : m.getRequest().getParam())
@@ -405,12 +430,8 @@ public class GroovyServiceOutputPreviewPresenter
     * @param path path to resource
     * @param methodName name of method
     */
-   private void setResourceInfo(String path, String methodName)
+   private void setResourceInfo()
    {
-      resource = findResource(path, methodName);
-      
-      Method method = findMethod(resource, methodName);
-      
       fillParameters(resource, method);
       
       if (HTTPMethod.GET.equals(method.getName())
@@ -491,7 +512,7 @@ public class GroovyServiceOutputPreviewPresenter
     */
    private String getPathRegex(Resource resource)
    {
-      return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
+      return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
    }
    
    /**
@@ -563,6 +584,7 @@ public class GroovyServiceOutputPreviewPresenter
       }
       display.setMethods(methods);
       
+      //checks is it need to change method field value
       for (String methodName : methodArray)
          if (oldMethodName.equals(methodName))
          {
