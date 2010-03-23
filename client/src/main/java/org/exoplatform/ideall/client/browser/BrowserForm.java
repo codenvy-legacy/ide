@@ -20,24 +20,22 @@ package org.exoplatform.ideall.client.browser;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
+import org.exoplatform.ideall.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 
-public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Display
+public class BrowserForm extends SimpleTabPanel implements BrowserPanel, BrowserPresenter.Display
 {
 
    public static final String TITLE = "Workspace";
 
-   public static final String ID = "Workspace";
+   private HandlerManager eventBus;
 
    private ItemTreeGrid<Item> treeGrid;
 
@@ -47,7 +45,8 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
 
    public BrowserForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus);
+      super(ID);
+      this.eventBus = eventBus;
 
       this.context = context;
 
@@ -56,7 +55,7 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);
       treeGrid.setEmptyMessage("Root folder not found!");
-      
+
       treeGrid.setSelectionType(SelectionStyle.MULTIPLE);
 
       treeGrid.setHeight100();
@@ -87,27 +86,14 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPresenter.Disp
       return treeGrid;
    }
 
-   @Override
-   protected void onSelected()
-   {
-      eventBus.fireEvent(new BrowserPanelSelectedEvent());
-      super.onSelected();
-   }
-
-   @Override
-   protected void onDeselected()
-   {
-      eventBus.fireEvent(new BrowserPanelDeselectedEvent());
-      super.onDeselected();
-   }
-
    public void selectItem(String path)
    {
       treeGrid.selectItem(path);
    }
 
-   public List<Item> getSelectedItems() {
+   public List<Item> getSelectedItems()
+   {
       return treeGrid.getSelectedItems();
    }
-   
+
 }

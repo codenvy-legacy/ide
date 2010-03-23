@@ -577,7 +577,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onError(ExceptionThrownEvent event)
    {
-      context.setSelectedEditorDescriptor(null);
+      context.setSelectedEditorDescription(null);
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)

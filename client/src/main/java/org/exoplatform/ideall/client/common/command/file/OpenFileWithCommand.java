@@ -18,12 +18,10 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
 import org.exoplatform.ideall.client.model.vfs.api.File;
-
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,7 +30,9 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
 */
 public class OpenFileWithCommand extends IDECommand implements SelectedItemsHandler
 {
-   public static final String ID = "File/Open File With...";
+   private static final String ID = "File/Open File With...";
+
+   private boolean browserPanelSelected = true;
 
    public OpenFileWithCommand()
    {
@@ -42,14 +42,14 @@ public class OpenFileWithCommand extends IDECommand implements SelectedItemsHand
       setIcon(Images.MainMenu.OPENWITH);
       setEvent(new OpenFileWithEvent());
    }
-   
+
    @Override
    protected void onInitializeApplication()
    {
       setVisible(true);
       setEnabled(false);
    }
-   
+
    @Override
    protected void onRegisterHandlers()
    {
@@ -58,12 +58,17 @@ public class OpenFileWithCommand extends IDECommand implements SelectedItemsHand
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if (event.getSelectedItems().size() !=1 || !(event.getSelectedItems().get(0) instanceof File))
+      if (!browserPanelSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
       {
          setEnabled(false);
          return;
       }
       setEnabled(true);
    }
-}
 
+}

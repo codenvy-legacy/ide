@@ -17,8 +17,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.navigation;
+package org.exoplatform.ideall.client.panel;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.panel.event.PanelClosedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
+import org.exoplatform.ideall.client.panel.event.SelectPanelHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -36,14 +44,30 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version $
  */
 
-public class TabContainer extends TabSet
+public class TabContainer extends TabSet implements SelectPanelHandler
 {
 
-   public TabContainer()
+   private HandlerManager eventBus;
+
+   private Handlers handlers;
+
+   public TabContainer(HandlerManager eventBus)
    {
+      this.eventBus = eventBus;
+      handlers = new Handlers(eventBus);
+
+      handlers.addHandler(SelectPanelEvent.TYPE, this);
+
       addTabSelectedHandler(tabSelectedHandler);
       addTabDeselectedHandler(tabDeselectedHandler);
       addCloseClickHandler(closeClickhandler);
+   }
+
+   @Override
+   public void destroy()
+   {
+      handlers.removeHandlers();
+      super.destroy();
    }
 
    public boolean isTabPanelExist(String tabID)
@@ -51,10 +75,10 @@ public class TabContainer extends TabSet
       return getTab(tabID) != null;
    }
 
-   public void addTabPanel(Canvas tabPanel, String title, String id, String icon, boolean canClose)
+   public void addTabPanel(SimpleTabPanel tabPanel, String title, String icon, boolean canClose)
    {
       Tab tab = new Tab("<span>" + Canvas.imgHTML(icon) + "&nbsp;" + title);
-      tab.setID(id);
+      tab.setID(tabPanel.getPanelId());
       tab.setPane(tabPanel);
       tab.setCanClose(canClose);
       addTab(tab);
@@ -78,7 +102,7 @@ public class TabContainer extends TabSet
       public void onTabSelected(TabSelectedEvent event)
       {
          SimpleTabPanel tabPanel = (SimpleTabPanel)event.getTab().getPane();
-         tabPanel.setSelected();
+         eventBus.fireEvent(new PanelSelectedEvent(tabPanel.getPanelId()));
       }
    };
 
@@ -87,7 +111,7 @@ public class TabContainer extends TabSet
       public void onTabDeselected(TabDeselectedEvent event)
       {
          SimpleTabPanel tabPanel = (SimpleTabPanel)event.getTab().getPane();
-         tabPanel.setDeselected();
+         eventBus.fireEvent(new PanelDeselectedEvent(tabPanel.getPanelId()));
       }
    };
 
@@ -96,8 +120,18 @@ public class TabContainer extends TabSet
       public void onCloseClick(TabCloseClickEvent event)
       {
          SimpleTabPanel tabPanel = (SimpleTabPanel)event.getTab().getPane();
-         tabPanel.setClosed();
+         eventBus.fireEvent(new PanelClosedEvent(tabPanel.getPanelId()));
       }
    };
+
+   public void onSelectPanel(SelectPanelEvent event)
+   {
+      if (event.getPanelId() == null)
+      {
+         return;
+      }
+
+      selectTab(event.getPanelId());
+   }
 
 }

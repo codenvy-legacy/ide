@@ -20,14 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,8 +29,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends IDECommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler, SelectedItemsHandler
+public class CreateFileFromTemplateCommand extends AbstractNewFileCommand
 {
 
    private boolean browserPanelSelected = true;
@@ -46,64 +38,8 @@ public class CreateFileFromTemplateCommand extends IDECommand implements Browser
 
    public CreateFileFromTemplateCommand()
    {
-      super(ID);
-      setTitle("From Template...");
-      setPrompt("Create File From Template...");
-      setIcon(Images.MainMenu.TEMPLATES);
-      setEvent(new CreateFileFromTemplateEvent());
+      super(ID, "From Template...", "Create File From Template...", Images.MainMenu.TEMPLATES,
+         new CreateFileFromTemplateEvent());
    }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      updateEnabling();
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(BrowserPanelSelectedEvent.TYPE, this);
-      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
-      addHandler(SelectedItemsEvent.TYPE, this);
-   }
-
-   private void updateEnabling()
-   {
-      if (browserPanelSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
-
-   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
-   {
-      browserPanelSelected = true;
-      updateEnabling();
-   }
-
-   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
-   {
-      browserPanelSelected = false;
-      updateEnabling();
-   }
-
-   public void onItemsSelected(SelectedItemsEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         browserPanelSelected = false;
-         updateEnabling();
-      }
-      else
-      {
-         browserPanelSelected = true;
-         updateEnabling();
-      }
-   }
-
+   
 }

@@ -31,10 +31,8 @@ import org.exoplatform.ideall.client.application.event.InitializeApplicationEven
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
-import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
@@ -47,14 +45,16 @@ import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.Workspace;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler;
 
@@ -179,8 +179,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       {
          selectedItems = display.getSelectedItems();
          
-         context.getSelectedItems().clear();
-         context.getSelectedItems().addAll(selectedItems);
+         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
          
          eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
       }
@@ -192,7 +192,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    protected void onBrowserDoubleClicked()
    {
-      if (context.getSelectedItems().size() != 1)
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
       }
@@ -201,7 +201,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       
       if (item instanceof File)
       {
-         context.setSelectedEditorDescriptor(null);
+         context.setSelectedEditorDescription(null);
          //VirtualFileSystem.getInstance().getFileContent((File)item);
          eventBus.fireEvent(new OpenFileEvent((File)item));
       }
@@ -214,11 +214,11 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onRefreshBrowser()
    {
-      if (context.getSelectedItems().size() != 1)
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
       }
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String selectedItemPath = item.getPath();
       if (item instanceof File)
       {
@@ -260,8 +260,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       
       selectedItems.clear();
       selectedItems.add(workspace);
-      context.getSelectedItems().clear();
-      context.getSelectedItems().add(workspace);
+      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+      context.getSelectedItems(context.getSelectedNavigationPanel()).add(workspace);
       
       display.getBrowserTree().setValue(workspace);
 
@@ -316,7 +316,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       display.getBrowserTree().setValue(event.getFolder());
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      eventBus.fireEvent(new SelectBrowserPanelEvent());
+      
+      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
 
       if (forlderToSelect != null)
       {
@@ -341,12 +342,12 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onFolderCreated(FolderCreatedEvent event)
    {
-      if(context.getSelectedItems().size() != 1)
+      if(context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
       }
    
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       forlderToSelect = event.getFolder().getPath();
       VirtualFileSystem.getInstance().getChildren((Folder)item);
    }
@@ -419,7 +420,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       switchWorkspace();
-      eventBus.fireEvent(new BrowserPanelSelectedEvent());
+    //TODO fire new event
+      //eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
    }
 
    /**

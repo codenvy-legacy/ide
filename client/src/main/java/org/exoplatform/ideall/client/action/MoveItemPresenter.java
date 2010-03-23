@@ -77,14 +77,15 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       this.context = context;
       handlers = new Handlers(eventBus);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
-      
+
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
 
-      display.getItemPathField().setValue(context.getSelectedItems().get(0).getPath());
+      display.getItemPathField().setValue(
+         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
 
       display.getMoveButton().addClickHandler(new ClickHandler()
       {
@@ -123,7 +124,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    protected void move()
    {
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String path = display.getItemPathField().getValue();
 
@@ -142,7 +143,7 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
             {
                if (value != null && value == true)
                {
-                  saveNextOpenedFile(context.getSelectedItems().get(0).getPath());
+                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
                }
             }
 
@@ -196,13 +197,14 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (context.getSelectedItems().size() != 1 && saveNextOpenedFile(context.getSelectedItems().get(0).getPath()))
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1
+         && saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath()))
       {
          return;
       }
 
       String path = display.getItemPathField().getValue();
-      VirtualFileSystem.getInstance().move(context.getSelectedItems().get(0), path);
+      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), path);
    }
 
 }

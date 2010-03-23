@@ -25,11 +25,11 @@ import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.MoveItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
-import org.exoplatform.ideall.client.command.GoToFolderCommandHandler;
+import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
 import org.exoplatform.ideall.client.command.PasteItemsCommandThread;
-import org.exoplatform.ideall.client.command.SaveAllFilesCommandHandler;
-import org.exoplatform.ideall.client.command.SaveFileAsCommandHandler;
+import org.exoplatform.ideall.client.command.SaveAllFilesCommandThread;
+import org.exoplatform.ideall.client.command.SaveFileAsCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
@@ -76,30 +76,31 @@ import com.google.gwt.user.client.Window.Location;
  * @version $
  */
 
-public class CommonActionsComponent extends AbstractApplicationComponent implements  UploadFileHandler, CreateFolderHandler, DeleteItemHandler, MoveItemHander,
-   SearchFileHandler, SaveAsTemplateHandler, TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler,
-   OpenFileWithHandler, CopyItemsHandler, CutItemsHandler
+public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
+   CreateFolderHandler, DeleteItemHandler, MoveItemHander, SearchFileHandler, SaveAsTemplateHandler,
+   TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler,
+   CutItemsHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
 
-   private SaveFileAsCommandHandler saveFileAsCommandHandler;
+   private SaveFileAsCommandThread saveFileAsCommandHandler;
 
-   private SaveAllFilesCommandHandler saveAllFilesCommandHandler;
+   private SaveAllFilesCommandThread saveAllFilesCommandHandler;
 
-   private GoToFolderCommandHandler goToFolderCommandHandler;
+   private GoToFolderCommandThread goToFolderCommandHandler;
 
    private PasteItemsCommandThread pasteItemsCommandHandler;
 
    private OpenFileCommandThread openFileCommandThread;
-   
+
    private CreateFileCommandThread createFileCommandThread;
-   
+
    public CommonActionsComponent()
    {
       super(new CommonActionsComponentInitializer());
    }
-   
+
    @Override
    protected void onInitializeComponent()
    {
@@ -131,16 +132,16 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
        * Initializing Save, Save As, Save All Command Handlers
        */
       saveFileCommandHandler = new SaveFileCommandThread(eventBus, context);
-      saveFileAsCommandHandler = new SaveFileAsCommandHandler(eventBus, context);
-      saveAllFilesCommandHandler = new SaveAllFilesCommandHandler(eventBus, context);
-      goToFolderCommandHandler = new GoToFolderCommandHandler(eventBus, context);
-      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);      
+      saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus, context);
+      saveAllFilesCommandHandler = new SaveAllFilesCommandThread(eventBus, context);
+      goToFolderCommandHandler = new GoToFolderCommandThread(eventBus, context);
+      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);
    }
 
    public void onUploadFile(UploadFileEvent event)
    {
 
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String path = item.getPath();
       if (item instanceof File)
@@ -153,7 +154,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onCreateFolder(CreateFolderEvent event)
    {
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String path = item.getPath();
       if (item instanceof File)
@@ -177,6 +178,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onSearchFile(SearchFileEvent event)
    {
       new AdvancedSearchForm(eventBus, context);
+      //new SearchForm(eventBus, "alala");
    }
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)
@@ -204,9 +206,12 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    private String getURL()
    {
-      String url = Location.getProtocol() + "//" + Location.getHost() +
-      //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
-         Configuration.getInstance().getContext() + "/jcr" + context.getSelectedItems().get(0).getPath();
+      String url =
+         Location.getProtocol() + "//" + Location.getHost()
+            +
+            //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
+            Configuration.getInstance().getContext() + "/jcr"
+            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath();
       return url;
    }
 
@@ -219,7 +224,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       context.getItemsToCopy().clear();
       context.getItemsToCut().clear();
-      context.getItemsToCopy().addAll(context.getSelectedItems());
+      context.getItemsToCopy().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
@@ -228,7 +233,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       context.getItemsToCut().clear();
       context.getItemsToCopy().clear();
 
-      context.getItemsToCut().addAll(context.getSelectedItems());
+      context.getItemsToCut().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 

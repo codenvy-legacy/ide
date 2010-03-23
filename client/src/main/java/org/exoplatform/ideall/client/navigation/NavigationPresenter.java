@@ -17,8 +17,6 @@
 package org.exoplatform.ideall.client.navigation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelEvent;
-import org.exoplatform.ideall.client.browser.event.SelectBrowserPanelHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.event.SearchResultReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.SearchResultReceivedHandler;
@@ -30,14 +28,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class NavigationPresenter implements SearchResultReceivedHandler, SelectBrowserPanelHandler
+public class NavigationPresenter implements SearchResultReceivedHandler
 {
 
    interface Display
    {
 
       void showSearchResult(Folder searchResult);
-      
+
       void selectBrowserPanel();
 
    }
@@ -45,7 +43,7 @@ public class NavigationPresenter implements SearchResultReceivedHandler, SelectB
    protected Display display;
 
    private HandlerManager eventBus;
-   
+
    private Handlers handlers;
 
    public NavigationPresenter(HandlerManager eventBus)
@@ -58,7 +56,6 @@ public class NavigationPresenter implements SearchResultReceivedHandler, SelectB
    {
       this.display = d;
       handlers.addHandler(SearchResultReceivedEvent.TYPE, this);
-      handlers.addHandler(SelectBrowserPanelEvent.TYPE, this);
    }
 
    public void destroy()
@@ -70,11 +67,6 @@ public class NavigationPresenter implements SearchResultReceivedHandler, SelectB
    {
       Folder searchResult = event.getFolder();
       display.showSearchResult(searchResult);
-   }
-
-   public void onSelectBrowserPanel(SelectBrowserPanelEvent event)
-   {
-      display.selectBrowserPanel();
    }
 
 }

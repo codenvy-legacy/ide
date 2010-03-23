@@ -83,14 +83,14 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private String getPathToPaste(Item item)
    {
-      if (context.getSelectedItems().get(0) instanceof File)
+      String selectedNavigationPanel = context.getSelectedNavigationPanel();
+      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
       {
-         String path = ((File)context.getSelectedItems().get(0)).getPath();
+         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getPath();
          return path.substring(0, path.lastIndexOf("/"));
       }
 
-      return context.getSelectedItems().get(0).getPath();
-
+      return context.getSelectedItems(selectedNavigationPanel).get(0).getPath();
    }
 
    /****************************************************************************************************
@@ -110,7 +110,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       String pathFromCopy = item.getPath();
       pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
 
-      String pathToCopy = getPathToPaste(context.getSelectedItems().get(0));
+      String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
 
       if (pathFromCopy.equals(pathToCopy))
       {
@@ -179,7 +179,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       String pathFromCut = item.getPath();
       pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
 
-      String pathToCut = getPathToPaste(context.getSelectedItems().get(0));
+      String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
       if (pathFromCut.equals(pathToCut))
       {
          String message = "Can't move files in the same directory!";

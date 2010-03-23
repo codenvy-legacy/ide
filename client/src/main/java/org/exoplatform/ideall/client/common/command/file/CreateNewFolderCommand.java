@@ -21,13 +21,13 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,9 +36,10 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler, SelectedItemsHandler
+public class CreateNewFolderCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
 {
+
+   private boolean folderItemSelected = true;
 
    private boolean browserPanelSelected = true;
 
@@ -56,8 +57,7 @@ public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSe
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(BrowserPanelSelectedEvent.TYPE, this);
-      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      addHandler(PanelSelectedEvent.TYPE, this);
       addHandler(SelectedItemsEvent.TYPE, this);
    }
 
@@ -70,7 +70,12 @@ public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSe
 
    private void updateEnabling()
    {
-      if (browserPanelSelected)
+      if (!browserPanelSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+      if (folderItemSelected)
       {
          setEnabled(true);
       }
@@ -80,30 +85,31 @@ public class CreateNewFolderCommand extends IDECommand implements BrowserPanelSe
       }
    }
 
-   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
-   {
-      browserPanelSelected = true;
-      updateEnabling();
-   }
-
-   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
-   {
-      browserPanelSelected = false;
-      updateEnabling();
-   }
-
    public void onItemsSelected(SelectedItemsEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {
-         browserPanelSelected = false;
+         folderItemSelected = false;
          updateEnabling();
+         return;
       }
-      else
+
+      if (event.getSelectedItems().get(0) instanceof File)
       {
-         browserPanelSelected = true;
+         folderItemSelected = false;
          updateEnabling();
+         return;
       }
+      
+      folderItemSelected = true;
+      updateEnabling();
+
+   }
+
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
    }
 
 }

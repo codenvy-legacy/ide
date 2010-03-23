@@ -20,6 +20,8 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.BrowserForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.panel.TabContainer;
+import org.exoplatform.ideall.client.search.SearchResultPanel;
 import org.exoplatform.ideall.client.search.SearchResultsForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -49,7 +51,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
       setHeight100();
       setWidth100();
-      tabContainer = new TabContainer();
+      tabContainer = new TabContainer(eventBus);
       showBrowser();
 
       addMember(tabContainer);
@@ -63,7 +65,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
       if (!tabContainer.isTabPanelExist(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
-         tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, BrowserForm.ID, Images.BrowserPanel.ICON, false);
+         tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, Images.BrowserPanel.ICON, false);
       }
    }
 
@@ -72,11 +74,10 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
     */
    public void showSearchResult(Folder folder)
    {
-      tabContainer.closeTabPanel(SearchResultsForm.ID);
+      tabContainer.closeTabPanel(SearchResultPanel.ID);
 
-      SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, folder);
-      tabContainer.addTabPanel(searchResultForm, SearchResultsForm.TITLE, SearchResultsForm.ID,
-         Images.SearchPanel.ICON, true);
+      SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, context, folder);
+      tabContainer.addTabPanel(searchResultForm, SearchResultsForm.TITLE, Images.SearchPanel.ICON, true);
       tabContainer.selectTabPanel(SearchResultsForm.ID);
    }
 

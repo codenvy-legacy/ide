@@ -170,7 +170,7 @@ public class CreateFileFromTemplatePresenter
          return;
       }
 
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String path = item.getPath();
       if (item instanceof File)

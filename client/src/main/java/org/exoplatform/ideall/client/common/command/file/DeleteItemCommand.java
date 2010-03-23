@@ -20,10 +20,6 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
@@ -32,6 +28,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,12 +38,10 @@ import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
  */
 
 public class DeleteItemCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler,
-   ItemDeletedHandler, BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
+   ItemDeletedHandler
 {
 
    private static final String ID = "File/Delete...";
-
-   private boolean browserPanelSelected = true;
 
    private Item selectedItem;
 
@@ -65,8 +60,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       addHandler(SelectedItemsEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
-      addHandler(BrowserPanelSelectedEvent.TYPE, this);
-      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      super.onRegisterHandlers();
    }
 
    @Override
@@ -79,7 +73,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    public void onItemsSelected(SelectedItemsEvent event)
    {
 
-      if (!isItemsInSameFolder(event.getSelectedItems()))
+      if (!isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems()))
       {
          setEnabled(false);
          return;
@@ -94,9 +88,17 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       updateEnabling();
    }
 
-   private void updateEnabling()
+   @Override
+   public void onPanelSelected(PanelSelectedEvent event)
    {
-      if (!browserPanelSelected)
+      super.onPanelSelected(event);
+      updateEnabling();
+   }
+   
+   @Override
+   protected void updateEnabling()
+   {
+      if (!browserSelected)
       {
          setEnabled(false);
          return;
@@ -116,18 +118,6 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       {
          setEnabled(true);
       }
-   }
-
-   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
-   {
-      browserPanelSelected = true;
-      updateEnabling();
-   }
-
-   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
-   {
-      browserPanelSelected = false;
-      updateEnabling();
    }
 
 }

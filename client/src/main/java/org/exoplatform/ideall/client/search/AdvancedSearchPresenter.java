@@ -183,7 +183,7 @@ public class AdvancedSearchPresenter
 
    private void getPathValue()
    {
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       
       //if file was selected then delete it's name from path
       if (item instanceof File)

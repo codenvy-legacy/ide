@@ -20,39 +20,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.Workspace;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class MultipleSelectionItemsCommand extends IDECommand
+public class MultipleSelectionItemsCommand extends IDECommand implements PanelSelectedHandler
 {
+   
+   protected boolean browserSelected = true;
 
    public MultipleSelectionItemsCommand(String id)
    {
       super(id);
    }
 
-   public boolean isSelectedWorkspace(List<Item> items)
+   @Override
+   protected void onRegisterHandlers()
    {
-      for (Item i : items)
-      {
-         if (i instanceof Workspace)
-         {
-            return true;
-         }
-      }
-      return false;
+      addHandler(PanelSelectedEvent.TYPE, this);
    }
 
-   public boolean isItemsInSameFolder(List<Item> items)
+   public boolean isItemsInSameFolderOrNotSelectedWorspace(List<Item> items)
    {
       List<String> paths = new ArrayList<String>();
       for (Item i : items)
       {
+         if(i instanceof Workspace)
+         {
+            return false;
+         }
          String p = i.getPath();
          p = p.substring(0, p.lastIndexOf("/"));
          paths.add(p);
@@ -72,5 +75,23 @@ public class MultipleSelectionItemsCommand extends IDECommand
       }
 
       return true;
+   }
+
+   protected void updateEnabling()
+   {
+      if (browserSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+   
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
    }
 }

@@ -21,6 +21,8 @@ import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsComman
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,7 +33,11 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
 {
 
    private static final String ID = "Edit/Copy Item(s)";
+   
+   private Item selectedItem;
 
+   private boolean copyReady = false;
+   
    public CopyItemsCommand()
    {
       super(ID);
@@ -52,28 +58,41 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
    protected void onRegisterHandlers()
    {
       addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(PanelSelectedEvent.TYPE, this);
+      super.onRegisterHandlers();
    }
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if (event.getSelectedItems().size() == 0)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (!isItemsInSameFolder(event.getSelectedItems()))
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (isSelectedWorkspace(event.getSelectedItems()))
-      {
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
+         selectedItem = event.getSelectedItems().get(0);
+         copyReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
+         updateEnabling();
    }
+   
+   @Override
+   protected void updateEnabling()
+   {
+      if (!browserSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+         return;
+      }
+      
+      if(copyReady)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+     
+   }
+
 }

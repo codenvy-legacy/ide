@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
@@ -148,7 +147,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    private void fillEditorListGrid()
    {
 
-      String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
+      String mimeType = ((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)).getContentType();
 
       try
       {
@@ -160,7 +159,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
          if (context.getDefaultEditors().get(mimeType) != null)
          {
-            
+
             String defaultEdotorDecription = context.getDefaultEditors().get(mimeType);
 
             for (Editor e : editorsItems)
@@ -170,14 +169,13 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
                   defaultEditor = e;
                }
             }
-            
+
          }
          else
          {
             defaultEditor = EditorFactory.getDefaultEditor(mimeType);
          }
 
-         
          for (Editor e : editorsItems)
          {
             if (e.getDescription().equals(defaultEditor.getDescription()))
@@ -203,13 +201,15 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
-         context.setSelectedEditorDescriptor(selectedEditor.getDescription());
-         eventBus.fireEvent(new OpenFileEvent((File)context.getSelectedItems().get(0)));
+         context.setSelectedEditorDescription(selectedEditor.getDescription());
+         eventBus.fireEvent(new OpenFileEvent((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(
+            0)));
          display.closeForm();
       }
       else
       {
-         String mimeType = ((File)context.getSelectedItems().get(0)).getContentType();
+         String mimeType =
+            ((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)).getContentType();
 
          context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
 
@@ -219,9 +219,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private void showDialog()
    {
-      Dialogs.getInstance().ask("Info",
-         "Do you want to reopen file <b>" + context.getSelectedItems().get(0).getName() + "</b> in selected editor?",
-         new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask(
+         "Info",
+         "Do you want to reopen file <b>"
+            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getName()
+            + "</b> in selected editor?", new BooleanValueReceivedCallback()
          {
 
             public void execute(Boolean value)
@@ -248,14 +250,14 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private void tryOpenFile()
    {
-      File file = (File)context.getSelectedItems().get(0);
-      
+      File file = (File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
       if (context.getOpenedFiles().get(file.getPath()) != null)
       {
          showDialog();
          return;
       }
-     
+
       openFile();
    }
 
@@ -266,7 +268,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void onApplicationContextSaved(ApplicationContextSavedEvent event)
    {
-      eventBus.fireEvent(new OpenFileEvent((File)context.getSelectedItems().get(0)));
+      eventBus
+         .fireEvent(new OpenFileEvent((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)));
    }
 
 }

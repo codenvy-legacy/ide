@@ -16,17 +16,22 @@
  */
 package org.exoplatform.ideall.client.search;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.event.file.OpenFileEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,19 +46,24 @@ public class SearchResultsPresenter
 
       TreeGridItem<Item> getSearchResultTree();
 
+      List<Item> getSelectedItems();
+
    }
 
    private HandlerManager eventBus;
 
+   private ApplicationContext context;
+
    private Display display;
 
-   private Item selectedItem;
+   private List<Item> selectedItem;
 
    private Folder searchresult;
 
-   public SearchResultsPresenter(HandlerManager eventBus, Folder searchResult)
+   public SearchResultsPresenter(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
       this.eventBus = eventBus;
+      this.context = context;
       this.searchresult = searchResult;
    }
 
@@ -65,7 +75,7 @@ public class SearchResultsPresenter
       {
          public void onDoubleClick(DoubleClickEvent arg0)
          {
-            openFile(selectedItem);
+            onBrowserDoubleClicked();
          }
       });
 
@@ -73,7 +83,7 @@ public class SearchResultsPresenter
       {
          public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
          {
-            selectedItem = event.getSelectedItem();
+            onItemSelected(event.getSelectedItem());
          }
       });
 
@@ -84,6 +94,50 @@ public class SearchResultsPresenter
       }
    }
 
+   /**
+    * Handling of mouse double clicking
+    */
+   protected void onBrowserDoubleClicked()
+   {
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      {
+         return;
+      }
+
+      Item item = selectedItem.get(0);
+
+      context.setSelectedEditorDescription(null);
+      eventBus.fireEvent(new OpenFileEvent((File)item));
+
+   }
+
+   /**
+    * 
+    * Handling item selected event from panel
+    * @param item
+    */
+   protected void onItemSelected(Item item)
+   {
+      updateSelectionTimer.cancel();
+      updateSelectionTimer.schedule(10);
+   }
+
+   private Timer updateSelectionTimer = new Timer()
+   {
+
+      @Override
+      public void run()
+      {
+         selectedItem = display.getSelectedItems();
+
+         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItem);
+
+         eventBus.fireEvent(new SelectedItemsEvent(selectedItem));
+      }
+
+   };
+
    private void openFile(Item item)
    {
       if (!(item instanceof File))
@@ -91,7 +145,8 @@ public class SearchResultsPresenter
          return;
       }
 
-      VirtualFileSystem.getInstance().getFileContent((File)item);
+      context.setSelectedEditorDescription(null);
+      eventBus.fireEvent(new OpenFileEvent((File)item));
    }
 
 }

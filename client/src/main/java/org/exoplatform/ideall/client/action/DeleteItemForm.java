@@ -63,13 +63,13 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    {
       super(eventBus, WIDTH, HEIGHT);
 
-      if (context.getSelectedItems().size() == 1)
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
       {
-         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems().get(0).getPath() + "</b> ?";
+         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath() + "</b> ?";
       }
       else
       {
-         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems().size() + "</b> items?";
+         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).size() + "</b> items?";
       }
       setTitle("Delete Repository");
 

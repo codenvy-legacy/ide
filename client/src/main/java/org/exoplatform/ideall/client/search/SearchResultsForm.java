@@ -16,12 +16,14 @@
  */
 package org.exoplatform.ideall.client.search;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.navigation.SimpleTabPanel;
-import org.exoplatform.ideall.client.search.event.SearchResultPanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -30,20 +32,21 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsForm extends SimpleTabPanel implements SearchResultsPresenter.Display
+public class SearchResultsForm extends SimpleTabPanel implements SearchResultPanel, SearchResultsPresenter.Display
 {
 
    public static final String TITLE = "Search";
 
-   public static final String ID = "Search";
+   private HandlerManager eventBus;
 
    private ItemTreeGrid<Item> searchItemTreeGrid;
 
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
 
-   public SearchResultsForm(HandlerManager eventBus, Folder searchResult)
+   public SearchResultsForm(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
-      super(eventBus);
+      super(ID);
+      this.eventBus = eventBus;
 
       searchItemTreeGrid = new ItemTreeGrid<Item>(true);
       searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
@@ -54,7 +57,7 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultsPr
       searchItemTreeGrid.setWidth100();
       addChild(searchItemTreeGrid);
 
-      SearchResultsPresenter presenter = new SearchResultsPresenter(eventBus, searchResult);
+      SearchResultsPresenter presenter = new SearchResultsPresenter(eventBus, context, searchResult);
       presenter.bindDsplay(this);
    }
 
@@ -63,11 +66,9 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultsPr
       return searchItemTreeGrid;
    }
 
-   @Override
-   protected void onSelected()
+   public List<Item> getSelectedItems()
    {
-      eventBus.fireEvent(new SearchResultPanelSelectedEvent());
-      super.onSelected();
+      return searchItemTreeGrid.getSelectedItems();
    }
 
 }

@@ -21,13 +21,12 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,8 +35,7 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
  * @version $
  */
 
-public class UploadFileCommand extends IDECommand implements BrowserPanelSelectedHandler,
-   BrowserPanelDeselectedHandler, SelectedItemsHandler
+public class UploadFileCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
 {
 
    private final static String ID = "File/Upload File...";
@@ -58,9 +56,8 @@ public class UploadFileCommand extends IDECommand implements BrowserPanelSelecte
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(BrowserPanelSelectedEvent.TYPE, this);
-      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
       addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(PanelSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -82,18 +79,6 @@ public class UploadFileCommand extends IDECommand implements BrowserPanelSelecte
       }
    }
 
-   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
-   {
-      browserPanelSelected = true;
-      updateEnabling();
-   }
-
-   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
-   {
-      browserPanelSelected = false;
-      updateEnabling();
-   }
-
    public void onItemsSelected(SelectedItemsEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -106,5 +91,11 @@ public class UploadFileCommand extends IDECommand implements BrowserPanelSelecte
          browserPanelSelected = true;
          updateEnabling();
       }
+   }
+
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
    }
 }

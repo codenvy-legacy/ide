@@ -75,7 +75,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       this.context = context;
       this.eventBus = eventBus;
       items = new ArrayList<Item>();
-      items.addAll(context.getSelectedItems());
+      items.addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       handlers = new Handlers(eventBus);
    }
 
@@ -153,8 +153,8 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       Folder folder = new Folder(selectedItemPath);
       VirtualFileSystem.getInstance().getChildren(folder);
 
-      context.getSelectedItems().clear();
-      context.getSelectedItems().add(folder);
+      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
 
       eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
       //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));

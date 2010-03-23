@@ -44,10 +44,12 @@ public class ApplicationContext
     */
    private UserInfo userInfo;
 
+   private String selectedNavigationPanel;
+
    /**
-    * Selected items in browser
+    * Selected items in all navigation panels
     */
-   private List<Item> selectedItems = new ArrayList<Item>();
+   private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
    /**
     * Current edited file
@@ -144,7 +146,7 @@ public class ApplicationContext
    private boolean showLineNumbers = true;
 
    private boolean initialized;
-   
+
    private Item cached;
 
    public ApplicationContext()
@@ -196,12 +198,36 @@ public class ApplicationContext
       return openedEditors;
    }
 
+//   /**
+//    * @return the selectedItems
+//    */
+//   public HashMap<String, List<Item>> getSelectedItems()
+//   {
+//      return selectedItems;
+//   }
+
    /**
     * @return the selectedItems
     */
-   public List<Item> getSelectedItems()
+   public List<Item> getSelectedItems(String navigationPanelName)
    {
-      return selectedItems;
+      List<Item> items = selectedItems.get(navigationPanelName);
+      if (items == null) {
+         items = new ArrayList<Item>();
+         selectedItems.put(navigationPanelName, items);
+      }
+      
+      return items;
+   }
+   
+   public String getSelectedNavigationPanel()
+   {
+      return selectedNavigationPanel;
+   }
+
+   public void setSelectedNavigationPanel(String selectedNavigationPanel)
+   {
+      this.selectedNavigationPanel = selectedNavigationPanel;
    }
 
    /**
@@ -368,7 +394,7 @@ public class ApplicationContext
       return selectedEditorDescription;
    }
 
-   public void setSelectedEditorDescriptor(String selectedEditor)
+   public void setSelectedEditorDescription(String selectedEditor)
    {
       this.selectedEditorDescription = selectedEditor;
    }
@@ -381,6 +407,6 @@ public class ApplicationContext
    public void setCache(Item cache)
    {
       this.cached = cache;
-   }   
+   }
 
 }

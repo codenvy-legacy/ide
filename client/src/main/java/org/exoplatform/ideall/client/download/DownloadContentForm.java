@@ -78,7 +78,7 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
    private void downloadResource()
    {
-      Item item = context.getSelectedItems().get(0);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       
       String fileName = item.getPath();
       fileName = fileName.substring(fileName.lastIndexOf("/") + 1);

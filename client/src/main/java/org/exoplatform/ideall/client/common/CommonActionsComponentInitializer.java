@@ -106,7 +106,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
       addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
-      addCommand(new OpenFileWithCommand()).disable().hide();
+      addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
 

@@ -21,10 +21,7 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelDeselectedHandler;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.BrowserPanelSelectedHandler;
+import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
@@ -32,6 +29,8 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,7 +40,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
  */
 
 public class MoveItemCommand extends IDECommand implements SelectedItemsHandler, ItemDeletedHandler,
-   BrowserPanelSelectedHandler, BrowserPanelDeselectedHandler
+   PanelSelectedHandler
 {
 
    private static final String ID = "File/Move File\\Folder...";
@@ -65,8 +64,7 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
       addHandler(SelectedItemsEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
-      addHandler(BrowserPanelSelectedEvent.TYPE, this);
-      addHandler(BrowserPanelDeselectedEvent.TYPE, this);
+      addHandler(PanelSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -78,7 +76,7 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if (context.getSelectedItems().size() != 1)
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          setEnabled(false);
          return;
@@ -119,15 +117,9 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
       }
    }
 
-   public void onBrowserPanelSelected(BrowserPanelSelectedEvent event)
+   public void onPanelSelected(PanelSelectedEvent event)
    {
-      browserPanelSelected = true;
-      updateEnabling();
-   }
-
-   public void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event)
-   {
-      browserPanelSelected = false;
+      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
    }
 

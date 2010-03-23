@@ -68,7 +68,7 @@ public class EditorUtil
       if (context.getSelectedEditorDescription() != null)
       {
          defaultEditorDescription = context.getSelectedEditorDescription();
-         context.setSelectedEditorDescriptor(null);
+         context.setSelectedEditorDescription(null);
       }
       else
       {

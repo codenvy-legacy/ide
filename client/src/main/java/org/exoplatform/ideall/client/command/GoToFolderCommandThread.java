@@ -42,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenReceivedHandler,
+public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenReceivedHandler,
    ExceptionThrownHandler
 {
 
@@ -56,7 +56,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenRece
 
    private ArrayList<String> pathes;
 
-   public GoToFolderCommandHandler(HandlerManager eventBus, ApplicationContext context)
+   public GoToFolderCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;

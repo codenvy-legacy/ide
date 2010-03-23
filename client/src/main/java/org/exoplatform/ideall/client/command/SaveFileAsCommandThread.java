@@ -44,7 +44,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
+public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveFileAsHandler
 {
 
@@ -52,7 +52,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    private Handlers handlers;
 
-   public SaveFileAsCommandHandler(HandlerManager eventBus, ApplicationContext context)
+   public SaveFileAsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
       handlers = new Handlers(eventBus);
@@ -83,7 +83,8 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
                return;
             }
 
-            String pathToSave = getFilePath(context.getSelectedItems().get(0)) + "/" + value;
+            String pathToSave =
+               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + "/" + value;
 
             File newFile = new File(file.getPath());
             newFile.setContent(file.getContent());

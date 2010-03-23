@@ -17,9 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.browser.event;
+package org.exoplatform.ideall.client.panel;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +29,19 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface BrowserPanelDeselectedHandler extends EventHandler
+public abstract class SimpleTabPanel extends Layout
 {
 
-   void onBrowserPanelDeselected(BrowserPanelDeselectedEvent event);
+   private String panelId;
+
+   public SimpleTabPanel(String panelId)
+   {
+      this.panelId = panelId;
+   }
+
+   public String getPanelId()
+   {
+      return panelId;
+   }
 
 }

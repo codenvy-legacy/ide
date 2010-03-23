@@ -41,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveAllFilesCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
+public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveAllFilesHandler
 {
 
@@ -49,7 +49,7 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
 
    private Handlers handlers;
 
-   public SaveAllFilesCommandHandler(HandlerManager eventBus, ApplicationContext context)
+   public SaveAllFilesCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
       handlers = new Handlers(eventBus);

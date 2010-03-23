@@ -21,6 +21,7 @@ import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsComman
 import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,6 +33,10 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
 
    private static final String ID = "Edit/Cut Item(s)";
 
+   private boolean cutReady = false;
+
+   private Item selectedItem;
+   
    public CutItemsCommand()
    {
       super(ID);
@@ -52,28 +57,40 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
    protected void onRegisterHandlers()
    {
       addHandler(SelectedItemsEvent.TYPE, this);
+      super.onRegisterHandlers();
    }
 
+   @Override
+   protected void updateEnabling()
+   {
+      if (!browserSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+         return;
+      }
+      
+      if(cutReady)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+   
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      if (event.getSelectedItems().size() == 0)
-      {
-         setEnabled(false);
-         return;
-      }
+      selectedItem = event.getSelectedItems().get(0);
+      cutReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
+      updateEnabling();
 
-      if (!isItemsInSameFolder(event.getSelectedItems()))
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (isSelectedWorkspace(event.getSelectedItems()))
-      {
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
    }
+
 }
