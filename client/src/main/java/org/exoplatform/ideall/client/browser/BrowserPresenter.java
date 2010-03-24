@@ -53,6 +53,8 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler;
@@ -76,7 +78,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler,
    RefreshBrowserHandler, ChildrenReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
-   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler
+   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler, PanelSelectedHandler
 {
 
    interface Display
@@ -134,7 +136,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       {
          public void onSelection(SelectionEvent<Item> event)
          {
-            onItemSelected(event.getSelectedItem());
+            onItemSelected();
          }
       });
 
@@ -165,7 +167,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     * Handling item selected event from browser
     * @param item
     */
-   protected void onItemSelected(Item item)
+   protected void onItemSelected()
    {
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
@@ -177,6 +179,11 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       public void run()
       {
          selectedItems = display.getSelectedItems();
+         
+         System.out.println("selected items: " + selectedItems.size());
+         for (Item i : selectedItems) {
+            System.out.println(">> " + i.getPath());
+         }
          
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
@@ -409,6 +416,8 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      
+      handlers.addHandler(PanelSelectedEvent.TYPE, this);
    }
 
    /**
@@ -436,6 +445,14 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    public void onError(ExceptionThrownEvent event)
    {
       forlderToSelect = null;
+   }
+
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      if(BrowserPanel.ID.equals(event.getPanelId()))
+      {
+         onItemSelected();
+      }
    }
 
 }

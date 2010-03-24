@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,6 +44,8 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
    private ItemTreeGrid<Item> searchItemTreeGrid;
 
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
+   
+   private SearchResultsPresenter presenter;
 
    public SearchResultsForm(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
@@ -57,8 +61,15 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
       searchItemTreeGrid.setWidth100();
       addChild(searchItemTreeGrid);
 
-      SearchResultsPresenter presenter = new SearchResultsPresenter(eventBus, context, searchResult);
-      presenter.bindDsplay(this);
+      presenter = new SearchResultsPresenter(eventBus, context, searchResult);
+      presenter.bindDsplay(this);      
+   }
+   
+   @Override
+   public void destroy()
+   {
+      presenter.destroy();
+      super.destroy();
    }
 
    public TreeGridItem<Item> getSearchResultTree()

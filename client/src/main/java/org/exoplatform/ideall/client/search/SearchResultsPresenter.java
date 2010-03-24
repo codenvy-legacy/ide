@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.search;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
@@ -26,6 +27,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -38,7 +41,7 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsPresenter
+public class SearchResultsPresenter implements PanelSelectedHandler
 {
 
    interface Display
@@ -59,18 +62,23 @@ public class SearchResultsPresenter
    private List<Item> selectedItem;
 
    private Folder searchresult;
+   
+   private Handlers handlers;
 
    public SearchResultsPresenter(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
       this.eventBus = eventBus;
       this.context = context;
       this.searchresult = searchResult;
+      
+      handlers = new Handlers(eventBus);
    }
 
    public void bindDsplay(Display d)
    {
       this.display = d;
 
+      handlers.addHandler(PanelSelectedEvent.TYPE, this);
       display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler()
       {
          public void onDoubleClick(DoubleClickEvent arg0)
@@ -92,6 +100,11 @@ public class SearchResultsPresenter
          searchresult.setIcon(Images.FileTypes.WORKSPACE);
          display.getSearchResultTree().setValue(searchresult);
       }
+   }
+   
+   public void destroy() {
+      updateSelectionTimer = null;
+      handlers.removeHandlers();
    }
 
    /**
@@ -119,6 +132,10 @@ public class SearchResultsPresenter
     */
    protected void onItemSelected()
    {
+      if (updateSelectionTimer == null) {
+         return;
+      }
+      
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
    }
@@ -138,5 +155,13 @@ public class SearchResultsPresenter
       }
 
    };
+
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      if(SearchResultPanel.ID.equals(event.getPanelId()))
+      {
+         onItemSelected();
+      }
+   }
 
 }
