@@ -83,7 +83,7 @@ public class SearchResultsPresenter
       {
          public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
          {
-            onItemSelected(event.getSelectedItem());
+            onItemSelected();
          }
       });
 
@@ -105,10 +105,11 @@ public class SearchResultsPresenter
       }
 
       Item item = selectedItem.get(0);
-
-      context.setSelectedEditorDescription(null);
-      eventBus.fireEvent(new OpenFileEvent((File)item));
-
+      if (item instanceof File)
+      {
+         context.setSelectedEditorDescription(null);
+         eventBus.fireEvent(new OpenFileEvent((File)item));
+      }
    }
 
    /**
@@ -116,7 +117,7 @@ public class SearchResultsPresenter
     * Handling item selected event from panel
     * @param item
     */
-   protected void onItemSelected(Item item)
+   protected void onItemSelected()
    {
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
@@ -137,16 +138,5 @@ public class SearchResultsPresenter
       }
 
    };
-
-   private void openFile(Item item)
-   {
-      if (!(item instanceof File))
-      {
-         return;
-      }
-
-      context.setSelectedEditorDescription(null);
-      eventBus.fireEvent(new OpenFileEvent((File)item));
-   }
 
 }

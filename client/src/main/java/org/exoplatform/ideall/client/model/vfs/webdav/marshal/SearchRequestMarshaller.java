@@ -34,77 +34,55 @@ public class SearchRequestMarshaller implements Marshallable
    //if andFlag has true value, than "AND" must be put before condition
    private boolean andFlag = false;
 
-   public SearchRequestMarshaller(String content, String name, String contentType, String path)
+   public SearchRequestMarshaller(String text, String mimeType, String path)
    {
-      content = escapeRegisteredSymbols(content);
-
+      text = escapeRegisteredSymbols(text);
       String statement = "SELECT * FROM nt:base";
+      
+    if (text != null && text.length() > 0)
+    {
+       statement += " WHERE CONTAINS(*, '" + text + "')";
+       andFlag = true;
+    }
 
-      if (content != null && content.length() > 0)
-      {
-         statement += " WHERE CONTAINS(*, '" + content + "')";
-         andFlag = true;
-      }
+    if ((mimeType != null) && (mimeType.length() > 0))
+    {
+       if (andFlag)
+       {
+          statement += " AND (jcr:mimeType = '" + mimeType + "')";
+       }
+       else
+       {
+          statement += " WHERE (jcr:mimeType = '" + mimeType + "')";
+          andFlag = true;
+       }
+    }
 
-      if ((name != null) && (name.length() > 0))
-      {
-         if (andFlag)
-         {
-            statement += " AND (fn:name() = '" + name + "')";
-         }
-         else
-         {
-            statement += " WHERE (fn:name() = '" + name + "')";
-            andFlag = true;
-         }
-      }
+    if (path != null && (path.length() > 0))
+    {
+       if (andFlag)
+       {
+          statement += " AND jcr:path LIKE '" + path + "/" + "%'";
+       }
+       else
+       {
+          // This is made with purpose to get only files (not with folders)
+          statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "/" + "%'";
+          andFlag = true;
+       }
+    }
 
-      if ((contentType != null) && (contentType.length() > 0))
-      {
-         if (andFlag)
-         {
-            statement += " AND (jcr:mimeType = '" + contentType + "')";
-         }
-         else
-         {
-            statement += " WHERE (jcr:mimeType = '" + contentType + "')";
-            andFlag = true;
-         }
-      }
+    if (!andFlag)
+    {
+       statement = "SELECT * FROM nt:file";
+    }
 
-      if (path != null && (path.length() > 0))
-      {
-         if (andFlag)
-         {
-            statement += " AND jcr:path LIKE '" + path + "/" + "%'";
-         }
-         else
-         {
-            // This is made with purpose to get only files (not with folders)
-            statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "/" + "%'";
-            andFlag = true;
-         }
-      }
-
-      if (!andFlag)
-      {
-         statement = "SELECT * FROM nt:file";
-      }
-
-      query =
-         "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
-            + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
+    query =
+       "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
+          + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
+      
    }
-
-   public SearchRequestMarshaller(String content)
-   {
-      content = escapeRegisteredSymbols(content);
-      String statement = "SELECT * FROM nt:base WHERE CONTAINS(*, '" + content + "')";
-      query =
-         "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
-            + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
-   }
-
+   
    private String escapeRegisteredSymbols(String request)
    {
       String escapedRequest = request;
@@ -116,7 +94,7 @@ public class SearchRequestMarshaller implements Marshallable
    }
 
    public String marshal()
-   {    
+   {  
       return query;
    }
 

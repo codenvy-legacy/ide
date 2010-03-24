@@ -86,12 +86,11 @@ public abstract class VirtualFileSystem
    /**
     * Search files
     * 
-    * @param content
+    * @param folder
+    * @param text
+    * @param mimeType
     * @param path
     */
-   
-   public abstract void search(String content, String path);
-   
-   public abstract void search(String folderPath, String contentText, String name, String contentType, String searchPath);
+   public abstract void search(Folder folder, String text, String mimeType, String path);
 
 }

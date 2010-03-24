@@ -178,7 +178,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onSearchFile(SearchFileEvent event)
    {
       new AdvancedSearchForm(eventBus, context);
-      //new SearchForm(eventBus, "alala");
    }
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)

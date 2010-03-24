@@ -43,7 +43,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
 {
    private static final int WIDTH = 450;
 
-   private static final int HEIGHT = 230;
+   private static final int HEIGHT = 190;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -58,8 +58,6 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    private TextField contentField;
 
    private TextField pathField;
-
-   private TextField fileNameField;
 
    private IButton searchButton;
 
@@ -126,7 +124,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       paramForm.setCellSpacing(5);
       paramForm.setLayoutAlign(Alignment.CENTER);
 
-      paramFormItemArray = new FormItem[4];
+      paramFormItemArray = new FormItem[3];
       
       pathField = createValueField("Path");
       paramFormItemArray[0] = pathField;
@@ -134,11 +132,8 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       contentField = createValueField("Containing text");
       paramFormItemArray[1] = contentField;
 
-      fileNameField = createValueField("File name");
-      paramFormItemArray[2] = fileNameField;
-
       mimeTypesField = createSelectField("Mime type");
-      paramFormItemArray[3] = mimeTypesField;
+      paramFormItemArray[2] = mimeTypesField;
 
       paramForm.setItems(paramFormItemArray);
 
@@ -210,14 +205,6 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    public HasValue<String> getSearchContentItem()
    {
       return contentField;
-   }
-
-   /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#getFileNameItem()
-    */
-   public HasValue<String> getFileNameItem()
-   {
-      return fileNameField;
    }
 
    /**

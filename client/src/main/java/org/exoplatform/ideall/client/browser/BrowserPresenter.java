@@ -53,7 +53,6 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler;

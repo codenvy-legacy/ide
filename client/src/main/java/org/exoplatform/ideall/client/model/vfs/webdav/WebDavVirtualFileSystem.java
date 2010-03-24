@@ -237,42 +237,58 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
    }
 
-   @Override
-   public void search(String content, String path)
-   {
-      String url = getURL(path);
-
-      SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(content);
-      Folder folder = new Folder(path);
-      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
-      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-
-      Loader.getInstance().setMessage(Messages.SEARCH);
-
-      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
-   }
+//   @Override
+//   public void search(String content, String path)
+//   {
+//      String url = getURL(path);
+//
+//      SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(content);
+//      Folder folder = new Folder(path);
+//      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
+//      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
+//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+//
+//      Loader.getInstance().setMessage(Messages.SEARCH);
+//
+//      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+//         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
+//   }
 
    /**
     * @see org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem#advancedSearch(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
     */
+//   @Override
+//   public void search(String path, String contentText, String name, String contentType, String searchPath)
+//   {
+//      String url = getURL(path);
+//
+//      SearchRequestMarshaller requestMarshaller =
+//         new SearchRequestMarshaller(contentText, name, contentType, searchPath);
+//      Folder folder = new Folder(path);
+//      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
+//      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
+//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+//
+//      Loader.getInstance().setMessage(Messages.SEARCH);
+//
+//      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+//         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
+//   }
    @Override
-   public void search(String path, String contentText, String name, String contentType, String searchPath)
+   public void search(Folder folder, String text, String mimeType, String path) 
    {
-      String url = getURL(path);
-
+      String url = getURL(folder.getPath());
       SearchRequestMarshaller requestMarshaller =
-         new SearchRequestMarshaller(contentText, name, contentType, searchPath);
-      Folder folder = new Folder(path);
-      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
-      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+       new SearchRequestMarshaller(text, mimeType, path);
 
-      Loader.getInstance().setMessage(Messages.SEARCH);
+    SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
+    SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
+    AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
-      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
+    Loader.getInstance().setMessage(Messages.SEARCH);
+
+    AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+       HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
 
    @Override

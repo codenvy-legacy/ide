@@ -36,7 +36,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
    private boolean cutReady = false;
 
    private Item selectedItem;
-   
+
    public CutItemsCommand()
    {
       super(ID);
@@ -74,8 +74,8 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
          setEnabled(false);
          return;
       }
-      
-      if(cutReady)
+
+      if (cutReady)
       {
          setEnabled(true);
       }
@@ -84,12 +84,15 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
          setEnabled(false);
       }
    }
-   
+
    public void onItemsSelected(SelectedItemsEvent event)
    {
-      selectedItem = event.getSelectedItems().get(0);
-      cutReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
-      updateEnabling();
+      if (event.getSelectedItems().size() != 0)
+      {
+         selectedItem = event.getSelectedItems().get(0);
+         cutReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
+         updateEnabling();
+      }
 
    }
 

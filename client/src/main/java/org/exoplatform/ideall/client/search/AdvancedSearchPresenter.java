@@ -19,9 +19,9 @@
 package org.exoplatform.ideall.client.search;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 
@@ -48,8 +48,6 @@ public class AdvancedSearchPresenter
       HasValue<String> getSearchContentItem();
 
       HasValue<String> getPathItem();
-
-      HasValue<String> getFileNameItem();
 
       HasValue<String> getMimeTypeItem();
 
@@ -107,10 +105,6 @@ public class AdvancedSearchPresenter
          display.getSearchContentItem().setValue(context.getSearchContent());
       }
 
-      if (context.getSearchFileName() != null)
-      {
-         display.getFileNameItem().setValue(context.getSearchFileName());
-      }
 
       if (context.getSearchContentType() != null)
       {
@@ -121,16 +115,15 @@ public class AdvancedSearchPresenter
    private void doAdvancedSearch()
    {
       String content = display.getSearchContentItem().getValue();
-      String mainPath = display.getPathItem().getValue();
+ //     String mainPath = display.getPathItem().getValue();
       String searchPath = display.getPathItem().getValue();
-      String fileName = display.getFileNameItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
-      if (mainPath == null || mainPath.length() == 0)
-      {
-         Dialogs.getInstance().showError("Path must not be empty!");
-         return;
-      }
+//      if (mainPath == null || mainPath.length() == 0)
+//      {
+//         Dialogs.getInstance().showError("Path must not be empty!");
+//         return;
+//      }
 
       String[] parts = searchPath.split("/");
       int i = 3;
@@ -152,17 +145,14 @@ public class AdvancedSearchPresenter
          context.setSearchContent(content);
       }
 
-      if (fileName != null )
-      {
-         context.setSearchFileName(fileName);
-      }
-
       if (contentType != null )
       {
          context.setSearchContentType(contentType);
       }
-
-      VirtualFileSystem.getInstance().search(mainPath, content, fileName, contentType, searchPath);
+      
+      Folder folder =  new Folder(path);
+      
+      VirtualFileSystem.getInstance().search(folder, content, contentType, searchPath);
       display.closeForm();
    }
 

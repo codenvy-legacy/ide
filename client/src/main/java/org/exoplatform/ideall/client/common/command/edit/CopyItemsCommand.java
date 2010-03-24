@@ -64,9 +64,12 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
 
    public void onItemsSelected(SelectedItemsEvent event)
    {
+      if(event.getSelectedItems().size() != 0)
+      {
          selectedItem = event.getSelectedItems().get(0);
          copyReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
          updateEnabling();
+      }
    }
    
    @Override
