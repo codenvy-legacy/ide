@@ -16,6 +16,11 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Vector;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
@@ -32,11 +37,6 @@ import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -57,6 +57,8 @@ public class GroovyServiceOutputPreviewPresenter
    {
 
       void closeForm();
+      
+      HasClickHandlers getShowUrlButton();
 
       HasClickHandlers getSendRequestButton();
 
@@ -79,6 +81,8 @@ public class GroovyServiceOutputPreviewPresenter
       void setBodyDisabled(boolean value);
       
       void setSendRequestButtonDisabled(boolean value);
+      
+      void setShowUrlButtonDisabled(boolean value);
       
       void setPaths(String[] paths);
       
@@ -128,6 +132,19 @@ public class GroovyServiceOutputPreviewPresenter
    {
       display = d;
 
+      display.getShowUrlButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            String url = wadlApplication.getResources().getBase();
+            if (display.getPathField().getValue() != null)
+            {
+               url += display.getPathField().getValue();
+            }
+            new GetRestServiceURLForm(eventBus, url);
+         }
+      });
+      
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -189,7 +206,11 @@ public class GroovyServiceOutputPreviewPresenter
             }
             else
             {
+               resource = null;
+               method = null;
                display.setSendRequestButtonDisabled(true);
+               display.setMethods(new LinkedHashMap<String, String>());
+               setResourceInfo();
             }
          }
       });
@@ -360,6 +381,9 @@ public class GroovyServiceOutputPreviewPresenter
    {
       display.getParametersQueryListGrid().setValue(new ArrayList<WadlParameterEntry>());
       display.getParametersHeaderListGrid().setValue(new ArrayList<WadlParameterEntry>());
+      
+      if (resource == null || method == null)
+         return;
 
       List<WadlParameterEntry> itemsQuery = new ArrayList<WadlParameterEntry>();
       List<WadlParameterEntry> itemsHeader = new ArrayList<WadlParameterEntry>();
@@ -434,10 +458,17 @@ public class GroovyServiceOutputPreviewPresenter
    {
       fillParameters(resource, method);
       
-      if (HTTPMethod.GET.equals(method.getName())
-               || HTTPMethod.DELETE.equals(method.getName())
-               || HTTPMethod.HEAD.equals(method.getName())
-               || HTTPMethod.OPTIONS.equals(method.getName()))
+      if (method == null) 
+      {
+         display.getRequestMediaTypeField().setValue("");
+         display.getResponseMediaTypeField().setValue("");
+         return;
+      }
+      
+      if (method.getName().equals(HTTPMethod.GET)
+       || method.getName().equals(HTTPMethod.DELETE)
+       || method.getName().equals(HTTPMethod.HEAD)
+       || method.getName().equals(HTTPMethod.OPTIONS))
       {
          display.setBodyDisabled(true);
       }

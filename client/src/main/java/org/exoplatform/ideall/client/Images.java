@@ -102,6 +102,8 @@ public interface Images
 
       public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload.png";
       
+      public static final String URL = imageUrl + "groovy/url.png";
+      
       /*
        * GADGET
        */

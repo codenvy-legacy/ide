@@ -58,6 +58,8 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private static final String TITLE = "REST Service output preview";
 
+   private IButton showUrlButton;
+   
    private IButton sendRequestButton;
 
    private IButton cancelButton;
@@ -258,6 +260,12 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
+      showUrlButton = new IButton("Get URL");
+      showUrlButton.setWidth(90);
+      showUrlButton.setHeight(22);
+      showUrlButton.setIcon(Images.MainMenu.URL);
+      
+      
       sendRequestButton = new IButton("Send");
       sendRequestButton.setWidth(90);
       sendRequestButton.setHeight(22);
@@ -272,7 +280,9 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       ToolbarItem tbi = new ToolbarItem();
       StatefulCanvas delimiter1 = new StatefulCanvas();
       delimiter1.setWidth(3);
-      tbi.setButtons(sendRequestButton, delimiter1, cancelButton);
+      StatefulCanvas delimiter2 = new StatefulCanvas();
+      delimiter2.setWidth(3);
+      tbi.setButtons(showUrlButton, delimiter1, sendRequestButton, delimiter2, cancelButton);
       buttonsForm.setFields(tbi);
 
       buttonsForm.setAutoWidth();
@@ -366,6 +376,16 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    public void setSendRequestButtonDisabled(boolean value)
    {
       sendRequestButton.setDisabled(value);
+   }
+
+	public HasClickHandlers getShowUrlButton()
+   {
+      return showUrlButton;
+   }
+
+   public void setShowUrlButtonDisabled(boolean value)
+   {
+      showUrlButton.setDisabled(value);
    }
 
 }
