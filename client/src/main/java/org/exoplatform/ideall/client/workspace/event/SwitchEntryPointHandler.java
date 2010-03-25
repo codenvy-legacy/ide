@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.workspace.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,33 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class SwitchWorkspaceEvent extends GwtEvent<SwitchWorkspaceHandler>
+public interface SwitchEntryPointHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<SwitchWorkspaceHandler> TYPE = new GwtEvent.Type<SwitchWorkspaceHandler>();
-
-   private String href;
-
-   public SwitchWorkspaceEvent(String href)
-   {
-      this.href = href;
-   }
-
-   public String getHref()
-   {
-      return href;
-   }
-
-   @Override
-   protected void dispatch(SwitchWorkspaceHandler handler)
-   {
-      handler.onSwitchWorkspace(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SwitchWorkspaceHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   
+   void onSwitchEntryPoint(SwitchEntryPointEvent event);
 
 }
