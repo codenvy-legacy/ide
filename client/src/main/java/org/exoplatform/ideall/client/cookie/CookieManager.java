@@ -51,12 +51,12 @@ public class CookieManager
    private static final String OPENED_FILES_DELIMITER = "#";
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-            return decodeURIComponent(text);
-         }-*/;
+                return decodeURIComponent(text);
+             }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-            return encodeURIComponent(text);
-         }-*/;
+                return encodeURIComponent(text);
+             }-*/;
 
    /**
     * Storing Application context to browser cookies.
@@ -107,15 +107,15 @@ public class CookieManager
    private static void storeActiveFile(File file)
    {
       //      TODO
-            if (file == null)
-            {
-               Cookies.removeCookie(Cookie.ACTIVE_FILE);
-            }
-            else
-            {
-               String filePath = javaScriptEncodeURIComponent(file.getHref());
-               Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
-            }
+      if (file == null)
+      {
+         Cookies.removeCookie(Cookie.ACTIVE_FILE);
+      }
+      else
+      {
+         String fileHref = javaScriptEncodeURIComponent(file.getHref());
+         Cookies.setCookie(Cookie.ACTIVE_FILE, fileHref);
+      }
    }
 
    /**
@@ -151,25 +151,24 @@ public class CookieManager
 
    private static void restoreOpenedFiles(ApplicationContext context)
    {
-          //  TODO HZ 
-            String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
-            if (openedFilesCookie == null)
-            {
-               return;
-            }
-      
-            String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
-            for (String f : files)
-            {
-               String path = javaScriptDecodeURIComponent(f);
-               if ("".equals(path))
-               {
-                  continue;
-               }
-      
-               File file = new File(path);
-               context.getPreloadFiles().put(file.getHref(), file);
-            }
+      String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
+      if (openedFilesCookie == null)
+      {
+         return;
+      }
+
+      String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
+      for (String f : files)
+      {
+         String href = javaScriptDecodeURIComponent(f);
+         if ("".equals(href))
+         {
+            continue;
+         }
+
+         File file = new File(href);
+         context.getPreloadFiles().put(file.getHref(), file);
+      }
    }
 
    private static void restoreActiveFile(ApplicationContext context)
