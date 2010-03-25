@@ -176,18 +176,17 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       @Override
       public void run()
       {
-//         TODO
-//         selectedItems = display.getSelectedItems();
-//         
-//         System.out.println("selected items: " + selectedItems.size());
-//         for (Item i : selectedItems) {
-//            System.out.println(">> " + i.getPath());
-//         }
-//         
-//         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-//         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-//         
-//         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+         selectedItems = display.getSelectedItems();
+         
+         System.out.println("selected items: " + selectedItems.size());
+         for (Item i : selectedItems) {
+            System.out.println(">> " + i.getHref());
+         }
+         
+         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
+         
+         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
       }
       
    };
