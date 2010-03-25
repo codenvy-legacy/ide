@@ -62,7 +62,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
    private List<Item> selectedItem;
 
    private Folder searchresult;
-   
+
    private Handlers handlers;
 
    public SearchResultsPresenter(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
@@ -70,7 +70,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       this.eventBus = eventBus;
       this.context = context;
       this.searchresult = searchResult;
-      
+
       handlers = new Handlers(eventBus);
    }
 
@@ -101,8 +101,9 @@ public class SearchResultsPresenter implements PanelSelectedHandler
          display.getSearchResultTree().setValue(searchresult);
       }
    }
-   
-   public void destroy() {
+
+   public void destroy()
+   {
       updateSelectionTimer = null;
       handlers.removeHandlers();
    }
@@ -112,7 +113,8 @@ public class SearchResultsPresenter implements PanelSelectedHandler
     */
    protected void onBrowserDoubleClicked()
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+
+      if (selectedItem == null || context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
       }
@@ -132,10 +134,11 @@ public class SearchResultsPresenter implements PanelSelectedHandler
     */
    protected void onItemSelected()
    {
-      if (updateSelectionTimer == null) {
+      if (updateSelectionTimer == null)
+      {
          return;
       }
-      
+
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
    }
@@ -158,7 +161,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if(SearchResultPanel.ID.equals(event.getPanelId()))
+      if (SearchResultPanel.ID.equals(event.getPanelId()))
       {
          onItemSelected();
       }
