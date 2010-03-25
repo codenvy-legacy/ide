@@ -67,50 +67,56 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-//      TODO
-//      boolean switchWorkspace = !checkSwitchingWorkspace();
-//
-//      if (rootNode == null || switchWorkspace)
-//      {
-//         tree.setRoot(new TreeNode("root"));
-//
-//         String nodeName = getValue().getPath();
+      boolean switchWorkspace = !checkSwitchingWorkspace();
+
+      if (rootNode == null || switchWorkspace)
+      {
+         tree.setRoot(new TreeNode("root"));
+
+         String nodeName = getValue().getHref();
+         if (nodeName.endsWith("/")) {
+            nodeName = nodeName.substring(0, nodeName.length() - 1);
+         }
+         
+         System.out.println("node node name: " + nodeName);
+         
+         nodeName = nodeName.substring(nodeName.lastIndexOf("/") + 1);
 //         if (nodeName.startsWith("/"))
 //         {
 //            nodeName = nodeName.substring(1);
 //         }
-//
-//         rootNode = new TreeNode(nodeName);
-//         rootNode.setAttribute(getValuePropertyName(), getValue());
-//         if (getValue().getIcon() != null)
-//         {
-//            rootNode.setAttribute("icon", getValue().getIcon());
-//         }
-//
-//         rootNode.setIsFolder(true);
-//         tree.add(rootNode, tree.getRoot());
-//
-//         selectRecord(rootNode);
-//      }
-//
-//      if (((Folder)getValue()).getChildren() == null)
-//      {
-//         return;
-//      }
-//
-//      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-//
-//      if (getValue().getPath().startsWith(rootFolder.getPath()))
-//      {
-//         TreeNode parent = getNodeByPath(getValue().getPath());
-//         setItems(parent, ((Folder)getValue()).getChildren());
-//      }
+         
+         rootNode = new TreeNode(nodeName);
+         rootNode.setAttribute(getValuePropertyName(), getValue());
+         if (getValue().getIcon() != null)
+         {
+            rootNode.setAttribute("icon", getValue().getIcon());
+         }
+
+         rootNode.setIsFolder(true);
+         tree.add(rootNode, tree.getRoot());
+
+         selectRecord(rootNode);
+      }
+
+      if (((Folder)getValue()).getChildren() == null)
+      {
+         return;
+      }
+
+      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
+
+      if (getValue().getHref().startsWith(rootFolder.getHref()))
+      {
+         TreeNode parent = getNodeByPath(getValue().getHref());
+         setItems(parent, ((Folder)getValue()).getChildren());
+      }
    }
 
    private boolean checkSwitchingWorkspace()
    {
       return false;
-//      TODO
+//TODO
 //      try
 //      {
 //         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());

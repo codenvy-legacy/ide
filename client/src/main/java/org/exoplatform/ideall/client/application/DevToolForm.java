@@ -44,7 +44,7 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display
    {
       this.eventBus = eventBus;
       this.context = context;
-
+      
       setWidth100();
       setHeight100();
       setOverflow(Overflow.HIDDEN);
