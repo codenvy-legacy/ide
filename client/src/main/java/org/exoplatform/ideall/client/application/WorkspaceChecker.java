@@ -31,7 +31,6 @@ import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedE
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -74,7 +73,6 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      Window.alert("A");
       new ApplicationStateLoader(eventBus, context).loadState();
    }
 

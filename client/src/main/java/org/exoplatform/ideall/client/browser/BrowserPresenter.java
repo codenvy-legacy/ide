@@ -18,6 +18,8 @@
 package org.exoplatform.ideall.client.browser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -35,6 +37,7 @@ import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
+import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -50,6 +53,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
 
@@ -215,20 +219,19 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onRefreshBrowser()
    {
-//      TODO
-//      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-//      {
-//         return;
-//      }
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//      String selectedItemPath = item.getPath();
-//      if (item instanceof File)
-//      {
-//         selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-//      }
-//
-//      Folder folder = new Folder(selectedItemPath);
-//      VirtualFileSystem.getInstance().getChildren(folder);
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      {
+         return;
+      }
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String href = item.getHref();
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/"));
+      }
+
+      Folder folder = new Folder(href);
+      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -289,25 +292,24 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       switchWorkspace();
    }
 
-//   TODO
-//   /**
-//    * Comparator for comparing items in received directory.
-//    */
-//   private Comparator<Item> comparator = new Comparator<Item>()
-//   {
-//      public int compare(Item item1, Item item2)
-//      {
-//         if (item1 instanceof Folder && item2 instanceof File)
-//         {
-//            return -1;
-//         }
-//         else if (item1 instanceof File && item2 instanceof Folder)
-//         {
-//            return 1;
-//         }
-//         return item1.getPath().compareToIgnoreCase(item2.getPath());
-//      }
-//   };
+   /**
+    * Comparator for comparing items in received directory.
+    */
+   private Comparator<Item> comparator = new Comparator<Item>()
+   {
+      public int compare(Item item1, Item item2)
+      {
+         if (item1 instanceof Folder && item2 instanceof File)
+         {
+            return -1;
+         }
+         else if (item1 instanceof File && item2 instanceof Folder)
+         {
+            return 1;
+         }
+         return item1.getHref().compareToIgnoreCase(item2.getHref());
+      }
+   };
 
    /**
     * Handling folder content receiving.
@@ -316,27 +318,28 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-//      TODO
-//      Collections.sort(event.getFolder().getChildren(), comparator);
-//
-//      display.getBrowserTree().setValue(event.getFolder());
-//      eventBus.fireEvent(new RestorePerspectiveEvent());
-//      
-//      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-//
-//      if (forlderToSelect != null)
-//      {
-//         display.selectItem(forlderToSelect);
-//         forlderToSelect = null;
-//      }
-//
-//      if (folderToUpdate != null)
-//      {
-//         String path = folderToUpdate;
-//         folderToUpdate = null;
-//         Folder folder = new Folder(path);
-//         VirtualFileSystem.getInstance().getChildren(folder);
-//      }
+      Collections.sort(event.getFolder().getChildren(), comparator);
+
+      System.out.println("children received for: " + event.getFolder().getHref());
+      
+      display.getBrowserTree().setValue(event.getFolder());
+      eventBus.fireEvent(new RestorePerspectiveEvent());
+      
+      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
+
+      if (forlderToSelect != null)
+      {
+         display.selectItem(forlderToSelect);
+         forlderToSelect = null;
+      }
+
+      if (folderToUpdate != null)
+      {
+         String path = folderToUpdate;
+         folderToUpdate = null;
+         Folder folder = new Folder(path);
+         VirtualFileSystem.getInstance().getChildren(folder);
+      }
    }
 
    /**
