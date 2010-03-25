@@ -56,52 +56,52 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       this.context = context;
 
       handlers = new Handlers(eventBus);
-      
+
       eventBus.addHandler(CreateNewFileEvent.TYPE, this);
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
    }
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
-//      TODO
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//
-//      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
-//
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/"));
-//      }
-//
-//      String content = FileTemplates.getTemplateFor(event.getMimeType());
-//
-//      String fileName = "Untitled file." + extension;
-//      int index = 1;
-//      System.out.println("File path: " + path + "/" + fileName);
-//      while (context.getOpenedFiles().get(path + "/" + fileName) != null) {
-//         fileName = "Untitled file " + index + "." + extension;
-//         index++;
-//      }
-//
-//      File newFile = new File(path + "/" + fileName);
-//      newFile.setContentType(event.getMimeType());
-//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(event.getMimeType()));
-//      newFile.setIcon(ImageUtil.getIcon(event.getMimeType()));
-//      newFile.setNewFile(true);
-//      newFile.setContent(content);
-//      newFile.setContentChanged(true);
-//
-//      try
-//      {
-//         Editor editor = EditorUtil.getEditor(event.getMimeType(), context);
-//         eventBus.fireEvent(new EditorOpenFileEvent(newFile,editor));
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         Dialogs.getInstance().showError("Can't find editor for type <b>" + event.getMimeType() + "</b>");
-//      }
-      
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
+
+      String href = item.getHref();
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/"));
+      }
+
+      String content = FileTemplates.getTemplateFor(event.getMimeType());
+
+      String fileName = "Untitled file." + extension;
+      int index = 1;
+      System.out.println("File path: " + href + fileName);
+      while (context.getOpenedFiles().get(href + fileName) != null)
+      {
+         fileName = "Untitled file " + index + "." + extension;
+         index++;
+      }
+
+      File newFile = new File(href + fileName);
+      newFile.setContentType(event.getMimeType());
+      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(event.getMimeType()));
+      newFile.setIcon(ImageUtil.getIcon(event.getMimeType()));
+      newFile.setNewFile(true);
+      newFile.setContent(content);
+      newFile.setContentChanged(true);
+
+      try
+      {
+         Editor editor = EditorUtil.getEditor(event.getMimeType(), context);
+         eventBus.fireEvent(new EditorOpenFileEvent(newFile, editor));
+      }
+      catch (EditorNotFoundException e)
+      {
+         Dialogs.getInstance().showError("Can't find editor for type <b>" + event.getMimeType() + "</b>");
+      }
+
    }
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)

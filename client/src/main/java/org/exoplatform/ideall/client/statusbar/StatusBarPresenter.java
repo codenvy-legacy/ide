@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
-import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -48,30 +47,29 @@ public class StatusBarPresenter implements SelectedItemsHandler
    }
 
    public void onItemsSelected(SelectedItemsEvent event)
-   {    
-//      TODO
-//      String statusMessage = null;
-//
-//      if (event.getSelectedItems().size() == 1)
-//      {
-//         Item item = event.getSelectedItems().get(0);
-//         statusMessage = item.getPath();
-////         if (item instanceof File)
-////         {
-////            statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
-////         }
-//
-//      }
-//      else if (event.getSelectedItems().size() == 0)
-//      {
-//         statusMessage = "No items selected!";
-//      }
-//      else
-//      {
-//         statusMessage = "Selected: <b>" + event.getSelectedItems().size() + "</b> items";
-//      }
-//
-//      display.getPathInfoField().setValue(statusMessage);
+   {          
+      String statusMessage = null;
+
+      if (event.getSelectedItems().size() == 1)
+      {
+         Item item = event.getSelectedItems().get(0);
+         statusMessage = item.getHref();
+//         if (item instanceof File)
+//         {
+//            statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
+//         }
+
+      }
+      else if (event.getSelectedItems().size() == 0)
+      {
+         statusMessage = "No items selected!";
+      }
+      else
+      {
+         statusMessage = "Selected: <b>" + event.getSelectedItems().size() + "</b> items";
+      }
+
+      display.getPathInfoField().setValue(statusMessage);
    }
 
 }

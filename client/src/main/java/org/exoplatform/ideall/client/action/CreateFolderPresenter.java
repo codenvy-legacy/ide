@@ -115,7 +115,7 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    protected void createFolder()
    {
-      String newFolderHref = href + "/" + display.getFolderNameField().getValue();
+      String newFolderHref = href + display.getFolderNameField().getValue();
       Folder newFolder = new Folder(newFolderHref);
       VirtualFileSystem.getInstance().createFolder(newFolder);
    }
