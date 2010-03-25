@@ -104,12 +104,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       this.eventBus = eventbus;
    }
 
-//   private String getURL(String path)
-//   {
-//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
-//      url = TextUtils.javaScriptEncodeURI(url);
-//      return url;
-//   }
+   //   private String getURL(String path)
+   //   {
+   //      String url = Configuration.getInstance().getContext() + CONTEXT + path;
+   //      url = TextUtils.javaScriptEncodeURI(url);
+   //      return url;
+   //   }
 
    @Override
    public void getFileContent(File file)
@@ -133,11 +133,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void getChildren(Folder folder)
    {
       String url = TextUtils.javaScriptEncodeURI(folder.getHref());
-//      if (!url.endsWith("/"))
-//      {
-//         url += "/";
-//      }
-      
+      //      if (!url.endsWith("/"))
+      //      {
+      //         url += "/";
+      //      }
+
       System.out.println("here!!!!!!!!!!");
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
@@ -156,7 +156,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void createFolder(Folder folder)
    {
       String url = TextUtils.javaScriptEncodeURI(folder.getHref());
-      
+
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
@@ -237,24 +237,23 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
    }
-   
+
    @Override
-   public void search(Folder folder, String text, String mimeType, String path) 
+   public void search(Folder folder, String text, String mimeType, String path)
    {
-      String url = getURL(folder.getPath());
-      SearchRequestMarshaller requestMarshaller =
-       new SearchRequestMarshaller(text, mimeType, path);
+      String url = TextUtils.javaScriptEncodeURI(folder.getHref());
+      SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(text, mimeType, path);
 
-    SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
-    SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-    AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
+      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
-    Loader.getInstance().setMessage(Messages.SEARCH);
+      Loader.getInstance().setMessage(Messages.SEARCH);
 
-    AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-       HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
+         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
-   
+
    @Override
    public void move(Item item, String destination)
    {
@@ -309,7 +308,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       host = host.substring(host.indexOf("//") + 2);
       destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
-
 
       CopyCompleteEvent event = new CopyCompleteEvent(item, destination);
 

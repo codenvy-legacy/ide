@@ -45,11 +45,6 @@ public abstract class Item
       this.href = href;
    }
 
-   //TODO remove this method !!!
-   public String getPath() {
-      return null;
-   }
-   
    public String getHref()
    {
       return href;
