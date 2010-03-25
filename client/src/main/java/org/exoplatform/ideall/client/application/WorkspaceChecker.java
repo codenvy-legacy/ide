@@ -22,8 +22,11 @@ package org.exoplatform.ideall.client.application;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
@@ -55,16 +58,15 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-//      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
-//      Workspace workspace = new Workspace(path);
-//      VirtualFileSystem.getInstance().getProperties(workspace);
+      Folder rootFolder = new Folder(context.getEntryPoint());
+      VirtualFileSystem.getInstance().getProperties(rootFolder);
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-//      handlers.removeHandlers();
-//      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-//      Dialogs.getInstance().showError("Workspace <b>" + context.getRepository() + "/" + context.getWorkspace() + "</b> not found!");
+      handlers.removeHandlers();
+      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+      Dialogs.getInstance().showError("Entry point <b>" + context.getEntryPoint() + "</b> not found!");
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)

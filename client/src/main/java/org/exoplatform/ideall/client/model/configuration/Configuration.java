@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigu
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 
 /**
