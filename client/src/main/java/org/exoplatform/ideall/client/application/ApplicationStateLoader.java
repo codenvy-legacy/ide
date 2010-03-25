@@ -72,29 +72,28 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    protected void preloadNextFile()
    {
-//      TODO
-//      try
-//      {
-//         if (context.getPreloadFiles().size() == 0)
-//         {
-//            fileToLoad = null;
-//            handlers.removeHandlers();
-//
-//            ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-//            
-//            new ApplicationInitializer(eventBus, context);
-//
-//            return;
-//         }
-//
-//         fileToLoad = context.getPreloadFiles().values().iterator().next();
-//         context.getPreloadFiles().remove(fileToLoad.getPath());
-//         VirtualFileSystem.getInstance().getProperties(fileToLoad);
-//      }
-//      catch (Exception exc)
-//      {
-//         exc.printStackTrace();
-//      }
+      try
+      {
+         if (context.getPreloadFiles().size() == 0)
+         {
+            fileToLoad = null;
+            handlers.removeHandlers();
+
+            ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+            
+            new ApplicationInitializer(eventBus, context);
+
+            return;
+         }
+
+         fileToLoad = context.getPreloadFiles().values().iterator().next();
+         context.getPreloadFiles().remove(fileToLoad.getHref());
+         VirtualFileSystem.getInstance().getProperties(fileToLoad);
+      }
+      catch (Exception exc)
+      {
+         exc.printStackTrace();
+      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
@@ -106,16 +105,14 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
-//      TODO
-//      context.getOpenedFiles().put(fileToLoad.getPath(), fileToLoad);
-//      preloadNextFile();
+      context.getOpenedFiles().put(fileToLoad.getHref(), fileToLoad);
+      preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-//      TODO
-//      context.getOpenedFiles().remove(fileToLoad.getPath());
-//      preloadNextFile();
+      context.getOpenedFiles().remove(fileToLoad.getHref());
+      preloadNextFile();
    }
 
 }
