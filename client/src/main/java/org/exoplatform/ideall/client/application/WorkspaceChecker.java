@@ -75,6 +75,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
 
       System.out.println("items received for: " + event.getItem().getHref());
+      context.setEntryPoint(event.getItem().getHref());
 
       new ApplicationStateLoader(eventBus, context).loadState();
    }
