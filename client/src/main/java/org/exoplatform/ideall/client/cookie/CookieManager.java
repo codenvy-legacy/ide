@@ -44,21 +44,19 @@ public class CookieManager
 
       static final String ACTIVE_FILE = "active-file";
 
-      static final String REPOSITORY = "repository";
-
-      static final String WORKSPACE = "workspace";
+      static final String INTRY_POINT = "entry-point";
 
    }
 
    private static final String OPENED_FILES_DELIMITER = "#";
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-        return decodeURIComponent(text);
-     }-*/;
+            return decodeURIComponent(text);
+         }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-        return encodeURIComponent(text);
-     }-*/;
+            return encodeURIComponent(text);
+         }-*/;
 
    /**
     * Storing Application context to browser cookies.
@@ -108,49 +106,32 @@ public class CookieManager
     */
    private static void storeActiveFile(File file)
    {
-//      TODO
-//      if (file == null)
-//      {
-//         Cookies.removeCookie(Cookie.ACTIVE_FILE);
-//      }
-//      else
-//      {
-//         String filePath = javaScriptEncodeURIComponent(file.getPath());
-//         Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
-//      }
+      //      TODO
+            if (file == null)
+            {
+               Cookies.removeCookie(Cookie.ACTIVE_FILE);
+            }
+            else
+            {
+               String filePath = javaScriptEncodeURIComponent(file.getHref());
+               Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
+            }
    }
 
    /**
-    * Store name of selected repository
+    * Store name of entry point
     * 
-    * @param repository
+    * @param entryPoint
     */
-   public static void storeRepository(String repository)
+   public static void storeEntryPoint(String entryPoint)
    {
-      if (repository == null)
+      if (entryPoint == null)
       {
-         Cookies.removeCookie(Cookie.REPOSITORY);
+         Cookies.removeCookie(Cookie.INTRY_POINT);
       }
       else
       {
-         Cookies.setCookie(Cookie.REPOSITORY, repository);
-      }
-   }
-
-   /**
-    * Store name of selected workspace
-    * 
-    * @param workspace
-    */
-   public static void storeWorkspace(String workspace)
-   {
-      if (workspace == null)
-      {
-         Cookies.removeCookie(Cookie.WORKSPACE);
-      }
-      else
-      {
-         Cookies.setCookie(Cookie.WORKSPACE, workspace);
+         Cookies.setCookie(Cookie.INTRY_POINT, entryPoint);
       }
    }
 
@@ -160,11 +141,9 @@ public class CookieManager
     */
    public static void getApplicationState(ApplicationContext context)
    {
-      String repository = Cookies.getCookie(Cookie.REPOSITORY);
-      String workspace = Cookies.getCookie(Cookie.WORKSPACE);
+      String entryPoint = Cookies.getCookie(Cookie.INTRY_POINT);
 
-      context.setRepository(repository);
-      context.setWorkspace(workspace);
+      context.setEntryPoint(entryPoint);
 
       restoreOpenedFiles(context);
       restoreActiveFile(context);
@@ -172,25 +151,25 @@ public class CookieManager
 
    private static void restoreOpenedFiles(ApplicationContext context)
    {
-//      TODO
-//      String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
-//      if (openedFilesCookie == null)
-//      {
-//         return;
-//      }
-//
-//      String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
-//      for (String f : files)
-//      {
-//         String path = javaScriptDecodeURIComponent(f);
-//         if ("".equals(path))
-//         {
-//            continue;
-//         }
-//
-//         File file = new File(path);
-//         context.getPreloadFiles().put(file.getPath(), file);
-//      }
+          //  TODO HZ 
+            String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
+            if (openedFilesCookie == null)
+            {
+               return;
+            }
+      
+            String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
+            for (String f : files)
+            {
+               String path = javaScriptDecodeURIComponent(f);
+               if ("".equals(path))
+               {
+                  continue;
+               }
+      
+               File file = new File(path);
+               context.getPreloadFiles().put(file.getHref(), file);
+            }
    }
 
    private static void restoreActiveFile(ApplicationContext context)
