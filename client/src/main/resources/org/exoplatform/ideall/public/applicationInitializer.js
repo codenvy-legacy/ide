@@ -13,8 +13,7 @@ var appConfig = {
 	//"gadgetServer" : "/gadgets/",/*under GWT Shell*/
 	"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
 	"publicContext" : "/rest",
-	"repository" : "repository",
-	"workspace" : "dev-monit"
+	"entryPoint" : "/rest/private/jcr/repository/dev-monit"
 }
 
 var metadata = {};

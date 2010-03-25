@@ -51,7 +51,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private HLayout hLayout;
 
-   private final String prompt;
+   private String prompt;
 
    private IButton deleteButton;
 
@@ -63,35 +63,36 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    {
       super(eventBus, WIDTH, HEIGHT);
 
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
-      {
-         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath() + "</b> ?";
-      }
-      else
-      {
-         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).size() + "</b> items?";
-      }
-      setTitle("Delete Repository");
-
-      hLayout = new HLayout();
-      addItem(hLayout);
-      //hLayout.setBackgroundColor("#FFEEAA");
-
-      createImageLayout();
-      createPromptLayout();
-
-      show();
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
-      presenter = new DeleteItemPresenter(eventBus, context);
-      presenter.bindDisplay(this);
+//      TODO
+//      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
+//      {
+//         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath() + "</b> ?";
+//      }
+//      else
+//      {
+//         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).size() + "</b> items?";
+//      }
+//      setTitle("Delete Repository");
+//
+//      hLayout = new HLayout();
+//      addItem(hLayout);
+//      //hLayout.setBackgroundColor("#FFEEAA");
+//
+//      createImageLayout();
+//      createPromptLayout();
+//
+//      show();
+//
+//      addCloseClickHandler(new CloseClickHandler()
+//      {
+//         public void onCloseClick(CloseClientEvent event)
+//         {
+//            destroy();
+//         }
+//      });
+//
+//      presenter = new DeleteItemPresenter(eventBus, context);
+//      presenter.bindDisplay(this);
    }
 
    private void createImageLayout()

@@ -78,9 +78,11 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
     */
    private String getURL()
    {
-      String url = Location.getProtocol() + "//" + Location.getHost() +
-         Configuration.getInstance().getPublicContext() + "/jcr" + context.getActiveFile().getPath();
-      return url;
+      //TODO
+//      String url = Location.getProtocol() + "//" + Location.getHost() +
+//         Configuration.getInstance().getPublicContext() + "/jcr" + context.getActiveFile().getPath();
+//      return url;
+      return null;
    }
 
    /**

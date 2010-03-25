@@ -71,33 +71,34 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
-      if (context.getActiveFile() == null)
-      {
-         return;
-      }
-
-      String workingPath = context.getActiveFile().getPath();
-      while (workingPath.startsWith("/"))
-      {
-         workingPath = workingPath.substring(1);
-      }
-      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
-
-      String p[] = workingPath.split("/");
-      pathes = new ArrayList<String>();
-      pathToOpen = "/" + p[0] + "/" + p[1];
-
-      if (p.length > 2)
-      {
-         for (int i = 2; i < p.length; i++)
-         {
-            pathes.add(p[i]);
-         }
-      }
-
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
+//      TODO
+//      if (context.getActiveFile() == null)
+//      {
+//         return;
+//      }
+//
+//      String workingPath = context.getActiveFile().getPath();
+//      while (workingPath.startsWith("/"))
+//      {
+//         workingPath = workingPath.substring(1);
+//      }
+//      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
+//
+//      String p[] = workingPath.split("/");
+//      pathes = new ArrayList<String>();
+//      pathToOpen = "/" + p[0] + "/" + p[1];
+//
+//      if (p.length > 2)
+//      {
+//         for (int i = 2; i < p.length; i++)
+//         {
+//            pathes.add(p[i]);
+//         }
+//      }
+//
+//      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+//      VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
    }
 
    /**
@@ -107,21 +108,22 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-      if (pathes.size() > 0)
-      {
-         String name = pathes.get(0);
-         pathes.remove(0);
-         pathToOpen += "/" + name;
-
-         VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
-      }
-      else
-      {
-         // try to select file.........
-         handlers.removeHandlers();
-         eventBus.fireEvent(new SetFocusOnItemEvent(context.getActiveFile().getPath()));
-      }
-
+//      TODO
+//      if (pathes.size() > 0)
+//      {
+//         String name = pathes.get(0);
+//         pathes.remove(0);
+//         pathToOpen += "/" + name;
+//
+//         VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
+//      }
+//      else
+//      {
+//         // try to select file.........
+//         handlers.removeHandlers();
+//         eventBus.fireEvent(new SetFocusOnItemEvent(context.getActiveFile().getPath()));
+//      }
+//
    }
 
    /**

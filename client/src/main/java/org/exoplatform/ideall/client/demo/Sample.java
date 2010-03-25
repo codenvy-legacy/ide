@@ -61,7 +61,7 @@ public class Sample implements FileContentSavedHandler, ExceptionThrownHandler
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      Window.alert("Content of the file " + event.getFile().getPath() + " saved successfully!");
+      Window.alert("Content of the file " + event.getFile().getHref() + " saved successfully!");
    }
 
    public void onError(ExceptionThrownEvent event)

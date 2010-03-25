@@ -140,29 +140,30 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onUploadFile(UploadFileEvent event)
    {
-
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(path.lastIndexOf("/"));
-      }
-      eventBus.fireEvent(new ClearFocusEvent());
-      new UploadForm(eventBus, path);
+//      TODO
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//
+//      String path = item.getPath();
+//      if (item instanceof File)
+//      {
+//         path = path.substring(path.lastIndexOf("/"));
+//      }
+//      eventBus.fireEvent(new ClearFocusEvent());
+//      new UploadForm(eventBus, path);
    }
 
    public void onCreateFolder(CreateFolderEvent event)
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/"));
-      }
-
-      new CreateFolderForm(eventBus, path);
+//      TODO
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//
+//      String path = item.getPath();
+//      if (item instanceof File)
+//      {
+//         path = path.substring(0, path.lastIndexOf("/"));
+//      }
+//
+//      new CreateFolderForm(eventBus, path);
    }
 
    public void onDeleteItem(DeleteItemEvent event)
@@ -205,13 +206,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    private String getURL()
    {
-      String url =
-         Location.getProtocol() + "//" + Location.getHost()
-            +
-            //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
-            Configuration.getInstance().getContext() + "/jcr"
-            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath();
-      return url;
+//      TODO
+//      String url =
+//         Location.getProtocol() + "//" + Location.getHost()
+//            +
+//            //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
+//            Configuration.getInstance().getContext() + "/jcr"
+//            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath();
+//      return url;
+      return null;
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)

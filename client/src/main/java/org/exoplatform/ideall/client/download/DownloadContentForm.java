@@ -78,22 +78,23 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
    private void downloadResource()
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      
-      String fileName = item.getPath();
-      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      if (!(item instanceof File))
-      {
-         fileName += ".zip";
-      }
-
-      String path = item.getPath();
-
-      String url = Configuration.getInstance().getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
-      String iframe =
-         "<iframe src=\"" + url
-            + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
-      htmlPane.setContents(iframe);
+//      TODO
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//      
+//      String fileName = item.getPath();
+//      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+//      if (!(item instanceof File))
+//      {
+//         fileName += ".zip";
+//      }
+//
+//      String path = item.getPath();
+//
+//      String url = Configuration.getInstance().getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
+//      String iframe =
+//         "<iframe src=\"" + url
+//            + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
+//      htmlPane.setContents(iframe);
    }
 
    public void onDownloadFile(DownloadFileEvent event)

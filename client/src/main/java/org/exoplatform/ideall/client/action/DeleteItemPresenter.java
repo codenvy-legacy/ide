@@ -141,23 +141,24 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void deleteItemsComplete()
    {
-      if (lastDeletedItem == null)
-      {
-         return;
-      }
-
-      String selectedItemPath = lastDeletedItem.getPath();
-
-      selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-
-      Folder folder = new Folder(selectedItemPath);
-      VirtualFileSystem.getInstance().getChildren(folder);
-
-      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
-
-      eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
-      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
+//      TODO
+//      if (lastDeletedItem == null)
+//      {
+//         return;
+//      }
+//
+//      String selectedItemPath = lastDeletedItem.getPath();
+//
+//      selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
+//
+//      Folder folder = new Folder(selectedItemPath);
+//      VirtualFileSystem.getInstance().getChildren(folder);
+//
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
+//
+//      eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
+//      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 
 }

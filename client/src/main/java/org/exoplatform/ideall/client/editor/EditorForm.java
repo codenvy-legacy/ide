@@ -120,17 +120,18 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       public void onTabSelected(TabSelectedEvent event)
       {
-         try
-         {
-            activeTab = (EditorTab)event.getTab();
-            String path = activeTab.getFile().getPath();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), hasUndoChanges(path),
-               hasRedoChanges(path)));
-         }
-         catch (Exception exc)
-         {
-            exc.printStackTrace();
-         }
+//         TODO
+//         try
+//         {
+//            activeTab = (EditorTab)event.getTab();
+//            String path = activeTab.getFile().getPath();
+//            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), hasUndoChanges(path),
+//               hasRedoChanges(path)));
+//         }
+//         catch (Exception exc)
+//         {
+//            exc.printStackTrace();
+//         }
       }
    };
 
@@ -160,28 +161,29 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void openTab(File file, boolean lineNumbers, Editor editor)
    {
-      EditorTab tab = getEditorTab(file.getPath());
-      boolean addTab = false;
-      if (tab == null) {
-         tab = new EditorTab(file);
-         tab.setCanClose(true);
-         addTab = true;
-      }
-      
-      EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
-      configuration.setLineNumbers(lineNumbers);
-      
-      GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
-      SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-
-      tab.setTextEditor(smartGwtTextEditor);
-      tab.setFile(file);
-      
-      if (addTab) {
-         redraw();
-         tabSet.addTab(tab);
-         redraw();         
-      }
+//      TODO
+//      EditorTab tab = getEditorTab(file.getPath());
+//      boolean addTab = false;
+//      if (tab == null) {
+//         tab = new EditorTab(file);
+//         tab.setCanClose(true);
+//         addTab = true;
+//      }
+//      
+//      EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
+//      configuration.setLineNumbers(lineNumbers);
+//      
+//      GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
+//      SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
+//
+//      tab.setTextEditor(smartGwtTextEditor);
+//      tab.setFile(file);
+//      
+//      if (addTab) {
+//         redraw();
+//         tabSet.addTab(tab);
+//         redraw();         
+//      }
    }
 
    public void selectTab(String path)
@@ -225,14 +227,15 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    private EditorTab getEditorTab(String path)
    {
-      for (Tab tab : tabSet.getTabs())
-      {
-         EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getFile().getPath().equals(path))
-         {
-            return editorTab;
-         }
-      }
+//      TODO
+//      for (Tab tab : tabSet.getTabs())
+//      {
+//         EditorTab editorTab = (EditorTab)tab;
+//         if (editorTab.getFile().getPath().equals(path))
+//         {
+//            return editorTab;
+//         }
+//      }
 
       return null;
    }
@@ -245,14 +248,15 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public String getPathByEditorId(String editorId)
    {
-      for (Tab tab : tabSet.getTabs())
-      {
-         EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getTextEditor().getEditorId().equals(editorId))
-         {
-            return editorTab.getFile().getPath();
-         }
-      }
+//      TODO
+//      for (Tab tab : tabSet.getTabs())
+//      {
+//         EditorTab editorTab = (EditorTab)tab;
+//         if (editorTab.getTextEditor().getEditorId().equals(editorId))
+//         {
+//            return editorTab.getFile().getPath();
+//         }
+//      }
 
       return null;
    }
@@ -280,18 +284,19 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void relocateFile(File oldFile, File newFile)
    {
-      for (Tab tab : tabSet.getTabs())
-      {
-         EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getFile().equals(oldFile))
-         {
-            editorTab.setFile(newFile);
-            String newFilePath = newFile.getPath();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
-               hasRedoChanges(newFilePath)));
-            return;
-         }
-      }
+//      TODO
+//      for (Tab tab : tabSet.getTabs())
+//      {
+//         EditorTab editorTab = (EditorTab)tab;
+//         if (editorTab.getFile().equals(oldFile))
+//         {
+//            editorTab.setFile(newFile);
+//            String newFilePath = newFile.getPath();
+//            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
+//               hasRedoChanges(newFilePath)));
+//            return;
+//         }
+//      }
    }
 
    public void setLineNumbers(String path, boolean lineNumbers)

@@ -83,14 +83,16 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private String getPathToPaste(Item item)
    {
-      String selectedNavigationPanel = context.getSelectedNavigationPanel();
-      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
-      {
-         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getPath();
-         return path.substring(0, path.lastIndexOf("/"));
-      }
-
-      return context.getSelectedItems(selectedNavigationPanel).get(0).getPath();
+//      TODO
+//      String selectedNavigationPanel = context.getSelectedNavigationPanel();
+//      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
+//      {
+//         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getPath();
+//         return path.substring(0, path.lastIndexOf("/"));
+//      }
+//
+//      return context.getSelectedItems(selectedNavigationPanel).get(0).getPath();
+      return null;
    }
 
    /****************************************************************************************************
@@ -99,29 +101,30 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void copyNextItem()
    {
-      if (context.getItemsToCopy().size() == 0)
-      {
-         operationCompleted();
-         return;
-      }
-
-      Item item = context.getItemsToCopy().get(0);
-
-      String pathFromCopy = item.getPath();
-      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
-
-      String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-
-      if (pathFromCopy.equals(pathToCopy))
-      {
-         String message = "Can't copy files in the same directory!";
-         Dialogs.getInstance().showError(message);
-         return;
-      }
-
-      String destination = pathToCopy + "/" + item.getName();
-
-      VirtualFileSystem.getInstance().copy(item, destination);
+//      TODO
+//      if (context.getItemsToCopy().size() == 0)
+//      {
+//         operationCompleted();
+//         return;
+//      }
+//
+//      Item item = context.getItemsToCopy().get(0);
+//
+//      String pathFromCopy = item.getPath();
+//      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
+//
+//      String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+//
+//      if (pathFromCopy.equals(pathToCopy))
+//      {
+//         String message = "Can't copy files in the same directory!";
+//         Dialogs.getInstance().showError(message);
+//         return;
+//      }
+//
+//      String destination = pathToCopy + "/" + item.getName();
+//
+//      VirtualFileSystem.getInstance().copy(item, destination);
    }
 
    public void onCopyComplete(CopyCompleteEvent event)
@@ -139,57 +142,58 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void cutNextItem()
    {
-      if (context.getItemsToCut().size() == 0)
-      {
-         operationCompleted();
-         return;
-      }
-
-      Item item = context.getItemsToCut().get(0);
-
-      if (item instanceof File)
-      {
-         File file = (File)item;
-         if (context.getOpenedFiles().get(file.getPath()) != null)
-         {
-            final File openedFile = context.getOpenedFiles().get(file.getPath());
-            if (openedFile.isContentChanged())
-            {
-               Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
-                  new BooleanValueReceivedCallback()
-                  {
-                     public void execute(Boolean value)
-                     {
-                        if (value != null && value == true)
-                        {
-                           VirtualFileSystem.getInstance().saveFileContent(openedFile, openedFile.getPath());
-                        }
-                        else
-                        {
-                           handlers.removeHandlers();
-                        }
-                     }
-                  });
-               return;
-            }
-
-         }
-      }
-
-      String pathFromCut = item.getPath();
-      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
-
-      String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-      if (pathFromCut.equals(pathToCut))
-      {
-         String message = "Can't move files in the same directory!";
-         Dialogs.getInstance().showError(message);
-         return;
-      }
-
-      String destination = pathToCut + "/" + item.getName();
-
-      VirtualFileSystem.getInstance().move(item, destination);
+//      TODO
+//      if (context.getItemsToCut().size() == 0)
+//      {
+//         operationCompleted();
+//         return;
+//      }
+//
+//      Item item = context.getItemsToCut().get(0);
+//
+//      if (item instanceof File)
+//      {
+//         File file = (File)item;
+//         if (context.getOpenedFiles().get(file.getPath()) != null)
+//         {
+//            final File openedFile = context.getOpenedFiles().get(file.getPath());
+//            if (openedFile.isContentChanged())
+//            {
+//               Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
+//                  new BooleanValueReceivedCallback()
+//                  {
+//                     public void execute(Boolean value)
+//                     {
+//                        if (value != null && value == true)
+//                        {
+//                           VirtualFileSystem.getInstance().saveFileContent(openedFile, openedFile.getPath());
+//                        }
+//                        else
+//                        {
+//                           handlers.removeHandlers();
+//                        }
+//                     }
+//                  });
+//               return;
+//            }
+//
+//         }
+//      }
+//
+//      String pathFromCut = item.getPath();
+//      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
+//
+//      String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+//      if (pathFromCut.equals(pathToCut))
+//      {
+//         String message = "Can't move files in the same directory!";
+//         Dialogs.getInstance().showError(message);
+//         return;
+//      }
+//
+//      String destination = pathToCut + "/" + item.getName();
+//
+//      VirtualFileSystem.getInstance().move(item, destination);
    }
 
    /****************************************************************************************************

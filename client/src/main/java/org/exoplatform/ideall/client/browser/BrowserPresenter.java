@@ -178,17 +178,18 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       @Override
       public void run()
       {
-         selectedItems = display.getSelectedItems();
-         
-         System.out.println("selected items: " + selectedItems.size());
-         for (Item i : selectedItems) {
-            System.out.println(">> " + i.getPath());
-         }
-         
-         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-         
-         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+//         TODO
+//         selectedItems = display.getSelectedItems();
+//         
+//         System.out.println("selected items: " + selectedItems.size());
+//         for (Item i : selectedItems) {
+//            System.out.println(">> " + i.getPath());
+//         }
+//         
+//         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
+//         
+//         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
       }
       
    };
@@ -220,19 +221,20 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onRefreshBrowser()
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-      {
-         return;
-      }
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String selectedItemPath = item.getPath();
-      if (item instanceof File)
-      {
-         selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-      }
-
-      Folder folder = new Folder(selectedItemPath);
-      VirtualFileSystem.getInstance().getChildren(folder);
+//      TODO
+//      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+//      {
+//         return;
+//      }
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//      String selectedItemPath = item.getPath();
+//      if (item instanceof File)
+//      {
+//         selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
+//      }
+//
+//      Folder folder = new Folder(selectedItemPath);
+//      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -243,15 +245,16 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (!event.isNewFile() && !event.isSaveAs())
-      {
-         return;
-      }
-
-      String path = event.getPath();
-      path = path.substring(0, path.lastIndexOf("/")) + "/";
-      Folder folder = new Folder(path);
-      VirtualFileSystem.getInstance().getChildren(folder);
+//      TODO
+//      if (!event.isNewFile() && !event.isSaveAs())
+//      {
+//         return;
+//      }
+//
+//      String path = event.getPath();
+//      path = path.substring(0, path.lastIndexOf("/")) + "/";
+//      Folder folder = new Folder(path);
+//      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -292,24 +295,25 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       switchWorkspace();
    }
 
-   /**
-    * Comparator for comparing items in received directory.
-    */
-   private Comparator<Item> comparator = new Comparator<Item>()
-   {
-      public int compare(Item item1, Item item2)
-      {
-         if (item1 instanceof Folder && item2 instanceof File)
-         {
-            return -1;
-         }
-         else if (item1 instanceof File && item2 instanceof Folder)
-         {
-            return 1;
-         }
-         return item1.getPath().compareToIgnoreCase(item2.getPath());
-      }
-   };
+//   TODO
+//   /**
+//    * Comparator for comparing items in received directory.
+//    */
+//   private Comparator<Item> comparator = new Comparator<Item>()
+//   {
+//      public int compare(Item item1, Item item2)
+//      {
+//         if (item1 instanceof Folder && item2 instanceof File)
+//         {
+//            return -1;
+//         }
+//         else if (item1 instanceof File && item2 instanceof Folder)
+//         {
+//            return 1;
+//         }
+//         return item1.getPath().compareToIgnoreCase(item2.getPath());
+//      }
+//   };
 
    /**
     * Handling folder content receiving.
@@ -318,26 +322,27 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-      Collections.sort(event.getFolder().getChildren(), comparator);
-
-      display.getBrowserTree().setValue(event.getFolder());
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-      
-      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-
-      if (forlderToSelect != null)
-      {
-         display.selectItem(forlderToSelect);
-         forlderToSelect = null;
-      }
-
-      if (folderToUpdate != null)
-      {
-         String path = folderToUpdate;
-         folderToUpdate = null;
-         Folder folder = new Folder(path);
-         VirtualFileSystem.getInstance().getChildren(folder);
-      }
+//      TODO
+//      Collections.sort(event.getFolder().getChildren(), comparator);
+//
+//      display.getBrowserTree().setValue(event.getFolder());
+//      eventBus.fireEvent(new RestorePerspectiveEvent());
+//      
+//      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
+//
+//      if (forlderToSelect != null)
+//      {
+//         display.selectItem(forlderToSelect);
+//         forlderToSelect = null;
+//      }
+//
+//      if (folderToUpdate != null)
+//      {
+//         String path = folderToUpdate;
+//         folderToUpdate = null;
+//         Folder folder = new Folder(path);
+//         VirtualFileSystem.getInstance().getChildren(folder);
+//      }
    }
 
    /**
@@ -348,14 +353,15 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onFolderCreated(FolderCreatedEvent event)
    {
-      if(context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-      {
-         return;
-      }
-   
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      forlderToSelect = event.getFolder().getPath();
-      VirtualFileSystem.getInstance().getChildren((Folder)item);
+//      TODO
+//      if(context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+//      {
+//         return;
+//      }
+//   
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//      forlderToSelect = event.getFolder().getPath();
+//      VirtualFileSystem.getInstance().getChildren((Folder)item);
    }
 
    /**
@@ -366,22 +372,23 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      String source = event.getItem().getPath();
-      String destination = event.getDestination();
-
-      if (isSameFolder(source, destination))
-      {
-         String path = source.substring(0, source.lastIndexOf("/"));
-         VirtualFileSystem.getInstance().getChildren(new Folder(path));
-      }
-      else
-      {
-         String path1 = source.substring(0, source.lastIndexOf("/"));
-         String path2 = destination.substring(0, destination.lastIndexOf("/"));
-
-         folderToUpdate = path2;
-         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
-      }
+//      TODO
+//      String source = event.getItem().getPath();
+//      String destination = event.getDestination();
+//
+//      if (isSameFolder(source, destination))
+//      {
+//         String path = source.substring(0, source.lastIndexOf("/"));
+//         VirtualFileSystem.getInstance().getChildren(new Folder(path));
+//      }
+//      else
+//      {
+//         String path1 = source.substring(0, source.lastIndexOf("/"));
+//         String path2 = destination.substring(0, destination.lastIndexOf("/"));
+//
+//         folderToUpdate = path2;
+//         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
+//      }
    }
 
    /**

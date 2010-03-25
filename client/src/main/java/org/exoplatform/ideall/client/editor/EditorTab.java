@@ -75,11 +75,13 @@ public class EditorTab extends Tab
 
    public String getTabTitle()
    {
-      boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
-      String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
-      String title =
-         "<span title=\"" + file.getPath() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + "</span>";
-      return title;
+      return null;
+//      TODO
+//      boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
+//      String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+//      String title =
+//         "<span title=\"" + file.getPath() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + "</span>";
+//      return title;
    }
 
 }

@@ -109,12 +109,14 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    private String getFilePath(Item item)
    {
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/"));
-      }
-      return path;
+//      TODO
+//      String path = item.getPath();
+//      if (item instanceof File)
+//      {
+//         path = path.substring(0, path.lastIndexOf("/"));
+//      }
+//      return path;
+      return null;
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)

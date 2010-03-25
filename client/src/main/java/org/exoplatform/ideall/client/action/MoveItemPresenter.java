@@ -84,37 +84,38 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
    {
       display = d;
 
-      display.getItemPathField().setValue(
-         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
-
-      display.getMoveButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            move();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            display.closeForm();
-         }
-      });
-
-      display.getItemPathFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
-      {
-
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER)
-            {
-               move();
-            }
-         }
-
-      });
+//      TODO
+//      display.getItemPathField().setValue(
+//         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
+//
+//      display.getMoveButton().addClickHandler(new ClickHandler()
+//      {
+//         public void onClick(ClickEvent event)
+//         {
+//            move();
+//         }
+//      });
+//
+//      display.getCancelButton().addClickHandler(new ClickHandler()
+//      {
+//         public void onClick(ClickEvent event)
+//         {
+//            display.closeForm();
+//         }
+//      });
+//
+//      display.getItemPathFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
+//      {
+//
+//         public void onKeyPress(KeyPressEvent event)
+//         {
+//            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+//            {
+//               move();
+//            }
+//         }
+//
+//      });
    }
 
    public void destroy()
@@ -122,89 +123,91 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       handlers.removeHandlers();
    }
 
-   protected void move()
-   {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-
-      String path = display.getItemPathField().getValue();
-
-      if (path.equals(item.getPath()))
-      {
-         Dialogs.getInstance().showError("Can't move / rename resource!");
-         return;
-      }
-
-      String selectedItemPath = item.getPath();
-      if (hasOpenedFiles(selectedItemPath))
-      {
-         Dialogs.getInstance().ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
-         {
-            public void execute(Boolean value)
-            {
-               if (value != null && value == true)
-               {
-                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
-               }
-            }
-
-         });
-
-         return;
-      }
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().move(item, path);
-   }
-
-   private boolean hasOpenedFiles(String path)
-   {
-      for (String key : context.getOpenedFiles().keySet())
-      {
-         if (key.startsWith(path))
-         {
-            File file = context.getOpenedFiles().get(key);
-            if (file.isContentChanged() || file.isPropertiesChanged())
-            {
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
-
-   private boolean saveNextOpenedFile(String path)
-   {
-      for (String key : context.getOpenedFiles().keySet())
-      {
-         if (key.startsWith(path))
-         {
-            File file = context.getOpenedFiles().get(key);
-            if (file.isContentChanged())
-            {
-               VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
-
+//   TODO
+//   protected void move()
+//   {
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//
+//      String path = display.getItemPathField().getValue();
+//
+//      if (path.equals(item.getPath()))
+//      {
+//         Dialogs.getInstance().showError("Can't move / rename resource!");
+//         return;
+//      }
+//
+//      String selectedItemPath = item.getPath();
+//      if (hasOpenedFiles(selectedItemPath))
+//      {
+//         Dialogs.getInstance().ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
+//         {
+//            public void execute(Boolean value)
+//            {
+//               if (value != null && value == true)
+//               {
+//                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath());
+//               }
+//            }
+//
+//         });
+//
+//         return;
+//      }
+//      handlers.addHandler(FileContentSavedEvent.TYPE, this);
+//      VirtualFileSystem.getInstance().move(item, path);
+//   }
+//
+//   private boolean hasOpenedFiles(String path)
+//   {
+//      for (String key : context.getOpenedFiles().keySet())
+//      {
+//         if (key.startsWith(path))
+//         {
+//            File file = context.getOpenedFiles().get(key);
+//            if (file.isContentChanged() || file.isPropertiesChanged())
+//            {
+//               return true;
+//            }
+//         }
+//      }
+//
+//      return false;
+//   }
+//
+//   private boolean saveNextOpenedFile(String path)
+//   {
+//      for (String key : context.getOpenedFiles().keySet())
+//      {
+//         if (key.startsWith(path))
+//         {
+//            File file = context.getOpenedFiles().get(key);
+//            if (file.isContentChanged())
+//            {
+//               VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
+//               return true;
+//            }
+//         }
+//      }
+//
+//      return false;
+//   }
+//
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      display.closeForm();
+//      display.closeForm();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1
-         && saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath()))
-      {
-         return;
-      }
-
-      String path = display.getItemPathField().getValue();
-      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), path);
+//      TODO
+//      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1
+//         && saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath()))
+//      {
+//         return;
+//      }
+//
+//      String path = display.getItemPathField().getValue();
+//      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), path);
    }
 
 }

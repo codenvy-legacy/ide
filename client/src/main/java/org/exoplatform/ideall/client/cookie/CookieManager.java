@@ -108,15 +108,16 @@ public class CookieManager
     */
    private static void storeActiveFile(File file)
    {
-      if (file == null)
-      {
-         Cookies.removeCookie(Cookie.ACTIVE_FILE);
-      }
-      else
-      {
-         String filePath = javaScriptEncodeURIComponent(file.getPath());
-         Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
-      }
+//      TODO
+//      if (file == null)
+//      {
+//         Cookies.removeCookie(Cookie.ACTIVE_FILE);
+//      }
+//      else
+//      {
+//         String filePath = javaScriptEncodeURIComponent(file.getPath());
+//         Cookies.setCookie(Cookie.ACTIVE_FILE, filePath);
+//      }
    }
 
    /**
@@ -171,24 +172,25 @@ public class CookieManager
 
    private static void restoreOpenedFiles(ApplicationContext context)
    {
-      String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
-      if (openedFilesCookie == null)
-      {
-         return;
-      }
-
-      String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
-      for (String f : files)
-      {
-         String path = javaScriptDecodeURIComponent(f);
-         if ("".equals(path))
-         {
-            continue;
-         }
-
-         File file = new File(path);
-         context.getPreloadFiles().put(file.getPath(), file);
-      }
+//      TODO
+//      String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
+//      if (openedFilesCookie == null)
+//      {
+//         return;
+//      }
+//
+//      String[] files = openedFilesCookie.split(OPENED_FILES_DELIMITER);
+//      for (String f : files)
+//      {
+//         String path = javaScriptDecodeURIComponent(f);
+//         if ("".equals(path))
+//         {
+//            continue;
+//         }
+//
+//         File file = new File(path);
+//         context.getPreloadFiles().put(file.getPath(), file);
+//      }
    }
 
    private static void restoreActiveFile(ApplicationContext context)

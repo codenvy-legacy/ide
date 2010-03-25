@@ -73,28 +73,29 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    protected void preloadNextFile()
    {
-      try
-      {
-         if (context.getPreloadFiles().size() == 0)
-         {
-            fileToLoad = null;
-            handlers.removeHandlers();
-
-            ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-            
-            new ApplicationInitializer(eventBus, context);
-
-            return;
-         }
-
-         fileToLoad = context.getPreloadFiles().values().iterator().next();
-         context.getPreloadFiles().remove(fileToLoad.getPath());
-         VirtualFileSystem.getInstance().getProperties(fileToLoad);
-      }
-      catch (Exception exc)
-      {
-         exc.printStackTrace();
-      }
+//      TODO
+//      try
+//      {
+//         if (context.getPreloadFiles().size() == 0)
+//         {
+//            fileToLoad = null;
+//            handlers.removeHandlers();
+//
+//            ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+//            
+//            new ApplicationInitializer(eventBus, context);
+//
+//            return;
+//         }
+//
+//         fileToLoad = context.getPreloadFiles().values().iterator().next();
+//         context.getPreloadFiles().remove(fileToLoad.getPath());
+//         VirtualFileSystem.getInstance().getProperties(fileToLoad);
+//      }
+//      catch (Exception exc)
+//      {
+//         exc.printStackTrace();
+//      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
@@ -106,14 +107,16 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
-      context.getOpenedFiles().put(fileToLoad.getPath(), fileToLoad);
-      preloadNextFile();
+//      TODO
+//      context.getOpenedFiles().put(fileToLoad.getPath(), fileToLoad);
+//      preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      context.getOpenedFiles().remove(fileToLoad.getPath());
-      preloadNextFile();
+//      TODO
+//      context.getOpenedFiles().remove(fileToLoad.getPath());
+//      preloadNextFile();
    }
 
 }

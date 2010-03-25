@@ -161,20 +161,21 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      for (File file : context.getOpenedFiles().values())
-      {
-         ignoreContentChangedList.add(file.getPath());
-         try
-         {
-            Editor editor = EditorUtil.getEditor(file.getContentType(), context);
-            context.getOpenedEditors().put(file.getPath(), editor.getDescription());
-            display.openTab(file, context.isShowLineNumbers(), editor);
-         }
-         catch (EditorNotFoundException e)
-         {
-            e.printStackTrace();
-         }
-      }
+//      TODO
+//      for (File file : context.getOpenedFiles().values())
+//      {
+//         ignoreContentChangedList.add(file.getPath());
+//         try
+//         {
+//            Editor editor = EditorUtil.getEditor(file.getContentType(), context);
+//            context.getOpenedEditors().put(file.getPath(), editor.getDescription());
+//            display.openTab(file, context.isShowLineNumbers(), editor);
+//         }
+//         catch (EditorNotFoundException e)
+//         {
+//            e.printStackTrace();
+//         }
+//      }
 
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorInitializedEvent.TYPE, this);
@@ -250,17 +251,18 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorInitialized(EditorInitializedEvent event)
    {
-      try
-      {
-         String editorId = event.getEditorId();
-         String path = display.getPathByEditorId(editorId);
-         File file = context.getOpenedFiles().get(path);
-         display.setTabContent(file.getPath(), file.getContent());
-      }
-      catch (Exception exc)
-      {
-         exc.printStackTrace();
-      }
+//      TODO
+//      try
+//      {
+//         String editorId = event.getEditorId();
+//         String path = display.getPathByEditorId(editorId);
+//         File file = context.getOpenedFiles().get(path);
+//         display.setTabContent(file.getPath(), file.getContent());
+//      }
+//      catch (Exception exc)
+//      {
+//         exc.printStackTrace();
+//      }
    }
 
    /* 
@@ -268,20 +270,21 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      String editorId = event.getEditorId();
-      String path = display.getPathByEditorId(editorId);
-
-      if (ignoreContentChangedList.contains(path))
-      {
-         ignoreContentChangedList.remove(path);
-         return;
-      }
-
-      File file = context.getOpenedFiles().get(path);
-      file.setContentChanged(true);
-      file.setContent(display.getTabContent(file.getPath()));
-      display.updateTabTitle(path);
-      eventBus.fireEvent(new FileContentChangedEvent(file, display.hasUndoChanges(path), display.hasRedoChanges(path)));
+//      TODO
+//      String editorId = event.getEditorId();
+//      String path = display.getPathByEditorId(editorId);
+//
+//      if (ignoreContentChangedList.contains(path))
+//      {
+//         ignoreContentChangedList.remove(path);
+//         return;
+//      }
+//
+//      File file = context.getOpenedFiles().get(path);
+//      file.setContentChanged(true);
+//      file.setContent(display.getTabContent(file.getPath()));
+//      display.updateTabTitle(path);
+//      eventBus.fireEvent(new FileContentChangedEvent(file, display.hasUndoChanges(path), display.hasRedoChanges(path)));
    }
 
    /**
@@ -297,91 +300,97 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      File curentFile = event.getFile();
-      if (curentFile == null)
-      {
-         context.setActiveFile(null);
-         return;
-      }
-
-      context.setActiveFile(curentFile);
-      CookieManager.storeOpenedFiles(context);
-      display.setEditorFocus(curentFile.getPath());
+//      TODO
+//      File curentFile = event.getFile();
+//      if (curentFile == null)
+//      {
+//         context.setActiveFile(null);
+//         return;
+//      }
+//
+//      context.setActiveFile(curentFile);
+//      CookieManager.storeOpenedFiles(context);
+//      display.setEditorFocus(curentFile.getPath());
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
    {
-      File file = context.getActiveFile();
-      file.setContent(display.getTabContent(file.getPath()));
-      if (file.isNewFile())
-      {
-         eventBus.fireEvent(new SaveFileAsEvent());
-      }
-      else
-      {
-         eventBus.fireEvent(new SaveFileEvent());
-      }
+//      TODO
+//      File file = context.getActiveFile();
+//      file.setContent(display.getTabContent(file.getPath()));
+//      if (file.isNewFile())
+//      {
+//         eventBus.fireEvent(new SaveFileAsEvent());
+//      }
+//      else
+//      {
+//         eventBus.fireEvent(new SaveFileEvent());
+//      }
    }
 
    private void closeFile(File file)
    {
-      display.closeTab(file.getPath());
-      file.setContent(null);
-      file.setContentChanged(false);
-
-      context.getOpenedFiles().remove(file.getPath());
-      CookieManager.storeOpenedFiles(context);
+//      TODO
+//      display.closeTab(file.getPath());
+//      file.setContent(null);
+//      file.setContentChanged(false);
+//
+//      context.getOpenedFiles().remove(file.getPath());
+//      CookieManager.storeOpenedFiles(context);
    }
 
    public void onEditorCloseFile(EditorCloseFileEvent event)
    {
-      final File file = event.getFile();
-      if (!file.isContentChanged() && !file.isPropertiesChanged())
-      {
-         closeFile(file);
-         return;
-      }
-
-      String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-      Dialogs.getInstance().ask("DevTool", message, new BooleanValueReceivedCallback()
-      {
-         public void execute(Boolean value)
-         {
-            if (value == null)
-            {
-               return;
-            }
-
-            if (value == true)
-            {
-               closeFileAfterSaving = true;
-
-               if (file.isNewFile())
-               {
-                  eventBus.fireEvent(new SaveFileAsEvent(file));
-               }
-               else
-               {
-                  file.setContent(display.getTabContent(file.getPath()));
-                  eventBus.fireEvent(new SaveFileEvent());
-               }
-            }
-            else
-            {
-               closeFile(file);
-            }
-         }
-      });
+//      TODO
+//      final File file = event.getFile();
+//      if (!file.isContentChanged() && !file.isPropertiesChanged())
+//      {
+//         closeFile(file);
+//         return;
+//      }
+//
+//      String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
+//      Dialogs.getInstance().ask("DevTool", message, new BooleanValueReceivedCallback()
+//      {
+//         public void execute(Boolean value)
+//         {
+//            if (value == null)
+//            {
+//               return;
+//            }
+//
+//            if (value == true)
+//            {
+//               closeFileAfterSaving = true;
+//
+//               if (file.isNewFile())
+//               {
+//                  eventBus.fireEvent(new SaveFileAsEvent(file));
+//               }
+//               else
+//               {
+//                  file.setContent(display.getTabContent(file.getPath()));
+//                  eventBus.fireEvent(new SaveFileEvent());
+//               }
+//            }
+//            else
+//            {
+//               closeFile(file);
+//            }
+//         }
+//      });
    }
 
    public void onUndoEditing(UndoEditingEvent event)
    {
-      display.undoEditing(context.getActiveFile().getPath());
+//      TODO
+//      display.undoEditing(context.getActiveFile().getPath());
    }
 
    public void onRedoEditing(RedoEditingEvent event)
    {
-      display.redoEditing(context.getActiveFile().getPath());
+//      TODO
+//      display.redoEditing(context.getActiveFile().getPath());
    }
 
    private void updateTabTitle(String path)
@@ -391,29 +400,30 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (closeFileAfterSaving)
-      {
-         closeFileAfterSaving = false;
-         closeFile(event.getFile());
-      }
-      else
-      {
-         File currentOpenedFile = context.getActiveFile();
-         File savedFile = event.getFile();
-
-         if (event.isSaveAs() || event.isNewFile())
-         {
-            savedFile.setPath(event.getPath());
-            context.getOpenedFiles().remove(context.getActiveFile().getPath());
-            context.setActiveFile(savedFile);
-            context.getOpenedFiles().put(savedFile.getPath(), savedFile);
-            display.relocateFile(currentOpenedFile, savedFile);
-         }
-         
-         updateTabTitle(savedFile.getPath());
-      }
-
-      CookieManager.storeOpenedFiles(context);
+//      TODO
+//      if (closeFileAfterSaving)
+//      {
+//         closeFileAfterSaving = false;
+//         closeFile(event.getFile());
+//      }
+//      else
+//      {
+//         File currentOpenedFile = context.getActiveFile();
+//         File savedFile = event.getFile();
+//
+//         if (event.isSaveAs() || event.isNewFile())
+//         {
+//            savedFile.setPath(event.getPath());
+//            context.getOpenedFiles().remove(context.getActiveFile().getPath());
+//            context.setActiveFile(savedFile);
+//            context.getOpenedFiles().put(savedFile.getPath(), savedFile);
+//            display.relocateFile(currentOpenedFile, savedFile);
+//         }
+//         
+//         updateTabTitle(savedFile.getPath());
+//      }
+//
+//      CookieManager.storeOpenedFiles(context);
    }
 
    /*
@@ -422,95 +432,101 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      if (!(event.getItem() instanceof File))
-      {
-         return;
-      }
-
-      updateTabTitle(event.getItem().getPath());
+//      TODO
+//      if (!(event.getItem() instanceof File))
+//      {
+//         return;
+//      }
+//
+//      updateTabTitle(event.getItem().getPath());
    }
 
    public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
    {
-      updateTabTitle(event.getFile().getPath());
+//      TODO
+//      updateTabTitle(event.getFile().getPath());
    }
 
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      String dest = event.getDestination();
-      ArrayList<String> keys = new ArrayList<String>();
-      for (String key : context.getOpenedFiles().keySet())
-      {
-         keys.add(key);
-      }
-
-      for (String key : keys)
-      {
-         if (key.startsWith(event.getItem().getPath()))
-         {
-            File file = context.getOpenedFiles().get(key);
-            String sourcePath = file.getPath();
-            String destinationPath = file.getPath();
-            destinationPath = destinationPath.substring(event.getItem().getPath().length());
-            destinationPath = dest + destinationPath;
-            file.setPath(destinationPath);
-            display.updateTabTitle(file.getPath());
-
-            context.getOpenedFiles().remove(sourcePath);
-            context.getOpenedFiles().put(destinationPath, file);
-         }
-      }
-
-      CookieManager.storeOpenedFiles(context);
+//      TODO
+//      String dest = event.getDestination();
+//      ArrayList<String> keys = new ArrayList<String>();
+//      for (String key : context.getOpenedFiles().keySet())
+//      {
+//         keys.add(key);
+//      }
+//
+//      for (String key : keys)
+//      {
+//         if (key.startsWith(event.getItem().getPath()))
+//         {
+//            File file = context.getOpenedFiles().get(key);
+//            String sourcePath = file.getPath();
+//            String destinationPath = file.getPath();
+//            destinationPath = destinationPath.substring(event.getItem().getPath().length());
+//            destinationPath = dest + destinationPath;
+//            file.setPath(destinationPath);
+//            display.updateTabTitle(file.getPath());
+//
+//            context.getOpenedFiles().remove(sourcePath);
+//            context.getOpenedFiles().put(destinationPath, file);
+//         }
+//      }
+//
+//      CookieManager.storeOpenedFiles(context);
    }
 
    public void onFormatFile(FormatFileEvent event)
    {
-      display.formatFile(context.getActiveFile().getPath());
+//      TODO
+//      display.formatFile(context.getActiveFile().getPath());
    }
 
    public void onItemDeleted(ItemDeletedEvent event)
    {
-      // fix of bug (WBT-225)
-      String path = event.getItem().getPath();
-
-      if (event.getItem() instanceof File)
-      {
-         closeFile((File)event.getItem());
-      }
-      else
-      {
-         //find out the files are been in the removed folder
-         HashMap<String, File> openedFiles = context.getOpenedFiles();
-
-         HashMap<String, File> copy = new HashMap<String, File>();
-         for (String key : openedFiles.keySet())
-         {
-            File file = openedFiles.get(key);
-            copy.put(key, file);
-         }
-
-         for (File file : copy.values())
-         {
-            if (Utils.match(file.getPath(), "^" + path + ".*", ""))
-            {
-               closeFile(file);
-            }
-         }
-      }
-
-      CookieManager.storeOpenedFiles(context);
+//      TODO
+//      // fix of bug (WBT-225)
+//      String path = event.getItem().getPath();
+//
+//      if (event.getItem() instanceof File)
+//      {
+//         closeFile((File)event.getItem());
+//      }
+//      else
+//      {
+//         //find out the files are been in the removed folder
+//         HashMap<String, File> openedFiles = context.getOpenedFiles();
+//
+//         HashMap<String, File> copy = new HashMap<String, File>();
+//         for (String key : openedFiles.keySet())
+//         {
+//            File file = openedFiles.get(key);
+//            copy.put(key, file);
+//         }
+//
+//         for (File file : copy.values())
+//         {
+//            if (Utils.match(file.getPath(), "^" + path + ".*", ""))
+//            {
+//               closeFile(file);
+//            }
+//         }
+//      }
+//
+//      CookieManager.storeOpenedFiles(context);
    }
 
    private void updateLineNumbers(boolean lineNumbers)
    {
-      Iterator<String> iterator = context.getOpenedFiles().keySet().iterator();
-      while (iterator.hasNext())
-      {
-         String path = iterator.next();
-         display.setLineNumbers(path, lineNumbers);
-      }
-      display.setEditorFocus(context.getActiveFile().getPath());
+//      TODO
+//      Iterator<String> iterator = context.getOpenedFiles().keySet().iterator();
+//      while (iterator.hasNext())
+//      {
+//         String path = iterator.next();
+//         display.setLineNumbers(path, lineNumbers);
+//      }
+//      display.setEditorFocus(context.getActiveFile().getPath());
    }
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
@@ -520,42 +536,42 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onChangeActiveFile(ChangeActiveFileEvent event)
    {
-      //ignoreContentChangedList.add(file.getPath());
-      if (timer1 != null)
-      {
-         timer1.cancel();
-      }
-
-      if (timer2 != null)
-      {
-         timer2.cancel();
-      }
-
-      context.setActiveFile(event.getFile());
-      //context.getOpenedFiles().put(file.getPath(), file);
-      //display.addTab(file, context.isShowLineNumbers());
-      display.selectTab(event.getFile().getPath());
-
-      CookieManager.storeOpenedFiles(context);
-      // TODO Auto-generated method stub
+//      TODO
+//      //ignoreContentChangedList.add(file.getPath());
+//      if (timer1 != null)
+//      {
+//         timer1.cancel();
+//      }
+//
+//      if (timer2 != null)
+//      {
+//         timer2.cancel();
+//      }
+//
+//      context.setActiveFile(event.getFile());
+//      //context.getOpenedFiles().put(file.getPath(), file);
+//      //display.addTab(file, context.isShowLineNumbers());
+//      display.selectTab(event.getFile().getPath());
+//
+//      CookieManager.storeOpenedFiles(context);
+//      // TODO Auto-generated method stub
    }
 
    private class UpdateActiveFileTimer extends Timer
    {
-
       @Override
       public void run()
       {
-         if (context.getActiveFile() == null)
-         {
-            return;
-         }
-
-         String path = context.getActiveFile().getPath();
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(path),
-            display.hasRedoChanges(path)));
+//         TODO
+//         if (context.getActiveFile() == null)
+//         {
+//            return;
+//         }
+//
+//         String path = context.getActiveFile().getPath();
+//         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(path),
+//            display.hasRedoChanges(path)));
       }
-
    }
 
    private UpdateActiveFileTimer timer1;
@@ -564,15 +580,16 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    private void setFileAsActive()
    {
-      if (context.getActiveFile() == null)
-      {
-         return;
-      }
-      display.selectTab(context.getActiveFile().getPath());
-      timer1 = new UpdateActiveFileTimer();
-      timer1.schedule(1000);
-      timer2 = new UpdateActiveFileTimer();
-      timer2.schedule(500);
+//      TODO
+//      if (context.getActiveFile() == null)
+//      {
+//         return;
+//      }
+//      display.selectTab(context.getActiveFile().getPath());
+//      timer1 = new UpdateActiveFileTimer();
+//      timer1.schedule(1000);
+//      timer2 = new UpdateActiveFileTimer();
+//      timer2.schedule(500);
    }
 
    public void onError(ExceptionThrownEvent event)
@@ -582,28 +599,29 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
-      File file = event.getFile();
-      if (context.getOpenedFiles().get(file.getPath()) != null
-         && event.getEditor().getDescription().equals(context.getOpenedEditors().get(file.getPath())))
-      {
-         File openedFile = context.getOpenedFiles().get(file.getPath());
-         context.setActiveFile(openedFile);
-         display.selectTab(openedFile.getPath());         
-         CookieManager.storeOpenedFiles(context);
-         return;
-      }
-      
-      ignoreContentChangedList.add(file.getPath());
-      
-      display.openTab(file, context.isShowLineNumbers(), event.getEditor());
-
-      context.getOpenedFiles().put(file.getPath(), file);
-      context.getOpenedEditors().put(file.getPath(), event.getEditor().getDescription());
-
-      context.setActiveFile(file);
-      display.selectTab(file.getPath());
-      
-      CookieManager.storeOpenedFiles(context);
+//      TODO
+//      File file = event.getFile();
+//      if (context.getOpenedFiles().get(file.getPath()) != null
+//         && event.getEditor().getDescription().equals(context.getOpenedEditors().get(file.getPath())))
+//      {
+//         File openedFile = context.getOpenedFiles().get(file.getPath());
+//         context.setActiveFile(openedFile);
+//         display.selectTab(openedFile.getPath());         
+//         CookieManager.storeOpenedFiles(context);
+//         return;
+//      }
+//      
+//      ignoreContentChangedList.add(file.getPath());
+//      
+//      display.openTab(file, context.isShowLineNumbers(), event.getEditor());
+//
+//      context.getOpenedFiles().put(file.getPath(), file);
+//      context.getOpenedEditors().put(file.getPath(), event.getEditor().getDescription());
+//
+//      context.setActiveFile(file);
+//      display.selectTab(file.getPath());
+//      
+//      CookieManager.storeOpenedFiles(context);
    }
 
 }

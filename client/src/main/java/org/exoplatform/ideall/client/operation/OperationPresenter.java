@@ -142,41 +142,43 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onPreviewFile(PreviewFileEvent event)
    {
-      display.closePreviewTab();
-      display.closeGadgetPreviewTab();
-      File file = context.getActiveFile();
-
-      if (file.isNewFile())
-      {
-         Dialogs.getInstance().showInfo("You should save the file!");
-         return;
-      }
-      
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-      
-      if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
-      {
-         previewGadget();
-      }
-      else
-      {
-         display.showPreview(file.getPath());
-      }
+//      TODO
+//      display.closePreviewTab();
+//      display.closeGadgetPreviewTab();
+//      File file = context.getActiveFile();
+//
+//      if (file.isNewFile())
+//      {
+//         Dialogs.getInstance().showInfo("You should save the file!");
+//         return;
+//      }
+//      
+//      eventBus.fireEvent(new RestorePerspectiveEvent());
+//      
+//      if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
+//      {
+//         previewGadget();
+//      }
+//      else
+//      {
+//         display.showPreview(file.getPath());
+//      }
    }
 
    private void previewGadget()
    {
-      //FIXME:  
-      String gadgetURL =
-         Location.getProtocol() + "//" + Location.getHost() + Configuration.getInstance().getPublicContext() + "/jcr"
-            + context.getActiveFile().getPath();
-      String owner = "root";
-      String viewer = "root";
-      Long moduleId = 0L;
-      String container = "default";
-      String domain = null;
-      TokenRequest tokenRequest = new TokenRequest(URL.encode(gadgetURL), owner, viewer, moduleId, container, domain);
-      GadgetService.getInstance().getSecurityToken(tokenRequest);
+//      //FIXME:  
+//      //TODO
+//      String gadgetURL =
+//         Location.getProtocol() + "//" + Location.getHost() + Configuration.getInstance().getPublicContext() + "/jcr"
+//            + context.getActiveFile().getPath();
+//      String owner = "root";
+//      String viewer = "root";
+//      Long moduleId = 0L;
+//      String container = "default";
+//      String domain = null;
+//      TokenRequest tokenRequest = new TokenRequest(URL.encode(gadgetURL), owner, viewer, moduleId, container, domain);
+//      GadgetService.getInstance().getSecurityToken(tokenRequest);
    }
 
    public void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent)

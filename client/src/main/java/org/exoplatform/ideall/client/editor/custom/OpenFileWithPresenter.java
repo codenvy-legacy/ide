@@ -250,15 +250,16 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private void tryOpenFile()
    {
-      File file = (File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-
-      if (context.getOpenedFiles().get(file.getPath()) != null)
-      {
-         showDialog();
-         return;
-      }
-
-      openFile();
+//      TODO
+//      File file = (File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//
+//      if (context.getOpenedFiles().get(file.getPath()) != null)
+//      {
+//         showDialog();
+//         return;
+//      }
+//
+//      openFile();
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

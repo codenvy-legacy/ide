@@ -67,69 +67,72 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      boolean switchWorkspace = !checkSwitchingWorkspace();
-
-      if (rootNode == null || switchWorkspace)
-      {
-         tree.setRoot(new TreeNode("root"));
-
-         String nodeName = getValue().getPath();
-         if (nodeName.startsWith("/"))
-         {
-            nodeName = nodeName.substring(1);
-         }
-
-         rootNode = new TreeNode(nodeName);
-         rootNode.setAttribute(getValuePropertyName(), getValue());
-         if (getValue().getIcon() != null)
-         {
-            rootNode.setAttribute("icon", getValue().getIcon());
-         }
-
-         rootNode.setIsFolder(true);
-         tree.add(rootNode, tree.getRoot());
-
-         selectRecord(rootNode);
-      }
-
-      if (((Folder)getValue()).getChildren() == null)
-      {
-         return;
-      }
-
-      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-
-      if (getValue().getPath().startsWith(rootFolder.getPath()))
-      {
-         TreeNode parent = getNodeByPath(getValue().getPath());
-         setItems(parent, ((Folder)getValue()).getChildren());
-      }
+//      TODO
+//      boolean switchWorkspace = !checkSwitchingWorkspace();
+//
+//      if (rootNode == null || switchWorkspace)
+//      {
+//         tree.setRoot(new TreeNode("root"));
+//
+//         String nodeName = getValue().getPath();
+//         if (nodeName.startsWith("/"))
+//         {
+//            nodeName = nodeName.substring(1);
+//         }
+//
+//         rootNode = new TreeNode(nodeName);
+//         rootNode.setAttribute(getValuePropertyName(), getValue());
+//         if (getValue().getIcon() != null)
+//         {
+//            rootNode.setAttribute("icon", getValue().getIcon());
+//         }
+//
+//         rootNode.setIsFolder(true);
+//         tree.add(rootNode, tree.getRoot());
+//
+//         selectRecord(rootNode);
+//      }
+//
+//      if (((Folder)getValue()).getChildren() == null)
+//      {
+//         return;
+//      }
+//
+//      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
+//
+//      if (getValue().getPath().startsWith(rootFolder.getPath()))
+//      {
+//         TreeNode parent = getNodeByPath(getValue().getPath());
+//         setItems(parent, ((Folder)getValue()).getChildren());
+//      }
    }
 
    private boolean checkSwitchingWorkspace()
    {
-      try
-      {
-         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
-         String[] pathes1 = rootItem.getPath().split("/");
-         String[] pathes2 = getValue().getPath().split("/");
-
-         if (!pathes1[1].equals(pathes2[1]))
-         {
-            return false;
-         }
-
-         if (!pathes1[2].equals(pathes2[2]))
-         {
-            return false;
-         }
-
-      }
-      catch (Exception exc)
-      {
-         //exc.printStackTrace();
-      }
-      return true;
+      return false;
+//      TODO
+//      try
+//      {
+//         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
+//         String[] pathes1 = rootItem.getPath().split("/");
+//         String[] pathes2 = getValue().getPath().split("/");
+//
+//         if (!pathes1[1].equals(pathes2[1]))
+//         {
+//            return false;
+//         }
+//
+//         if (!pathes1[2].equals(pathes2[2]))
+//         {
+//            return false;
+//         }
+//
+//      }
+//      catch (Exception exc)
+//      {
+//         //exc.printStackTrace();
+//      }
+//      return true;
    }
 
    private TreeNode getChild(TreeNode parent, String name)
@@ -147,27 +150,29 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private TreeNode getNodeByPath(String path)
    {
-      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-      path = path.substring(rootFolder.getPath().length());
-
-      if (path.startsWith("/"))
-      {
-         path = path.substring(1);
-      }
-
-      if ("".equals(path))
-      {
-         return rootNode;
-      }
-
-      String[] names = path.split("/");
-      TreeNode node = rootNode;
-      for (String folderName : names)
-      {
-         node = getChild(node, folderName);
-      }
-
-      return node;
+      return null;
+//      TODO
+//      Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
+//      path = path.substring(rootFolder.getPath().length());
+//
+//      if (path.startsWith("/"))
+//      {
+//         path = path.substring(1);
+//      }
+//
+//      if ("".equals(path))
+//      {
+//         return rootNode;
+//      }
+//
+//      String[] names = path.split("/");
+//      TreeNode node = rootNode;
+//      for (String folderName : names)
+//      {
+//         node = getChild(node, folderName);
+//      }
+//
+//      return node;
    }
 
    /**
@@ -179,14 +184,16 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
     */
    private boolean isItemExist(List<Item> items, String name)
    {
-      for (Item item : items)
-      {
-         if (item.getPath().endsWith("/" + name))
-         {
-            return true;
-         }
-      }
       return false;
+//      TODO
+//      for (Item item : items)
+//      {
+//         if (item.getPath().endsWith("/" + name))
+//         {
+//            return true;
+//         }
+//      }
+//      return false;
    }
 
    private void setItems(TreeNode parentNode, List<Item> children)

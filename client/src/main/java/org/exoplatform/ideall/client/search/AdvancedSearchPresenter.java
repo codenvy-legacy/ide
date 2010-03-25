@@ -173,24 +173,25 @@ public class AdvancedSearchPresenter
 
    private void getPathValue()
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      
-      //if file was selected then delete it's name from path
-      if (item instanceof File)
-      {
-         String filePath = item.getPath();
-         String fileName = ((File)item).getName();
-         int index = filePath.lastIndexOf(fileName);
-         if (index > 0)
-         {
-            // remove file's name plus delimiter before it
-            path = filePath.substring(0, index - 1);
-         }
-      }
-      else
-      {
-         path = item.getPath();
-      }
+      //TODO
+//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//      
+//      //if file was selected then delete it's name from path
+//      if (item instanceof File)
+//      {
+//         String filePath = item.getPath();
+//         String fileName = ((File)item).getName();
+//         int index = filePath.lastIndexOf(fileName);
+//         if (index > 0)
+//         {
+//            // remove file's name plus delimiter before it
+//            path = filePath.substring(0, index - 1);
+//         }
+//      }
+//      else
+//      {
+//         path = item.getPath();
+//      }
    }
 
 }

@@ -67,16 +67,17 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
 
    protected void saveNextUnsavedFile()
    {
-      for (File file : context.getOpenedFiles().values())
-      {
-         if (!file.isNewFile() && file.isContentChanged())
-         {
-            VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
-            return;
-         }
-      }
-
-      handlers.removeHandlers();
+//      TODO
+//      for (File file : context.getOpenedFiles().values())
+//      {
+//         if (!file.isNewFile() && file.isContentChanged())
+//         {
+//            VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
+//            return;
+//         }
+//      }
+//
+//      handlers.removeHandlers();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)

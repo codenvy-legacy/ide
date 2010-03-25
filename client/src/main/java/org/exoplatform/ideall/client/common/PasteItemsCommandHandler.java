@@ -92,29 +92,30 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
    
    private void copyNextItem()
    {
-      if (context.getItemsToCopy().size() == 0)
-      {
-         operationCompleted();
-         return;
-      }
-
-      Item item = context.getItemsToCopy().get(0);
-
-      String pathFromCopy = item.getPath();
-      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
-
-      String pathToCopy = getPathToPaste(context.getSelectedItems().get(0));
-
-      if (pathFromCopy.equals(pathToCopy))
-      {
-         String message = "Can't copy files in the same directory!";
-         Dialogs.getInstance().showError(message);
-         return;
-      }
-
-      String destination = pathToCopy + "/" + item.getName();
-
-      VirtualFileSystem.getInstance().copy(item, destination);
+//      TODO
+//      if (context.getItemsToCopy().size() == 0)
+//      {
+//         operationCompleted();
+//         return;
+//      }
+//
+//      Item item = context.getItemsToCopy().get(0);
+//
+//      String pathFromCopy = item.getPath();
+//      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
+//
+//      String pathToCopy = getPathToPaste(context.getSelectedItems().get(0));
+//
+//      if (pathFromCopy.equals(pathToCopy))
+//      {
+//         String message = "Can't copy files in the same directory!";
+//         Dialogs.getInstance().showError(message);
+//         return;
+//      }
+//
+//      String destination = pathToCopy + "/" + item.getName();
+//
+//      VirtualFileSystem.getInstance().copy(item, destination);
    }
    
    public void onCopyComplete(CopyCompleteEvent event)
@@ -158,14 +159,16 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
    
    private String getPathToPaste(Item item)
    {
-      if (context.getSelectedItems().get(0) instanceof File)
-      {
-         String path = ((File)context.getSelectedItems().get(0)).getPath();
-         return path.substring(0, path.lastIndexOf("/"));
-      }
-
-      return context.getSelectedItems().get(0).getPath();
-
+//      TODO
+//      if (context.getSelectedItems().get(0) instanceof File)
+//      {
+//         String path = ((File)context.getSelectedItems().get(0)).getPath();
+//         return path.substring(0, path.lastIndexOf("/"));
+//      }
+//
+//      return context.getSelectedItems().get(0).getPath();
+//
+      return null;
    }
 
 
@@ -203,53 +206,54 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 //      }
       
       
-      
-      
-      
-      
-      
 
-      Item item = context.getItemsToCut().get(0);
-
-      String pathFromCut = item.getPath();
-      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
-
-      String pathToCut = getPathToPaste(context.getSelectedItems().get(0));
-      if (pathFromCut.equals(pathToCut))
-      {
-         String message = "Can't move files in the same directory!";
-         Dialogs.getInstance().showError(message);
-         return;
-      }
-
-      String destination = pathToCut + "/" + item.getName();
-
-      VirtualFileSystem.getInstance().move(item, destination);
+//      TODO
+//
+//      Item item = context.getItemsToCut().get(0);
+//
+//      String pathFromCut = item.getPath();
+//      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
+//
+//      String pathToCut = getPathToPaste(context.getSelectedItems().get(0));
+//      if (pathFromCut.equals(pathToCut))
+//      {
+//         String message = "Can't move files in the same directory!";
+//         Dialogs.getInstance().showError(message);
+//         return;
+//      }
+//
+//      String destination = pathToCut + "/" + item.getName();
+//
+//      VirtualFileSystem.getInstance().move(item, destination);
    }
    
    
 
    private boolean isFilesChanged(List<Item> items)
    {
-      boolean fileChanged = false;
-      fileToSaveContent.clear();
-      for (Item i : items)
-      {
-         if (i instanceof File)
-         {
-            File file = (File)i;
-            if (context.getOpenedFiles().get(file.getPath()) != null)
-            {
-               if (context.getOpenedFiles().get(file.getPath()).isContentChanged())
-               {
-                  fileToSaveContent.add(context.getOpenedFiles().get(file.getPath()));
-                  fileChanged = true;
-               }
-            }
-         }
-      }
-
-      return fileChanged;
+      return false;
+      
+//      TODO
+//      boolean fileChanged = false;
+//      fileToSaveContent.clear();
+//      for (Item i : items)
+//      {
+//         if (i instanceof File)
+//         {
+//            File file = (File)i;
+//            if (context.getOpenedFiles().get(file.getPath()) != null)
+//            {
+//               if (context.getOpenedFiles().get(file.getPath()).isContentChanged())
+//               {
+//                  fileToSaveContent.add(context.getOpenedFiles().get(file.getPath()));
+//                  fileChanged = true;
+//               }
+//            }
+//         }
+//      }
+//
+//      return fileChanged;
+      
    }
 
 

@@ -188,23 +188,24 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
     */
    public void changeActiveFile(File file)
    {
-      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
-      if (propertiesTab != null)
-      {
-         propertiesForm.refreshProperties(file);
-      }
-
-      Tab previewTab = tabSet.getTab(previewForm.getId());
-      if (previewTab != null)
-      {
-         previewForm.showPreview(file.getPath());
-      }
-      
-      Tab gadgetPreviewTab = tabSet.getTab(GadgetPreviewPane.ID);
-      if (gadgetPreviewTab != null)
-      {
-         tabSet.removeTab(GadgetPreviewPane.ID);
-      }
+//      TODO
+//      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
+//      if (propertiesTab != null)
+//      {
+//         propertiesForm.refreshProperties(file);
+//      }
+//
+//      Tab previewTab = tabSet.getTab(previewForm.getId());
+//      if (previewTab != null)
+//      {
+//         previewForm.showPreview(file.getPath());
+//      }
+//      
+//      Tab gadgetPreviewTab = tabSet.getTab(GadgetPreviewPane.ID);
+//      if (gadgetPreviewTab != null)
+//      {
+//         tabSet.removeTab(GadgetPreviewPane.ID);
+//      }
    }
    
    public void closeGadgetPreviewTab() {

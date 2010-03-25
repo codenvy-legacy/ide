@@ -49,28 +49,29 @@ public class StatusBarPresenter implements SelectedItemsHandler
 
    public void onItemsSelected(SelectedItemsEvent event)
    {    
-      String statusMessage = null;
-
-      if (event.getSelectedItems().size() == 1)
-      {
-         Item item = event.getSelectedItems().get(0);
-         statusMessage = item.getPath();
-//         if (item instanceof File)
-//         {
-//            statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
-//         }
-
-      }
-      else if (event.getSelectedItems().size() == 0)
-      {
-         statusMessage = "No items selected!";
-      }
-      else
-      {
-         statusMessage = "Selected: <b>" + event.getSelectedItems().size() + "</b> items";
-      }
-
-      display.getPathInfoField().setValue(statusMessage);
+//      TODO
+//      String statusMessage = null;
+//
+//      if (event.getSelectedItems().size() == 1)
+//      {
+//         Item item = event.getSelectedItems().get(0);
+//         statusMessage = item.getPath();
+////         if (item instanceof File)
+////         {
+////            statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
+////         }
+//
+//      }
+//      else if (event.getSelectedItems().size() == 0)
+//      {
+//         statusMessage = "No items selected!";
+//      }
+//      else
+//      {
+//         statusMessage = "Selected: <b>" + event.getSelectedItems().size() + "</b> items";
+//      }
+//
+//      display.getPathInfoField().setValue(statusMessage);
    }
 
 }

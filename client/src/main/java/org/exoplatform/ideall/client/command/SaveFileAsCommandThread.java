@@ -71,78 +71,82 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private void onSaveAsFile(final File file)
    {
-      String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
-
-      new AskForValueDialog("Save file as...", "Enter new file name:", newFileName, 400, new ValueCallback()
-      {
-         public void execute(String value)
-         {
-            if (value == null)
-            {
-               handlers.removeHandlers();
-               return;
-            }
-
-            String pathToSave =
-               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + "/" + value;
-
-            File newFile = new File(file.getPath());
-            newFile.setContent(file.getContent());
-            newFile.setContentType(file.getContentType());
-            newFile.setJcrContentNodeType(file.getJcrContentNodeType());
-            newFile.setNewFile(true);
-            if (file.isNewFile())
-            {
-            }
-            else
-            {
-               newFile.getProperties().addAll(file.getProperties());
-               newFile.setPropertiesChanged(true);
-            }
-            newFile.setIcon(file.getIcon());
-            VirtualFileSystem.getInstance().saveFileContent(newFile, pathToSave);
-         }
-
-      });
-
+//      TODO
+//      String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
+//
+//      new AskForValueDialog("Save file as...", "Enter new file name:", newFileName, 400, new ValueCallback()
+//      {
+//         public void execute(String value)
+//         {
+//            if (value == null)
+//            {
+//               handlers.removeHandlers();
+//               return;
+//            }
+//
+//            String pathToSave =
+//               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + "/" + value;
+//
+//            File newFile = new File(file.getPath());
+//            newFile.setContent(file.getContent());
+//            newFile.setContentType(file.getContentType());
+//            newFile.setJcrContentNodeType(file.getJcrContentNodeType());
+//            newFile.setNewFile(true);
+//            if (file.isNewFile())
+//            {
+//            }
+//            else
+//            {
+//               newFile.getProperties().addAll(file.getProperties());
+//               newFile.setPropertiesChanged(true);
+//            }
+//            newFile.setIcon(file.getIcon());
+//            VirtualFileSystem.getInstance().saveFileContent(newFile, pathToSave);
+//         }
+//
+//      });
+//
    }
 
    private String getFilePath(Item item)
    {
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/"));
-      }
-      return path;
+//      TODO
+//      String path = item.getPath();
+//      if (item instanceof File)
+//      {
+//         path = path.substring(0, path.lastIndexOf("/"));
+//      }
+//      return path;
+      return null;
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (event.isNewFile())
-      {
-         handlers.removeHandlers();
-         VirtualFileSystem.getInstance().getProperties(event.getFile());
-      }
-      else
-      {
-         if (event.isSaveAs())
-         {
-            event.getFile().setPath(event.getPath());
-            VirtualFileSystem.getInstance().saveProperties(event.getFile());
-         }
-         else
-         {
-            if (event.getFile().isPropertiesChanged())
-            {
-               VirtualFileSystem.getInstance().saveProperties(event.getFile());
-            }
-            else
-            {
-               handlers.removeHandlers();
-            }
-         }
-      }
+//      TODO
+//      if (event.isNewFile())
+//      {
+//         handlers.removeHandlers();
+//         VirtualFileSystem.getInstance().getProperties(event.getFile());
+//      }
+//      else
+//      {
+//         if (event.isSaveAs())
+//         {
+//            event.getFile().setPath(event.getPath());
+//            VirtualFileSystem.getInstance().saveProperties(event.getFile());
+//         }
+//         else
+//         {
+//            if (event.getFile().isPropertiesChanged())
+//            {
+//               VirtualFileSystem.getInstance().saveProperties(event.getFile());
+//            }
+//            else
+//            {
+//               handlers.removeHandlers();
+//            }
+//         }
+//      }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)

@@ -49,30 +49,31 @@ public class MultipleSelectionItemsCommand extends IDECommand implements PanelSe
 
    public boolean isItemsInSameFolderOrNotSelectedWorspace(List<Item> items)
    {
-      List<String> paths = new ArrayList<String>();
-      for (Item i : items)
-      {
-         if(i instanceof Workspace)
-         {
-            return false;
-         }
-         String p = i.getPath();
-         p = p.substring(0, p.lastIndexOf("/"));
-         paths.add(p);
-
-      }
-
-      for (int i = 0; i < paths.size(); i++)
-      {
-         String path = paths.get(i);
-         for (int j = i + 1; j < paths.size(); j++)
-         {
-            if (!path.equals(paths.get(j)))
-            {
-               return false;
-            }
-         }
-      }
+//      TODO
+//      List<String> paths = new ArrayList<String>();
+//      for (Item i : items)
+//      {
+//         if(i instanceof Workspace)
+//         {
+//            return false;
+//         }
+//         String p = i.getPath();
+//         p = p.substring(0, p.lastIndexOf("/"));
+//         paths.add(p);
+//
+//      }
+//
+//      for (int i = 0; i < paths.size(); i++)
+//      {
+//         String path = paths.get(i);
+//         for (int j = i + 1; j < paths.size(); j++)
+//         {
+//            if (!path.equals(paths.get(j)))
+//            {
+//               return false;
+//            }
+//         }
+//      }
 
       return true;
    }
