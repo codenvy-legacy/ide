@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
@@ -33,6 +34,7 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
+import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -254,23 +256,19 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    private void switchWorkspace()
    {
-//      TODO
-//      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
-//
-//      Workspace workspace = new Workspace(path);
-//      workspace.setIcon(Images.FileTypes.WORKSPACE);
-//      
-//      selectedItems.clear();
-//      selectedItems.add(workspace);
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(workspace);
-//      
-//      display.getBrowserTree().setValue(workspace);
-//
-//      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
-//
-//      VirtualFileSystem.getInstance().getChildren(workspace);
+      Folder rootFolder = new Folder(context.getEntryPoint());
+      rootFolder.setIcon(Images.FileTypes.WORKSPACE);
       
+      selectedItems.clear();
+      selectedItems.add(rootFolder);
+      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+      context.getSelectedItems(context.getSelectedNavigationPanel()).add(rootFolder);
+      
+      display.getBrowserTree().setValue(rootFolder);
+
+      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+
+      //VirtualFileSystem.getInstance().getChildren(workspace);      
    }
 
    /**

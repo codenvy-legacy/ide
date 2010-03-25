@@ -39,4 +39,5 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
    {
       return TYPE;
    }
+   
 }
