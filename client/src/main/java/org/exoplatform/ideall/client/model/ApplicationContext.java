@@ -70,15 +70,7 @@ public class ApplicationContext
     */
    private TemplateList templateList;
 
-   /**
-    * Selected Repository
-    */
-   private String repository;
-
-   /**
-    * Selected Workspace
-    */
-   private String workspace;
+   private String entryPoint;
 
    /**
     * Configuration of Repository Service
@@ -198,13 +190,13 @@ public class ApplicationContext
       return openedEditors;
    }
 
-//   /**
-//    * @return the selectedItems
-//    */
-//   public HashMap<String, List<Item>> getSelectedItems()
-//   {
-//      return selectedItems;
-//   }
+   //   /**
+   //    * @return the selectedItems
+   //    */
+   //   public HashMap<String, List<Item>> getSelectedItems()
+   //   {
+   //      return selectedItems;
+   //   }
 
    /**
     * @return the selectedItems
@@ -212,14 +204,15 @@ public class ApplicationContext
    public List<Item> getSelectedItems(String navigationPanelName)
    {
       List<Item> items = selectedItems.get(navigationPanelName);
-      if (items == null) {
+      if (items == null)
+      {
          items = new ArrayList<Item>();
          selectedItems.put(navigationPanelName, items);
       }
-      
+
       return items;
    }
-   
+
    public String getSelectedNavigationPanel()
    {
       return selectedNavigationPanel;
@@ -246,36 +239,14 @@ public class ApplicationContext
       this.templateList = templateList;
    }
 
-   /**
-    * @return the repository
-    */
-   public String getRepository()
+   public String getEntryPoint()
    {
-      return repository;
+      return entryPoint;
    }
 
-   /**
-    * @param repository the repository to set
-    */
-   public void setRepository(String repository)
+   public void setEntryPoint(String entryPoint)
    {
-      this.repository = repository;
-   }
-
-   /**
-    * @return the workspace
-    */
-   public String getWorkspace()
-   {
-      return workspace;
-   }
-
-   /**
-    * @param workspace the workspace to set
-    */
-   public void setWorkspace(String workspace)
-   {
-      this.workspace = workspace;
+      this.entryPoint = entryPoint;
    }
 
    /**

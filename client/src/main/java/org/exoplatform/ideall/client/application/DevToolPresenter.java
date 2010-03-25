@@ -20,12 +20,9 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
-import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
@@ -162,17 +159,11 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    public void onApplicationContextReceived(ApplicationContextReceivedEvent event)
    {
       CookieManager.getApplicationState(context);
+
+      if (context.getEntryPoint() == null) {
+         context.setEntryPoint(Configuration.getInstance().getDefaultEntryPoint());
+      }
       
-      if (context.getRepository() == null)
-      {
-         context.setRepository(Configuration.getInstance().getDefaultRepositoryName());
-      }
-
-      if (context.getWorkspace() == null)
-      {
-         context.setWorkspace(Configuration.getInstance().getDefaultWorkspaceName());
-      }
-
 //      context.getToolBarItems().clear();
 //      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
 

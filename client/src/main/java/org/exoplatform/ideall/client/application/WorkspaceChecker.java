@@ -58,16 +58,16 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
-      Workspace workspace = new Workspace(path);
-      VirtualFileSystem.getInstance().getProperties(workspace);
+//      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
+//      Workspace workspace = new Workspace(path);
+//      VirtualFileSystem.getInstance().getProperties(workspace);
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      handlers.removeHandlers();
-      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      Dialogs.getInstance().showError("Workspace <b>" + context.getRepository() + "/" + context.getWorkspace() + "</b> not found!");
+//      handlers.removeHandlers();
+//      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+//      Dialogs.getInstance().showError("Workspace <b>" + context.getRepository() + "/" + context.getWorkspace() + "</b> not found!");
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)

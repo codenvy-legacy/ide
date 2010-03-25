@@ -41,7 +41,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    private final static String CONTEXT = "context";
 
    private final static String ENTRY_POINT = "entryPoint";
-   
+
    private final static String GADGET_SERVER = "gadgetServer";
 
    private final static String PUBLIC_CONTEXT = "publicContext";
@@ -49,12 +49,6 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    public static final String UPLOAD_SERVICE_CONTEXT = "/services/loopbackcontent";
 
    private String defaultEntryPoint;
-   
-   
-   
-   private String defaultWorkspaceName;
-
-   private String defaultRepositoryName;
 
    private String context;
 
@@ -111,7 +105,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          sendErrorMessage(PUBLIC_CONTEXT);
          return;
       }
-      
+
       if (config.containsKey(ENTRY_POINT))
          defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
       else
@@ -135,43 +129,16 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    }
 
    /**
-    * @return the defaultWorkspaceName
-    */
-   public String getDefaultWorkspaceName()
-   {
-      return defaultWorkspaceName;
-   }
-
-   /**
-    * @param defaultWorkspaceName the defaultWorkspaceName to set
-    */
-   public void setDefaultWorkspaceName(String defaultWorkspaceName)
-   {
-      this.defaultWorkspaceName = defaultWorkspaceName;
-   }
-
-   /**
-    * @return the defaultRepositoryName
-    */
-   public String getDefaultRepositoryName()
-   {
-      return defaultRepositoryName;
-   }
-
-   /**
-    * @param defaultRepositoryName the defaultRepositoryName to set
-    */
-   public void setDefaultRepositoryName(String defaultRepositoryName)
-   {
-      this.defaultRepositoryName = defaultRepositoryName;
-   }
-
-   /**
     * @return the context
     */
    public String getContext()
    {
       return context;
+   }
+
+   public String getDefaultEntryPoint()
+   {
+      return defaultEntryPoint;
    }
 
    /**
@@ -248,9 +215,9 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       String m = "Invalid configuration missing : " + message + " item";
       eventBus.fireEvent(new InvalidConfigurationRecievedEvent(m));
    }
-   
+
    public static native String getRegistryURL() /*-{
-      return $wnd.registryURL;
-   }-*/;   
+        return $wnd.registryURL;
+     }-*/;
 
 }

@@ -30,30 +30,16 @@ public class SwitchWorkspaceEvent extends GwtEvent<SwitchWorkspaceHandler>
 
    public static final GwtEvent.Type<SwitchWorkspaceHandler> TYPE = new GwtEvent.Type<SwitchWorkspaceHandler>();
 
-   private String repository;
+   private String href;
 
-   private String workspace;
-
-   public SwitchWorkspaceEvent(String repository, String workspace)
+   public SwitchWorkspaceEvent(String href)
    {
-      this.repository = repository;
-      this.workspace = workspace;
+      this.href = href;
    }
 
-   /**
-    * @return the repository
-    */
-   public String getRepository()
+   public String getHref()
    {
-      return repository;
-   }
-
-   /**
-    * @return the workspace
-    */
-   public String getWorkspace()
-   {
-      return workspace;
+      return href;
    }
 
    @Override

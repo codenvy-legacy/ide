@@ -262,21 +262,23 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    private void switchWorkspace()
    {
-      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
-
-      Workspace workspace = new Workspace(path);
-      workspace.setIcon(Images.FileTypes.WORKSPACE);
+//      TODO
+//      String path = "/" + context.getRepository() + "/" + context.getWorkspace();
+//
+//      Workspace workspace = new Workspace(path);
+//      workspace.setIcon(Images.FileTypes.WORKSPACE);
+//      
+//      selectedItems.clear();
+//      selectedItems.add(workspace);
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(workspace);
+//      
+//      display.getBrowserTree().setValue(workspace);
+//
+//      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+//
+//      VirtualFileSystem.getInstance().getChildren(workspace);
       
-      selectedItems.clear();
-      selectedItems.add(workspace);
-      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-      context.getSelectedItems(context.getSelectedNavigationPanel()).add(workspace);
-      
-      display.getBrowserTree().setValue(workspace);
-
-      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
-
-      VirtualFileSystem.getInstance().getChildren(workspace);
    }
 
    /**
@@ -286,11 +288,13 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onSwitchWorkspace(SwitchWorkspaceEvent event)
    {
-      context.setRepository(event.getRepository());
-      context.setWorkspace(event.getWorkspace());
 
-      CookieManager.storeRepository(event.getRepository());
-      CookieManager.storeWorkspace(event.getWorkspace());
+//      TODO
+//      context.setRepository(event.getRepository());
+//      context.setWorkspace(event.getWorkspace());
+//
+//      CookieManager.storeRepository(event.getRepository());
+//      CookieManager.storeWorkspace(event.getWorkspace());
 
       switchWorkspace();
    }
