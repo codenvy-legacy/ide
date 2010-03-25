@@ -106,7 +106,6 @@ public class CookieManager
     */
    private static void storeActiveFile(File file)
    {
-      //      TODO
       if (file == null)
       {
          Cookies.removeCookie(Cookie.ACTIVE_FILE);
