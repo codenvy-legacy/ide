@@ -19,12 +19,10 @@
  */
 package org.exoplatform.ideall.client.model.template.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.client.model.util.TextUtils;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.xml.client.Document;
@@ -51,6 +49,10 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       this.templateList = templateList;
       this.eventBus = eventBus;
    }
+   
+   public static native String javaScriptDecodeURIComponent(String text) /*-{
+      return decodeURIComponent(text);
+   }-*/;   
 
    public void unmarshal(String body) throws UnmarshallerException
    {
@@ -81,14 +83,13 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       Node node = getChildNode(templateNode, TEMPLATE);
 
       Node descriptionNode = getChildNode(node, DESCRIPTION);
-      String description =
-         TextUtils.javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
+      String description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
 
       Node mimeTypeNode = getChildNode(node, MIME_TYPE);
-      String mimeType = TextUtils.javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());
+      String mimeType = javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());
 
       Node contentNode = getChildNode(node, CONTENT);
-      String content = TextUtils.javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
+      String content = javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
 
       Template template = new Template(mimeType, name, description, content);
       templateList.getTemplates().add(template);

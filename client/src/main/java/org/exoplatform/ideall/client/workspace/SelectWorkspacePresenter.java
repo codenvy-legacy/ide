@@ -19,8 +19,6 @@ package org.exoplatform.ideall.client.workspace;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.ApplicationInitializer;
-import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.jcrservice.RepositoryService;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Repository;
@@ -28,7 +26,6 @@ import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConf
 import org.exoplatform.ideall.client.model.jcrservice.bean.Workspace;
 import org.exoplatform.ideall.client.model.jcrservice.event.RepositoryConfigurationReceivedEvent;
 import org.exoplatform.ideall.client.model.jcrservice.event.RepositoryConfigurationReceivedHandler;
-import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -164,46 +161,47 @@ public class SelectWorkspacePresenter implements RepositoryConfigurationReceived
 
    protected void selectWorkspace()
    {
-      if (selectedItem == null)
-      {
-         return;
-      }
-
-      if (!(selectedItem.getEntry() instanceof Workspace))
-      {
-         return;
-      }
-
-      for (Repository repository : context.getRepositoryServiceConfiguration().getRepositories())
-      {
-         for (Workspace workspace : repository.getWorkspaces())
-         {
-            if (workspace == (Workspace)selectedItem.getEntry())
-            {
-               display.closeForm();
-
-               if (context.isInitialized())
-               {
-                  eventBus.fireEvent(new SwitchWorkspaceEvent(repository.getName(), workspace.getName()));
-               }
-               else
-               {
-                  context.getPreloadFiles().clear();
-                  //context.setSelectedItem(null);
-                  context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-                  context.setRepository(repository.getName());
-                  context.setWorkspace(workspace.getName());
-
-                  CookieManager.storeRepository(repository.getName());
-                  CookieManager.storeWorkspace(workspace.getName());
-
-                  new ApplicationInitializer(eventBus, context);
-               }
-
-               return;
-            }
-         }
-      }
+//      TODO
+//      if (selectedItem == null)
+//      {
+//         return;
+//      }
+//
+//      if (!(selectedItem.getEntry() instanceof Workspace))
+//      {
+//         return;
+//      }
+//
+//      for (Repository repository : context.getRepositoryServiceConfiguration().getRepositories())
+//      {
+//         for (Workspace workspace : repository.getWorkspaces())
+//         {
+//            if (workspace == (Workspace)selectedItem.getEntry())
+//            {
+//               display.closeForm();
+//
+//               if (context.isInitialized())
+//               {
+//                  eventBus.fireEvent(new SwitchWorkspaceEvent(repository.getName(), workspace.getName()));
+//               }
+//               else
+//               {
+//                  context.getPreloadFiles().clear();
+//                  //context.setSelectedItem(null);
+//                  context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//                  context.setRepository(repository.getName());
+//                  context.setWorkspace(workspace.getName());
+//
+//                  CookieManager.storeRepository(repository.getName());
+//                  CookieManager.storeWorkspace(workspace.getName());
+//
+//                  new ApplicationInitializer(eventBus, context);
+//               }
+//
+//               return;
+//            }
+//         }
+//      }
    }
 
    public void onRepositoryConfigurationReceived(RepositoryConfigurationReceivedEvent event)

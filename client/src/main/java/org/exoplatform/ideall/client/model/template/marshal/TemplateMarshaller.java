@@ -21,7 +21,6 @@ package org.exoplatform.ideall.client.model.template.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.model.util.TextUtils;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,14 +38,18 @@ public class TemplateMarshaller implements Marshallable, Const
    {
       this.template = template;
    }
+   
+   public static native String javaScriptEncodeURIComponent(String text) /*-{
+      return encodeURIComponent(text);
+   }-*/;   
 
    public String marshal()
    {
       String xml = "<" + TEMPLATE + ">";
 
-      xml += "<" + DESCRIPTION + ">" + TextUtils.javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
-      xml += "<" + MIME_TYPE + ">" + TextUtils.javaScriptEncodeURIComponent(template.getMimeType()) + "</" + MIME_TYPE + ">";
-      xml += "<" + CONTENT + ">" + TextUtils.javaScriptEncodeURIComponent(template.getContent()) + "</" + CONTENT + ">";
+      xml += "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
+      xml += "<" + MIME_TYPE + ">" + javaScriptEncodeURIComponent(template.getMimeType()) + "</" + MIME_TYPE + ">";
+      xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(template.getContent()) + "</" + CONTENT + ">";
 
       xml += "</" + TEMPLATE + ">";
 
