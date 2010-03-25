@@ -24,8 +24,8 @@ import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsComman
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.model.jcrservice.bean.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
@@ -112,15 +112,15 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
          setEnabled(false);
          return;
       }
-
-      if (selectedItem instanceof Workspace)
-      {
-         setEnabled(false);
-      }
-      else
-      {
-         setEnabled(true);
-      }
+      //TODO 
+//      if (selectedItem instanceof Workspace)
+//      {
+//         setEnabled(false);
+//      }
+//      else
+//      {
+//         setEnabled(true);
+//      }
    }
 
 }

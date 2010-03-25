@@ -18,33 +18,26 @@
 package org.exoplatform.ideall.client.browser;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
-import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
@@ -55,9 +48,8 @@ import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
-import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent;
-import org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -77,7 +69,7 @@ import com.google.gwt.user.client.Timer;
  * @version $Id: $
 */
 public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler,
-   RefreshBrowserHandler, ChildrenReceivedHandler, MoveCompleteHandler, SwitchWorkspaceHandler,
+   RefreshBrowserHandler, ChildrenReceivedHandler, MoveCompleteHandler, SwitchEntryPointHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler, PanelSelectedHandler
 {
 
@@ -284,9 +276,9 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    /**
     * Switching active workspace by Switch Workspace Event
     * 
-    * @see org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceHandler#onSwitchWorkspace(org.exoplatform.ideall.client.workspace.event.SwitchWorkspaceEvent)
+    * @see org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler#onSwitchEntryPoint(org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent)
     */
-   public void onSwitchWorkspace(SwitchWorkspaceEvent event)
+   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
 
 //      TODO
@@ -422,7 +414,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
-      handlers.addHandler(SwitchWorkspaceEvent.TYPE, this);
+      handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
 
       handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
 

@@ -26,7 +26,6 @@ import org.exoplatform.ideall.client.event.file.MoveItemEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.api.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
@@ -106,15 +105,15 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
          setEnabled(false);
          return;
       }
-
-      if (selectedItem instanceof Workspace)
-      {
-         setEnabled(false);
-      }
-      else
-      {
-         setEnabled(true);
-      }
+//TODO
+//      if (selectedItem instanceof Workspace)
+//      {
+//         setEnabled(false);
+//      }
+//      else
+//      {
+//         setEnabled(true);
+//      }
    }
 
    public void onPanelSelected(PanelSelectedEvent event)
