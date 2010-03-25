@@ -154,16 +154,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onCreateFolder(CreateFolderEvent event)
    {
-//      TODO
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/"));
-//      }
-//
-//      new CreateFolderForm(eventBus, path);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+      String href = item.getHref();
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/"));
+      }
+
+      new CreateFolderForm(eventBus, href);
    }
 
    public void onDeleteItem(DeleteItemEvent event)

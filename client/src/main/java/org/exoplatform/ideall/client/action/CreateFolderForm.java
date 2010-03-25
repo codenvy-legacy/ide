@@ -59,7 +59,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
    private CreateFolderPresenter presenter;
 
-   public CreateFolderForm(HandlerManager eventBus, String path)
+   public CreateFolderForm(HandlerManager eventBus, String href)
    {
       super(eventBus, WIDTH, HEIGHT);
       setTitle("Create folder");
@@ -72,7 +72,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
       show();
 
-      presenter = new CreateFolderPresenter(eventBus, path);
+      presenter = new CreateFolderPresenter(eventBus, href);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()

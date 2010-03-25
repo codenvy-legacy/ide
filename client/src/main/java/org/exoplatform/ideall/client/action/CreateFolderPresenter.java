@@ -61,15 +61,15 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    private HandlerManager eventBus;
 
-   private String path;
+   private String href;
 
    private Handlers handlers;
 
-   public CreateFolderPresenter(HandlerManager eventBus, String path)
+   public CreateFolderPresenter(HandlerManager eventBus, String href)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      this.path = path;
+      this.href = href;
    }
 
    public void bindDisplay(Display d)
@@ -115,8 +115,8 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    protected void createFolder()
    {
-      String newFolderPath = path + "/" + display.getFolderNameField().getValue();
-      Folder newFolder = new Folder(newFolderPath);
+      String newFolderHref = href + "/" + display.getFolderNameField().getValue();
+      Folder newFolder = new Folder(newFolderHref);
       VirtualFileSystem.getInstance().createFolder(newFolder);
    }
 
