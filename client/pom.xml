@@ -64,19 +64,20 @@
 			<artifactId>exo.gwtframework.ui</artifactId>
 			<version>${org.exoplatform.gwtframework.version}</version>
 		</dependency>
-
-		<!-- test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.1</version>
-			<scope>test</scope>
-		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>IDEall</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<outputDirectory>target/war/WEB-INF/classes</outputDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -452,5 +453,119 @@ source : ${source.url}
 				</plugins>
 			</build>
 		</profile>
+		
+<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+						
+			<dependencies>
+				<!--  test -->
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>4.1</version>
+				</dependency>		
+			
+			</dependencies>
+			
+			<build>
+			
+		        <resources>
+		          <resource>
+		            <directory>src/test/resources</directory>
+		          </resource>
+		          <resource>
+		            <directory>src/test/java</directory>
+		          </resource>
+		        </resources>			
+			
+			
+				<plugins>
+				
+				 
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webXml>target/web.xml</webXml>
+							<warSourceExcludes>.gwt-tmp/**,**/lib/**,**/gadget/**,**/application/**</warSourceExcludes>
+							<webResources>
+								<resource>
+									<directory>src/test/webapp/WEB-INF</directory>
+									<targetPath>WEB-INF</targetPath>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+					
+					
+					<!-- plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.3</version>
+						<executions>
+							<execution>
+								<id>copy-prod-resources</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>target/war/WEB-INF/</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/webapp/test</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>	
+					-->				
+					
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<version>1.1</version>
+						<configuration>
+							<module>org.exoplatform.ideall.IDEGwtTest</module>
+							<runTarget>org.exoplatform.ideall.IDEGwtTest/IDEGwtTest.html</runTarget>
+							<logLevel>INFO</logLevel>
+							<hostedWebapp>${basedir}/target/war</hostedWebapp>
+							<tomcat>${basedir}/target/tomcat</tomcat>
+							<skipTests>false</skipTests>
+							<webXml>${basedir}/src/test/webapp/WEB-INF/web.xml</webXml>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mergewebxml</goal>
+									<goal>compile</goal>
+									<goal>test</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<excludes>
+								<exclude>**/IDEGadget.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>					
+					
+				</plugins>
+			</build>
+		</profile>		
+		
+		
 	</profiles>
 </project>

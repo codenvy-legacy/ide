@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.util.TextUtils;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -105,19 +104,19 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       this.eventBus = eventbus;
    }
 
-   private String getURL(String path)
-   {
-      String url = Configuration.getInstance().getContext() + CONTEXT + path;
-      url = TextUtils.javaScriptEncodeURI(url);
-      return url;
-   }
+//   private String getURL(String path)
+//   {
+//      String url = Configuration.getInstance().getContext() + CONTEXT + path;
+//      url = TextUtils.javaScriptEncodeURI(url);
+//      return url;
+//   }
 
    @Override
    public void getFileContent(File file)
    {
       //      String url = Configuration.getInstance().getContext() + CONTEXT + file.getPath();
       //      url = TextUtils.javaScriptEncodeURI(url);
-      String url = getURL(file.getPath());
+      String url = TextUtils.javaScriptEncodeURI(file.getHref());
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
       FileContentReceivedEvent event = new FileContentReceivedEvent(file);
@@ -133,14 +132,16 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getChildren(Folder folder)
    {
-      String url = getURL(folder.getPath());
-      if (!url.endsWith("/"))
-      {
-         url += "/";
-      }
+      String url = TextUtils.javaScriptEncodeURI(folder.getHref());
+//      if (!url.endsWith("/"))
+//      {
+//         url += "/";
+//      }
+      
+      System.out.println("here!!!!!!!!!!");
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
-      FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(eventBus, folder);
+      FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
@@ -154,7 +155,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void createFolder(Folder folder)
    {
-      String url = getURL(folder.getPath());
+      String url = TextUtils.javaScriptEncodeURI(folder.getHref());
+      
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
@@ -168,7 +170,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void deleteItem(Item item)
    {
-      String url = getURL(item.getPath());
+      String url = TextUtils.javaScriptEncodeURI(item.getHref());
       ItemDeletedEvent event = new ItemDeletedEvent(item);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
@@ -186,14 +188,13 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void saveFileContent(File file, String path)
+   public void saveFileContent(File file)
    {
-      String url = getURL(path);
+      String url = TextUtils.javaScriptEncodeURI(file.getHref());
       boolean isNewFile = file.isNewFile();
-      boolean isSaveAs = !file.getPath().equals(path);
 
       FileContentMarshaller marshaller = new FileContentMarshaller(file);
-      FileContentSavedEvent event = new FileContentSavedEvent(file, path, isNewFile, isSaveAs);
+      FileContentSavedEvent event = new FileContentSavedEvent(file, isNewFile);
       FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
@@ -207,7 +208,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getProperties(Item item)
    {
-      String url = getURL(item.getPath());
+      String url = TextUtils.javaScriptEncodeURI(item.getHref());
 
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(eventBus, item);
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
@@ -224,7 +225,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void saveProperties(Item item)
    {
-      String url = getURL(item.getPath());
+      String url = TextUtils.javaScriptEncodeURI(item.getHref());
 
       ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
       ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
@@ -236,44 +237,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
    }
-
-//   @Override
-//   public void search(String content, String path)
-//   {
-//      String url = getURL(path);
-//
-//      SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(content);
-//      Folder folder = new Folder(path);
-//      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
-//      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-//
-//      Loader.getInstance().setMessage(Messages.SEARCH);
-//
-//      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-//         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
-//   }
-
-   /**
-    * @see org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem#advancedSearch(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-    */
-//   @Override
-//   public void search(String path, String contentText, String name, String contentType, String searchPath)
-//   {
-//      String url = getURL(path);
-//
-//      SearchRequestMarshaller requestMarshaller =
-//         new SearchRequestMarshaller(contentText, name, contentType, searchPath);
-//      Folder folder = new Folder(path);
-//      SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
-//      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-//
-//      Loader.getInstance().setMessage(Messages.SEARCH);
-//
-//      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-//         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
-//   }
+   
    @Override
    public void search(Folder folder, String text, String mimeType, String path) 
    {
@@ -290,17 +254,17 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
        HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
    }
-
+   
    @Override
    public void move(Item item, String destination)
    {
-      String url = getURL(item.getPath());
+      String url = TextUtils.javaScriptEncodeURI(item.getHref());
       String host = GWT.getModuleBaseURL();
 
       String destinationURL = host.substring(0, host.indexOf("//") + 2);
       host = host.substring(host.indexOf("//") + 2);
       destinationURL += host.substring(0, host.indexOf("/"));
-      destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
+      //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
       MoveCompleteEvent event = new MoveCompleteEvent(item, destination);
 
@@ -338,14 +302,13 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void copy(Item item, String destination)
    {
-
-      String url = getURL(item.getPath());
+      String url = TextUtils.javaScriptEncodeURI(item.getHref());
       String host = GWT.getModuleBaseURL();
 
       String destinationURL = host.substring(0, host.indexOf("//") + 2);
       host = host.substring(host.indexOf("//") + 2);
       destinationURL += host.substring(0, host.indexOf("/"));
-      destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
+      //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
 
       CopyCompleteEvent event = new CopyCompleteEvent(item, destination);

@@ -24,15 +24,12 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.property.ItemProperty;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,13 +41,10 @@ import com.google.gwt.event.shared.HandlerManager;
 public class FolderContentUnmarshaller implements Unmarshallable
 {
 
-   private HandlerManager eventBus;
-
    private Folder folder;
 
-   public FolderContentUnmarshaller(HandlerManager eventBus, Folder folder)
+   public FolderContentUnmarshaller(Folder folder)
    {
-      this.eventBus = eventBus;
       this.folder = folder;
    }
 
@@ -62,22 +56,26 @@ public class FolderContentUnmarshaller implements Unmarshallable
       }
       catch (Exception exc)
       {
-         String message = "Can't parse folder content at <b>" + folder.getPath() + "</b>!";
+         exc.printStackTrace();
+         
+         String message = "Can't parse folder content at <b>" + folder.getHref() + "</b>!";
          throw new UnmarshallerException(message);
       }
-      
+
    }
 
    private void parseFolderContent(String body)
    {
-      String context = Configuration.getInstance().getContext() + "/jcr";
-      if (context.endsWith("/"))
-      {
-         context = context.substring(0, context.length() - 1);
-      }
+//      String context = Configuration.getInstance().getContext() + "/jcr";
+//      if (context.endsWith("/"))
+//      {
+//         context = context.substring(0, context.length() - 1);
+//      }
 
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
 
+      System.out.println("parsing > " + body);
+      
       PropfindResponse response = PropfindResponse.parse(body);
 
       Resource resource = response.getResource();
@@ -90,29 +88,30 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
       for (Resource child : resource.getChildren())
       {
-         String path = child.getHref();
-         if (path.indexOf(context) >= 0)
-         {
-            path = path.substring(path.indexOf(context) + context.length());
-         }
-         else
-         {
-            continue;
-         }
-
-         if (path.endsWith("/"))
-         {
-            path = path.substring(0, path.length() - 1);
-         }
+         String href = child.getHref();
+//         String path = 
+//         if (path.indexOf(context) >= 0)
+//         {
+//            path = path.substring(path.indexOf(context) + context.length());
+//         }
+//         else
+//         {
+//            continue;
+//         }
+//
+//         if (path.endsWith("/"))
+//         {
+//            path = path.substring(0, path.length() - 1);
+//         }
 
          Item item;
          if (child.isCollection())
          {
-            item = new Folder(path);
+            item = new Folder(href);
          }
          else
          {
-            item = new File(path);
+            item = new File(href);
          }
 
          item.getProperties().clear();

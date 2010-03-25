@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,33 +32,27 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 public abstract class Item
 {
 
-   private String path;
+   private String href;
 
    private Collection<Property> properties = new ArrayList<Property>();
-   
+
    private boolean propertiesChanged = false;
 
    private String icon;
 
-   protected Item(String path)
+   protected Item(String href)
    {
-      this.path = path;
+      this.href = href;
    }
 
-   /**
-    * @return the path
-    */
-   public String getPath()
-   {
-      return path;
+   //TODO remove this method !!!
+   public String getPath() {
+      return null;
    }
-
-   /**
-    * @param path the path to set
-    */
-   public void setPath(String path)
+   
+   public String getHref()
    {
-      this.path = path;
+      return href;
    }
 
    /**
@@ -84,9 +79,19 @@ public abstract class Item
       return properties;
    }
    
+   public Property getProperty(QName propertyName) {
+      for (Property property : properties) {
+         if (propertyName.equals(property.getName())) {
+            return property;
+         }
+      }
+      
+      return null;
+   }
+
    public String getName()
    {
-      String name = path;
+      String name = href;
       if (name.endsWith("/"))
       {
          name = name.substring(0, name.length() - 1);
@@ -109,6 +114,6 @@ public abstract class Item
    public void setIcon(String icon)
    {
       this.icon = icon;
-   } 
-   
+   }
+
 }

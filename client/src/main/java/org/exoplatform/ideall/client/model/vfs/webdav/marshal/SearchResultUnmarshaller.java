@@ -64,7 +64,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
       }
       catch (Exception exc)
       {
-         String message = "Can't parse search result at <b>" + folder.getPath() + "</b>";
+         String message = "Can't parse search result at <b>" + folder.getHref() + "</b>";
          throw new UnmarshallerException(message);
       }
    }

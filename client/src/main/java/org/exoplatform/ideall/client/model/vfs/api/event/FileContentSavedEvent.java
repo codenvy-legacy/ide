@@ -34,18 +34,12 @@ public class FileContentSavedEvent extends GwtEvent<FileContentSavedHandler>
 
    private File file;
 
-   private String path;
-   
    private boolean isNewFile;
-   
-   private boolean isSaveAs;
 
-   public FileContentSavedEvent(File file, String path, boolean isNewFile, boolean isSaveAs)
+   public FileContentSavedEvent(File file, boolean isNewFile)
    {
       this.file = file;
-      this.path = path;
       this.isNewFile = isNewFile;
-      this.isSaveAs = isSaveAs;
    }
 
    /**
@@ -54,14 +48,6 @@ public class FileContentSavedEvent extends GwtEvent<FileContentSavedHandler>
    public File getFile()
    {
       return file;
-   }
-
-   /**
-    * @return the path
-    */
-   public String getPath()
-   {
-      return path;
    }
 
    @Override
@@ -84,12 +70,4 @@ public class FileContentSavedEvent extends GwtEvent<FileContentSavedHandler>
       return isNewFile;
    }
 
-   /**
-    * @return the isSaveAs
-    */
-   public boolean isSaveAs()
-   {
-      return isSaveAs;
-   }
-   
 }

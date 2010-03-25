@@ -40,16 +40,18 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private final static String CONTEXT = "context";
 
-   private final static String REPOSITORY = "repository";
-
-   private final static String WORKSPACE = "workspace";
-
+   private final static String ENTRY_POINT = "entryPoint";
+   
    private final static String GADGET_SERVER = "gadgetServer";
 
    private final static String PUBLIC_CONTEXT = "publicContext";
 
    public static final String UPLOAD_SERVICE_CONTEXT = "/services/loopbackcontent";
 
+   private String defaultEntryPoint;
+   
+   
+   
    private String defaultWorkspaceName;
 
    private String defaultRepositoryName;
@@ -109,20 +111,12 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          sendErrorMessage(PUBLIC_CONTEXT);
          return;
       }
-
-      if (config.containsKey(WORKSPACE))
-         defaultWorkspaceName = config.get(Configuration.WORKSPACE).isString().stringValue();
+      
+      if (config.containsKey(ENTRY_POINT))
+         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
       else
       {
-         sendErrorMessage(WORKSPACE);
-         return;
-      }
-
-      if (config.containsKey(REPOSITORY))
-         defaultRepositoryName = config.get(Configuration.REPOSITORY).isString().stringValue();
-      else
-      {
-         sendErrorMessage(REPOSITORY);
+         sendErrorMessage(ENTRY_POINT);
          return;
       }
 

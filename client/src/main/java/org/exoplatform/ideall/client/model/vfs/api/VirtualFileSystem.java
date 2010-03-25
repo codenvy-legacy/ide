@@ -44,7 +44,7 @@ public abstract class VirtualFileSystem
     * @param file
     * @param path
     */
-   public abstract void saveFileContent(File file, String path);
+   public abstract void saveFileContent(File file);
 
    /**
     * Delete file or folder
