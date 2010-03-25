@@ -75,16 +75,16 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler,
-   RefreshBrowserHandler, ChildrenReceivedHandler, MoveCompleteHandler, SwitchEntryPointHandler,
-   RegisterEventHandlersHandler, InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler, PanelSelectedHandler
+public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler, RefreshBrowserHandler,
+   ChildrenReceivedHandler, MoveCompleteHandler, SwitchEntryPointHandler, RegisterEventHandlersHandler,
+   InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler, PanelSelectedHandler
 {
 
    interface Display
    {
 
       TreeGridItem<Item> getBrowserTree();
-      
+
       List<Item> getSelectedItems();
 
       void selectItem(String path);
@@ -160,7 +160,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
          VirtualFileSystem.getInstance().getChildren(openedFolder);
       }
    }
-   
+
    /**
     * 
     * Handling item selected event from browser
@@ -171,25 +171,27 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       updateSelectionTimer.cancel();
       updateSelectionTimer.schedule(10);
    }
-   
-   private Timer updateSelectionTimer = new Timer() {
+
+   private Timer updateSelectionTimer = new Timer()
+   {
 
       @Override
       public void run()
       {
          selectedItems = display.getSelectedItems();
-         
+
          System.out.println("selected items: " + selectedItems.size());
-         for (Item i : selectedItems) {
+         for (Item i : selectedItems)
+         {
             System.out.println(">> " + i.getHref());
          }
-         
+
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-         
+
          eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
       }
-      
+
    };
 
    /**
@@ -203,7 +205,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       }
 
       Item item = selectedItems.get(0);
-      
+
       if (item instanceof File)
       {
          context.setSelectedEditorDescription(null);
@@ -242,16 +244,16 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-//      TODO
-//      if (!event.isNewFile() && !event.isSaveAs())
-//      {
-//         return;
-//      }
-//
-//      String path = event.getPath();
-//      path = path.substring(0, path.lastIndexOf("/")) + "/";
-//      Folder folder = new Folder(path);
-//      VirtualFileSystem.getInstance().getChildren(folder);
+      //      TODO
+      //      if (!event.isNewFile() && !event.isSaveAs())
+      //      {
+      //         return;
+      //      }
+      //
+      //      String path = event.getPath();
+      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
+      //      Folder folder = new Folder(path);
+      //      VirtualFileSystem.getInstance().getChildren(folder);
    }
 
    /**
@@ -261,17 +263,17 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    {
       Folder rootFolder = new Folder(context.getEntryPoint());
       rootFolder.setIcon(Images.FileTypes.WORKSPACE);
-      
+
       selectedItems.clear();
       selectedItems.add(rootFolder);
       context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
       context.getSelectedItems(context.getSelectedNavigationPanel()).add(rootFolder);
-      
+
       display.getBrowserTree().setValue(rootFolder);
 
       eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
 
-      //VirtualFileSystem.getInstance().getChildren(workspace);      
+      VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
 
    /**
@@ -314,10 +316,10 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       Collections.sort(event.getFolder().getChildren(), comparator);
 
       System.out.println("children received for: " + event.getFolder().getHref());
-      
+
       display.getBrowserTree().setValue(event.getFolder());
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      
+
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
 
       if (forlderToSelect != null)
@@ -343,15 +345,14 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onFolderCreated(FolderCreatedEvent event)
    {
-//      TODO
-//      if(context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-//      {
-//         return;
-//      }
-//   
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//      forlderToSelect = event.getFolder().getPath();
-//      VirtualFileSystem.getInstance().getChildren((Folder)item);
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      {
+         return;
+      }
+
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      forlderToSelect = event.getFolder().getHref();
+      VirtualFileSystem.getInstance().getChildren((Folder)item);
    }
 
    /**
@@ -362,23 +363,23 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onMoveComplete(MoveCompleteEvent event)
    {
-//      TODO
-//      String source = event.getItem().getPath();
-//      String destination = event.getDestination();
-//
-//      if (isSameFolder(source, destination))
-//      {
-//         String path = source.substring(0, source.lastIndexOf("/"));
-//         VirtualFileSystem.getInstance().getChildren(new Folder(path));
-//      }
-//      else
-//      {
-//         String path1 = source.substring(0, source.lastIndexOf("/"));
-//         String path2 = destination.substring(0, destination.lastIndexOf("/"));
-//
-//         folderToUpdate = path2;
-//         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
-//      }
+      //      TODO
+      //      String source = event.getItem().getPath();
+      //      String destination = event.getDestination();
+      //
+      //      if (isSameFolder(source, destination))
+      //      {
+      //         String path = source.substring(0, source.lastIndexOf("/"));
+      //         VirtualFileSystem.getInstance().getChildren(new Folder(path));
+      //      }
+      //      else
+      //      {
+      //         String path1 = source.substring(0, source.lastIndexOf("/"));
+      //         String path2 = destination.substring(0, destination.lastIndexOf("/"));
+      //
+      //         folderToUpdate = path2;
+      //         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
+      //      }
    }
 
    /**
@@ -413,7 +414,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
+
       handlers.addHandler(PanelSelectedEvent.TYPE, this);
    }
 
@@ -425,7 +426,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       switchWorkspace();
-    //TODO fire new event
+      //TODO fire new event
       //eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
    }
 
@@ -446,7 +447,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if(BrowserPanel.ID.equals(event.getPanelId()))
+      if (BrowserPanel.ID.equals(event.getPanelId()))
       {
          onItemSelected();
       }

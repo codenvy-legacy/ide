@@ -158,6 +158,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void createFolder(Folder folder)
    {
+      System.out.println("create folder " + folder.getHref());
+      
       String url = javaScriptEncodeURI(folder.getHref());
 
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
