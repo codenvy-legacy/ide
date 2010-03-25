@@ -98,6 +98,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       if (((Folder)getValue()).getChildren() == null)
       {
+         System.out.println("returning 1");
          return;
       }
 
@@ -105,8 +106,12 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       
       System.out.println("children: " + ((Folder)getValue()).getChildren().size());
 
+      System.out.println("new href: " + getValue().getHref());
+      System.out.println("old href: " + rootFolder.getHref());
+      
       if (!getValue().getHref().startsWith(rootFolder.getHref()))
       {
+         System.out.println("returning 2");
          return;
       }
       
@@ -118,7 +123,20 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private boolean checkSwitchingWorkspace()
    {
+      System.out.println("checking switching workspace!!!!!!!!!!!!!!!!!!!!!!");
+      
+      try {
+         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
+         System.out.println("> root item href > " + rootItem.getHref());
+         
+         System.out.println("> value href > " + getValue().getHref());
+         
+      } catch (Exception exc) {
+         
+      }
+      
       return false;
+      
 //TODO
 //      try
 //      {

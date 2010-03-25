@@ -50,6 +50,11 @@ public abstract class Item
       return href;
    }
 
+   public void setHref(String href)
+   {
+      this.href = href;
+   }
+
    /**
     * @return the propertiesChanged
     */
@@ -73,14 +78,17 @@ public abstract class Item
    {
       return properties;
    }
-   
-   public Property getProperty(QName propertyName) {
-      for (Property property : properties) {
-         if (propertyName.equals(property.getName())) {
+
+   public Property getProperty(QName propertyName)
+   {
+      for (Property property : properties)
+      {
+         if (propertyName.equals(property.getName()))
+         {
             return property;
          }
       }
-      
+
       return null;
    }
 

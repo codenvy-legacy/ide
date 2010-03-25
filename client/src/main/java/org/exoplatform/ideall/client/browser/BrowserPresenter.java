@@ -33,6 +33,7 @@ import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEven
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
 import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
@@ -280,14 +281,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
-
-//      TODO
-//      context.setRepository(event.getRepository());
-//      context.setWorkspace(event.getWorkspace());
-//
-//      CookieManager.storeRepository(event.getRepository());
-//      CookieManager.storeWorkspace(event.getWorkspace());
-
+      CookieManager.storeEntryPoint(context.getEntryPoint());
       switchWorkspace();
    }
 

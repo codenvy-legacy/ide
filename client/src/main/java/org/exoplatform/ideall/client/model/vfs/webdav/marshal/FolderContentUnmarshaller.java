@@ -80,6 +80,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
       Resource resource = response.getResource();
       folder.setChildren(new ArrayList<Item>());
+      
+      System.out.println(">>>>>>>>>>>>>>>>>. HREF > " + resource.getHref());
 
       if (resource == null)
       {

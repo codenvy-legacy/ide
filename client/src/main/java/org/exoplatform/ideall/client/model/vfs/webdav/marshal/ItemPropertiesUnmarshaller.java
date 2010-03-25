@@ -30,7 +30,6 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -74,6 +73,10 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
       PropfindResponse propfindResponse = PropfindResponse.parse(body);
       Resource resource = propfindResponse.getResource();
 
+      System.out.println("requested href > " + item.getHref());
+      System.out.println("received href > " + resource.getHref());
+      item.setHref(resource.getHref());
+      
       item.getProperties().clear();
       item.getProperties().addAll(resource.getProperties());
 
