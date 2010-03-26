@@ -33,10 +33,23 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
    public static GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
    private File file;
+   
+   private boolean forceClosing = false;
 
    public EditorCloseFileEvent(File file)
    {
       this.file = file;
+   }
+
+   public EditorCloseFileEvent(File file, boolean forceClosing)
+   {
+      this.file = file;
+      this.forceClosing = forceClosing;
+   }   
+   
+   public boolean isForceClosing()
+   {
+      return forceClosing;
    }
 
    /**
