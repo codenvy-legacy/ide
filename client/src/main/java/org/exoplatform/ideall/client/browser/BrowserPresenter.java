@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.Log;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
@@ -169,24 +170,14 @@ public class BrowserPresenter implements  RefreshBrowserHandler,
 
    private Timer updateSelectionTimer = new Timer()
    {
-
       @Override
       public void run()
       {
          selectedItems = display.getSelectedItems();
-
-         System.out.println("selected items: " + selectedItems.size());
-         for (Item i : selectedItems)
-         {
-            System.out.println(">> " + i.getHref());
-         }
-
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
       }
-
    };
 
    /**
@@ -279,7 +270,9 @@ public class BrowserPresenter implements  RefreshBrowserHandler,
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
+      context.setEntryPoint(event.getHref());
       CookieManager.storeEntryPoint(context.getEntryPoint());
+      display.getBrowserTree().setValue(null);
       switchWorkspace();
    }
 

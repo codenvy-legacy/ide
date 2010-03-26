@@ -67,11 +67,16 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      boolean switchWorkspace = checkSwitchingWorkspace();
+      //boolean switchWorkspace = checkSwitchingWorkspace();
 
-      if (rootNode == null || switchWorkspace)
+      if (getValue() == null) {
+         tree.remove(rootNode);
+         rootNode = null;
+         return;
+      }
+      
+      if (rootNode == null)
       {
-         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! initialize root node!!!!!!");
          tree.setRoot(new TreeNode("root"));
 
          String nodeName = getValue().getHref();
@@ -79,8 +84,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          {
             nodeName = nodeName.substring(0, nodeName.length() - 1);
          }
-
-         System.out.println("node node name: " + nodeName);
 
          nodeName = nodeName.substring(nodeName.lastIndexOf("/") + 1);
 
@@ -99,48 +102,34 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       if (((Folder)getValue()).getChildren() == null)
       {
-         System.out.println("returning 1");
          return;
       }
 
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-
-      System.out.println("children: " + ((Folder)getValue()).getChildren().size());
-
-      System.out.println("new href: " + getValue().getHref());
-      System.out.println("old href: " + rootFolder.getHref());
-
       if (!getValue().getHref().startsWith(rootFolder.getHref()))
       {
-         System.out.println("returning 2");
          return;
       }
 
-      System.out.println("updating content of " + getValue().getHref());
       TreeNode parent = getNodeByHref(getValue().getHref());
-      System.out.println("parent node: " + parent);
       setItems(parent, ((Folder)getValue()).getChildren());
    }
 
-   private boolean checkSwitchingWorkspace()
-   {
-      System.out.println("checking switching workspace!!!!!!!!!!!!!!!!!!!!!!");
-
-      try
-      {
-         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
-         System.out.println("> root item href > " + rootItem.getHref());
-
-         System.out.println("> value href > " + getValue().getHref());
-
-      }
-      catch (Exception exc)
-      {
-
-      }
-
-      return false;
-   }
+//   private boolean checkSwitchingWorkspace()
+//   {
+//      try
+//      {
+//         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
+//         System.out.println("> root item href > " + rootItem.getHref());
+//         System.out.println("> value href > " + getValue().getHref());
+//      }
+//      catch (Exception exc)
+//      {
+//
+//      }
+//
+//      return false;
+//   }
 
    private TreeNode getChild(TreeNode parent, String name)
    {
@@ -162,14 +151,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          System.out.println();
       }
 
-      System.out.println("get node by href > " + href);
-
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-      System.out.println("root folder href > " + rootFolder.getHref());
-
       String path = href.substring(rootFolder.getHref().length());
-      System.out.println("now path > " + path);
-
       if (path.startsWith("/"))
       {
          path = path.substring(1);
@@ -211,10 +194,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private void setItems(TreeNode parentNode, List<Item> children)
    {
-      System.out.println("setting items to " + parentNode);
-      System.out.println("parent node href "
-         + ((Item)parentNode.getAttributeAsObject(getValuePropertyName())).getHref());
-
       if (children.size() == 0)
       {
          // needs here to delete all children from parentNode

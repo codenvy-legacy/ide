@@ -21,6 +21,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -90,6 +91,14 @@ public class EntryPointListPresenter
 
       });
 
+      display.getOkButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            changeEntryPoint();
+         }
+      });
+
       display.getEntryPoints().setValue(entryPoints);
       display.getEntryPoints().addSelectionHandler(new SelectionHandler<String>()
       {
@@ -122,4 +131,11 @@ public class EntryPointListPresenter
    {
       handlers.removeHandlers();
    }
+
+   private void changeEntryPoint()
+   {
+      display.closeForm();
+      eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint));
+   }
+
 }
