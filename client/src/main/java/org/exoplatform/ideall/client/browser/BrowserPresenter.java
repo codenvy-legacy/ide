@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.Log;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
@@ -47,7 +46,6 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
@@ -71,9 +69,9 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements  RefreshBrowserHandler,
-   ChildrenReceivedHandler, SwitchEntryPointHandler, RegisterEventHandlersHandler,
-   InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler, PanelSelectedHandler 
+public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
+   RegisterEventHandlersHandler, InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler,
+   PanelSelectedHandler
 {
 
    interface Display
@@ -108,6 +106,7 @@ public class BrowserPresenter implements  RefreshBrowserHandler,
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
+      handlers.addHandler(RefreshBrowserEvent.TYPE, this);
    }
 
    public void destroy()
@@ -207,41 +206,59 @@ public class BrowserPresenter implements  RefreshBrowserHandler,
     */
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
-      //TODO df adsfadsflksadm l
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      //TODO df adsfadsflksadm
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      if (event.getFolders() != null)
       {
-         return;
+         for (Folder folder : event.getFolders())
+         {
+            System.out.println("========================================================");
+            System.out.println("folders to refresh: " + event.getFolders().length);
+            System.out.println(folder.getHref());
+            System.out.println("========================================================");
+            handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+            System.out.println("refresh: " + folder.getHref());
+            VirtualFileSystem.getInstance().getChildren(folder);
+         }
       }
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String href = item.getHref();
-      if (item instanceof File)
+      else
       {
-         href = href.substring(0, href.lastIndexOf("/"));
-      }
+         if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+         {
+            return;
+         }
+         Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+         String href = item.getHref();
+         if (item instanceof File)
+         {
+            href = href.substring(0, href.lastIndexOf("/"));
+         }
 
-      Folder folder = new Folder(href);
-      VirtualFileSystem.getInstance().getChildren(folder);
+         handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+         Folder folder = new Folder(href);
+         VirtualFileSystem.getInstance().getChildren(folder);
+      }
    }
 
-//   /**
-//    * Handling of file content saved event.
-//    * After saving folder which contains saved file will be refreshed. 
-//    * 
-//    * @see org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent)
-//    */
-//   public void onFileContentSaved(FileContentSavedEvent event)
-//   {
-//      //      TODO
-//      //      if (!event.isNewFile() && !event.isSaveAs())
-//      //      {
-//      //         return;
-//      //      }
-//      //
-//      //      String path = event.getPath();
-//      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
-//      //      Folder folder = new Folder(path);
-//      //      VirtualFileSystem.getInstance().getChildren(folder);
-//   }
+   //   /**
+   //    * Handling of file content saved event.
+   //    * After saving folder which contains saved file will be refreshed. 
+   //    * 
+   //    * @see org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent)
+   //    */
+   //   public void onFileContentSaved(FileContentSavedEvent event)
+   //   {
+   //      //      TODO
+   //      //      if (!event.isNewFile() && !event.isSaveAs())
+   //      //      {
+   //      //         return;
+   //      //      }
+   //      //
+   //      //      String path = event.getPath();
+   //      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
+   //      //      Folder folder = new Folder(path);
+   //      //      VirtualFileSystem.getInstance().getChildren(folder);
+   //   }
 
    /**
     * Switching active workspace
@@ -305,37 +322,37 @@ public class BrowserPresenter implements  RefreshBrowserHandler,
       Collections.sort(event.getFolder().getChildren(), comparator);
 
       System.out.println("children received for: " + event.getFolder().getHref());
-
+      
       display.getBrowserTree().setValue(event.getFolder());
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-
+      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
       if (forlderToSelect != null)
       {
          display.selectItem(forlderToSelect);
          forlderToSelect = null;
       }
 
-      if (folderToUpdate != null)
-      {
-         String path = folderToUpdate;
-         folderToUpdate = null;
-         Folder folder = new Folder(path);
-         VirtualFileSystem.getInstance().getChildren(folder);
-      }
+//      if (folderToUpdate != null)
+//      {
+//         String path = folderToUpdate;
+//         folderToUpdate = null;
+//         Folder folder = new Folder(path);
+//         VirtualFileSystem.getInstance().getChildren(folder);
+//      }
    }
-   
-    /**
-    * Registering handlers
-    * 
-    * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
-    */
+
+   /**
+   * Registering handlers
+   * 
+   * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
+   */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      handlers.addHandler(RefreshBrowserEvent.TYPE, this);
+      
 
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      //handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
 
       handlers.addHandler(SelectItemEvent.TYPE, this);

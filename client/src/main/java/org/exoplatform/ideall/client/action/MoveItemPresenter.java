@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
@@ -210,47 +212,48 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    public void onMoveComplete(MoveCompleteEvent event)
    {
-//      String dest = event.getDestination();
-//      ArrayList<String> keys = new ArrayList<String>();
-//      for (String key : context.getOpenedFiles().keySet())
-//      {
-//         keys.add(key);
-//      }
-//
-//      for (String key : keys)
-//      {
-//         if (key.startsWith(event.getItem().getHref()))
-//         {
-//            File file = context.getOpenedFiles().get(key);
-//            String sourcePath = file.getHref();
-//            String destinationHref = file.getHref();
-//
-//            destinationHref = destinationHref.substring(event.getItem().getHref().length());
-//            destinationHref = dest + destinationHref;
-//            System.out.println("move open file to: " + destinationHref);
-//            file.setHref(destinationHref);
-//            eventBus.fireEvent(new OpenFileEvent(file));
-//         }
-//      }
-      display.closeForm();
+      //      String dest = event.getDestination();
+      //      ArrayList<String> keys = new ArrayList<String>();
+      //      for (String key : context.getOpenedFiles().keySet())
+      //      {
+      //         keys.add(key);
+      //      }
+      //
+      //      for (String key : keys)
+      //      {
+      //         if (key.startsWith(event.getItem().getHref()))
+      //         {
+      //            File file = context.getOpenedFiles().get(key);
+      //            String sourcePath = file.getHref();
+      //            String destinationHref = file.getHref();
+      //
+      //            destinationHref = destinationHref.substring(event.getItem().getHref().length());
+      //            destinationHref = dest + destinationHref;
+      //            System.out.println("move open file to: " + destinationHref);
+      //            file.setHref(destinationHref);
+      //            eventBus.fireEvent(new OpenFileEvent(file));
+      //         }
+      //      }
 
       //            TODO
-      //            String source = event.getItem().getHref();
-      //            String destination = event.getDestination();
-      //      
-      //            if (isSameFolder(source, destination))
-      //            {
-      //               String href = source.substring(0, source.lastIndexOf("/"));
-      //               VirtualFileSystem.getInstance().getChildren(new Folder(href));
-      //            }
-      //            else
-      //            {
-      //               String href1 = source.substring(0, source.lastIndexOf("/"));
-      //               String href2 = destination.substring(0, destination.lastIndexOf("/"));
-      //      
-      //              // folderToUpdate = href2;
-      //               VirtualFileSystem.getInstance().getChildren(new Folder(href1));
-      //            }
+      String source = event.getItem().getHref();
+      String destination = event.getDestination();
+
+      if (isSameFolder(source, destination))
+      {
+         String href = source.substring(0, source.lastIndexOf("/"));
+         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href)));         
+      }
+      else
+      {
+         String href1 = source.substring(0, source.lastIndexOf("/"));
+         String href2 = destination.substring(0, destination.lastIndexOf("/"));
+
+         // folderToUpdate = href2;
+         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href1), new Folder(href2)));
+         //VirtualFileSystem.getInstance().getChildren();
+      }
+      display.closeForm();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)

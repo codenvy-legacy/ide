@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.command;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.component.AskForValueDialog;
 import org.exoplatform.ideall.client.component.ValueCallback;
 import org.exoplatform.ideall.client.event.file.FileSavedEvent;
@@ -29,6 +30,7 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
@@ -143,6 +145,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
+      refreshBrouser(event.getItem().getHref());
    }
 
    public void onError(ExceptionThrownEvent event)
@@ -154,6 +157,13 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
+      refreshBrouser(event.getItem().getHref());
    }
 
+   private void refreshBrouser(String hrefFolder)
+   {
+      hrefFolder = hrefFolder.substring(0, hrefFolder.lastIndexOf("/")) + "/";
+      Folder folder = new Folder(hrefFolder);
+      eventBus.fireEvent(new RefreshBrowserEvent(folder));
+   }
 }

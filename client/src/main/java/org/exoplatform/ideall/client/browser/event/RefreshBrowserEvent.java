@@ -47,6 +47,11 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
       handler.onRefreshBrowser(this);
    }
 
+   public Folder[] getFolders()
+   {
+      return folders;
+   }
+
    @Override
    public GwtEvent.Type<RefreshBrowserHandler> getAssociatedType()
    {
