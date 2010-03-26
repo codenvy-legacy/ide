@@ -17,10 +17,10 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 /**
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CutItemsCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler
+public class CutItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
    private static final String ID = "Edit/Cut Item(s)";
@@ -56,7 +56,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       super.onRegisterHandlers();
    }
 
@@ -85,7 +85,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements Se
       }
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 0)
       {

@@ -18,9 +18,9 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
 /**
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends IDECommand implements SelectedItemsHandler
+public class OpenFileWithCommand extends IDECommand implements ItemsSelectedHandler
 {
    private static final String ID = "File/Open File With...";
 
@@ -53,10 +53,10 @@ public class OpenFileWithCommand extends IDECommand implements SelectedItemsHand
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (!browserPanelSelected)
       {

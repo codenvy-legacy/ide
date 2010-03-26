@@ -142,20 +142,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          event.cancel();
          EditorTab tab = (EditorTab)event.getTab();
          eventBus.fireEvent(new EditorCloseFileEvent(tab.getFile()));         
-         
-//         EditorTab tab = (EditorTab)event.getTab();
-//         eventBus.fireEvent(new EditorCloseFileEvent(tab.getFile()));
-//         if (tab.getFile().isContentChanged() || tab.getFile().isPropertiesChanged())
-//         {
-//            event.cancel();
-//         }
-//         else
-//         {
-//            if (tabSet.getTabs().length == 1)
-//            {
-//               eventBus.fireEvent(new EditorActiveFileChangedEvent(null, false, false));
-//            }
-//         }
       }
    };
 

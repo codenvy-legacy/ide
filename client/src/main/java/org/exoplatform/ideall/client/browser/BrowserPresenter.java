@@ -31,13 +31,13 @@ import org.exoplatform.ideall.client.application.event.InitializeApplicationEven
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
+import org.exoplatform.ideall.client.browser.event.SelectItemHandler;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
-import org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
@@ -46,12 +46,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
@@ -75,9 +70,9 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedHandler, RefreshBrowserHandler,
-   ChildrenReceivedHandler, MoveCompleteHandler, SwitchEntryPointHandler, RegisterEventHandlersHandler,
-   InitializeApplicationHandler, SetFocusOnItemHandler, ExceptionThrownHandler, PanelSelectedHandler
+public class BrowserPresenter implements  RefreshBrowserHandler,
+   ChildrenReceivedHandler, SwitchEntryPointHandler, RegisterEventHandlersHandler,
+   InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler, PanelSelectedHandler 
 {
 
    interface Display
@@ -189,7 +184,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
 
-         eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
       }
 
    };
@@ -219,8 +214,9 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
     * 
     * @see org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler#onRefreshBrowser()
     */
-   public void onRefreshBrowser()
+   public void onRefreshBrowser(RefreshBrowserEvent event)
    {
+      //TODO df adsfadsflksadm l
       if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
@@ -236,25 +232,25 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
       VirtualFileSystem.getInstance().getChildren(folder);
    }
 
-   /**
-    * Handling of file content saved event.
-    * After saving folder which contains saved file will be refreshed. 
-    * 
-    * @see org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent)
-    */
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      //      TODO
-      //      if (!event.isNewFile() && !event.isSaveAs())
-      //      {
-      //         return;
-      //      }
-      //
-      //      String path = event.getPath();
-      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
-      //      Folder folder = new Folder(path);
-      //      VirtualFileSystem.getInstance().getChildren(folder);
-   }
+//   /**
+//    * Handling of file content saved event.
+//    * After saving folder which contains saved file will be refreshed. 
+//    * 
+//    * @see org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent)
+//    */
+//   public void onFileContentSaved(FileContentSavedEvent event)
+//   {
+//      //      TODO
+//      //      if (!event.isNewFile() && !event.isSaveAs())
+//      //      {
+//      //         return;
+//      //      }
+//      //
+//      //      String path = event.getPath();
+//      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
+//      //      Folder folder = new Folder(path);
+//      //      VirtualFileSystem.getInstance().getChildren(folder);
+//   }
 
    /**
     * Switching active workspace
@@ -271,7 +267,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
 
       display.getBrowserTree().setValue(rootFolder);
 
-      eventBus.fireEvent(new SelectedItemsEvent(selectedItems));
+      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
 
       VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
@@ -279,7 +275,7 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    /**
     * Switching active workspace by Switch Workspace Event
     * 
-    * @see org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler#onSwitchEntryPoint(org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent)
+    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent)
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
@@ -336,82 +332,20 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
          VirtualFileSystem.getInstance().getChildren(folder);
       }
    }
-
-   /**
-    * Handling folder created event.
-    * Browser should be refreshed.
-    * 
-    * @see org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent)
-    */
-   public void onFolderCreated(FolderCreatedEvent event)
-   {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-      {
-         return;
-      }
-
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      forlderToSelect = event.getFolder().getHref();
-      VirtualFileSystem.getInstance().getChildren((Folder)item);
-   }
-
-   /**
-    * Handling item moved event.
-    * Refreshing source and destination folders.
-    * 
-    * @see org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent)
-    */
-   public void onMoveComplete(MoveCompleteEvent event)
-   {
-      //      TODO
-      //      String source = event.getItem().getPath();
-      //      String destination = event.getDestination();
-      //
-      //      if (isSameFolder(source, destination))
-      //      {
-      //         String path = source.substring(0, source.lastIndexOf("/"));
-      //         VirtualFileSystem.getInstance().getChildren(new Folder(path));
-      //      }
-      //      else
-      //      {
-      //         String path1 = source.substring(0, source.lastIndexOf("/"));
-      //         String path2 = destination.substring(0, destination.lastIndexOf("/"));
-      //
-      //         folderToUpdate = path2;
-      //         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
-      //      }
-   }
-
-   /**
-    * @param source
-    * @param destination
-    * @return
-    */
-   private boolean isSameFolder(String source, String destination)
-   {
-      source = source.substring(0, source.lastIndexOf("/"));
-      destination = destination.substring(0, destination.lastIndexOf("/"));
-      return source.equals(destination);
-   }
-
-   /**
+   
+    /**
     * Registering handlers
     * 
     * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
     */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      handlers.addHandler(FolderCreatedEvent.TYPE, this);
-      //handlers.addHandler(ItemDeletedEvent.TYPE, this);
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
 
-      handlers.addHandler(SetFocusOnItemEvent.TYPE, this);
+      handlers.addHandler(SelectItemEvent.TYPE, this);
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
@@ -433,9 +367,9 @@ public class BrowserPresenter implements FolderCreatedHandler, FileContentSavedH
    /**
     * Select chosen item in browser.
     * 
-    * @see org.exoplatform.ideall.client.event.browse.SetFocusOnItemHandler#onSetFocusOnItem(org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent)
+    * @see org.exoplatform.ideall.client.browser.event.SelectItemHandler#onSelectItem(org.exoplatform.ideall.client.browser.event.SelectItemEvent)
     */
-   public void onSetFocusOnItem(SetFocusOnItemEvent event)
+   public void onSelectItem(SelectItemEvent event)
    {
       display.selectItem(event.getPath());
    }

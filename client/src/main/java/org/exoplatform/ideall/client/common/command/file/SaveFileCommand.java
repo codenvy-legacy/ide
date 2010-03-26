@@ -23,8 +23,8 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
@@ -42,7 +42,7 @@ import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesCh
  */
 
 public class SaveFileCommand extends IDECommand implements EditorActiveFileChangedHandler, ItemPropertiesSavedHandler,
-   FileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
+   EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
 {
 
    public static final String ID = "File/Save File";
@@ -65,7 +65,7 @@ public class SaveFileCommand extends IDECommand implements EditorActiveFileChang
 
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      addHandler(FileContentChangedEvent.TYPE, this);
+      addHandler(EditorFileContentChangedEvent.TYPE, this);
       addHandler(FilePropertiesChangedEvent.TYPE, this);
       addHandler(FileContentSavedEvent.TYPE, this);
    }
@@ -119,7 +119,7 @@ public class SaveFileCommand extends IDECommand implements EditorActiveFileChang
       }
    }
 
-   public void onFileContentChanged(FileContentChangedEvent event)
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
       if (event.getFile().isNewFile())
       {

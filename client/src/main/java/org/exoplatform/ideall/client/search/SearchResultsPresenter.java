@@ -21,8 +21,8 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -154,7 +154,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItem);
 
-         eventBus.fireEvent(new SelectedItemsEvent(selectedItem));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItem));
       }
 
    };

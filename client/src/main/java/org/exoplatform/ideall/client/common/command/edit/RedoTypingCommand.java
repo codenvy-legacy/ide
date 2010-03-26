@@ -23,8 +23,8 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.FileContentChangedHandler;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHand
  */
 
 public class RedoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
-   FileContentChangedHandler, FileContentReceivedHandler
+   EditorFileContentChangedHandler, FileContentReceivedHandler
 {
    
    public static final String ID = "Edit/Redo Typing";
@@ -57,7 +57,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(FileContentChangedEvent.TYPE, this);
+      addHandler(EditorFileContentChangedEvent.TYPE, this);
       addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
@@ -80,7 +80,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
       setEnabled(event.hasRedoChanges());
    }
 
-   public void onFileContentChanged(FileContentChangedEvent event)
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
       setEnabled(event.hasRedoChanges());
    }

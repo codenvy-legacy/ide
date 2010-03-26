@@ -159,7 +159,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       String href = item.getHref();
       if (item instanceof File)
       {
-         href = href.substring(0, href.lastIndexOf("/"));
+         href = href.substring(0, href.lastIndexOf("/") + 1);
       }
 
       new CreateFolderForm(eventBus, href);

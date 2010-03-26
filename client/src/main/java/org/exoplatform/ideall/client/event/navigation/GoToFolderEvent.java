@@ -17,9 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.editor.event;
-
-import org.exoplatform.ideall.client.model.vfs.api.File;
+package org.exoplatform.ideall.client.event.navigation;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,31 +28,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ChangeActiveFileEvent extends GwtEvent<ChangeActiveFileHandler>
+public class GoToFolderEvent extends GwtEvent<GoToFolderHandler>
 {
 
-   public static final GwtEvent.Type<ChangeActiveFileHandler> TYPE = new GwtEvent.Type<ChangeActiveFileHandler>();
+   public static final GwtEvent.Type<GoToFolderHandler> TYPE = new GwtEvent.Type<GoToFolderHandler>();
 
-   private File file;
-
-   public ChangeActiveFileEvent(File file)
+   @Override
+   protected void dispatch(GoToFolderHandler handler)
    {
-      this.file = file;
-   }
-
-   public File getFile()
-   {
-      return file;
+      handler.onGoToFolder(this);
    }
 
    @Override
-   protected void dispatch(ChangeActiveFileHandler handler)
-   {
-      handler.onChangeActiveFile(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeActiveFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<GoToFolderHandler> getAssociatedType()
    {
       return TYPE;
    }

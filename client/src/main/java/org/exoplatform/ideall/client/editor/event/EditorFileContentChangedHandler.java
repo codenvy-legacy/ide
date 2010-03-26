@@ -24,9 +24,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: $
  */
 
-public interface FileContentChangedHandler extends EventHandler
+public interface EditorFileContentChangedHandler extends EventHandler
 {
 
-   void onFileContentChanged(FileContentChangedEvent event);
+   void onEditorFileContentChanged(EditorFileContentChangedEvent event);
 
 }

@@ -192,9 +192,39 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 //      return false;
 //   }
 //
+   /**
+    * @param source
+    * @param destination
+    * @return
+    */
+   private boolean isSameFolder(String source, String destination)
+   {
+      source = source.substring(0, source.lastIndexOf("/"));
+      destination = destination.substring(0, destination.lastIndexOf("/"));
+      return source.equals(destination);
+   }
+   
    public void onMoveComplete(MoveCompleteEvent event)
    {
 //      display.closeForm();
+      //
+      //      TODO
+      //      String source = event.getItem().getPath();
+      //      String destination = event.getDestination();
+      //
+      //      if (isSameFolder(source, destination))
+      //      {
+      //         String path = source.substring(0, source.lastIndexOf("/"));
+      //         VirtualFileSystem.getInstance().getChildren(new Folder(path));
+      //      }
+      //      else
+      //      {
+      //         String path1 = source.substring(0, source.lastIndexOf("/"));
+      //         String path2 = destination.substring(0, destination.lastIndexOf("/"));
+      //
+      //         folderToUpdate = path2;
+      //         VirtualFileSystem.getInstance().getChildren(new Folder(path1));
+      //      }
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)

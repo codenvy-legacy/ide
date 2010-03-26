@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.browse.GoToFolderEvent;
+import org.exoplatform.ideall.client.event.navigation.GoToFolderEvent;
 
 /**
  * Created by The eXo Platform SAS .

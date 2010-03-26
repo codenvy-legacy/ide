@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.browser.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface SelectedItemsHandler extends EventHandler
+public interface ItemsSelectedHandler extends EventHandler
 {
    
-   void onItemsSelected(SelectedItemsEvent event);
+   void onItemsSelected(ItemsSelectedEvent event);
 
 }

@@ -21,9 +21,9 @@ package org.exoplatform.ideall.client.common.command.file.download;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Folder;
  * @version $
  */
 
-public class DownloadZippedFolderCommand extends IDECommand implements SelectedItemsHandler
+public class DownloadZippedFolderCommand extends IDECommand implements ItemsSelectedHandler
 {
 
    private final static String ID = "File/Download/Download Zipped Folder";
@@ -57,10 +57,10 @@ public class DownloadZippedFolderCommand extends IDECommand implements SelectedI
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
       {

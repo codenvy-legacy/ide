@@ -70,7 +70,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       String href = item.getHref();
       if (item instanceof File)
       {
-         href = href.substring(0, href.lastIndexOf("/"));
+         href = href.substring(0, href.lastIndexOf("/") + 1);
       }
 
       String content = FileTemplates.getTemplateFor(event.getMimeType());

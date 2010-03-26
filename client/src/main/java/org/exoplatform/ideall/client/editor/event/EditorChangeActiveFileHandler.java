@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.browse;
+package org.exoplatform.ideall.client.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -28,9 +28,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface SetFocusOnItemHandler extends EventHandler
+public interface EditorChangeActiveFileHandler extends EventHandler
 {
 
-   void onSetFocusOnItem(SetFocusOnItemEvent event);
+   void onEditorChangeActiveFile(EditorChangeActiveFileEvent event);
 
 }

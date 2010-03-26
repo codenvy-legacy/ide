@@ -22,8 +22,8 @@ package org.exoplatform.ideall.client.common.command.file;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class UploadFileCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
+public class UploadFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private final static String ID = "File/Upload File...";
@@ -56,7 +56,7 @@ public class UploadFileCommand extends IDECommand implements SelectedItemsHandle
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       addHandler(PanelSelectedEvent.TYPE, this);
    }
 
@@ -79,7 +79,7 @@ public class UploadFileCommand extends IDECommand implements SelectedItemsHandle
       }
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {

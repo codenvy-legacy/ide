@@ -22,9 +22,9 @@ package org.exoplatform.ideall.client.common.command.file;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class GetFileURLCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
+public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private static final String ID = "File/Get File URL";
@@ -59,7 +59,7 @@ public class GetFileURLCommand extends IDECommand implements SelectedItemsHandle
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       addHandler(PanelSelectedEvent.TYPE, this);
    }
 
@@ -70,7 +70,7 @@ public class GetFileURLCommand extends IDECommand implements SelectedItemsHandle
       setEnabled(false);
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {

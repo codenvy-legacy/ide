@@ -17,10 +17,10 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
@@ -29,7 +29,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CopyItemsCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler
+public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
    private static final String ID = "Edit/Copy Item(s)";
@@ -57,12 +57,12 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements S
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       addHandler(PanelSelectedEvent.TYPE, this);
       super.onRegisterHandlers();
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if(event.getSelectedItems().size() != 0)
       {

@@ -21,9 +21,9 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
  * @version $
  */
 
-public class SearchFilesCommand extends IDECommand implements SelectedItemsHandler
+public class SearchFilesCommand extends IDECommand implements ItemsSelectedHandler
 {
 
    public static final String ID = "File/Search...";
@@ -51,12 +51,12 @@ public class SearchFilesCommand extends IDECommand implements SelectedItemsHandl
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       setVisible(true);
       setEnabled(true);
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {

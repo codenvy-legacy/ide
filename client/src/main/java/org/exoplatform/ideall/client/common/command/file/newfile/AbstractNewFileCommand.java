@@ -21,8 +21,8 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
@@ -35,7 +35,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class AbstractNewFileCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
+public class AbstractNewFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private boolean browserSelected = false;
@@ -53,7 +53,7 @@ public class AbstractNewFileCommand extends IDECommand implements SelectedItemsH
    protected void onRegisterHandlers()
    {
       addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -75,7 +75,7 @@ public class AbstractNewFileCommand extends IDECommand implements SelectedItemsH
       }
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {

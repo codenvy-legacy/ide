@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.component.AskForValueDialog;
 import org.exoplatform.ideall.client.component.ValueCallback;
+import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -32,6 +33,8 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 
@@ -45,16 +48,21 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveFileAsHandler
+   ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler
 {
 
    private ApplicationContext context;
 
    private Handlers handlers;
 
+   private HandlerManager eventBus;
+
+   private String sourceHref;
+
    public SaveFileAsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
+      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
    }
@@ -64,6 +72,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
       onSaveAsFile(file);
@@ -71,9 +80,9 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private void onSaveAsFile(final File file)
    {
-//      TODO
+      //      TODO
       String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
-
+      sourceHref = file.getHref();
       new AskForValueDialog("Save file as...", "Enter new file name:", newFileName, 400, new ValueCallback()
       {
          public void execute(String value)
@@ -84,10 +93,10 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
                return;
             }
 
-//            String pathToSave =
-//               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + "/" + value;
-
-            File newFile = new File(file.getHref());
+            String pathToSave =
+               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + value;
+            System.out.println(pathToSave);
+            File newFile = new File(pathToSave);
             newFile.setContent(file.getContent());
             newFile.setContentType(file.getContentType());
             newFile.setJcrContentNodeType(file.getJcrContentNodeType());
@@ -105,58 +114,47 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
          }
 
       });
-//
    }
 
    private String getFilePath(Item item)
    {
-//      TODO
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/"));
-//      }
-//      return path;
-      return null;
+      String href = item.getHref();
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/") + 1);
+      }
+      return href;
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-//      TODO
-//      if (event.isNewFile())
-//      {
-//         handlers.removeHandlers();
-//         VirtualFileSystem.getInstance().getProperties(event.getFile());
-//      }
-//      else
-//      {
-//         if (event.isSaveAs())
-//         {
-//            event.getFile().setPath(event.getPath());
-//            VirtualFileSystem.getInstance().saveProperties(event.getFile());
-//         }
-//         else
-//         {
-//            if (event.getFile().isPropertiesChanged())
-//            {
-//               VirtualFileSystem.getInstance().saveProperties(event.getFile());
-//            }
-//            else
-//            {
-//               handlers.removeHandlers();
-//            }
-//         }
-//      }
+      System.out.println("file content saved: " + event.getFile().getHref());
+      if (event.isNewFile())
+      {
+         handlers.removeHandlers();
+         VirtualFileSystem.getInstance().getProperties(event.getFile());
+      }
+      else
+      {
+         VirtualFileSystem.getInstance().saveProperties(event.getFile());
+      }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       handlers.removeHandlers();
+      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
    }
 
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      handlers.removeHandlers();
+      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
    }
 
 }

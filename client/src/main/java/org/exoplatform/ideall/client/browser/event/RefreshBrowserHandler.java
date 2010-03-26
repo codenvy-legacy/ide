@@ -26,6 +26,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface RefreshBrowserHandler extends EventHandler
 {
 
-   void onRefreshBrowser();
+   void onRefreshBrowser(RefreshBrowserEvent event);
 
 }

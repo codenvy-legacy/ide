@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.browse;
+package org.exoplatform.ideall.client.browser.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +28,33 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface GoToFolderHandler extends EventHandler
+public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 {
 
-   void onGoToFolder(GoToFolderEvent event);
+   public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
+
+   private String path;
+
+   public SelectItemEvent(String path)
+   {
+      this.path = path;
+   }
+
+   public String getPath()
+   {
+      return path;
+   }
+
+   @Override
+   protected void dispatch(SelectItemHandler handler)
+   {
+      handler.onSelectItem(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

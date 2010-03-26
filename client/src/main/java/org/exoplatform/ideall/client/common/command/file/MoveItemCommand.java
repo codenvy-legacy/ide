@@ -22,9 +22,9 @@ package org.exoplatform.ideall.client.common.command.file;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.MoveItemEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
@@ -38,7 +38,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class MoveItemCommand extends IDECommand implements SelectedItemsHandler, ItemDeletedHandler,
+public class MoveItemCommand extends IDECommand implements ItemsSelectedHandler, ItemDeletedHandler,
    PanelSelectedHandler
 {
 
@@ -60,7 +60,7 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
       addHandler(PanelSelectedEvent.TYPE, this);
@@ -73,7 +73,7 @@ public class MoveItemCommand extends IDECommand implements SelectedItemsHandler,
       updateEnabling();
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {

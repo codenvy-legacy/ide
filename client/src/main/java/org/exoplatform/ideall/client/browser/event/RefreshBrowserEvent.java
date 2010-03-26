@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ideall.client.browser.event;
 
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -28,10 +30,21 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
 
    public static GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
 
+   private Folder[] folders;
+   
+   public RefreshBrowserEvent()
+   {   
+   }
+   
+   public RefreshBrowserEvent(Folder ...folders)
+   {   
+      this.folders = folders;
+   }
+   
    @Override
    protected void dispatch(RefreshBrowserHandler handler)
    {
-      handler.onRefreshBrowser();
+      handler.onRefreshBrowser(this);
    }
 
    @Override

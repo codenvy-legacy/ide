@@ -20,10 +20,10 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.jcrservice.bean.Workspace;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
  * @version $
  */
 
-public class DeleteItemCommand extends MultipleSelectionItemsCommand implements SelectedItemsHandler,
+public class DeleteItemCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler,
    ItemDeletedHandler
 {
 
@@ -57,7 +57,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       addHandler(ItemDeletedEvent.TYPE, this);
 
       super.onRegisterHandlers();
@@ -70,7 +70,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       updateEnabling();
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
 
       if (!isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems()))

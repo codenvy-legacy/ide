@@ -17,7 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.browse;
+package org.exoplatform.ideall.client.editor.event;
+
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -28,31 +30,31 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SetFocusOnItemEvent extends GwtEvent<SetFocusOnItemHandler>
+public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFileHandler>
 {
 
-   public static final GwtEvent.Type<SetFocusOnItemHandler> TYPE = new GwtEvent.Type<SetFocusOnItemHandler>();
+   public static final GwtEvent.Type<EditorChangeActiveFileHandler> TYPE = new GwtEvent.Type<EditorChangeActiveFileHandler>();
 
-   private String path;
+   private File file;
 
-   public SetFocusOnItemEvent(String path)
+   public EditorChangeActiveFileEvent(File file)
    {
-      this.path = path;
+      this.file = file;
    }
 
-   public String getPath()
+   public File getFile()
    {
-      return path;
-   }
-
-   @Override
-   protected void dispatch(SetFocusOnItemHandler handler)
-   {
-      handler.onSetFocusOnItem(this);
+      return file;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SetFocusOnItemHandler> getAssociatedType()
+   protected void dispatch(EditorChangeActiveFileHandler handler)
+   {
+      handler.onEditorChangeActiveFile(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorChangeActiveFileHandler> getAssociatedType()
    {
       return TYPE;
    }

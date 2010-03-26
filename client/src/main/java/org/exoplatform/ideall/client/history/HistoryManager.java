@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.application.event.InitializeApplicationEven
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.editor.event.ChangeActiveFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -114,7 +114,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
          }
 
          context.setActiveFile(file);
-         eventBus.fireEvent(new ChangeActiveFileEvent(file));
+         eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
       }
 
    }

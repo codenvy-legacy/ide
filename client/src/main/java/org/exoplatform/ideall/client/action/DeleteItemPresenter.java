@@ -22,7 +22,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.event.browse.SetFocusOnItemEvent;
+import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;

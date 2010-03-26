@@ -18,14 +18,14 @@ package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
 /**
@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
  * @version $Id: $
 */
 public class PasteItemsCommand extends MultipleSelectionItemsCommand implements ItemsToPasteSelectedHandler,
-   PasteItemsCompleteHandler, SelectedItemsHandler
+   PasteItemsCompleteHandler, ItemsSelectedHandler
 {
    private static final String ID = "Edit/Paste Item(s)";
 
@@ -61,7 +61,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    {
       addHandler(ItemsToPasteSelectedEvent.TYPE, this);
       addHandler(PasteItemsCompleteEvent.TYPE, this);
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
       super.onRegisterHandlers();
    }
 
@@ -77,7 +77,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       pastePrepared = false;
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {

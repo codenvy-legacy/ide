@@ -22,9 +22,9 @@ package org.exoplatform.ideall.client.common.command.file;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class CreateNewFolderCommand extends IDECommand implements SelectedItemsHandler, PanelSelectedHandler
+public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -58,7 +58,7 @@ public class CreateNewFolderCommand extends IDECommand implements SelectedItemsH
    protected void onRegisterHandlers()
    {
       addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(SelectedItemsEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -85,7 +85,7 @@ public class CreateNewFolderCommand extends IDECommand implements SelectedItemsH
       }
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {
@@ -94,13 +94,6 @@ public class CreateNewFolderCommand extends IDECommand implements SelectedItemsH
          return;
       }
 
-      if (event.getSelectedItems().get(0) instanceof File)
-      {
-         folderItemSelected = false;
-         updateEnabling();
-         return;
-      }
-      
       folderItemSelected = true;
       updateEnabling();
 

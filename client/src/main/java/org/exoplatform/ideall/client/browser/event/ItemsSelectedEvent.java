@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.browser.event;
 
 import java.util.List;
 
@@ -29,26 +29,26 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class SelectedItemsEvent extends GwtEvent<SelectedItemsHandler>
+public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
 {
 
-   public static final GwtEvent.Type<SelectedItemsHandler> TYPE = new GwtEvent.Type<SelectedItemsHandler>();
+   public static final GwtEvent.Type<ItemsSelectedHandler> TYPE = new GwtEvent.Type<ItemsSelectedHandler>();
 
    private List<Item> selectedItems;
 
-   public SelectedItemsEvent(List<Item> selectedItems)
+   public ItemsSelectedEvent(List<Item> selectedItems)
    {
       this.selectedItems = selectedItems;
    }
 
    @Override
-   protected void dispatch(SelectedItemsHandler handler)
+   protected void dispatch(ItemsSelectedHandler handler)
    {
       handler.onItemsSelected(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SelectedItemsHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemsSelectedHandler> getAssociatedType()
    {
       return TYPE;
    }

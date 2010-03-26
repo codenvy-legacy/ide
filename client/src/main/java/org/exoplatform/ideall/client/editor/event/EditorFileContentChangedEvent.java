@@ -26,10 +26,10 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: $
  */
 
-public class FileContentChangedEvent extends GwtEvent<FileContentChangedHandler>
+public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler>
 {
 
-   public static GwtEvent.Type<FileContentChangedHandler> TYPE = new GwtEvent.Type<FileContentChangedHandler>();
+   public static GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
 
    private File file;
 
@@ -40,7 +40,7 @@ public class FileContentChangedEvent extends GwtEvent<FileContentChangedHandler>
    /**
     * @param changed item 
     */
-   public FileContentChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
+   public EditorFileContentChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
    {
       this.file = file;
       this.hasUndoChanges = hasUndoChanges;
@@ -48,13 +48,13 @@ public class FileContentChangedEvent extends GwtEvent<FileContentChangedHandler>
    }
 
    @Override
-   protected void dispatch(FileContentChangedHandler handler)
+   protected void dispatch(EditorFileContentChangedHandler handler)
    {
-      handler.onFileContentChanged(this);
+      handler.onEditorFileContentChanged(this);
    }
 
    @Override
-   public GwtEvent.Type<FileContentChangedHandler> getAssociatedType()
+   public GwtEvent.Type<EditorFileContentChangedHandler> getAssociatedType()
    {
       return TYPE;
    }

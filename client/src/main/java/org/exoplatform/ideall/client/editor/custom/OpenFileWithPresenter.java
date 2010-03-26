@@ -235,8 +235,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
                if (value == true)
                {
-                  //File file = (File)context.getSelectedItems().get(0);
-                  //eventBus.fireEvent(new EditorCloseFileEvent(file));
                   openFile();
                }
                else

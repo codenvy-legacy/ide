@@ -3,15 +3,15 @@ package org.exoplatform.ideall.client.statusbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.event.file.SelectedItemsEvent;
-import org.exoplatform.ideall.client.event.file.SelectedItemsHandler;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 
-public class StatusBarPresenter implements SelectedItemsHandler
+public class StatusBarPresenter implements ItemsSelectedHandler
 {
 
    interface Display
@@ -30,7 +30,7 @@ public class StatusBarPresenter implements SelectedItemsHandler
    public StatusBarPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers.add(eventBus.addHandler(SelectedItemsEvent.TYPE, this));
+      handlers.add(eventBus.addHandler(ItemsSelectedEvent.TYPE, this));
    }
 
    public void destroy()
@@ -46,7 +46,7 @@ public class StatusBarPresenter implements SelectedItemsHandler
       display = d;
    }
 
-   public void onItemsSelected(SelectedItemsEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {          
       String statusMessage = null;
 
