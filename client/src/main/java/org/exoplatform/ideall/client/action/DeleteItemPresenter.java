@@ -17,13 +17,17 @@
 package org.exoplatform.ideall.client.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
+import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
@@ -130,6 +134,35 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       context.getItemsToCopy().remove(item);
       context.getItemsToCut().remove(item);
+      if (item instanceof File)
+      {
+         if (context.getOpenedFiles().get(item.getHref()) != null)
+         {
+            eventBus.fireEvent(new EditorCloseFileEvent((File)item));
+         }
+      }
+      else
+      {
+         //find out the files are been in the removed folder
+
+         String href = event.getItem().getHref();
+         HashMap<String, File> openedFiles = context.getOpenedFiles();
+
+         HashMap<String, File> copy = new HashMap<String, File>();
+         for (String key : openedFiles.keySet())
+         {
+            File file = openedFiles.get(key);
+            copy.put(key, file);
+         }
+
+         for (File file : copy.values())
+         {
+            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
+            {
+               eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+            }
+         }
+      }
       lastDeletedItem = item;
       deleteNextItem();
    }
@@ -141,24 +174,24 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void deleteItemsComplete()
    {
-//      TODO
-//      if (lastDeletedItem == null)
-//      {
-//         return;
-//      }
-//
-//      String selectedItemPath = lastDeletedItem.getPath();
-//
-//      selectedItemPath = selectedItemPath.substring(0, selectedItemPath.lastIndexOf("/"));
-//
-//      Folder folder = new Folder(selectedItemPath);
-//      VirtualFileSystem.getInstance().getChildren(folder);
-//
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
-//
-//      eventBus.fireEvent(new SetFocusOnItemEvent(folder.getPath()));
-//      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
+      //      TODO
+      if (lastDeletedItem == null)
+      {
+         return;
+      }
+
+      String selectedItemHref = lastDeletedItem.getHref();
+
+      selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/"));
+
+      Folder folder = new Folder(selectedItemHref);
+      VirtualFileSystem.getInstance().getChildren(folder);
+
+      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
+
+      eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
+      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 
 }

@@ -194,10 +194,9 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    }
 
-   public void closeTab(String path)
+   public void closeTab(String href)
    {
-      EditorTab tab = getEditorTab(path);
-
+      EditorTab tab = getEditorTab(href);
       if (tab == null)
       {
          return;
@@ -210,13 +209,13 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    }
 
-   private EditorTab getEditorTab(String path)
+   private EditorTab getEditorTab(String href)
    {
 //      TODO
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;
-         if (editorTab.getFile().getHref().equals(path))
+         if (editorTab.getFile().getHref().equals(href))
          {
             return editorTab;
          }
@@ -225,15 +224,14 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       return null;
    }
 
-   public String getTabContent(String path)
+   public String getTabContent(String href)
    {
-      EditorTab tab = getEditorTab(path);
+      EditorTab tab = getEditorTab(href);
       return tab.getTextEditor().getText();
    }
 
    public String getPathByEditorId(String editorId)
    {
-//      TODO
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;
@@ -246,9 +244,9 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       return null;
    }
 
-   public void updateTabTitle(String path)
+   public void updateTabTitle(String href)
    {
-      EditorTab tab = getEditorTab(path);
+      EditorTab tab = getEditorTab(href);
       tabSet.setTabTitle((Tab)tab, tab.getTabTitle());
    }
 

@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.command;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -48,38 +49,40 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    private ApplicationContext context;
 
    private Handlers handlers;
+   
+   private HandlerManager eventBus;
 
    public SaveFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
+      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveFileEvent.TYPE, this);
    }
 
    public void onSaveFile(SaveFileEvent event)
    {
-      //TODO
-//      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-//      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-//
-//      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
-//
-//      if (file.isContentChanged())
-//      {
-//         VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
-//         return;
-//      }
-//      else
-//      {
-//         if (file.isPropertiesChanged())
-//         {
-//            VirtualFileSystem.getInstance().saveProperties(file);
-//            return;
-//         }
-//      }
-//
-//      handlers.removeHandlers();
+      handlers.addHandler(FileContentSavedEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+
+      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
+
+      if (file.isContentChanged())
+      {
+         VirtualFileSystem.getInstance().saveFileContent(file);
+         return;
+      }
+      else
+      {
+         if (file.isPropertiesChanged())
+         {
+            VirtualFileSystem.getInstance().saveProperties(file);
+            return;
+         }
+      }
+
+      handlers.removeHandlers();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
@@ -90,6 +93,7 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
       }
       else
       {
+         eventBus.fireEvent(new FileSavedEvent((File)event.getFile(), null));
          handlers.removeHandlers();
       }
    }
@@ -97,6 +101,7 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       handlers.removeHandlers();
+      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
    }
 
    public void onError(ExceptionThrownEvent event)

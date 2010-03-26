@@ -150,7 +150,7 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       destroy();
    }
 
-   public HasValue<String> getItemPathField()
+   public HasValue<String> getItemHrefField()
    {
       return itemPathField;
    }

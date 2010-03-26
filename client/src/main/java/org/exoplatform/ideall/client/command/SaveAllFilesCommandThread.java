@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.command;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -48,10 +49,13 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    private ApplicationContext context;
 
    private Handlers handlers;
+   
+   private HandlerManager eventBus;
 
    public SaveAllFilesCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
+      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
    }
@@ -67,17 +71,16 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
 
    protected void saveNextUnsavedFile()
    {
-//      TODO
-//      for (File file : context.getOpenedFiles().values())
-//      {
-//         if (!file.isNewFile() && file.isContentChanged())
-//         {
-//            VirtualFileSystem.getInstance().saveFileContent(file, file.getPath());
-//            return;
-//         }
-//      }
-//
-//      handlers.removeHandlers();
+      for (File file : context.getOpenedFiles().values())
+      {
+         if (!file.isNewFile() && file.isContentChanged())
+         {
+            VirtualFileSystem.getInstance().saveFileContent(file);
+            return;
+         }
+      }
+
+      handlers.removeHandlers();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
@@ -88,12 +91,14 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
       }
       else
       {
+         eventBus.fireEvent(new FileSavedEvent(event.getFile(), null));
          saveNextUnsavedFile();
       }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
+      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
       saveNextUnsavedFile();
    }
 

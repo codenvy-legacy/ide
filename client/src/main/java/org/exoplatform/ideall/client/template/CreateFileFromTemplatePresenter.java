@@ -164,34 +164,34 @@ public class CreateFileFromTemplatePresenter
    protected void createFile()
    {
 //      TODO
-//      String fileName = display.getFileNameField().getValue();
-//      if ("".equals(fileName.trim()))
-//      {
-//         Dialogs.getInstance().showError("You must enter file name the first!");
-//         return;
-//      }
-//
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/"));
-//      }
-//
-//      String contentType = selectedTemplate.getMimeType();
-//
-//      File newFile = new File(path + "/" + fileName);
-//      newFile.setContentType(contentType);
-//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-//      newFile.setIcon(ImageUtil.getIcon(contentType));
-//      newFile.setNewFile(true);
-//      newFile.setContent(selectedTemplate.getContent());
-//      newFile.setContentChanged(true);
-//
-//      eventBus.fireEvent(new OpenFileEvent(newFile));
-//
-//      display.closeForm();
+      String fileName = display.getFileNameField().getValue();
+      if ("".equals(fileName.trim()))
+      {
+         Dialogs.getInstance().showError("You must enter file name the first!");
+         return;
+      }
+
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+      String href = item.getHref();
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/")+1);
+      }
+
+      String contentType = selectedTemplate.getMimeType();
+
+      File newFile = new File(href + fileName);
+      newFile.setContentType(contentType);
+      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
+      newFile.setIcon(ImageUtil.getIcon(contentType));
+      newFile.setNewFile(true);
+      newFile.setContent(selectedTemplate.getContent());
+      newFile.setContentChanged(true);
+
+      eventBus.fireEvent(new OpenFileEvent(newFile));
+
+      display.closeForm();
    }
 
 }

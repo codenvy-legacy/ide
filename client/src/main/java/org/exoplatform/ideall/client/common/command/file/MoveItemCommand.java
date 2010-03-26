@@ -105,15 +105,15 @@ public class MoveItemCommand extends IDECommand implements ItemsSelectedHandler,
          setEnabled(false);
          return;
       }
-//TODO
-//      if (selectedItem instanceof Workspace)
-//      {
-//         setEnabled(false);
-//      }
-//      else
-//      {
-//         setEnabled(true);
-//      }
+
+      if (selectedItem.getHref().equals(context.getEntryPoint()))
+      {
+         setEnabled(false);
+      }
+      else
+      {
+      setEnabled(true);
+      }
    }
 
    public void onPanelSelected(PanelSelectedEvent event)

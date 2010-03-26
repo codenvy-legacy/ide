@@ -263,11 +263,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void move(Item item, String destination)
    {
       String url = javaScriptEncodeURI(item.getHref());
-      String host = GWT.getModuleBaseURL();
-
-      String destinationURL = host.substring(0, host.indexOf("//") + 2);
-      host = host.substring(host.indexOf("//") + 2);
-      destinationURL += host.substring(0, host.indexOf("/"));
+//      String host = GWT.getModuleBaseURL();
+//
+//      String destinationURL = host.substring(0, host.indexOf("//") + 2);
+//      host = host.substring(host.indexOf("//") + 2);
+//      destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
       MoveCompleteEvent event = new MoveCompleteEvent(item, destination);
@@ -279,7 +279,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          Loader.getInstance().setMessage(Messages.MOVE_FILE);
 
          AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+            .header(HTTPHeader.DESTINATION, destination).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
       else
       {
@@ -288,9 +288,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             url += "/";
          }
 
-         if (!destinationURL.endsWith("/"))
+         if (!destination.endsWith("/"))
          {
-            destinationURL += "/";
+            destination += "/";
          }
 
          AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
@@ -298,7 +298,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          Loader.getInstance().setMessage(Messages.MOVE_FOLDER);
 
          AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+            .header(HTTPHeader.DESTINATION, destination).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
 
    }

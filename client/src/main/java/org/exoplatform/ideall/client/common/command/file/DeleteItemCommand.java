@@ -113,14 +113,14 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
          return;
       }
       //TODO 
-//      if (selectedItem instanceof Workspace)
+//      if (selectedItem instanceof EntryP)
 //      {
 //         setEnabled(false);
 //      }
 //      else
 //      {
-//         setEnabled(true);
-//      }
+         setEnabled(true);
+      
    }
 
 }

@@ -131,7 +131,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       System.out.println("file content saved: " + event.getFile().getHref());
       if (event.isNewFile())
       {
-         handlers.removeHandlers();
          VirtualFileSystem.getInstance().getProperties(event.getFile());
       }
       else
