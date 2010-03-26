@@ -61,7 +61,7 @@ public class MockDiscoveryServiceImpl extends DiscoveryService
 
          }
 
-      }.schedule(2000);
+      }.schedule(1000);
    }
 
 }
