@@ -46,7 +46,7 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
       this.file = file;
       this.forceClosing = forceClosing;
    }   
-   
+
    public boolean isForceClosing()
    {
       return forceClosing;
