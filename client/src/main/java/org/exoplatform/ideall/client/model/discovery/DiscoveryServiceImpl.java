@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ideall.client.model.discovery;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 
 
 /**
@@ -23,20 +25,19 @@ package org.exoplatform.ideall.client.model.discovery;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MockEntryPointService
+public class DiscoveryServiceImpl extends DiscoveryService
 {
-   private static MockEntryPointService instance;
+
+   private HandlerManager eventBus;
    
-   public static MockEntryPointService getInstance() {
-      return instance;
-   }
-   
-   protected MockEntryPointService()
+   public DiscoveryServiceImpl(HandlerManager eventBus)
    {
-      instance = this;
+      this.eventBus = eventBus;
    }
    
-   public abstract void getEntryPoints(); 
+   @Override
+   public void getEntryPoints()
+   {
+   }
 
 }
-

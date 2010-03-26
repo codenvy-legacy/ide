@@ -16,31 +16,52 @@
  */
 package org.exoplatform.ideall.client.model.discovery;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
+
 import com.google.gwt.event.shared.HandlerManager;
-
-
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointServiceImpl extends EntryPointService
+public class MockDiscoveryServiceImpl extends DiscoveryService
 {
 
    private HandlerManager eventBus;
-   
-   public EntryPointServiceImpl(HandlerManager eventBus)
+
+   public MockDiscoveryServiceImpl(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
    }
-   
+
    @Override
    public void getEntryPoints()
    {
-      // TODO Auto-generated method stub
+      Loader.getInstance().show();
 
+      new Timer()
+      {
+
+         @Override
+         public void run()
+         {
+            Loader.getInstance().hide();
+
+            List<String> entryPoint = new ArrayList<String>();
+            entryPoint.add("/rest/private/jcr/repository/production");
+            entryPoint.add("/rest/private/jcr/repository/dev-monit");
+
+            eventBus.fireEvent(new EntryPointsReceivedEvent(entryPoint));
+
+         }
+
+      }.schedule(2000);
    }
 
 }
-

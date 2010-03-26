@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
 {
+   
    public static GwtEvent.Type<EditorOpenFileHandler> TYPE = new GwtEvent.Type<EditorOpenFileHandler>();
 
    private File file;
@@ -66,5 +67,6 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
    {  
       return TYPE;
    }
+   
 }
 

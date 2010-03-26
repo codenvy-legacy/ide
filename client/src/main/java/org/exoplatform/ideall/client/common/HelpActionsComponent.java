@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.application.component.AbstractApplicationCo
 import org.exoplatform.ideall.client.component.AboutForm;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogHandler;
-import org.exoplatform.ideall.client.model.discovery.MockEntryPointService;
+import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ideall.client.toolbar.customize.CustomizeToolbarForm;
@@ -66,9 +66,7 @@ public class HelpActionsComponent extends AbstractApplicationComponent implement
 
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
-      //new SelectWorkspaceForm(eventBus, context);
-     // new EntryPointListForm(eventBus, context);
-     MockEntryPointService.getInstance().getEntryPoints();
+      DiscoveryService.getInstance().getEntryPoints();
    }
 
    public void onShowAboutDialog(ShowAboutDialogEvent event)

@@ -11,7 +11,7 @@ import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ideall.client.model.discovery.MockEntryPointSeviceImpl;
+import org.exoplatform.ideall.client.model.discovery.MockDiscoveryServiceImpl;
 import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.client.model.jcrservice.RepositoryServiceImpl;
@@ -70,7 +70,7 @@ public class IDE
       
       new WadlServiceImpl(eventBus);
       
-      new MockEntryPointSeviceImpl(eventBus);
+      new MockDiscoveryServiceImpl(eventBus);
 
       final ApplicationContext context = new ApplicationContext();
 

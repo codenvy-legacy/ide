@@ -24,15 +24,15 @@ package org.exoplatform.ideall.client.model.discovery;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class EntryPointService
+public abstract class DiscoveryService
 {
-   private static EntryPointService instance;
+   private static DiscoveryService instance;
    
-   public static EntryPointService getInstance() {
+   public static DiscoveryService getInstance() {
       return instance;
    }
    
-   protected EntryPointService()
+   protected DiscoveryService()
    {
       instance = this;
    }
@@ -40,4 +40,3 @@ public abstract class EntryPointService
    public abstract void getEntryPoints(); 
 
 }
-
