@@ -183,7 +183,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          }
       });
 
-      statusBar = new StatusBarForm(eventBus);
+      statusBar = new StatusBarForm(eventBus, context);
       addMember(statusBar);
    }
 

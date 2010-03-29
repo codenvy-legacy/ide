@@ -14,6 +14,7 @@ var appConfig = {
 	"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
 	"publicContext" : "/rest",
 	"entryPoint" : "/rest/private/jcr/repository/dev-monit"
+	//"entryPoint" : "http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit"
 }
 
 var metadata = {};
