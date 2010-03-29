@@ -24,7 +24,6 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
-import org.exoplatform.ideall.client.model.jcrservice.bean.RepositoryServiceConfiguration;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
@@ -72,10 +71,6 @@ public class ApplicationContext
 
    private String entryPoint;
 
-   /**
-    * Configuration of Repository Service
-    */
-   private RepositoryServiceConfiguration repositoryServiceConfiguration;
 
    /*
     * Last entered value in Groovy script output form
@@ -247,22 +242,6 @@ public class ApplicationContext
    public void setEntryPoint(String entryPoint)
    {
       this.entryPoint = entryPoint;
-   }
-
-   /**
-    * @return the repositoryServiceConfiguration
-    */
-   public RepositoryServiceConfiguration getRepositoryServiceConfiguration()
-   {
-      return repositoryServiceConfiguration;
-   }
-
-   /**
-    * @param repositoryServiceConfiguration the repositoryServiceConfiguration to set
-    */
-   public void setRepositoryServiceConfiguration(RepositoryServiceConfiguration repositoryServiceConfiguration)
-   {
-      this.repositoryServiceConfiguration = repositoryServiceConfiguration;
    }
 
    /**

@@ -12,10 +12,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryServiceImpl;
-import org.exoplatform.ideall.client.model.discovery.MockDiscoveryServiceImpl;
 import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
-import org.exoplatform.ideall.client.model.jcrservice.RepositoryServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.vfs.webdav.WebDavVirtualFileSystem;
@@ -33,7 +31,7 @@ public class IDE
 
    public IDE()
    {
-	   
+
       for (int i = 0; i < 30; i++)
       {
          System.out.println();
@@ -59,8 +57,6 @@ public class IDE
 
       new ConversationServiceImpl(eventBus);
 
-      new RepositoryServiceImpl(eventBus);
-
       new WebDavVirtualFileSystem(eventBus);
 
       new GroovyServiceImpl(eventBus);
@@ -68,9 +64,9 @@ public class IDE
       new GadgetServiceImpl(eventBus);
 
       new TemplateServiceImpl(eventBus);
-      
+
       new WadlServiceImpl(eventBus);
-      
+
       //new MockDiscoveryServiceImpl(eventBus);
       new DiscoveryServiceImpl(eventBus);
 
@@ -82,11 +78,11 @@ public class IDE
 
       context.getComponents().add(new CommonActionsComponent());
       context.getComponents().add(new GroovyActionsComponent());
-      
+
       context.getComponents().add(new GadgetActionsComponent());
-      
+
       context.getComponents().add(new HelpActionsComponent());
-      
+
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       new DevToolForm(eventBus, context);
