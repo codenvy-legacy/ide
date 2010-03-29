@@ -81,15 +81,14 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-//      TODO
-//      String path = event.getFile() != null ? event.getFile().getPath() : "";
-//      if (path.equals(currentHistoryToken))
-//      {
-//         return;
-//      }
-//
-//      currentHistoryToken = path;
-//      History.newItem(path);
+      String path = event.getFile() != null ? event.getFile().getHref() : "";
+      if (path.equals(currentHistoryToken))
+      {
+         return;
+      }
+
+      currentHistoryToken = path;
+      History.newItem(path);
    }
 
    public void onValueChange(ValueChangeEvent<String> value)

@@ -140,7 +140,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onUploadFile(UploadFileEvent event)
    {
-//      TODO
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String path = item.getHref();
@@ -205,7 +204,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    private String getURL()
    {
-//      TODO
       String url =
 //         Location.getProtocol() + "//" + Location.getHost()
 //            +

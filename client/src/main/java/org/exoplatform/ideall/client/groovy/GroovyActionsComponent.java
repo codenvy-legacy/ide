@@ -99,14 +99,14 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
 
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-//TODO
-//      GroovyService.getInstance().deploy(context.getActiveFile().getPath());
+      //TODO
+      GroovyService.getInstance().deploy(context.getActiveFile().getHref());
    }
 
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
 //TODO
-//      GroovyService.getInstance().undeploy(context.getActiveFile().getPath());
+      GroovyService.getInstance().undeploy(context.getActiveFile().getHref());
    }
 
    public void onPreviewGroovyOutput(PreviewGroovyOutputEvent event)

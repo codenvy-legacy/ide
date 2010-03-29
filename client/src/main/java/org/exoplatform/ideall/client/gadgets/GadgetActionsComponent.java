@@ -52,7 +52,7 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
     */
    public void onDeployGadget(DeployGadgetEvent event)
    {
-
+      System.out.println("gadget url: " + getURL());
       GadgetService.getInstance().deployGadget(getURL());
    }
 
@@ -79,10 +79,11 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
    private String getURL()
    {
       //TODO
-//      String url = Location.getProtocol() + "//" + Location.getHost() +
-//         Configuration.getInstance().getPublicContext() + "/jcr" + context.getActiveFile().getPath();
-//      return url;
-      return null;
+      String url = 
+//         Location.getProtocol() + "//" + Location.getHost() +
+//         Configuration.getInstance().getPublicContext() + "/jcr" + 
+         context.getActiveFile().getHref();
+      return url;
    }
 
    /**
