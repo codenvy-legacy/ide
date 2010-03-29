@@ -120,7 +120,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       public void onTabSelected(TabSelectedEvent event)
       {
-//         TODO
          try
          {
             activeTab = (EditorTab)event.getTab();
@@ -211,7 +210,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    private EditorTab getEditorTab(String href)
    {
-//      TODO
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;
@@ -267,7 +265,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void relocateFile(File oldFile, File newFile)
    {
-//      TODO
       for (Tab tab : tabSet.getTabs())
       {
          EditorTab editorTab = (EditorTab)tab;

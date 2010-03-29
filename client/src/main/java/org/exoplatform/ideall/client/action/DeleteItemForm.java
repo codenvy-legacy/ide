@@ -63,7 +63,6 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    {
       super(eventBus, WIDTH, HEIGHT);
 
-//      TODO
       if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
       {
          prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref() + "</b> ?";

@@ -163,7 +163,6 @@ public class CreateFileFromTemplatePresenter
 
    protected void createFile()
    {
-//      TODO
       String fileName = display.getFileNameField().getValue();
       if ("".equals(fileName.trim()))
       {

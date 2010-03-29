@@ -141,15 +141,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onUploadFile(UploadFileEvent event)
    {
 //      TODO
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//
-//      String path = item.getPath();
-//      if (item instanceof File)
-//      {
-//         path = path.substring(path.lastIndexOf("/"));
-//      }
-//      eventBus.fireEvent(new ClearFocusEvent());
-//      new UploadForm(eventBus, path);
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+      String path = item.getHref();
+      if (item instanceof File)
+      {
+         path = path.substring(path.lastIndexOf("/"));
+      }
+      eventBus.fireEvent(new ClearFocusEvent());
+      new UploadForm(eventBus, path);
    }
 
    public void onCreateFolder(CreateFolderEvent event)
@@ -206,14 +206,14 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    private String getURL()
    {
 //      TODO
-//      String url =
+      String url =
 //         Location.getProtocol() + "//" + Location.getHost()
 //            +
 //            //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
 //            Configuration.getInstance().getContext() + "/jcr"
-//            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getPath();
-//      return url;
-      return null;
+             context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+      return url;
+//      return null;
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)

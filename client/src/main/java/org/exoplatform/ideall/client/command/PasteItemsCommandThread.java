@@ -152,7 +152,6 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void cutNextItem()
    {
-      //      TODO
       if (context.getItemsToCut().size() == 0)
       {
          operationCompleted();

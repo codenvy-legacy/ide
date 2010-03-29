@@ -175,7 +175,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void deleteItemsComplete()
    {
-      //      TODO
       if (lastDeletedItem == null)
       {
          return;

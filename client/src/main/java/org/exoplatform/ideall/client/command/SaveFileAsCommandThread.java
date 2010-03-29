@@ -82,7 +82,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private void onSaveAsFile(final File file)
    {
-      //      TODO
       String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
       new AskForValueDialog("Save file as...", "Enter new file name:", newFileName, 400, new ValueCallback()
