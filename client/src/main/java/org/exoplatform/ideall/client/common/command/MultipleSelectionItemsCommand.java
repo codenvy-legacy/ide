@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
@@ -32,7 +33,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 */
 public class MultipleSelectionItemsCommand extends IDECommand implements PanelSelectedHandler
 {
-   
+
    protected boolean browserSelected = true;
 
    public MultipleSelectionItemsCommand(String id)
@@ -46,18 +47,22 @@ public class MultipleSelectionItemsCommand extends IDECommand implements PanelSe
       addHandler(PanelSelectedEvent.TYPE, this);
    }
 
-   public boolean isItemsInSameFolderOrNotSelectedWorspace(List<Item> items)
+   public boolean isItemsInSameFolder(List<Item> items)
    {
-//      TODO
       List<String> hrefs = new ArrayList<String>();
       for (Item i : items)
       {
-         if(i.getHref().equals(context.getEntryPoint()))
+         if (i.getHref().equals(context.getEntryPoint()))
          {
             return false;
          }
          String p = i.getHref();
          p = p.substring(0, p.lastIndexOf("/"));
+         // folders href ends with "/"
+         if (i instanceof Folder)
+         {
+            p = p.substring(0, p.lastIndexOf("/"));
+         }
          hrefs.add(p);
 
       }
@@ -88,7 +93,7 @@ public class MultipleSelectionItemsCommand extends IDECommand implements PanelSe
          setEnabled(false);
       }
    }
-   
+
    public void onPanelSelected(PanelSelectedEvent event)
    {
       browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;

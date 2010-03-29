@@ -16,17 +16,22 @@
  */
 package org.exoplatform.ideall.client.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
@@ -51,6 +56,10 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private ApplicationContext context;
 
    private Handlers handlers;
+   
+   private Item lastPasteItem;
+   
+   private Folder folderToPast;
 
    public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -67,6 +76,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       {
          handlers.addHandler(CopyCompleteEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         folderToPast = null;
          copyNextItem();
          return;
       }
@@ -83,16 +93,16 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private String getPathToPaste(Item item)
    {
-//      TODO
-//      String selectedNavigationPanel = context.getSelectedNavigationPanel();
-//      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
-//      {
-//         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getPath();
-//         return path.substring(0, path.lastIndexOf("/"));
-//      }
-//
-//      return context.getSelectedItems(selectedNavigationPanel).get(0).getPath();
-      return null;
+      //      TODO
+      String selectedNavigationPanel = context.getSelectedNavigationPanel();
+      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
+      {
+         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getHref();
+         return path.substring(0, path.lastIndexOf("/") + 1);
+      }
+
+      return context.getSelectedItems(selectedNavigationPanel).get(0).getHref();
+      //      return null;
    }
 
    /****************************************************************************************************
@@ -101,30 +111,30 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void copyNextItem()
    {
-//      TODO
-//      if (context.getItemsToCopy().size() == 0)
-//      {
-//         operationCompleted();
-//         return;
-//      }
-//
-//      Item item = context.getItemsToCopy().get(0);
-//
-//      String pathFromCopy = item.getPath();
-//      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
-//
-//      String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-//
-//      if (pathFromCopy.equals(pathToCopy))
-//      {
-//         String message = "Can't copy files in the same directory!";
-//         Dialogs.getInstance().showError(message);
-//         return;
-//      }
-//
-//      String destination = pathToCopy + "/" + item.getName();
-//
-//      VirtualFileSystem.getInstance().copy(item, destination);
+      //      TODO
+      if (context.getItemsToCopy().size() == 0)
+      {
+         operationCompleted();
+         return;
+      }
+
+      Item item = context.getItemsToCopy().get(0);
+
+      String pathFromCopy = item.getHref();
+      pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/"));
+
+      String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+
+      if (pathFromCopy.equals(pathToCopy))
+      {
+         String message = "Can't copy files in the same directory!";
+         Dialogs.getInstance().showError(message);
+         return;
+      }
+
+      String destination = pathToCopy  + item.getName();
+      //System.out.println("Destination: " + destination);
+      VirtualFileSystem.getInstance().copy(item, destination);
    }
 
    public void onCopyComplete(CopyCompleteEvent event)
@@ -132,6 +142,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       if (context.getItemsToCopy().size() != 0)
       {
          context.getItemsToCopy().remove(event.getCopiedItem());
+         lastPasteItem = event.getCopiedItem();
          copyNextItem();
       }
    }
@@ -142,58 +153,59 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void cutNextItem()
    {
-//      TODO
-//      if (context.getItemsToCut().size() == 0)
-//      {
-//         operationCompleted();
-//         return;
-//      }
-//
-//      Item item = context.getItemsToCut().get(0);
-//
-//      if (item instanceof File)
-//      {
-//         File file = (File)item;
-//         if (context.getOpenedFiles().get(file.getPath()) != null)
-//         {
-//            final File openedFile = context.getOpenedFiles().get(file.getPath());
-//            if (openedFile.isContentChanged())
-//            {
-//               Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
-//                  new BooleanValueReceivedCallback()
-//                  {
-//                     public void execute(Boolean value)
-//                     {
-//                        if (value != null && value == true)
-//                        {
-//                           VirtualFileSystem.getInstance().saveFileContent(openedFile, openedFile.getPath());
-//                        }
-//                        else
-//                        {
-//                           handlers.removeHandlers();
-//                        }
-//                     }
-//                  });
-//               return;
-//            }
-//
-//         }
-//      }
-//
-//      String pathFromCut = item.getPath();
-//      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
-//
-//      String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-//      if (pathFromCut.equals(pathToCut))
-//      {
-//         String message = "Can't move files in the same directory!";
-//         Dialogs.getInstance().showError(message);
-//         return;
-//      }
-//
-//      String destination = pathToCut + "/" + item.getName();
-//
-//      VirtualFileSystem.getInstance().move(item, destination);
+      //      TODO
+      if (context.getItemsToCut().size() == 0)
+      {
+         operationCompleted();
+         return;
+      }
+
+      Item item = context.getItemsToCut().get(0);
+
+      if (item instanceof File)
+      {
+         File file = (File)item;
+         if (context.getOpenedFiles().get(file.getHref()) != null)
+         {
+            final File openedFile = context.getOpenedFiles().get(file.getHref());
+            if (openedFile.isContentChanged())
+            {
+               Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
+                  new BooleanValueReceivedCallback()
+                  {
+                     public void execute(Boolean value)
+                     {
+                        if (value != null && value == true)
+                        {
+                           VirtualFileSystem.getInstance().saveFileContent(openedFile);
+                        }
+                        else
+                        {
+                           handlers.removeHandlers();
+                        }
+                     }
+                  });
+               return;
+            }
+
+         }
+      }
+
+      String pathFromCut = item.getHref();
+      pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/"));
+
+      String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+      folderToPast = new Folder(pathToCut);
+      if (pathFromCut.equals(pathToCut))
+      {
+         String message = "Can't move files in the same directory!";
+         Dialogs.getInstance().showError(message);
+         return;
+      }
+
+      String destination = pathToCut  + item.getName();
+
+      VirtualFileSystem.getInstance().move(item, destination);
    }
 
    /****************************************************************************************************
@@ -209,7 +221,23 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
-      eventBus.fireEvent(new RefreshBrowserEvent());
+      String pastedItemHref = lastPasteItem.getHref();
+
+      pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/") + 1);
+
+      Folder folder = new Folder(pastedItemHref);
+      if (folderToPast != null)
+      {
+         List<Folder> folders = new ArrayList<Folder>();
+         folders.add(folder);
+         folders.add(folderToPast);
+         
+         eventBus.fireEvent(new RefreshBrowserEvent(folders,folderToPast));
+         //eventBus.fireEvent(new SelectItemEvent(folder));
+         return;
+      }
+      eventBus.fireEvent(new RefreshBrowserEvent(folder));
+      eventBus.fireEvent(new SelectItemEvent(folder));
    }
 
    public void onMoveComplete(MoveCompleteEvent event)
@@ -217,6 +245,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());
+         lastPasteItem = event.getItem();
          cutNextItem();
       }
 

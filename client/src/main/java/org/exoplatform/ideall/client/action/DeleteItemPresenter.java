@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -182,15 +183,16 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       String selectedItemHref = lastDeletedItem.getHref();
 
-      selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/"));
+      selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/") + 1);
 
       Folder folder = new Folder(selectedItemHref);
-      VirtualFileSystem.getInstance().getChildren(folder);
+     // VirtualFileSystem.getInstance().getChildren(folder);
 
       context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
       context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
 
-      eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
+      eventBus.fireEvent(new RefreshBrowserEvent(folder));
+      eventBus.fireEvent(new SelectItemEvent(folder));
       //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 

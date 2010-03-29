@@ -18,6 +18,7 @@
 package org.exoplatform.ideall.client.browser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -93,9 +94,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
    private ApplicationContext context;
 
-   private String folderToUpdate;
+   private String itemToSelect;
 
-   private String forlderToSelect;
+   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -144,19 +145,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    }
 
    /**
-    * Handling of folder opened event from browser
-    * 
-    * @param openedFolder
-    */
-   protected void onFolderOpened(Folder openedFolder)
-   {
-      if (openedFolder.getChildren() == null)
-      {
-         VirtualFileSystem.getInstance().getChildren(openedFolder);
-      }
-   }
-
-   /**
     * 
     * Handling item selected event from browser
     * @param item
@@ -194,72 +182,121 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       if (item instanceof File)
       {
          context.setSelectedEditorDescription(null);
-         //VirtualFileSystem.getInstance().getFileContent((File)item);
          eventBus.fireEvent(new OpenFileEvent((File)item));
       }
    }
 
    /**
-    * Refreshing browser content ( selected item path only )
+    * Handling of folder opened event from browser
     * 
-    * @see org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler#onRefreshBrowser()
+    * @param openedFolder
     */
-   public void onRefreshBrowser(RefreshBrowserEvent event)
+   protected void onFolderOpened(Folder openedFolder)
    {
-      //TODO df adsfadsflksadm
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      if (event.getFolders() != null)
-      {
-         for (Folder folder : event.getFolders())
-         {
-            System.out.println("========================================================");
-            System.out.println("folders to refresh: " + event.getFolders().length);
-            System.out.println(folder.getHref());
-            System.out.println("========================================================");
-            handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-            System.out.println("refresh: " + folder.getHref());
-            VirtualFileSystem.getInstance().getChildren(folder);
-         }
-      }
-      else
-      {
-         if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
-         {
-            return;
-         }
-         Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-         String href = item.getHref();
-         if (item instanceof File)
-         {
-            href = href.substring(0, href.lastIndexOf("/"));
-         }
-
-         handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-         Folder folder = new Folder(href);
-         VirtualFileSystem.getInstance().getChildren(folder);
-      }
+      itemToSelect = null;
+      foldersToRefresh = new ArrayList<Folder>();
+      foldersToRefresh.add(openedFolder);
+      refreshNextFolder();
    }
 
-   //   /**
-   //    * Handling of file content saved event.
-   //    * After saving folder which contains saved file will be refreshed. 
-   //    * 
-   //    * @see org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent)
-   //    */
-   //   public void onFileContentSaved(FileContentSavedEvent event)
-   //   {
-   //      //      TODO
-   //      //      if (!event.isNewFile() && !event.isSaveAs())
-   //      //      {
-   //      //         return;
-   //      //      }
-   //      //
-   //      //      String path = event.getPath();
-   //      //      path = path.substring(0, path.lastIndexOf("/")) + "/";
-   //      //      Folder folder = new Folder(path);
-   //      //      VirtualFileSystem.getInstance().getChildren(folder);
-   //   }
+   public void onRefreshBrowser(RefreshBrowserEvent event)
+   {
+      if (event.getItemToSelect() != null)
+      {
+         itemToSelect = event.getItemToSelect().getHref();
+      }
+      else 
+      {
+         itemToSelect = null;
+      }      
+      
+      if (event.getFolders() != null) {
+         foldersToRefresh = event.getFolders();
+      } else {
+         foldersToRefresh = new ArrayList<Folder>();
+         
+         Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+         if (item instanceof File)
+         {
+            String href = item.getHref();
+            href = href.substring(0, href.lastIndexOf("/"));
+            Folder folder = new Folder(href);
+            foldersToRefresh.add(folder);
+         }
+         else
+         {
+            foldersToRefresh.add((Folder)item);
+         }
+      }
+      
+      refreshNextFolder();
+   }
 
+
+   private void refreshNextFolder()
+   {
+      System.out.println("!!!!!! item to select: " + itemToSelect);
+
+      if (foldersToRefresh.size() == 0)
+      {
+         return;
+      }
+
+      System.out.println("refresh dir: " + foldersToRefresh.get(0).getHref());
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      
+      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0));
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      itemToSelect = null;
+      foldersToRefresh.clear();
+      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
+      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+   }
+
+   /**
+    * Handling folder content receiving.
+    * Browser subtree should be refreshed and browser panel should be selected.
+    * 
+    */
+   public void onChildrenReceived(ChildrenReceivedEvent event)
+   {
+      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
+      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+      foldersToRefresh.remove(event.getFolder());
+      
+      Collections.sort(event.getFolder().getChildren(), comparator);
+      display.getBrowserTree().setValue(event.getFolder());
+
+      eventBus.fireEvent(new RestorePerspectiveEvent());
+      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
+
+      if (itemToSelect != null)
+      {
+//         System.out.println("children received for > " + event.getFolder().getHref());
+//         System.out.println("try select > " + itemToSelect);
+//         display.selectItem(itemToSelect);
+         itemToSelect = null;
+      }
+      
+      if (foldersToRefresh.size() > 0 )
+      {
+         refreshNextFolder();
+      }
+      //      if (folderToUpdate != null)
+      //      {
+      //         String path = folderToUpdate;
+      //         folderToUpdate = null;
+      //         Folder folder = new Folder(path);
+      //         VirtualFileSystem.getInstance().getChildren(folder);
+      //      }
+   }
+   
+   
+   
    /**
     * Switching active workspace
     */
@@ -277,6 +314,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
 
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
 
@@ -312,36 +350,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
    };
 
-   /**
-    * Handling folder content receiving.
-    * Browser subtree should be refreshed and browser panel should be selected.
-    * 
-    */
-   public void onChildrenReceived(ChildrenReceivedEvent event)
-   {
-      Collections.sort(event.getFolder().getChildren(), comparator);
-
-      System.out.println("children received for: " + event.getFolder().getHref());
-      
-      display.getBrowserTree().setValue(event.getFolder());
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-
-      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
-      if (forlderToSelect != null)
-      {
-         display.selectItem(forlderToSelect);
-         forlderToSelect = null;
-      }
-
-//      if (folderToUpdate != null)
-//      {
-//         String path = folderToUpdate;
-//         folderToUpdate = null;
-//         Folder folder = new Folder(path);
-//         VirtualFileSystem.getInstance().getChildren(folder);
-//      }
-   }
 
    /**
    * Registering handlers
@@ -350,14 +358,13 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      
 
-      //handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      // handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
 
       handlers.addHandler(SelectItemEvent.TYPE, this);
 
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       handlers.addHandler(PanelSelectedEvent.TYPE, this);
    }
@@ -381,12 +388,15 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onSelectItem(SelectItemEvent event)
    {
-      display.selectItem(event.getPath());
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      forlderToSelect = null;
+      if (event.getItem() instanceof Folder)
+      {
+         itemToSelect = event.getItem().getHref();
+      }
+      else
+      {
+         itemToSelect = null;
+      }
+      display.selectItem(event.getItem().getHref());
    }
 
    public void onPanelSelected(PanelSelectedEvent event)

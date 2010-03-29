@@ -73,7 +73,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
 
-      if (!isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems()))
+      if (!isItemsInSameFolder(event.getSelectedItems()))
       {
          setEnabled(false);
          return;

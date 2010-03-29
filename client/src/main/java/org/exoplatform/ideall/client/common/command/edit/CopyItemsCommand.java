@@ -22,7 +22,6 @@ import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -58,7 +57,6 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
    protected void onRegisterHandlers()
    {
       addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(PanelSelectedEvent.TYPE, this);
       super.onRegisterHandlers();
    }
 
@@ -67,7 +65,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       if(event.getSelectedItems().size() != 0)
       {
          selectedItem = event.getSelectedItems().get(0);
-         copyReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
+         copyReady = isItemsInSameFolder(event.getSelectedItems());
          updateEnabling();
       }
    }

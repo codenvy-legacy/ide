@@ -146,13 +146,17 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private TreeNode getNodeByHref(String href)
    {
-      for (int i = 0; i < 5; i++)
-      {
-         System.out.println();
-      }
+//      for (int i = 0; i < 5; i++)
+//      {
+//         System.out.println();
+//      }
+      
+      System.out.println("getNodeByHref(String href) " + href);
 
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
+      System.out.println("rootFolder.getHref() " + rootFolder.getHref());
       String path = href.substring(rootFolder.getHref().length());
+      
       if (path.startsWith("/"))
       {
          path = path.substring(1);

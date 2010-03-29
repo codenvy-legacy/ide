@@ -90,7 +90,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       if (event.getSelectedItems().size() != 0)
       {
          selectedItem = event.getSelectedItems().get(0);
-         cutReady = isItemsInSameFolderOrNotSelectedWorspace(event.getSelectedItems());
+         cutReady = isItemsInSameFolder(event.getSelectedItems());
          updateEnabling();
       }
 

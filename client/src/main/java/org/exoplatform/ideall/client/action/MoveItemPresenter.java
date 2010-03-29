@@ -17,12 +17,12 @@
 package org.exoplatform.ideall.client.action;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -249,8 +249,10 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          String href1 = source.substring(0, source.lastIndexOf("/"));
          String href2 = destination.substring(0, destination.lastIndexOf("/"));
 
-         // folderToUpdate = href2;
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href1), new Folder(href2)));
+         List<Folder> folders = new ArrayList<Folder>();
+         folders.add(new Folder(href1));
+         folders.add(new Folder(href2));
+         eventBus.fireEvent(new RefreshBrowserEvent(folders, new Folder(destination)));
          //VirtualFileSystem.getInstance().getChildren();
       }
       display.closeForm();

@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.browser.event;
 
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -33,16 +35,16 @@ public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 
    public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   private String path;
+   private Item item;
 
-   public SelectItemEvent(String path)
+   public SelectItemEvent(Item item)
    {
-      this.path = path;
+      this.item = item;
    }
 
-   public String getPath()
+   public Item getItem()
    {
-      return path;
+      return item;
    }
 
    @Override

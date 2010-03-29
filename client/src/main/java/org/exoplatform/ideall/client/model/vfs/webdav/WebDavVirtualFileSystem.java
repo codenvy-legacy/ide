@@ -307,11 +307,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void copy(Item item, String destination)
    {
       String url = javaScriptEncodeURI(item.getHref());
-      String host = GWT.getModuleBaseURL();
+//      String host = GWT.getModuleBaseURL();
 
-      String destinationURL = host.substring(0, host.indexOf("//") + 2);
-      host = host.substring(host.indexOf("//") + 2);
-      destinationURL += host.substring(0, host.indexOf("/"));
+      String destinationURL = destination;
+      //host.substring(0, host.indexOf("//") + 2);
+//      host = host.substring(host.indexOf("//") + 2);
+//      destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
       CopyCompleteEvent event = new CopyCompleteEvent(item, destination);

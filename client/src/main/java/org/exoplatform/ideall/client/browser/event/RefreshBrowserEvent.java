@@ -16,7 +16,11 @@
  */
 package org.exoplatform.ideall.client.browser.event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,26 +34,40 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
 
    public static GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
 
-   private Folder[] folders;
-   
+   private List<Folder> folders;
+
+   private Item itemToSelect;
+
    public RefreshBrowserEvent()
-   {   
+   {
    }
+
+   public RefreshBrowserEvent(Folder folder)
+   {
+      folders = new ArrayList<Folder>();
+      folders.add(folder);
+   }   
    
-   public RefreshBrowserEvent(Folder ...folders)
-   {   
+   public RefreshBrowserEvent(List<Folder> folders, Item itemToSelect)
+   {
       this.folders = folders;
+      this.itemToSelect = itemToSelect;
    }
-   
+
    @Override
    protected void dispatch(RefreshBrowserHandler handler)
    {
       handler.onRefreshBrowser(this);
    }
 
-   public Folder[] getFolders()
+   public List<Folder> getFolders()
    {
       return folders;
+   }
+
+   public Item getItemToSelect()
+   {
+      return itemToSelect;
    }
 
    @Override
@@ -57,5 +75,5 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
    {
       return TYPE;
    }
-   
+
 }
