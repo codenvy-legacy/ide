@@ -60,13 +60,9 @@ public class EntryPointListEntity implements StreamingOutput
       {
          XMLStreamWriter xmlStreamWriter =
             XMLOutputFactory.newInstance().createXMLStreamWriter(stream, Constants.DEFAULT_ENCODING);
-         //xmlStreamWriter.setNamespaceContext(namespaceContext);
-         //xmlStreamWriter.setDefaultNamespace("DAV:");
 
          xmlStreamWriter.writeStartDocument();
          xmlStreamWriter.writeStartElement("entrypoints");
-
-         //traverseResources(rootResource, 0);
          
          for (String entryPoint : entryPoints) {
             xmlStreamWriter.writeStartElement("entrypoint");
@@ -74,15 +70,11 @@ public class EntryPointListEntity implements StreamingOutput
             xmlStreamWriter.writeEndElement();
          }
 
-         // D:multistatus
          xmlStreamWriter.writeEndElement();
          xmlStreamWriter.writeEndDocument();
-
-         // rootNode.accept(this);
       }
       catch (Exception exc)
       {
-
          log.error(exc.getMessage(), exc);
          throw new IOException(exc.getMessage());
       }
