@@ -388,15 +388,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onSelectItem(SelectItemEvent event)
    {
-      if (event.getItem() instanceof Folder)
-      {
-         itemToSelect = event.getItem().getHref();
-      }
-      else
-      {
-         itemToSelect = null;
-      }
-      display.selectItem(event.getItem().getHref());
+      display.selectItem(event.getItemHref());
    }
 
    public void onPanelSelected(PanelSelectedEvent event)

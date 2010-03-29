@@ -192,7 +192,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
 
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
-      eventBus.fireEvent(new SelectItemEvent(folder));
+      eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
       //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 

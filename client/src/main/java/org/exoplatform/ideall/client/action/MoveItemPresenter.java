@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -89,7 +90,6 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
    {
       display = d;
 
-      //      TODO
       display.getItemHrefField().setValue(
          context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
 
@@ -128,7 +128,6 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       handlers.removeHandlers();
    }
 
-   //   TODO
    protected void move()
    {
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
@@ -212,55 +211,30 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      //      String dest = event.getDestination();
-      //      ArrayList<String> keys = new ArrayList<String>();
-      //      for (String key : context.getOpenedFiles().keySet())
-      //      {
-      //         keys.add(key);
-      //      }
-      //
-      //      for (String key : keys)
-      //      {
-      //         if (key.startsWith(event.getItem().getHref()))
-      //         {
-      //            File file = context.getOpenedFiles().get(key);
-      //            String sourcePath = file.getHref();
-      //            String destinationHref = file.getHref();
-      //
-      //            destinationHref = destinationHref.substring(event.getItem().getHref().length());
-      //            destinationHref = dest + destinationHref;
-      //            System.out.println("move open file to: " + destinationHref);
-      //            file.setHref(destinationHref);
-      //            eventBus.fireEvent(new OpenFileEvent(file));
-      //         }
-      //      }
-
-      //            TODO
       String source = event.getItem().getHref();
       String destination = event.getDestination();
 
       if (isSameFolder(source, destination))
       {
-         String href = source.substring(0, source.lastIndexOf("/"));
+         String href = source.substring(0, source.lastIndexOf("/")+1);
          eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href)));         
       }
       else
       {
-         String href1 = source.substring(0, source.lastIndexOf("/"));
-         String href2 = destination.substring(0, destination.lastIndexOf("/"));
+         String href1 = source.substring(0, source.lastIndexOf("/")+1);
+         String href2 = destination.substring(0, destination.lastIndexOf("/")+1);
 
          List<Folder> folders = new ArrayList<Folder>();
          folders.add(new Folder(href1));
          folders.add(new Folder(href2));
          eventBus.fireEvent(new RefreshBrowserEvent(folders, new Folder(destination)));
-         //VirtualFileSystem.getInstance().getChildren();
+         //eventBus.fireEvent(new SelectItemEvent(destination));
       }
       display.closeForm();
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      //      TODO
       if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1
          && saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref()))
       {
