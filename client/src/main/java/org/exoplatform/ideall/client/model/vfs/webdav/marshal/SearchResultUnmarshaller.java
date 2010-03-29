@@ -102,21 +102,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
    {
       String path = resource.getHref();
       path = Utils.unescape(path);
-      String prefix = context + WebDavVirtualFileSystem.CONTEXT;
-      if (path.indexOf(prefix) >= 0)
-      {
-         path = path.substring(path.indexOf(prefix) + prefix.length());
-      }
-      else
-      {
-         return;
-      }
-
-      if (path.endsWith("/"))
-      {
-         path = path.substring(0, path.length() - 1);
-      }
-
+      
       Item item;
       if (resource.isCollection())
       {

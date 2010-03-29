@@ -27,11 +27,11 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
@@ -49,7 +49,6 @@ import org.exoplatform.ideall.client.model.vfs.webdav.marshal.ItemPropertiesUnma
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchRequestMarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchResultUnmarshaller;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 

@@ -39,7 +39,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @version $Id:   $
  *
  */
-public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPresenter.Display
+public class SearchForm extends DialogWindow implements SearchPresenter.Display
 {
    private static final int WIDTH = 450;
 
@@ -91,7 +91,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       return searchButton;
    }
 
-   public AdvancedSearchForm(HandlerManager eventBus, ApplicationContext context)
+   public SearchForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, WIDTH, HEIGHT);
       setTitle("Search");
@@ -109,7 +109,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
       addItem(mainLayout);
 
       show();
-      AdvancedSearchPresenter advancedSearchPresenter = new AdvancedSearchPresenter(eventBus, context);
+      SearchPresenter advancedSearchPresenter = new SearchPresenter(eventBus, context);
       advancedSearchPresenter.bindDisplay(this);
    }
 
@@ -192,7 +192,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#getPathItem()
+    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getPathItem()
     */
    public HasValue<String> getPathItem()
    {
@@ -200,7 +200,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#getSearchContentItem()
+    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getSearchContentItem()
     */
    public HasValue<String> getSearchContentItem()
    {
@@ -208,7 +208,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#getMimeTypeItem()
+    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getMimeTypeItem()
     */
    public HasValue<String> getMimeTypeItem()
    {
@@ -216,7 +216,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#setMimeTypeValues(java.lang.String[])
+    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#setMimeTypeValues(java.lang.String[])
     */
    public void setMimeTypeValues(String[] mimeTypes)
    {
@@ -224,7 +224,7 @@ public class AdvancedSearchForm extends DialogWindow implements AdvancedSearchPr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.AdvancedSearchPresenter.Display#disablePathItem()
+    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#disablePathItem()
     */
    public void disablePathItem()
    {

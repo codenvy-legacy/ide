@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:   $
  *
  */
-public class AdvancedSearchPresenter
+public class SearchPresenter
 {
 
    public interface Display
@@ -67,7 +67,7 @@ public class AdvancedSearchPresenter
 
    private String path;
 
-   public AdvancedSearchPresenter(HandlerManager eventBus, ApplicationContext context)
+   public SearchPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -124,7 +124,7 @@ public class AdvancedSearchPresenter
 //         Dialogs.getInstance().showError("Path must not be empty!");
 //         return;
 //      }
-
+      searchPath = searchPath.substring(context.getEntryPoint().length(), searchPath.length());
       String[] parts = searchPath.split("/");
       int i = 3;
       if (parts[0].length() != 0)
@@ -151,7 +151,6 @@ public class AdvancedSearchPresenter
       }
       
       Folder folder =  new Folder(path);
-      
       VirtualFileSystem.getInstance().search(folder, content, contentType, searchPath);
       display.closeForm();
    }
@@ -174,24 +173,24 @@ public class AdvancedSearchPresenter
    private void getPathValue()
    {
       //TODO
-//      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//      
-//      //if file was selected then delete it's name from path
-//      if (item instanceof File)
-//      {
-//         String filePath = item.getPath();
-//         String fileName = ((File)item).getName();
-//         int index = filePath.lastIndexOf(fileName);
-//         if (index > 0)
-//         {
-//            // remove file's name plus delimiter before it
-//            path = filePath.substring(0, index - 1);
-//         }
-//      }
-//      else
-//      {
-//         path = item.getPath();
-//      }
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      
+      //if file was selected then delete it's name from path
+      if (item instanceof File)
+      {
+         String filePath = item.getHref();
+         String fileName = ((File)item).getName();
+         int index = filePath.lastIndexOf(fileName);
+         if (index > 0)
+         {
+            // remove file's name plus delimiter before it
+            path = filePath.substring(0, index - 1);
+         }
+      }
+      else
+      {
+         path = item.getHref();
+      }
    }
 
 }

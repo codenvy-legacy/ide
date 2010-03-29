@@ -67,7 +67,6 @@ public class StatusBarPresenter implements ItemsSelectedHandler
          }
 
          prefix = prefix.substring(0, prefix.lastIndexOf("/"));
-
          statusMessage = statusMessage.substring(prefix.length());
          if (statusMessage.endsWith("/"))
          {

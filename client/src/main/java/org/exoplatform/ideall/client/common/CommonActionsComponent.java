@@ -62,7 +62,7 @@ import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEv
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.search.AdvancedSearchForm;
+import org.exoplatform.ideall.client.search.SearchForm;
 import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
@@ -177,7 +177,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onSearchFile(SearchFileEvent event)
    {
-      new AdvancedSearchForm(eventBus, context);
+      new SearchForm(eventBus, context);
    }
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)
