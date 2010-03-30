@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.MoveItemEvent;
+import org.exoplatform.ideall.client.event.file.RenameItemEvent;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
@@ -38,23 +38,23 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class MoveItemCommand extends IDECommand implements ItemsSelectedHandler, ItemDeletedHandler,
+public class RenameItemCommand extends IDECommand implements ItemsSelectedHandler, ItemDeletedHandler,
    PanelSelectedHandler
 {
 
-   private static final String ID = "File/Move File\\Folder...";
+   private static final String ID = "File/Rename File\\Folder...";
 
    private boolean browserPanelSelected = true;
 
    private Item selectedItem;
 
-   public MoveItemCommand()
+   public RenameItemCommand()
    {
       super(ID);
-      setTitle("Move...");
-      setPrompt("Move Item...");
+      setTitle("Rename...");
+      setPrompt("Rename Item...");
       setIcon(Images.MainMenu.MOVE);
-      setEvent(new MoveItemEvent());
+      setEvent(new RenameItemEvent());
    }
 
    @Override
@@ -81,7 +81,6 @@ public class MoveItemCommand extends IDECommand implements ItemsSelectedHandler,
          return;
       }
 
-      // setEnabled(true);
       selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
    }

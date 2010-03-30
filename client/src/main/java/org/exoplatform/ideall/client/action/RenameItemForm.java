@@ -43,7 +43,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @version @version $Id: $
  */
 
-public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Display
+public class RenameItemForm extends DialogWindow implements RenameItemPresenter.Display
 {
 
    public static final int WIDTH = 400;
@@ -52,18 +52,18 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
 
    private VLayout vLayout;
 
-   private TextField itemPathField;
+   private TextField itemNameField;
 
-   private IButton moveButton;
+   private IButton renameButton;
 
    private IButton cancelButton;
 
-   private MoveItemPresenter presenter;
+   private RenameItemPresenter presenter;
 
-   public MoveItemForm(HandlerManager eventBus, ApplicationContext context)
+   public RenameItemForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, WIDTH, HEIGHT);
-      setTitle("Move item");
+      setTitle("Rename item");
 
       vLayout = new VLayout();
       addItem(vLayout);
@@ -73,7 +73,7 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
 
       show();
 
-      presenter = new MoveItemPresenter(eventBus, context);
+      presenter = new RenameItemPresenter(eventBus, context);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -95,7 +95,7 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       paramsForm.setAutoFocus(true);
 
       StaticTextItem caption = new StaticTextItem();
-      caption.setDefaultValue("Move item to:");
+      caption.setDefaultValue("Rename item to:");
       caption.setShowTitle(false);
       caption.setColSpan(2);
 
@@ -103,10 +103,10 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       delimiter.setColSpan(2);
       delimiter.setHeight(5);
 
-      itemPathField = new TextField();
-      itemPathField.setShowTitle(false);
-      itemPathField.setWidth(340);
-      paramsForm.setFields(caption, delimiter, itemPathField);
+      itemNameField = new TextField();
+      itemNameField.setShowTitle(false);
+      itemNameField.setWidth(340);
+      paramsForm.setFields(caption, delimiter, itemNameField);
 
       vLayout.addMember(paramsForm);
    }
@@ -118,10 +118,10 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      moveButton = new IButton("Move");
-      moveButton.setWidth(90);
-      moveButton.setHeight(22);
-      moveButton.setIcon(Images.Buttons.OK);
+      renameButton = new IButton("Rename");
+      renameButton.setWidth(90);
+      renameButton.setHeight(22);
+      renameButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
       cancelButton.setWidth(90);
@@ -131,7 +131,7 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       ToolbarItem tbi = new ToolbarItem();
       StatefulCanvas delimiter1 = new StatefulCanvas();
       delimiter1.setWidth(3);
-      tbi.setButtons(moveButton, delimiter1, cancelButton);
+      tbi.setButtons(renameButton, delimiter1, cancelButton);
       buttonsForm.setFields(tbi);
 
       buttonsForm.setAutoWidth();
@@ -150,9 +150,9 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       destroy();
    }
 
-   public HasValue<String> getItemHrefField()
+   public HasValue<String> getItemNameField()
    {
-      return itemPathField;
+      return itemNameField;
    }
 
    public HasClickHandlers getCancelButton()
@@ -160,13 +160,13 @@ public class MoveItemForm extends DialogWindow implements MoveItemPresenter.Disp
       return cancelButton;
    }
 
-   public HasClickHandlers getMoveButton()
+   public HasClickHandlers getRenameButton()
    {
-      return moveButton;
+      return renameButton;
    }
 
-   public HasKeyPressHandlers getItemPathFieldKeyPressHandler()
+   public HasKeyPressHandlers getItemNameFieldKeyPressHandler()
    {
-      return (HasKeyPressHandlers)itemPathField;
+      return (HasKeyPressHandlers)itemNameField;
    }
 }

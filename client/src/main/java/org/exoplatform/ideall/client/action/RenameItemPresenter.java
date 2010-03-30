@@ -16,14 +16,10 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -51,19 +47,19 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedHandler
+public class RenameItemPresenter implements MoveCompleteHandler, FileContentSavedHandler
 {
 
    public interface Display
    {
 
-      HasValue<String> getItemHrefField();
+      HasValue<String> getItemNameField();
 
-      HasClickHandlers getMoveButton();
+      HasClickHandlers getRenameButton();
 
       HasClickHandlers getCancelButton();
 
-      HasKeyPressHandlers getItemPathFieldKeyPressHandler();
+      HasKeyPressHandlers getItemNameFieldKeyPressHandler();
 
       void closeForm();
 
@@ -77,7 +73,9 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
    private ApplicationContext context;
 
-   public MoveItemPresenter(HandlerManager eventBus, ApplicationContext context)
+   private String itemBaseHref;
+
+   public RenameItemPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -90,14 +88,21 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
    {
       display = d;
 
-      display.getItemHrefField().setValue(
-         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
+      itemBaseHref = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).get(0) instanceof Folder)
+      {
+         itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
+      }
+      itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
 
-      display.getMoveButton().addClickHandler(new ClickHandler()
+      display.getItemNameField().setValue(
+         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getName());
+
+      display.getRenameButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            move();
+            rename();
          }
       });
 
@@ -109,14 +114,14 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          }
       });
 
-      display.getItemPathFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
+      display.getItemNameFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
       {
 
          public void onKeyPress(KeyPressEvent event)
          {
             if (event.getCharCode() == KeyCodes.KEY_ENTER)
             {
-               move();
+               rename();
             }
          }
 
@@ -128,27 +133,28 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       handlers.removeHandlers();
    }
 
-   protected void move()
+   protected void rename()
    {
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
-      String href = display.getItemHrefField().getValue();
+      String href = getPathToRename(item);
 
       if (href.equals(item.getHref()))
       {
-         Dialogs.getInstance().showError("Can't move / rename resource!");
+         Dialogs.getInstance().showError("Can't rename resource!");
          return;
       }
 
       String selectedItemPath = item.getHref();
       if (hasOpenedFiles(selectedItemPath))
       {
-         Dialogs.getInstance().ask("Move", "Save opened files?", new BooleanValueReceivedCallback()
+         Dialogs.getInstance().ask("Rename", "Save opened files?", new BooleanValueReceivedCallback()
          {
             public void execute(Boolean value)
             {
                if (value != null && value == true)
                {
+                  handlers.addHandler(FileContentSavedEvent.TYPE, RenameItemPresenter.this);
                   saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
                }
             }
@@ -157,8 +163,20 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
 
          return;
       }
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
       VirtualFileSystem.getInstance().move(item, href);
+   }
+
+   private String getPathToRename(Item item)
+   {
+      String href = display.getItemNameField().getValue();
+
+      href = itemBaseHref + href;
+
+      if (item instanceof Folder)
+      {
+         href += "/";
+      }
+      return href;
    }
 
    private boolean hasOpenedFiles(String path)
@@ -196,41 +214,19 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       return false;
    }
 
-   //
-   /**
-    * @param source
-    * @param destination
-    * @return
-    */
-   private boolean isSameFolder(String source, String destination)
-   {
-      source = source.substring(0, source.lastIndexOf("/"));
-      destination = destination.substring(0, destination.lastIndexOf("/"));
-      return source.equals(destination);
-   }
-
    public void onMoveComplete(MoveCompleteEvent event)
    {
       String source = event.getItem().getHref();
       String destination = event.getDestination();
 
-      if (isSameFolder(source, destination))
+      String href = source;
+      if (event.getItem() instanceof Folder)
       {
-         String href = source.substring(0, source.lastIndexOf("/")+1);
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href)));
-         
+         href = source.substring(0, source.lastIndexOf("/"));
       }
-      else
-      {
-         String href1 = source.substring(0, source.lastIndexOf("/")+1);
-         String href2 = destination.substring(0, destination.lastIndexOf("/")+1);
+      href = href.substring(0, href.lastIndexOf("/") + 1);
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), new Folder(destination)));
 
-         List<Folder> folders = new ArrayList<Folder>();
-         folders.add(new Folder(href1));
-         folders.add(new Folder(href2));
-         eventBus.fireEvent(new RefreshBrowserEvent(folders, new Folder(destination)));
-      }
-      eventBus.fireEvent(new SelectItemEvent(destination));
       display.closeForm();
    }
 
@@ -242,8 +238,8 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          return;
       }
 
-      String path = display.getItemHrefField().getValue();
-      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), path);
+      String href = getPathToRename(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), href);
    }
 
 }

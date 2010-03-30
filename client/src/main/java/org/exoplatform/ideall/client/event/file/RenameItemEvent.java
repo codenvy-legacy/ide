@@ -25,19 +25,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class MoveItemEvent extends GwtEvent<MoveItemHander>
+public class RenameItemEvent extends GwtEvent<RenameItemHander>
 {
 
-   public static final GwtEvent.Type<MoveItemHander> TYPE = new GwtEvent.Type<MoveItemHander>();
+   public static final GwtEvent.Type<RenameItemHander> TYPE = new GwtEvent.Type<RenameItemHander>();
 
    @Override
-   protected void dispatch(MoveItemHander handler)
+   protected void dispatch(RenameItemHander handler)
    {
-      handler.onMoveItem(this);
+      handler.onRenameItem(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<MoveItemHander> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<RenameItemHander> getAssociatedType()
    {
       return TYPE;
    }

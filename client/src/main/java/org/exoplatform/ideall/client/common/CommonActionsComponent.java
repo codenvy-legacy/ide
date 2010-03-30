@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.common;
 import org.exoplatform.ideall.client.action.CreateFolderForm;
 import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.GetItemURLForm;
-import org.exoplatform.ideall.client.action.MoveItemForm;
+import org.exoplatform.ideall.client.action.RenameItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
@@ -46,8 +46,8 @@ import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.DeleteItemHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
-import org.exoplatform.ideall.client.event.file.MoveItemEvent;
-import org.exoplatform.ideall.client.event.file.MoveItemHander;
+import org.exoplatform.ideall.client.event.file.RenameItemEvent;
+import org.exoplatform.ideall.client.event.file.RenameItemHander;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileWithHandler;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
@@ -77,7 +77,7 @@ import com.google.gwt.user.client.Window.Location;
  */
 
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
-   CreateFolderHandler, DeleteItemHandler, MoveItemHander, SearchFileHandler, SaveAsTemplateHandler,
+   CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler,
    CutItemsHandler
 {
@@ -114,7 +114,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(UploadFileEvent.TYPE, this);
       addHandler(CreateFolderEvent.TYPE, this);
       addHandler(DeleteItemEvent.TYPE, this);
-      addHandler(MoveItemEvent.TYPE, this);
+      addHandler(RenameItemEvent.TYPE, this);
       addHandler(SearchFileEvent.TYPE, this);
       addHandler(SaveAsTemplateEvent.TYPE, this);
       addHandler(TemplateListReceivedEvent.TYPE, this);
@@ -169,9 +169,9 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       new DeleteItemForm(eventBus, context);
    }
 
-   public void onMoveItem(MoveItemEvent event)
+   public void onRenameItem(RenameItemEvent event)
    {
-      new MoveItemForm(eventBus, context);
+      new RenameItemForm(eventBus, context);
    }
 
    public void onSearchFile(SearchFileEvent event)

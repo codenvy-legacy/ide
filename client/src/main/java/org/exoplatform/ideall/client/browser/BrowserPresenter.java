@@ -234,14 +234,11 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
    private void refreshNextFolder()
    {
-      System.out.println("!!!!!! item to select: " + itemToSelect);
-
       if (foldersToRefresh.size() == 0)
       {
          return;
       }
 
-      System.out.println("refresh dir: " + foldersToRefresh.get(0).getHref());
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       
@@ -272,8 +269,8 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-
       
+      System.out.println("folder refreshed: " + event.getFolder().getHref());
       
       if (foldersToRefresh.size() > 0 )
       {
@@ -282,16 +279,10 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       
       if (itemToSelect != null)
       {
+         System.out.println("!!!!!! item to select: " + itemToSelect);
          display.selectItem(itemToSelect);
          itemToSelect = null;
       }
-      //      if (folderToUpdate != null)
-      //      {
-      //         String path = folderToUpdate;
-      //         folderToUpdate = null;
-      //         Folder folder = new Folder(path);
-      //         VirtualFileSystem.getInstance().getChildren(folder);
-      //      }
    }
    
    

@@ -25,10 +25,10 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface MoveItemHander extends EventHandler
+public interface RenameItemHander extends EventHandler
 {
    
-   void onMoveItem(MoveItemEvent event);
+   void onRenameItem(RenameItemEvent event);
 
 
 }

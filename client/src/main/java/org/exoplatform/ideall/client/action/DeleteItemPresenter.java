@@ -181,18 +181,20 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       }
 
       String selectedItemHref = lastDeletedItem.getHref();
-
+      
+      if(lastDeletedItem instanceof Folder)
+      {
+         selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/"));
+      }
       selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/") + 1);
 
       Folder folder = new Folder(selectedItemHref);
-     // VirtualFileSystem.getInstance().getChildren(folder);
 
       context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
       context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
 
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
-      //eventBus.fireEvent(new SelectedItemsEvent(context.getSelectedItems()));
    }
 
 }

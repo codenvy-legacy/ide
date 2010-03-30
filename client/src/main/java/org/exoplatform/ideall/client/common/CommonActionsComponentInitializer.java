@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
-import org.exoplatform.ideall.client.common.command.file.MoveItemCommand;
+import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
 import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
@@ -126,7 +126,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new MoveItemCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new RenameItemCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       /*
        * COPY, CUT, PASTE COMMAND
        */
