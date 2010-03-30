@@ -217,7 +217,8 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
       if (isSameFolder(source, destination))
       {
          String href = source.substring(0, source.lastIndexOf("/")+1);
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href)));         
+         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href)));
+         
       }
       else
       {
@@ -228,8 +229,8 @@ public class MoveItemPresenter implements MoveCompleteHandler, FileContentSavedH
          folders.add(new Folder(href1));
          folders.add(new Folder(href2));
          eventBus.fireEvent(new RefreshBrowserEvent(folders, new Folder(destination)));
-         //eventBus.fireEvent(new SelectItemEvent(destination));
       }
+      eventBus.fireEvent(new SelectItemEvent(destination));
       display.closeForm();
    }
 

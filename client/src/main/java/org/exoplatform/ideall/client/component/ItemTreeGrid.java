@@ -256,6 +256,11 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    public void selectItem(String href)
    {
       TreeNode node = getNodeByHref(href);
+      if (node == null)
+      {
+         System.err.println("Node " + href + " not found!");;
+         return;
+      }
       deselectAllRecords();
       selectRecord(node);
    }
