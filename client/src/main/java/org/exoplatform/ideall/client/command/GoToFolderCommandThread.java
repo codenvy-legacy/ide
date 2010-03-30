@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.event.navigation.GoToFolderEvent;
 import org.exoplatform.ideall.client.event.navigation.GoToFolderHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
 
@@ -71,34 +71,37 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
-//      TODO
-//      if (context.getActiveFile() == null)
-//      {
-//         return;
-//      }
-//
-//      String workingPath = context.getActiveFile().getPath();
-//      while (workingPath.startsWith("/"))
-//      {
-//         workingPath = workingPath.substring(1);
-//      }
-//      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
-//
-//      String p[] = workingPath.split("/");
-//      pathes = new ArrayList<String>();
-//      pathToOpen = "/" + p[0] + "/" + p[1];
-//
-//      if (p.length > 2)
-//      {
-//         for (int i = 2; i < p.length; i++)
-//         {
-//            pathes.add(p[i]);
-//         }
-//      }
-//
-//      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-//      VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
+      if (context.getActiveFile() == null)
+      {
+         return;
+      }
+
+      String workingPath = context.getActiveFile().getHref();
+      
+      String entryPoint = context.getEntryPoint().substring(0, context.getEntryPoint().lastIndexOf("/"));
+      entryPoint = entryPoint.substring(0, entryPoint.lastIndexOf("/"));
+      workingPath = workingPath.substring(entryPoint.length(), workingPath.length());
+      
+      while (workingPath.startsWith("/"))
+      {
+         workingPath = workingPath.substring(1);
+      }
+
+      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
+      String p[] = workingPath.split("/");
+      pathes = new ArrayList<String>();
+      pathToOpen = entryPoint + "/" + p[0] + "/";
+      if (p.length > 1)
+      {
+         for (int i = 1; i < p.length; i++)
+         {
+            pathes.add(p[i]);
+         }
+      }
+
+      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
    }
 
    /**
@@ -108,21 +111,19 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-//      TODO
-//      if (pathes.size() > 0)
-//      {
-//         String name = pathes.get(0);
-//         pathes.remove(0);
-//         pathToOpen += "/" + name;
-//
-//         VirtualFileSystem.getInstance().getChildren(new Folder(pathToOpen));
-//      }
-//      else
-//      {
-//         // try to select file.........
-//         handlers.removeHandlers();
-//         eventBus.fireEvent(new SetFocusOnItemEvent(context.getActiveFile().getPath()));
-//      }
+      if (pathes.size() > 0)
+      {
+         String name = pathes.get(0);
+         pathes.remove(0);
+         pathToOpen += name + "/";
+         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+      }
+      else
+      {
+         // try to select file.........
+         handlers.removeHandlers();
+         eventBus.fireEvent(new SelectItemEvent(context.getActiveFile().getHref()));
+      }
 //
    }
 
