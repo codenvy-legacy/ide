@@ -273,17 +273,17 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
 
-      if (itemToSelect != null)
-      {
-//         System.out.println("children received for > " + event.getFolder().getHref());
-//         System.out.println("try select > " + itemToSelect);
-//         display.selectItem(itemToSelect);
-         itemToSelect = null;
-      }
+      
       
       if (foldersToRefresh.size() > 0 )
       {
          refreshNextFolder();
+      }
+      
+      if (itemToSelect != null)
+      {
+         display.selectItem(itemToSelect);
+         itemToSelect = null;
       }
       //      if (folderToUpdate != null)
       //      {
@@ -357,13 +357,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-
-      // handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
 
       handlers.addHandler(SelectItemEvent.TYPE, this);
-
-//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       handlers.addHandler(PanelSelectedEvent.TYPE, this);
    }

@@ -511,12 +511,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       if (closeFileAfterSaving)
       {
+         closeFile(event.getFile());
+         
          closeFileAfterSaving = false;
-         display.closeTab(event.getSourceHref());
-         File file = event.getFile();
-         file.setContent(null);
-         file.setContentChanged(false);
-         context.getOpenedFiles().remove(event.getSourceHref());
       }
       else
       {
@@ -531,9 +528,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          }
 
          updateTabTitle(savedFile.getHref());
+         CookieManager.storeOpenedFiles(context);
       }
 
-      CookieManager.storeOpenedFiles(context);
 
    }
 

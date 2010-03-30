@@ -47,6 +47,13 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
       folders = new ArrayList<Folder>();
       folders.add(folder);
    }   
+
+   public RefreshBrowserEvent(Folder folder, Item itemToSelect)
+   {
+      folders = new ArrayList<Folder>();
+      folders.add(folder);
+      this.itemToSelect = itemToSelect;
+   }      
    
    public RefreshBrowserEvent(List<Folder> folders, Item itemToSelect)
    {

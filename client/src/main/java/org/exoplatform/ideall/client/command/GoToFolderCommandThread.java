@@ -34,6 +34,7 @@ import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ChildrenReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -111,19 +112,25 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-      if (pathes.size() > 0)
-      {
-         String name = pathes.get(0);
-         pathes.remove(0);
-         pathToOpen += name + "/";
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
-      }
-      else
-      {
-         // try to select file.........
-         handlers.removeHandlers();
-         eventBus.fireEvent(new SelectItemEvent(context.getActiveFile().getHref()));
-      }
+      new Timer() {
+         @Override
+         public void run()
+         {
+            if (pathes.size() > 0)
+            {
+               String name = pathes.get(0);
+               pathes.remove(0);
+               pathToOpen += name + "/";
+               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+            }
+            else
+            {
+               // try to select file.........
+               handlers.removeHandlers();
+               eventBus.fireEvent(new SelectItemEvent(context.getActiveFile().getHref()));
+            }
+         }
+      }.schedule(10);
 //
    }
 

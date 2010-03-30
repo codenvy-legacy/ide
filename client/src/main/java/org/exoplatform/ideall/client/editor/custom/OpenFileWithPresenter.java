@@ -261,6 +261,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
+      System.out.println("OpenFileWithPresenter.onFileContentReceived()");
       display.closeForm();
    }
 
@@ -268,6 +269,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       eventBus
          .fireEvent(new OpenFileEvent((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)));
+      display.closeForm();
    }
 
 }

@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsHandler;
@@ -240,6 +239,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
          folders.add(folder);
       }
       folders.add(folderToPast);
+      System.out.println("folder to paste: " + folderToPast.getHref());
       eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPast));
    }
 

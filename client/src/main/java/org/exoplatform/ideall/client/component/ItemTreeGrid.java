@@ -261,8 +261,10 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          System.err.println("Node " + href + " not found!");;
          return;
       }
+      
       deselectAllRecords();
       selectRecord(node);
+      
    }
 
    public List<Item> getSelectedItems()

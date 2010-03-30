@@ -161,7 +161,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
 
-      new CreateFolderForm(eventBus, href);
+      new CreateFolderForm(eventBus, context, href);
    }
 
    public void onDeleteItem(DeleteItemEvent event)
