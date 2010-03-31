@@ -267,7 +267,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       Collections.sort(event.getFolder().getChildren(), comparator);
       
       display.getBrowserTree().setValue(event.getFolder());
-
+      
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
       

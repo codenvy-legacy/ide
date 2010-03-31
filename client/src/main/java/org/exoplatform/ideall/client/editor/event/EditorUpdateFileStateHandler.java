@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.vfs.api.event;
+package org.exoplatform.ideall.client.editor.event;
 
-import org.exoplatform.ideall.client.model.vfs.api.Item;
-
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 
 
@@ -27,33 +25,10 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class ItemCutCompleteEvent extends GwtEvent<ItemCutCompleteHandler>
+public interface EditorUpdateFileStateHandler extends EventHandler
 {
-public static GwtEvent.Type<ItemCutCompleteHandler> TYPE = new GwtEvent.Type<ItemCutCompleteHandler>();
    
-   private Item cutItem;
+   void onEditorUdateFileState(EditorUpdateFileStateEvent event);
    
-
-   public ItemCutCompleteEvent(Item item)
-   {
-      this.cutItem = item;
-   }
-   
-   public Item getCutItem()
-   {
-      return cutItem;
-   }
-   
-   @Override
-   protected void dispatch(ItemCutCompleteHandler handler)
-   {
-      handler.onItemCutComplite(this);
-   }
-
-   @Override
-   public GwtEvent.Type<ItemCutCompleteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
 }
 

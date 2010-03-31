@@ -16,10 +16,14 @@
  */
 package org.exoplatform.ideall.client.action;
 
+import java.util.ArrayList;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.cookie.CookieManager;
+import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
@@ -215,10 +219,44 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return false;
    }
 
+   private void updateFileState(String href, String source)
+   {
+    //String dest = tem().getHref(); //getDestination();
+    ArrayList<String> keys = new ArrayList<String>();
+    for (String key : context.getOpenedFiles().keySet())
+    {
+       keys.add(key);
+    }
+
+    for (String key : keys)
+    {
+       if (key.startsWith(source))
+       {
+          File file = context.getOpenedFiles().get(key);
+         // String sourcePath = file.getHref();
+          String destinationPath = file.getHref();
+          destinationPath = destinationPath.substring(href.length());
+          destinationPath = href + destinationPath;
+          System.out.println("new href: " + destinationPath);
+          file.setHref(destinationPath);
+          //display.updateTabTitle(file.getHref());
+          eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+          context.getOpenedFiles().remove(source);
+          context.getOpenedFiles().put(destinationPath, file);
+
+       }
+    }
+
+    CookieManager.storeOpenedFiles(context);
+   }
+   
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      String source = event.getItem().getHref();
-      String destination = event.getDestination();
+      String source = event.getSource();
+      
+      updateFileState(event.getItem().getHref(), source);
+      
+      String destination = event.getItem().getHref();
       String href = source;
       if (event.getItem() instanceof Folder)
       {

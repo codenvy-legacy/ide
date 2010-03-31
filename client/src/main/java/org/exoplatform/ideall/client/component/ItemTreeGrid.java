@@ -68,7 +68,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    protected void doUpdateValue()
    {
       //boolean switchWorkspace = checkSwitchingWorkspace();
-
       if (getValue() == null) {
          tree.remove(rootNode);
          rootNode = null;

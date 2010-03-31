@@ -46,6 +46,7 @@ import org.exoplatform.ideall.client.model.vfs.webdav.marshal.FolderContentUnmar
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.ItemPropertiesMarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.ItemPropertiesSavingResultUnmarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.ItemPropertiesUnmarshaller;
+import org.exoplatform.ideall.client.model.vfs.webdav.marshal.MoveResponseUnmarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchRequestMarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchResultUnmarshaller;
 
@@ -108,10 +109,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    //      url = TextUtils.javaScriptEncodeURI(url);
    //      return url;
    //   }
-   
+
    public static native String javaScriptEncodeURI(String text) /*-{
-      return encodeURI(text);
-   }-*/;
+        return encodeURI(text);
+     }-*/;
 
    @Override
    public void getFileContent(File file)
@@ -158,7 +159,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void createFolder(Folder folder)
    {
       System.out.println("create folder " + folder.getHref());
-      
+
       String url = javaScriptEncodeURI(folder.getHref());
 
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
@@ -262,18 +263,18 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void move(Item item, String destination)
    {
       String url = javaScriptEncodeURI(item.getHref());
-//      String host = GWT.getModuleBaseURL();
-//
-//      String destinationURL = host.substring(0, host.indexOf("//") + 2);
-//      host = host.substring(host.indexOf("//") + 2);
-//      destinationURL += host.substring(0, host.indexOf("/"));
+      //      String host = GWT.getModuleBaseURL();
+      //
+      //      String destinationURL = host.substring(0, host.indexOf("//") + 2);
+      //      host = host.substring(host.indexOf("//") + 2);
+      //      destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
-      MoveCompleteEvent event = new MoveCompleteEvent(item, destination);
-
+      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
+      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
       if (item instanceof File)
       {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
          Loader.getInstance().setMessage(Messages.MOVE_FILE);
 
@@ -292,7 +293,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             destination += "/";
          }
 
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
 
          Loader.getInstance().setMessage(Messages.MOVE_FOLDER);
 
@@ -306,12 +307,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void copy(Item item, String destination)
    {
       String url = javaScriptEncodeURI(item.getHref());
-//      String host = GWT.getModuleBaseURL();
+      //      String host = GWT.getModuleBaseURL();
 
       String destinationURL = destination;
       //host.substring(0, host.indexOf("//") + 2);
-//      host = host.substring(host.indexOf("//") + 2);
-//      destinationURL += host.substring(0, host.indexOf("/"));
+      //      host = host.substring(host.indexOf("//") + 2);
+      //      destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
       CopyCompleteEvent event = new CopyCompleteEvent(item, destination);

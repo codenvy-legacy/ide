@@ -14,19 +14,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.vfs.api.event;
+package org.exoplatform.ideall.client.editor.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 
-
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface ItemCutCompleteHandler extends EventHandler
+public class EditorUpdateFileStateEvent extends GwtEvent<EditorUpdateFileStateHandler>
 {
-   void onItemCutComplite(ItemCutCompleteEvent event);
-}
 
+   public static GwtEvent.Type<EditorUpdateFileStateHandler> TYPE = new GwtEvent.Type<EditorUpdateFileStateHandler>();
+
+   private File file;
+
+   public EditorUpdateFileStateEvent(File file)
+   {
+      this.file = file;
+   }
+
+   public File getFile()
+   {
+      return file;
+   }
+
+   @Override
+   protected void dispatch(EditorUpdateFileStateHandler handler)
+   {
+      handler.onEditorUdateFileState(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorUpdateFileStateHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+}
