@@ -112,24 +112,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       }
 
       TreeNode parent = getNodeByHref(getValue().getHref());
+      
       setItems(parent, ((Folder)getValue()).getChildren());
    }
-
-//   private boolean checkSwitchingWorkspace()
-//   {
-//      try
-//      {
-//         Item rootItem = (Item)rootNode.getAttributeAsObject(getValuePropertyName());
-//         System.out.println("> root item href > " + rootItem.getHref());
-//         System.out.println("> value href > " + getValue().getHref());
-//      }
-//      catch (Exception exc)
-//      {
-//
-//      }
-//
-//      return false;
-//   }
 
    private TreeNode getChild(TreeNode parent, String name)
    {
@@ -151,10 +136,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 //         System.out.println();
 //      }
       
-      System.out.println("getNodeByHref(String href) " + href);
-
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-      System.out.println("rootFolder.getHref() " + rootFolder.getHref());
       String path = href.substring(rootFolder.getHref().length());
       
       if (path.startsWith("/"))
@@ -186,6 +168,11 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
     */
    private boolean isItemExist(List<Item> items, String name)
    {
+      for(Item i: items)
+      {
+         System.out.println("children name: " + i.getName());         
+      }
+      
       for (Item item : items)
       {
          if (item.getName().equals(name))
@@ -219,7 +206,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          }
          tree.closeAll(childNode);
       }
-
+      
       for (Item child : children)
       {
          // see if parentNode already has child with this name
@@ -258,13 +245,12 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       TreeNode node = getNodeByHref(href);
       if (node == null)
       {
-         System.err.println("Node " + href + " not found!");;
+         System.out.println("Node " + href + " not found!");;
          return;
       }
       
       deselectAllRecords();
       selectRecord(node);
-      
    }
 
    public List<Item> getSelectedItems()

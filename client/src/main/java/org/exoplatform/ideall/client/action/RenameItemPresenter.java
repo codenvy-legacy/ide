@@ -80,8 +80,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
-
    }
 
    public void bindDisplay(Display d)
@@ -135,6 +133,8 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    protected void rename()
    {
+      handlers.addHandler(MoveCompleteEvent.TYPE, this);
+
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String href = getPathToRename(item);
@@ -205,6 +205,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             File file = context.getOpenedFiles().get(key);
             if (file.isContentChanged())
             {
+               System.out.println("save opened file: " + file.getName());
                VirtualFileSystem.getInstance().saveFileContent(file);
                return true;
             }
@@ -218,7 +219,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    {
       String source = event.getItem().getHref();
       String destination = event.getDestination();
-
       String href = source;
       if (event.getItem() instanceof Folder)
       {

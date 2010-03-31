@@ -133,8 +133,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
    {
       Item item = event.getItem();
 
-      context.getItemsToCopy().remove(item);
-      context.getItemsToCut().remove(item);
       if (item instanceof File)
       {
          if (context.getOpenedFiles().get(item.getHref()) != null)

@@ -265,6 +265,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       foldersToRefresh.remove(event.getFolder());
       
       Collections.sort(event.getFolder().getChildren(), comparator);
+      
       display.getBrowserTree().setValue(event.getFolder());
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
@@ -279,7 +280,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       
       if (itemToSelect != null)
       {
-         System.out.println("!!!!!! item to select: " + itemToSelect);
          display.selectItem(itemToSelect);
          itemToSelect = null;
       }

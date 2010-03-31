@@ -37,6 +37,8 @@ import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.CopyCompleteHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
@@ -48,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, FileContentSavedHandler
+   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler
 {
    private HandlerManager eventBus;
 
@@ -69,6 +71,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(PasteItemsEvent.TYPE, this);
+      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    public void onPasteItems(PasteItemsEvent event)
@@ -257,6 +260,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    public void onFileContentSaved(FileContentSavedEvent event)
    {
       cutNextItem();
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      context.getItemsToCopy().remove(event.getItem());
+      context.getItemsToCut().remove(event.getItem());
    }
 
 }
