@@ -219,42 +219,41 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return false;
    }
 
-   private void updateFileState(String href, String source)
+   private void updateFileState(Item item, String source)
    {
-    //String dest = tem().getHref(); //getDestination();
-    ArrayList<String> keys = new ArrayList<String>();
-    for (String key : context.getOpenedFiles().keySet())
-    {
-       keys.add(key);
-    }
-
-    for (String key : keys)
-    {
-       if (key.startsWith(source))
-       {
-          File file = context.getOpenedFiles().get(key);
-         // String sourcePath = file.getHref();
-          String destinationPath = file.getHref();
-          destinationPath = destinationPath.substring(href.length());
-          destinationPath = href + destinationPath;
-          System.out.println("new href: " + destinationPath);
-          file.setHref(destinationPath);
-          //display.updateTabTitle(file.getHref());
-          eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
-          context.getOpenedFiles().remove(source);
-          context.getOpenedFiles().put(destinationPath, file);
-
-       }
-    }
-
-    CookieManager.storeOpenedFiles(context);
+      if(item instanceof File)
+      {
+         context.getOpenedFiles().remove(source);
+         context.getOpenedFiles().put(item.getHref(), (File)item);
+         eventBus.fireEvent(new EditorUpdateFileStateEvent((File)item));
+         CookieManager.storeOpenedFiles(context);
+         return;
+      }
+      
+      for(String key : context.getOpenedFiles().keySet())
+      {
+         if(key.startsWith(source))
+         {
+            File file = context.getOpenedFiles().get(key);
+            String destinationPath = file.getHref();
+            destinationPath = destinationPath.substring(source.length());
+            destinationPath = item.getHref() + destinationPath;
+            System.out.println("new href: " + destinationPath);
+            file.setHref(destinationPath);
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            context.getOpenedFiles().remove(key);
+            context.getOpenedFiles().put(destinationPath, file);
+         }
+         
+      }
+      CookieManager.storeOpenedFiles(context);
    }
    
    public void onMoveComplete(MoveCompleteEvent event)
    {
       String source = event.getSource();
       
-      updateFileState(event.getItem().getHref(), source);
+      updateFileState(event.getItem(), source);
       
       String destination = event.getItem().getHref();
       String href = source;

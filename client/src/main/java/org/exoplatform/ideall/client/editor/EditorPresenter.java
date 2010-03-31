@@ -63,8 +63,6 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -78,7 +76,7 @@ import com.google.gwt.user.client.Timer;
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
-   RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, MoveCompleteHandler,
+   RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, 
    InitializeApplicationHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
    FileSavedHandler, EditorUpdateFileStateHandler
 {
@@ -174,7 +172,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorActivityEvent.TYPE, this);
       handlers.addHandler(EditorSaveContentEvent.TYPE, this);
 
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
+     // handlers.addHandler(MoveCompleteEvent.TYPE, this);
 
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
@@ -383,35 +381,35 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.updateTabTitle(href);
    }
 
-   public void onMoveComplete(MoveCompleteEvent event)
-   {
-//      String dest = event.getItem().getHref(); //getDestination();
-//      ArrayList<String> keys = new ArrayList<String>();
-//      for (String key : context.getOpenedFiles().keySet())
-//      {
-//         keys.add(key);
-//      }
-//
-//      for (String key : keys)
-//      {
-//         if (key.startsWith(event.getItem().getHref()))
-//         {
-//            File file = context.getOpenedFiles().get(key);
-//            String sourcePath = file.getHref();
-//            String destinationPath = file.getHref();
-//            destinationPath = destinationPath.substring(event.getItem().getHref().length());
-//            destinationPath = dest + destinationPath;
-//            file.setHref(destinationPath);
-//            display.updateTabTitle(file.getHref());
-//
-//            context.getOpenedFiles().remove(event.getSource());
-//            context.getOpenedFiles().put(destinationPath, file);
-//            
-//         }
-//      }
-//
-//      CookieManager.storeOpenedFiles(context);
-   }
+//   public void onMoveComplete(MoveCompleteEvent event)
+//   {
+////      String dest = event.getItem().getHref(); //getDestination();
+////      ArrayList<String> keys = new ArrayList<String>();
+////      for (String key : context.getOpenedFiles().keySet())
+////      {
+////         keys.add(key);
+////      }
+////
+////      for (String key : keys)
+////      {
+////         if (key.startsWith(event.getItem().getHref()))
+////         {
+////            File file = context.getOpenedFiles().get(key);
+////            String sourcePath = file.getHref();
+////            String destinationPath = file.getHref();
+////            destinationPath = destinationPath.substring(event.getItem().getHref().length());
+////            destinationPath = dest + destinationPath;
+////            file.setHref(destinationPath);
+////            display.updateTabTitle(file.getHref());
+////
+////            context.getOpenedFiles().remove(event.getSource());
+////            context.getOpenedFiles().put(destinationPath, file);
+////            
+////         }
+////      }
+////
+////      CookieManager.storeOpenedFiles(context);
+//   }
 
    public void onFormatFile(FormatFileEvent event)
    {
@@ -541,7 +539,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
    {
-      //TODO Auto-generated method stub
       display.updateTabTitle(event.getFile().getHref());
    }
 
