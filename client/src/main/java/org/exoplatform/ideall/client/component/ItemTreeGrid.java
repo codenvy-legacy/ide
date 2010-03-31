@@ -168,11 +168,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
     */
    private boolean isItemExist(List<Item> items, String name)
    {
-      for(Item i: items)
-      {
-         System.out.println("children name: " + i.getName());         
-      }
-      
       for (Item item : items)
       {
          if (item.getName().equals(name))

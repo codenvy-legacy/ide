@@ -242,7 +242,6 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
          folders.add(folder);
       }
       folders.add(folderToPast);
-      System.out.println("folder to paste: " + folderToPast.getHref());
       eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPast));
    }
 

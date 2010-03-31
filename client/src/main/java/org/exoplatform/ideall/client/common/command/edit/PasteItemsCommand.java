@@ -84,6 +84,11 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
          setEnabled(false);
          return;
       }
+      
+      if (pastePrepared)
+      {
+         setEnabled(true);
+      }
    }
    
    @Override
