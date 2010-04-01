@@ -144,8 +144,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       uploadButton = new IButton("Upload");
       uploadButton.setHeight(22);
-      uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
-
+     // uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
+      uploadButton.setIcon(Images.MainMenu.UPLOAD);  
+      
       StatefulCanvas buttonSpacer = new StatefulCanvas();
       buttonSpacer.setWidth(5);
 
