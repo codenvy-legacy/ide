@@ -36,8 +36,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -65,6 +67,8 @@ public class DownloadContentService implements Const, ResourceContainer
    private static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
    private static final String APPLICATION_OCTETSTREAM = "application/octet-stream";
+
+   private String WEBDAV_CONTEXT = "jcr";
 
    private static Log log = ExoLogger.getLogger(DownloadContentService.class);
 
@@ -99,10 +103,10 @@ public class DownloadContentService implements Const, ResourceContainer
          try
          {
             //WBT:358
-//            if (element.contains(":"))
-//            {
-//               element = element.replaceAll(":", URLEncoder.encode(":", "UTF-8"));
-//            }
+            //            if (element.contains(":"))
+            //            {
+            //               element = element.replaceAll(":", URLEncoder.encode(":", "UTF-8"));
+            //            }
             if (element.contains("["))
             {
                element = element.replaceAll("\\[", URLEncoder.encode("[", "UTF-8"));
@@ -183,8 +187,20 @@ public class DownloadContentService implements Const, ResourceContainer
 
    @GET
    @Path("/{fileName:.*}/")
-   public Response download(@PathParam("fileName") String fileName, @QueryParam("repoPath") String repoPath)
+   public Response download(@Context UriInfo uriInfo, @PathParam("fileName") String fileName,
+      @QueryParam("repoPath") String repoPath)
    {
+      String href = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
+
+      if (!repoPath.startsWith(href))
+      {
+         return Response.status(HTTPStatus.NOT_FOUND).entity(repoPath).build();
+      }
+
+      repoPath = repoPath.substring(href.length());
+
+      System.out.println("repopath > " + repoPath);
+
       if (repoPath.startsWith("/"))
       {
          repoPath = repoPath.substring(1);
