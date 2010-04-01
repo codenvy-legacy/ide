@@ -236,9 +236,10 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
       String pastedItemHref = lastPasteItem.getHref();
-      if (pastedItemHref.endsWith("/"))
+      //if file get parent folder
+      if(lastPasteItem instanceof File)
       {
-         pastedItemHref = pastedItemHref.substring(0, pastedItemHref.length() - 1);
+         pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/"));
       }
 
       pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/") + 1);
