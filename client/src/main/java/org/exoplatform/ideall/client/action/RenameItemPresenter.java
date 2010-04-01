@@ -240,19 +240,31 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      String source = event.getItem().getHref(); 
-      String destination = event.getDestination();
-      
-      updateFileState(event.getItem(), destination);
-      
-      String href = source;
-      if (event.getItem() instanceof Folder)
+      if (event.getItem() instanceof File)
       {
-         href = source.substring(0, source.lastIndexOf("/"));
+         
       }
-      href = href.substring(0, href.lastIndexOf("/") + 1);
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), new Folder(destination)));
-
+      else
+      {
+         System.out.println("-----------------------------------------------");
+         System.out.println("source href > " + event.getSourceHref());
+         System.out.println("item href > " + event.getItem().getHref());
+      }
+      
+//      String source = event.getSourceHref(); 
+//          
+//      String destination = event.getItem().getHref(); 
+//      
+//      updateFileState(event.getItem(), destination);
+//      
+//      String href = source;
+//      if (event.getItem() instanceof Folder)
+//      {
+//         href = source.substring(0, source.lastIndexOf("/"));
+//      }
+//      href = href.substring(0, href.lastIndexOf("/") + 1);
+//      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), new Folder(destination)));
+//
       display.closeForm();
    }
 

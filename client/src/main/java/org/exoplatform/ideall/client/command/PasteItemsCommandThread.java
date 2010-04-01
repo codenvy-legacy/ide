@@ -270,7 +270,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      updateFileState(event.getItem(), event.getDestination());
+      //updateFileState(event.getItem(), event.getSource());
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());

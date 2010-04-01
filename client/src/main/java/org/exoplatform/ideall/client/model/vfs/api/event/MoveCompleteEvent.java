@@ -34,12 +34,12 @@ public class MoveCompleteEvent extends GwtEvent<MoveCompleteHandler>
 
    private Item item;
 
-   private String destination;
+   private String sourceHref;
 
-   public MoveCompleteEvent(Item item, String destination)
+   public MoveCompleteEvent(Item item, String sourceHref)
    {
       this.item = item;
-      this.destination = destination;
+      this.sourceHref = sourceHref;
    }
 
    @Override
@@ -59,8 +59,8 @@ public class MoveCompleteEvent extends GwtEvent<MoveCompleteHandler>
       return item;
    }
 
-   public String getDestination()
+   public String getSourceHref()
    {
-      return destination;
+      return sourceHref;
    }
 }
