@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.history;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;

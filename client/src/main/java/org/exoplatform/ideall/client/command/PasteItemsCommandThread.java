@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
-import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;

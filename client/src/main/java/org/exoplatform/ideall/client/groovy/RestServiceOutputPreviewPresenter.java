@@ -22,7 +22,7 @@ import java.util.Vector;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.configuration.Configuration;

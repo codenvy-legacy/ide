@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;

@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;

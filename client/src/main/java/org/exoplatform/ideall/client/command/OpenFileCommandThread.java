@@ -17,11 +17,11 @@
 package org.exoplatform.ideall.client.command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.editor.EditorUtil;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;

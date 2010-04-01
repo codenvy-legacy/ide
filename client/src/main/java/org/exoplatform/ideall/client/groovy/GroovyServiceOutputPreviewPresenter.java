@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
