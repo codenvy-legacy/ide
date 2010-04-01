@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.discovery.Scheme;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
@@ -67,7 +68,7 @@ public class EntryPointListPresenter
 
    private Display display;
 
-   private String selectedEntryPoint;
+   private EntryPoint selectedEntryPoint;
 
    public EntryPointListPresenter(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
@@ -105,9 +106,12 @@ public class EntryPointListPresenter
       List<EntryPoint> entryPoints = new ArrayList<EntryPoint>();
       for (int i = 0; i < entryPointList.getEntryPoints().length(); i++) {
          EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
-         entryPoints.add(entryPoint);
+         System.out.println("entry point scheme > " + entryPoint.getScheme());
+         if (entryPoint.getScheme().equals(Scheme.WEBDAV)) {
+            entryPoints.add(entryPoint);
+         }
       }
-      
+
       display.getEntryPoints().setValue(entryPoints);
       display.getEntryPoints().addSelectionHandler(new SelectionHandler<EntryPoint>()
       {
@@ -122,18 +126,18 @@ public class EntryPointListPresenter
 
    protected void onEntryPointSelected(EntryPoint selectedItem)
    {
-      //      if (selectedItem == null)
-      //      {
-      //         display.disableOkButton();
-      //         return;
-      //      }
-      //
-      //      if (selectedItem.equals(selectedEntryPoint))
-      //      {
-      //         return;
-      //      }
-      //      selectedEntryPoint = selectedItem;
-      //      display.enableOkButton();
+      if (selectedItem == null)
+      {
+         display.disableOkButton();
+         return;
+      }
+      
+      if (selectedItem == selectedEntryPoint)
+      {
+         return;
+      }
+      selectedEntryPoint = selectedItem;
+      display.enableOkButton();
    }
 
    public void destroy()
@@ -144,7 +148,7 @@ public class EntryPointListPresenter
    private void changeEntryPoint()
    {
       display.closeForm();
-      eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint));
+      eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
 
 }
