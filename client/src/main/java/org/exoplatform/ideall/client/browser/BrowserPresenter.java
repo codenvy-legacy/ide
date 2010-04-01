@@ -166,6 +166,35 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
    };
 
+//   /**
+//    * Handling of mouse double clicking
+//    */
+//   protected void onBrowserDoubleClicked()
+//   {
+//      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+//      {
+//         return;
+//      }
+//
+//      Item item = selectedItems.get(0);
+//            
+//      if (item instanceof File)
+//      {
+//         context.setSelectedEditorDescription(null);
+//         File nFile = new File(item.getHref());
+//         File file = (File) item;
+//         nFile.setContent(file.getContent());
+//         nFile.setContentChanged(file.isContentChanged());
+//         nFile.setContentType(file.getContentType());
+//         nFile.setIcon(file.getIcon());
+//         nFile.setJcrContentNodeType(file.getJcrContentNodeType());
+//         nFile.setNewFile(file.isNewFile());
+//         nFile.setPropertiesChanged(file.isPropertiesChanged());
+////         eventBus.fireEvent(new OpenFileEvent((File)item));
+//         eventBus.fireEvent(new OpenFileEvent(nFile));
+//      }
+//   }
+
    /**
     * Handling of mouse double clicking
     */
@@ -177,14 +206,24 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
 
       Item item = selectedItems.get(0);
-
+            
       if (item instanceof File)
       {
          context.setSelectedEditorDescription(null);
-         eventBus.fireEvent(new OpenFileEvent((File)item));
+         File nFile = new File(item.getHref());
+         File file = (File) item;
+         nFile.setContent(file.getContent());
+         nFile.setContentChanged(file.isContentChanged());
+         nFile.setContentType(file.getContentType());
+         nFile.setIcon(file.getIcon());
+         nFile.setJcrContentNodeType(file.getJcrContentNodeType());
+         nFile.setNewFile(file.isNewFile());
+         nFile.setPropertiesChanged(file.isPropertiesChanged());
+//         eventBus.fireEvent(new OpenFileEvent((File)item));
+         eventBus.fireEvent(new OpenFileEvent(nFile));
       }
    }
-
+   
    /**
     * Handling of folder opened event from browser
     * 

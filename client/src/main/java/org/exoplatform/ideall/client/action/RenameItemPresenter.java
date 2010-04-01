@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ideall.client.action;
 
-import java.util.ArrayList;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
@@ -219,17 +217,9 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return false;
    }
 
-   private void updateFileState(Item item, String source)
+   private void updateFileState(Item item, String destination)
    {
-      if(item instanceof File)
-      {
-         context.getOpenedFiles().remove(source);
-         context.getOpenedFiles().put(item.getHref(), (File)item);
-         eventBus.fireEvent(new EditorUpdateFileStateEvent((File)item));
-         CookieManager.storeOpenedFiles(context);
-         return;
-      }
-      
+      String source = item.getHref();
       for(String key : context.getOpenedFiles().keySet())
       {
          if(key.startsWith(source))
@@ -237,8 +227,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             File file = context.getOpenedFiles().get(key);
             String destinationPath = file.getHref();
             destinationPath = destinationPath.substring(source.length());
-            destinationPath = item.getHref() + destinationPath;
-            System.out.println("new href: " + destinationPath);
+            destinationPath = destination + destinationPath;
             file.setHref(destinationPath);
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
             context.getOpenedFiles().remove(key);
@@ -251,11 +240,11 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      String source = event.getSource();
+      String source = event.getItem().getHref(); 
+      String destination = event.getDestination();
       
-      updateFileState(event.getItem(), source);
+      updateFileState(event.getItem(), destination);
       
-      String destination = event.getItem().getHref();
       String href = source;
       if (event.getItem() instanceof Folder)
       {

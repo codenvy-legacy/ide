@@ -42,7 +42,7 @@ public class RenameItemCommand extends IDECommand implements ItemsSelectedHandle
    PanelSelectedHandler
 {
 
-   private static final String ID = "File/Rename File\\Folder...";
+   private static final String ID = "File/Rename";
 
    private boolean browserPanelSelected = true;
 
@@ -51,8 +51,8 @@ public class RenameItemCommand extends IDECommand implements ItemsSelectedHandle
    public RenameItemCommand()
    {
       super(ID);
-      setTitle("Rename...");
-      setPrompt("Rename Item...");
+      setTitle("Rename");
+      setPrompt("Rename Item");
       setIcon(Images.MainMenu.MOVE);
       setEvent(new RenameItemEvent());
    }

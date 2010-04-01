@@ -25,6 +25,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.cookie.CookieManager;
+import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsHandler;
@@ -245,8 +247,30 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPast));
    }
 
+   private void updateFileState(Item item, String destination)
+   {
+      String source = item.getHref();      
+      for(String key : context.getOpenedFiles().keySet())
+      {
+         if(key.startsWith(source))
+         {
+            File file = context.getOpenedFiles().get(key);
+            String destinationPath = file.getHref();
+            destinationPath = destinationPath.substring(source.length());
+            destinationPath = destination + destinationPath;
+            file.setHref(destinationPath);
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            context.getOpenedFiles().remove(key);
+            context.getOpenedFiles().put(destinationPath, file);
+         }
+         
+      }
+      CookieManager.storeOpenedFiles(context);
+   }
+   
    public void onMoveComplete(MoveCompleteEvent event)
    {
+      updateFileState(event.getItem(), event.getDestination());
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());

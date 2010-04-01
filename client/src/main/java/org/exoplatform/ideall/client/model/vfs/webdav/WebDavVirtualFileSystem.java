@@ -270,11 +270,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       //      destinationURL += host.substring(0, host.indexOf("/"));
       //destinationURL += Configuration.getInstance().getContext() + CONTEXT + TextUtils.javaScriptEncodeURI(destination);
 
-      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
-      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+      MoveCompleteEvent event = new MoveCompleteEvent(item, destination);
+      //MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
       if (item instanceof File)
       {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
 
          Loader.getInstance().setMessage(Messages.MOVE_FILE);
 
@@ -293,7 +293,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             destination += "/";
          }
 
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
 
          Loader.getInstance().setMessage(Messages.MOVE_FOLDER);
 

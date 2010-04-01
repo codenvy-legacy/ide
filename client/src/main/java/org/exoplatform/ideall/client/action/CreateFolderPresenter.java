@@ -18,9 +18,10 @@ package org.exoplatform.ideall.client.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FolderCreatedHandler;
@@ -128,8 +129,13 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    public void onFolderCreated(FolderCreatedEvent event)
    {
-      eventBus.fireEvent(new RefreshBrowserEvent((Folder)context.getSelectedItems(context.getSelectedNavigationPanel())
-         .get(0), event.getFolder()));
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String folder = item.getHref();
+      if (item instanceof File)
+      {
+         folder = folder.substring(0, folder.lastIndexOf("/")+1);
+      }
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
       display.closeForm();
    }
 

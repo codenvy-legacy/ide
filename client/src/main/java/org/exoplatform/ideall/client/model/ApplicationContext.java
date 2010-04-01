@@ -51,7 +51,7 @@ public class ApplicationContext
    private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
    /**
-    * Current edited file
+    * Current active file in editor
     */
    private File activeFile;
 
@@ -160,7 +160,7 @@ public class ApplicationContext
    }
 
    /**
-    * @param activeFile the activeFile to set
+    * @param activeFile
     */
    public void setActiveFile(File activeFile)
    {
