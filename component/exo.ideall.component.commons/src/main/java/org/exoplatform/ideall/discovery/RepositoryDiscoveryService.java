@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,7 +34,6 @@ import javax.ws.rs.core.UriInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
-import org.exoplatform.services.rest.ExtHttpHeaders;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
@@ -48,6 +49,18 @@ public class RepositoryDiscoveryService implements ResourceContainer
 
    private String WEBDAV_CONTEXT = "jcr";
 
+   /**
+    * To disable cache control.
+    */
+   private static final CacheControl noCache;
+
+   static
+   {
+      noCache = new CacheControl();
+      noCache.setNoCache(true);
+      noCache.setNoStore(true);
+   }
+
    private RepositoryService repositoryService;
 
    public RepositoryDiscoveryService(RepositoryService repositoryService)
@@ -56,6 +69,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
    }
 
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
    public Response getEntryPoints(@Context UriInfo uriInfo)
    {
@@ -75,9 +89,13 @@ public class RepositoryDiscoveryService implements ResourceContainer
          }
       }
 
-      EntryPointListEntity entity = new EntryPointListEntity(entryPoints);
+      EntryPointList entryPointList = new EntryPointList();
+      for (int i = 0; i < entryPoints.size(); i++)
+      {
+         entryPointList.getEntryPoints().add(new EntryPoint(Scheme.WEBDAV, entryPoints.get(i)));
+      }
 
-      return Response.ok().header(ExtHttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML).entity(entity).build();
+      return Response.ok(entryPointList).cacheControl(noCache).build();
    }
 
 }
