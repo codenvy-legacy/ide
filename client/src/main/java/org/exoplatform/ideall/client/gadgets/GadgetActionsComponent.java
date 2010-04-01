@@ -22,7 +22,6 @@ import org.exoplatform.ideall.client.gadgets.event.DeployGadgetEvent;
 import org.exoplatform.ideall.client.gadgets.event.DeployGadgetHadndler;
 import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetEvent;
 import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetHandler;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetDeployResultEvent;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetDeployResultHandler;
@@ -30,8 +29,6 @@ import org.exoplatform.ideall.client.model.gadget.event.GadgetUndeployResultEven
 import org.exoplatform.ideall.client.model.gadget.event.GadgetUndeployResultHandler;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
-
-import com.google.gwt.user.client.Window.Location;
 
 /**
  * Created by The eXo Platform SAS.
@@ -52,8 +49,7 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
     */
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      System.out.println("gadget url: " + getURL());
-      GadgetService.getInstance().deployGadget(getURL());
+      GadgetService.getInstance().deployGadget(context.getActiveFile().getHref());
    }
 
    /**
@@ -61,7 +57,7 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
     */
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      GadgetService.getInstance().undeployGadget(getURL());
+      GadgetService.getInstance().undeployGadget(context.getActiveFile().getHref());
    }
 
    @Override
@@ -71,19 +67,6 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
       handlers.addHandler(GadgetDeployResultEvent.TYPE, this);
       handlers.addHandler(GadgetUndeployResultEvent.TYPE, this);
-   }
-
-   /**
-    * @return
-    */
-   private String getURL()
-   {
-      //TODO
-      String url = 
-//         Location.getProtocol() + "//" + Location.getHost() +
-//         Configuration.getInstance().getPublicContext() + "/jcr" + 
-         context.getActiveFile().getHref();
-      return url;
    }
 
    /**

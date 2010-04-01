@@ -206,19 +206,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
    public void onGetFileURL(GetFileURLEvent event)
    {
-      new GetItemURLForm(eventBus, getURL());
-   }
-
-   private String getURL()
-   {
-      String url =
-//         Location.getProtocol() + "//" + Location.getHost()
-//            +
-//            //( "80".equals(Location.getPort()) ? "" : ":" + Location.getPort() ) +
-//            Configuration.getInstance().getContext() + "/jcr"
-             context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
-      return url;
-//      return null;
+      String url = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+      new GetItemURLForm(eventBus, url);
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)

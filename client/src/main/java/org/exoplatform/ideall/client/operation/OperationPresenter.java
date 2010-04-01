@@ -27,6 +27,7 @@ import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
+import org.exoplatform.ideall.client.model.gadget.TokenRequest;
 import org.exoplatform.ideall.client.model.gadget.TokenResponse;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedEvent;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedHandler;
@@ -41,6 +42,7 @@ import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEv
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 /**
  * Created by The eXo Platform SAS .
@@ -138,7 +140,6 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onPreviewFile(PreviewFileEvent event)
    {
-//      TODO
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
       File file = context.getActiveFile();
@@ -163,18 +164,14 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    private void previewGadget()
    {
-//      //FIXME:  
-//      //TODO
-//      String gadgetURL =
-//         Location.getProtocol() + "//" + Location.getHost() + Configuration.getInstance().getPublicContext() + "/jcr"
-//            + context.getActiveFile().getPath();
-//      String owner = "root";
-//      String viewer = "root";
-//      Long moduleId = 0L;
-//      String container = "default";
-//      String domain = null;
-//      TokenRequest tokenRequest = new TokenRequest(URL.encode(gadgetURL), owner, viewer, moduleId, container, domain);
-//      GadgetService.getInstance().getSecurityToken(tokenRequest);
+      String owner = "root";
+      String viewer = "root";
+      Long moduleId = 0L;
+      String container = "default";
+      String domain = null;
+      TokenRequest tokenRequest = new TokenRequest(URL.encode(context.getActiveFile().getHref()),
+         owner, viewer, moduleId, container, domain);
+      GadgetService.getInstance().getSecurityToken(tokenRequest);
    }
 
    public void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent)
