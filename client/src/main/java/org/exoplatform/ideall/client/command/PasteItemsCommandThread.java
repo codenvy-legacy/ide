@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
@@ -127,6 +126,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       pathFromCopy = pathFromCopy.substring(0, pathFromCopy.lastIndexOf("/") + 1);
 
       String pathToCopy = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
+      
+      if(!pathToCopy.endsWith("/"))
+      {
+         pathToCopy += "/";
+      }
+      
       folderToPast = new Folder(pathToCopy);
       if (pathFromCopy.equals(pathToCopy))
       {
@@ -197,9 +202,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       pathFromCut = pathFromCut.substring(0, pathFromCut.lastIndexOf("/") + 1);
 
       String pathToCut = getPathToPaste(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-
-      System.out.println("path from cut: " + pathFromCut);
-      System.out.println("path to cut: " + pathToCut);
+      
+      if(!pathToCut.endsWith("/"))
+      {
+         pathToCut += "/";
+      }
+      
       folderToPast = new Folder(pathToCut);
       if (pathFromCut.equals(pathToCut))
       {
@@ -228,9 +236,9 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
       String pastedItemHref = lastPasteItem.getHref();
-      if (lastPasteItem instanceof Folder)
+      if (pastedItemHref.endsWith("/"))
       {
-         pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/"));
+         pastedItemHref = pastedItemHref.substring(0, pastedItemHref.length() - 1);
       }
 
       pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/") + 1);
@@ -247,30 +255,51 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPast));
    }
 
-   private void updateFileState(Item item, String destination)
+   
+   private void updateOpenedFiles(String href, String sourceHref)
    {
-      String source = item.getHref();      
-      for(String key : context.getOpenedFiles().keySet())
+      List<String> keys = new ArrayList<String>();
+      for (String key : context.getOpenedFiles().keySet())
       {
-         if(key.startsWith(source))
+         keys.add(key);
+      }
+
+      for (String key : keys)
+      {
+         if (key.startsWith(sourceHref))
          {
             File file = context.getOpenedFiles().get(key);
-            String destinationPath = file.getHref();
-            destinationPath = destinationPath.substring(source.length());
-            destinationPath = destination + destinationPath;
-            file.setHref(destinationPath);
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            String fileHref = file.getHref().replace(sourceHref, href);
+            file.setHref(fileHref);
+
             context.getOpenedFiles().remove(key);
-            context.getOpenedFiles().put(destinationPath, file);
+            context.getOpenedFiles().put(fileHref, file);
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
-         
       }
-      CookieManager.storeOpenedFiles(context);
    }
    
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      //updateFileState(event.getItem(), event.getSource());
+      if (event.getItem() instanceof File)
+      {
+         File file = (File)event.getItem();
+
+         if (context.getOpenedFiles().containsKey(event.getSourceHref()))
+         {
+            File openedFle = context.getOpenedFiles().get(event.getSourceHref());
+            openedFle.setHref(file.getHref());
+            context.getOpenedFiles().remove(event.getSourceHref());
+            context.getOpenedFiles().put(openedFle.getHref(), openedFle);
+
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+         }
+      }
+      else
+      {
+         updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
+      }
+      
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());

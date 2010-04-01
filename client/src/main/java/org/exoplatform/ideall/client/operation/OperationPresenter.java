@@ -25,10 +25,8 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
-import org.exoplatform.ideall.client.model.gadget.TokenRequest;
 import org.exoplatform.ideall.client.model.gadget.TokenResponse;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedEvent;
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedHandler;
@@ -43,8 +41,6 @@ import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEv
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window.Location;
 
 /**
  * Created by The eXo Platform SAS .
