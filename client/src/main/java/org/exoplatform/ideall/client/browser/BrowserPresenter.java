@@ -344,6 +344,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);      
       VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
 

@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -62,7 +62,7 @@ public class EntryPointListForm extends DialogWindow implements EntryPointListPr
    private EntryPointListGrid entryPointListGrid;
    
    
-   public EntryPointListForm(HandlerManager eventBus, ApplicationContext context, List<String> entryPoints)
+   public EntryPointListForm(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
       super(eventBus, WIDTH, HEIGHT);
       
@@ -81,9 +81,8 @@ public class EntryPointListForm extends DialogWindow implements EntryPointListPr
 
       show();
       
-      presenter = new EntryPointListPresenter(eventBus, context, entryPoints);
-      presenter.bindDisplay(this);
-      
+      presenter = new EntryPointListPresenter(eventBus, context, entryPointList);
+      presenter.bindDisplay(this);      
    }
 
    private void createSelectWorkspaceForm()
@@ -152,7 +151,7 @@ public class EntryPointListForm extends DialogWindow implements EntryPointListPr
       return cancelButton;
    }
 
-   public ListGridItem<String> getEntryPoints()
+   public ListGridItem<EntryPoint> getEntryPoints()
    {
       return entryPointListGrid;
    }

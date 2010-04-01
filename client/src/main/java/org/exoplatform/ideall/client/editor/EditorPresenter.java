@@ -540,6 +540,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
    {
       display.updateTabTitle(event.getFile().getHref());
+      CookieManager.storeOpenedFiles(context);
    }
 
 }

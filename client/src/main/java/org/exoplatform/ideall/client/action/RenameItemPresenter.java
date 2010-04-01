@@ -16,11 +16,13 @@
  */
 package org.exoplatform.ideall.client.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
@@ -217,54 +219,60 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return false;
    }
 
-   private void updateFileState(Item item, String destination)
+   private void updateOpenedFiles(String href, String sourceHref)
    {
-      String source = item.getHref();
-      for(String key : context.getOpenedFiles().keySet())
+      List<String> keys = new ArrayList<String>();
+      for (String key : context.getOpenedFiles().keySet())
       {
-         if(key.startsWith(source))
+         keys.add(key);
+      }
+
+      for (String key : keys)
+      {
+         if (key.startsWith(sourceHref))
          {
             File file = context.getOpenedFiles().get(key);
-            String destinationPath = file.getHref();
-            destinationPath = destinationPath.substring(source.length());
-            destinationPath = destination + destinationPath;
-            file.setHref(destinationPath);
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            String fileHref = file.getHref().replace(sourceHref, href);
+            file.setHref(fileHref);
+
             context.getOpenedFiles().remove(key);
-            context.getOpenedFiles().put(destinationPath, file);
+            context.getOpenedFiles().put(fileHref, file);
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
-         
       }
-      CookieManager.storeOpenedFiles(context);
    }
-   
+
    public void onMoveComplete(MoveCompleteEvent event)
    {
       if (event.getItem() instanceof File)
       {
-         
+         File file = (File)event.getItem();
+
+         if (context.getOpenedFiles().containsKey(event.getSourceHref()))
+         {
+            File openedFle = context.getOpenedFiles().get(event.getSourceHref());
+            openedFle.setHref(file.getHref());
+            context.getOpenedFiles().remove(event.getSourceHref());
+            context.getOpenedFiles().put(openedFle.getHref(), openedFle);
+
+            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+         }
       }
       else
       {
-         System.out.println("-----------------------------------------------");
-         System.out.println("source href > " + event.getSourceHref());
-         System.out.println("item href > " + event.getItem().getHref());
+         updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
       }
-      
-//      String source = event.getSourceHref(); 
-//          
-//      String destination = event.getItem().getHref(); 
-//      
-//      updateFileState(event.getItem(), destination);
-//      
-//      String href = source;
-//      if (event.getItem() instanceof Folder)
-//      {
-//         href = source.substring(0, source.lastIndexOf("/"));
-//      }
-//      href = href.substring(0, href.lastIndexOf("/") + 1);
-//      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), new Folder(destination)));
-//
+
+      String href = event.getSourceHref();
+      if (href.endsWith("/"))
+      {
+         href = href.substring(0, href.length() - 1);
+      }
+
+      href = href.substring(0, href.lastIndexOf("/") + 1);
+      System.out.println("folder to refresh > " + href);
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), event.getItem()));
+
       display.closeForm();
    }
 

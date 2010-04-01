@@ -67,7 +67,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      //boolean switchWorkspace = checkSwitchingWorkspace();
       if (getValue() == null) {
          tree.remove(rootNode);
          rootNode = null;
@@ -130,11 +129,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private TreeNode getNodeByHref(String href)
    {
-//      for (int i = 0; i < 5; i++)
-//      {
-//         System.out.println();
-//      }
-      
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
       String path = href.substring(rootFolder.getHref().length());
       
@@ -188,6 +182,16 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          }
          tree.closeAll(parentNode);
          return;
+      }
+      
+      /*
+       * check differences in name of tree node and item href
+       */
+      for (TreeNode childNode : tree.getChildren(parentNode)) {
+         Item item = ((Item)childNode.getAttributeAsObject(getValuePropertyName()));
+         if (!childNode.getName().equals(item.getName())) {
+            tree.remove(childNode);
+         }
       }
 
       // remove not existed items in response from tree

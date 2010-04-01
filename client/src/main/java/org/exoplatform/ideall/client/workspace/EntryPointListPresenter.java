@@ -16,11 +16,14 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,7 +43,7 @@ public class EntryPointListPresenter
 
    public interface Display
    {
-      ListGridItem<String> getEntryPoints();
+      ListGridItem<EntryPoint> getEntryPoints();
 
       void closeForm();
 
@@ -60,17 +63,17 @@ public class EntryPointListPresenter
 
    private Handlers handlers;
 
-   private List<String> entryPoints;
+   private EntryPointList entryPointList;
 
    private Display display;
 
    private String selectedEntryPoint;
 
-   public EntryPointListPresenter(HandlerManager eventBus, ApplicationContext context, List<String> entryPoints)
+   public EntryPointListPresenter(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
       this.context = context;
       this.eventBus = eventBus;
-      this.entryPoints = entryPoints;
+      this.entryPointList = entryPointList;
 
       handlers = new Handlers(eventBus);
    }
@@ -99,11 +102,17 @@ public class EntryPointListPresenter
          }
       });
 
+      List<EntryPoint> entryPoints = new ArrayList<EntryPoint>();
+      for (int i = 0; i < entryPointList.getEntryPoints().length(); i++) {
+         EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
+         entryPoints.add(entryPoint);
+      }
+      
       display.getEntryPoints().setValue(entryPoints);
-      display.getEntryPoints().addSelectionHandler(new SelectionHandler<String>()
+      display.getEntryPoints().addSelectionHandler(new SelectionHandler<EntryPoint>()
       {
 
-         public void onSelection(SelectionEvent<String> event)
+         public void onSelection(SelectionEvent<EntryPoint> event)
          {
             onEntryPointSelected(event.getSelectedItem());
          }
@@ -111,20 +120,20 @@ public class EntryPointListPresenter
       });
    }
 
-   protected void onEntryPointSelected(String selectedItem)
+   protected void onEntryPointSelected(EntryPoint selectedItem)
    {
-      if (selectedItem == null)
-      {
-         display.disableOkButton();
-         return;
-      }
-
-      if (selectedItem.equals(selectedEntryPoint))
-      {
-         return;
-      }
-      selectedEntryPoint = selectedItem;
-      display.enableOkButton();
+      //      if (selectedItem == null)
+      //      {
+      //         display.disableOkButton();
+      //         return;
+      //      }
+      //
+      //      if (selectedItem.equals(selectedEntryPoint))
+      //      {
+      //         return;
+      //      }
+      //      selectedEntryPoint = selectedItem;
+      //      display.enableOkButton();
    }
 
    public void destroy()

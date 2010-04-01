@@ -52,6 +52,7 @@ import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchResultUnmars
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Random;
 
 /**
  * Created by The eXo Platform SAS .
@@ -135,6 +136,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getChildren(Folder folder)
    {
+      System.out.println("==========================================================================================================");
+//      new Exception().printStackTrace();
+      
       String url = javaScriptEncodeURI(folder.getHref());
       //      if (!url.endsWith("/"))
       //      {
@@ -213,9 +217,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getProperties(Item item)
    {
+      System.out.println("try get properties: " + item.getHref());
+      //
       String url = javaScriptEncodeURI(item.getHref());
+      //String url = javaScriptEncodeURI(item.getHref() + "?nocache=" + Random.nextInt());
 
-      ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(eventBus, item);
+      ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item);
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
@@ -223,8 +230,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       Loader.getInstance().setMessage(Messages.GET_PROPERTIES);
 
-      AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
-         .header(HTTPHeader.DEPTH, "infinity").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
+         //.header(HTTPHeader.DEPTH, "infinity")
+         .header(HTTPHeader.DEPTH, "0")
+         .send(callback);
    }
 
    @Override

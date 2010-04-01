@@ -16,11 +16,9 @@
  */
 package org.exoplatform.ideall.client.model.discovery.event;
 
-import java.util.List;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -30,26 +28,24 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EntryPointsReceivedEvent extends GwtEvent<EntryPointsReceivedHandler>
 {
 
-   public static GwtEvent.Type<EntryPointsReceivedHandler> TYPE = new GwtEvent.Type<EntryPointsReceivedHandler>(); 
-   
-   private List<String> entryPoints;
-   
-   public EntryPointsReceivedEvent(List<String> entryPoints)
+   public static GwtEvent.Type<EntryPointsReceivedHandler> TYPE = new GwtEvent.Type<EntryPointsReceivedHandler>();
+
+   private EntryPointList entryPointList;
+
+   public EntryPointList getEntryPointList()
    {
-      this.entryPoints = entryPoints;
-   }
-   
-   
-   public List<String> getEntryPoints()
-   {
-      return entryPoints;
+      return entryPointList;
    }
 
+   public void setEntryPointList(EntryPointList entryPointList)
+   {
+      this.entryPointList = entryPointList;
+   }
 
    @Override
    protected void dispatch(EntryPointsReceivedHandler handler)
    {
-      handler.onEntryPointsReceived(this);      
+      handler.onEntryPointsReceived(this);
    }
 
    @Override
@@ -57,6 +53,5 @@ public class EntryPointsReceivedEvent extends GwtEvent<EntryPointsReceivedHandle
    {
       return TYPE;
    }
- 
-}
 
+}

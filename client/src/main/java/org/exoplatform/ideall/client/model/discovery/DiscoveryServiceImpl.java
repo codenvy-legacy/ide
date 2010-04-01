@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ideall.client.model.discovery;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -50,10 +47,9 @@ public class DiscoveryServiceImpl extends DiscoveryService
    {
       String url = Configuration.getInstance().getContext() + CONTEXT;
 
-      List<String> entryPoints = new ArrayList<String>();
-
-      EntryPointsReceivedEvent event = new EntryPointsReceivedEvent(entryPoints);
-      EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(entryPoints);
+      EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
+      EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
+      
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }

@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.workspace;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
@@ -28,7 +29,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointListGrid extends ListGrid<String>
+public class EntryPointListGrid extends ListGrid<EntryPoint>
 {
 
    public EntryPointListGrid()
@@ -45,10 +46,9 @@ public class EntryPointListGrid extends ListGrid<String>
    }
 
    @Override
-   protected void setRecordFields(ListGridRecord record, String item)
+   protected void setRecordFields(ListGridRecord record, EntryPoint item)
    {
-      String text = "<span title = \"" + item + "\">" + item + "</span>";
-
+      String text = "<span title = \"" + item.getHref() + "\">" + item.getHref() + "</span>";
       record.setAttribute("entryPoint", text);
    }
 

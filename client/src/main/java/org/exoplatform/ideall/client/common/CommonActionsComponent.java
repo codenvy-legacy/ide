@@ -56,7 +56,9 @@ import org.exoplatform.ideall.client.event.file.SearchFileEvent;
 import org.exoplatform.ideall.client.event.file.SearchFileHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
+import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
+import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
@@ -66,8 +68,9 @@ import org.exoplatform.ideall.client.search.SearchForm;
 import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
-
-import com.google.gwt.user.client.Window.Location;
+import org.exoplatform.ideall.client.workspace.EntryPointListForm;
+import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -79,7 +82,7 @@ import com.google.gwt.user.client.Window.Location;
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler,
-   CutItemsHandler
+   CutItemsHandler, SelectWorkspaceHandler, EntryPointsReceivedHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -127,6 +130,10 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(CopyItemsEvent.TYPE, this);
       addHandler(CutItemsEvent.TYPE, this);
+      
+      addHandler(SelectWorkspaceEvent.TYPE, this);
+      addHandler(EntryPointsReceivedEvent.TYPE, this);      
+      
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -235,5 +242,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       context.getItemsToCut().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
+   
+   public void onSelectWorkspace(SelectWorkspaceEvent event)
+   {
+      DiscoveryService.getInstance().getEntryPoints();      
+   }
+   
+   public void onEntryPointsReceived(EntryPointsReceivedEvent event)
+   {
+      new EntryPointListForm(eventBus, context, event.getEntryPointList());      
+   }   
 
 }

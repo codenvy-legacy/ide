@@ -88,6 +88,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
          fileToLoad = context.getPreloadFiles().values().iterator().next();
          context.getPreloadFiles().remove(fileToLoad.getHref());
+         System.out.println("loading file > " + fileToLoad.getHref());
          VirtualFileSystem.getInstance().getProperties(fileToLoad);
       }
       catch (Exception exc)

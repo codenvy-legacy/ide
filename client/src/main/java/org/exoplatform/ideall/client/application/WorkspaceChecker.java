@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.application;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.ui.client.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -64,8 +65,17 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
 
    public void onError(ExceptionThrownEvent event)
    {
+      System.out.println("error: " + event.getError());      
+      event.getError().printStackTrace();
+      
+      ServerException e = (ServerException)event.getError();
+      System.out.println("STATUS: " + e.getHTTPStatus());
+      System.out.println("STATUS TEXT: " + e.getStatusText());
+      
       handlers.removeHandlers();
+      
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+      
       Dialogs.getInstance().showError("Entry point <b>" + context.getEntryPoint() + "</b> not found!");
    }
 

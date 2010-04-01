@@ -28,8 +28,6 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -40,18 +38,16 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ItemPropertiesUnmarshaller implements Unmarshallable
 {
 
-   private HandlerManager eventBus;
-
    private Item item;
 
-   public ItemPropertiesUnmarshaller(HandlerManager eventBus, Item item)
+   public ItemPropertiesUnmarshaller(Item item)
    {
       this.item = item;
-      this.eventBus = eventBus;
    }
 
    public void unmarshal(String body) throws UnmarshallerException
    {
+      System.out.println("body > " + body);
       try
       {
          parseItemProperties(body);
