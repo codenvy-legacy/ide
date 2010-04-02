@@ -15,6 +15,10 @@
   <component>
     <type>org.exoplatform.ideall.discovery.RepositoryDiscoveryService</type>
   </component>
+ 
+  <component>
+    <type>org.exoplatform.ideall.groovy.GroovyScriptServiceApplication</type>
+  </component>
   
   <component>
     <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>

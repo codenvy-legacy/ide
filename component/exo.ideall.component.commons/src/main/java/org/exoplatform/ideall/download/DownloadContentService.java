@@ -185,6 +185,12 @@ public class DownloadContentService implements Const, ResourceContainer
       return sp.getSession(workspaceName(repoPath), repo);
    }
 
+   /**
+    * @param uriInfo
+    * @param fileName
+    * @param repoPath
+    * @return
+    */
    @GET
    @Path("/{fileName:.*}/")
    public Response download(@Context UriInfo uriInfo, @PathParam("fileName") String fileName,

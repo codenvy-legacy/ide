@@ -19,7 +19,20 @@
  */
 package org.exoplatform.ideall.groovy;
 
+import java.io.InputStream;
+
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,10 +41,68 @@ import javax.ws.rs.Path;
  * @version $
  */
 
-@Path("/services/discovery")
+@Path("/services/groovy")
 public class GroovyScriptService
 {
-   
-   
+
+   private static final String WEBDAV_CONTEXT = "jcr";
+
+   private static Log log = ExoLogger.getLogger(GroovyScriptService.class);
+
+   private GroovyScript2RestLoader groovyScript2RestLoader;
+
+   public GroovyScriptService(GroovyScript2RestLoader groovyScript2RestLoader)
+   {
+      this.groovyScript2RestLoader = groovyScript2RestLoader;
+   }
+
+   @POST
+   @Path("/validate")
+   public Response validate(@HeaderParam("location") String location, InputStream inputStream)
+   {
+      log.info("Location: " + location);
+      return groovyScript2RestLoader.validateScript(location, inputStream);
+   }
+
+   @POST
+   @Path("/load")
+   public Response load(@Context UriInfo uriInfo, @HeaderParam("location") String location,
+      @QueryParam("state") String state)
+   {
+      //return 
+      //?state=true
+      //new NodeScriptKey()
+
+      log.info(">> VALIDATE");
+
+      log.info("BaseURI: " + uriInfo.getBaseUri().toASCIIString() + "/");
+      
+      String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
+      
+      if (!location.startsWith(prefix)) {
+         return Response.status(HTTPStatus.NOT_FOUND).entity(location + " Not found!").build();
+      }
+      
+      location = location.substring(prefix.length());
+      log.info("Location: " + location);
+      
+      log.info("State: " + state);
+      
+      String repositoryName = location.substring(0, location.indexOf("/"));
+      log.info("repository name: " + repositoryName);
+      
+      location = location.substring(location.indexOf("/") + 1);
+      
+      String workspaceName = location.substring(0, location.indexOf("/"));
+      log.info("workspace name: " + workspaceName);
+      
+      String path = location.substring(location.indexOf("/") + 1);
+      log.info("path: " + path);
+      
+      //ScriptKey scriptKey = new NodeScriptKey(repositoryName, workspaceName, path);
+      
+      boolean load = Boolean.parseBoolean(state);
+      return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);
+   }
 
 }
