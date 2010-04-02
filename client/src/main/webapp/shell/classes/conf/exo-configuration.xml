@@ -23,6 +23,15 @@
   <component>
     <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
   </component>
+  
+	
+  <component>
+    <type>org.exoplatform.ideall.discovery.RepositoryDiscoveryService</type>
+  </component>
+  
+  
+  
+  
 
    <component> 
     <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key> 
