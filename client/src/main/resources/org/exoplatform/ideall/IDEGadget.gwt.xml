@@ -21,6 +21,7 @@
 
 	<!--  Inherit the SmartGWT Toolkit library configuration. -->
 	<script src="applicationInitializer.js" />
+	<script src="mimeTypes.js" />	
 	<script src="init_smartgwt_for_gadget.js" />
 
 	<inherits name="com.smartgwt.SmartGwtNoScript" />

@@ -17,13 +17,13 @@
 package org.exoplatform.ideall.client.template;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
+import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
@@ -143,7 +143,7 @@ public class CreateFileFromTemplatePresenter
       selectedTemplate = template;
       display.enableCreateButton();
 
-      String extension = MimeTypeResolver.getExtensionsMap().get(template.getMimeType());
+      String extension = IDEMimeTypes.getExtensionsMap().get(template.getMimeType());
       if (previousExtension != null)
       {
          String fName = display.getFileNameField().getValue();

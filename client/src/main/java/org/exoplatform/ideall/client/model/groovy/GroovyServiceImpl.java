@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -43,11 +44,15 @@ import com.google.gwt.http.client.RequestBuilder.Method;
 public class GroovyServiceImpl extends GroovyService
 {
 
-   public static final String CONTEXT = "/script/groovy";
+   //public static final String CONTEXT = "/script/groovy";
+   
+   public static final String CONTEXT = "/services/groovy";
 
-   public static final String VALIDATE = "/validate";
+   //public static final String VALIDATE = "/validate";
 
    public static final String LOAD = "/load";
+   
+   public static final String VALIDATE = "/validate";
 
    private HandlerManager eventBus;
 
@@ -60,13 +65,15 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#deploy(java.lang.String)
     */
    @Override
-   public void deploy(String path)
+   public void deploy(String href)
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT + LOAD + path + "?state=true";
+      String url = Configuration.getInstance().getContext() + CONTEXT + LOAD + "?state=true";
 
-      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(path);
+      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url)
+      .header(HTTPHeader.LOCATION, href)
+      .send(callback);
    }
 
    /* (non-Javadoc)
@@ -85,14 +92,18 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#validate(java.lang.String, java.lang.String)
     */
    @Override
-   public void validate(String fileName, String content)
+   public void validate(String href, String content)
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT + VALIDATE + "/" + fileName;
+      String url = Configuration.getInstance().getContext() + CONTEXT + VALIDATE;
 
-      GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(fileName);
+      GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 
-      AsyncRequest.build(RequestBuilder.POST, url).header("Content-Type", "script/groovy").data(content).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url)
+         .header(HTTPHeader.CONTENT_TYPE, "script/groovy")
+         .header(HTTPHeader.LOCATION, href)
+         .data(content)
+         .send(callback);
    }
 
    @Override

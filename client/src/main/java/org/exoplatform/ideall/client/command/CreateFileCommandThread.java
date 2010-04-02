@@ -17,9 +17,9 @@
 package org.exoplatform.ideall.client.command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.editor.EditorUtil;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
@@ -29,8 +29,8 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.FileTemplates;
 import org.exoplatform.ideall.client.model.template.TemplateService;
+import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
@@ -65,7 +65,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    {
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
-      String extension = MimeTypeResolver.getExtensionsMap().get(event.getMimeType());
+      String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
 
       String href = item.getHref();
       if (item instanceof File)

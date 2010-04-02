@@ -48,14 +48,14 @@ public abstract class GroovyService
     * @param fileName
     * @param content
     */
-   public abstract void validate(String fileName, String content);
+   public abstract void validate(String href, String content);
 
    /**
     * Deploy Groovy script
     * 
     * @param path
     */
-   public abstract void deploy(String path);
+   public abstract void deploy(String href);
 
    /**
     * Undeploy deployed Groovy script

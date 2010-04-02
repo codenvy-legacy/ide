@@ -1,93 +1,107 @@
-/*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+/**
+ * Copyright (C) 2009 eXo Platform SAS.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
 package org.exoplatform.ideall.client.model.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $
  */
 
 public class MimeTypeResolver
 {
 
-   private static HashMap<String, List<String>> mimeTypes = new HashMap<String, List<String>>();
+   private static final String DEFAULT_MIMETYPE = "application/octet-stream";
 
-   private static HashMap<String, String> extensions = new HashMap<String, String>();
+   private static HashMap<String, List<String>> mimeTypes;
 
-   private static void add(String extension, String mimeType)
+   private static native JavaScriptObject getMimeTypesConfig() /*-{
+      return $wnd.mimeTypes;
+   }-*/;
+
+   private static void loadMimeTypes()
    {
-      if (mimeTypes.containsKey(extension))
-         mimeTypes.get(extension).add(mimeType);
-      else
+      mimeTypes = new HashMap<String, List<String>>();
+      try
       {
-         List<String> list = new ArrayList<String>();
-         list.add(mimeType);
-         mimeTypes.put(extension, list);
+         JSONObject json = new JSONObject(getMimeTypesConfig());
+
+         Iterator<String> iterator = json.keySet().iterator();
+         while (iterator.hasNext())
+         {
+            String key = iterator.next();
+
+            JSONValue value = json.get(key);
+            if (value.isArray() != null)
+            {
+               JSONArray array = value.isArray();
+               List<String> types = new ArrayList<String>();
+               for (int i = 0; i < array.size(); i++)
+               {
+                  String mimeType = array.get(i).isString().stringValue();
+                  types.add(mimeType);
+               }
+               mimeTypes.put(key, types);
+
+            }
+            else if (value.isString() != null)
+            {
+               String mimeType = value.isString().stringValue();
+               List<String> types = new ArrayList<String>();
+               types.add(mimeType);
+               mimeTypes.put(key, types);
+            }
+         }
       }
-      if (!extensions.containsKey(mimeType)) {
-         extensions.put(mimeType, extension);
+      catch (Exception exc)
+      {
+         exc.printStackTrace();
       }
    }
 
-   static
+   public static List<String> getMimeTypes(String fileExtension)
    {
-      add("html", MimeType.TEXT_HTML);
-      add("htm", MimeType.TEXT_HTML);
-      add("css", MimeType.TEXT_CSS);
-      add("txt", MimeType.TEXT_PLAIN);
-      add("js", MimeType.APPLICATION_JAVASCRIPT);
-      add("js", MimeType.APPLICATION_X_JAVASCRIPT);
-      add("xml", MimeType.TEXT_XML);
-      add("groovy", MimeType.SCRIPT_GROOVY);
-      add("xml", MimeType.GOOGLE_GADGET);
-   }
+      if (mimeTypes == null)
+      {
+         loadMimeTypes();
+      }
 
-   public static Set<String> getExtensions()
-   {
-      return mimeTypes.keySet();
-   }
+      List<String> types = mimeTypes.get(fileExtension);
+      if (types == null)
+      {
+         types = new ArrayList<String>();
+         types.add(DEFAULT_MIMETYPE);
+      }
 
-   public static List<String> getMimeTypes(String fileName)
-   {
-      String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-
-      List<String> mimeType = mimeTypes.get(fileExtension);
-//      if (mimeType == null)
-//      {
-//         List<String> list = new ArrayList<String>();
-//         //list.add(MimeType.APPLICATION_OCTET_STREAM);
-//         return list;
-//      }
-
-      return mimeType;
-   }
-
-   public static HashMap<String, String> getExtensionsMap()
-   {
-      return extensions;
+      return types;
    }
 
 }

@@ -367,6 +367,7 @@ source : ${source.url}
 							<hostedWebapp>${basedir}/target/war</hostedWebapp>
 							<skipTests>${gwt.test.skip}</skipTests>
 							<port>${gwt.port}</port>
+							<extraJvmArgs>-Xmx1024m</extraJvmArgs>
 						</configuration>
 					</plugin>
 					<!--

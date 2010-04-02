@@ -19,12 +19,12 @@ package org.exoplatform.ideall.client.upload;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
+import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
@@ -200,7 +200,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       mimeTypes.add(MimeType.APPLICATION_XML);
       mimeTypes.add(MimeType.GOOGLE_GADGET);
 
-      List<String> proposalMimeTypes = MimeTypeResolver.getMimeTypes(event.getFileName());
+      List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(event.getFileName());
 
       String[] valueMap = new String[mimeTypes.size()];
       int i = 0;
