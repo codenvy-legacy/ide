@@ -403,8 +403,15 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       switchWorkspace();
-      //TODO fire new event
-      //eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+//      //TODO fire new event
+//      new Timer() {
+//         @Override
+//         public void run()
+//         {
+//            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+//         }
+//      }.schedule(100);
    }
 
    /**

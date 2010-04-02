@@ -24,6 +24,7 @@ import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEven
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,7 +41,15 @@ public class ApplicationInitializer
       eventBus.fireEvent(new RegisterEventHandlersEvent());
 
       context.setInitialized(true);
-      eventBus.fireEvent(new InitializeApplicationEvent());
+
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            eventBus.fireEvent(new InitializeApplicationEvent());
+         }
+      }.schedule(100);
    }
 
 }

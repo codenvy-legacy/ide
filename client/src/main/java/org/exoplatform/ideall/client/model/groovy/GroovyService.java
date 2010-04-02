@@ -62,7 +62,7 @@ public abstract class GroovyService
     * 
     * @param path
     */
-   public abstract void undeploy(String path);
+   public abstract void undeploy(String href);
 
    /**
     * Get Groovy script output
