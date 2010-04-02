@@ -1,21 +1,18 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.ideall.client.common.command.file;
 
@@ -28,30 +25,31 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
+
+
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
-
-public class UploadFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: $
+*/
+public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
+   
+   private final static String ID = "File/Open from local system";
 
-   private final static String ID = "File/Upload File...";
-
-   private final static String TITLE = "Upload File...";
+   private final static String TITLE = "Open from local system";
 
    private boolean browserPanelSelected = true;
-
-   public UploadFileCommand()
+   
+   public OpenInEditorCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setIcon(Images.MainMenu.UPLOAD);
-      setEvent(new UploadFileEvent(false));
+      setEvent(new UploadFileEvent(true));
    }
+   
 
    @Override
    protected void onRegisterHandlers()
@@ -99,3 +97,4 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
       updateEnabling();
    }
 }
+

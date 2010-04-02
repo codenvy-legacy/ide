@@ -34,6 +34,7 @@ import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
+import org.exoplatform.ideall.client.common.command.file.OpenInEditorCommand;
 import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
 import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
@@ -109,7 +110,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
-
+      
+      addCommand(new OpenInEditorCommand()).disable().hide();
+      
       /*
        * DOWNLOAD GROUP
        */

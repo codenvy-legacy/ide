@@ -33,6 +33,18 @@ public class UploadFileEvent extends GwtEvent<UploadFileHandler>
 
    public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
 
+   private boolean openFile;
+
+   public UploadFileEvent(boolean openFile)
+   {
+      this.openFile = openFile;
+   }
+
+   public boolean isOpenFile()
+   {
+      return openFile;
+   }
+
    @Override
    protected void dispatch(UploadFileHandler handler)
    {

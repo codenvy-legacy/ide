@@ -62,13 +62,35 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    private UploadPresenter presenter;
 
-   public UploadForm(HandlerManager eventBus, String path)
+   private String title;
+   
+   private String buttonTitle;
+   
+   private String labelTitle;
+   
+   private boolean openFile;
+   
+   public UploadForm(HandlerManager eventBus, String path, boolean openFile)
    {
       super(eventBus, WIDTH, HEIGHT);
 
       this.eventBus = eventBus;
-
-      setTitle("File upload");
+      this.openFile = openFile;
+      
+      if (openFile)
+      {
+         title = "Open file";
+         buttonTitle = "Open";
+         labelTitle = "File to open";
+      }
+      else
+      {
+         title = "File upload";
+         buttonTitle = "Upload";
+         labelTitle = "File to upload";
+      }
+      
+      setTitle(title);
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -83,7 +105,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
-      presenter = new UploadPresenter(eventBus, path);
+      presenter = new UploadPresenter(eventBus, path, openFile);
       presenter.bindDisplay(this);
    }
 
@@ -96,7 +118,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       StaticTextItem promptItem = new StaticTextItem();
       promptItem.setWidth(250);
       promptItem.setTitleAlign(Alignment.LEFT);
-      promptItem.setValue("File to upload:");
+      promptItem.setValue(labelTitle);
       promptItem.setShowTitle(false);
       promptItem.setColSpan(2);
 
@@ -142,7 +164,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
       uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
 
-      uploadButton = new IButton("Upload");
+      uploadButton = new IButton(buttonTitle);
       uploadButton.setHeight(22);
      // uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
       uploadButton.setIcon(Images.MainMenu.UPLOAD);  
@@ -150,7 +172,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       StatefulCanvas buttonSpacer = new StatefulCanvas();
       buttonSpacer.setWidth(5);
 
-      closeButton = new IButton("Close");
+      closeButton = new IButton("Cancel");
       closeButton.setHeight(22);
       closeButton.setIcon(Images.Buttons.CANCEL);
 
@@ -206,7 +228,15 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadForm = new FormPanel();
       uploadForm.setMethod(FormPanel.METHOD_POST);
       uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-      uploadForm.setAction(Configuration.getInstance().getUploadServiceContext() + "/");
+      if(openFile)
+      {
+         uploadForm.setAction(Configuration.getInstance().getUploadServiceContext() + "/");         
+      }
+      else
+      {
+//         uploadForm.setAction(url);
+      }
+      
       fileUploadCanvas.addChild(uploadForm);
       FileUploadInput upload = new FileUploadInput(eventBus);
       upload.setWidth("80px");
