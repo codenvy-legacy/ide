@@ -64,6 +64,8 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private Folder folderToPast;
 
    private boolean isCopy = false;
+   
+   private String sourceLastPastadItem;
 
    public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -235,15 +237,24 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
-      String pastedItemHref = lastPasteItem.getHref();
+      String pastedItemHref = sourceLastPastadItem;
       //if file get parent folder
+      System.out.println("pasted item Href: " + pastedItemHref);
       if(lastPasteItem instanceof File)
       {
          pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/"));
+         System.out.println("pasted item Href: " + pastedItemHref);
       }
-
-      pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/") + 1);
-
+      if(!(pastedItemHref+"/").equals(context.getEntryPoint()))
+      {
+         pastedItemHref = pastedItemHref.substring(0, pastedItemHref.lastIndexOf("/") + 1);         
+      }
+      
+      if(!pastedItemHref.endsWith("/"))
+      {
+         pastedItemHref += "/";
+      }
+      
       Folder folder = new Folder(pastedItemHref);
       System.out.println("folder from: " + folder.getHref());
 
@@ -300,7 +311,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       {
          updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
       }
-      
+      sourceLastPastadItem = event.getSourceHref();
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(event.getItem());
