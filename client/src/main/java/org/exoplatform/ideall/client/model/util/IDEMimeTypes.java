@@ -47,7 +47,8 @@ public class IDEMimeTypes
          list.add(mimeType);
          mimeTypes.put(extension, list);
       }
-      if (!extensions.containsKey(mimeType)) {
+      if (!extensions.containsKey(mimeType))
+      {
          extensions.put(mimeType, extension);
       }
    }
@@ -64,9 +65,17 @@ public class IDEMimeTypes
       add("groovy", MimeType.SCRIPT_GROOVY);
       add("xml", MimeType.GOOGLE_GADGET);
    }
-   
-   public static boolean isMimeTypeSupported(String mimeType) {
-      return mimeTypes.get(mimeType) != null;
+
+   public static boolean isMimeTypeSupported(String mimeType)
+   {
+      if (mimeTypes.get(mimeType) == null)
+      {
+         return false;
+      }
+      else
+      {
+         return true;
+      }
    }
 
    public static Set<String> getExtensions()

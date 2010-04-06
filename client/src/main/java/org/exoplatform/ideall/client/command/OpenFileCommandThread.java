@@ -62,11 +62,11 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    {
       File file = event.getFile();
 
-      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
-      {
-         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
-         return;
-      }
+//      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
+//      {
+//         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
+//         return;
+//      }
 
       if (file.getContent() != null)
       {

@@ -185,10 +185,13 @@ public class UploadPresenter implements UploadFileSelectedHandler
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
       
+      System.out.println("file name:" + fileName);
+      
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String href = item.getHref();
+      System.out.println("href:" + href);
       if (item instanceof File) {
-         href = href.substring(0, href.lastIndexOf("/"));
+         href = href.substring(0, href.lastIndexOf("/") + 1);
       }
       href += fileName;
       
@@ -406,7 +409,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String href = item.getHref();
       if (item instanceof File) {
-         href = href.substring(0,href.lastIndexOf("/"));
+         href = href.substring(0,href.lastIndexOf("/") + 1);
       }
       
       System.out.println("href > " + href);
