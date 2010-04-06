@@ -21,6 +21,10 @@
   </component>
   
   <component>
+    <type>org.exoplatform.ideall.upload.UploadServiceApplication</type>
+  </component>
+
+  <component>
     <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>
     <init-params>
        <value-param>

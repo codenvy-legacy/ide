@@ -53,7 +53,6 @@ public class LoopbackContentService implements ResourceContainer {
   @POST
   @Consumes( { "multipart/*" })
   public Response post(Iterator<FileItem> items) {
-
     InputStream stream = null;
     while (items.hasNext()) {
       FileItem fitem = items.next();
