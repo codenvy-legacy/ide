@@ -46,11 +46,15 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private final static String PUBLIC_CONTEXT = "publicContext";
 
-   public static final String UPLOAD_SERVICE_CONTEXT = "/services/loopbackcontent";
+   public static final String LOOPBACK_SERVICE_CONTEXT = "/services/loopbackcontent";
+
+   public static final String UPLOAD_SERVICE_CONTEXT = "/services/upload";
 
    private String defaultEntryPoint;
 
    private String context;
+
+   private String loopbackServiceContext;
 
    private String uploadServiceContext;
 
@@ -90,6 +94,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       if (config.containsKey(CONTEXT))
       {
          context = config.get(Configuration.CONTEXT).isString().stringValue();
+         loopbackServiceContext = context + LOOPBACK_SERVICE_CONTEXT;
          uploadServiceContext = context + UPLOAD_SERVICE_CONTEXT;
       }
       else
@@ -195,16 +200,26 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    }
 
    /**
-    * @return the uploadServiceContext
+    * @return the loopbackServiceContext
     */
+   public String getLoopbackServiceContext()
+   {
+      return loopbackServiceContext;
+   }
+
+   /**
+    * @param loopbackServiceContext the loopbackServiceContext to set
+    */
+   public void setLoopbackServiceContext(String loopbackServiceContext)
+   {
+      this.loopbackServiceContext = loopbackServiceContext;
+   }
+
    public String getUploadServiceContext()
    {
       return uploadServiceContext;
    }
 
-   /**
-    * @param uploadServiceContext the uploadServiceContext to set
-    */
    public void setUploadServiceContext(String uploadServiceContext)
    {
       this.uploadServiceContext = uploadServiceContext;
@@ -217,7 +232,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    }
 
    public static native String getRegistryURL() /*-{
-        return $wnd.registryURL;
-     }-*/;
+       return $wnd.registryURL;
+    }-*/;
 
 }

@@ -35,9 +35,11 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
    
-   private final static String ID = "File/Open from local system";
+   private final static String ID = "File/Open Local File...";
 
-   private final static String TITLE = "Open from local system";
+   private final static String TITLE = "Open Local File...";
+   
+   private final static String PROMPT = "Open Local File...";
 
    private boolean browserPanelSelected = true;
    
@@ -45,7 +47,7 @@ public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHand
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
+      setPrompt(PROMPT);
       setIcon(Images.MainMenu.UPLOAD);
       setEvent(new UploadFileEvent(true));
    }
@@ -96,5 +98,6 @@ public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHand
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
    }
+   
 }
 

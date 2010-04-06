@@ -101,7 +101,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    {
       fileToLoad.setNewFile(false);
       fileToLoad.setContentChanged(false);
-      VirtualFileSystem.getInstance().getFileContent(fileToLoad);
+      VirtualFileSystem.getInstance().getContent(fileToLoad);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

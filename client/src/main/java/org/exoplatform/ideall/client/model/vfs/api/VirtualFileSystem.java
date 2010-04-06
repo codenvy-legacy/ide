@@ -36,7 +36,7 @@ public abstract class VirtualFileSystem
     * @param file
     */
 
-   public abstract void getFileContent(File file);
+   public abstract void getContent(File file);
 
    /**
     * Save file content
@@ -44,7 +44,7 @@ public abstract class VirtualFileSystem
     * @param file
     * @param path
     */
-   public abstract void saveFileContent(File file);
+   public abstract void saveContent(File file);
 
    /**
     * Delete file or folder

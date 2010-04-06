@@ -56,7 +56,7 @@ public class Sample implements FileContentSavedHandler, ExceptionThrownHandler
       String path = "http://host:port/some path/some file";
 
       File file = new File(path);
-      VirtualFileSystem.getInstance().getFileContent(file);
+      VirtualFileSystem.getInstance().getContent(file);
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)

@@ -197,7 +197,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
                      {
                         if (value != null && value == true)
                         {
-                           VirtualFileSystem.getInstance().saveFileContent(openedFile);
+                           VirtualFileSystem.getInstance().saveContent(openedFile);
                         }
                         else
                         {

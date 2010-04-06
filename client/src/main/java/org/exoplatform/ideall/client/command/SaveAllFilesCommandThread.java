@@ -75,7 +75,7 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
-            VirtualFileSystem.getInstance().saveFileContent(file);
+            VirtualFileSystem.getInstance().saveContent(file);
             return;
          }
       }

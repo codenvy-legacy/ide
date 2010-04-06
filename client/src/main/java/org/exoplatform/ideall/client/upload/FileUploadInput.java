@@ -39,7 +39,7 @@ public class FileUploadInput extends FileUpload
    {
       this.eventBus = eventBus;
 
-      setName("uploadFile");
+      setName(FormFields.FILE);
       addStyleName("UploadFile-FileSelect");
 
       ((InputElement)getElement().cast()).setSize(1);

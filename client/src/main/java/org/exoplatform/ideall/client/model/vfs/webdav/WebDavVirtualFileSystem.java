@@ -108,7 +108,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
      }-*/;
 
    @Override
-   public void getFileContent(File file)
+   public void getContent(File file)
    {
       String url = javaScriptEncodeURI(file.getHref());
 
@@ -176,7 +176,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void saveFileContent(File file)
+   public void saveContent(File file)
    {
       String url = javaScriptEncodeURI(file.getHref());
       boolean isNewFile = file.isNewFile();

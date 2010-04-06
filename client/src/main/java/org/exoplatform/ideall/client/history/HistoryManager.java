@@ -133,7 +133,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       stopHandling();
-      VirtualFileSystem.getInstance().getFileContent((File)event.getItem());
+      VirtualFileSystem.getInstance().getContent((File)event.getItem());
    }
 
    public void onInitializeApplication(InitializeApplicationEvent event)

@@ -40,7 +40,9 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
 
    private final static String ID = "File/Upload File...";
 
-   private final static String TITLE = "Upload File...";
+   private final static String TITLE = "Upload...";
+   
+   private final static String PROMPT = "Upload File...";
 
    private boolean browserPanelSelected = true;
 
@@ -48,7 +50,7 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
+      setPrompt(PROMPT);
       setIcon(Images.MainMenu.UPLOAD);
       setEvent(new UploadFileEvent(false));
    }

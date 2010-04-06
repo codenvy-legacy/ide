@@ -210,7 +210,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             if (file.isContentChanged())
             {
                System.out.println("save opened file: " + file.getName());
-               VirtualFileSystem.getInstance().saveFileContent(file);
+               VirtualFileSystem.getInstance().saveContent(file);
                return true;
             }
          }

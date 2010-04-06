@@ -155,7 +155,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
          path = path.substring(path.lastIndexOf("/"));
       }
       eventBus.fireEvent(new ClearFocusEvent());
-      new UploadForm(eventBus, path, event.isOpenFile());
+      new UploadForm(eventBus, context, path, event.isOpenFile());
    }
 
    public void onCreateFolder(CreateFolderEvent event)

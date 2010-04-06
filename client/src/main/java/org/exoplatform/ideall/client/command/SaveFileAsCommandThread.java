@@ -111,7 +111,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
                newFile.setPropertiesChanged(true);
             }
             newFile.setIcon(file.getIcon());
-            VirtualFileSystem.getInstance().saveFileContent(newFile);
+            VirtualFileSystem.getInstance().saveContent(newFile);
          }
 
       });

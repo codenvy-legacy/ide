@@ -220,6 +220,7 @@ source : ${source.url}
 					<version>${org.exoplatform.jcr.version}</version>
 
 				</dependency>
+				
 				<dependency>
 					<groupId>org.exoplatform.jcr</groupId>
 					<artifactId>exo.jcr.component.webdav</artifactId>

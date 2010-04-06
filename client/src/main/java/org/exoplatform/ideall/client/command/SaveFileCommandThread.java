@@ -70,7 +70,7 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
 
       if (file.isContentChanged())
       {
-         VirtualFileSystem.getInstance().saveFileContent(file);
+         VirtualFileSystem.getInstance().saveContent(file);
          return;
       }
       else

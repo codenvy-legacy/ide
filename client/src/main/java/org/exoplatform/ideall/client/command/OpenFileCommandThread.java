@@ -27,6 +27,7 @@ import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
@@ -60,6 +61,13 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    public void onOpenFile(OpenFileEvent event)
    {
       File file = event.getFile();
+
+      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
+      {
+         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
+         return;
+      }
+
       if (file.getContent() != null)
       {
          open(file);
@@ -68,7 +76,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getFileContent(event.getFile());
+      VirtualFileSystem.getInstance().getContent(event.getFile());
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

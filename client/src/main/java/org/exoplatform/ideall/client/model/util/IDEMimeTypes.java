@@ -64,6 +64,10 @@ public class IDEMimeTypes
       add("groovy", MimeType.SCRIPT_GROOVY);
       add("xml", MimeType.GOOGLE_GADGET);
    }
+   
+   public static boolean isMimeTypeSupported(String mimeType) {
+      return mimeTypes.get(mimeType) != null;
+   }
 
    public static Set<String> getExtensions()
    {

@@ -23,11 +23,15 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.MimeTypeResolver;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
 
@@ -68,19 +72,30 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       HasValue<String> getFileNameField();
 
-      void setMimeTypes(String[] mimeTypes);
-
       HasValue<String> getMimeType();
+
+      void setMimeTypes(String[] mimeTypes);
 
       void enableMimeTypeSelect();
 
       void disableMimeTypeSelect();
 
       void setDefaultMimeType(String mimeType);
+      
+      
+      HasValue<String> getLocationHiddenField();
+      
+      HasValue<String> getMimeTypeHiddenField();
+      
+      HasValue<String> getNodeTypeHiddenField();
+      
+      HasValue<String> getJcrContentNodeTypeHiddenField();
 
    }
 
    private HandlerManager eventBus;
+   
+   private ApplicationContext context;
 
    private Display display;
 
@@ -88,13 +103,14 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private String path;
 
-   private boolean openFile;
+   private boolean openLocalFile;
 
-   public UploadPresenter(HandlerManager eventBus, String path, boolean openFile)
+   public UploadPresenter(HandlerManager eventBus, ApplicationContext context, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
+      this.context = context;
       this.path = path;
-      this.openFile = openFile;
+      this.openLocalFile = openLocalFile;
       fileSelectedHandler = eventBus.addHandler(UploadFileSelectedEvent.TYPE, this);
    }
 
@@ -102,13 +118,13 @@ public class UploadPresenter implements UploadFileSelectedHandler
    {
       display = d;
 
-      if (openFile)
+      if (openLocalFile)
       {
          display.getUploadButton().addClickHandler(new ClickHandler()
          {
             public void onClick(ClickEvent event)
             {
-               openFile();
+               openLocalFile();
             }
          });
       }
@@ -153,7 +169,34 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private void uploadFile()
    {
-      //display.getUploadForm().submit();
+      String mimeType = display.getMimeType().getValue();
+      
+      if (mimeType == null || "".equals(mimeType)) {
+         return;
+      }
+      
+      display.getMimeTypeHiddenField().setValue(mimeType);
+      
+      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      display.getJcrContentNodeTypeHiddenField().setValue(contentNodeType);
+      
+      String fileName = display.getFileNameField().getValue();
+      if (fileName.contains("/")) {
+         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+      }
+      
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String href = item.getHref();
+      if (item instanceof File) {
+         href = href.substring(0, href.lastIndexOf("/"));
+      }
+      href += fileName;
+      
+      System.out.println("HREF > " + href);
+      
+      display.getLocationHiddenField().setValue(href);
+      
+      display.getUploadForm().submit();
    }
 
    void destroy()
@@ -241,7 +284,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    public void onUploadFileSelected(UploadFileSelectedEvent event)
    {
-      if (openFile)
+      if (openLocalFile)
       {
          openInEditor(event.getFileName());
          return;
@@ -285,17 +328,36 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    }
 
-   protected void openFile()
+   protected void openLocalFile()
    {
       display.getUploadForm().submit();
    }
 
    protected void submit(SubmitEvent event)
    {
+      System.out.println("UploadPresenter.submit()");
       Loader.getInstance().show();
    }
 
    private void submitComplete(String uploadServiceResponse)
+   {
+      System.out.println("UploadPresenter.submitComplete()");
+
+      System.out.println("upload service response: " + uploadServiceResponse);
+
+      Loader.getInstance().hide();
+
+      if (openLocalFile)
+      {
+         completeOpenLocalFile(uploadServiceResponse);
+      }
+      else
+      {
+         completeUpload();
+      }
+   }
+
+   private void completeOpenLocalFile(String uploadServiceResponse)
    {
       if (uploadServiceResponse == null)
       {
@@ -317,13 +379,12 @@ public class UploadPresenter implements UploadFileSelectedHandler
          return;
       }
 
-      loadFile(submittedFileContent);
+      display.closeDisplay();
+      openFile(submittedFileContent);
    }
 
-   private void loadFile(String submittedFileContent)
+   private void openFile(String submittedFileContent)
    {
-      display.closeDisplay();
-
       String fileName = display.getFileNameField().getValue();
 
       String mimeType = display.getMimeType().getValue();
@@ -335,7 +396,23 @@ public class UploadPresenter implements UploadFileSelectedHandler
       submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
 
       eventBus.fireEvent(new OpenFileEvent(submittedFile)); // to save file content
-      Loader.getInstance().hide();
+   }
+
+   private void completeUpload()
+   {
+      System.out.println("UploadPresenter.completeUpload()");
+      display.closeDisplay();
+      
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String href = item.getHref();
+      if (item instanceof File) {
+         href = href.substring(0,href.lastIndexOf("/"));
+      }
+      
+      System.out.println("href > " + href);
+      
+      Folder folder = new Folder(href);
+      eventBus.fireEvent(new RefreshBrowserEvent(folder));      
    }
 
 }
