@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,7 +37,6 @@ import javax.jcr.observation.ObservationManager;
 import org.apache.commons.io.IOUtils;
 import org.exoplatform.application.gadget.Gadget;
 import org.exoplatform.application.gadget.GadgetRegistryService;
-import org.exoplatform.common.http.client.URI;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.RequestLifeCycle;
@@ -65,7 +63,7 @@ public class GadgetListingService implements Startable
    /**
      * Class logger.
      */
-   private final Log log = ExoLogger.getLogger("ide.GadgetRegister");
+   private final Log log = ExoLogger.getLogger(GadgetListingService.class);
    
    public static final String GADGET_MIME_TYPE = "application/x-google-gadget";
    

@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -54,6 +54,9 @@ import org.json.JSONObject;
 @Path("/ideall/gadget")
 public class RestGadgetRegistryService implements ResourceContainer
 {
+   
+//   private static final String WEBDAV_CONTEXT = "jcr";
+   
    /**
     * Class logger.
     */
@@ -87,16 +90,27 @@ public class RestGadgetRegistryService implements ResourceContainer
    /**
     * @param uriInfo
     * @param gadgetUrl
+    * @param publicContext
+    * @param privateContext
+    * @return
     */
-   @GET
+   @POST
    @Path("/deploy")
-   public Response addGadget(@Context UriInfo uriInfo, @QueryParam("gadgetUrl") String gadgetUrl)
+   public Response addGadget(@Context UriInfo uriInfo, @QueryParam(QueryParams.GADGET_URL) String gadgetUrl,
+      @QueryParam(QueryParams.PUBLIC_CONTEXT) String publicContext, @QueryParam(QueryParams.PRIVATE_CONTEXT) String privateContext)
    {
-      String urlEnc = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);
-      String name = "gadget" + gadgetUrl.hashCode();
+      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);      
+      String publicContextEncoded = UriComponent.encode(publicContext, UriComponent.PATH, false);
+      String privateContextEncoded = UriComponent.encode(privateContext, UriComponent.PATH, false);
+      
+      urlEncoded = urlEncoded.replace(privateContextEncoded, publicContextEncoded);
+      
+      log.info("DEPLOY GADGET: " + urlEncoded);
+      
+      String name = "gadget" + urlEncoded.hashCode();
       try
       {
-         Gadget gadget = createGadget(name, urlEnc, false, uriInfo);
+         Gadget gadget = createGadget(name, urlEncoded, false, uriInfo);
          ExoContainer container = ExoContainerContext.getCurrentContainer();
          RequestLifeCycle.begin(container, true);
          try
@@ -128,14 +142,27 @@ public class RestGadgetRegistryService implements ResourceContainer
       }
    }
 
+
    /**
     * @param gadgetUrl
+    * @param publicContext
+    * @param privateContext
+    * @return
     */
-   @GET
+   @POST
    @Path("/undeploy")
-   public Response removeGadget(@QueryParam("gadgetUrl") String gadgetUrl)
+   public Response removeGadget(@QueryParam(QueryParams.GADGET_URL) String gadgetUrl,
+      @QueryParam(QueryParams.PUBLIC_CONTEXT) String publicContext, @QueryParam(QueryParams.PRIVATE_CONTEXT) String privateContext)
    {
-      String name = "gadget" + gadgetUrl.hashCode();
+      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);      
+      String publicContextEncoded = UriComponent.encode(publicContext, UriComponent.PATH, false);
+      String privateContextEncoded = UriComponent.encode(privateContext, UriComponent.PATH, false);
+      
+      urlEncoded = urlEncoded.replace(privateContextEncoded, publicContextEncoded);
+      
+      log.info("UNDEPLOY GADGET: " + urlEncoded);
+      
+      String name = "gadget" + urlEncoded.hashCode();
       try
       {
          ExoContainer container = ExoContainerContext.getCurrentContainer();
