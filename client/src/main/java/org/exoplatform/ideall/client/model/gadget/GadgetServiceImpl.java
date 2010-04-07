@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.gadget;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -49,9 +50,12 @@ public class GadgetServiceImpl extends GadgetService
 
    private HandlerManager eventBus;
 
-   public GadgetServiceImpl(HandlerManager eventBus)
+   private Loader loader;
+
+   public GadgetServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    public void getGadgetMetadata(TokenResponse tokenResponse)
@@ -65,8 +69,10 @@ public class GadgetServiceImpl extends GadgetService
       GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(eventBus, metadata);
       GadgetMetadaRecievedEvent event = new GadgetMetadaRecievedEvent(metadata);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.POST, Configuration.getInstance().getGadgetServer() + "metadata").data(data)
-         .send(callback);
+
+      String url = Configuration.getInstance().getGadgetServer() + "metadata";
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).data(data).send(callback);
    }
 
    public void getSecurityToken(TokenRequest request)
@@ -76,9 +82,11 @@ public class GadgetServiceImpl extends GadgetService
       TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(eventBus, tokenResponse);
       TokenRequestMarshaler marshaler = new TokenRequestMarshaler(request);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshal, postEvent);
-      AsyncRequest.build(RequestBuilder.POST,
-         Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken").header(
-         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaler).send(callback);
+
+      String url = Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken";
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+         .data(marshaler).send(callback);
 
    }
 
@@ -93,7 +101,7 @@ public class GadgetServiceImpl extends GadgetService
 
       GadgetDeployResultEvent event = new GadgetDeployResultEvent(url);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    @Override
@@ -106,7 +114,7 @@ public class GadgetServiceImpl extends GadgetService
             + URL.encodeComponent(Configuration.getInstance().getPublicContext());
       GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(url);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
 }

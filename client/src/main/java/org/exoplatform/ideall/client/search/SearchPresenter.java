@@ -53,8 +53,6 @@ public class SearchPresenter
 
       void setMimeTypeValues(String[] mimeTypes);
 
-      void disablePathItem();
-
       void closeForm();
 
    }
@@ -65,13 +63,10 @@ public class SearchPresenter
 
    private ApplicationContext context;
 
-   private String path;
-
    public SearchPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
-      getPathValue();
    }
 
    public void bindDisplay(Display d)
@@ -82,7 +77,7 @@ public class SearchPresenter
       {
          public void onClick(ClickEvent event)
          {
-            doAdvancedSearch();
+            doSearch();
          }
       });
 
@@ -95,8 +90,25 @@ public class SearchPresenter
          }
       });
 
+      String path;
+      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 0)
+      {
+         path = "/";
+      }
+      else
+      {
+         Item selectedItem = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+         String href = selectedItem.getHref();
+         if (selectedItem instanceof File)
+         {
+            href = href.substring(0, href.lastIndexOf("/") + 1);
+         }
+
+         path = href.substring(context.getEntryPoint().length() - 1);
+      }
+
       display.getPathItem().setValue(path);
-      display.disablePathItem();
 
       fillMimeTypes();
 
@@ -105,53 +117,45 @@ public class SearchPresenter
          display.getSearchContentItem().setValue(context.getSearchContent());
       }
 
-
       if (context.getSearchContentType() != null)
       {
          display.getMimeTypeItem().setValue(context.getSearchContentType());
       }
    }
 
-   private void doAdvancedSearch()
+   private void doSearch()
    {
       String content = display.getSearchContentItem().getValue();
- //     String mainPath = display.getPathItem().getValue();
-      String searchPath = display.getPathItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
-//      if (mainPath == null || mainPath.length() == 0)
-//      {
-//         Dialogs.getInstance().showError("Path must not be empty!");
-//         return;
-//      }
-      searchPath = searchPath.substring(context.getEntryPoint().length(), searchPath.length());
-      String[] parts = searchPath.split("/");
-      int i = 3;
-      if (parts[0].length() != 0)
-      {
-         i = 2;
-      }
-
-      // Get path of the folder where to search
-      searchPath = "";
-      while (i <= parts.length - 1)
-      {
-         searchPath += "/" + parts[i];
-         i++;
-      }
-
-      if (content != null )
+      if (content != null)
       {
          context.setSearchContent(content);
       }
 
-      if (contentType != null )
+      if (contentType != null)
       {
          context.setSearchContentType(contentType);
       }
-      
-      Folder folder =  new Folder(path);
-      VirtualFileSystem.getInstance().search(folder, content, contentType, searchPath);
+
+      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+
+      String path = item.getHref();
+      path = path.substring(context.getEntryPoint().length());
+      if (item instanceof File)
+      {
+         path = path.substring(0, path.lastIndexOf("/") + 1);
+      }
+
+      if (!"".equals(path) && !path.startsWith("/"))
+      {
+         path = "/" + path;
+      }
+
+      System.out.println("path [" + path + "]");
+
+      Folder folder = new Folder(context.getEntryPoint());
+      VirtualFileSystem.getInstance().search(folder, content, contentType, path);
       display.closeForm();
    }
 
@@ -168,29 +172,6 @@ public class SearchPresenter
       mimeTypes[7] = MimeType.SCRIPT_GROOVY;
       mimeTypes[8] = MimeType.GOOGLE_GADGET;
       display.setMimeTypeValues(mimeTypes);
-   }
-
-   private void getPathValue()
-   {
-      //TODO
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      
-      //if file was selected then delete it's name from path
-      if (item instanceof File)
-      {
-         String filePath = item.getHref();
-         String fileName = ((File)item).getName();
-         int index = filePath.lastIndexOf(fileName);
-         if (index > 0)
-         {
-            // remove file's name plus delimiter before it
-            path = filePath.substring(0, index - 1);
-         }
-      }
-      else
-      {
-         path = item.getHref();
-      }
    }
 
 }

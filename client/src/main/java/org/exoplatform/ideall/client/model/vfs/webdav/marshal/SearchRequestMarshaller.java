@@ -62,12 +62,12 @@ public class SearchRequestMarshaller implements Marshallable
     {
        if (andFlag)
        {
-          statement += " AND jcr:path LIKE '" + path + "/" + "%'";
+          statement += " AND jcr:path LIKE '" + path + "%'";
        }
        else
        {
           // This is made with purpose to get only files (not with folders)
-          statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "/" + "%'";
+          statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "%'";
           andFlag = true;
        }
     }
@@ -81,6 +81,9 @@ public class SearchRequestMarshaller implements Marshallable
        "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
           + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
       
+    
+    System.out.println("query: " + query);
+    
    }
    
    private String escapeRegisteredSymbols(String request)

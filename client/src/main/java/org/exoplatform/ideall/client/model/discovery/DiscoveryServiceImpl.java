@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.discovery;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -37,9 +38,12 @@ public class DiscoveryServiceImpl extends DiscoveryService
 
    private HandlerManager eventBus;
 
-   public DiscoveryServiceImpl(HandlerManager eventBus)
+   private Loader loader;
+
+   public DiscoveryServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    @Override
@@ -49,9 +53,9 @@ public class DiscoveryServiceImpl extends DiscoveryService
 
       EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
-      
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

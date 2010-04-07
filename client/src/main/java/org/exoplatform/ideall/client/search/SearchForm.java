@@ -21,6 +21,7 @@ package org.exoplatform.ideall.client.search;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -30,7 +31,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -52,7 +52,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private static int FIELD_WIDTH = 300;
 
    private static int FIELD_HEIGHT = 20;
-   
+
    private final int FORM_WIDTH = 430;
 
    private TextField contentField;
@@ -64,8 +64,6 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private IButton cancelButton;
 
    private ComboBoxField mimeTypesField;
-
-   private FormItem[] paramFormItemArray;
 
    /**
     * {@inheritDoc}
@@ -109,6 +107,9 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       addItem(mainLayout);
 
       show();
+      
+      UIHelper.setAsReadOnly(pathField.getName());
+      
       SearchPresenter advancedSearchPresenter = new SearchPresenter(eventBus, context);
       advancedSearchPresenter.bindDisplay(this);
    }
@@ -119,23 +120,18 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       paramForm.setLayoutAlign(Alignment.CENTER);
       paramForm.setWidth100();
       paramForm.setPadding(5);
-   
+
       paramForm.setWidth(FORM_WIDTH);
       paramForm.setCellSpacing(5);
       paramForm.setLayoutAlign(Alignment.CENTER);
 
-      paramFormItemArray = new FormItem[3];
-      
       pathField = createValueField("Path");
-      paramFormItemArray[0] = pathField;
 
       contentField = createValueField("Containing text");
-      paramFormItemArray[1] = contentField;
 
       mimeTypesField = createSelectField("Mime type");
-      paramFormItemArray[2] = mimeTypesField;
 
-      paramForm.setItems(paramFormItemArray);
+      paramForm.setItems(pathField, contentField, mimeTypesField);
 
       return paramForm;
    }
@@ -143,7 +139,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private TextField createValueField(String title)
    {
       TextField textField = new TextField();
-      textField.setTitle("<NOBR>"+title+"</NOBR>");
+      textField.setTitle("<NOBR>" + title + "</NOBR>");
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
       textField.setSelectOnFocus(true);
@@ -153,7 +149,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private ComboBoxField createSelectField(String title)
    {
       ComboBoxField comboboxField = new ComboBoxField();
-      comboboxField.setTitle("<NOBR>"+title+"</NOBR>");
+      comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
       comboboxField.setColSpan(2);
@@ -223,11 +219,4 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       mimeTypesField.setValueMap(mimeTypes);
    }
 
-   /**
-    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#disablePathItem()
-    */
-   public void disablePathItem()
-   {
-      pathField.disable();
-   }
 }

@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.demo;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
@@ -44,8 +45,8 @@ public class Sample implements FileContentSavedHandler, ExceptionThrownHandler
    public Sample()
    {
       HandlerManager eventBus = new HandlerManager(null);
-      new EmptyLoader();
-      new WebDavVirtualFileSystem(eventBus);
+      Loader loader = new EmptyLoader();
+      new WebDavVirtualFileSystem(eventBus, loader);
 
       eventBus.addHandler(FileContentSavedEvent.TYPE, this);
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);

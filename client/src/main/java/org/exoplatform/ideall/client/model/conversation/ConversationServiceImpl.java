@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.conversation;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -44,9 +45,12 @@ public class ConversationServiceImpl extends ConversationService
 
    private HandlerManager eventBus;
 
-   public ConversationServiceImpl(HandlerManager eventBus)
+   private Loader loader;
+
+   public ConversationServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    @Override
@@ -59,7 +63,7 @@ public class ConversationServiceImpl extends ConversationService
       UserInfoReceivedEvent event = new UserInfoReceivedEvent(userInfo);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

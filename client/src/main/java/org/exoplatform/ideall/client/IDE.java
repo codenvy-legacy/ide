@@ -2,7 +2,6 @@ package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
-import org.exoplatform.gwtframework.ui.client.smartgwt.loader.SmartGWTLoader;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
@@ -37,8 +36,6 @@ public class IDE
          System.out.println();
       }
 
-      new SmartGWTLoader();
-
       new SmartGWTDialogs();
 
       HandlerManager eventBus = new HandlerManager(null);
@@ -53,22 +50,22 @@ public class IDE
        * Initializing services
        */
 
-      new SettingsServiceImpl(eventBus);
+      new SettingsServiceImpl(eventBus, IDELoader.getInstance());
 
-      new ConversationServiceImpl(eventBus);
+      new ConversationServiceImpl(eventBus, IDELoader.getInstance());
 
-      new WebDavVirtualFileSystem(eventBus);
+      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance());
 
-      new GroovyServiceImpl(eventBus);
+      new GroovyServiceImpl(eventBus, IDELoader.getInstance());
 
-      new GadgetServiceImpl(eventBus);
+      new GadgetServiceImpl(eventBus, IDELoader.getInstance());
 
-      new TemplateServiceImpl(eventBus);
+      new TemplateServiceImpl(eventBus, IDELoader.getInstance());
 
-      new WadlServiceImpl(eventBus);
+      new WadlServiceImpl(eventBus, IDELoader.getInstance());
 
       //new MockDiscoveryServiceImpl(eventBus);
-      new DiscoveryServiceImpl(eventBus);
+      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance());
 
       final ApplicationContext context = new ApplicationContext();
 
@@ -87,7 +84,7 @@ public class IDE
 
       new DevToolForm(eventBus, context);
 
-      Configuration.getInstance().loadConfiguration(eventBus);
+      Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
    }
 
 }

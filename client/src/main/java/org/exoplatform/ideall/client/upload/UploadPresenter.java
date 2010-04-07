@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
@@ -83,14 +83,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
       void setDefaultMimeType(String mimeType);
       
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
-      
-//      HasValue<String> getLocationHiddenField();
-//      
-//      HasValue<String> getMimeTypeHiddenField();
-//      
-//      HasValue<String> getNodeTypeHiddenField();
-//      
-//      HasValue<String> getJcrContentNodeTypeHiddenField();
 
    }
 
@@ -105,7 +97,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private String path;
 
    private boolean openLocalFile;
-
+   
    public UploadPresenter(HandlerManager eventBus, ApplicationContext context, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
@@ -330,7 +322,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    protected void submit(SubmitEvent event)
    {
-      Loader.getInstance().show();
+      IDELoader.getInstance().show();
    }
 
    private void submitComplete(String uploadServiceResponse)

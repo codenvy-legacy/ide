@@ -20,6 +20,7 @@ package org.exoplatform.ideall.client.model.configuration;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -81,9 +82,9 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       instance = this;
    }
 
-   public void loadConfiguration(HandlerManager eventBus)
+   public void loadConfiguration(HandlerManager eventBus, Loader loader)
    {
-      ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION);
+      ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION, loader);
       applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
    }
 

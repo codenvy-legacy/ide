@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.model.groovy;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -45,20 +46,23 @@ public class GroovyServiceImpl extends GroovyService
 {
 
    //public static final String CONTEXT = "/script/groovy";
-   
+
    public static final String CONTEXT = "/services/groovy";
 
    //public static final String VALIDATE = "/validate";
 
    public static final String LOAD = "/load";
-   
+
    public static final String VALIDATE = "/validate";
 
    private HandlerManager eventBus;
 
-   public GroovyServiceImpl(HandlerManager eventBus)
+   private Loader loader;
+
+   public GroovyServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    /* (non-Javadoc)
@@ -71,9 +75,7 @@ public class GroovyServiceImpl extends GroovyService
 
       GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-      .header(HTTPHeader.LOCATION, href)
-      .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
 
    /* (non-Javadoc)
@@ -85,9 +87,7 @@ public class GroovyServiceImpl extends GroovyService
       String url = Configuration.getInstance().getContext() + CONTEXT + LOAD + "?state=false";
       GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url)
-      .header(HTTPHeader.LOCATION, href)
-      .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
 
    /* (non-Javadoc)
@@ -101,11 +101,8 @@ public class GroovyServiceImpl extends GroovyService
       GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 
-      AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.CONTENT_TYPE, "script/groovy")
-         .header(HTTPHeader.LOCATION, href)
-         .data(content)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy").header(
+         HTTPHeader.LOCATION, href).data(content).send(callback);
    }
 
    @Override
@@ -141,13 +138,13 @@ public class GroovyServiceImpl extends GroovyService
       RestServiceOutputUnmarshaller unmarshaller = new RestServiceOutputUnmarshaller(output);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
-      AsyncRequest request = AsyncRequest.build(httpMethod, url);
+      AsyncRequest request = AsyncRequest.build(httpMethod, url, loader);
       if (headers != null)
       {
          for (SimpleParameterEntry header : headers)
          {
             if (header.getName() != null && header.getName().length() != 0)
-                  request.header(header.getName(), header.getValue());
+               request.header(header.getName(), header.getValue());
          }
       }
       if (body != null && body.length() > 0)
@@ -156,4 +153,5 @@ public class GroovyServiceImpl extends GroovyService
       }
       request.send(callback);
    }
+
 }

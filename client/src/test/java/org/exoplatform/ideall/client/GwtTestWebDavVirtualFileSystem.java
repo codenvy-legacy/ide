@@ -20,6 +20,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ideall.client.model.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ideall.client.vfs.TestUnmarshallers;
 
@@ -57,8 +58,8 @@ public class GwtTestWebDavVirtualFileSystem extends GWTTestSuite
    {
       System.out.println("GwtTestWebDavVirtualFileSystem.GwtTestWebDavVirtualFileSystem()");
       eventBus = new HandlerManager(null);
-      new EmptyLoader();
-      new WebDavVirtualFileSystem(eventBus);
+      Loader loader = new EmptyLoader();
+      new WebDavVirtualFileSystem(eventBus, loader);
    }
 
    //   public void testPropfind() {

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.wadl;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -36,20 +37,23 @@ public class WadlServiceImpl extends WadlService
 {
    private HandlerManager eventBus;
 
-   public WadlServiceImpl(HandlerManager eventBus)
+   private Loader loader;
+
+   public WadlServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    @Override
    public void getWadl(String url)
    {
       WadlApplication application = new WadlApplication();
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,
-    		  new WadlServiceOutputUnmarshaller(eventBus, application), 
-    		  new WadlServiceOutputReceivedEvent(application));
-      AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url);
-      
+      AsyncRequestCallback callback =
+         new AsyncRequestCallback(eventBus, new WadlServiceOutputUnmarshaller(eventBus, application),
+            new WadlServiceOutputReceivedEvent(application));
+      AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
+
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
       request.send(callback);
 
