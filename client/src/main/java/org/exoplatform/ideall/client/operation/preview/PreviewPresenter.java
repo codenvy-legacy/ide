@@ -30,14 +30,16 @@ import com.smartgwt.client.widgets.events.ContentLoadedHandler;
 public class PreviewPresenter
 {
 
-   protected Display display;
-
    interface Display
    {
+
       HTMLPane getHtmlPane();
 
       void hideLoader();
+
    }
+
+   protected Display display;
 
    void bindDisplay(Display display)
    {

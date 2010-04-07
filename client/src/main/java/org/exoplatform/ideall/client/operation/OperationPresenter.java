@@ -142,8 +142,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    {
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
+      
       File file = context.getActiveFile();
-
       if (file.isNewFile())
       {
          Dialogs.getInstance().showInfo("You should save the file!");

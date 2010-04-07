@@ -61,7 +61,7 @@ public class PreviewForm extends TabPanel
     * @param file
     * @return 
     */
-   public void showPreview(String path)
+   public void showPreview(String href)
    {
       if (htmlPane != null)
       {
@@ -71,9 +71,9 @@ public class PreviewForm extends TabPanel
       htmlPane = new HTMLPane();
       addMember(htmlPane);
 
-      String fileURL = Configuration.getInstance().getContext() + "/jcr" + path;
+      //String fileURL = Configuration.getInstance().getContext() + "/jcr" + path;
       String iframe =
-         "<iframe src=\"" + fileURL + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
+         "<iframe src=\"" + href + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
       iframe += "<p>Your browser does not support iframes.</p>";
       iframe += "</iframe>";
       htmlPane.setContents(iframe);
