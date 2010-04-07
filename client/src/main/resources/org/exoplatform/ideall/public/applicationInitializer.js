@@ -1,4 +1,4 @@
-var registryURL = "/portal/rest/registry/repository";
+var registryURL = "/rest/private/registry/repository";
 var proxyServiceContext = "/rest/private/proxy";
 
 // for the shell the configuration is being placed in the
@@ -10,11 +10,9 @@ var proxyServiceContext = "/rest/private/proxy";
 // default configuration for the gadget under the GateIn-beta03 - URL of WebDAV:
 var appConfig = {
 	"context" : "/rest/private",
-	//"gadgetServer" : "/gadgets/",/*under GWT Shell*/
-	"gadgetServer" : "/eXoGadgetServer/gadgets/", /*for portal*/
 	"publicContext" : "/rest",
-	"entryPoint" : "/rest/private/jcr/repository/dev-monit"
-	//"entryPoint" : "http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit"
+	"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+	
+	//"gadgetServer" : "/gadgets/",/*under GWT Shell*/
+	"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
 }
-
-var metadata = {};

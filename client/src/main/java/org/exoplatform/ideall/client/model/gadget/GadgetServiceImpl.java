@@ -28,12 +28,10 @@ import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedEve
 import org.exoplatform.ideall.client.model.gadget.marshal.GadgetMetadataUnmarshaler;
 import org.exoplatform.ideall.client.model.gadget.marshal.TokenRequestMarshaler;
 import org.exoplatform.ideall.client.model.gadget.marshal.TokenResponseUnmarshal;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyUndeployResultReceivedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,16 +40,13 @@ import com.google.gwt.user.client.Window;
 */
 public class GadgetServiceImpl extends GadgetService
 {
-   
+
    private static final String CONTEXT = "/ideall/gadget";
-   
+
    private static final String DEPLOY = "/deploy";
-   
+
    private static final String UNDEPLOY = "/undeploy";
-   
-   private static final String GADGET_URL_QUERY_PARAM = "gadgetUrl";
-   
-   
+
    private HandlerManager eventBus;
 
    public GadgetServiceImpl(HandlerManager eventBus)
@@ -88,21 +83,30 @@ public class GadgetServiceImpl extends GadgetService
    }
 
    @Override
-   public void deployGadget(String gadgetUrl)
+   public void deployGadget(String href)
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT + DEPLOY + "?" + GADGET_URL_QUERY_PARAM + "=" + URL.encodeComponent(gadgetUrl);
-      GadgetDeployResultEvent event = new GadgetDeployResultEvent(gadgetUrl);
+      String url =
+         Configuration.getInstance().getContext() + CONTEXT + DEPLOY + "?" + QueryParams.GADGET_URL + "="
+            + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
+            + URL.encodeComponent(Configuration.getInstance().getContext()) + "&" + QueryParams.PUBLIC_CONTEXT + "="
+            + URL.encodeComponent(Configuration.getInstance().getPublicContext());
+
+      GadgetDeployResultEvent event = new GadgetDeployResultEvent(url);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
    @Override
-   public void undeployGadget(String gadgetUrl)
+   public void undeployGadget(String href)
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT + UNDEPLOY + "?" + GADGET_URL_QUERY_PARAM + "=" + URL.encodeComponent(gadgetUrl);
-      GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(gadgetUrl);
+      String url =
+         Configuration.getInstance().getContext() + CONTEXT + UNDEPLOY + "?" + QueryParams.GADGET_URL + "="
+            + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
+            + URL.encodeComponent(Configuration.getInstance().getContext()) + "&" + QueryParams.PUBLIC_CONTEXT + "="
+            + URL.encodeComponent(Configuration.getInstance().getPublicContext());
+      GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(url);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
 }

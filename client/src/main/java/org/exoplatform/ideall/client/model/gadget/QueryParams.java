@@ -26,29 +26,13 @@ package org.exoplatform.ideall.client.model.gadget;
  * @version $
  */
 
-public abstract class GadgetService
+public class QueryParams
 {
 
-   private static GadgetService instance;
-
-   public static GadgetService getInstance()
-   {
-      return instance;
-   }
-
-   protected GadgetService()
-   {
-      instance = this;
-   }
-
-   public abstract void getGadgetMetadata(TokenResponse tokenResponse);
+   public static final String GADGET_URL = "gadgetURL";
    
-   public abstract void getSecurityToken(TokenRequest request);
+   public static final String PUBLIC_CONTEXT = "publicContext";
    
-   public abstract void deployGadget(String href);
+   public static final String PRIVATE_CONTEXT = "privateContext";
    
-   public abstract void undeployGadget(String href);
-   
-   
-
 }

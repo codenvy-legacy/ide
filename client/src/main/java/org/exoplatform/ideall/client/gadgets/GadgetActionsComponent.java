@@ -44,6 +44,15 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
       super(new GadgetActionsComponentInitializer());
    }
 
+   @Override
+   protected void registerHandlers()
+   {
+      handlers.addHandler(DeployGadgetEvent.TYPE, this);
+      handlers.addHandler(UndeployGadgetEvent.TYPE, this);
+      handlers.addHandler(GadgetDeployResultEvent.TYPE, this);
+      handlers.addHandler(GadgetUndeployResultEvent.TYPE, this);
+   }
+
    /**
     * {@inheritDoc}
     */
@@ -58,15 +67,6 @@ public class GadgetActionsComponent extends AbstractApplicationComponent impleme
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
       GadgetService.getInstance().undeployGadget(context.getActiveFile().getHref());
-   }
-
-   @Override
-   protected void registerHandlers()
-   {
-      handlers.addHandler(DeployGadgetEvent.TYPE, this);
-      handlers.addHandler(UndeployGadgetEvent.TYPE, this);
-      handlers.addHandler(GadgetDeployResultEvent.TYPE, this);
-      handlers.addHandler(GadgetUndeployResultEvent.TYPE, this);
    }
 
    /**

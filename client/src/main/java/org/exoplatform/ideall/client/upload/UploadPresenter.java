@@ -82,14 +82,15 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       void setDefaultMimeType(String mimeType);
       
+      void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
       
-      HasValue<String> getLocationHiddenField();
-      
-      HasValue<String> getMimeTypeHiddenField();
-      
-      HasValue<String> getNodeTypeHiddenField();
-      
-      HasValue<String> getJcrContentNodeTypeHiddenField();
+//      HasValue<String> getLocationHiddenField();
+//      
+//      HasValue<String> getMimeTypeHiddenField();
+//      
+//      HasValue<String> getNodeTypeHiddenField();
+//      
+//      HasValue<String> getJcrContentNodeTypeHiddenField();
 
    }
 
@@ -117,7 +118,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    void bindDisplay(Display d)
    {
       display = d;
-
+      
       if (openLocalFile)
       {
          display.getUploadButton().addClickHandler(new ClickHandler()
@@ -175,31 +176,22 @@ public class UploadPresenter implements UploadFileSelectedHandler
          return;
       }
       
-      display.getMimeTypeHiddenField().setValue(mimeType);
-      
       String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
-      display.getJcrContentNodeTypeHiddenField().setValue(contentNodeType);
-      
+
       String fileName = display.getFileNameField().getValue();
       if (fileName.contains("/")) {
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
       
-      System.out.println("file name:" + fileName);
-      
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String href = item.getHref();
-      System.out.println("href:" + href);
       if (item instanceof File) {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
       href += fileName;
       
-      System.out.println("HREF > " + href);
-      
-      display.getLocationHiddenField().setValue(href);
-      
-      display.getUploadForm().submit();
+      display.setHiddenFields(href, mimeType, "", contentNodeType);
+      display.getUploadForm().submit();      
    }
 
    void destroy()
@@ -338,18 +330,11 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    protected void submit(SubmitEvent event)
    {
-      System.out.println("UploadPresenter.submit()");
       Loader.getInstance().show();
    }
 
    private void submitComplete(String uploadServiceResponse)
    {
-      System.out.println("UploadPresenter.submitComplete()");
-
-      System.out.println("upload service response: " + uploadServiceResponse);
-
-      Loader.getInstance().hide();
-
       if (openLocalFile)
       {
          completeOpenLocalFile(uploadServiceResponse);

@@ -36,9 +36,9 @@ public class GadgetPreviewPane extends TabPanel
     * 
     */
    public static final String title = "Gadget Preview";
-   
+
    private String meta;
-   
+
    private GadgetMetadata metadata;
 
    /**
@@ -54,7 +54,7 @@ public class GadgetPreviewPane extends TabPanel
    {
       super(eventBus, true);
       metadata = gadgetMetadata;
-//      meta = parseMetadata(gadgetMetadata);
+      //      meta = parseMetadata(gadgetMetadata);
    }
 
    @Override
@@ -63,18 +63,18 @@ public class GadgetPreviewPane extends TabPanel
       return title;
    }
 
-//   /**
-//    * @param metadata
-//    * @return
-//    */
-//   private String parseMetadata(GadgetMetadata metadata)
-//   {
-//      String src =
-//         "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
-//            + ",title:\"" + metadata.getTitle() + "\",width:" + String.valueOf(metadata.getWidth()) + ",secureToken:\""
-//            + metadata.getSecurityToken() + "\",view:\"home\",server:\"" + Configuration.getInstance().getGadgetServer() + "\"}";
-//      return src;
-//   }
+   //   /**
+   //    * @param metadata
+   //    * @return
+   //    */
+   //   private String parseMetadata(GadgetMetadata metadata)
+   //   {
+   //      String src =
+   //         "{specUrl: \"" + URL.decode(metadata.getUrl()) + "\",height:" + String.valueOf(metadata.getHeight())
+   //            + ",title:\"" + metadata.getTitle() + "\",width:" + String.valueOf(metadata.getWidth()) + ",secureToken:\""
+   //            + metadata.getSecurityToken() + "\",view:\"home\",server:\"" + Configuration.getInstance().getGadgetServer() + "\"}";
+   //      return src;
+   //   }
 
    @Override
    public void onCloseTab()
@@ -108,24 +108,22 @@ public class GadgetPreviewPane extends TabPanel
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
-      
-//      return frame;
 
-      
-//      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
-//      frame.setWidth("100%");
-//      frame.setHeight("100%");
-//      addMember(frame);
-//      DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
-//      DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
-//      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
+      //      return frame;
+
+      //      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
+      //      frame.setWidth("100%");
+      //      frame.setHeight("100%");
+      //      addMember(frame);
+      //      DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
+      //      DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
+      //      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
    }
-
-
 
    @Override
    public String getId()
    {
       return ID;
    }
+
 }

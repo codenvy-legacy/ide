@@ -17,7 +17,6 @@
 
 package org.exoplatform.ideall.client.upload;
 
-import org.exoplatform.gwtframework.ui.client.api.HiddenFieldItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
@@ -29,6 +28,7 @@ import org.exoplatform.ideall.client.model.configuration.Configuration;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
@@ -72,14 +72,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    private String labelTitle;
 
    private boolean openFile;
-   
-   private HiddenFieldItem locationField;
-   
-   private HiddenFieldItem mimeTypeField;
-   
-   private HiddenFieldItem nodeTypeField;
-   
-   private HiddenFieldItem jcrContentNodeTypeField;   
+
+   private VerticalPanel postFieldsPanel;
 
    public UploadForm(HandlerManager eventBus, ApplicationContext context, String path, boolean openFile)
    {
@@ -111,11 +105,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
          }
       });
 
-      locationField = new HiddenFieldItem(FormFields.LOCATION);
-      mimeTypeField = new HiddenFieldItem(FormFields.MIME_TYPE);
-      nodeTypeField = new HiddenFieldItem(FormFields.NODE_TYPE);
-      jcrContentNodeTypeField = new HiddenFieldItem(FormFields.JCR_CONTENT_NODE_TYPE);      
-      
       createFileUploadForm();
       createButtons();
 
@@ -238,21 +227,21 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       fileUploadCanvas.setOpacity(0);
 
       // create upload form
-      
+
       uploadForm = new FormPanel();
       uploadForm.setMethod(FormPanel.METHOD_POST);
       uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
       fileUploadCanvas.addChild(uploadForm);
-      
+
       // create file upload input
-      
-      VerticalPanel vPanel = new VerticalPanel();
-      
+
+      postFieldsPanel = new VerticalPanel();
+
       FileUploadInput upload = new FileUploadInput(eventBus);
       upload.setWidth("80px");
       upload.setHeight("20px");
-      vPanel.add(upload);
-      
+      postFieldsPanel.add(upload);
+
       if (openFile)
       {
          uploadForm.setAction(Configuration.getInstance().getLoopbackServiceContext() + "/");
@@ -260,18 +249,25 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       else
       {
          uploadForm.setAction(Configuration.getInstance().getUploadServiceContext() + "/");
-
-         vPanel.add(locationField);
-         vPanel.add(mimeTypeField);
-         vPanel.add(nodeTypeField);
-         vPanel.add(jcrContentNodeTypeField);
       }
-      
-      
-      uploadForm.setWidget(vPanel);
-      
+
+      uploadForm.setWidget(postFieldsPanel);
+
       return uploadLayout;
-   }   
+   }
+
+   public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
+   {
+      Hidden locationField = new Hidden(FormFields.LOCATION, location);
+      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
+      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
+      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
+
+      postFieldsPanel.add(locationField);
+      postFieldsPanel.add(mimeTypeField);
+      postFieldsPanel.add(nodeTypeField);
+      postFieldsPanel.add(jcrContentNodeTypeField);
+   }
 
    public FormPanel getUploadForm()
    {
@@ -339,22 +335,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public void setDefaultMimeType(String mimeType)
    {
       mimeTypesField.setDefaultValue(mimeType);
-   }
-   
-   public HasValue<String> getLocationHiddenField() {
-      return locationField;
-   }
-   
-   public HasValue<String> getMimeTypeHiddenField() {
-      return mimeTypeField;
-   }
-   
-   public HasValue<String> getNodeTypeHiddenField() {
-      return nodeTypeField;
-   }
-   
-   public HasValue<String> getJcrContentNodeTypeHiddenField() {
-      return jcrContentNodeTypeField;
    }
 
 }
