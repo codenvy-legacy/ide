@@ -25,6 +25,7 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.model.gadget.GadgetService;
 import org.exoplatform.ideall.client.model.gadget.TokenRequest;
@@ -169,7 +170,14 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       Long moduleId = 0L;
       String container = "default";
       String domain = null;
-      TokenRequest tokenRequest = new TokenRequest(URL.encode(context.getActiveFile().getHref()),
+      
+      String href = context.getActiveFile().getHref();
+      System.out.println("href to: " + href);
+      href = href.replace(Configuration.getInstance().getContext(),
+         Configuration.getInstance().getPublicContext());
+      System.out.println("href after: " + href);
+      
+      TokenRequest tokenRequest = new TokenRequest(URL.encode(href),
          owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest);
    }

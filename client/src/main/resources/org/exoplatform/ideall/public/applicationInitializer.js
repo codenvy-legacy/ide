@@ -13,6 +13,6 @@ var appConfig = {
 	"publicContext" : "/rest",
 	"entryPoint" : "/rest/private/jcr/repository/dev-monit",
 	
-	//"gadgetServer" : "/gadgets/",/*under GWT Shell*/
+	//"gadgetServer" : "/gadgets/", /*under GWT Shell*/
 	"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
 }

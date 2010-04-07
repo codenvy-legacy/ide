@@ -88,7 +88,6 @@ public interface Images
       /*
        * GROOVY
        */
-      
 
       public static final String VALIDATE = imageUrl + "groovy/validate.png";
 
@@ -166,7 +165,7 @@ public interface Images
       public static final String ICON = imageUrl + "panel/output/output.png";
 
    }
-
+   
    public interface BrowserPanel
    {
 
