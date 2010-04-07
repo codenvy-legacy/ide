@@ -31,8 +31,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,8 +45,6 @@ public class GroovyScriptService
 
    private static final String WEBDAV_CONTEXT = "jcr";
 
-   private static Log log = ExoLogger.getLogger(GroovyScriptService.class);
-
    private GroovyScript2RestLoader groovyScript2RestLoader;
 
    public GroovyScriptService(GroovyScript2RestLoader groovyScript2RestLoader)
@@ -60,7 +56,6 @@ public class GroovyScriptService
    @Path("/validate")
    public Response validate(@HeaderParam("location") String location, InputStream inputStream)
    {
-      log.info("Location: " + location);
       return groovyScript2RestLoader.validateScript(location, inputStream);
    }
 
@@ -69,38 +64,23 @@ public class GroovyScriptService
    public Response load(@Context UriInfo uriInfo, @HeaderParam("location") String location,
       @QueryParam("state") String state)
    {
-      //return 
-      //?state=true
-      //new NodeScriptKey()
-
-      log.info(">> VALIDATE");
-
-      log.info("BaseURI: " + uriInfo.getBaseUri().toASCIIString() + "/");
-      
       String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
-      
-      if (!location.startsWith(prefix)) {
+
+      if (!location.startsWith(prefix))
+      {
          return Response.status(HTTPStatus.NOT_FOUND).entity(location + " Not found!").build();
       }
-      
+
       location = location.substring(prefix.length());
-      log.info("Location: " + location);
-      
-      log.info("State: " + state);
-      
+
       String repositoryName = location.substring(0, location.indexOf("/"));
-      log.info("repository name: " + repositoryName);
-      
+
       location = location.substring(location.indexOf("/") + 1);
-      
+
       String workspaceName = location.substring(0, location.indexOf("/"));
-      log.info("workspace name: " + workspaceName);
-      
+
       String path = location.substring(location.indexOf("/") + 1);
-      log.info("path: " + path);
-      
-      //ScriptKey scriptKey = new NodeScriptKey(repositoryName, workspaceName, path);
-      
+
       boolean load = Boolean.parseBoolean(state);
       return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);
    }
