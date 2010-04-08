@@ -21,6 +21,8 @@ package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
@@ -35,7 +37,8 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler
  * @version $
  */
 
-public class SaveAllFilesCommand extends IDECommand implements EditorFileContentChangedHandler, FileContentSavedHandler
+public class SaveAllFilesCommand extends IDECommand implements EditorFileContentChangedHandler,
+   FileContentSavedHandler, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "File/Save All Files";
@@ -58,6 +61,7 @@ public class SaveAllFilesCommand extends IDECommand implements EditorFileContent
 
       addHandler(EditorFileContentChangedEvent.TYPE, this);
       addHandler(FileContentSavedEvent.TYPE, this);
+      addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    private void checkItemEnabling()
@@ -72,14 +76,7 @@ public class SaveAllFilesCommand extends IDECommand implements EditorFileContent
          }
       }
 
-      if (enable)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      setEnabled(enable);
    }
 
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
@@ -88,6 +85,11 @@ public class SaveAllFilesCommand extends IDECommand implements EditorFileContent
    }
 
    public void onFileContentSaved(FileContentSavedEvent event)
+   {
+      checkItemEnabling();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       checkItemEnabling();
    }

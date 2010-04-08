@@ -39,9 +39,11 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "File/Get File URL";
+   private static final String ID = "File/Get URL";
 
-   private static final String TITLE = "Get File URL";
+   private static final String TITLE = "Get URL";
+
+   private static final String PROMPT = "Get URL";
 
    private boolean browserPanelSelected = true;
 
@@ -51,7 +53,7 @@ public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandle
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
+      setPrompt(PROMPT);
       setIcon(Images.MainMenu.GET_URL);
       setEvent(new GetFileURLEvent());
    }

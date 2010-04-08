@@ -47,7 +47,7 @@ public class EntryPointListForm extends DialogWindow implements EntryPointListPr
 
    private static final int HEIGHT = 200;
 
-   private static final String TITLE = "Entry Point";
+   private static final String TITLE = "Workspace";
 
    private EntryPointListPresenter presenter;
 
