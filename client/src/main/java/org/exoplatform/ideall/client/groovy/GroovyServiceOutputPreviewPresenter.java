@@ -387,13 +387,6 @@ public class GroovyServiceOutputPreviewPresenter
 
       List<WadlParameterEntry> itemsQuery = new ArrayList<WadlParameterEntry>();
       List<WadlParameterEntry> itemsHeader = new ArrayList<WadlParameterEntry>();
-      
-      
-      if (! "GET".equals(method.getName()) && ! "POST".equals(method.getName()))
-      {
-         itemsHeader.add(new WadlParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "", method.getName()));
-      }
-      
 
       for (Param p : resource.getParam())
       {
