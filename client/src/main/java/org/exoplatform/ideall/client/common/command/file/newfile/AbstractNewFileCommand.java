@@ -35,7 +35,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class AbstractNewFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
+public class AbstractNewFileCommand extends IDECommand implements PanelSelectedHandler
 {
 
    private boolean browserSelected = false;
@@ -53,7 +53,6 @@ public class AbstractNewFileCommand extends IDECommand implements ItemsSelectedH
    protected void onRegisterHandlers()
    {
       addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -72,20 +71,6 @@ public class AbstractNewFileCommand extends IDECommand implements ItemsSelectedH
       else
       {
          setEnabled(false);
-      }
-   }
-
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         browserSelected = false;
-         updateEnabling();
-      }
-      else
-      {
-         browserSelected = true;
-         updateEnabling();
       }
    }
 
