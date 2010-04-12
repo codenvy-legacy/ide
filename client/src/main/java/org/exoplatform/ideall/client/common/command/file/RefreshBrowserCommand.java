@@ -38,9 +38,9 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "File/Refresh";
+   private static final String ID = "File/Refresh Selected Folder";
 
-   private static final String TITLE = "Refresh Browser";
+   private static final String TITLE = "Refresh Selected Folder";
 
    private boolean browserPanelSelected = true;
 
