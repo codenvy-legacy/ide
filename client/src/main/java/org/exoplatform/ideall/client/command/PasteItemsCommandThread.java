@@ -137,9 +137,9 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
       Item item = context.getItemsToCopy().get(0);
 
-      if (folderFromPaste.equals(folderToPaste))
+      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
-         String message = "Can't copy files in the same directory!";
+         String message = "Can't copy items in the same directory!";
          Dialogs.getInstance().showError(message);
          handlers.removeHandlers();
          return;
@@ -211,9 +211,9 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
          }
       }
 
-      if (folderFromPaste.equals(folderToPaste))
+      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
-         String message = "Can't move files in the same directory!";
+         String message = "Can't move items in the same directory!";
          Dialogs.getInstance().showError(message);
          handlers.removeHandlers();
          return;
