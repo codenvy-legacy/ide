@@ -29,6 +29,8 @@ import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -103,11 +105,22 @@ public class EntryPointListPresenter
          }
       });
 
+      display.getEntryPoints().addDoubleClickHandler(new DoubleClickHandler()
+      {
+
+         public void onDoubleClick(DoubleClickEvent arg0)
+         {
+            changeEntryPoint();
+         }
+      });
+
       List<EntryPoint> entryPoints = new ArrayList<EntryPoint>();
-      for (int i = 0; i < entryPointList.getEntryPoints().length(); i++) {
+      for (int i = 0; i < entryPointList.getEntryPoints().length(); i++)
+      {
          EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
          System.out.println("entry point scheme > " + entryPoint.getScheme());
-         if (entryPoint.getScheme().equals(Scheme.WEBDAV)) {
+         if (entryPoint.getScheme().equals(Scheme.WEBDAV))
+         {
             entryPoints.add(entryPoint);
          }
       }
@@ -131,7 +144,7 @@ public class EntryPointListPresenter
          display.disableOkButton();
          return;
       }
-      
+
       if (selectedItem == selectedEntryPoint)
       {
          return;
