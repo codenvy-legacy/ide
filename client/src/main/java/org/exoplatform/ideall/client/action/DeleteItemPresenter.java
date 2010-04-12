@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.Utils;
@@ -125,19 +127,81 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       }
 
       Item item = items.get(0);
-      items.remove(0);
+
+      if (item instanceof File)
+      {
+         if (context.getOpenedFiles().get(item.getHref()) != null)
+         {
+            File file = context.getOpenedFiles().get(item.getHref());
+            if (file.isContentChanged() || file.isPropertiesChanged())
+            {
+               String msg = "Do you wont delete modified file <b>" + item.getName() + "</b>?";
+               showDialog(file, msg);
+               return;
+            }
+         }
+      }
+      else
+      {
+         String href = item.getHref();
+         HashMap<String, File> openedFiles = context.getOpenedFiles();
+
+         HashMap<String, File> copy = new HashMap<String, File>();
+         for (String key : openedFiles.keySet())
+         {
+            File file = openedFiles.get(key);
+            copy.put(key, file);
+         }
+
+         for (File file : copy.values())
+         {
+            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
+            {
+               if (file.isContentChanged() || file.isPropertiesChanged())
+               {
+                  String msg = "Folder <b>" + item.getName() + "</b> contains modified file(s), delete them?";
+                  showDialog(item, msg);
+                  return;
+               }
+            }
+         }
+      }
       VirtualFileSystem.getInstance().deleteItem(item);
+   }
+
+   private void showDialog(final Item item, String msg)
+   {
+      Dialogs.getInstance().ask("DevTool", msg, new BooleanValueReceivedCallback()
+      {
+
+         public void execute(Boolean value)
+         {
+            if (value)
+            {
+               VirtualFileSystem.getInstance().deleteItem(item);
+            }
+            else
+            {
+               display.closeForm();
+               deleteItemsComplete();
+
+            }
+         }
+
+      });
    }
 
    public void onItemDeleted(ItemDeletedEvent event)
    {
       Item item = event.getItem();
 
+      items.remove(0);
+
       if (item instanceof File)
       {
          if (context.getOpenedFiles().get(item.getHref()) != null)
          {
-            eventBus.fireEvent(new EditorCloseFileEvent((File)item));
+            eventBus.fireEvent(new EditorCloseFileEvent((File)item, true));
          }
       }
       else
@@ -168,6 +232,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    public void onError(ExceptionThrownEvent event)
    {
+      handlers.removeHandlers();
       display.closeForm();
    }
 
@@ -178,9 +243,12 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          return;
       }
 
+      items.clear();
+      handlers.removeHandlers();
+
       String selectedItemHref = lastDeletedItem.getHref();
-      
-      if(lastDeletedItem instanceof Folder)
+
+      if (lastDeletedItem instanceof Folder)
       {
          selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/"));
       }
@@ -190,7 +258,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
       context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
-
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
    }

@@ -76,9 +76,9 @@ import com.google.gwt.user.client.Timer;
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
-   RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, 
-   InitializeApplicationHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
-   FileSavedHandler, EditorUpdateFileStateHandler
+   RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
+   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
+   EditorUpdateFileStateHandler
 {
 
    public interface Display
@@ -137,7 +137,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
 
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
    }
 
@@ -172,7 +172,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorActivityEvent.TYPE, this);
       handlers.addHandler(EditorSaveContentEvent.TYPE, this);
 
-     // handlers.addHandler(MoveCompleteEvent.TYPE, this);
+      // handlers.addHandler(MoveCompleteEvent.TYPE, this);
 
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
@@ -321,7 +321,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorCloseFile(EditorCloseFileEvent event)
    {
-
       if (event.isForceClosing())
       {
          closeFile(event.getFile());
@@ -381,35 +380,35 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.updateTabTitle(href);
    }
 
-//   public void onMoveComplete(MoveCompleteEvent event)
-//   {
-////      String dest = event.getItem().getHref(); //getDestination();
-////      ArrayList<String> keys = new ArrayList<String>();
-////      for (String key : context.getOpenedFiles().keySet())
-////      {
-////         keys.add(key);
-////      }
-////
-////      for (String key : keys)
-////      {
-////         if (key.startsWith(event.getItem().getHref()))
-////         {
-////            File file = context.getOpenedFiles().get(key);
-////            String sourcePath = file.getHref();
-////            String destinationPath = file.getHref();
-////            destinationPath = destinationPath.substring(event.getItem().getHref().length());
-////            destinationPath = dest + destinationPath;
-////            file.setHref(destinationPath);
-////            display.updateTabTitle(file.getHref());
-////
-////            context.getOpenedFiles().remove(event.getSource());
-////            context.getOpenedFiles().put(destinationPath, file);
-////            
-////         }
-////      }
-////
-////      CookieManager.storeOpenedFiles(context);
-//   }
+   //   public void onMoveComplete(MoveCompleteEvent event)
+   //   {
+   ////      String dest = event.getItem().getHref(); //getDestination();
+   ////      ArrayList<String> keys = new ArrayList<String>();
+   ////      for (String key : context.getOpenedFiles().keySet())
+   ////      {
+   ////         keys.add(key);
+   ////      }
+   ////
+   ////      for (String key : keys)
+   ////      {
+   ////         if (key.startsWith(event.getItem().getHref()))
+   ////         {
+   ////            File file = context.getOpenedFiles().get(key);
+   ////            String sourcePath = file.getHref();
+   ////            String destinationPath = file.getHref();
+   ////            destinationPath = destinationPath.substring(event.getItem().getHref().length());
+   ////            destinationPath = dest + destinationPath;
+   ////            file.setHref(destinationPath);
+   ////            display.updateTabTitle(file.getHref());
+   ////
+   ////            context.getOpenedFiles().remove(event.getSource());
+   ////            context.getOpenedFiles().put(destinationPath, file);
+   ////            
+   ////         }
+   ////      }
+   ////
+   ////      CookieManager.storeOpenedFiles(context);
+   //   }
 
    public void onFormatFile(FormatFileEvent event)
    {
@@ -515,7 +514,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       if (closeFileAfterSaving)
       {
          closeFile(event.getFile());
-         
+
          closeFileAfterSaving = false;
       }
       else
@@ -533,7 +532,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          updateTabTitle(savedFile.getHref());
          CookieManager.storeOpenedFiles(context);
       }
-
 
    }
 
