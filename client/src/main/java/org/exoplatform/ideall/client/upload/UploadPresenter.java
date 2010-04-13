@@ -327,6 +327,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private void submitComplete(String uploadServiceResponse)
    {
+      IDELoader.getInstance().hide();
       if (openLocalFile)
       {
          completeOpenLocalFile(uploadServiceResponse);
