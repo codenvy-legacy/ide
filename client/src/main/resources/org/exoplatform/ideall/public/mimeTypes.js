@@ -1,5 +1,7 @@
 var mimeTypes = {
 	"js" : ["application/x-javascript", "application/javascript"],
+	"xml" : ["text/xml", "application/x-google-gadget"],
+	"groovy" : ["script/groovy","application/x-groovy"],
 	"jpg" : "image/jpeg",
 	"ai" : "application/postscript",
 	"aif" : "audio/x-aiff",
@@ -134,7 +136,6 @@ var mimeTypes = {
 	"wrl" : "model/vrml",
 	"xbm" : "image/x-xbitmap",
 	"xls" : "application/xls",
-	"xml" : "text/xml",
 	"xpdl" : "text/xml",
 	"xpm" : "image/x-xpixmap",
 	"xwd" : "image/x-xwindowdump",

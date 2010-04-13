@@ -38,7 +38,6 @@ public class FileContentUnmarshaller implements Unmarshallable
 
    public void unmarshal(String body)
    {
-      System.out.println("BODY > " + body);
       file.setContent(body);
    }
 
