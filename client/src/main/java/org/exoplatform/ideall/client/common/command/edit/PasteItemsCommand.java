@@ -17,7 +17,6 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -26,7 +25,6 @@ import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -79,24 +77,19 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() == 1)
       {
-         setEnabled(false);
-         return;
+         updateEnabling();
       }
-      
-      if (pastePrepared)
-      {
-         setEnabled(true);
-      }
+
    }
-   
+
    @Override
-   public void onPanelSelected(PanelSelectedEvent event)
+   protected void updateEnabling()
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
-         browserSelected = true;
-         if(pastePrepared)
+      if (browserSelected)
+      {
+         if (pastePrepared)
          {
             setEnabled(true);
          }
@@ -104,10 +97,10 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
          {
             setEnabled(false);
          }
+
       }
       else
       {
-         browserSelected = false;
          setEnabled(false);
       }
    }

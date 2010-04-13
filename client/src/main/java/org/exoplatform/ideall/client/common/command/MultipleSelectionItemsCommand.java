@@ -31,7 +31,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class MultipleSelectionItemsCommand extends IDECommand implements PanelSelectedHandler
+public abstract class MultipleSelectionItemsCommand extends IDECommand implements PanelSelectedHandler
 {
 
    protected boolean browserSelected = true;
@@ -82,17 +82,7 @@ public class MultipleSelectionItemsCommand extends IDECommand implements PanelSe
       return true;
    }
 
-   protected void updateEnabling()
-   {
-      if (browserSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+   protected abstract void updateEnabling();
 
    public void onPanelSelected(PanelSelectedEvent event)
    {

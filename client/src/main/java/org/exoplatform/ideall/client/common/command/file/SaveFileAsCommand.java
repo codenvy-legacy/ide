@@ -20,7 +20,9 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
+import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
@@ -32,12 +34,17 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
  * @version $
  */
 
-public class SaveFileAsCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements EditorActiveFileChangedHandler,
+   ItemsSelectedHandler
 {
 
-   public static final String ID = "File/Save File As...";
+   private static final String ID = "File/Save File As...";
 
-   public static final String TITLE = "Save File As...";
+   private static final String TITLE = "Save File As...";
+
+   private boolean activeFileSelected = false;
+   
+   private boolean singleItemSelected = true; 
 
    public SaveFileAsCommand()
    {
@@ -54,17 +61,61 @@ public class SaveFileAsCommand extends IDECommand implements EditorActiveFileCha
       setVisible(true);
 
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
       {
-         setEnabled(false);
+         activeFileSelected = false;
+         updateEnabling();
       }
       else
       {
-         setEnabled(true);
+         activeFileSelected = true;
+         updateEnabling();
+      }
+   }
+
+   @Override
+   protected void updateEnabling()
+   {
+      if (browserSelected)
+      {
+         if (activeFileSelected)
+         {
+            if (singleItemSelected)
+            {
+               setEnabled(true);               
+            }
+            else
+            {
+               setEnabled(false);
+            }
+         }
+         else
+         {
+            setEnabled(false);
+         }
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() == 1)
+      {
+         singleItemSelected = true;
+         updateEnabling();
+      }
+      else
+      {
+         singleItemSelected = false;
+         updateEnabling();
       }
    }
 
