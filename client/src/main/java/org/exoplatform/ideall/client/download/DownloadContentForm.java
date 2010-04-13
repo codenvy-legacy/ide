@@ -80,7 +80,13 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
    {
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String fileName = item.getHref();
+      
+      if(fileName.endsWith("/"))
+      {
+         fileName = fileName.substring(0, fileName.length() - 1);
+      }
       fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+      
       if (!(item instanceof File))
       {
          fileName += ".zip";
