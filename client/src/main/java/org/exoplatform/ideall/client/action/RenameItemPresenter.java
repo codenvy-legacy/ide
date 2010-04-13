@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -139,9 +138,9 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    {
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
 
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      final Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
-      String href = getPathToRename(item);
+      final String href = getPathToRename(item);
 
       if (href.equals(item.getHref()))
       {
@@ -149,24 +148,29 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
          return;
       }
 
-      String selectedItemPath = item.getHref();
-      if (hasOpenedFiles(selectedItemPath))
-      {
-         Dialogs.getInstance().ask("Rename", "Save opened files?", new BooleanValueReceivedCallback()
-         {
-            public void execute(Boolean value)
-            {
-               if (value != null && value == true)
-               {
-                  handlers.addHandler(FileContentSavedEvent.TYPE, RenameItemPresenter.this);
-                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
-               }
-            }
-
-         });
-
-         return;
-      }
+//      String selectedItemPath = item.getHref();
+//      if (hasOpenedFiles(selectedItemPath))
+//      {
+//         Dialogs.getInstance().ask("Rename", "Save opened files?", new BooleanValueReceivedCallback()
+//         {
+//            public void execute(Boolean value)
+//            {
+//               if (value != null && value == true)
+//               {
+//                  handlers.addHandler(FileContentSavedEvent.TYPE, RenameItemPresenter.this);
+//                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
+//                  return;
+//               }
+//               if (value != null && !value)
+//               {
+//                  VirtualFileSystem.getInstance().move(item, href);
+//               }
+//            }
+//
+//         });
+//
+//         return;
+//      }
       VirtualFileSystem.getInstance().move(item, href);
    }
 
@@ -183,22 +187,22 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return href;
    }
 
-   private boolean hasOpenedFiles(String path)
-   {
-      for (String key : context.getOpenedFiles().keySet())
-      {
-         if (key.startsWith(path))
-         {
-            File file = context.getOpenedFiles().get(key);
-            if (file.isContentChanged() || file.isPropertiesChanged())
-            {
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
+//   private boolean hasOpenedFiles(String path)
+//   {
+//      for (String key : context.getOpenedFiles().keySet())
+//      {
+//         if (key.startsWith(path))
+//         {
+//            File file = context.getOpenedFiles().get(key);
+//            if (file.isContentChanged() || file.isPropertiesChanged())
+//            {
+//               return true;
+//            }
+//         }
+//      }
+//
+//      return false;
+//   }
 
    private boolean saveNextOpenedFile(String path)
    {
