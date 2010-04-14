@@ -59,8 +59,8 @@ public class ExceptionThrownEventHandlerInitializer
          /*
           * shell mode
           */
-         //handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
-         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new SmartGWTExceptionThrownHandlerImpl());         
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
+         //handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new SmartGWTExceptionThrownHandlerImpl());         
       }
    }
 

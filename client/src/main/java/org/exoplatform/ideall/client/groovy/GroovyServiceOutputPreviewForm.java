@@ -83,7 +83,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private WadlParameterEntryListGrid parameterHeaderGrid;
 
    private TextAreaItem requestbody;
-
+   
    public GroovyServiceOutputPreviewForm(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
    {
       super(eventBus, WIDTH, HEIGHT);
