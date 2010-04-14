@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
@@ -392,7 +393,10 @@ public class GroovyServiceOutputPreviewPresenter
 
          if (p.getStyle() == ParamStyle.HEADER)
          {
-            itemsHeader.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
+            if(!p.getName().equals(HTTPHeader.OVERWRITE))
+            {
+               itemsHeader.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));               
+            }
          }
       }
 
