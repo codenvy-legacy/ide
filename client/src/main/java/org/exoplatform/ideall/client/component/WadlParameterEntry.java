@@ -25,18 +25,21 @@ import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 */
 public class WadlParameterEntry extends SimpleParameterEntry
 {
-  // private String name;
+   // private String name;
 
-  // private String value;
+   // private String value;
 
    private String type;
 
-   public WadlParameterEntry(String name, String type, String value)
+   private boolean send;
+
+   public WadlParameterEntry(boolean send, String name, String type, String value)
    {
-      super(name,value);
-      this.setType(type);
+      super(name, value);
+      this.type = type;
+      this.send = send;
    }
-   
+
    /**
     * Set type
     * @param type
@@ -54,4 +57,25 @@ public class WadlParameterEntry extends SimpleParameterEntry
    {
       return type;
    }
+
+   /**
+    * Is send header
+    *  
+    * @return
+    */
+   public boolean isSend()
+   {
+      return send;
+   }
+
+   /**
+    * Set if isSend
+    * 
+    * @param send
+    */
+   public void setSend(boolean send)
+   {
+      this.send = send;
+   }
+
 }

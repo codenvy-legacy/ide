@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
@@ -36,20 +37,32 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> implements EditCompleteHandler
 {
 
-   HandlerRegistration editCompleteHandler;
-
+   private HandlerRegistration editCompleteHandler;
+   
    public WadlParameterEntryListGrid()
    {
       setHeaderHeight(22);
-
+      
+      ListGridField fieldSend = new ListGridField("send", "Send");
+      fieldSend.setAlign(Alignment.CENTER);
+      fieldSend.setType(ListGridFieldType.BOOLEAN);
+      fieldSend.setWidth(30);
+      fieldSend.setCanEdit(true);
+      
       ListGridField fieldName = new ListGridField("name", "Name");
       fieldName.setAlign(Alignment.LEFT);
+      fieldName.setCanEdit(false);
+      
       ListGridField fieldType = new ListGridField("type", "Type");
-      fieldName.setAlign(Alignment.LEFT);
+      fieldType.setAlign(Alignment.LEFT);
+      fieldType.setCanEdit(false);
+      
       ListGridField fieldValue = new ListGridField("value", "Value");
       fieldValue.setAlign(Alignment.LEFT);
+      fieldValue.setCanEdit(true);
+      
       setData(new ListGridRecord[0]);
-      setFields(fieldName, fieldType, fieldValue);
+      setFields(fieldSend, fieldName, fieldType, fieldValue);
 
       setShowHeader(true);
 
@@ -67,6 +80,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
    @Override
    protected void setRecordFields(ListGridRecord record, WadlParameterEntry item)
    {
+      record.setAttribute("send", item.isSend());
       record.setAttribute("name", item.getName());
       record.setAttribute("type", item.getType());
       record.setAttribute("value", item.getValue());

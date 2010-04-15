@@ -117,6 +117,8 @@ public class GroovyServiceOutputPreviewPresenter
    private Resource resource;
 
    private Method method;
+   
+   private final boolean isSend = true; 
 
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context,
       WadlApplication wadlApplication)
@@ -314,10 +316,10 @@ public class GroovyServiceOutputPreviewPresenter
 
          String base = wadlApplication.getResources().getBase();
          String fullPath = base.substring(base.lastIndexOf("/")) + display.getPathField().getValue();
+         display.closeForm();
          
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
             display.getRequestBody().getValue());
-         display.closeForm();
       }
       catch (IllegalArgumentException e)
       {
@@ -350,12 +352,10 @@ public class GroovyServiceOutputPreviewPresenter
       List<SimpleParameterEntry> query = new ArrayList<SimpleParameterEntry>();//display.getParametersQueryListGrid().getValue();
       for (WadlParameterEntry p : display.getParametersQueryListGrid().getValue())
       {
-         if (!p.getValue().equals(""))
+         if (p.isSend())
          {
             query.add(p);
          }
-         else
-            throw new IllegalArgumentException("Parameter " + p.getName() + ", not have value");
       }
 
       return query;
@@ -388,14 +388,14 @@ public class GroovyServiceOutputPreviewPresenter
 
          if (p.getStyle() == ParamStyle.QUERY)
          {
-            itemsQuery.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));
+            itemsQuery.add(new WadlParameterEntry(isSend, p.getName(), p.getType().getLocalName(), ""));
          }
 
          if (p.getStyle() == ParamStyle.HEADER)
          {
             if(!p.getName().equals(HTTPHeader.OVERWRITE))
             {
-               itemsHeader.add(new WadlParameterEntry(p.getName(), p.getType().getLocalName(), ""));               
+               itemsHeader.add(new WadlParameterEntry(isSend, p.getName(), p.getType().getLocalName(), ""));               
             }
          }
       }
@@ -417,11 +417,11 @@ public class GroovyServiceOutputPreviewPresenter
                   {
                      if (par.getStyle() == ParamStyle.QUERY)
                      {
-                        itemsQuery.add(new WadlParameterEntry(par.getName(), par.getType().getLocalName(), ""));
+                        itemsQuery.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), ""));
                      }
                      else
                      {
-                        itemsHeader.add(new WadlParameterEntry(par.getName(), par.getType().getLocalName(), ""));
+                        itemsHeader.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), ""));
                      }
                   }
                }
@@ -430,12 +430,8 @@ public class GroovyServiceOutputPreviewPresenter
       }
 
       display.getParametersHeaderListGrid().setValue(itemsHeader);
-      display.getParametersHeaderListGrid().getFields()[0].setCanEdit(false);
-      display.getParametersHeaderListGrid().getFields()[1].setCanEdit(false);
 
       display.getParametersQueryListGrid().setValue(itemsQuery);
-      display.getParametersQueryListGrid().getFields()[0].setCanEdit(false);
-      display.getParametersQueryListGrid().getFields()[1].setCanEdit(false);
 
    }
 

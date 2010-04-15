@@ -124,6 +124,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parameterHeaderGrid = new WadlParameterEntryListGrid();
       parameterHeaderGrid.setHeight100();
       parameterHeaderGrid.setCanEdit(true);
+      parameterHeaderGrid.getFields()[0].setHidden(true);
 
       Tab headerTab = new Tab("Header Parameter");
       headerTab.setPane(parameterHeaderGrid);
