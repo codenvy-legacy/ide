@@ -344,7 +344,7 @@ public class GroovyServiceOutputPreviewPresenter
          }
          else
          {
-            throw new IllegalArgumentException("Parameter " + p.getName() + ", not have value");
+            throw new IllegalArgumentException("Checked parameter '" + p.getName() + "' should have the value!");
          }
       }
 
