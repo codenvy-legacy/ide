@@ -38,31 +38,35 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
 {
 
    private HandlerRegistration editCompleteHandler;
-   
+
    public WadlParameterEntryListGrid()
    {
       setHeaderHeight(22);
-      
+
       ListGridField fieldSend = new ListGridField("send", "Send");
       fieldSend.setAlign(Alignment.CENTER);
       fieldSend.setType(ListGridFieldType.BOOLEAN);
       fieldSend.setWidth(30);
       fieldSend.setCanEdit(true);
-      
+
       ListGridField fieldName = new ListGridField("name", "Name");
       fieldName.setAlign(Alignment.LEFT);
       fieldName.setCanEdit(false);
-      
+
       ListGridField fieldType = new ListGridField("type", "Type");
       fieldType.setAlign(Alignment.LEFT);
       fieldType.setCanEdit(false);
-      
+
+      ListGridField fieldDefault = new ListGridField("default", "Default");
+      fieldDefault.setAlign(Alignment.LEFT);
+      fieldDefault.setCanEdit(false);
+
       ListGridField fieldValue = new ListGridField("value", "Value");
       fieldValue.setAlign(Alignment.LEFT);
       fieldValue.setCanEdit(true);
-      
+
       setData(new ListGridRecord[0]);
-      setFields(fieldSend, fieldName, fieldType, fieldValue);
+      setFields(fieldSend, fieldName, fieldType, fieldDefault, fieldValue);
 
       setShowHeader(true);
 
@@ -83,6 +87,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       record.setAttribute("send", item.isSend());
       record.setAttribute("name", item.getName());
       record.setAttribute("type", item.getType());
+      record.setAttribute("default", item.getDefaultValue());
       record.setAttribute("value", item.getValue());
    }
 

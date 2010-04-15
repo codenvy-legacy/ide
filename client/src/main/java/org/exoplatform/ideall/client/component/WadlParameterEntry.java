@@ -33,11 +33,22 @@ public class WadlParameterEntry extends SimpleParameterEntry
 
    private boolean send;
 
+   private String defaultValue;
+
    public WadlParameterEntry(boolean send, String name, String type, String value)
    {
       super(name, value);
       this.type = type;
       this.send = send;
+      this.defaultValue = "";
+   }
+
+   public WadlParameterEntry(boolean send, String name, String type, String value, String defaultValue)
+   {
+      super(name, value);
+      this.type = type;
+      this.send = send;
+      this.defaultValue = defaultValue;
    }
 
    /**
@@ -76,6 +87,16 @@ public class WadlParameterEntry extends SimpleParameterEntry
    public void setSend(boolean send)
    {
       this.send = send;
+   }
+
+   public String getDefaultValue()
+   {
+      return defaultValue;
+   }
+
+   public void setDefaultValue(String defaultValue)
+   {
+      this.defaultValue = defaultValue;
    }
 
 }
