@@ -59,7 +59,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private static final String TITLE = "REST Service output preview";
 
    private IButton showUrlButton;
-   
+
    private IButton sendRequestButton;
 
    private IButton cancelButton;
@@ -83,8 +83,13 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private WadlParameterEntryListGrid parameterHeaderGrid;
 
    private TextAreaItem requestbody;
-   
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, ApplicationContext context, WadlApplication wadlApplication)
+
+   private Tab bodyTab;
+
+   private TabSet parametersTabSet;
+
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, ApplicationContext context,
+      WadlApplication wadlApplication)
    {
       super(eventBus, WIDTH, HEIGHT);
       setTitle(TITLE);
@@ -102,7 +107,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       createParamsForm();
       createButtonsForm();
-      
+
       show();
 
       presenter = new GroovyServiceOutputPreviewPresenter(eventBus, context, wadlApplication);
@@ -118,7 +123,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       });
 
    }
-   
+
    private Tab createParametersHeaderTab()
    {
       parameterHeaderGrid = new WadlParameterEntryListGrid();
@@ -135,14 +140,14 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private Tab createBodyTab()
    {
 
-      Tab bodyTab = new Tab("Body");
+      bodyTab = new Tab("Body");
 
       DynamicForm form = new DynamicForm();
       form.setWidth100();
       form.setHeight100();
       form.setLayoutAlign(Alignment.CENTER);
       form.setLayoutAlign(VerticalAlignment.CENTER);
-      
+
       requestbody = new TextAreaItem();
       requestbody.setShowTitle(false);
 
@@ -174,7 +179,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private TabSet createParametersTabSet()
    {
-      TabSet parametersTabSet = new TabSet();
+      parametersTabSet = new TabSet();
       parametersTabSet.setHeight100();
       parametersTabSet.setLayoutAlign(Alignment.CENTER);
       parametersTabSet.setWidth(480);
@@ -185,13 +190,13 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       return parametersTabSet;
    }
-   
+
    private void createParamsForm()
    {
       DynamicForm form = new DynamicForm();
 
       VLayout vLay = new VLayout();
-      
+
       vLay.setMargin(8);
       vLay.setWidth(480);
       vLay.setAlign(Alignment.CENTER);
@@ -239,7 +244,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       responseMediaTypeField.setColSpan(2);
       responseMediaTypeField.setWidth(480);
       responseMediaTypeField.setDisabled(true);
-      
+
       SpacerItem spacer = new SpacerItem();
       spacer.setHeight(5);
 
@@ -252,7 +257,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       hLayout.addMember(vLay);
    }
-   
+
    private void createButtonsForm()
    {
       DynamicForm buttonsForm = new DynamicForm();
@@ -265,8 +270,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
       showUrlButton.setIcon(Images.MainMenu.URL);
-      
-      
+
       sendRequestButton = new IButton("Send");
       sendRequestButton.setWidth(90);
       sendRequestButton.setHeight(22);
@@ -289,7 +293,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       buttonsForm.setAutoWidth();
       vLayout.addMember(buttonsForm);
    }
-   
+
    public void closeForm()
    {
       destroy();
@@ -321,7 +325,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
       return methodField;
    }
-   
+
    public void setMethodFieldValue(String value)
    {
       methodField.setValue(value);
@@ -331,19 +335,19 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
       return pathField;
    }
-   
+
    public void setPaths(String[] paths)
    {
       pathField.clearValue();
       pathField.setValueMap(paths);
    }
-   
+
    public void setMethods(LinkedHashMap<String, String> methods)
    {
       methodField.clearValue();
       methodField.setValueMap(methods);
    }
-   
+
    public HasValue<String> getRequestMediaTypeField()
    {
       return requestMediaTypeField;
@@ -368,7 +372,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
       return requestbody;
    }
-   
+
    public void setBodyDisabled(boolean value)
    {
       requestbody.setDisabled(value);
@@ -379,7 +383,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       sendRequestButton.setDisabled(value);
    }
 
-	public HasClickHandlers getShowUrlButton()
+   public HasClickHandlers getShowUrlButton()
    {
       return showUrlButton;
    }
@@ -387,6 +391,18 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    public void setShowUrlButtonDisabled(boolean value)
    {
       showUrlButton.setDisabled(value);
+   }
+
+   public void setBodyTabEnabled()
+   {
+      // 2 is tabIndex of body tab
+      parametersTabSet.enableTab(2);
+   }
+
+   public void setBodyTabDisabled()
+   {
+      // 2 is tabIndex of body tab
+      parametersTabSet.disableTab(2);
    }
 
 }

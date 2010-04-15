@@ -90,6 +90,10 @@ public class GroovyServiceOutputPreviewPresenter
 
       void setMethodFieldValue(String value);
 
+      void setBodyTabEnabled();
+
+      void setBodyTabDisabled();
+
    }
 
    private static final String REPLACEMENT_REGEX = "\\{[^/]+}";
@@ -117,8 +121,8 @@ public class GroovyServiceOutputPreviewPresenter
    private Resource resource;
 
    private Method method;
-   
-   private final boolean isSend = true; 
+
+   private final boolean isSend = true;
 
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context,
       WadlApplication wadlApplication)
@@ -317,7 +321,7 @@ public class GroovyServiceOutputPreviewPresenter
          String base = wadlApplication.getResources().getBase();
          String fullPath = base.substring(base.lastIndexOf("/")) + display.getPathField().getValue();
          display.closeForm();
-         
+
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
             display.getRequestBody().getValue());
       }
@@ -393,9 +397,9 @@ public class GroovyServiceOutputPreviewPresenter
 
          if (p.getStyle() == ParamStyle.HEADER)
          {
-            if(!p.getName().equals(HTTPHeader.OVERWRITE))
+            if (!p.getName().equals(HTTPHeader.OVERWRITE))
             {
-               itemsHeader.add(new WadlParameterEntry(isSend, p.getName(), p.getType().getLocalName(), ""));               
+               itemsHeader.add(new WadlParameterEntry(isSend, p.getName(), p.getType().getLocalName(), ""));
             }
          }
       }
@@ -421,7 +425,8 @@ public class GroovyServiceOutputPreviewPresenter
                      }
                      else
                      {
-                        itemsHeader.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), ""));
+                        itemsHeader
+                           .add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), ""));
                      }
                   }
                }
@@ -455,11 +460,11 @@ public class GroovyServiceOutputPreviewPresenter
       if (method.getName().equals(HTTPMethod.GET) || method.getName().equals(HTTPMethod.DELETE)
          || method.getName().equals(HTTPMethod.HEAD) || method.getName().equals(HTTPMethod.OPTIONS))
       {
-         display.setBodyDisabled(true);
+         display.setBodyTabDisabled();
       }
       else
       {
-         display.setBodyDisabled(false);
+         display.setBodyTabEnabled();
       }
 
       if (method.getRequest() != null)
