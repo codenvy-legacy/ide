@@ -40,7 +40,9 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
 
    private static final String ID = "File/Refresh Selected Folder";
 
-   private static final String TITLE = "Refresh Selected Folder";
+   private static final String TITLE = "Refresh";
+
+   private static final String PROMPT = "Refresh Selected Folder";
 
    private boolean browserPanelSelected = true;
 
@@ -48,7 +50,7 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
+      setPrompt(PROMPT);
       setIcon(Images.MainMenu.REFRESH);
       setEvent(new RefreshBrowserEvent());
    }

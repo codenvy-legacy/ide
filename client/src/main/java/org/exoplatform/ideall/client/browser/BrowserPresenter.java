@@ -37,6 +37,7 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserHandler;
 import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
 import org.exoplatform.ideall.client.browser.event.SelectItemHandler;
 import org.exoplatform.ideall.client.cookie.CookieManager;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -365,14 +366,15 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    {
       switchWorkspace();
       eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-//      //TODO fire new event
-//      new Timer() {
-//         @Override
-//         public void run()
-//         {
-//            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-//         }
-//      }.schedule(100);
+      //TODO fire new event
+      new Timer() {
+         @Override
+         public void run()
+         {
+            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), false, false));
+         }
+      }.schedule(500);
    }
 
    /**

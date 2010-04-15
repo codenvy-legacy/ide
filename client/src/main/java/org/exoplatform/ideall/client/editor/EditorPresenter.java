@@ -172,8 +172,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorActivityEvent.TYPE, this);
       handlers.addHandler(EditorSaveContentEvent.TYPE, this);
 
-      // handlers.addHandler(MoveCompleteEvent.TYPE, this);
-
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
@@ -197,28 +195,36 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
-      if (context.getActiveFile() != null)
+      new Timer()
       {
-         try
+         @Override
+         public void run()
          {
-            setFileAsActive();
-         }
-         catch (Exception exc)
-         {
-            exc.printStackTrace();
-         }
-      }
-      else
-      {
-         if (context.getOpenedFiles().size() > 0)
-         {
-            String fileName = (String)context.getOpenedFiles().keySet().toArray()[0];
-            File file = context.getOpenedFiles().get(fileName);
-            context.setActiveFile(file);
-            setFileAsActive();
-         }
+            if (context.getActiveFile() != null)
+            {
+               try
+               {
+                  setFileAsActive();
+               }
+               catch (Exception exc)
+               {
+                  exc.printStackTrace();
+               }
+            }
+            else
+            {
+               if (context.getOpenedFiles().size() > 0)
+               {
+                  String fileName = (String)context.getOpenedFiles().keySet().toArray()[0];
+                  File file = context.getOpenedFiles().get(fileName);
+                  context.setActiveFile(file);
+                  setFileAsActive();
+               }
 
-      }
+            }
+         }
+      }.schedule(1000);
+
    }
 
    /**
@@ -380,36 +386,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.updateTabTitle(href);
    }
 
-   //   public void onMoveComplete(MoveCompleteEvent event)
-   //   {
-   ////      String dest = event.getItem().getHref(); //getDestination();
-   ////      ArrayList<String> keys = new ArrayList<String>();
-   ////      for (String key : context.getOpenedFiles().keySet())
-   ////      {
-   ////         keys.add(key);
-   ////      }
-   ////
-   ////      for (String key : keys)
-   ////      {
-   ////         if (key.startsWith(event.getItem().getHref()))
-   ////         {
-   ////            File file = context.getOpenedFiles().get(key);
-   ////            String sourcePath = file.getHref();
-   ////            String destinationPath = file.getHref();
-   ////            destinationPath = destinationPath.substring(event.getItem().getHref().length());
-   ////            destinationPath = dest + destinationPath;
-   ////            file.setHref(destinationPath);
-   ////            display.updateTabTitle(file.getHref());
-   ////
-   ////            context.getOpenedFiles().remove(event.getSource());
-   ////            context.getOpenedFiles().put(destinationPath, file);
-   ////            
-   ////         }
-   ////      }
-   ////
-   ////      CookieManager.storeOpenedFiles(context);
-   //   }
-
    public void onFormatFile(FormatFileEvent event)
    {
       display.formatFile(context.getActiveFile().getHref());
@@ -433,41 +409,15 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorChangeActiveFile(EditorChangeActiveFileEvent event)
    {
-      if (timer1 != null)
-      {
-         timer1.cancel();
-      }
-
-      if (timer2 != null)
-      {
-         timer2.cancel();
-      }
-
       context.setActiveFile(event.getFile());
       display.selectTab(event.getFile().getHref());
 
+      String href = context.getActiveFile().getHref();
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+         display.hasRedoChanges(href)));
+
       CookieManager.storeOpenedFiles(context);
    }
-
-   private class UpdateActiveFileTimer extends Timer
-   {
-      @Override
-      public void run()
-      {
-         if (context.getActiveFile() == null)
-         {
-            return;
-         }
-
-         String href = context.getActiveFile().getHref();
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-            display.hasRedoChanges(href)));
-      }
-   }
-
-   private UpdateActiveFileTimer timer1;
-
-   private UpdateActiveFileTimer timer2;
 
    private void setFileAsActive()
    {
@@ -476,10 +426,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          return;
       }
       display.selectTab(context.getActiveFile().getHref());
-      timer1 = new UpdateActiveFileTimer();
-      timer1.schedule(1000);
-      timer2 = new UpdateActiveFileTimer();
-      timer2.schedule(500);
+      if (context.getActiveFile() == null)
+      {
+         return;
+      }
+
+      String href = context.getActiveFile().getHref();
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+         display.hasRedoChanges(href)));
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
