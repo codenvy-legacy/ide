@@ -168,8 +168,8 @@ public class GroovyServiceOutputPreviewPresenter
             if (!pathExists(display.getPathField().getValue()))
             {
                Dialogs.getInstance().showError(
-                  "Path doesn't exist.<br>" + "May be you try to pass symbol <b>/</b> as parameter value.<br><br>"
-                     + "Try to select pass from the list");
+                  "Path is unexisted.<br> Check that there are no symbol '/' used as path parameter value.<br>"
+                     + "Also you could select required path from the 'Path' list.");
                return;
             }
             if (!validatePathParams())
