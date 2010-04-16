@@ -74,9 +74,9 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private SelectItem methodField;
 
-   private TextField requestMediaTypeField;
+   private SelectItem requestMediaTypeField;
 
-   private TextField responseMediaTypeField;
+   private SelectItem responseMediaTypeField;
 
    private WadlParameterEntryListGrid parametersQueryGrid;
 
@@ -228,22 +228,20 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       requestTitle.setShowTitle(false);
       requestTitle.setDefaultValue("Request Media Type:");
 
-      requestMediaTypeField = new TextField();
+      requestMediaTypeField = new SelectItem();
       requestMediaTypeField.setShowTitle(false);
       requestMediaTypeField.setColSpan(2);
       requestMediaTypeField.setWidth(480);
-      requestMediaTypeField.setDisabled(true);
 
       StaticTextItem responseTitle = new StaticTextItem();
       responseTitle.setColSpan(2);
       responseTitle.setShowTitle(false);
       responseTitle.setDefaultValue("Response Media Type");
 
-      responseMediaTypeField = new TextField();
+      responseMediaTypeField = new SelectItem();
       responseMediaTypeField.setShowTitle(false);
       responseMediaTypeField.setColSpan(2);
       responseMediaTypeField.setWidth(480);
-      responseMediaTypeField.setDisabled(true);
 
       SpacerItem spacer = new SpacerItem();
       spacer.setHeight(5);
@@ -269,7 +267,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton = new IButton("Get URL");
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
-      showUrlButton.setIcon(Images.MainMenu.URL);
+      showUrlButton.setIcon(Images.MainMenu.GET_URL);
 
       sendRequestButton = new IButton("Send");
       sendRequestButton.setWidth(90);
@@ -403,6 +401,28 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
       // 2 is tabIndex of body tab
       parametersTabSet.disableTab(2);
+   }
+
+   public void setRequestMediaType(LinkedHashMap<String, String> requestMediaType)
+   {
+      requestMediaTypeField.clearValue();
+      requestMediaTypeField.setValueMap(requestMediaType);
+   }
+
+   public void setRequestMediaTypeFieldValue(String value)
+   {
+      requestMediaTypeField.setValue(value);
+   }
+
+   public void setResponseMediaType(LinkedHashMap<String, String> responseMediaType)
+   {
+      responseMediaTypeField.clearValue();
+      responseMediaTypeField.setValueMap(responseMediaType);
+   }
+
+   public void setResponseMediaTypeFieldValue(String value)
+   {
+      responseMediaTypeField.setValue(value);
    }
 
 }

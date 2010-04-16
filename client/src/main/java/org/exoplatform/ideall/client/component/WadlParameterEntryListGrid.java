@@ -46,7 +46,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       ListGridField fieldSend = new ListGridField("send", "Send");
       fieldSend.setAlign(Alignment.CENTER);
       fieldSend.setType(ListGridFieldType.BOOLEAN);
-      fieldSend.setWidth(30);
+      fieldSend.setWidth(33);
       fieldSend.setCanEdit(true);
 
       ListGridField fieldName = new ListGridField("name", "Name");
@@ -57,7 +57,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       fieldType.setAlign(Alignment.LEFT);
       fieldType.setCanEdit(false);
 
-      ListGridField fieldDefault = new ListGridField("default", "Default");
+      ListGridField fieldDefault = new ListGridField("default", "By default");
       fieldDefault.setAlign(Alignment.LEFT);
       fieldDefault.setCanEdit(false);
 
