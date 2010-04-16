@@ -109,6 +109,15 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       {
          listItem.setType("" + event.getNewValues().get("type"));
       }
+      if (event.getNewValues().get("send") != null)
+      {
+         listItem.setSend(Boolean.parseBoolean(event.getNewValues().get("send").toString()));
+      }
+      if (event.getNewValues().get("default") != null)
+      {
+         listItem.setDefaultValue("" + event.getNewValues().get("default"));
+      }
+      
       fireOnValueChangeEvent();
       editCompleteHandler = addEditCompleteHandler(this);
    }

@@ -16,17 +16,16 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
+import java.util.LinkedHashMap;
+
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-
-import java.util.LinkedHashMap;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -129,7 +128,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parameterHeaderGrid = new WadlParameterEntryListGrid();
       parameterHeaderGrid.setHeight100();
       parameterHeaderGrid.setCanEdit(true);
-      parameterHeaderGrid.getFields()[0].setHidden(true);
+      //parameterHeaderGrid.getFields()[0].setHidden(true);
 
       Tab headerTab = new Tab("Header Parameter");
       headerTab.setPane(parameterHeaderGrid);

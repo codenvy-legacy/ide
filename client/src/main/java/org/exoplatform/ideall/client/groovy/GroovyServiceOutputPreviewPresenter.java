@@ -43,7 +43,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -436,21 +435,24 @@ public class GroovyServiceOutputPreviewPresenter
       {
          for (WadlParameterEntry p : display.getParametersHeaderListGrid().getValue())
          {
-            if (!p.getValue().equals(""))
+            if (p.isSend())
             {
-               headersParam.add(p);
-            }
-            else
-            {
-               throw new IllegalArgumentException("Checked parameter '" + p.getName() + "' should have the value!");
+               if (!p.getValue().equals(""))
+               {
+                  headersParam.add(p);
+               }
+               else
+               {
+                  throw new IllegalArgumentException("Checked parameter '" + p.getName() + "' should have the value!");
+               }
             }
          }
       }
-      
+
       if (!currentRequestMediaType.equals(""))
       {
          SimpleParameterEntry contentType = new SimpleParameterEntry(HTTPHeader.CONTENT_TYPE, currentRequestMediaType);
-         headersParam.add(contentType);         
+         headersParam.add(contentType);
       }
       return headersParam;
    }
@@ -595,8 +597,6 @@ public class GroovyServiceOutputPreviewPresenter
          return "";
       }
    }
-
-
 
    private void setRequestMediaType()
    {

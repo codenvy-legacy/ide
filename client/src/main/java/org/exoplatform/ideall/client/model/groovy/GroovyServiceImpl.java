@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
-import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
@@ -123,7 +122,7 @@ public class GroovyServiceImpl extends GroovyService
             if (param.getName() != null && param.getName().length() != 0)
                url += param.getName() + "=" + param.getValue() + "&";
          }
-         url.substring(0, url.lastIndexOf("&"));
+         url = url.substring(0, url.lastIndexOf("&"));
       }
 
       Method httpMethod;
