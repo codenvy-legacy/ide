@@ -447,6 +447,11 @@ public class GroovyServiceOutputPreviewPresenter
          }
       }
       
+      if (!currentRequestMediaType.equals(""))
+      {
+         SimpleParameterEntry contentType = new SimpleParameterEntry(HTTPHeader.CONTENT_TYPE, currentRequestMediaType);
+         headersParam.add(contentType);         
+      }
       return headersParam;
    }
 
