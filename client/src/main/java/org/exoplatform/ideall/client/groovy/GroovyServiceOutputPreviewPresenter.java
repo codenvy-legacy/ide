@@ -136,6 +136,8 @@ public class GroovyServiceOutputPreviewPresenter
 
    private String currentResponseMediaType;
 
+   private String currentPath;
+
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context,
       WadlApplication wadlApplication)
    {
@@ -207,7 +209,10 @@ public class GroovyServiceOutputPreviewPresenter
                   String oldMethodName = currentMethod == null ? null : currentMethod.getName();
 
                   resource = findResource(event.getValue(), display.getMethodField().getValue());
+                  currentPath = resource.getPath();
+
                   listMethods = findMethod(resource, display.getMethodField().getValue());
+
                   if (listMethods.size() != 0)
                   {
                      currentMethod = listMethods.get(0);
@@ -289,7 +294,9 @@ public class GroovyServiceOutputPreviewPresenter
 
       initResources(res);
 
-      display.setPaths(getPathArray());
+      String[] pathArr = getPathArray();
+      display.setPaths(pathArr);
+      currentPath = pathArr[0];
    }
 
    private void setResponseMediaType(String requestMediaType)
@@ -694,6 +701,11 @@ public class GroovyServiceOutputPreviewPresenter
     */
    private String getPathRegex(Resource resource)
    {
+      if (resource.getPath().contains(".+"))
+      {
+         return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "/[A-Za-z0-9+&@#/%=~_|]*$";
+      }
+
       return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
    }
 
