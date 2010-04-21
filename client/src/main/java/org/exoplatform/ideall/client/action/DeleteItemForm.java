@@ -71,7 +71,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       {
          prompt = "<br>Do you want to delete <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).size() + "</b> items?";
       }
-      setTitle("Delete Repository");
+      setTitle("Delete Item(s)");
 
       hLayout = new HLayout();
       addItem(hLayout);
