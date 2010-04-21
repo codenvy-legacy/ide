@@ -45,6 +45,8 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
    private final static String PROMPT = "Upload File...";
 
    private boolean browserPanelSelected = true;
+   
+   private boolean oneItemSelected = true;
 
    public UploadFileCommand()
    {
@@ -71,7 +73,7 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
 
    private void updateEnabling()
    {
-      if (browserPanelSelected)
+      if (browserPanelSelected && oneItemSelected)
       {
          setEnabled(true);
       }
@@ -85,12 +87,12 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
    {
       if (event.getSelectedItems().size() != 1)
       {
-         browserPanelSelected = false;
+         oneItemSelected = false;
          updateEnabling();
       }
       else
       {
-         browserPanelSelected = true;
+         oneItemSelected = true;
          updateEnabling();
       }
    }

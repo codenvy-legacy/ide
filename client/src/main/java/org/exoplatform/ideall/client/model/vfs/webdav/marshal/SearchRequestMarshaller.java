@@ -38,54 +38,51 @@ public class SearchRequestMarshaller implements Marshallable
    {
       text = escapeRegisteredSymbols(text);
       String statement = "SELECT * FROM nt:base";
-      
-    if (text != null && text.length() > 0)
-    {
-       statement += " WHERE CONTAINS(*, '" + text + "')";
-       andFlag = true;
-    }
 
-    if ((mimeType != null) && (mimeType.length() > 0))
-    {
-       if (andFlag)
-       {
-          statement += " AND (jcr:mimeType = '" + mimeType + "')";
-       }
-       else
-       {
-          statement += " WHERE (jcr:mimeType = '" + mimeType + "')";
-          andFlag = true;
-       }
-    }
+      if (text != null && text.length() > 0)
+      {
+         statement += " WHERE CONTAINS(*, '" + text + "')";
+         andFlag = true;
+      }
 
-    if (path != null && (path.length() > 0))
-    {
-       if (andFlag)
-       {
-          statement += " AND jcr:path LIKE '" + path + "%'";
-       }
-       else
-       {
-          // This is made with purpose to get only files (not with folders)
-          statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "%'";
-          andFlag = true;
-       }
-    }
+      if ((mimeType != null) && (mimeType.length() > 0))
+      {
+         if (andFlag)
+         {
+            statement += " AND (jcr:mimeType = '" + mimeType + "')";
+         }
+         else
+         {
+            statement += " WHERE (jcr:mimeType = '" + mimeType + "')";
+            andFlag = true;
+         }
+      }
 
-    if (!andFlag)
-    {
-       statement = "SELECT * FROM nt:file";
-    }
+      if (path != null && (path.length() > 0))
+      {
+         if (andFlag)
+         {
+            statement += " AND jcr:path LIKE '" + path + "%'";
+         }
+         else
+         {
+            // This is made with purpose to get only files (not with folders)
+            statement = "SELECT * FROM nt:file WHERE jcr:path LIKE '" + path + "%'";
+            andFlag = true;
+         }
+      }
 
-    query =
-       "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
-          + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
-      
-    
-    System.out.println("query: " + query);
-    
+      if (!andFlag)
+      {
+         statement = "SELECT * FROM nt:file";
+      }
+
+      query =
+         "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<D:searchrequest xmlns:D='DAV:'>\n" + "    <D:sql>\n"
+            + statement + "\n" + " </D:sql>\n" + "</D:searchrequest>\n";
+
    }
-   
+
    private String escapeRegisteredSymbols(String request)
    {
       String escapedRequest = request;
@@ -97,7 +94,7 @@ public class SearchRequestMarshaller implements Marshallable
    }
 
    public String marshal()
-   {  
+   {
       return query;
    }
 

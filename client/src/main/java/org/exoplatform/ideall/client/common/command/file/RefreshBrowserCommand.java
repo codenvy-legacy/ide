@@ -45,6 +45,8 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
    private static final String PROMPT = "Refresh Selected Folder";
 
    private boolean browserPanelSelected = true;
+   
+   private boolean oneItemSelected = true;
 
    public RefreshBrowserCommand()
    {
@@ -71,26 +73,28 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
 
    private void updateEnabling()
    {
-      if (browserPanelSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      
+         if (browserPanelSelected && oneItemSelected)
+         {
+            setEnabled(true);
+         }
+         else
+         {
+            setEnabled(false);
+         }
+  
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {
-         browserPanelSelected = false;
+         oneItemSelected = false;
          updateEnabling();
       }
       else
       {
-         browserPanelSelected = true;
+         oneItemSelected = true;
          updateEnabling();
       }
    }

@@ -32,7 +32,6 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -72,7 +71,6 @@ public class SearchResultUnmarshaller implements Unmarshallable
    private void parseSearchResult(String body)
    {
       String context = Configuration.getInstance().getContext();
-
       if (context.endsWith("/"))
       {
          context = context.substring(0, context.length() - 1);
@@ -102,7 +100,6 @@ public class SearchResultUnmarshaller implements Unmarshallable
    {
       String path = resource.getHref();
       path = Utils.unescape(path);
-      
       Item item;
       if (resource.isCollection())
       {

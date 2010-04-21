@@ -23,8 +23,11 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
+import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DownloadFileEvent;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,11 +36,13 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
  * @version $
  */
 
-public class DownloadFileCommand extends IDECommand implements ItemsSelectedHandler
+public class DownloadFileCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
    private final static String ID = "File/Download/Download File...";
 
+   private boolean oneItemSelected = true;
+   
    public DownloadFileCommand()
    {
       super(ID);
@@ -57,6 +62,7 @@ public class DownloadFileCommand extends IDECommand implements ItemsSelectedHand
    @Override
    protected void onRegisterHandlers()
    {
+      super.onRegisterHandlers();
       addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
@@ -64,11 +70,28 @@ public class DownloadFileCommand extends IDECommand implements ItemsSelectedHand
    {
       if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
       {
-         setEnabled(false);
-         return;
+        oneItemSelected = false;
+        updateEnabling();
       }
-
-      setEnabled(true);
+      else
+      {
+         oneItemSelected = true;
+         updateEnabling();
+      }
    }
+
+   @Override
+   protected void updateEnabling()
+   {
+      if (browserSelected && oneItemSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
 
 }

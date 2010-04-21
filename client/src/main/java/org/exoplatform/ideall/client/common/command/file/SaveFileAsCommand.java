@@ -58,8 +58,9 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    protected void onRegisterHandlers()
    {
+      super.onRegisterHandlers();
       setVisible(true);
-
+      setEnabled(false);
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(ItemsSelectedEvent.TYPE, this);
    }
@@ -81,23 +82,9 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    protected void updateEnabling()
    {
-      if (browserSelected)
+      if (browserSelected && activeFileSelected && singleItemSelected)
       {
-         if (activeFileSelected)
-         {
-            if (singleItemSelected)
-            {
-               setEnabled(true);               
-            }
-            else
-            {
-               setEnabled(false);
-            }
-         }
-         else
-         {
-            setEnabled(false);
-         }
+         setEnabled(true);
       }
       else
       {

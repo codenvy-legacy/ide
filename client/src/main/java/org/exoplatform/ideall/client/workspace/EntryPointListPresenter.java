@@ -108,7 +108,7 @@ public class EntryPointListPresenter
       display.getEntryPoints().addDoubleClickHandler(new DoubleClickHandler()
       {
 
-         public void onDoubleClick(DoubleClickEvent arg0)
+         public void onDoubleClick(DoubleClickEvent event)
          {
             changeEntryPoint();
          }
@@ -118,7 +118,6 @@ public class EntryPointListPresenter
       for (int i = 0; i < entryPointList.getEntryPoints().length(); i++)
       {
          EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
-         System.out.println("entry point scheme > " + entryPoint.getScheme());
          if (entryPoint.getScheme().equals(Scheme.WEBDAV))
          {
             entryPoints.add(entryPoint);

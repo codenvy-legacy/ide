@@ -23,6 +23,7 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
+import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 
@@ -33,10 +34,12 @@ import org.exoplatform.ideall.client.model.vfs.api.Folder;
  * @version $
  */
 
-public class DownloadZippedFolderCommand extends IDECommand implements ItemsSelectedHandler
+public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
    private final static String ID = "File/Download/Download Zipped Folder";
+
+   private boolean oneItemSelected = true;
 
    public DownloadZippedFolderCommand()
    {
@@ -57,6 +60,7 @@ public class DownloadZippedFolderCommand extends IDECommand implements ItemsSele
    @Override
    protected void onRegisterHandlers()
    {
+      super.onRegisterHandlers();
       addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
@@ -64,11 +68,27 @@ public class DownloadZippedFolderCommand extends IDECommand implements ItemsSele
    {
       if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
       {
-         setEnabled(false);
-         return;
+         oneItemSelected = false;
+         updateEnabling();
       }
+      else
+      {
+         oneItemSelected = true;
+         updateEnabling();
+      }
+   }
 
-      setEnabled(true);
+   @Override
+   protected void updateEnabling()
+   {
+      if (browserSelected && oneItemSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
    }
 
 }

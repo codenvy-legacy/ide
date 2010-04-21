@@ -43,6 +43,8 @@ public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHand
 
    private boolean browserPanelSelected = true;
    
+   private boolean oneItemSelected = true;
+   
    public OpenInEditorCommand()
    {
       super(ID);
@@ -69,7 +71,7 @@ public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHand
 
    private void updateEnabling()
    {
-      if (browserPanelSelected)
+      if (browserPanelSelected && oneItemSelected)
       {
          setEnabled(true);
       }
@@ -83,12 +85,12 @@ public class OpenInEditorCommand extends IDECommand implements ItemsSelectedHand
    {
       if (event.getSelectedItems().size() != 1)
       {
-         browserPanelSelected = false;
+         oneItemSelected  = false;
          updateEnabling();
       }
       else
       {
-         browserPanelSelected = true;
+         oneItemSelected  = true;
          updateEnabling();
       }
    }

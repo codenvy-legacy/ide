@@ -251,7 +251,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void move(Item item, String destination)
    {
       String url = javaScriptEncodeURI(item.getHref());
-      System.out.println("destination URL: " + destination);
       MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
       MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
       if (item instanceof File)
