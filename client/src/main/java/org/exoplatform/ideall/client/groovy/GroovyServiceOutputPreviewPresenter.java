@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
+import org.exoplatform.gwtframework.commons.wadl.Response;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
@@ -201,6 +202,7 @@ public class GroovyServiceOutputPreviewPresenter
             if (event.getValue() != null && !"".equals(event.getValue()))
             {
                display.setSendRequestButtonDisabled(false);
+
                if (pathExists(event.getValue()))
                {
                   setMethodsOnPath(event.getValue());
@@ -303,34 +305,24 @@ public class GroovyServiceOutputPreviewPresenter
    {
       display.setResponseMediaTypeFieldValue("");
       LinkedHashMap<String, String> responseMediaType = new LinkedHashMap<String, String>();
+
       for (Method m : listMethods)
       {
-         if (m.getResponse() != null)
+         String response = getMethodResponse(m);
+         if (response != null)
          {
-            if (m.getResponse().getRepresentationOrFault().size() != 0)
+            String request = getMethodRequestMediaType(m);
+            if (request != null)
             {
-               if (m.getRequest() != null)
+               if (request.equals(requestMediaType) || "".equals(requestMediaType))
                {
-                  if (m.getRequest().getRepresentation().size() != 0)
-                  {
-                     if (m.getRequest().getRepresentation().get(0).getMediaType().equals(requestMediaType))
-                     {
-                        responseMediaType.put(m.getResponse().getRepresentationOrFault().get(0).getMediaType(), m
-                           .getResponse().getRepresentationOrFault().get(0).getMediaType());
-                     }
-                  }
-                  else
-                  {
-                     if ("".equals(requestMediaType))
-                     {
-                        responseMediaType.put(m.getResponse().getRepresentationOrFault().get(0).getMediaType(), m
-                           .getResponse().getRepresentationOrFault().get(0).getMediaType());
-                     }
-                  }
+                  responseMediaType.put(response, response);
                }
             }
+
          }
       }
+
       if (responseMediaType.size() != 0)
       {
          display.setResponseMediaType(responseMediaType);
@@ -522,18 +514,20 @@ public class GroovyServiceOutputPreviewPresenter
          }
       }
       Method m = getMethodByNemeAndId();
-
-      for (Param par : m.getRequest().getParam())
+      if (m.getRequest() != null)
       {
-         if (par.getStyle() == ParamStyle.QUERY)
+         for (Param par : m.getRequest().getParam())
          {
-            itemsQuery.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), "", par
-               .getDefault()));
-         }
-         else
-         {
-            itemsHeader.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), "", par
-               .getDefault()));
+            if (par.getStyle() == ParamStyle.QUERY)
+            {
+               itemsQuery.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), "", par
+                  .getDefault()));
+            }
+            else
+            {
+               itemsHeader.add(new WadlParameterEntry(isSend, par.getName(), par.getType().getLocalName(), "", par
+                  .getDefault()));
+            }
          }
       }
 
@@ -550,7 +544,7 @@ public class GroovyServiceOutputPreviewPresenter
       {
          if (m.getName().equals(keyMethod))
          {
-            String requestType = getMethodRequest(m);
+            String requestType = getMethodRequestMediaType(m);
             String responseType = getMethodResponse(m);
             if (currentRequestMediaType.equals(requestType) && currentResponseMediaType.equals(responseType))
             {
@@ -586,7 +580,7 @@ public class GroovyServiceOutputPreviewPresenter
     * @param m {@link Method}
     * @return request media type, if method not have request media type, return empty string
     */
-   private String getMethodRequest(Method m)
+   private String getMethodRequestMediaType(Method m)
    {
       if (m.getRequest() != null)
       {
@@ -608,24 +602,17 @@ public class GroovyServiceOutputPreviewPresenter
    private void setRequestMediaType()
    {
       LinkedHashMap<String, String> requestMediaType = new LinkedHashMap<String, String>();
+
       for (Method m : listMethods)
       {
          if (m.getName().equals(display.getMethodField().getValue()))
          {
-            if (m.getRequest() != null)
-            {
-               if (m.getRequest().getRepresentation().size() != 0)
-               {
-                  requestMediaType.put(m.getRequest().getRepresentation().get(0).getMediaType(), m.getRequest()
-                     .getRepresentation().get(0).getMediaType());
-               }
-               else
-               {
-                  requestMediaType.put("", "");
-               }
-            }
+            String request = getMethodRequestMediaType(m);
+            requestMediaType.put(request, request);
          }
+
       }
+
       if (requestMediaType.size() != 0)
       {
          display.setRequestMediaType(requestMediaType);
@@ -780,12 +767,14 @@ public class GroovyServiceOutputPreviewPresenter
       display.setMethods(methods);
 
       //checks is it need to change method field value
-      for (String methodName : methodArray.values())
+      for (String methodName : methodArray.keySet())
+      {
          if (oldMethodName.equals(methodName))
          {
             display.setMethodFieldValue(oldMethodName);
             return;
          }
+      }
       display.setMethodFieldValue(methodArray.keySet().iterator().next());
    }
 
