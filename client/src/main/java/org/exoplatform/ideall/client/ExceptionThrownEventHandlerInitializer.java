@@ -51,7 +51,6 @@ public class ExceptionThrownEventHandlerInitializer
          return;
       }
       
-      System.out.println("GWT.isScript() " + GWT.isScript());
       if (GWT.isScript()) {
          // browser
          handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());

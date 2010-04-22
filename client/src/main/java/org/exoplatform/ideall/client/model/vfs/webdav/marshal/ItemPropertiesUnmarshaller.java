@@ -47,7 +47,6 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
 
    public void unmarshal(String body) throws UnmarshallerException
    {
-      System.out.println("body > " + body);
       try
       {
          parseItemProperties(body);

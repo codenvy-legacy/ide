@@ -47,9 +47,7 @@ public class ImageUtil
    }
 
    public static String getIcon(String mimeType)
-   {
-      System.out.println("tru get icon for: " + mimeType);
-      
+   {      
       String icon = images.get(mimeType);
       if (icon == null)
       {

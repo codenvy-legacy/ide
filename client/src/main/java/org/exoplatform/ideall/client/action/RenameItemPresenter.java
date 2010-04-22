@@ -187,23 +187,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return href;
    }
 
-//   private boolean hasOpenedFiles(String path)
-//   {
-//      for (String key : context.getOpenedFiles().keySet())
-//      {
-//         if (key.startsWith(path))
-//         {
-//            File file = context.getOpenedFiles().get(key);
-//            if (file.isContentChanged() || file.isPropertiesChanged())
-//            {
-//               return true;
-//            }
-//         }
-//      }
-//
-//      return false;
-//   }
-
    private boolean saveNextOpenedFile(String path)
    {
       for (String key : context.getOpenedFiles().keySet())
@@ -213,7 +196,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             File file = context.getOpenedFiles().get(key);
             if (file.isContentChanged())
             {
-               System.out.println("save opened file: " + file.getName());
                VirtualFileSystem.getInstance().saveContent(file);
                return true;
             }
@@ -274,7 +256,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       }
 
       href = href.substring(0, href.lastIndexOf("/") + 1);
-      System.out.println("folder to refresh > " + href);
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), event.getItem()));
 
       display.closeForm();

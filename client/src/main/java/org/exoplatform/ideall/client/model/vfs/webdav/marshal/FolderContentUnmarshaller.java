@@ -73,16 +73,12 @@ public class FolderContentUnmarshaller implements Unmarshallable
 //      }
 
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
-
-      //System.out.println("parsing > " + body);
       
       PropfindResponse response = PropfindResponse.parse(body);
 
       Resource resource = response.getResource();
       folder.setChildren(new ArrayList<Item>());
       
-      System.out.println(">>>>>>>>>>>>>>>>>. HREF > " + resource.getHref());
-
       if (resource == null)
       {
          return;

@@ -244,7 +244,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void updateTabTitle(String href)
    {
-      System.out.println("update tab title for > " + href);
       EditorTab tab = getEditorTab(href);
       tabSet.setTabTitle((Tab)tab, tab.getTabTitle());
    }

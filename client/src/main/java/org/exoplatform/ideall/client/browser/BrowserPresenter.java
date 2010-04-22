@@ -271,9 +271,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-      
-      System.out.println("folder refreshed: " + event.getFolder().getHref());      
-      
+            
       if (itemToSelect != null)
       {
          display.selectItem(itemToSelect);

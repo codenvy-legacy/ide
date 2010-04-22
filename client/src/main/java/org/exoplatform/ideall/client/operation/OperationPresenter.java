@@ -172,10 +172,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       String domain = null;
       
       String href = context.getActiveFile().getHref();
-      System.out.println("href to: " + href);
       href = href.replace(Configuration.getInstance().getContext(),
          Configuration.getInstance().getPublicContext());
-      System.out.println("href after: " + href);
       
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href),
          owner, viewer, moduleId, container, domain);

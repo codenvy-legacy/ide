@@ -243,7 +243,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       TreeNode node = getNodeByHref(href);
       if (node == null)
       {
-         System.out.println("Node " + href + " not found!");;
          return;
       }
       

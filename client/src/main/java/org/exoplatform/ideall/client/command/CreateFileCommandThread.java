@@ -77,7 +77,6 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
       String fileName = "Untitled file." + extension;
       int index = 1;
-      System.out.println("File path: " + href + fileName);
       while (context.getOpenedFiles().get(href + fileName) != null)
       {
          fileName = "Untitled file " + index + "." + extension;

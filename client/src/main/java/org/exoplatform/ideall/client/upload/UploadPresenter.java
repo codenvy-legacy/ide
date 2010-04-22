@@ -381,7 +381,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private void completeUpload()
    {
-      System.out.println("UploadPresenter.completeUpload()");
       display.closeDisplay();
       
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
@@ -389,9 +388,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       if (item instanceof File) {
          href = href.substring(0,href.lastIndexOf("/") + 1);
       }
-      
-      System.out.println("href > " + href);
-      
+            
       Folder folder = new Folder(href);
       eventBus.fireEvent(new RefreshBrowserEvent(folder));      
    }

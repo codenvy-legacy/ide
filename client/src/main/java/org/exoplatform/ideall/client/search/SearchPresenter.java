@@ -152,8 +152,6 @@ public class SearchPresenter
          path = "/" + path;
       }
 
-      System.out.println("path [" + path + "]");
-
       Folder folder = new Folder(context.getEntryPoint());
       VirtualFileSystem.getInstance().search(folder, content, contentType, path);
       display.closeForm();

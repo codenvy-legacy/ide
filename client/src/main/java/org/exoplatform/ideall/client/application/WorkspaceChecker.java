@@ -65,12 +65,9 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
 
    public void onError(ExceptionThrownEvent event)
    {
-      System.out.println("error: " + event.getError());      
       event.getError().printStackTrace();
       
       ServerException e = (ServerException)event.getError();
-      System.out.println("STATUS: " + e.getHTTPStatus());
-      System.out.println("STATUS TEXT: " + e.getStatusText());
       
       handlers.removeHandlers();
       
@@ -84,7 +81,6 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
 
-      System.out.println("items received for: " + event.getItem().getHref());
       context.setEntryPoint(event.getItem().getHref());
 
       new ApplicationStateLoader(eventBus, context).loadState();

@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
@@ -58,7 +59,6 @@ public class TemplateServiceImpl extends TemplateService
    public void createTemplate(Template template)
    {
       String templateName = template.getName();
-
       String url =
          Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
             + CONTEXT + "/" + templateName + "/?createIfNotExist=true";

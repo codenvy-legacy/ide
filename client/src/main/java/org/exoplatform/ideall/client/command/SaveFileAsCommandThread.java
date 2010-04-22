@@ -96,7 +96,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
             String pathToSave =
                getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + value;
-            System.out.println(pathToSave);
             File newFile = new File(pathToSave);
             newFile.setContent(file.getContent());
             newFile.setContentType(file.getContentType());
@@ -129,7 +128,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      System.out.println("file content saved: " + event.getFile().getHref());
       if (event.isNewFile())
       {
          VirtualFileSystem.getInstance().getProperties(event.getFile());
