@@ -38,5 +38,7 @@ public interface Const
    public static final String TEMPLATE = "template";
    
    public static final String TEMPLATES = "templates";
+   
+   public static final String NAME = "name";
 
 }

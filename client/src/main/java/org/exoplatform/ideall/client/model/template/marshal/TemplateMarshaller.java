@@ -38,21 +38,23 @@ public class TemplateMarshaller implements Marshallable, Const
    {
       this.template = template;
    }
-   
+
    public static native String javaScriptEncodeURIComponent(String text) /*-{
-      return encodeURIComponent(text);
-   }-*/;   
+        return encodeURIComponent(text);
+     }-*/;
 
    public String marshal()
    {
       String xml = "<" + TEMPLATE + ">";
 
-      xml += "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
+      xml += "<" + NAME + ">" + javaScriptEncodeURIComponent(template.getName()) + "</" + NAME + ">";
+      xml +=
+         "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
       xml += "<" + MIME_TYPE + ">" + javaScriptEncodeURIComponent(template.getMimeType()) + "</" + MIME_TYPE + ">";
       xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(template.getContent()) + "</" + CONTENT + ">";
 
       xml += "</" + TEMPLATE + ">";
-
+      System.out.println(javaScriptEncodeURIComponent(template.getDescription()));
       return xml;
    }
 

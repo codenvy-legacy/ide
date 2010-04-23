@@ -45,6 +45,8 @@ public class TemplateServiceImpl extends TemplateService
 
    private static final String CONTEXT = "/templates";
 
+   private static final String TEMPLATE = "template-";
+   
    private HandlerManager eventBus;
    
    private Loader loader;
@@ -58,10 +60,9 @@ public class TemplateServiceImpl extends TemplateService
    @Override
    public void createTemplate(Template template)
    {
-      String templateName = template.getName();
       String url =
          Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
-            + CONTEXT + "/" + templateName + "/?createIfNotExist=true";
+            + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
 
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
