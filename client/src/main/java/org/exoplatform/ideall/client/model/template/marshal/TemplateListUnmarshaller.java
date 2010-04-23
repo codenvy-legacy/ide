@@ -41,7 +41,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 {
 
    private HandlerManager eventBus;
-   
+
    private TemplateList templateList;
 
    public TemplateListUnmarshaller(HandlerManager eventBus, TemplateList templateList)
@@ -49,10 +49,10 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       this.templateList = templateList;
       this.eventBus = eventBus;
    }
-   
+
    public static native String javaScriptDecodeURIComponent(String text) /*-{
-      return decodeURIComponent(text);
-   }-*/;   
+            return decodeURIComponent(text);
+         }-*/;
 
    public void unmarshal(String body) throws UnmarshallerException
    {
@@ -70,20 +70,26 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       catch (Exception exc)
       {
-        String message = "Can't parse template!";
-        throw new UnmarshallerException(message);
+         String message = "Can't parse template!";
+         throw new UnmarshallerException(message);
       }
 
    }
 
    private void parseTemplate(Node templateNode)
    {
-      String name = templateNode.getNodeName();
-
       Node node = getChildNode(templateNode, TEMPLATE);
 
+      Node nameNode = getChildNode(node, NAME);
+
+      String name = javaScriptDecodeURIComponent(nameNode.getChildNodes().item(0).getNodeValue());
+
       Node descriptionNode = getChildNode(node, DESCRIPTION);
-      String description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
+      String description = "";
+      if (descriptionNode.getChildNodes().getLength() != 0)
+      {
+         description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
+      }
 
       Node mimeTypeNode = getChildNode(node, MIME_TYPE);
       String mimeType = javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());
