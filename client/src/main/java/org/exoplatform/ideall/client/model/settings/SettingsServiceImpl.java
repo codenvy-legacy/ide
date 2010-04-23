@@ -46,8 +46,6 @@ import com.google.gwt.user.client.Random;
 public class SettingsServiceImpl extends SettingsService
 {
 
-   private static final String CONTEXT = "/settings";
-
    private HandlerManager eventBus;
    
    private Loader loader;

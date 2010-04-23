@@ -87,7 +87,6 @@ public class GadgetServiceImpl extends GadgetService
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
          .data(marshaler).send(callback);
-
    }
 
    @Override

@@ -17,12 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.application.component;
-
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+package org.exoplatform.ideall.client.statusbar;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,26 +29,11 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public abstract class AbstractComponentInitializer
+public class IDEStatusBar extends Layout
 {
-
-   protected HandlerManager eventBus;
-
-   protected ApplicationContext context;
-
-   protected CommandRegistration addCommand(Command command)
-   {
-      context.getCommands().add(command);
-      return new CommandRegistration(command, context);
+   
+   public IDEStatusBar(HandlerManager eventBus) {
+      
    }
-
-   public void initializeComponent(HandlerManager eventBus, ApplicationContext context)
-   {
-      this.eventBus = eventBus;
-      this.context = context;
-      onItitialize();
-   }
-
-   protected abstract void onItitialize();
 
 }

@@ -34,16 +34,14 @@ import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
 import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
-import org.exoplatform.ideall.client.common.command.file.OpenInEditorCommand;
-import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
 import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
+import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileAsCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
-import org.exoplatform.ideall.client.common.command.file.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFile;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
@@ -56,8 +54,12 @@ import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileComm
 import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
+import org.exoplatform.ideall.client.common.command.file.upload.OpenLocalFileCommand;
+import org.exoplatform.ideall.client.common.command.file.upload.UploadFile;
+import org.exoplatform.ideall.client.common.command.file.upload.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
+import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -109,10 +111,11 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
-      
-      addCommand(new OpenInEditorCommand()).disable().hide();
-      
+      addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
+
+      addCommand(new UploadFileCommand()).disable().hide();
+      addCommand(new OpenLocalFileCommand()).disable().hide();
+
       /*
        * DOWNLOAD GROUP
        */
@@ -176,6 +179,14 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
       newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
       newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
+
+      /*
+       * STATUS BAR
+       * */
+
+      addCommand(new NavigatorStatusControl(eventBus, context));
+      context.getStatusBarItems().add(NavigatorStatusControl.ID);
+
    }
 
 }

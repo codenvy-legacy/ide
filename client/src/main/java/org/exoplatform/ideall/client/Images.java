@@ -79,6 +79,10 @@ public interface Images
       
       public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
       
+      public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
+      
+      public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
+      
       /*
        * HTML
        */
@@ -202,6 +206,8 @@ public interface Images
       public static final String CSS = imageUrl + "filetype/css.png";
 
       public static final String GADGET = imageUrl + "filetype/gadget.png";
+      
+      public static final String FOLDER = imageUrl + "filetype/folder_closed.png";
 
    }
 

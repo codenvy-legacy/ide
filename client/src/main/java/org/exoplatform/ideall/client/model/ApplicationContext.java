@@ -71,7 +71,6 @@ public class ApplicationContext
 
    private String entryPoint;
 
-
    /*
     * Last entered value in Groovy script output form
     */
@@ -102,6 +101,11 @@ public class ApplicationContext
     * Uses for storing default state of toolbar
     */
    private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
+
+   /*
+    * Store status bar control id's here
+    */
+   private List<String> statusBarItems = new ArrayList<String>();
 
    /**
     * Uses for storing the current state of defaults editors
@@ -184,14 +188,6 @@ public class ApplicationContext
    {
       return openedEditors;
    }
-
-   //   /**
-   //    * @return the selectedItems
-   //    */
-   //   public HashMap<String, List<Item>> getSelectedItems()
-   //   {
-   //      return selectedItems;
-   //   }
 
    /**
     * @return the selectedItems
@@ -357,6 +353,11 @@ public class ApplicationContext
    public void setCache(Item cache)
    {
       this.cached = cache;
+   }
+
+   public List<String> getStatusBarItems()
+   {
+      return statusBarItems;
    }
 
 }

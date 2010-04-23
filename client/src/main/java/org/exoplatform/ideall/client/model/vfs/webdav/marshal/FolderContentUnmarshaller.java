@@ -66,14 +66,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
    private void parseFolderContent(String body)
    {
-//      String context = Configuration.getInstance().getContext() + "/jcr";
-//      if (context.endsWith("/"))
-//      {
-//         context = context.substring(0, context.length() - 1);
-//      }
-
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
-      
+
       PropfindResponse response = PropfindResponse.parse(body);
 
       Resource resource = response.getResource();
@@ -87,20 +81,6 @@ public class FolderContentUnmarshaller implements Unmarshallable
       for (Resource child : resource.getChildren())
       {
          String href = child.getHref();
-//         String path = 
-//         if (path.indexOf(context) >= 0)
-//         {
-//            path = path.substring(path.indexOf(context) + context.length());
-//         }
-//         else
-//         {
-//            continue;
-//         }
-//
-//         if (path.endsWith("/"))
-//         {
-//            path = path.substring(0, path.length() - 1);
-//         }
 
          Item item;
          if (child.isCollection())

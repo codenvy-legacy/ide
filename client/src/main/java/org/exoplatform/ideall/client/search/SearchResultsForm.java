@@ -81,5 +81,14 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
    {
       return searchItemTreeGrid.getSelectedItems();
    }
+   
+   public void selectItem(String href)
+   {
+      searchItemTreeGrid.selectItem(href);
+   }
+   
+   public void deselectAllItems() {
+      searchItemTreeGrid.deselectAllRecords();
+   }
 
 }

@@ -50,6 +50,10 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       TreeGridItem<Item> getSearchResultTree();
 
       List<Item> getSelectedItems();
+      
+      void selectItem(String href);
+      
+      void deselectAllItems();
 
    }
 
@@ -59,7 +63,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
 
    private Display display;
 
-   private List<Item> selectedItem;
+   private List<Item> selectedItems;
 
    private Folder searchresult;
 
@@ -95,15 +99,26 @@ public class SearchResultsPresenter implements PanelSelectedHandler
          }
       });
 
+      searchresult.setIcon(Images.FileTypes.WORKSPACE);
       if (searchresult.getChildren() != null && !searchresult.getChildren().isEmpty())
       {
-         searchresult.setIcon(Images.FileTypes.WORKSPACE);
          display.getSearchResultTree().setValue(searchresult);
+         display.selectItem(searchresult.getHref());
+      } else {
+         display.getSearchResultTree().setValue(searchresult);
+         display.deselectAllItems();
       }
+
+      selectedItems = display.getSelectedItems();
+      onItemSelected();
    }
 
    public void destroy()
    {
+      if (updateSelectionTimer != null) {
+         updateSelectionTimer.cancel();
+      }
+      
       updateSelectionTimer = null;
       handlers.removeHandlers();
    }
@@ -114,12 +129,12 @@ public class SearchResultsPresenter implements PanelSelectedHandler
    protected void onBrowserDoubleClicked()
    {
 
-      if (selectedItem == null || context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      if (selectedItems == null || context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
       {
          return;
       }
 
-      Item item = selectedItem.get(0);
+      Item item = selectedItems.get(0);
       if (item instanceof File)
       {
          context.setSelectedEditorDescription(null);
@@ -149,12 +164,12 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       @Override
       public void run()
       {
-         selectedItem = display.getSelectedItems();
+         selectedItems = display.getSelectedItems();
 
          context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItem);
+         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
 
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItem));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
       }
 
    };

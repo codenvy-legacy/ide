@@ -53,12 +53,12 @@ public class ExceptionThrownEventHandlerInitializer
       
       if (GWT.isScript()) {
          // browser
-         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new IDEExceptionThrownEventHandler());
       } else {
          /*
           * shell mode
           */
-         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
+         handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new IDEExceptionThrownEventHandler());
          //handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new SmartGWTExceptionThrownHandlerImpl());         
       }
    }

@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTMenuWrapper;
+import org.exoplatform.gwtframework.ui.client.smartgwt.GWTStatusBarWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
@@ -88,7 +89,9 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    private OperationForm operationForm;
 
-   protected StatusBarForm statusBar;
+   //protected StatusBarForm statusBar;
+
+   protected GWTStatusBarWrapper statusBar;
 
    /*
     * PERSPECTIVE STATE
@@ -165,7 +168,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       operationForm = new OperationForm(eventBus, context);
       operationForm.setHeight(180);
       operationForm.hide();
-      verticalSplitLayout.addMember(operationForm);      
+      verticalSplitLayout.addMember(operationForm);
 
       verticalSplitLayout.addMouseDownHandler(new MouseDownHandler()
       {
@@ -183,7 +186,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          }
       });
 
-      statusBar = new StatusBarForm(eventBus, context);
+      statusBar = new GWTStatusBarWrapper(eventBus);
+      //statusBar = new StatusBarForm(eventBus, context);
       addMember(statusBar);
    }
 

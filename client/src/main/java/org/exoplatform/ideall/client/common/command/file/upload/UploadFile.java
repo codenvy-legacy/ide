@@ -17,12 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.application.component;
+package org.exoplatform.ideall.client.common.command.file.upload;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.application.component.IDECommand;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,26 +29,26 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public abstract class AbstractComponentInitializer
+public class UploadFile extends IDECommand
 {
+   
+   public static final String ID = "File/Upload";
+   
+   public static final String TITLE = "Upload";
 
-   protected HandlerManager eventBus;
-
-   protected ApplicationContext context;
-
-   protected CommandRegistration addCommand(Command command)
+   public UploadFile()
    {
-      context.getCommands().add(command);
-      return new CommandRegistration(command, context);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.UPLOAD_MENU);
    }
-
-   public void initializeComponent(HandlerManager eventBus, ApplicationContext context)
+   
+   @Override
+   protected void onInitializeApplication()
    {
-      this.eventBus = eventBus;
-      this.context = context;
-      onItitialize();
-   }
-
-   protected abstract void onItitialize();
+      setVisible(true);
+      setEnabled(true);
+   }   
 
 }

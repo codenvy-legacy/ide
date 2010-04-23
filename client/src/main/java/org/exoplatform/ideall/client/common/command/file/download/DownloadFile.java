@@ -35,7 +35,7 @@ public class DownloadFile extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.BLANK);
+      setIcon(Images.MainMenu.DOWNLOAD_MENU);
    }
 
    @Override

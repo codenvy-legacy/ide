@@ -21,6 +21,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
+import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
@@ -99,7 +100,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        * Updating top menu
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(context.getCommands()));
-
+      eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), context.getCommands()));
       
       /*
        * Initializing handlers of menu items
