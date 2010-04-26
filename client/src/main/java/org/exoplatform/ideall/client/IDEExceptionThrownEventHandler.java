@@ -59,6 +59,12 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
          }
          else
          {
+            if (event.getErrorMessage() != null) {
+               
+            } else {
+               
+            }
+            
             String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
             //Dialogs.showError(serverException.getHTTPStatus(), serverException.getStatusText());            
             Dialogs.getInstance().showError(html);

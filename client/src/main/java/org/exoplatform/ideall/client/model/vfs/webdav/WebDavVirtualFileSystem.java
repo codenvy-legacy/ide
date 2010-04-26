@@ -17,6 +17,7 @@
 
 package org.exoplatform.ideall.client.model.vfs.webdav;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -50,6 +51,7 @@ import org.exoplatform.ideall.client.model.vfs.webdav.marshal.MoveResponseUnmars
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchRequestMarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchResultUnmarshaller;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
@@ -110,6 +112,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
           return encodeURI(text);
        }-*/;
 
+   private ExceptionThrownEvent getErrorEvent(String message) {
+      return new ExceptionThrownEvent(message);
+   }
+   
    @Override
    public void getContent(File file)
    {
@@ -117,9 +123,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
       FileContentReceivedEvent event = new FileContentReceivedEvent(file);
+      
+      String errorMessage = "Service is not deployed.<br>Resource not found.";      
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
-
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      
       loader.setMessage(Messages.GET_FILE_CONTENT);
 
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)

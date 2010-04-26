@@ -20,8 +20,6 @@
 package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.handler.ExceptionThrownHandlerImpl;
-import org.exoplatform.gwtframework.ui.client.smartgwt.handler.SmartGWTExceptionThrownHandlerImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -41,20 +39,18 @@ public class ExceptionThrownEventHandlerInitializer
 
    public static void initialize(HandlerManager eventBus)
    {
-//      if (eventBus.getHandlerCount(ExceptionThrownEvent.TYPE) > 0)
-//      {
-//         Window.alert("present " + eventBus.getHandlerCount(ExceptionThrownEvent.TYPE));
-//         return;
-//      }
-
-      if (handler != null) {
+      if (handler != null)
+      {
          return;
       }
-      
-      if (GWT.isScript()) {
+
+      if (GWT.isScript())
+      {
          // browser
          handler = eventBus.addHandler(ExceptionThrownEvent.TYPE, new IDEExceptionThrownEventHandler());
-      } else {
+      }
+      else
+      {
          /*
           * shell mode
           */
