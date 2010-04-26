@@ -83,7 +83,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      // TODO Auto-generated method stub
       if (event.getItem() instanceof File)
       {
          handlers.addHandler(FileContentReceivedEvent.TYPE, this);

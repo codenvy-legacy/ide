@@ -17,12 +17,10 @@
 package org.exoplatform.ideall.client.operation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
-import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -53,7 +51,7 @@ import com.google.gwt.http.client.URL;
  */
 
 public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
-   PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler, SaveFileAsHandler
+   PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler
 {
 
    public interface Display
@@ -72,7 +70,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       void changeActiveFile(File file);
 
       void showGadget(GadgetMetadata metadata);
-      
+
       void closeGadgetPreviewTab();
 
    }
@@ -109,7 +107,6 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       handlers.addHandler(GadgetMetadaRecievedEvent.TYPE, this);
       handlers.addHandler(SecurityTokenRecievedEvent.TYPE, this);
 
-      handlers.addHandler(SaveFileAsEvent.TYPE, this);
    }
 
    public void onShowProperties(ShowPropertiesEvent event)
@@ -122,7 +119,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    {
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
-      
+
       if (event.getFile() == null)
       {
          display.closePropertiesTab();
@@ -143,16 +140,16 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    {
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
-      
+
       File file = context.getActiveFile();
       if (file.isNewFile())
       {
          Dialogs.getInstance().showInfo("You should save the file!");
          return;
       }
-      
+
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      
+
       if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
       {
          previewGadget();
@@ -170,13 +167,11 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       Long moduleId = 0L;
       String container = "default";
       String domain = null;
-      
+
       String href = context.getActiveFile().getHref();
-      href = href.replace(Configuration.getInstance().getContext(),
-         Configuration.getInstance().getPublicContext());
-      
-      TokenRequest tokenRequest = new TokenRequest(URL.encode(href),
-         owner, viewer, moduleId, container, domain);
+      href = href.replace(Configuration.getInstance().getContext(), Configuration.getInstance().getPublicContext());
+
+      TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest);
    }
 
@@ -189,11 +184,6 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    public void onMetadataRecieved(GadgetMetadaRecievedEvent event)
    {
       display.showGadget(event.getMetadata());
-   }
-
-   public void onSaveFileAs(SaveFileAsEvent event)
-   {
-      display.closePropertiesTab();
    }
 
 }
