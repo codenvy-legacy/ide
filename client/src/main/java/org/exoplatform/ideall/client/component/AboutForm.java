@@ -64,8 +64,6 @@ public class AboutForm extends DialogWindow
 
    private final String WIKI;
 
-   private final String SRC;
-
    private final String COPYRIGHT = "(c) ";
 
    private final String COMPANY_NAME = "eXo Platform SAS";
@@ -95,8 +93,6 @@ public class AboutForm extends DialogWindow
       VERSION = "Version: " + buildNumber.version();
       BUILD_TIME = "Build Time: " + buildNumber.buildTime();
       WIKI = buildNumber.wiki();
-      SRC = buildNumber.source();
-      
       setShowMinimizeButton(false);
       setTitle(ABOUT);
 
@@ -174,8 +170,7 @@ public class AboutForm extends DialogWindow
       infoLabel.setCanSelectText(true);
       infoLabel.setValue("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
          + "&nbsp;" + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + "<a href=\"" + WIKI
-         + " \" target=\"_blank\" >Wiki</a>" + "<br>" + "<b>"   + "<a href=\"" + SRC
-         + " \" target=\"_blank\">Code Source</a>" + "<br>" + "</b>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
+         + " \" target=\"_blank\" >Wiki</a>" + "<br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
          + BUILD_TIME + "</b>");
       infoLayout.addMember(infoLabel);
       return infoLayout;

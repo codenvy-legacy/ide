@@ -4,50 +4,42 @@ package org.exoplatform.ideall.client;
  * Interface to represent the messages contained in resource bundle:
  * 	/home/vetal/eXo/eXoRpojects/exo-int/web-tools/trunk/applications/gwt/devtool/src/main/resources/org/exoplatform/gadgets/devtool/client/BuildNumber.properties'.
  */
-public interface BuildNumber extends com.google.gwt.i18n.client.Messages {
-  
-  /**
-   * Translated "4417".
-   * 
-   * @return translated "4417"
-   */
-  @DefaultMessage("")
-  @Key("buildNumber")
-  String buildNumber();
+public interface BuildNumber extends com.google.gwt.i18n.client.Messages
+{
 
-  /**
-   * Translated "2009-12-21 15:05:49".
-   * 
-   * @return translated "2009-12-21 15:05:49"
-   */
-  @DefaultMessage("")
-  @Key("buildTime")
-  String buildTime();
+   /**
+    * Translated "4417".
+    * 
+    * @return translated "4417"
+    */
+   @DefaultMessage("")
+   @Key("buildNumber")
+   String buildNumber();
 
-  /**
-   * Translated "\"http://svn.exoplatform.org/exo-int/web-tools/trunk/applications/gwt/devtool\"".
-   * 
-   * @return translated "\"http://svn.exoplatform.org/exo-int/web-tools/trunk/applications/gwt/devtool\""
-   */
-  @DefaultMessage("")
-  @Key("source")
-  String source();
+   /**
+    * Translated "2009-12-21 15:05:49".
+    * 
+    * @return translated "2009-12-21 15:05:49"
+    */
+   @DefaultMessage("")
+   @Key("buildTime")
+   String buildTime();
 
-  /**
-   * Translated "1.0-SNAPSHOT".
-   * 
-   * @return translated "1.0-SNAPSHOT"
-   */
-  @DefaultMessage("1.0-SNAPSHOT")
-  @Key("version")
-  String version();
+   /**
+    * Translated "1.0-SNAPSHOT".
+    * 
+    * @return translated "1.0-SNAPSHOT"
+    */
+   @DefaultMessage("1.0-SNAPSHOT")
+   @Key("version")
+   String version();
 
-  /**
-   * Translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\"".
-   * 
-   * @return translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\""
-   */
-  @DefaultMessage("")
-  @Key("wiki")
-  String wiki();
+   /**
+    * Translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\"".
+    * 
+    * @return translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\""
+    */
+   @DefaultMessage("")
+   @Key("wiki")
+   String wiki();
 }
