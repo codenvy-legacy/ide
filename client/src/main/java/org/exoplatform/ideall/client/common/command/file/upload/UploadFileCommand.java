@@ -96,8 +96,6 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      System.out.println("UploadFileCommand.onItemsSelected()");
-
       selectedItems = event.getSelectedItems();
       updateEnabling();
    }

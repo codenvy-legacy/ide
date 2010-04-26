@@ -97,7 +97,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public static final String CONTEXT = "/jcr";
 
    private HandlerManager eventBus;
-   
+
    private Loader loader;
 
    public WebDavVirtualFileSystem(HandlerManager eventbus, Loader loader)
@@ -107,8 +107,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    public static native String javaScriptEncodeURI(String text) /*-{
-        return encodeURI(text);
-     }-*/;
+          return encodeURI(text);
+       }-*/;
 
    @Override
    public void getContent(File file)
@@ -122,8 +122,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.GET_FILE_CONTENT);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET).send(
-         callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)
+         .send(callback);
    }
 
    @Override
@@ -139,8 +139,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
-         .header(HTTPHeader.DEPTH, "1").send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "1").send(callback);
    }
 
    @Override
@@ -154,8 +154,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.CREATE_FOLDER);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL).header(
-         HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
+         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
    @Override
@@ -174,8 +174,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       {
          loader.setMessage(Messages.DELETE_FOLDER);
       }
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).header(
-         HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
+         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
    @Override
@@ -191,9 +191,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT).header(
-         HTTPHeader.CONTENT_TYPE, file.getContentType()).header(HTTPHeader.CONTENT_NODETYPE,
-         file.getJcrContentNodeType()).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         .header(HTTPHeader.CONTENT_TYPE, file.getContentType()).header(HTTPHeader.CONTENT_NODETYPE,
+            file.getJcrContentNodeType()).data(marshaller).send(callback);
    }
 
    @Override
@@ -209,10 +209,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.GET_PROPERTIES);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
-         .header(HTTPHeader.DEPTH, "0")
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE,
+         HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").send(callback);
    }
 
    @Override
@@ -227,8 +225,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.SAVE_PROPERTIES);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE,
+         HTTPMethod.PROPPATCH).header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(
+         callback);
    }
 
    @Override
@@ -243,8 +242,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.SEARCH);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH).header(
-         HTTPHeader.CONTENT_TYPE, "text/xml").data(requestMarshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH)
+         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(requestMarshaller).send(callback);
    }
 
    @Override
@@ -259,8 +258,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
          loader.setMessage(Messages.MOVE_FILE);
 
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destination).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
       else
       {
@@ -278,8 +278,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
          loader.setMessage(Messages.MOVE_FOLDER);
 
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
-            .header(HTTPHeader.DESTINATION, destination).header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
 
    }
@@ -303,9 +304,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
          loader.setMessage(Messages.COPY_FILE);
 
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
-            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller)
-            .send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY).header(HTTPHeader.DESTINATION, destinationURL)
+            .header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller).send(callback);
       }
       else
       {
@@ -323,9 +324,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
          loader.setMessage(Messages.COPY_FOLDER);
 
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
-            .header(HTTPHeader.DESTINATION, destinationURL).header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller)
-            .send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY).header(HTTPHeader.DESTINATION, destinationURL)
+            .header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller).send(callback);
       }
    }
 

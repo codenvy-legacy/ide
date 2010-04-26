@@ -96,9 +96,14 @@ public class SearchResultUnmarshaller implements Unmarshallable
 
    }
 
+   public static native String javaScriptDecodeURI(String url) /*-{
+        return decodeURI(url);
+     }-*/;
+
    private void addResource(Folder folder, Resource resource, String context)
    {
       String path = resource.getHref();
+      path = javaScriptDecodeURI(path);
       path = Utils.unescape(path);
       Item item;
       if (resource.isCollection())

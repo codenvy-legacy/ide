@@ -57,7 +57,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
       catch (Exception exc)
       {
          exc.printStackTrace();
-         
+
          String message = "Can't parse folder content at <b>" + folder.getHref() + "</b>!";
          throw new UnmarshallerException(message);
       }
@@ -72,7 +72,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
       Resource resource = response.getResource();
       folder.setChildren(new ArrayList<Item>());
-      
+
       if (resource == null)
       {
          return;
