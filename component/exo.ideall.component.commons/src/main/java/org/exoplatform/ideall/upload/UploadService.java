@@ -20,6 +20,7 @@
 package org.exoplatform.ideall.upload;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -75,6 +76,8 @@ public class UploadService
          InputStream inputStream = fileItem.getInputStream();
 
          String location = requestItems.get(FormFields.LOCATION).getString();
+         
+         location = URLDecoder.decode(location, "UTF-8");
 
          String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
 
