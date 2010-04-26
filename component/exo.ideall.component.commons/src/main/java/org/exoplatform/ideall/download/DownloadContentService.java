@@ -205,8 +205,6 @@ public class DownloadContentService implements Const, ResourceContainer
 
       repoPath = repoPath.substring(href.length());
 
-      System.out.println("repopath > " + repoPath);
-
       if (repoPath.startsWith("/"))
       {
          repoPath = repoPath.substring(1);
