@@ -19,6 +19,9 @@ package org.exoplatform.ideall.client.operation.properties;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler;
 
@@ -31,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter implements ItemPropertiesSavedHandler
+public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler
 {
 
    public interface Display
@@ -60,6 +63,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler
    {
       display = d;
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -67,18 +71,27 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler
       handlers.removeHandlers();
    }
 
-   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   private void refreshProperties(Item item)
    {
-      if (!(event.getItem() instanceof File))
+      if (!(item instanceof File))
       {
          return;
       }
-
-      File file = (File)event.getItem();
-      if (context.getActiveFile() == file)
+      File file = (File)item;
+      if (context.getActiveFile().getHref().equals(file.getHref()))
       {
          display.refreshProperties(file);
       }
+   }
+
+   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   {
+      refreshProperties(event.getItem());
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      refreshProperties(event.getItem());
    }
 
 }

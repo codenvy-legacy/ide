@@ -27,11 +27,12 @@ import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -40,7 +41,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler
+public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
+   ItemPropertiesReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -62,11 +64,11 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    {
       File file = event.getFile();
 
-//      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
-//      {
-//         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
-//         return;
-//      }
+      //      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
+      //      {
+      //         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
+      //         return;
+      //      }
 
       if (file.getContent() != null)
       {
@@ -74,9 +76,20 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          return;
       }
 
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getContent(event.getFile());
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      VirtualFileSystem.getInstance().getProperties(file);
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      // TODO Auto-generated method stub
+      if (event.getItem() instanceof File)
+      {
+         handlers.addHandler(FileContentReceivedEvent.TYPE, this);
+         VirtualFileSystem.getInstance().getContent((File)event.getItem());
+      }
+
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)

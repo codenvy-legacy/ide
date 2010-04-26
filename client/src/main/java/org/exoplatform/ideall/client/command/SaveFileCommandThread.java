@@ -93,7 +93,8 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
       }
       else
       {
-         eventBus.fireEvent(new FileSavedEvent((File)event.getFile(), null));
+         eventBus.fireEvent(new FileSavedEvent(event.getFile(), null));
+         VirtualFileSystem.getInstance().getProperties(event.getFile());
          handlers.removeHandlers();
       }
    }
@@ -102,6 +103,7 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
+      VirtualFileSystem.getInstance().getProperties(event.getItem());
    }
 
    public void onError(ExceptionThrownEvent event)
