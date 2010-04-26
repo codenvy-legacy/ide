@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ideall.client.model.settings;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -47,7 +48,7 @@ public class SettingsServiceImpl extends SettingsService
 {
 
    private HandlerManager eventBus;
-   
+
    private Loader loader;
 
    public SettingsServiceImpl(HandlerManager eventBus, Loader loader)
@@ -84,7 +85,10 @@ public class SettingsServiceImpl extends SettingsService
       ApplicationContextMarshaller marshaller = new ApplicationContextMarshaller(context);
       ApplicationContextSavedEvent event = new ApplicationContextSavedEvent(context);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+      String errorMessage = "Registry service is not deployed.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
          HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }

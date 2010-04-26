@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.discovery;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -54,7 +55,10 @@ public class DiscoveryServiceImpl extends DiscoveryService
       EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+      String errorMessage = "Service is not deployed.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

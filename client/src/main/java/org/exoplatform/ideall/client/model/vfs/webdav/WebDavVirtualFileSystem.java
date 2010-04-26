@@ -51,7 +51,6 @@ import org.exoplatform.ideall.client.model.vfs.webdav.marshal.MoveResponseUnmars
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchRequestMarshaller;
 import org.exoplatform.ideall.client.model.vfs.webdav.marshal.SearchResultUnmarshaller;
 
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
@@ -109,13 +108,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    public static native String javaScriptEncodeURI(String text) /*-{
-          return encodeURI(text);
-       }-*/;
+                    return encodeURI(text);
+                 }-*/;
 
-   private ExceptionThrownEvent getErrorEvent(String message) {
+   private ExceptionThrownEvent getErrorEvent(String message)
+   {
       return new ExceptionThrownEvent(message);
    }
-   
+
    @Override
    public void getContent(File file)
    {
@@ -123,12 +123,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
       FileContentReceivedEvent event = new FileContentReceivedEvent(file);
-      
-      String errorMessage = "Service is not deployed.<br>Resource not found.";      
+
+      String errorMessage = " Service is not deployed.<br>Resource not found.";
       ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-      
+
       loader.setMessage(Messages.GET_FILE_CONTENT);
 
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)
@@ -143,8 +143,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder);
 
+      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
 
@@ -159,7 +162,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
 
       loader.setMessage(Messages.CREATE_FOLDER);
 
@@ -173,7 +179,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       String url = javaScriptEncodeURI(item.getHref());
       ItemDeletedEvent event = new ItemDeletedEvent(item);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
 
       if (item instanceof File)
       {
@@ -196,7 +205,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       FileContentMarshaller marshaller = new FileContentMarshaller(file);
       FileContentSavedEvent event = new FileContentSavedEvent(file, isNewFile);
       FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
 
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
 
@@ -213,8 +226,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item);
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
       loader.setMessage(Messages.GET_PROPERTIES);
 
@@ -230,7 +246,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
       ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
       ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
 
       loader.setMessage(Messages.SAVE_PROPERTIES);
 
@@ -247,7 +267,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(eventBus, folder);
       SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+
+      String errorMessage = "Service is not deployed.<br>Search path does not exist.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
 
       loader.setMessage(Messages.SEARCH);
 
@@ -261,9 +285,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       String url = javaScriptEncodeURI(item.getHref());
       MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
       MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+
+      String errorMessage =
+         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
       if (item instanceof File)
       {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
 
          loader.setMessage(Messages.MOVE_FILE);
 
@@ -283,7 +312,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             destination += "/";
          }
 
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
 
          loader.setMessage(Messages.MOVE_FOLDER);
 
@@ -307,9 +336,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       CopyResponseUnmarshaller unmarshaller = new CopyResponseUnmarshaller();
       CopyRequestMarshaller marshaller = new CopyRequestMarshaller();
 
+      String errorMessage =
+         "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
       if (item instanceof File)
       {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+         AsyncRequestCallback callback =
+            new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
          loader.setMessage(Messages.COPY_FILE);
 
@@ -329,7 +363,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             destinationURL += "/";
          }
 
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, acceptStatus);
+         AsyncRequestCallback callback =
+            new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
          loader.setMessage(Messages.COPY_FOLDER);
 

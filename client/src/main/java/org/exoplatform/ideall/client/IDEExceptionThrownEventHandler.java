@@ -33,7 +33,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 
 public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
 {
-   
+
    /* 
     * Handler of any errors which throws by application
     * 
@@ -54,19 +54,15 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
                "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
                   + serverException.getMessage();
             Dialogs.getInstance().showError(html);
-            //            Dialogs.showError(serverException.getHTTPStatus(), serverException.getStatusText(), serverException
-            //               .getMessage());            
          }
          else
          {
-            if (event.getErrorMessage() != null) {
-               
-            } else {
-               
-            }
-            
             String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-            //Dialogs.showError(serverException.getHTTPStatus(), serverException.getStatusText());            
+
+            if (event.getErrorMessage() != null)
+            {
+               html += "<br><hr><br>Possible reasons:<br>" + event.getErrorMessage();
+            }
             Dialogs.getInstance().showError(html);
          }
       }
@@ -74,6 +70,6 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       {
          Dialogs.getInstance().showError(error.getMessage());
       }
-   }   
+   }
 
 }

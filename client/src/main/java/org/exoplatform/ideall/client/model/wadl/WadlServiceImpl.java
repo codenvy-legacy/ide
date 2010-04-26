@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model.wadl;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -49,9 +50,14 @@ public class WadlServiceImpl extends WadlService
    public void getWadl(String url)
    {
       WadlApplication application = new WadlApplication();
-      AsyncRequestCallback callback =
-         new AsyncRequestCallback(eventBus, new WadlServiceOutputUnmarshaller(eventBus, application),
-            new WadlServiceOutputReceivedEvent(application));
+      WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
+      WadlServiceOutputReceivedEvent event = new WadlServiceOutputReceivedEvent(application);
+      
+      String errorMessage = "Service is not deployed.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+
       AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
 
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);

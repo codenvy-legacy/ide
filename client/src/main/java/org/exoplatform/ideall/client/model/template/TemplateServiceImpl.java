@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ideall.client.model.template;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
@@ -46,9 +46,9 @@ public class TemplateServiceImpl extends TemplateService
    private static final String CONTEXT = "/templates";
 
    private static final String TEMPLATE = "template-";
-   
+
    private HandlerManager eventBus;
-   
+
    private Loader loader;
 
    public TemplateServiceImpl(HandlerManager eventBus, Loader loader)
@@ -67,7 +67,10 @@ public class TemplateServiceImpl extends TemplateService
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event);
+      String errorMessage = "Registry service is not deployed.<br>Template already exist.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
          HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }
