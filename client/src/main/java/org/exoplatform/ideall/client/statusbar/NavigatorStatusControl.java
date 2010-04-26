@@ -48,7 +48,7 @@ public class NavigatorStatusControl extends StatusTextCommand implements ItemsSe
       super(ID);
       setVisible(true);
       setEnabled(true);
-      setText("Obana!");
+      setText("&nbsp;");
 
       this.context = context;
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
