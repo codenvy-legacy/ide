@@ -88,6 +88,8 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       try
       {
          Editor editor = EditorUtil.getEditor(file.getContentType(), context);
+         System.out.println("content type - " + file.getContentType());
+         System.out.println("editor - " + editor.getDescription());
          eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
       }
       catch (EditorNotFoundException e)

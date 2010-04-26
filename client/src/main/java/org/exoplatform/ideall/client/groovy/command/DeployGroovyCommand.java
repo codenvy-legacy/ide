@@ -35,9 +35,9 @@ import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 
 public class DeployGroovyCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
-   
+
    private static final String ID = "Run/Deploy";
-   
+
    public DeployGroovyCommand()
    {
       super(ID);
@@ -61,13 +61,14 @@ public class DeployGroovyCommand extends IDECommand implements EditorActiveFileC
          setVisible(false);
          return;
       }
-      
+
       setVisible(true);
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
       {
          setVisible(true);
-         
+
          if (event.getFile().isNewFile())
          {
             setEnabled(false);

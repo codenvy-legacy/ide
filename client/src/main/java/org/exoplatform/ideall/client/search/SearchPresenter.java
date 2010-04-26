@@ -159,7 +159,7 @@ public class SearchPresenter
 
    private void fillMimeTypes()
    {
-      String[] mimeTypes = new String[9];
+      String[] mimeTypes = new String[10];
       mimeTypes[0] = MimeType.TEXT_HTML;
       mimeTypes[1] = MimeType.TEXT_CSS;
       mimeTypes[2] = MimeType.TEXT_PLAIN;
@@ -168,7 +168,8 @@ public class SearchPresenter
       mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
       mimeTypes[6] = MimeType.TEXT_XML;
       mimeTypes[7] = MimeType.SCRIPT_GROOVY;
-      mimeTypes[8] = MimeType.GOOGLE_GADGET;
+      mimeTypes[8] = MimeType.APPLICATION_GROOVY;
+      mimeTypes[9] = MimeType.GOOGLE_GADGET;
       display.setMimeTypeValues(mimeTypes);
    }
 

@@ -61,6 +61,7 @@ public class EditorUtil
 
       return editor;
    }
+   
    public static Editor getEditor(String mimeType, ApplicationContext context) throws EditorNotFoundException
    {
       

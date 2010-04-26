@@ -58,7 +58,8 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
          return;
       }
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
       {
          if (event.getFile().isNewFile())
          {
@@ -78,7 +79,7 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
          setVisible(false);
          setEnabled(false);
       }
-      
+
    }
 
 }

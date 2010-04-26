@@ -62,7 +62,8 @@ public class PreviewGroovyOutputCommand extends IDECommand implements EditorActi
          return;
       }
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          setEnabled(true);

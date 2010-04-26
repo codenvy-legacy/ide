@@ -44,13 +44,12 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
    private static final String ID = "Run/Set \\ Unset Autoload";
 
    private static final String TITLE_SET = "Set Autoload";
-   
+
    private static final String PROMPT_SET = "Set REST Service Autoload";
 
    private static final String TITLE_UNSET = "Unset Autoload";
-   
-   private static final String PROMPT_UNSET = "Unset REST Service Autoload";
 
+   private static final String PROMPT_UNSET = "Unset REST Service Autoload";
 
    public SetAutoloadCommand()
    {
@@ -86,7 +85,8 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
          return;
       }
 
-      if (!MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
+      if (!MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         && !MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
       {
          hideAutoload();
          return;

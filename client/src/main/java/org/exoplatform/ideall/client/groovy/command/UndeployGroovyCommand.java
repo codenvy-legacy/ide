@@ -62,7 +62,8 @@ public class UndeployGroovyCommand extends IDECommand implements EditorActiveFil
          return;
       }
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
+         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          if (event.getFile().isNewFile())

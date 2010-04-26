@@ -39,6 +39,7 @@ public class ImageUtil
       images.put(MimeType.TEXT_XML, Images.FileTypes.XML);
       images.put(MimeType.TEXT_PLAIN, Images.FileTypes.TXT);
       images.put(MimeType.SCRIPT_GROOVY, Images.FileTypes.GROOVY);
+      images.put(MimeType.APPLICATION_GROOVY, Images.FileTypes.GROOVY);
       images.put(MimeType.GOOGLE_GADGET, Images.FileTypes.GADGET);
       images.put(MimeType.APPLICATION_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
       images.put(MimeType.TEXT_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
