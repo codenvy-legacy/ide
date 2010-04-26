@@ -31,8 +31,6 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -41,8 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler
+public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler
 {
    private HandlerManager eventBus;
 
@@ -75,20 +72,9 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          open(file);
          return;
       }
-
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getProperties(file);
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      if (event.getItem() instanceof File)
-      {
-         handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().getContent((File)event.getItem());
-      }
-
+      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
+      VirtualFileSystem.getInstance().getContent(file);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
