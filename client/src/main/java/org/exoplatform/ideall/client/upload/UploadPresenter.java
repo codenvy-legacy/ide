@@ -37,6 +37,7 @@ import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -159,6 +160,14 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.disableUploadButton();
       display.disableMimeTypeSelect();
    }
+   
+   /**
+    * @param url
+    * @return result of javaScript function <code>encodeURI(url)</code>
+    */
+   public static native String encodeURI(String url) /*-{
+       return encodeURI(url);
+     }-*/;   
 
    private void uploadFile()
    {
@@ -181,6 +190,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
       href += fileName;
+      href = encodeURI(href);
       
       display.setHiddenFields(href, mimeType, "", contentNodeType);
       display.getUploadForm().submit();      
