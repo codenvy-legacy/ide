@@ -39,9 +39,9 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHand
 public class RedoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileContentReceivedHandler
 {
-   
+
    public static final String ID = "Edit/Redo Typing";
-   
+
    public static final String TITLE = "Redo Typing";
 
    public RedoTypingCommand()
@@ -69,13 +69,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
          setEnabled(false);
          return;
       }
-      
-      if(event.getFile().isNewFile())
-      {
-         setVisible(true);
-         setEnabled(false);
-         return;
-      }
+
       setVisible(true);
       setEnabled(event.hasRedoChanges());
    }

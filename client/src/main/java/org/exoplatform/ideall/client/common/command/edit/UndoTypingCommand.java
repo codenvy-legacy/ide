@@ -39,9 +39,9 @@ import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHand
 public class UndoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileContentReceivedHandler
 {
-   
+
    public static final String ID = "Edit/Undo Typing";
-   
+
    public static final String TITLE = "Undo Typing";
 
    public UndoTypingCommand()
@@ -66,13 +66,6 @@ public class UndoTypingCommand extends IDECommand implements EditorActiveFileCha
       if (event.getFile() == null)
       {
          setVisible(false);
-         setEnabled(false);
-         return;
-      }
-      
-      if(event.getFile().isNewFile())
-      {
-         setVisible(true);
          setEnabled(false);
          return;
       }
