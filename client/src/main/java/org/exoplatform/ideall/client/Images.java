@@ -189,9 +189,9 @@ public interface Images
    public interface FileTypes
    {
 
-      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
-
       public static final String DEFAULT = imageUrl + "filetype/default.png";
+
+      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
 
       public static final String TXT = imageUrl + "filetype/txt.png";
 
