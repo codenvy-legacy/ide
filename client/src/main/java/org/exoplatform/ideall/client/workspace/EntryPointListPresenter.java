@@ -20,11 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.discovery.Scheme;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointListPresenter
+public class EntryPointListPresenter implements FileContentSavedHandler
 {
 
    public interface Display
@@ -72,6 +81,8 @@ public class EntryPointListPresenter
 
    private EntryPoint selectedEntryPoint;
 
+   private boolean isSameEntryPoint = true;
+
    public EntryPointListPresenter(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
       this.context = context;
@@ -84,6 +95,7 @@ public class EntryPointListPresenter
    public void bindDisplay(Display d)
    {
       display = d;
+      handlers.addHandler(FileContentSavedEvent.TYPE, EntryPointListPresenter.this);
 
       display.disableOkButton();
 
@@ -110,7 +122,8 @@ public class EntryPointListPresenter
 
          public void onDoubleClick(DoubleClickEvent event)
          {
-            changeEntryPoint();
+            if (!isSameEntryPoint)
+               changeEntryPoint();
          }
       });
 
@@ -144,10 +157,13 @@ public class EntryPointListPresenter
          return;
       }
 
-      if (selectedItem == selectedEntryPoint)
+      if (selectedItem.getHref().equals(context.getEntryPoint()))
       {
+         display.disableOkButton();
+         isSameEntryPoint = true;
          return;
       }
+      isSameEntryPoint = false;
       selectedEntryPoint = selectedItem;
       display.enableOkButton();
    }
@@ -159,8 +175,98 @@ public class EntryPointListPresenter
 
    private void changeEntryPoint()
    {
+      if (context.getOpenedFiles().size() != 0)
+      {
+         Dialogs.getInstance().ask("IDEall", "All open file well being closed.<br>Do you wont to proceed?",
+            new BooleanValueReceivedCallback()
+            {
+
+               public void execute(Boolean value)
+               {
+                  if (value == null)
+                  {
+                     return;
+                  }
+                  if (value)
+                  {
+                     closeNextFile();
+                  }
+                  else
+                  {
+                     display.closeForm();
+                  }
+               }
+
+            });
+         return;
+      }
+      else
+      {
+         swichEntryPoint();
+      }
+   }
+
+   private void swichEntryPoint()
+   {
       display.closeForm();
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
+   }
+
+   private void closeNextFile()
+   {
+      if (context.getOpenedFiles().size() == 0)
+      {
+         swichEntryPoint();
+         return;
+      }
+
+      String href = context.getOpenedFiles().keySet().iterator().next();
+      final File file = context.getOpenedFiles().get(href);
+
+      if (file.isContentChanged())
+      {
+         String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
+         Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedCallback()
+         {
+            public void execute(Boolean value)
+            {
+               if (value == null)
+               {
+                  return;
+               }
+
+               if (value)
+               {
+                  if (file.isNewFile())
+                  {
+                     eventBus.fireEvent(new SaveFileAsEvent(file, true));
+                  }
+                  else
+                  {
+                     VirtualFileSystem.getInstance().saveContent(file);
+                  }
+               }
+               else
+               {
+                  eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                  closeNextFile();
+               }
+            }
+
+         });
+         return;
+      }
+      else
+      {
+         eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+         closeNextFile();
+      }
+   }
+
+   public void onFileContentSaved(FileContentSavedEvent event)
+   {
+      eventBus.fireEvent(new EditorCloseFileEvent(event.getFile(), true));
+      closeNextFile();
    }
 
 }

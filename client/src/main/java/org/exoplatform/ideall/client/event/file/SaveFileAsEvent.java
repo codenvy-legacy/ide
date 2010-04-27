@@ -37,6 +37,8 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 
    private File file;
 
+   private boolean saveOnly = false;
+
    public SaveFileAsEvent()
    {
    }
@@ -44,6 +46,17 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    public SaveFileAsEvent(File file)
    {
       this.file = file;
+   }
+
+   public SaveFileAsEvent(File file, boolean saveOnly)
+   {
+      this.file = file;
+      this.saveOnly = saveOnly;
+   }
+
+   public boolean isSaveOnly()
+   {
+      return saveOnly;
    }
 
    @Override

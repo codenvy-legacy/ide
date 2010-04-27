@@ -61,6 +61,8 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private String sourceHref;
 
+   private boolean saveOnly;
+
    public SaveFileAsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
@@ -69,8 +71,16 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
    }
 
+   /**
+    * Add handlers
+    * Open Save As Dialog
+    * 
+    * @see org.exoplatform.ideall.client.event.file.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ideall.client.event.file.SaveFileAsEvent)
+    */
    public void onSaveFileAs(SaveFileAsEvent event)
    {
+      this.saveOnly = event.isSaveOnly();
+
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -80,6 +90,11 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       onSaveAsFile(file);
    }
 
+   /**
+    * Open Save As Dialog 
+    * 
+    * @param file
+    */
    private void onSaveAsFile(final File file)
    {
       String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
@@ -128,6 +143,12 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
+      if (saveOnly)
+      {
+         handlers.removeHandlers();
+         return;
+      }
+
       if (event.isNewFile())
       {
          VirtualFileSystem.getInstance().getProperties(event.getFile());
@@ -142,7 +163,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
-      refreshBrouser(event.getItem().getHref());
+      refreshBrowser(event.getItem().getHref());
    }
 
    public void onError(ExceptionThrownEvent event)
@@ -154,10 +175,10 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
-      refreshBrouser(event.getItem().getHref());
+      refreshBrowser(event.getItem().getHref());
    }
 
-   private void refreshBrouser(String hrefFolder)
+   private void refreshBrowser(String hrefFolder)
    {
       hrefFolder = hrefFolder.substring(0, hrefFolder.lastIndexOf("/")) + "/";
       Folder folder = new Folder(hrefFolder);
