@@ -19,7 +19,6 @@
  */
 package org.exoplatform.ideall.client.panel;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.layout.Layout;
 
 /**
