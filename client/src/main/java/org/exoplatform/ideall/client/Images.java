@@ -70,18 +70,21 @@ public interface Images
       public static final String GET_URL = imageUrl + "menu/file/url.png";
       
       public static final String OPENWITH = imageUrl + "menu/file/openWith.png";
-      
-      public static final String UPLOAD = imageUrl + "menu/file/upload.png";
-      
+            
       public static final String DOWNLOAD = imageUrl + "menu/file/download.png";
       
-      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/file/downloadZipped.png";
+      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/file/download_zip.png";
       
       public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
       
       public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
       
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
+      
+      public static final String UPLOAD_FILE = imageUrl + "menu/file/upload_file.png";
+      
+      public static final String UPLOAD = imageUrl + "menu/file/upload.png";
+      
       
       /*
        * HTML

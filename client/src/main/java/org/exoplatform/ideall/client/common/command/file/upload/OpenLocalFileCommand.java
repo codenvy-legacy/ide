@@ -52,7 +52,7 @@ public class OpenLocalFileCommand extends IDECommand implements ItemsSelectedHan
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.UPLOAD);
+      setIcon(Images.MainMenu.UPLOAD_FILE);
       setEvent(new UploadFileEvent(true));
    }
 
