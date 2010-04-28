@@ -51,7 +51,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 220;
+   public static final int HEIGHT = 225;
 
    private FormPanel uploadForm;
 
