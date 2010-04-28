@@ -42,7 +42,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class UploadFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private final static String ID = "File/Upload/Upload File...";
+   private final static String ID = "File/Upload File...";
 
    private final static String TITLE = "Upload...";
 

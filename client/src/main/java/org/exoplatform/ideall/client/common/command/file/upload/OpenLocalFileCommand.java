@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class OpenLocalFileCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private final static String ID = "File/Upload/Open Local File...";
+   private final static String ID = "File/Open Local File...";
 
    private final static String TITLE = "Open Local File...";
 

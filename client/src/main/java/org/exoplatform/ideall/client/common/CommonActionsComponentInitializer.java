@@ -111,15 +111,16 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
+      
+      //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
 
-      addCommand(new UploadFileCommand()).disable().hide();
+      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
       addCommand(new OpenLocalFileCommand()).disable().hide();
 
       /*
        * DOWNLOAD GROUP
        */
-      addCommand(new DownloadFile()).disable().hide();
+      //addCommand(new DownloadFile()).disable().hide();
       addCommand(new DownloadFileCommand()).disable().hide();
       addCommand(new DownloadZippedFolderCommand()).disable().hide();
       /*

@@ -39,15 +39,15 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class DownloadFileCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private final static String ID = "File/Download/Download File...";
+   private final static String ID = "File/Download File...";
 
    private boolean oneItemSelected = true;
    
    public DownloadFileCommand()
    {
       super(ID);
-      setTitle("File");
-      setPrompt("Download File");
+      setTitle("Download...");
+      setPrompt("Download File...");
       setIcon(Images.MainMenu.DOWNLOAD);
       setEvent(new DownloadFileEvent());
    }

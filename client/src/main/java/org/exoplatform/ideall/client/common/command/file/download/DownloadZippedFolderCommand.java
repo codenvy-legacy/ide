@@ -37,15 +37,15 @@ import org.exoplatform.ideall.client.model.vfs.api.Folder;
 public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private final static String ID = "File/Download/Download Zipped Folder";
+   private final static String ID = "File/Download Zipped Folder...";
 
    private boolean oneItemSelected = true;
 
    public DownloadZippedFolderCommand()
    {
       super(ID);
-      setTitle("Zipped Folder");
-      setPrompt("Download Zipped Folder");
+      setTitle("Download Zipped Folder...");
+      setPrompt("Download Zipped Folder...");
       setIcon(Images.MainMenu.DOWNLOAD_FOLDER);
       setEvent(new DownloadZippedFolderEvent());
    }
