@@ -21,8 +21,7 @@
 	</component>
 
 	<external-component-plugins>
-		<target-component>org.exoplatform.services.jcr.RepositoryService
-		</target-component>
+		<target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
 		<component-plugin>
 			<name>add.nodeType</name>
 			<set-method>addPlugin</set-method>
