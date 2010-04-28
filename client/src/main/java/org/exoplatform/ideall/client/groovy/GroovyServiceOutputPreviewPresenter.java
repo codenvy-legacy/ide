@@ -414,7 +414,13 @@ public class GroovyServiceOutputPreviewPresenter
          headers = getHeadersParams();
 
          String base = wadlApplication.getResources().getBase();
-         String fullPath = base.substring(base.lastIndexOf("/")) + display.getPathField().getValue();
+         String methoPath = display.getPathField().getValue();
+         if (!methoPath.startsWith("/"))
+         {
+            methoPath = "/" + methoPath;
+         }
+         String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
+         
          display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,

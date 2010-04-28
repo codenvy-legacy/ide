@@ -250,7 +250,12 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       String content = context.getActiveFile().getContent();
       int indStart = content.indexOf("\"");
       int indEnd = content.indexOf("\"", indStart + 1);
-      String url = "/rest" + content.substring(indStart + 1, indEnd);
+      String path = content.substring(indStart + 1, indEnd);
+      if (!path.startsWith("/"))
+      {
+         path = "/" + path;
+      }
+      String url = "/rest" + path;
       WadlService.getInstance().getWadl(url);
    }
 
