@@ -234,7 +234,7 @@
 						<configuration>
 							<tasks>
 								<copy file="${project.build.directory}/packager-conf/war/exo.ideall.extension.webapp-${org.exoplatform.ideall.version}.war"
-									tofile="${project.build.directory}/tomcat/webapps/0ideall-extension.war" />
+									tofile="${project.build.directory}/tomcat/webapps/ideall-extension.war" />
 									
 								<copy	file="${project.build.directory}/packager-conf/war/exo.ideall.client-${org.exoplatform.ideall.version}.war"
 									tofile="${project.build.directory}/tomcat/webapps/IDEall.war" />
