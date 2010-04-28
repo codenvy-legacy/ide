@@ -220,5 +220,6 @@
 	<modules>
 		<module>client</module>
 		<module>component</module>
+		<module>extension</module>
 	</modules>
 </project>
