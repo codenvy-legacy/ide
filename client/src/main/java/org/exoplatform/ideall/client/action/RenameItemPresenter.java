@@ -30,6 +30,8 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ideall.client.model.vfs.api.event.MoveCompleteHandler;
 
@@ -50,7 +52,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class RenameItemPresenter implements MoveCompleteHandler, FileContentSavedHandler
+public class RenameItemPresenter implements MoveCompleteHandler, FileContentSavedHandler, ItemPropertiesReceivedHandler
 {
 
    public interface Display
@@ -137,6 +139,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    protected void rename()
    {
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
       final Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
@@ -148,29 +151,6 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
          return;
       }
 
-//      String selectedItemPath = item.getHref();
-//      if (hasOpenedFiles(selectedItemPath))
-//      {
-//         Dialogs.getInstance().ask("Rename", "Save opened files?", new BooleanValueReceivedCallback()
-//         {
-//            public void execute(Boolean value)
-//            {
-//               if (value != null && value == true)
-//               {
-//                  handlers.addHandler(FileContentSavedEvent.TYPE, RenameItemPresenter.this);
-//                  saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref());
-//                  return;
-//               }
-//               if (value != null && !value)
-//               {
-//                  VirtualFileSystem.getInstance().move(item, href);
-//               }
-//            }
-//
-//         });
-//
-//         return;
-//      }
       VirtualFileSystem.getInstance().move(item, href);
    }
 
@@ -228,8 +208,15 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       }
    }
 
+   private Item renamedItem;
+   
+   private String sourceHref;
+   
    public void onMoveComplete(MoveCompleteEvent event)
    {
+      renamedItem = event.getItem();
+      sourceHref = event.getSourceHref();
+      
       if (event.getItem() instanceof File)
       {
          File file = (File)event.getItem();
@@ -240,26 +227,42 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             openedFle.setHref(file.getHref());
             context.getOpenedFiles().remove(event.getSourceHref());
             context.getOpenedFiles().put(openedFle.getHref(), openedFle);
-
+            
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
+         
+         VirtualFileSystem.getInstance().getProperties(event.getItem());
       }
       else
       {
          updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
+         completeMove();
       }
 
-      String href = event.getSourceHref();
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      if (event.getItem().getHref().equals(renamedItem.getHref())) {
+         context.getOpenedFiles().get(renamedItem.getHref()).getProperties().clear();
+         context.getOpenedFiles().get(renamedItem.getHref()).getProperties().addAll(event.getItem().getProperties());
+      }
+      completeMove();
+   }
+
+   private void completeMove() {
+      String href = sourceHref;
       if (href.endsWith("/"))
       {
          href = href.substring(0, href.length() - 1);
       }
 
       href = href.substring(0, href.lastIndexOf("/") + 1);
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), event.getItem()));
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
 
-      display.closeForm();
+      display.closeForm();      
    }
+
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
