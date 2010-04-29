@@ -143,6 +143,11 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       }
       else
       {
+         /*
+          * check for new and unsaved files here
+          */
+         
+         
          String href = item.getHref();
          HashMap<String, File> openedFiles = context.getOpenedFiles();
 
@@ -152,20 +157,22 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
             File file = openedFiles.get(key);
             copy.put(key, file);
          }
-
-         for (File file : copy.values())
-         {
-            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
-            {
-               if (file.isContentChanged() || file.isPropertiesChanged())
-               {
-                  String msg = "Folder <b>" + item.getName() + "</b> contains modified file(s), delete them?";
-                  showDialog(item, msg);
-                  return;
-               }
+         
+         int files = 0;
+         for (File file : copy.values()) {
+            if (file.getHref().startsWith(href) && !file.isNewFile() && file.isContentChanged()) {
+               files++;
             }
          }
+         
+         if (files > 0) {
+            String msg = "Folder <b>" + item.getName() + "</b> contains " + copy.size() + " modified file(s), delete them?";
+            showDialog(item, msg);
+            return;
+         }
+
       }
+      
       VirtualFileSystem.getInstance().deleteItem(item);
    }
 
@@ -184,7 +191,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
             {
                display.closeForm();
                deleteItemsComplete();
-
             }
          }
 
@@ -220,10 +226,14 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
          for (File file : copy.values())
          {
-            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
-            {
+            if (file.getHref().startsWith(href) && !file.isNewFile()) {
                eventBus.fireEvent(new EditorCloseFileEvent(file, true));
             }
+            
+//            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
+//            {
+//               eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+//            }
          }
       }
       lastDeletedItem = item;

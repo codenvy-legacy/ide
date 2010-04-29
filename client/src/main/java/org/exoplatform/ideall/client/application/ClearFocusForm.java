@@ -41,8 +41,8 @@ public class ClearFocusForm implements ClearFocusHandler
    public ClearFocusForm(HandlerManager eventBus)
    {
       textBox = new TextBox();
-      textBox.setWidth("1px");
-      textBox.setHeight("1px");
+      textBox.setWidth("10px");
+      textBox.setHeight("10px");
       RootPanel.get().add(textBox, -100, -100);
 
       eventBus.addHandler(ClearFocusEvent.TYPE, this);
