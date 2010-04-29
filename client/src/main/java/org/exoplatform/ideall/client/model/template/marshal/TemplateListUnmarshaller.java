@@ -95,8 +95,12 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       String mimeType = javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());
 
       Node contentNode = getChildNode(node, CONTENT);
-      String content = javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
-
+      String content = "";
+      if(contentNode.getChildNodes().getLength() != 0)
+      {
+        content = javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
+      }
+      
       Template template = new Template(mimeType, name, description, content);
       templateList.getTemplates().add(template);
    }
