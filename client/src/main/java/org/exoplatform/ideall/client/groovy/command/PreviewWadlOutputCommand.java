@@ -30,13 +30,13 @@ import org.exoplatform.ideall.client.groovy.event.PreviewWadlOutputEvent;
 */
 public class PreviewWadlOutputCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
-   private static final String ID = "Run/Wadl";
+   private static final String ID = "Run/Launch REST Service";
 
    public PreviewWadlOutputCommand()
    {
       super(ID);
-      setTitle("Preview Output...");
-      setPrompt("Preview REST Service Output...");
+      setTitle("Launch REST Service...");
+      setPrompt("Launch REST Service...");
       setIcon(Images.MainMenu.GROOVY_OUTPUT);
       setEvent(new PreviewWadlOutputEvent());
 
