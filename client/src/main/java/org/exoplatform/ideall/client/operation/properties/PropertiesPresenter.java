@@ -77,7 +77,14 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       {
          return;
       }
+
+      if (context.getActiveFile() == null)
+      {
+         return;
+      }
+
       File file = (File)item;
+
       if (context.getActiveFile().getHref().equals(file.getHref()))
       {
          display.refreshProperties(file);

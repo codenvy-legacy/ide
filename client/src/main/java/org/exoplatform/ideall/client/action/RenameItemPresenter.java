@@ -259,7 +259,8 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
       href = href.substring(0, href.lastIndexOf("/") + 1);
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
-
+      
+      handlers.removeHandlers();
       display.closeForm();      
    }
 
