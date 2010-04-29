@@ -696,7 +696,9 @@ public class GroovyServiceOutputPreviewPresenter
    {
       if (resource.getPath().contains(".+"))
       {
-         return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "/[A-Za-z0-9+&@#/%=~_|]*$";
+         String reg = resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
+         reg = reg.replace(PATH_REGEX, "");
+         return reg + "[A-Za-z0-9+&@#/%=~_|][A-Za-z0-9+&@#/%=~_|]*$";
       }
 
       return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
