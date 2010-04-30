@@ -30,6 +30,14 @@
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
 	</properties>
+	
+	<scm>
+	  <connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</connection>
+          <developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</developerConnection>
+          <url>http://fisheye.exoplatform.org/browse/projects/parent/trunk</url>
+         </scm>
+
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
