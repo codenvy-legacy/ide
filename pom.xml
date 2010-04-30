@@ -11,7 +11,7 @@
 	<groupId>org.exoplatform.ideall</groupId>
 	<artifactId>ideall.parent</artifactId>
 	<name>eXo IDE :: Parent</name>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-Beta01-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
