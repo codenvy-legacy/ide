@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.exoplatform.ideall</groupId>
 		<artifactId>ideall.parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0-Beta01-SNAPSHOT</version>
 	</parent>
 
 
