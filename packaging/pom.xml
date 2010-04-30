@@ -26,19 +26,17 @@
 
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>exo.ideall.assembly.gatein</artifactId>
+	<artifactId>exo.ideall.packaging.gatein</artifactId>
 	<packaging>pom</packaging>
-	<name>eXo IDE based on GateIn Portal Packaging Assemblies</name>
+	<name>eXo IDE :: Based on GateIn Portal Assemblies</name>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.gatein.tools</groupId>
 			<artifactId>packager</artifactId>
 			<type>zip</type>
 			<version>1.0.0-CR01</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>kernel.packaging.module</artifactId>
@@ -69,82 +67,67 @@
 			<version>${org.exoplatform.gatein.version}</version>
 			<type>js</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>portal.packaging.product</artifactId>
 			<version>${org.exoplatform.gatein.version}</version>
 			<type>js</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>exo.portal.server.tomcat.patch</artifactId>
 			<version>${org.exoplatform.gatein.version}</version>
 			<type>jar</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.component.commons</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.client</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.extension.webapp</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.extension.config</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.component.commons</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.gatein.gadget.register</artifactId>
-			<version>${org.exoplatform.ideall.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.gwt</groupId>
 			<artifactId>exo.gwtframework.smartgwt</artifactId>
 			<version>${org.exoplatform.gwtframework.version}</version>
 			<type>war</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.exoplatform.portal</groupId>
 			<artifactId>exo.portal.starter.war</artifactId>
 			<version>${org.exoplatform.gatein.version}</version>
 			<type>war</type>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -153,7 +136,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
 				<configuration>
 					<repositoryUrl>xxx</repositoryUrl>
 				</configuration>
@@ -233,32 +215,38 @@
 						<phase>install</phase>
 						<configuration>
 							<tasks>
-								<copy file="${project.build.directory}/packager-conf/war/exo.ideall.extension.webapp-${org.exoplatform.ideall.version}.war"
+								<copy
+									file="${project.build.directory}/packager-conf/war/exo.ideall.extension.webapp-${project.version}.war"
 									tofile="${project.build.directory}/tomcat/webapps/ideall-extension.war" />
-									
-								<copy	file="${project.build.directory}/packager-conf/war/exo.ideall.client-${org.exoplatform.ideall.version}.war"
+
+								<copy
+									file="${project.build.directory}/packager-conf/war/exo.ideall.client-${project.version}.war"
 									tofile="${project.build.directory}/tomcat/webapps/IDEall.war" />
-									
-								<copy	file="${project.build.directory}/packager-conf/war/exo.gwtframework.smartgwt-${org.exoplatform.gwtframework.version}.war"
+
+								<copy
+									file="${project.build.directory}/packager-conf/war/exo.gwtframework.smartgwt-${org.exoplatform.gwtframework.version}.war"
 									tofile="${project.build.directory}/tomcat/webapps/SmartGWT.war" />
-									
-								<copy	file="${project.build.directory}/packager-conf/jar/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar"
+
+								<copy
+									file="${project.build.directory}/packager-conf/jar/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar"
 									tofile="${project.build.directory}/tomcat/lib/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar" />
-									
-								<copy	file="${project.build.directory}/packager-conf/jar/exo.ideall.extension.config-${org.exoplatform.ideall.version}.jar"
-									tofile="${project.build.directory}/tomcat/lib/exo.ideall.extension.config-${org.exoplatform.ideall.version}.jar" />
-									
-								<copy	file="${project.build.directory}/packager-conf/jar/exo.ideall.component.commons-${org.exoplatform.ideall.version}.jar"
-									tofile="${project.build.directory}/tomcat/lib/exo.ideall.component.commons-${org.exoplatform.ideall.version}.jar" />
-									
-								<copy	file="${project.build.directory}/packager-conf/jar/exo.ideall.gatein.gadget.register-${org.exoplatform.ideall.version}.jar"
-									tofile="${project.build.directory}/tomcat/lib/exo.ideall.gatein.gadget.register-${org.exoplatform.ideall.version}.jar" />
-									
-								<!-- copy file="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war"
-									tofile="${project.build.directory}/tomcat/webapps/starter.war" /-->
-									
-									<unwar  src="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war" dest="${project.build.directory}/tomcat/webapps/starter.war"/>
-									
+
+								<copy
+									file="${project.build.directory}/packager-conf/jar/exo.ideall.extension.config-${project.version}.jar"
+									tofile="${project.build.directory}/tomcat/lib/exo.ideall.extension.config-${project.version}.jar" />
+
+								<copy
+									file="${project.build.directory}/packager-conf/jar/exo.ideall.component.commons-${project.version}.jar"
+									tofile="${project.build.directory}/tomcat/lib/exo.ideall.component.commons-${project.version}.jar" />
+
+								<copy
+									file="${project.build.directory}/packager-conf/jar/exo.ideall.gatein.gadget.register-${project.version}.jar"
+									tofile="${project.build.directory}/tomcat/lib/exo.ideall.gatein.gadget.register-${project.version}.jar" />
+
+								<unwar
+									src="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war"
+									dest="${project.build.directory}/tomcat/webapps/starter.war" />
+
 							</tasks>
 						</configuration>
 						<goals>
@@ -374,15 +362,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--
-						<plugin> <artifactId>maven-assembly-plugin</artifactId>
-						<executions> <execution> <id>tomcat-assembly</id>
-						<phase>package</phase> <goals> <goal>single</goal> </goals>
-						<configuration> <descriptors>
-						<descriptor>src/main/assembly/tomcat-zip.xml</descriptor>
-						</descriptors> <attach>false</attach> </configuration>
-						</execution> </executions> </plugin>
-					-->
 				</plugins>
 			</build>
 		</profile>

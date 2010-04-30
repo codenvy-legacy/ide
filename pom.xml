@@ -17,12 +17,11 @@
 	<properties>
 		<wiki.url>http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29</wiki.url>
 		<exo.product.name>ideall</exo.product.name>
-		<org.exoplatform.ideall.version>1.0-SNAPSHOT</org.exoplatform.ideall.version>
 		<org.exoplatform.kernel.version>2.2.1-GA</org.exoplatform.kernel.version>
 		<org.exoplatform.core.version>2.3.1-GA</org.exoplatform.core.version>
 		<org.exoplatform.ws.version>2.1.1-GA</org.exoplatform.ws.version>
 		<org.exoplatform.jcr.version>1.12.1-GA</org.exoplatform.jcr.version>
-		<org.exoplatform.gwtframework.version>1.0-SNAPSHOT</org.exoplatform.gwtframework.version>
+		<org.exoplatform.gwtframework.version>1.0-Beta02</org.exoplatform.gwtframework.version>
 		<org.exoplatform.gatein.version>3.0.0-GA</org.exoplatform.gatein.version>
 		<gwt.version>1.7.1</gwt.version>
 		<smartgwt.version>1.3</smartgwt.version>
@@ -48,7 +47,6 @@
 				<artifactId>exo.core.component.security.core</artifactId>
 				<version>${org.exoplatform.core.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.exoplatform.ws</groupId>
 				<artifactId>exo.ws.frameworks.servlet</artifactId>
@@ -110,9 +108,34 @@
 				<version>${org.exoplatform.gwtframework.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.exoplatform.gwt</groupId>
+				<artifactId>exo.gwtframework.smartgwt</artifactId>
+				<version>${org.exoplatform.gwtframework.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
 				<artifactId>exo.ideall.component.commons</artifactId>
-				<version>${org.exoplatform.ideall.version}</version>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo.ideall.gatein.gadget.register</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo.ideall.client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo.ideall.extension.webapp</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo.ideall.extension.config</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.portal</groupId>
@@ -148,13 +171,11 @@
 				<groupId>org.apache.shindig</groupId>
 				<artifactId>shindig-common</artifactId>
 				<version>${shindig.version}</version>
-				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.shindig</groupId>
 				<artifactId>shindig-features</artifactId>
 				<version>${shindig.version}</version>
-				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.shindig</groupId>
@@ -201,6 +222,51 @@
 				<artifactId>junit</artifactId>
 				<version>4.1</version>
 			</dependency>
+			<dependency>
+				<groupId>org.gatein.tools</groupId>
+				<artifactId>packager</artifactId>
+				<version>1.0.0-CR01</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.kernel</groupId>
+				<artifactId>kernel.packaging.module</artifactId>
+				<version>${org.exoplatform.kernel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.core</groupId>
+				<artifactId>core.packaging.module</artifactId>
+				<version>${org.exoplatform.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ws</groupId>
+				<artifactId>ws.packaging.module</artifactId>
+				<version>${org.exoplatform.ws.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.jcr</groupId>
+				<artifactId>jcr.packaging.module</artifactId>
+				<version>${org.exoplatform.jcr.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.portal</groupId>
+				<artifactId>portal.packaging.module</artifactId>
+				<version>${org.exoplatform.gatein.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.portal</groupId>
+				<artifactId>portal.packaging.product</artifactId>
+				<version>${org.exoplatform.gatein.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.portal</groupId>
+				<artifactId>exo.portal.server.tomcat.patch</artifactId>
+				<version>${org.exoplatform.gatein.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.portal</groupId>
+				<artifactId>exo.portal.starter.war</artifactId>
+				<version>${org.exoplatform.gatein.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -215,7 +281,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 
 	<modules>
 		<module>client</module>
