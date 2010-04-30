@@ -340,7 +340,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
 
       String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-      Dialogs.getInstance().ask("DevTool", message, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
          {

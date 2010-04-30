@@ -177,7 +177,7 @@ public class EntryPointListPresenter implements FileContentSavedHandler
    {
       if (context.getOpenedFiles().size() != 0)
       {
-         Dialogs.getInstance().ask("IDEall", "All open file well being closed.<br>Do you wont to proceed?",
+         Dialogs.getInstance().ask("IDEall", "All opened files will be closed.<br>Do you want to continue?",
             new BooleanValueReceivedCallback()
             {
 

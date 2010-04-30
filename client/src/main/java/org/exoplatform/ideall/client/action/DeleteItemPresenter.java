@@ -135,7 +135,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
             File file = context.getOpenedFiles().get(item.getHref());
             if (file.isContentChanged() || file.isPropertiesChanged())
             {
-               String msg = "Do you wont delete modified file <b>" + item.getName() + "</b>?";
+               String msg = "Do you want to delete modified file <b>" + item.getName() + "</b>?";
                showDialog(file, msg);
                return;
             }
@@ -178,7 +178,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void showDialog(final Item item, String msg)
    {
-      Dialogs.getInstance().ask("DevTool", msg, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("Delete file", msg, new BooleanValueReceivedCallback()
       {
 
          public void execute(Boolean value)
