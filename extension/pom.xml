@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.exoplatform.ideall</groupId>
 		<artifactId>ideall.parent</artifactId>
-		<version>1.0-Beta01</version>
+		<version>1.0-Beta02-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
