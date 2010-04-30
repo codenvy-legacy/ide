@@ -4,7 +4,7 @@
   <parent>
       <groupId>org.exoplatform.ideall</groupId>
       <artifactId>ideall.extension.parent</artifactId>
-      <version>1.0-Beta01</version>
+      <version>1.0-Beta01-SNAPSHOT</version>
    </parent>
 
   <artifactId>exo.ideall.extension.webapp</artifactId>
