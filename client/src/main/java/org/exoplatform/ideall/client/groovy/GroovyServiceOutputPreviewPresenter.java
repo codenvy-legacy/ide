@@ -30,7 +30,6 @@ import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
-import org.exoplatform.gwtframework.commons.wadl.Response;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
@@ -101,6 +100,8 @@ public class GroovyServiceOutputPreviewPresenter
       void setResponseMediaType(LinkedHashMap<String, String> responseMediaType);
 
       void setResponseMediaTypeFieldValue(String value);
+      
+      void setPathFieldValue(String value);
    }
 
    private static final String REPLACEMENT_REGEX = "\\{[^/]+}";
@@ -199,49 +200,7 @@ public class GroovyServiceOutputPreviewPresenter
 
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            if (event.getValue() != null && !"".equals(event.getValue()))
-            {
-               display.setSendRequestButtonDisabled(false);
-
-               if (pathExists(event.getValue()))
-               {
-                  setMethodsOnPath(event.getValue());
-
-                  String oldPath = resource == null ? null : resource.getPath();
-                  String oldMethodName = currentMethod == null ? null : currentMethod.getName();
-
-                  resource = findResource(event.getValue(), display.getMethodField().getValue());
-                  currentPath = resource.getPath();
-
-                  listMethods = findMethod(resource, display.getMethodField().getValue());
-
-                  if (listMethods.size() != 0)
-                  {
-                     currentMethod = listMethods.get(0);
-                  }
-                  else
-                  {
-                     currentMethod = null;
-                  }
-
-                  //check if it is need to change resource info
-                  //If value if path field changed, but path and method stayed the same
-                  // there is no need to set resource info again
-                  if (!(oldPath != null && oldPath.equals(resource.getPath()) && oldMethodName != null && oldMethodName
-                     .equals(currentMethod.getName())))
-                  {
-                     setResourceInfo();
-                  }
-               }
-            }
-            else
-            {
-               resource = null;
-               currentMethod = null;
-               display.setSendRequestButtonDisabled(true);
-               display.setMethods(new LinkedHashMap<String, String>());
-               setResourceInfo();
-            }
+            onPathFieldChanged(event.getValue());
          }
       });
 
@@ -299,8 +258,58 @@ public class GroovyServiceOutputPreviewPresenter
       String[] pathArr = getPathArray();
       display.setPaths(pathArr);
       currentPath = pathArr[0];
+      display.setPathFieldValue(pathArr[0]);
+      onPathFieldChanged(pathArr[0]);
    }
 
+   
+   private void onPathFieldChanged(String path)
+   {
+      if (path != null && !"".equals(path))
+      {
+         display.setSendRequestButtonDisabled(false);
+
+         if (pathExists(path))
+         {
+            setMethodsOnPath(path);
+
+            String oldPath = resource == null ? null : resource.getPath();
+            String oldMethodName = currentMethod == null ? null : currentMethod.getName();
+
+            resource = findResource(path, display.getMethodField().getValue());
+            currentPath = resource.getPath();
+
+            listMethods = findMethod(resource, display.getMethodField().getValue());
+
+            if (listMethods.size() != 0)
+            {
+               currentMethod = listMethods.get(0);
+            }
+            else
+            {
+               currentMethod = null;
+            }
+
+            //check if it is need to change resource info
+            //If value if path field changed, but path and method stayed the same
+            // there is no need to set resource info again
+            if (!(oldPath != null && oldPath.equals(resource.getPath()) && oldMethodName != null && oldMethodName
+               .equals(currentMethod.getName())))
+            {
+               setResourceInfo();
+            }
+         }
+      }
+      else
+      {
+         resource = null;
+         currentMethod = null;
+         display.setSendRequestButtonDisabled(true);
+         display.setMethods(new LinkedHashMap<String, String>());
+         setResourceInfo();
+      }
+   }
+   
    private void setResponseMediaType(String requestMediaType)
    {
       display.setResponseMediaTypeFieldValue("");

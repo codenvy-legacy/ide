@@ -424,4 +424,12 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       responseMediaTypeField.setValue(value);
    }
 
+   /**
+    * @see org.exoplatform.ideall.client.groovy.GroovyServiceOutputPreviewPresenter.Display#setPathFieldValue(java.lang.String)
+    */
+   public void setPathFieldValue(String value)
+   {
+      pathField.setValue(value);
+   }
+
 }
