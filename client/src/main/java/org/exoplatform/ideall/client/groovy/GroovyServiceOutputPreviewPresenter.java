@@ -428,8 +428,10 @@ public class GroovyServiceOutputPreviewPresenter
          {
             methoPath = "/" + methoPath;
          }
-         String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
-         
+         // TODO research
+         //String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
+         String fullPath = base + methoPath;
+        
          display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
