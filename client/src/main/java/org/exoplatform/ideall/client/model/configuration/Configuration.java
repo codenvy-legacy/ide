@@ -112,13 +112,13 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
-      if (config.containsKey(ENTRY_POINT))
-         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
-      else
-      {
-         sendErrorMessage(ENTRY_POINT);
-         return;
-      }
+//      if (config.containsKey(ENTRY_POINT))
+//         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
+//      else
+//      {
+//         sendErrorMessage(ENTRY_POINT);
+//         return;
+//      }
 
       if (config.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host

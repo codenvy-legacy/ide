@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMen
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
@@ -169,7 +170,14 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
 //      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
-      new WorkspaceChecker(eventBus, context);
+      
+      if (context.getEntryPoint() != null) {
+         new WorkspaceChecker(eventBus, context);
+      } else {
+         Dialogs.getInstance().showError("Entry point not set!");
+         ExceptionThrownEventHandlerInitializer.initialize(eventBus);         
+         new ApplicationInitializer(eventBus, context);         
+      }
    }
 
    public void onError(ExceptionThrownEvent event)

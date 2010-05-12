@@ -68,7 +68,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    protected void doUpdateValue()
    {
       if (getValue() == null) {
-         tree.remove(rootNode);
+         if (rootNode != null) {
+            tree.remove(rootNode);
+         }
          rootNode = null;
          return;
       }

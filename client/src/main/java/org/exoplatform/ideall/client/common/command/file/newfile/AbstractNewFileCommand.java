@@ -64,6 +64,11 @@ public class AbstractNewFileCommand extends IDECommand implements PanelSelectedH
 
    private void updateEnabling()
    {
+      if (context.getEntryPoint() == null) {
+         setEnabled(false);
+         return;
+      }
+      
       if (browserSelected)
       {
          setEnabled(true);
