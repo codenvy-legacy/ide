@@ -1,24 +1,307 @@
-*****************
-* BUILD
-*****************
+=====================================================
+--------- Build and Deploy Under GateIn -------------
+=====================================================
 
-* mvn clean install
+Requirements:
 
-**********************
-* MAVEN CONFIGURATION:
-**********************
+    * JDK 1.5 or higher (32 bit)
+    * Maven 2.2.1 (or upper),
+    * Console SVN client.
+    * GateIn-3.0.0-GA (http://sourceforge.net/projects/jboss/files/GateIn/Portal/3.0.0-FINAL/GateIn-3.0.0-FINAL-tomcat.zip/download)
 
-  * ${exo.projects.directory.dependencies} directory contains :
-  ** ${exo.projects.app.tomcat.version}/ a clean Tomcat installation, to be used as packaging template
-  ** ${exo.projects.app.jboss.version}/ a clean JBoss installation, to be used as packaging template
+Compilation and configuration IDEall:
+1. For source eXo GWT Framework in folder gwt-commons execute the command
+svn co http://svn.exoplatform.org/projects/gwt/tags/1.0-Beta02 gwt-commons
+2. For the source IDEall (eXo IDE) to the folder ideall execute the command
+svn co http://svn.exoplatform.org/exo-int/ideall/tags/1.0-Beta01 ideall
+3. Download GateIn http://sourceforge.net/projects/jboss/files/GateIn/Portal/3.0.0-FINAL/GateIn-3.0.0-FINAL-tomcat.zip/download
+4. In folder gwt-commons execute command
+     mvn clean install
 
-Alternatively you can edit your local settings.xml to add the information
-provided in profiles.xml. It will override what's in the provided file.
+5. Edit file ideall/client/src/main/resources/org/exoplatform/ideall/public/applicationInitializer.js as written below:
 
-*****************
-* PACKAGING:
-*****************
-Go to packaging
-* mvn clean install -Ppkg-tomcat
-** Creates a Tomcat delivery in packaging/target/tomcat/
+ var registryURL = "/portal/rest/registry/repository"; // registry service address(for storing application settings)
+var appConfig = {
+"context" : "/rest/private",
+"publicContext" : "/rest",
+"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+//"gadgetServer" : "/gadgets/", /*under GWT Shell*/
+"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
+}
 
+6. In folder ideall execute command:
+mvn clean install
+
+GateIn configuration
+1. Unzip GateIn-3.0.0-FINAL-tomcat.zip in folder GateIn-3.0.0-GA
+2. Edit file GateIn-3.0.0-GA/webapps/portal.war/WEB-INF/conf/jcr/jcr-configuration.xml (add the necessary components)
+
+ <component>
+<type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
+</component>
+<component>
+<type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+<init-params>
+<properties-param>
+<name>locations</name>
+<property name="repository" value="portal-system" />
+</properties-param>
+</init-params>
+</component>
+<component>
+<type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
+</component>
+<component>
+<type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</type>
+<init-params>
+<object-param>
+<name>observation.config</name>
+<object type="org.exoplatform.services.jcr.ext.script.groovy.ObservationListenerConfiguration">
+<field name="repository">
+<string>repository</string>
+</field>
+<field name="workspaces">
+<collection type="java.util.ArrayList">
+<value>
+<string>dev-monit</string>
+</value>
+</collection>
+</field>
+</object>
+</object-param>
+</init-params>
+</component>
+
+3. Edit file GateIn-3.0.0-GA/webapps/portal.war/WEB-INF/conf/jcr/repository-configuration.xml (add workspace for IDE)
+
+ <workspace name="dev-monit">
+<container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
+<properties>
+<property name="source-name" value="${gatein.jcr.datasource.name}${container.name.suffix}"/>
+<property name="dialect" value="${gatein.jcr.datasource.dialect}"/>
+<property name="multi-db" value="false"/>
+<property name="update-storage" value="true"/>
+<property name="max-buffer-size" value="204800"/>
+<property name="swap-directory" value="${gatein.jcr.data.dir}/swap/dev-monit${container.name.suffix}"/>
+</properties>
+<value-storages>
+<value-storage id="dev-monit" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+<properties>
+<property name="path" value="${gatein.jcr.storage.data.dir}/dev-monit${container.name.suffix}"/>
+</properties>
+<filters>
+<filter property-type="Binary"/>
+</filters>
+</value-storage>
+</value-storages>
+</container>
+<initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
+<properties>
+<property name="root-nodetype" value="nt:unstructured"/>
+<property name="root-permissions" value="any read;*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove"/>
+</properties>
+</initializer>
+<cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+<properties>
+<property name="jbosscache-configuration" value="conf/jcr/jbosscache/${gatein.jcr.config.type}/config.xml" />
+<property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+<property name="jgroups-multiplexer-stack" value="true" />
+<property name="jbosscache-cluster-name" value="jcr-${container.name.suffix}-dev-monit" />
+</properties>
+</cache>
+<query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+<properties>
+<property name="index-dir" value="${gatein.jcr.index.data.dir}/dev-monit${container.name.suffix}"/>
+<property name="changesfilter-class" value="${gatein.jcr.index.changefilterclass}" />
+<property name="jbosscache-configuration" value="conf/jcr/jbosscache/cluster/indexer-config.xml" />
+<property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+<property name="jgroups-multiplexer-stack" value="true" />
+<property name="jbosscache-cluster-name" value="jcrindexer-${container.name.suffix}-dev-monit" />
+<property name="max-volatile-time" value="60" />
+</properties>
+</query-handler>
+<lock-manager class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.CacheableLockManagerImpl">
+<properties>
+<property name="time-out" value="15m" />
+<property name="jbosscache-configuration" value="conf/jcr/jbosscache/${gatein.jcr.config.type}/lock-config.xml" />
+<property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+<property name="jgroups-multiplexer-stack" value="true" />
+<property name="jbosscache-cluster-name" value="jcrlock-${container.name.suffix}-system" />
+<property name="jbosscache-cl-cache.jdbc.table.name" value="jcrlock_dev_monit" />
+<property name="jbosscache-cl-cache.jdbc.table.create" value="true" />
+<property name="jbosscache-cl-cache.jdbc.table.drop" value="false" />
+<property name="jbosscache-cl-cache.jdbc.table.primarykey" value="pk" />
+<property name="jbosscache-cl-cache.jdbc.fqn.column" value="fqn" />
+<property name="jbosscache-cl-cache.jdbc.node.column" value="node" />
+<property name="jbosscache-cl-cache.jdbc.parent.column" value="parent" />
+<property name="jbosscache-cl-cache.jdbc.datasource" value="${gatein.jcr.datasource.name}${container.name.suffix}" />
+</properties>
+</lock-manager>
+</workspace>
+
+4.To enable SSO, edit the file GateIn-3.0.0-GA/conf/server.xml, uncomment
+
+<Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+
+5. To avoid temporary problems, do next steps:
+   you can change portal/web.xml by adding
+
+<filter-mapping>
+<filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+   or change registryURL in applicationInitializer.js (/exo.ideall.client/src/main/resources/org/exoplatform/ideall/public/applicationInitializer.js) from "/portal/rest/registry/repository" to "/rest/registry/repository";
+
+Copy necessary wars & jars
+1 . Copy jar's in GateIn-3.0.0-GA/lib.
+
+    * exo.core.component.script.groovy-2.3.0-GA.jar (available herehttp://repository.jboss.com/maven2/org/exoplatform/core/exo.core.component.script.groovy/2.3.0-GA/exo.core.component.script.groovy-2.3.0-GA.jar)
+    * ideall/component/exo.ideall.component.commons/target/exo.ideall.component.commons-1.0-Beta01.jar
+    * ideall/component/exo.ideall.gatein.gadget.register/target/exo.ideall.gatein.gadget.register-1.0-Beta01.jar
+
+2. Copy IDEall.war & gwt-commons/exo.gwtframework.smartgwt/target/SmartGWT.war in tomcat-gatein-GA/webapps.
+
+Launch:
+1 Go to folder GateIn-3.0.0-GA/bin
+2. Execute command
+  ./gatein.sh run
+3. After starting the server portal is available at the address in the browserhttp://localhost:8080/portal/public/classic/
+
+    * register as user : root, password : gtn
+    * then in top menu Group -> Administration -> Application Registry
+    * in opened window press "Import Applications"
+
+Gadget is ready to use and you can add it in Dashboard.
+
+========================================
+--------- Run From Package -------------
+========================================
+
+In this paragraph will be described another way to start IDEall gadget - from Tomcat packaging with GateIn.
+
+Requirements:
+
+    * JDK 1.5 or higher (32 bit)
+    * Maven 2.2.1 (or upper),
+    * Console SVN client.
+    * Tomcat 6.0.20(or upper).
+
+Compilation IDEall:
+1. For the source IDEall (eXo IDE) to the folder ideall execute the command
+svn co http://svn.exoplatform.org/exo-int/ideall/tags/1.0-Beta01 ideall
+2. Edit file ideall/trunk/client/src/main/resources/org/exoplatform/ideall/public/applicationInitializer.js as written below:
+
+ var registryURL = "/portal/rest/registry/repository"; // registry service address(for storing application settings)
+var appConfig = {
+"context" : "/rest/private",
+"publicContext" : "/rest",
+"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+//"gadgetServer" : "/gadgets/", /*under GWT Shell*/
+"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
+}
+
+3. In folder ideall execute command:
+mvn clean install
+
+Prepare package with Tomcat:
+
+1. Download Tomcat 6.0.20 or upper and unzip into some folder of local system.
+
+2. In the maven configuration /packaging/pom.xml file set correct property:
+
+exo.projects.app.tomcat.version
+
+- a clean Tomcat installation, to be used as packaging template. E.g. /home/%USERNAME%/%tomcat_folder%/
+
+Alternatively you could edit your local Maven's settings.xml and add the information about folder with Tomcat in the property "<exo.projects.app.tomcat.version>".
+
+3. Go to folder /packaging  and call next command:
+mvn clean install -Ppkg-tomcat
+
+After this will be created Tomcat delivery in packaging/target/tomcat/.
+
+Launch in Tomcat delivery:
+1 Go to folder packaging/target/tomcat/bin
+2. Execute command 'gatein.sh start' on Linux, or 'gatein.bat start' on Windows.
+3. After starting the server portal is available at the address in the browser http://localhost:8080/portal/public/classic/
+
+    * register as user : root, password : gtn
+    * then in top menu Group -> Administration -> Application Registry
+    * in opened window press "Import Applications"
+
+Gadget is ready to use and you can add it in Dashboard or on new page. More info about it is in article Page Creation Wizard.
+
+
+=============================================================================================
+--------- Build and Deploy As GateIn Extension without additional configuration -------------
+=============================================================================================
+
+You can pass manual GateIn configuration step simply by building and copying special library with default portal configuration.
+
+Requirements:
+
+    * JDK 1.5 or higher (32 bit)
+    * Maven 2.2.1 (or upper),
+    * Console SVN client.
+    * GateIn-3.0.0-GA (http://sourceforge.net/projects/jboss/files/GateIn/Portal/3.0.0-FINAL/GateIn-3.0.0-FINAL-tomcat.zip/download)
+
+Compilation and configuration IDEall:
+1. For source eXo GWT Framework in folder gwt-commons execute the command
+svn co http://svn.exoplatform.org/projects/gwt/tags/1.0-Beta02 gwt-commons
+2. For the source IDEall (eXo IDE) to the folder ideall execute the command
+svn co http://svn.exoplatform.org/exo-int/ideall/tags/1.0-Beta01 ideall
+3. Download GateIn http://sourceforge.net/projects/jboss/files/GateIn/Portal/3.0.0-FINAL/GateIn-3.0.0-FINAL-tomcat.zip/download
+4. In folder gwt-commons execute command
+     mvn clean install
+
+5. Edit file ideall/client/src/main/resources/org/exoplatform/ideall/public/applicationInitializer.js as written below:
+
+ var registryURL = "/portal/rest/registry/repository"; // registry service address(for storing application settings)
+var appConfig = {
+"context" : "/rest/private",
+"publicContext" : "/rest",
+"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+//"gadgetServer" : "/gadgets/", /*under GWT Shell*/
+"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
+}
+
+6. In folder ideall execute command:
+     mvn clean install
+
+7.In folder ideall/extension execute command
+     mvn clean install
+
+GateIn configuration
+1.Unzip GateIn-3.0.0-FINAL-tomcat.zip in folder GateIn-3.0.0-GA
+
+2.To enable SSO, edit the file GateIn-3.0.0-GA/conf/server.xml, uncomment
+
+<Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+
+Copy necessary wars & jars
+1 . Copy jar's in GateIn-3.0.0-GA/lib.
+
+    * exo.core.component.script.groovy-2.3.0-GA.jar (available here http://repository.jboss.com/maven2/org/exoplatform/core/exo.core.component.script.groovy/2.3.0-GA/exo.core.component.script.groovy-2.3.0-GA.jar)
+    * ideall/component/exo.ideall.component.commons/target/exo.ideall.component.commons-1.0-Beta01.jar
+    * ideall/component/exo.ideall.gatein.gadget.register/target/exo.ideall.gatein.gadget.register-1.0-Beta01.jar
+    * ideall/extension/config/target/exo.ideall.extension.config-1.0-Beta01.jar
+
+2. Copy war's in tomcat-gatein-GA/webapps:
+
+    * ideall/client/target/IDEall.war
+    * gwt-commons/exo.gwtframework.smartgwt/target/SmartGWT.war
+    * ideall/extension/webapp/target/ideall-extension.war
+
+Launch:
+1 Go to folder GateIn-3.0.0-GA/bin
+2. Execute command
+  ./gatein.sh run
+3. After starting the server portal is available at the address in the browserhttp://localhost:8080/portal/public/classic/
+
+    * register as user : root, password : gtn
+    * then in top menu Group -> Administration -> Application Registry
+    * in opened window press "Import Applications"
+
+Gadget is ready to use and you can add it in Dashboard.
+!!!    If you get "java.lang.IllegalStateException: No pre init tasks can be added to the portal container 'portal', because it has already been initialized." exception, you should do next operations described in this article.
