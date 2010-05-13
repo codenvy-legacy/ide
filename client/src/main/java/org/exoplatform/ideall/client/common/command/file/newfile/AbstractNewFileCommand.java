@@ -21,10 +21,10 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -35,7 +35,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class AbstractNewFileCommand extends IDECommand implements PanelSelectedHandler
+public class AbstractNewFileCommand extends IDECommand implements PanelSelectedHandler, SwitchEntryPointHandler
 {
 
    private boolean browserSelected = false;
@@ -53,6 +53,7 @@ public class AbstractNewFileCommand extends IDECommand implements PanelSelectedH
    protected void onRegisterHandlers()
    {
       addHandler(PanelSelectedEvent.TYPE, this);
+      addHandler(SwitchEntryPointEvent.TYPE, this);
    }
 
    @Override
@@ -82,6 +83,11 @@ public class AbstractNewFileCommand extends IDECommand implements PanelSelectedH
    public void onPanelSelected(PanelSelectedEvent event)
    {
       browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
+   }
+
+   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
+   {
       updateEnabling();
    }
 
