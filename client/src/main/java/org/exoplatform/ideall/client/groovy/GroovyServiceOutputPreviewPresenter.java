@@ -257,9 +257,18 @@ public class GroovyServiceOutputPreviewPresenter
 
       String[] pathArr = getPathArray();
       display.setPaths(pathArr);
-      currentPath = pathArr[0];
-      display.setPathFieldValue(pathArr[0]);
-      onPathFieldChanged(pathArr[0]);
+      if (pathArr.length > 1)
+      {
+         currentPath = pathArr[1];
+         display.setPathFieldValue(pathArr[1]);
+         onPathFieldChanged(pathArr[1]);
+      }
+      else
+      {
+         currentPath = pathArr[0];
+         display.setPathFieldValue(pathArr[0]);
+         onPathFieldChanged(pathArr[0]);         
+      }
    }
 
    
