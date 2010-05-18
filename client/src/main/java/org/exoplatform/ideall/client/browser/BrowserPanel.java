@@ -26,7 +26,7 @@ package org.exoplatform.ideall.client.browser;
 public interface BrowserPanel
 {
 
-   static final String ID = "Browser";
+   static final String ID = "BrowserPanel";
    
 }
 

@@ -70,7 +70,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
       createFieldForm();
       createButtons();
-
+      
       show();
 
       presenter = new CreateFolderPresenter(eventBus, context, href);
@@ -108,7 +108,8 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
       folderNameField.setWidth(300);
 
       paramsForm.setFields(caption, delimiter, folderNameField);
-
+      paramsForm.focusInItem(folderNameField);
+      
       vLayout.addMember(paramsForm);
    }
 

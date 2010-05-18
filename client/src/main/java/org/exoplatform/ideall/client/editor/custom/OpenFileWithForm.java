@@ -78,7 +78,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       //form.setMargin(5);
       form.setLayoutAlign(Alignment.LEFT);
       
-      useAsDef = new CheckboxItem("&nbsp;Use as default editor");
+      useAsDef = new CheckboxItem("Default", "&nbsp;Use as default editor");
       
       useAsDef.setAlign(Alignment.LEFT);
       //useAsDef.setShowTitle(false);

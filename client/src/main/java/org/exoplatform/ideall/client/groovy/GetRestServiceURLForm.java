@@ -64,7 +64,7 @@ public class GetRestServiceURLForm extends DialogWindow
       createButtons();
       show();
 
-      draw();
+      //draw();
 
       new Timer()
       {
@@ -111,7 +111,8 @@ public class GetRestServiceURLForm extends DialogWindow
       URLField.setSelectOnFocus(true);
 
       paramsForm.setFields(caption, delimiter, URLField);
-
+      paramsForm.focusInItem(URLField);
+      
       addItem(paramsForm);
 
       URLField.setValue(url);

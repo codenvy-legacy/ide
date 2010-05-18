@@ -64,7 +64,7 @@ public class GetItemURLForm extends DialogWindow
       createButtons();
       show();
 
-      draw();
+      //draw();
 
       new Timer()
       {
@@ -111,7 +111,8 @@ public class GetItemURLForm extends DialogWindow
       itemURLField.setSelectOnFocus(true);
 
       paramsForm.setFields(caption, delimiter, itemURLField);
-
+      paramsForm.focusInItem(itemURLField);
+      
       addItem(paramsForm);
 
       itemURLField.setValue(url);

@@ -107,7 +107,8 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       itemNameField.setShowTitle(false);
       itemNameField.setWidth(340);
       paramsForm.setFields(caption, delimiter, itemNameField);
-
+      paramsForm.focusInItem(itemNameField);
+      
       vLayout.addMember(paramsForm);
    }
 

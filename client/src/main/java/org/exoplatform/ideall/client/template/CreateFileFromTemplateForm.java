@@ -115,7 +115,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       actionsLayout.setWidth100();
 
       DynamicForm form = new DynamicForm();
-      fileNameField = new TextField("File Name");
+      fileNameField = new TextField("Name","File Name");
       fileNameField.setWidth(200);
       fileNameField.setWrapTitle(false);
       form.setColWidths("*", "195");
