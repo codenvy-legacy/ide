@@ -127,7 +127,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
          description = display.getDescriptionField().getValue();
       }
 
-      Template template = new Template(file.getContentType(), name, description, file.getContent());
+      Template template = new Template(file.getContentType(), name, description, file.getContent(),null);
       TemplateServiceImpl.getInstance().createTemplate(template);
    }
 

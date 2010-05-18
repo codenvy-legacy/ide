@@ -81,8 +81,8 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
-   TemplateListReceivedHandler, ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler,
-   CutItemsHandler, SelectWorkspaceHandler, EntryPointsReceivedHandler
+   ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler,
+   SelectWorkspaceHandler, EntryPointsReceivedHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -120,7 +120,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(RenameItemEvent.TYPE, this);
       addHandler(SearchFileEvent.TYPE, this);
       addHandler(SaveAsTemplateEvent.TYPE, this);
-      addHandler(TemplateListReceivedEvent.TYPE, this);
 
       addHandler(ShowLineNumbersEvent.TYPE, this);
 
@@ -130,10 +129,9 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(CopyItemsEvent.TYPE, this);
       addHandler(CutItemsEvent.TYPE, this);
-      
+
       addHandler(SelectWorkspaceEvent.TYPE, this);
-      addHandler(EntryPointsReceivedEvent.TYPE, this);      
-      
+      addHandler(EntryPointsReceivedEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -192,12 +190,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       new SaveAsTemplateForm(eventBus, file);
    }
 
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      context.setTemplateList(event.getTemplateList());
-      new CreateFileFromTemplateForm(eventBus, context);
-   }
-
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
       context.setShowLineNumbers(event.isShowLineNumber());
@@ -231,15 +223,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       context.getItemsToCut().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
-   
+
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
-      DiscoveryService.getInstance().getEntryPoints();      
+      DiscoveryService.getInstance().getEntryPoints();
    }
-   
+
    public void onEntryPointsReceived(EntryPointsReceivedEvent event)
    {
-      new EntryPointListForm(eventBus, context, event.getEntryPointList());      
-   }   
+      new EntryPointListForm(eventBus, context, event.getEntryPointList());
+   }
 
 }

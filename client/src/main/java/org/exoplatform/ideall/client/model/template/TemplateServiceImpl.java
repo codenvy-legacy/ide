@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
+import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ideall.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ideall.client.model.template.marshal.TemplateMarshaller;
@@ -76,8 +77,20 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    @Override
-   public void deleteTemplate(String templateName)
+   public void deleteTemplate(Template template)
    {
+      String url =
+         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" +  Configuration.APPLICATION 
+            + CONTEXT + "/" + template.getNodeName();
+
+      String errorMessage = "Registry service is not deployed.<br>Template not found.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+      TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE").header(
+         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
+
    }
 
    @Override
@@ -91,23 +104,23 @@ public class TemplateServiceImpl extends TemplateService
 
       templateList.getTemplates().add(
          new Template(MimeType.TEXT_XML, "Empty XML", "Create empty XML file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_XML)));
+            .getTemplateFor(MimeType.TEXT_XML), null));
 
       templateList.getTemplates().add(
          new Template(MimeType.TEXT_HTML, "Empty HTML", "Create empty HTML file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_HTML)));
+            .getTemplateFor(MimeType.TEXT_HTML), null));
 
       templateList.getTemplates().add(
          new Template(MimeType.TEXT_PLAIN, "Empty TEXT", "Create empty TEXT file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_PLAIN)));
+            .getTemplateFor(MimeType.TEXT_PLAIN), null) );
 
       templateList.getTemplates().add(
          new Template(MimeType.GOOGLE_GADGET, "Google Gadget", "Sample of Google Gadget", FileTemplates
-            .getTemplateFor(MimeType.GOOGLE_GADGET)));
+            .getTemplateFor(MimeType.GOOGLE_GADGET), null));
 
       templateList.getTemplates().add(
          new Template(MimeType.SCRIPT_GROOVY, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
-            .getTemplateFor(MimeType.SCRIPT_GROOVY)));
+            .getTemplateFor(MimeType.SCRIPT_GROOVY), null));
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       TemplateListReceivedEvent event = new TemplateListReceivedEvent(templateList);

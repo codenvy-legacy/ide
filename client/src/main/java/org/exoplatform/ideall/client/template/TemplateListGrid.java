@@ -58,6 +58,16 @@ public class TemplateListGrid extends ListGrid<Template>
    @Override
    protected void setRecordFields(ListGridRecord record, Template item)
    {
+      if (item.getNodeName() == null)
+      {
+         String icon = ImageUtil.getIcon(item.getMimeType());
+         record.setAttribute("icon", icon);
+         record.setAttribute("name", "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName() + "</font></span>");
+         record.setAttribute("description", "<span title=\"" + item.getDescription() + "\"><font color=\"#FF0000\">" + item.getDescription()
+            + "</font></span>");
+         return;
+      }
+      
       String icon = ImageUtil.getIcon(item.getMimeType());
       record.setAttribute("icon", icon);
       record.setAttribute("name", "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>");

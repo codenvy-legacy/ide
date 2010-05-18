@@ -25,6 +25,8 @@ package org.exoplatform.ideall.client.model.template;
 
 public class Template
 {
+   
+   private String nodeName;
 
    private String mimeType;
 
@@ -39,12 +41,13 @@ public class Template
 
    }
 
-   public Template(String mimeType, String name, String description, String content)
+   public Template(String mimeType, String name, String description, String content, String nodeName)
    {
       this.mimeType = mimeType;
       this.name = name;
       this.description = description;
       this.content = content;
+      this.nodeName = nodeName;
    }
 
    /**
@@ -111,4 +114,20 @@ public class Template
       this.mimeType = mimeType;
    }
 
+   /**
+    * @return the nodeName
+    */
+   public String getNodeName()
+   {
+      return nodeName;
+   }
+
+   /**
+    * @param nodeName the nodeName to set
+    */
+   public void setNodeName(String nodeName)
+   {
+      this.nodeName = nodeName;
+   }
+   
 }

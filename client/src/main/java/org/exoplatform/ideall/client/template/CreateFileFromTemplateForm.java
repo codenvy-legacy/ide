@@ -59,6 +59,8 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
    private IButton cancelButton;
 
+   private IButton deleteButton;
+
    private TemplateListGrid templateListGrid;
 
    private TextField fileNameField;
@@ -134,19 +136,28 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       createButton = new IButton("Create");
-      createButton.setWidth(90);
+      createButton.setWidth(75);
       createButton.setHeight(22);
       createButton.setIcon(Images.Buttons.YES);
 
       cancelButton = new IButton("Cancel");
-      cancelButton.setWidth(90);
+      cancelButton.setWidth(75);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
+      deleteButton = new IButton("Delete");
+      deleteButton.setWidth(75);
+      deleteButton.setHeight(22);
+      deleteButton.setIcon(Images.Buttons.DELETE);
+
       ToolbarItem tbi = new ToolbarItem();
       StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(createButton, delimiter1, cancelButton);
+      delimiter1.setWidth(2);
+
+      StatefulCanvas delimiter2 = new StatefulCanvas();
+      delimiter2.setWidth(2);
+
+      tbi.setButtons(deleteButton, delimiter1, createButton, delimiter2, cancelButton);
       buttonsForm.setFields(tbi);
       buttonsForm.setAutoWidth();
       return buttonsForm;
@@ -158,7 +169,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       presenter.destroy();
       super.onDestroy();
    }
-   
+
    public ListGridItem<Template> getTemplateListGrid()
    {
       return templateListGrid;
@@ -192,6 +203,30 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    public void enableCreateButton()
    {
       createButton.enable();
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#getDeleteButton()
+    */
+   public HasClickHandlers getDeleteButton()
+   {
+      return deleteButton;
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#setEnabledDeleteButton(boolean)
+    */
+   public void setDeleteButtonDisabled(boolean value)
+   {
+      deleteButton.setDisabled(value);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#selectLastTemplate()
+    */
+   public void selectLastTemplate()
+   {
+      templateListGrid.selectRecord(templateListGrid.getRecords().length - 1);
    }
 
 }

@@ -29,11 +29,14 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.FileTemplates;
 import org.exoplatform.ideall.client.model.template.TemplateService;
+import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -42,7 +45,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler
+public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler, TemplateListReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -105,7 +108,18 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
+      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
       TemplateService.getInstance().getTemplates();
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent)
+    */
+   public void onTemplateListReceived(TemplateListReceivedEvent event)
+   {
+      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
+      context.setTemplateList(event.getTemplateList());
+      new CreateFileFromTemplateForm(eventBus, context);
    }
 
 }

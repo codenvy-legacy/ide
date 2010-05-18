@@ -78,6 +78,8 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 
    private void parseTemplate(Node templateNode)
    {
+      String nodeName = templateNode.getNodeName();
+      
       Node node = getChildNode(templateNode, TEMPLATE);
 
       Node nameNode = getChildNode(node, NAME);
@@ -101,7 +103,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
         content = javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
       }
       
-      Template template = new Template(mimeType, name, description, content);
+      Template template = new Template(mimeType, name, description, content, nodeName);
       templateList.getTemplates().add(template);
    }
 

@@ -18,10 +18,16 @@ package org.exoplatform.ideall.client.template;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
+import org.exoplatform.ideall.client.model.template.TemplateService;
+import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
+import org.exoplatform.ideall.client.model.template.event.TemplateDeletedHandler;
+import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
@@ -45,7 +51,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class CreateFileFromTemplatePresenter
+public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, TemplateListReceivedHandler
 {
 
    public interface Display
@@ -59,11 +65,17 @@ public class CreateFileFromTemplatePresenter
 
       HasClickHandlers getCreateButton();
 
+      HasClickHandlers getDeleteButton();
+
       void closeForm();
 
       void enableCreateButton();
 
       void disableCreateButton();
+      
+      void setDeleteButtonDisabled(boolean value);
+      
+      void selectLastTemplate();
 
    }
 
@@ -84,6 +96,7 @@ public class CreateFileFromTemplatePresenter
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
+      handlers.addHandler(TemplateDeletedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -127,11 +140,48 @@ public class CreateFileFromTemplatePresenter
          }
       });
 
+      display.getDeleteButton().addClickHandler(new ClickHandler()
+      {
+
+         public void onClick(ClickEvent event)
+         {
+            deleteTemplate();
+         }
+      });
+
       display.getFileNameField().setValue("Untitled file");
 
       display.getTemplateListGrid().setValue(context.getTemplateList().getTemplates());
 
       display.disableCreateButton();
+      
+      display.setDeleteButtonDisabled(true);
+   }
+
+   /**
+    * Delete selected template
+    */
+   private void deleteTemplate()
+   {
+
+      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
+      Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedCallback()
+      {
+
+         public void execute(Boolean value)
+         {
+            if (value == null)
+            {
+               return;
+            }
+            if (value)
+            {
+               TemplateService.getInstance().deleteTemplate(selectedTemplate);
+            }
+         }
+
+      });
+
    }
 
    protected void templateSelected(Template template)
@@ -142,6 +192,15 @@ public class CreateFileFromTemplatePresenter
       }
       selectedTemplate = template;
       display.enableCreateButton();
+      
+      if (template.getNodeName() == null)
+      {
+         display.setDeleteButtonDisabled(true);
+      }
+      else
+      {
+         display.setDeleteButtonDisabled(false);
+      }
 
       String extension = IDEMimeTypes.getExtensionsMap().get(template.getMimeType());
       if (previousExtension != null)
@@ -175,7 +234,7 @@ public class CreateFileFromTemplatePresenter
       String href = item.getHref();
       if (item instanceof File)
       {
-         href = href.substring(0, href.lastIndexOf("/")+1);
+         href = href.substring(0, href.lastIndexOf("/") + 1);
       }
 
       String contentType = selectedTemplate.getMimeType();
@@ -191,6 +250,36 @@ public class CreateFileFromTemplatePresenter
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       display.closeForm();
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.model.template.event.TemplateDeletedHandler#onTemplateDeleted(org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent)
+    */
+   public void onTemplateDeleted(TemplateDeletedEvent event)
+   {
+      refreshTemplateList();
+      String message = "Template <b>" + event.getTemplateName() + "</b> deleted.";
+      Dialogs.getInstance().showInfo("IDEall", message);
+   }
+
+   /**
+    * Refresh List of the templates, after deleting
+    */
+   private void refreshTemplateList()
+   {
+      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
+      TemplateService.getInstance().getTemplates();
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent)
+    */
+   public void onTemplateListReceived(TemplateListReceivedEvent event)
+   {
+      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
+      context.setTemplateList(event.getTemplateList());
+      display.getTemplateListGrid().setValue(context.getTemplateList().getTemplates());
+      display.selectLastTemplate();
    }
 
 }

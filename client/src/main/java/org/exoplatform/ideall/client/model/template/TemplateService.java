@@ -42,6 +42,6 @@ public abstract class TemplateService
 
    public abstract void createTemplate(Template template);
 
-   public abstract void deleteTemplate(String templateName);
+   public abstract void deleteTemplate(Template template);
 
 }
