@@ -24,6 +24,7 @@ import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.RenameItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.autocompletion.JavaScriptAutoCompletionHandler;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
@@ -109,6 +110,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
+      new JavaScriptAutoCompletionHandler(eventBus, context);
+      ret
    }
 
    @Override
