@@ -118,7 +118,7 @@ public class AboutForm extends DialogWindow
       HLayout logoLayout = new HLayout();
       logoLayout.setWidth100();
       logoLayout.setHeight(LOGO_HEIGHT);
-      logoLayout.setAlign(Alignment.RIGHT);
+      logoLayout.setAlign(Alignment.CENTER);
       Img logoImage = new Img();
       logoImage.setSrc(Images.Logos.ABOUT_LOGO);
       logoImage.setHeight(LOGO_HEIGHT);

@@ -217,7 +217,7 @@ public interface Images
    public interface Logos
    {
 
-      public static final String ABOUT_LOGO = imageUrl + "logo/exoplatform.gif";
+      public static final String ABOUT_LOGO = imageUrl + "logo/eXo-IDE-Logo.png";
    
    }
 
