@@ -20,9 +20,6 @@
 package org.exoplatform.ideall.client.autocompletion;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
-import org.exoplatform.gwtframework.commons.dialogs.callback.StringValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
@@ -30,16 +27,10 @@ import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
-import com.smartgwt.client.types.Positioning;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -83,16 +74,16 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
       form.setTop(cursorOffsetY);
       form.setLeft(cursorOffsetX);      
       SelectItem autoCompleteList = new SelectItem();
-      autoCompleteList.setDefaultToFirstOption(true); 
-      //autoCompleteList.setName(this.context);
+      autoCompleteList.setTitle("");
       autoCompleteList.setValueMap(this.context, "item2", "item3");
       
-      autoCompleteList.addChangedHandler(new ChangedHandler() {  
-         public void onChanged(ChangedEvent event) {  
+      autoCompleteList.addChangeHandler(new ChangeHandler() {  
+         public void onChange(ChangeEvent event)
+         {
             onCompletionSelected((String) event.getValue());
          }  
-      });
-
+      });    
+      
       form.setItems(autoCompleteList);
       form.draw();      
    }
