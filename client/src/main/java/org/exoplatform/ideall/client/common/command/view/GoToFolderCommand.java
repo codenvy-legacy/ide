@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.event.navigation.GoToFolderEvent;
 public class GoToFolderCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "File/Go to Folder";
+   private static final String ID = "View/Go to Folder";
 
    private static final String TITLE = "Go to Folder";
 

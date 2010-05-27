@@ -27,15 +27,12 @@ import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
-import org.exoplatform.ideall.client.common.command.edit.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.GetFileURLCommand;
-import org.exoplatform.ideall.client.common.command.file.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
 import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
 import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
@@ -44,7 +41,6 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileAsCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadFile;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
@@ -57,9 +53,11 @@ import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFi
 import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
 import org.exoplatform.ideall.client.common.command.file.upload.OpenLocalFileCommand;
-import org.exoplatform.ideall.client.common.command.file.upload.UploadFile;
 import org.exoplatform.ideall.client.common.command.file.upload.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
+import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
+import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
+import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
@@ -143,9 +141,8 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
       addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
 
-      addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
+      
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
-      addCommand(new GetFileURLCommand()).disable().hide();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
       
@@ -161,14 +158,16 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
 
       addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
-      addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
 
       /*
        * VIEW GROUP
        */
 
       addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true);
-
+      addCommand(new GetFileURLCommand()).disable().hide();
+      addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
+      addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
+      
       /*
        * RUN GROUP
        */

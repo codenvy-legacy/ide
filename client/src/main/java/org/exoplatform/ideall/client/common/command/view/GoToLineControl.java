@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.common.command.edit;
+package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 public class GoToLineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Edit/Go to Line";
+   private static final String ID = "View/Go to Line";
 
    public GoToLineControl()
    {

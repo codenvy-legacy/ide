@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
@@ -39,7 +39,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "File/Get URL";
+   private static final String ID = "View/Get URL";
 
    private static final String TITLE = "Get URL";
 

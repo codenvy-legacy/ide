@@ -22,7 +22,6 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
 import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
 
 /**
@@ -33,13 +32,13 @@ import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
 public class DeleteLineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
    
-   private static final String ID = "Edit/Delete Line";
+   private static final String ID = "Edit/Delete Current Line";
    
    public DeleteLineControl()
    {
       super(ID);
-      setTitle("Delete Line");
-      setPrompt("Delete Line");
+      setTitle("Delete Current Line");
+      setPrompt("Delete Current Line");
       setIcon(Images.Edit.DELETE_LINE);
       setEvent(new DeleteCurrentLineEvent());
    }
