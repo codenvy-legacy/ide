@@ -45,10 +45,14 @@ import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateHandler;
+import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
+import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineHandler;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
@@ -78,7 +82,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler
+   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler
 {
 
    public interface Display
@@ -113,6 +117,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       void setLineNumbers(String path, boolean lineNumbers);
 
       void setEditorFocus(String path);
+      
+      void deleteCurrentLune(String path);
+      
+      void goToLine(String path, int lineNumber);
 
    }
 
@@ -186,6 +194,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
 
       handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
+      
+      handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
+      
+      handlers.addHandler(EditorGoToLineEvent.TYPE, this);
 
    }
 
@@ -493,6 +505,22 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       display.updateTabTitle(event.getFile().getHref());
       CookieManager.storeOpenedFiles(context);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.event.edit.DeleteCurrentLineHandler#onDeleteCurrentLine(org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent)
+    */
+   public void onDeleteCurrentLine(DeleteCurrentLineEvent event)
+   {
+        display.deleteCurrentLune(context.getActiveFile().getHref());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler#onEditorGoToLine(org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent)
+    */
+   public void onEditorGoToLine(EditorGoToLineEvent event)
+   {
+      display.goToLine(context.getActiveFile().getHref(), event.getLineNumber());
    }
 
 }

@@ -25,7 +25,9 @@ import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
+import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
+import org.exoplatform.ideall.client.common.command.edit.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
@@ -146,6 +148,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new GetFileURLCommand()).disable().hide();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
+      
 
       /*
        * EDIT GROUP
@@ -156,6 +159,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
 
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
+
+      addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
+      addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
 
       /*
        * VIEW GROUP

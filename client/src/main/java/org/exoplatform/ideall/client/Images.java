@@ -140,6 +140,10 @@ public interface Images
       
       public static final String PASTE_FILE = imageUrl + "menu/edit/paste.png";
       
+      public static final String DELETE_LINE = imageUrl + "menu/edit/delete_current_line.png";
+      
+      public static final String GO_TO_LINE = imageUrl + "menu/edit/go_to_line.png";
+      
    }
    
    public interface ControlButtons

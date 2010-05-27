@@ -20,6 +20,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -318,6 +319,31 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public void onEditorPanelRestored(EditorPanelRestoredEvent event)
    {
       minMaxControlButton.setMaximize(true);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#deleteCurrentLune()
+    */
+   public void deleteCurrentLune(String path)
+   {
+      TextEditor editor = getEditorTab(path).getTextEditor(); 
+      if( editor.canDeleteCurrentLine())
+      {
+         editor.deleteCurrentLine();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#goToLine(java.lang.String, int)
+    */
+   public void goToLine(String path, int lineNuber)
+   {
+      TextEditor editor = getEditorTab(path).getTextEditor(); 
+      if( editor.canGoToLine())
+      {
+         editor.goToLine(lineNuber);
+         
+      }
    }
 
 }

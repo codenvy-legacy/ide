@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.common;
 import org.exoplatform.ideall.client.action.CreateFolderForm;
 import org.exoplatform.ideall.client.action.DeleteItemForm;
 import org.exoplatform.ideall.client.action.GetItemURLForm;
+import org.exoplatform.ideall.client.action.GoToLineForm;
 import org.exoplatform.ideall.client.action.RenameItemForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.autocompletion.JavaScriptAutoCompletionHandler;
@@ -38,6 +39,8 @@ import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsHandler;
 import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
+import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
+import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
@@ -83,7 +86,7 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler,
-   SelectWorkspaceHandler, EntryPointsReceivedHandler
+   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -134,6 +137,8 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(SelectWorkspaceEvent.TYPE, this);
       addHandler(EntryPointsReceivedEvent.TYPE, this);
+
+      addHandler(GoToLineEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -234,6 +239,14 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onEntryPointsReceived(EntryPointsReceivedEvent event)
    {
       new EntryPointListForm(eventBus, context, event.getEntryPointList());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.event.edit.GoToLineHandler#onGoToLine(org.exoplatform.ideall.client.event.edit.GoToLineEvent)
+    */
+   public void onGoToLine(GoToLineEvent event)
+   {
+      new GoToLineForm(eventBus, context);
    }
 
 }
