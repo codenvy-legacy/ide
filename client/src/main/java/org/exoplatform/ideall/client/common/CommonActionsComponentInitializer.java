@@ -59,6 +59,7 @@ import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
+import org.exoplatform.ideall.client.statusbar.EditorCursorPosition;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 /**
@@ -191,8 +192,10 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * */
 
       addCommand(new NavigatorStatusControl(eventBus, context));
+      addCommand(new EditorCursorPosition(eventBus, context));
+      
       context.getStatusBarItems().add(NavigatorStatusControl.ID);
-
+      context.getStatusBarItems().add(EditorCursorPosition.ID);
    }
 
 }

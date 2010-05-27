@@ -22,6 +22,7 @@ import java.util.Iterator;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
@@ -88,7 +89,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public interface Display
    {
 
-      void openTab(File file, boolean lineNumbers, Editor editor);
+      void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -121,6 +122,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       void deleteCurrentLune(String path);
       
       void goToLine(String path, int lineNumber);
+      
+      TextEditor getEditor(String path);
 
    }
 
@@ -167,7 +170,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          {
             Editor editor = EditorUtil.getEditor(file.getContentType(), context);
             context.getOpenedEditors().put(file.getHref(), editor.getDescription());
-            display.openTab(file, context.isShowLineNumbers(), editor);
+            display.openTab(file, context.isShowLineNumbers(), editor, false);
          }
          catch (EditorNotFoundException e)
          {
@@ -425,9 +428,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.selectTab(event.getFile().getHref());
 
       String href = context.getActiveFile().getHref();
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-         display.hasRedoChanges(href)));
+//      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+//         display.hasRedoChanges(href)));
 
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
       CookieManager.storeOpenedFiles(context);
    }
 
@@ -444,8 +448,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
 
       String href = context.getActiveFile().getHref();
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-         display.hasRedoChanges(href)));
+//      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+//         display.hasRedoChanges(href)));
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
@@ -464,12 +469,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       ignoreContentChangedList.add(file.getHref());
 
-      display.openTab(file, context.isShowLineNumbers(), event.getEditor());
-
       context.getOpenedFiles().put(file.getHref(), file);
       context.getOpenedEditors().put(file.getHref(), event.getEditor().getDescription());
-
       context.setActiveFile(file);
+
+      display.openTab(file, context.isShowLineNumbers(), event.getEditor(), true);
+      
       display.selectTab(file.getHref());
 
       CookieManager.storeOpenedFiles(context);

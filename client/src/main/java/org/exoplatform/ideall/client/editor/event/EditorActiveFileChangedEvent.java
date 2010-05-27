@@ -17,6 +17,7 @@
 
 package org.exoplatform.ideall.client.editor.event;
 
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -36,15 +37,12 @@ public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChang
 
    private File file;
 
-   private boolean hasUndoChanges;
-
-   private boolean hasRedoChanges;
-
-   public EditorActiveFileChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
+   private TextEditor editor;
+   
+   public EditorActiveFileChangedEvent(File file, TextEditor editor)
    {
       this.file = file;
-      this.hasUndoChanges = hasUndoChanges;
-      this.hasRedoChanges = hasRedoChanges;
+      this.editor = editor;
    }
 
    @Override
@@ -64,14 +62,12 @@ public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChang
       return file;
    }
 
-   public boolean hasUndoChanges()
+   /**
+    * @return the editor
+    */
+   public TextEditor getEditor()
    {
-      return hasUndoChanges;
-   }
-
-   public boolean hasRedoChanges()
-   {
-      return hasRedoChanges;
+      return editor;
    }
 
 }

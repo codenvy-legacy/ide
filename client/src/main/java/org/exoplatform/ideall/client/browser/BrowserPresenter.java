@@ -375,7 +375,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          public void run()
          {
             eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), false, false));
+            //eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), null));
          }
       }.schedule(500);
    }

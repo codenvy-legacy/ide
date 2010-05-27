@@ -124,9 +124,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          try
          {
             activeTab = (EditorTab)event.getTab();
-            String path = activeTab.getFile().getHref();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), hasUndoChanges(path),
-               hasRedoChanges(path)));
+//            String path = activeTab.getFile().getHref();
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
          catch (Exception exc)
          {
@@ -145,7 +144,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    };
 
-   public void openTab(File file, boolean lineNumbers, Editor editor)
+   public void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent)
    {
       EditorTab tab = getEditorTab(file.getHref());
       boolean addTab = false;
@@ -169,6 +168,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          tabSet.addTab(tab);
          redraw();         
       }
+      
+      if (fireEvent) {
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, textEditor));
+      }             
    }
 
    public void selectTab(String path)
@@ -205,7 +208,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       tabSet.removeTab(tab);
       if (tabSet.getTabs().length == 0)
       {
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(null, false, false));
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
       }
    }
 
@@ -272,9 +275,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          if (editorTab.getFile().equals(oldFile))
          {
             editorTab.setFile(newFile);
-            String newFilePath = newFile.getHref();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
-               hasRedoChanges(newFilePath)));
+            //String newFilePath = newFile.getHref();
+//            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
+//               hasRedoChanges(newFilePath)));
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, editorTab.getTextEditor()));
             return;
          }
       }
@@ -344,6 +348,14 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          editor.goToLine(lineNuber);
          
       }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#getEditor(java.lang.String)
+    */
+   public TextEditor getEditor(String path)
+   {
+      return getEditorTab(path).getTextEditor();
    }
 
 }

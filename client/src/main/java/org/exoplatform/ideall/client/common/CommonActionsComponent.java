@@ -246,7 +246,10 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
     */
    public void onGoToLine(GoToLineEvent event)
    {
-      new GoToLineForm(eventBus, context);
+      if (context.getActiveFile() != null)
+      {
+         new GoToLineForm(eventBus, context);
+      }
    }
 
 }

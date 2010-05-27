@@ -68,10 +68,16 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
          setEnabled(false);
          return;
       }
-      else
+      
+      if (event.getEditor().canDeleteCurrentLine())
       {
          setVisible(true);
          setEnabled(true);
+      }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
       }
    }
    

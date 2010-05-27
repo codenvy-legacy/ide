@@ -71,7 +71,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
       }
 
       setVisible(true);
-      setEnabled(event.hasRedoChanges());
+      setEnabled(event.getEditor().hasRedoChanges());
    }
 
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)

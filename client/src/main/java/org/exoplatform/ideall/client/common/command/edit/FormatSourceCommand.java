@@ -63,17 +63,26 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
          setEnabled(false);
          return;
       }
-
-      if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+      
+      if (event.getEditor().canFormatSource())
+      {
+         if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+         {
+            setVisible(false);
+            setEnabled(false);
+         }
+         else
+         {
+            setVisible(true);
+            setEnabled(true);
+         }         
+      }
+      else
       {
          setVisible(false);
          setEnabled(false);
       }
-      else
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
+      
    }
 
 }

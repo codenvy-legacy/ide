@@ -61,11 +61,18 @@ public class GoToLineControl extends IDECommand implements EditorActiveFileChang
          setEnabled(false);
          return;
       }
-      else
+
+      if (event.getEditor().canGoToLine())
       {
          setVisible(true);
          setEnabled(true);
       }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
+      }
+
    }
 
 }
