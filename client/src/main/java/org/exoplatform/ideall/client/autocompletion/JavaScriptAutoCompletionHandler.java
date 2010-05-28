@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.autocompletion;
 
+import java.util.LinkedHashMap;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
@@ -29,8 +31,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -74,14 +76,18 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
       form.setTop(cursorOffsetY);
       form.setLeft(cursorOffsetX);      
       SelectItem autoCompleteList = new SelectItem();
-      autoCompleteList.setTitle("");
-      autoCompleteList.setValueMap(this.context, "item2", "item3");
-      
-      autoCompleteList.addChangeHandler(new ChangeHandler() {  
-         public void onChange(ChangeEvent event)
+      autoCompleteList.setShowTitle(false);
+      LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+      valueMap.put("function ()\n{\n}", "insert FUNCTION-block");
+      valueMap.put("for ()\n{\n}", "insert FOR-block");      
+      valueMap.put("if ()\n{\n} else {\n}", "insert IF-ELSE-block");      
+      autoCompleteList.setValueMap(valueMap);
+
+      autoCompleteList.addChangedHandler(new ChangedHandler() {  
+         public void onChanged(ChangedEvent event)
          {
             onCompletionSelected((String) event.getValue());
-         }  
+         }
       });    
       
       form.setItems(autoCompleteList);
