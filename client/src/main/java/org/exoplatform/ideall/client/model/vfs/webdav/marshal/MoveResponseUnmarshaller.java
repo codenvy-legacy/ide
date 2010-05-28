@@ -20,6 +20,8 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
+import com.google.gwt.http.client.Response;
+
 
 
 /**
@@ -39,7 +41,7 @@ public class MoveResponseUnmarshaller implements Unmarshallable
       this.item = item;
    }
    
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       item.setHref(href);
    }

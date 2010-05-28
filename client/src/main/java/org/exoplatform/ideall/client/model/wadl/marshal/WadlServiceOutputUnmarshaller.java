@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,12 +44,12 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
       this.application = application;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       WadlProcessor processor;
       try
       {
-         processor = new WadlProcessor(application, body);
+         processor = new WadlProcessor(application, response.getText());
          processor.unmarshal();
       }
       catch (IllegalWADLException e)

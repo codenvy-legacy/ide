@@ -19,6 +19,9 @@
  */
 package org.exoplatform.ideall.client.model.groovy;
 
+import com.google.gwt.http.client.Header;
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -33,22 +36,22 @@ public class RestServiceOutput
    
    private String method;
 
-   private String response;
+   private Response response;
 
    public RestServiceOutput(String url, String method)
    {
       this.url = url;
       this.method = method;
    }
-
-   public String getResponse()
-   {
-      return response;
-   }
-
-   public void setResponse(String response)
+   
+   public void setResponse(Response response)
    {
       this.response = response;
+   }
+   
+   public Response getResponse()
+   {
+      return response;
    }
 
    public String getUrl()
@@ -59,6 +62,24 @@ public class RestServiceOutput
    public String getMethod()
    {
       return method;
+   }
+   
+   public String getResponseAsHtmlString()
+   {
+      String headers = new String();
+      for (Header header : response.getHeaders())
+      {
+         headers += "<b>" + header.getName() + "</b>" + "&nbsp;:&nbsp;" 
+                  + header.getValue() + "<br/>";
+      }
+      
+      String result = "- -Status - - - - - - - -<br/>" 
+         + response.getStatusCode() + "&nbsp;" + response.getStatusText() + "<br/>"
+         + "- -Headers- - - - - - - -<br/>"
+         + headers
+         + "- -Text - - - - - - - - -<br/>"
+         + response.getText().replace("<", "&lt;").replace(">", "&gt;");
+      return result;
    }
 
 }

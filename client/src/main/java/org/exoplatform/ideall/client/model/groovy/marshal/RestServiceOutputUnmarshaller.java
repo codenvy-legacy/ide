@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.model.groovy.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.groovy.RestServiceOutput;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -39,9 +41,9 @@ public class RestServiceOutputUnmarshaller implements Unmarshallable
       this.output = output;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(Response response)
    {
-      output.setResponse(body);
+      output.setResponse(response);
    }
 
 }

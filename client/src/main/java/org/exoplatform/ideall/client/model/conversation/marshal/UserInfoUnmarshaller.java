@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.model.conversation.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -39,9 +41,9 @@ public class UserInfoUnmarshaller implements Unmarshallable
       this.userInfo = userInfo;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(Response response)
    {
-      userInfo.setName(body);
+      userInfo.setName(response.getText());
    }
 
 }

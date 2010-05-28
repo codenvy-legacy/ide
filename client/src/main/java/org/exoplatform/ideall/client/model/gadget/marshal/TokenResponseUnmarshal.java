@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.TokenResponse;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -45,11 +46,11 @@ public class TokenResponseUnmarshal implements Unmarshallable
    /**
     * {@inheritDoc}
     */
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         parseTokenResponse(body);
+         parseTokenResponse(response.getText());
       }
       catch (Exception exc)
       {

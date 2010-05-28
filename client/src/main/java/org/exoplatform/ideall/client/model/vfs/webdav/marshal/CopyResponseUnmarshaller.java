@@ -19,6 +19,8 @@ package org.exoplatform.ideall.client.model.vfs.webdav.marshal;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -27,7 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 public class CopyResponseUnmarshaller implements Unmarshallable
 {
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
    }
 

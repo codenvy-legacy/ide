@@ -23,6 +23,7 @@ import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
@@ -45,11 +46,11 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       this.eventBus = eventBus;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         parseGadgetMetadata(body);
+         parseGadgetMetadata(response.getText());
       }
       catch (Exception exc)
       {

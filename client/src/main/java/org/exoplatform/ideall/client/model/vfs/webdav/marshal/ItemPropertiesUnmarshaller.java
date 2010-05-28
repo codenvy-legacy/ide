@@ -28,6 +28,8 @@ import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -45,11 +47,11 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
       this.item = item;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         parseItemProperties(body);
+         parseItemProperties(response.getText());
       }
       catch (Exception exc)
       {

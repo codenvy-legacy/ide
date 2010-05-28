@@ -31,6 +31,10 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
+import java.util.ArrayList;
+
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -48,11 +52,11 @@ public class FolderContentUnmarshaller implements Unmarshallable
       this.folder = folder;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         parseFolderContent(body);
+         parseFolderContent(response.getText());
       }
       catch (Exception exc)
       {

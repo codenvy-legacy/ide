@@ -25,6 +25,7 @@ import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -54,11 +55,11 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
             return decodeURIComponent(text);
          }-*/;
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         Document dom = XMLParser.parse(body);
+         Document dom = XMLParser.parse(response.getText());
          Node templatesNode = dom.getElementsByTagName(TEMPLATES).item(0);
 
          NodeList templateNodes = templatesNode.getChildNodes();

@@ -203,10 +203,8 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
    {
       if (event.getException() == null)
       {
-         String response = event.getOutput().getResponse();
-         response = response.replace("<", "&lt;");
-         response = response.replace(">", "&gt;");
-
+         String response = event.getOutput().getResponseAsHtmlString();
+         
          OutputEvent outputEvent = new OutputEvent(response, OutputMessage.Type.OUTPUT);
          eventBus.fireEvent(outputEvent);
       }

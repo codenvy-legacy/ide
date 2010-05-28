@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ideall.client.model.vfs.webdav.marshal;
 
-import java.util.ArrayList;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
@@ -33,7 +31,10 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS .
@@ -55,11 +56,11 @@ public class SearchResultUnmarshaller implements Unmarshallable
       this.eventBus = eventBus;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         parseSearchResult(body);
+         parseSearchResult(response.getText());
       }
       catch (Exception exc)
       {

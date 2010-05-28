@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.model.vfs.webdav.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -39,7 +41,7 @@ public class ItemPropertiesSavingResultUnmarshaller implements Unmarshallable
       this.item = item;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(Response response)
    {
       item.setPropertiesChanged(false);
    }

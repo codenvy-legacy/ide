@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
@@ -67,11 +68,11 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       return null;
    }
 
-   public void unmarshal(String body) throws UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         Document dom = XMLParser.parse(body);
+         Document dom = XMLParser.parse(response.getText());
 
          Node configurationNode = dom.getElementsByTagName(SETTINGS).item(0);
 

@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.model.vfs.webdav.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
+import com.google.gwt.http.client.Response;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -39,7 +41,7 @@ public class FileContentSavingResultUnmarshaller implements Unmarshallable
       this.file = file;
    }
 
-   public void unmarshal(String body)
+   public void unmarshal(Response response)
    {
       file.setContentChanged(false);
       file.setNewFile(false);
