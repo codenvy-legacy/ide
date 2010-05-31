@@ -355,6 +355,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
     */
    public TextEditor getEditor(String path)
    {
+      EditorTab editorTab = getEditorTab(path);
+      if (editorTab == null)
+      {
+         return null;
+      }
       return getEditorTab(path).getTextEditor();
    }
 

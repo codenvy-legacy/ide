@@ -71,7 +71,14 @@ public class UndoTypingCommand extends IDECommand implements EditorActiveFileCha
       }
 
       setVisible(true);
-      setEnabled(event.getEditor().hasUndoChanges());
+      if(event.getEditor() != null)
+      {
+         setEnabled(event.getEditor().hasUndoChanges());         
+      }
+      else
+      {
+         setEnabled(false);
+      }
    }
 
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
