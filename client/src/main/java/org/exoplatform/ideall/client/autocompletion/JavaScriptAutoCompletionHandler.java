@@ -49,6 +49,7 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
    private String editorId;
    private String context;
    DynamicForm form;
+   private int cursorPositionX;
    
    public JavaScriptAutoCompletionHandler(HandlerManager eventBus, ApplicationContext context) {
       this.eventBus = eventBus;
@@ -60,7 +61,7 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
    public void onEditorAutoCompleteCalled(final EditorAutoCompleteCalledEvent event)
    {
       this.editorId = event.getEditorId();
-      this.context = event.getContext();
+      this.context = event.getLineContent();
       
       if (! event.getMimeType().equals(MimeType.APPLICATION_JAVASCRIPT)
            && ! event.getMimeType().equals(MimeType.TEXT_JAVASCRIPT)
@@ -69,6 +70,7 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
       
       int cursorOffsetX = event.getCursorOffsetX();
       int cursorOffsetY = event.getCursorOffsetY();
+      cursorPositionX = event.getCursorPositionX();
      
       // create and draw completion list
       form = new DynamicForm();  
@@ -100,7 +102,8 @@ public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalled
       
       this.eventBus.fireEvent(new EditorAutoCompleteEvent(
             this.editorId, 
-            completion
+            completion,
+            cursorPositionX
          )
       );
    }
