@@ -16,17 +16,18 @@
  */
 package org.exoplatform.ideall.client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -81,6 +82,8 @@ public class ApplicationContext
    private String searchFileName;
 
    private String searchContentType;
+   
+   private Map<String, String> hotKeys = new HashMap<String, String>();
 
    /**
     * Registered components
@@ -139,7 +142,7 @@ public class ApplicationContext
    private boolean initialized;
 
    private Item cached;
-
+   
    public ApplicationContext()
    {
       toolBarItems.add("");
@@ -358,6 +361,24 @@ public class ApplicationContext
    public List<String> getStatusBarItems()
    {
       return statusBarItems;
+   }
+
+   public Map<String, String> getHotKeys()
+   {
+      return hotKeys;
+   }
+   
+   public void setHotKeys(Map<String, String> hotKeys)
+   {
+      this.hotKeys = hotKeys;
+   }
+   
+   public List<String> getHotKeyList()
+   {
+      if (hotKeys == null) 
+      	return null;
+      
+      return new ArrayList<String>(hotKeys.values());
    }
 
 }
