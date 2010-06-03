@@ -311,7 +311,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
 
       context.setActiveFile(curentFile);
-      CookieManager.storeOpenedFiles(context);
+      CookieManager.getInstance().storeOpenedFiles(context);
       display.setEditorFocus(curentFile.getHref());
    }
 
@@ -336,8 +336,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       file.setContent(null);
       file.setContentChanged(false);
 
-      context.getOpenedFiles().remove(file.getHref());
-      CookieManager.storeOpenedFiles(context);
+      context.getOpenedFiles().remove(file.getHref());      
+      CookieManager.getInstance().storeOpenedFiles(context);
    }
 
    public void onEditorCloseFile(EditorCloseFileEvent event)
@@ -432,7 +432,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 //         display.hasRedoChanges(href)));
 
       eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
-      CookieManager.storeOpenedFiles(context);
+      CookieManager.getInstance().storeOpenedFiles(context);
    }
 
    private void setFileAsActive()
@@ -463,7 +463,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          File openedFile = context.getOpenedFiles().get(file.getHref());
          context.setActiveFile(openedFile);
          display.selectTab(openedFile.getHref());
-         CookieManager.storeOpenedFiles(context);
+         CookieManager.getInstance().storeOpenedFiles(context);
          return;
       }
 
@@ -477,7 +477,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       
       display.selectTab(file.getHref());
 
-      CookieManager.storeOpenedFiles(context);
+      CookieManager.getInstance().storeOpenedFiles(context);
    }
 
    public void onFileSaved(FileSavedEvent event)
@@ -501,7 +501,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          }
 
          updateTabTitle(savedFile.getHref());
-         CookieManager.storeOpenedFiles(context);
+         CookieManager.getInstance().storeOpenedFiles(context);
       }
 
    }
@@ -509,7 +509,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
    {
       display.updateTabTitle(event.getFile().getHref());
-      CookieManager.storeOpenedFiles(context);
+      CookieManager.getInstance().storeOpenedFiles(context);
    }
 
    /**

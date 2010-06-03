@@ -22,9 +22,11 @@ package org.exoplatform.ideall.client.cookie;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Cookies;
 
 /**
@@ -43,31 +45,48 @@ public class CookieManager
       static final String OPENED_FILES = "opened-files";
 
       static final String ACTIVE_FILE = "active-file";
+      
+      static final String LINE_NUMBERS = "line-numbers";
 
-      static final String INTRY_POINT = "entry-point";
+      static final String ENTRY_POINT = "entry-point";
 
    }
 
    private static final String OPENED_FILES_DELIMITER = "#";
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-                return decodeURIComponent(text);
-             }-*/;
+       return decodeURIComponent(text);
+    }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-                return encodeURIComponent(text);
-             }-*/;
+       return encodeURIComponent(text);
+    }-*/;
 
+   private static CookieManager instance;
+   
+   private HandlerManager eventBus;
+   
+   public static CookieManager getInstance() {
+      return instance;
+   }
+   
+   public CookieManager(HandlerManager eventBus) {
+      instance = this;
+      this.eventBus = eventBus;
+   }
+   
    /**
     * Storing Application context to browser cookies.
     * Stores opened files, active file.
     * 
     * @param context
     */
-   public static void storeOpenedFiles(ApplicationContext context)
+   public void storeOpenedFiles(ApplicationContext context)
    {
       storeOpenedFiles(context.getOpenedFiles());
       storeActiveFile(context.getActiveFile());
+      
+      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
    }
 
    /**
@@ -75,7 +94,7 @@ public class CookieManager
     * 
     * @param openedFiles
     */
-   private static void storeOpenedFiles(HashMap<String, File> openedFiles)
+   private void storeOpenedFiles(HashMap<String, File> openedFiles)
    {
       String files = "";
       Iterator<String> iterator = openedFiles.keySet().iterator();
@@ -104,7 +123,7 @@ public class CookieManager
     *      
     * @param activeFile
     */
-   private static void storeActiveFile(File file)
+   private void storeActiveFile(File file)
    {
       if (file == null)
       {
@@ -114,7 +133,7 @@ public class CookieManager
       {
          String fileHref = javaScriptEncodeURIComponent(file.getHref());
          Cookies.setCookie(Cookie.ACTIVE_FILE, fileHref);
-      }
+      }      
    }
 
    /**
@@ -122,33 +141,36 @@ public class CookieManager
     * 
     * @param entryPoint
     */
-   public static void storeEntryPoint(String entryPoint)
+   public void storeEntryPoint(String entryPoint)
    {
       if (entryPoint == null)
       {
-         Cookies.removeCookie(Cookie.INTRY_POINT);
+         Cookies.removeCookie(Cookie.ENTRY_POINT);
       }
       else
       {
-         Cookies.setCookie(Cookie.INTRY_POINT, entryPoint);
+         Cookies.setCookie(Cookie.ENTRY_POINT, entryPoint);
       }
+      
+      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
    }
 
    /**
     * Restore Application context from Browser cookies.
     * Restores paths of opened files, active file, selected repository and workspace names.
     */
-   public static void getApplicationState(ApplicationContext context)
+   public void getApplicationState(ApplicationContext context)
    {
-      String entryPoint = Cookies.getCookie(Cookie.INTRY_POINT);
+      String entryPoint = Cookies.getCookie(Cookie.ENTRY_POINT);
 
       context.setEntryPoint(entryPoint);
 
       restoreOpenedFiles(context);
       restoreActiveFile(context);
+      restoreLineNumbers(context);
    }
 
-   private static void restoreOpenedFiles(ApplicationContext context)
+   private void restoreOpenedFiles(ApplicationContext context)
    {
       String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);
       if (openedFilesCookie == null)
@@ -170,7 +192,7 @@ public class CookieManager
       }
    }
 
-   private static void restoreActiveFile(ApplicationContext context)
+   private void restoreActiveFile(ApplicationContext context)
    {
       String cookie = Cookies.getCookie(Cookie.ACTIVE_FILE);
       if (cookie == null)
@@ -181,6 +203,21 @@ public class CookieManager
       String activeFilePath = javaScriptDecodeURIComponent(cookie);
       File file = context.getPreloadFiles().get(activeFilePath);
       context.setActiveFile(file);
+   }
+   
+   public void storeLineNumbers(ApplicationContext context) {      
+      Cookies.setCookie(Cookie.LINE_NUMBERS, "" + context.isShowLineNumbers());
+      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
+   }
+   
+   private void restoreLineNumbers(ApplicationContext context) {
+      String cookie = Cookies.getCookie(Cookie.LINE_NUMBERS);
+      if (cookie == null) {
+         return;
+      }
+      
+      boolean lineNumbers = Boolean.parseBoolean(cookie);
+      context.setShowLineNumbers(lineNumbers);
    }
 
 }

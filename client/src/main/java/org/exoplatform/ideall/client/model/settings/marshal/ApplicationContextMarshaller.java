@@ -19,8 +19,6 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -44,7 +42,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    public String marshal()
    {
       String xml = "<" + SETTINGS + ">";
-      xml += getLineNumbers();
+      //xml += getLineNumbers();
       xml += getToolbar();
       xml += getEditors();
       xml += "</" + SETTINGS + ">";
@@ -52,11 +50,11 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       return xml;
    }
 
-   private String getLineNumbers()
-   {
-      String xml = "<" + LINE_NUMBERS + ">" + context.isShowLineNumbers() + "</" + LINE_NUMBERS + ">";
-      return xml;
-   }
+//   private String getLineNumbers()
+//   {
+//      String xml = "<" + LINE_NUMBERS + ">" + context.isShowLineNumbers() + "</" + LINE_NUMBERS + ">";
+//      return xml;
+//   }
 
    private String getToolbar()
    {

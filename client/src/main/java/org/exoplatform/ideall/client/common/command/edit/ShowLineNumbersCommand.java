@@ -21,11 +21,11 @@ package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
 /**
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.client.model.vfs.api.File;
  */
 
 public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFileChangedHandler,
-   ApplicationContextSavedHandler
+   BrowserCookiesUpdatedHandler
 {
 
    private static final String ID = "Edit/Show \\ Hide Line Numbers";
@@ -60,7 +60,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(ApplicationContextSavedEvent.TYPE, this);
+      addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
    }
 
    @Override
@@ -107,9 +107,9 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
       updateState();
    }
 
-   public void onApplicationContextSaved(ApplicationContextSavedEvent event)
+   public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
    {
-      updateState();
+      updateState();      
    }
 
 }

@@ -17,7 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings.marshal;
+package org.exoplatform.ideall.client.cookie.event;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,23 +28,21 @@ package org.exoplatform.ideall.client.model.settings.marshal;
  * @version $
  */
 
-public interface Const
+public class BrowserCookiesUpdatedEvent extends GwtEvent<BrowserCookiesUpdatedHandler>
 {
-
-   public static final String SETTINGS = "settings";
-
-//   public static final String LINE_NUMBERS = "line-numbers";
-
-   public static final String TOOLBAR = "toolbar";
-
-   public static final String TOOLBAR_ITEM = "toolbar-item";
    
-   public static final String EDITORS = "editors";
-   
-   public static final String EDITOR = "editor";
-   
-   public static final String MIME_TYPE = "mimetype";
-   
-   public static final String EDITOR_DESCRIPTION = "editordescription";
+   public static final GwtEvent.Type<BrowserCookiesUpdatedHandler> TYPE = new GwtEvent.Type<BrowserCookiesUpdatedHandler>();
+
+   @Override
+   protected void dispatch(BrowserCookiesUpdatedHandler handler)
+   {
+      handler.onBrowserCookiesUpdated(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<BrowserCookiesUpdatedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

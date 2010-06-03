@@ -21,9 +21,7 @@ package org.exoplatform.ideall.client.model.settings.marshal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -76,7 +74,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
 
          Node configurationNode = dom.getElementsByTagName(SETTINGS).item(0);
 
-         parseLineNumbers(configurationNode);
+         //parseLineNumbers(configurationNode);
          parseToolbar(configurationNode);
          parseEditors(configurationNode);
       }
@@ -104,16 +102,16 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       context.getDefaultEditors().putAll(editorsMap);
    }
 
-   private void parseLineNumbers(Node configurationNode)
-   {
-      if (getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().getLength() == 0)
-      {
-         return;
-      }
-
-      String lineNumbers = getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().item(0).getNodeValue();
-      context.setShowLineNumbers(Boolean.parseBoolean(lineNumbers));
-   }
+//   private void parseLineNumbers(Node configurationNode)
+//   {
+//      if (getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().getLength() == 0)
+//      {
+//         return;
+//      }
+//
+//      String lineNumbers = getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().item(0).getNodeValue();
+//      context.setShowLineNumbers(Boolean.parseBoolean(lineNumbers));
+//   }
 
    private void parseToolbar(Node configurationNode)
    {

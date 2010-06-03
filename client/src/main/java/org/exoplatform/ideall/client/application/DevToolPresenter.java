@@ -160,7 +160,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
     */
    public void onApplicationContextReceived(ApplicationContextReceivedEvent event)
    {
-      CookieManager.getApplicationState(context);
+      CookieManager.getInstance().getApplicationState(context);
 
       if (context.getEntryPoint() == null) {
          context.setEntryPoint(Configuration.getInstance().getDefaultEntryPoint());

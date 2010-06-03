@@ -5,6 +5,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
 import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -41,6 +42,8 @@ public class IDE
       HandlerManager eventBus = new HandlerManager(null);
 
       new Configuration(eventBus);
+      
+      new CookieManager(eventBus);
 
       //eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);

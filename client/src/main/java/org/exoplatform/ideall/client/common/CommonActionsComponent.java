@@ -33,6 +33,7 @@ import org.exoplatform.ideall.client.command.PasteItemsCommandThread;
 import org.exoplatform.ideall.client.command.SaveAllFilesCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileAsCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
@@ -50,10 +51,10 @@ import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
 import org.exoplatform.ideall.client.event.file.DeleteItemHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
-import org.exoplatform.ideall.client.event.file.RenameItemEvent;
-import org.exoplatform.ideall.client.event.file.RenameItemHander;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileWithHandler;
+import org.exoplatform.ideall.client.event.file.RenameItemEvent;
+import org.exoplatform.ideall.client.event.file.RenameItemHander;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateHandler;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
@@ -63,13 +64,9 @@ import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.search.SearchForm;
-import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
 import org.exoplatform.ideall.client.workspace.EntryPointListForm;
@@ -113,7 +110,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
-      
+
       new JavaScriptAutoCompletionHandler(eventBus, context);
    }
 
@@ -201,7 +198,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
       context.setShowLineNumbers(event.isShowLineNumber());
-      SettingsService.getInstance().saveSetting(context);
+      CookieManager.getInstance().storeLineNumbers(context);
    }
 
    public void onGetFileURL(GetFileURLEvent event)
