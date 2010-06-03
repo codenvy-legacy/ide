@@ -18,7 +18,7 @@ if (typeof gadgets != "undefined") {
 
 			+ '<script type="text/javascript" src="' + isomorphicDir
 			+ 'modules/ISC_Forms.js" /></script>'
-
+			
 			+ '<script type="text/javascript" src="' + isomorphicDir
 			+ 'modules/ISC_RichTextEditor.js" /></script>'
 

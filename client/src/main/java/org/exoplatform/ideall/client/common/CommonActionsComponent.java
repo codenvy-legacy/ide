@@ -113,6 +113,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    {
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
+      
       new JavaScriptAutoCompletionHandler(eventBus, context);
    }
 

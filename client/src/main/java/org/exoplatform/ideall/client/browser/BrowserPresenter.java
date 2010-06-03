@@ -131,6 +131,11 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       {
          public void onSelection(SelectionEvent<Item> event)
          {
+            
+            System.out.println("((((((((((((((((((((((((((((((((((((((((((((((9");
+            
+            System.out.println("selected item > " + event.getSelectedItem().getHref());
+            
             onItemSelected();
          }
       });

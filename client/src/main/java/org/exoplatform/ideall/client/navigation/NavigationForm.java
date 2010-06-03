@@ -67,6 +67,11 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
          tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, Images.BrowserPanel.ICON, false);
       }
+//      if (!tabContainer.isTabPanelExist(BrowserFormNew.ID))
+//      {
+//         BrowserFormNew navigatorForm = new BrowserFormNew(eventBus, context);
+//         tabContainer.addTabPanel(navigatorForm, BrowserFormNew.TITLE, Images.BrowserPanel.ICON, false);
+//      }
    }
 
    /**
@@ -83,6 +88,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
    public void selectBrowserPanel()
    {
+      //tabContainer.selectTabPanel(BrowserFormNew.ID);
       tabContainer.selectTabPanel(BrowserForm.ID);
    }
 

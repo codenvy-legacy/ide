@@ -35,6 +35,7 @@ public class IDEApplication implements EntryPoint
       KeyIdentifier debugKey = new KeyIdentifier();
       debugKey.setCtrlKey(true);
       debugKey.setKeyName("D");
+      
       Page.registerKey(debugKey, new KeyCallback()
       {
          public void execute(String keyName)
