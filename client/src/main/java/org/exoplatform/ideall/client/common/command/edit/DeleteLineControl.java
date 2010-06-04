@@ -62,7 +62,7 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getEditor() ==null)
       {
          setVisible(false);
          setEnabled(false);
