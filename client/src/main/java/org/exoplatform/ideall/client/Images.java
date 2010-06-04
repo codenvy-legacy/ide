@@ -77,6 +77,8 @@ public interface Images
       
       public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
       
+      public static final String HOTKEYS = imageUrl + "menu/window/hotkeys.png";
+      
       public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
       
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";

@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,31 +15,37 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
-package org.exoplatform.ideall.client.common.command.file.newfile;
+package org.exoplatform.ideall.client.hotkeys;
 
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
+import com.google.gwt.user.client.Event;
+
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Created by The eXo Platform SAS.
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id:
+ *
  */
-
-public class CreateFileFromTemplateCommand extends AbstractNewFileCommand
+public abstract class HotKeyManager
 {
-
-   private boolean browserPanelSelected = true;
-
-   public final static String ID = "File/New/Create File From Template...";
-
-   public CreateFileFromTemplateCommand()
+   private static HotKeyManager instance;
+   
+   public static HotKeyManager getInstance()
    {
-      super(ID, "From Template...", "Create File From Template...", Images.MainMenu.TEMPLATES,
-         new CreateFileFromTemplateEvent());
+      return instance;
    }
    
+   protected HotKeyManager()
+   {
+      instance = this;
+   }
+   
+   public abstract void onKeyDown(final Event event);
+   
+   public abstract void setHotKeyPressedListener(HotKeyPressedListener listener);
+   
+   public abstract void onKeyPress(final Event event);
+
+   public abstract void onKeyUp(final Event event);
 }

@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.editor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
@@ -68,6 +69,8 @@ import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.FileSavedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
+import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
@@ -85,7 +88,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorSetFocusOnActiveFileHandler
+   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorSetFocusOnActiveFileHandler,
+   RefreshHotKeysHandler
 {
 
    public interface Display
@@ -152,6 +156,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
 
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
+      
+      handlers.addHandler(RefreshHotKeysEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -538,6 +544,18 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorSetFocuOnActiveFile(EditorSetFocusOnActiveFileEvent event)
    {
       display.setEditorFocus(context.getActiveFile().getHref());
+   }
+
+   public void onRefreshHotKeys(RefreshHotKeysEvent event)
+   {
+      List<String> hotKeyList = context.getHotKeyList();
+      
+      Iterator<String> it = context.getOpenedFiles().keySet().iterator();
+      while (it.hasNext())
+      {
+         String file = it.next();
+         display.getEditor(file).setHotKeyList(hotKeyList);
+      }
    }
 
 }

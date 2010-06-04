@@ -17,13 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common;
+package org.exoplatform.ideall.client.hotkeys.event;
 
-import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.help.ShowAboutCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeHotKeysCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeToolbarCommand;
-import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceCommand;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,16 +28,21 @@ import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceComman
  * @version $
  */
 
-public class HelpActionsComponentInitializer extends AbstractComponentInitializer
+public class RefreshHotKeysEvent extends GwtEvent<RefreshHotKeysHandler>
 {
 
+   public static final GwtEvent.Type<RefreshHotKeysHandler> TYPE = new GwtEvent.Type<RefreshHotKeysHandler>();
+
    @Override
-   protected void onItitialize()
+   protected void dispatch(RefreshHotKeysHandler handler)
    {
-      addCommand(new SelectWorkspaceCommand()).enable().show().setDelimiterBefore().dockOnToolbar(true);
-      addCommand(new CustomizeToolbarCommand()).disable().hide().dockOnToolbar(true);
-      addCommand(new CustomizeHotKeysCommand()).enable().show().dockOnToolbar(true);
-      addCommand(new ShowAboutCommand()).enable().show();
+      handler.onRefreshHotKeys(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RefreshHotKeysHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

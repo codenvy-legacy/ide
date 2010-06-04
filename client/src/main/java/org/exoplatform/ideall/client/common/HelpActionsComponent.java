@@ -23,6 +23,9 @@ import org.exoplatform.ideall.client.application.component.AbstractApplicationCo
 import org.exoplatform.ideall.client.component.AboutForm;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogHandler;
+import org.exoplatform.ideall.client.hotkeys.CustomizeHotKeysPanel;
+import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
+import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ideall.client.toolbar.customize.CustomizeToolbarForm;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarHandler;
@@ -35,7 +38,7 @@ import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarHan
  */
 
 public class HelpActionsComponent extends AbstractApplicationComponent implements
-   ShowAboutDialogHandler, CustomizeToolbarHandler
+   ShowAboutDialogHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler
 {
 
    public HelpActionsComponent()
@@ -53,6 +56,7 @@ public class HelpActionsComponent extends AbstractApplicationComponent implement
    protected void registerHandlers()
    {
       handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
+      handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
    }
 
 
@@ -64,6 +68,11 @@ public class HelpActionsComponent extends AbstractApplicationComponent implement
    public void onCustomizeToolBar(CustomizeToolbarEvent event)
    {
       new CustomizeToolbarForm(eventBus, context);
+   }
+
+   public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
+   {
+      new CustomizeHotKeysPanel(eventBus, context);
    }
 
 

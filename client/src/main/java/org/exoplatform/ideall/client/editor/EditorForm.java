@@ -158,6 +158,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       configuration.setLineNumbers(lineNumbers);
       
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
+      //TODO: editor.setHotKeyList(List<String>hotKeys);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
       tab.setTextEditor(smartGwtTextEditor);

@@ -8,6 +8,7 @@ import org.exoplatform.ideall.client.common.HelpActionsComponent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
 import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
+import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
@@ -82,6 +83,8 @@ public class IDE
       context.getComponents().add(new GadgetActionsComponent());
 
       context.getComponents().add(new HelpActionsComponent());
+      
+      new HotKeyManagerImpl(eventBus, context);
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 

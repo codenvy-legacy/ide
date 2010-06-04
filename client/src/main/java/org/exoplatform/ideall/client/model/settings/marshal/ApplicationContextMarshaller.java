@@ -19,6 +19,10 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -45,8 +49,26 @@ public class ApplicationContextMarshaller implements Const, Marshallable
       //xml += getLineNumbers();
       xml += getToolbar();
       xml += getEditors();
+      xml += getHotKeys();
       xml += "</" + SETTINGS + ">";
 
+      return xml;
+   }
+   
+   private String getHotKeys()
+   {
+      String xml = "<" + HOT_KEYS + ">";
+      
+      Iterator<Entry<String, String>> it = context.getHotKeys().entrySet().iterator();
+      while (it.hasNext())
+      {
+         Entry<String, String> entry = it.next();
+         xml += "<" + HOT_KEY + ">";
+         xml += "<" + SHORTCUT +">" + entry.getKey() + "</" + SHORTCUT + ">";
+         xml += "<" + CONTROL_ID + ">" + entry.getValue() + "</" + CONTROL_ID + ">";
+         xml += "</" + HOT_KEY + ">";
+      }
+      xml += "</" + HOT_KEYS + ">";
       return xml;
    }
 

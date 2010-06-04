@@ -17,13 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common;
+package org.exoplatform.ideall.client.common.command.window;
 
-import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.help.ShowAboutCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeHotKeysCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeToolbarCommand;
-import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceCommand;
+import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,16 +30,20 @@ import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceComman
  * @version $
  */
 
-public class HelpActionsComponentInitializer extends AbstractComponentInitializer
+public class CustomizeHotKeysCommand extends IDECommand
 {
 
-   @Override
-   protected void onItitialize()
+   public static final String ID = "Window/HotKeys...";
+
+   public static final String TITLE = "Customize hot keys...";
+
+   public CustomizeHotKeysCommand()
    {
-      addCommand(new SelectWorkspaceCommand()).enable().show().setDelimiterBefore().dockOnToolbar(true);
-      addCommand(new CustomizeToolbarCommand()).disable().hide().dockOnToolbar(true);
-      addCommand(new CustomizeHotKeysCommand()).enable().show().dockOnToolbar(true);
-      addCommand(new ShowAboutCommand()).enable().show();
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(Images.MainMenu.HOTKEYS);
+      setEvent(new CustomizeHotKeysEvent());
    }
 
 }

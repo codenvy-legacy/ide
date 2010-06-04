@@ -19,12 +19,13 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
@@ -77,6 +78,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
          //parseLineNumbers(configurationNode);
          parseToolbar(configurationNode);
          parseEditors(configurationNode);
+         parseHotKeys(configurationNode);
       }
       catch (Exception exc)
       {
@@ -133,6 +135,26 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
 
       context.getToolBarItems().clear();
       context.getToolBarItems().addAll(toolbarItems);
+   }
+   
+   private void parseHotKeys(Node configurationNode)
+   {
+      Node hotKeys = getChildNode(configurationNode, HOT_KEYS);
+      
+      Map<String, String> hotKeysMap = new HashMap<String, String>();
+      
+      for (int i = 0; i < hotKeys.getChildNodes().getLength(); i++)
+      {
+         Node hotKeyItemNode = hotKeys.getChildNodes().item(i);
+         
+         String itemKey = getChildNode(hotKeyItemNode, SHORTCUT).getChildNodes().item(0).getNodeValue();
+         String itemValue = getChildNode(hotKeyItemNode, CONTROL_ID).getChildNodes().item(0).getNodeValue();
+         
+         hotKeysMap.put(itemKey, itemValue);
+      }
+      
+      context.getHotKeys().clear();
+      context.getHotKeys().putAll(hotKeysMap);
    }
 
 }

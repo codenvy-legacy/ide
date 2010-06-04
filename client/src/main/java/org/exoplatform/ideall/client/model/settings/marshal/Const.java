@@ -44,5 +44,13 @@ public interface Const
    public static final String MIME_TYPE = "mimetype";
    
    public static final String EDITOR_DESCRIPTION = "editordescription";
+   
+   public static final String HOT_KEYS = "hot-keys";
+   
+   public static final String HOT_KEY = "hot-key";
+   
+   public static final String SHORTCUT = "shortcut";
+   
+   public static final String CONTROL_ID = "control-id";
 
 }
