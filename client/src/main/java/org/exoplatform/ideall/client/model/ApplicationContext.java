@@ -378,7 +378,7 @@ public class ApplicationContext
       if (hotKeys == null) 
       	return null;
       
-      return new ArrayList<String>(hotKeys.values());
+      return new ArrayList<String>(hotKeys.keySet());
    }
 
 }

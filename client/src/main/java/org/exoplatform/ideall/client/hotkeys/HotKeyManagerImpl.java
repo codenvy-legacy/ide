@@ -53,8 +53,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    {
       public native void onWindowClosing(ClosingEvent event) /*-{
             $doc.onkeydown = null; 
-            $doc.onkeypress = null; 
-            $doc.onkeyup = null; 
       }-*/;
 
       private native void init() /*-{
@@ -63,15 +61,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
                   hotKeyNamager.@org.exoplatform.ideall.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
             } 
                   
-            $doc.onkeypress = function(evt) { 
-                  var hotKeyNamager = @org.exoplatform.ideall.client.hotkeys.HotKeyManager::getInstance()();
-                  hotKeyNamager.@org.exoplatform.ideall.client.hotkeys.HotKeyManager::onKeyPress(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
-            }
-             
-            $doc.onkeyup = function(evt) { 
-                  var hotKeyNamager = @org.exoplatform.ideall.client.hotkeys.HotKeyManager::getInstance()();
-                  hotKeyNamager.@org.exoplatform.ideall.client.hotkeys.HotKeyManager::onKeyUp(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
-            }
       }-*/;
    }
    

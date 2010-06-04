@@ -2,7 +2,7 @@
  * Copyright (C) 2003-2007 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General  License
+ * modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
  *
@@ -65,10 +65,13 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    private EditorTab activeTab;
 
    private MinMaxControlButton minMaxControlButton;
+   
+   private ApplicationContext context;
 
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
+      this.context = context;
 
       handlers = new Handlers(eventBus);
 
@@ -159,8 +162,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       configuration.setLineNumbers(lineNumbers);
       
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
-      //TODO: editor.setHotKeyList(List<String>hotKeys);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
+      smartGwtTextEditor.setHotKeyList(context.getHotKeyList());
 
       tab.setTextEditor(smartGwtTextEditor);
       tab.setFile(file);
