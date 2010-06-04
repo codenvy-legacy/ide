@@ -40,6 +40,8 @@ import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CopyItemsHandler;
 import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
 import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
+import org.exoplatform.ideall.client.event.edit.FindTextEvent;
+import org.exoplatform.ideall.client.event.edit.FindTextHandler;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
@@ -66,7 +68,8 @@ import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEv
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.search.SearchForm;
+import org.exoplatform.ideall.client.search.file.SearchForm;
+import org.exoplatform.ideall.client.search.text.FindTextForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
 import org.exoplatform.ideall.client.workspace.EntryPointListForm;
@@ -83,7 +86,7 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler,
-   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler
+   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler, FindTextHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -137,6 +140,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(EntryPointsReceivedEvent.TYPE, this);
 
       addHandler(GoToLineEvent.TYPE, this);
+      addHandler(FindTextEvent.TYPE, this);
 
       /*
        * Initializing Save, Save As, Save All Command Handlers
@@ -248,6 +252,14 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       {
          new GoToLineForm(eventBus, context);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ideall.client.event.edit.FindTextEvent)
+    */
+   public void onFindText(FindTextEvent event)
+   {
+      new FindTextForm(eventBus, context);
    }
 
 }

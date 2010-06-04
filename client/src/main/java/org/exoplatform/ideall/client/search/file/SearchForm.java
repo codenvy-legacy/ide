@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search;
+package org.exoplatform.ideall.client.search.file;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
@@ -188,7 +188,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getPathItem()
+    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getPathItem()
     */
    public HasValue<String> getPathItem()
    {
@@ -196,7 +196,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getSearchContentItem()
+    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getSearchContentItem()
     */
    public HasValue<String> getSearchContentItem()
    {
@@ -204,7 +204,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#getMimeTypeItem()
+    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getMimeTypeItem()
     */
    public HasValue<String> getMimeTypeItem()
    {
@@ -212,7 +212,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.SearchPresenter.Display#setMimeTypeValues(java.lang.String[])
+    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#setMimeTypeValues(java.lang.String[])
     */
    public void setMimeTypeValues(String[] mimeTypes)
    {

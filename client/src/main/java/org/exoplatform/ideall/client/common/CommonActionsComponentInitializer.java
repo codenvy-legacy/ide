@@ -26,6 +26,7 @@ import org.exoplatform.ideall.client.application.component.AbstractComponentInit
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
+import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
 import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
@@ -159,6 +160,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
 
       addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
+      addCommand(new FindTextCommand()).disable().hide().dockOnToolbar();
 
       /*
        * VIEW GROUP

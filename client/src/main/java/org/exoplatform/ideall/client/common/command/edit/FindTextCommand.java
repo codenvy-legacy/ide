@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,67 +15,63 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.event.edit.FindTextEvent;
 import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Created by The eXo Platform SAS.
+ *	
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:   ${date} ${time}
+ *
  */
-
-public class FormatSourceCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
+   private static final String ID = "Edit/Find...";
 
-   private static final String ID = "Edit/Format";
-   
-   private static final String TITLE = "Format";
-   
-   public FormatSourceCommand()
+   private static final String TITLE = "Find...";
+
+   public FindTextCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.FORMAT);
-      setEvent(new FormatFileEvent());
+      setIcon(Images.Edit.FIND_TEXT);
+      setEvent(new FindTextEvent());
    }
 
+   /**
+    * @see org.exoplatform.ideall.client.application.component.IDECommand#onRegisterHandlers()
+    */
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null)
+      if (event.getFile() == null)
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
-         
-      if (event.getEditor().canFormatSource())
+
+      if (event.getEditor().canFindAndReplace())
       {
-         if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
-         {
-            setVisible(false);
-            setEnabled(false);
-         }
-         else
-         {
-            setVisible(true);
-            setEnabled(true);
-         }         
+         setVisible(true);
+         setEnabled(true);
       }
       else
       {
@@ -83,5 +79,4 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
          setEnabled(false);
       }
    }
-
 }

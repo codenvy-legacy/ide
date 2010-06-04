@@ -146,6 +146,10 @@ public interface Images
       
       public static final String GO_TO_LINE = imageUrl + "menu/edit/go_to_line.png";
       
+      public static final String FIND_TEXT = imageUrl + "menu/edit/findText.png";
+      
+      public static final String REPLACE = imageUrl + "menu/edit/replace.png";
+      
    }
    
    public interface ControlButtons

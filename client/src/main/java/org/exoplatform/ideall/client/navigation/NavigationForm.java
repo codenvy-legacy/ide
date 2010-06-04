@@ -21,8 +21,8 @@ import org.exoplatform.ideall.client.browser.BrowserForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.Folder;
 import org.exoplatform.ideall.client.panel.TabContainer;
-import org.exoplatform.ideall.client.search.SearchResultPanel;
-import org.exoplatform.ideall.client.search.SearchResultsForm;
+import org.exoplatform.ideall.client.search.file.SearchResultPanel;
+import org.exoplatform.ideall.client.search.file.SearchResultsForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.layout.Layout;

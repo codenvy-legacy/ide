@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -32,8 +34,6 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
@@ -47,10 +47,16 @@ import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextHandler;
+import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFindTextHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ideall.client.editor.event.EditorReplaceTextHandler;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
@@ -69,10 +75,12 @@ import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.FileSavedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -88,8 +96,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorSetFocusOnActiveFileHandler,
-   RefreshHotKeysHandler
+   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler,
+   EditorFindTextHandler,
+   EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusOnActiveFileHandler, RefreshHotKeysHandler
 {
 
    public interface Display
@@ -124,11 +133,19 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       void setLineNumbers(String path, boolean lineNumbers);
 
       void setEditorFocus(String path);
-      
+
       void deleteCurrentLune(String path);
-      
+
       void goToLine(String path, int lineNumber);
-      
+
+      boolean findText(String findText, boolean caseSensitive, String path);
+
+      boolean findReplaceText(String findText, String replace, boolean caseSensitive, String path);
+
+      void replaceText(String findText, String replace, boolean caseSensitive, String path);
+
+      void replaceAllText(String findText, String replace, boolean caseSensitive, String path);
+
       TextEditor getEditor(String path);
 
    }
@@ -158,6 +175,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
       
       handlers.addHandler(RefreshHotKeysEvent.TYPE, this);
+
+      handlers.addHandler(EditorFindTextEvent.TYPE, this);
+      handlers.addHandler(EditorReplaceTextEvent.TYPE, this);
+      handlers.addHandler(EditorFindReplaceTextEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -205,9 +226,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
 
       handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
-      
+
       handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
       
       handlers.addHandler(EditorSetFocusOnActiveFileEvent.TYPE, this);
@@ -438,8 +459,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.selectTab(event.getFile().getHref());
 
       String href = context.getActiveFile().getHref();
-//      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-//         display.hasRedoChanges(href)));
+      //      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+      //         display.hasRedoChanges(href)));
 
       eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
       CookieManager.getInstance().storeOpenedFiles(context);
@@ -458,8 +479,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
 
       String href = context.getActiveFile().getHref();
-//      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-//         display.hasRedoChanges(href)));
+      //      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
+      //         display.hasRedoChanges(href)));
       eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
    }
 
@@ -484,7 +505,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       context.setActiveFile(file);
 
       display.openTab(file, context.isShowLineNumbers(), event.getEditor(), true);
-      
+
       display.selectTab(file.getHref());
 
       CookieManager.getInstance().storeOpenedFiles(context);
@@ -509,11 +530,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
             context.getOpenedFiles().put(savedFile.getHref(), savedFile);
             display.relocateFile(currentOpenedFile, savedFile);
          }
-
          updateTabTitle(savedFile.getHref());
          CookieManager.getInstance().storeOpenedFiles(context);
       }
-
    }
 
    public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
@@ -527,7 +546,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onDeleteCurrentLine(DeleteCurrentLineEvent event)
    {
-        display.deleteCurrentLune(context.getActiveFile().getHref());
+      display.deleteCurrentLune(context.getActiveFile().getHref());
    }
 
    /**
@@ -539,14 +558,49 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ideall.client.editor.event.EditorFindTextEvent)
+    */
+   public void onEditorFindText(EditorFindTextEvent event)
+   {
+      boolean isFound =
+         display.findText(event.getFindText(), event.isCaseSensitive(), event.getPath());
+      eventBus.fireEvent(new FindTextResultEvent(isFound));
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent)
+    */
+   public void onEditorReplaceText(EditorReplaceTextEvent event)
+   {
+      if (event.isReplaceAll())
+      {
+         display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+      }
+      else
+      {
+         display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextHandler#onEditorFindReplaceText(org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent)
+    */
+   public void onEditorFindReplaceText(EditorFindReplaceTextEvent event)
+   {
+      boolean isFound =
+         display.findReplaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+      eventBus.fireEvent(new FindTextResultEvent(isFound));
+   }
+
+   /**
     * @see org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler#onEditorSetFocuOnActiveFile(org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent)
     */
    public void onEditorSetFocuOnActiveFile(EditorSetFocusOnActiveFileEvent event)
    {
       display.setEditorFocus(context.getActiveFile().getHref());
    }
-
-   public void onRefreshHotKeys(RefreshHotKeysEvent event)
+   
+    public void onRefreshHotKeys(RefreshHotKeysEvent event)
    {
       List<String> hotKeyList = context.getHotKeyList();
       

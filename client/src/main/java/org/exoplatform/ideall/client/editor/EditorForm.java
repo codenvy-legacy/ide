@@ -2,7 +2,7 @@
  * Copyright (C) 2003-2007 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
+ * modify it under the terms of the GNU Affero General  License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
  *
@@ -32,6 +32,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
@@ -364,4 +365,38 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       return getEditorTab(path).getTextEditor();
    }
 
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#findText(java.lang.String, java.lang.String)
+    */
+   public boolean findText(String findText, boolean isCaseSensitive, String path)
+   {
+      return getEditor(path).findAndSelect(findText, isCaseSensitive);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#findReplaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    */
+   public boolean findReplaceText(String findText, String replace, boolean caseSensitive, String path)
+   {
+      getEditor(path).replaceFoundedText(findText, replace, caseSensitive);
+      return getEditor(path).findAndSelect(findText, caseSensitive);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#replaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    */
+   public void replaceText(String findText, String replace, boolean caseSensitive, String path)
+   {
+      getEditor(path).replaceFoundedText(findText, replace, caseSensitive);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#replaceAllText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    */
+   public void replaceAllText(String findText, String replace, boolean caseSensitive, String path)
+   {
+      while (getEditor(path).findAndSelect(findText, caseSensitive)){
+         getEditor(path).replaceFoundedText(findText, replace, caseSensitive);
+      }
+   }
 }
