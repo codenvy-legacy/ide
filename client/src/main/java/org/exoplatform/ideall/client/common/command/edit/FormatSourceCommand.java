@@ -57,13 +57,13 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
-      
+         
       if (event.getEditor().canFormatSource())
       {
          if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))

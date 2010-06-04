@@ -25,7 +25,12 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
+import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
+import org.exoplatform.gwtframework.ui.client.component.autocomlete.AutoCompleteForm;
+import org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
+import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -37,26 +42,119 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, TokensCollectedCallback
+public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, TokensCollectedCallback,
+   AutocompleteTokenSelectedHandler
 {
 
    private HashMap<String, TokenCollector> factories = new HashMap<String, TokenCollector>();
 
-   public AutoCompletionManager(HandlerManager eventBus, ApplicationContext context) {
+   private HandlerManager eventBus;
+
+   private ApplicationContext context;
+
+   private int cursorOffsetX;
+
+   private int cursorOffsetY;
+
+   private String lineContent;
+
+   private String editorId;
+
+   private String tokenToComplete;
+
+   private String afterToken;
+
+   private String beforeToken;
+
+   private int cursorPos;
+
+   public AutoCompletionManager(HandlerManager eventBus, ApplicationContext context)
+   {
+      this.context = context;
+      this.eventBus = eventBus;
+
       factories.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
+      factories.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
+      factories.put(MimeType.GOOGLE_GADGET, new JavaScriptTokenCollector(eventBus, context, this));
+
+      eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
-   
+
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
-      
+      System.out.println("AutoCompletionManager.onEditorAutoCompleteCalled()");
+      cursorOffsetX = event.getCursorOffsetX();
+      cursorOffsetY = event.getCursorOffsetY();
+      editorId = event.getEditorId();
+      lineContent = event.getLineContent();
+      cursorPos = event.getCursorPositionX();
+     // Window.alert("X" + cursorOffsetX + " Y" + cursorOffsetY);
+      //TODO edit lineContent to separate one token 
+      //      
+      //      tokenToComplete = lineContent;
+      //      
+      getTokenFromLine(lineContent);
+      TokenCollector collector = factories.get(event.getMimeType());
+      collector.getTokens(tokenToComplete);
+   }
+
+   private void getTokenFromLine(String line)
+   {
+      String tokenLine = "";
+      if (line.length() > cursorPos - 1)
+      {
+         afterToken = line.substring(cursorPos - 1, line.length());
+         tokenLine = line.substring(0, cursorPos - 1);
+
+      }
+      else
+      {
+         afterToken = "";
+         if (line.endsWith(" "))
+         {
+            tokenToComplete = "";
+            beforeToken = line;
+            return;
+         }
+
+         tokenLine = line;
+      }
+
+      if (tokenLine.contains(" "))
+      {
+         beforeToken = tokenLine.substring(0, tokenLine.lastIndexOf(" ") + 1);
+         tokenLine = tokenLine.substring(tokenLine.lastIndexOf(" ") + 1);
+         tokenToComplete = tokenLine;
+      }
+      else
+      {
+         beforeToken = "";
+         tokenToComplete = tokenLine;
+      }
    }
 
    public void onTokensCollected(List<String> tokens)
    {
-      System.out.println("AutoCompletionManager.onTokensCollected()");
-      
-      
-      
+      new AutoCompleteForm(eventBus, cursorOffsetX, cursorOffsetY, tokenToComplete, tokens, this);
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteTokenSelected(java.lang.String)
+    */
+   public void onAutocompleteTokenSelected(String token)
+   {
+      String tokenToPaste = beforeToken + token + afterToken;
+      int newCursorPos = (beforeToken + token).length() + 1;
+
+      eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()
+    */
+   public void onAutocompleteCancel()
+   {
+      eventBus.fireEvent(new EditorSetFocusOnActiveFileEvent());
    }
 
 }

@@ -50,6 +50,8 @@ import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateHandler;
 import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
@@ -83,7 +85,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler
+   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorSetFocusOnActiveFileHandler
 {
 
    public interface Display
@@ -201,6 +203,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
       
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
+      
+      handlers.addHandler(EditorSetFocusOnActiveFileEvent.TYPE, this);
 
    }
 
@@ -526,6 +530,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorGoToLine(EditorGoToLineEvent event)
    {
       display.goToLine(context.getActiveFile().getHref(), event.getLineNumber());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler#onEditorSetFocuOnActiveFile(org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent)
+    */
+   public void onEditorSetFocuOnActiveFile(EditorSetFocusOnActiveFileEvent event)
+   {
+      display.setEditorFocus(context.getActiveFile().getHref());
    }
 
 }

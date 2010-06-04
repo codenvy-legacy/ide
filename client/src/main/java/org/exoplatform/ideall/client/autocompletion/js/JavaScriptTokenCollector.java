@@ -19,7 +19,11 @@
  */
 package org.exoplatform.ideall.client.autocompletion.js;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.ideall.client.autocompletion.TokenCollector;
+import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -33,12 +37,87 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class JavaScriptTokenCollector implements TokenCollector
 {
-   
-   public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context) {
+
+   private HandlerManager eventBus;
+
+   private ApplicationContext context;
+
+   private TokensCollectedCallback tokensCollectedCallback;
+
+   public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
+      TokensCollectedCallback tokensCollectedCallback)
+   {
+      this.context = context;
+      this.eventBus = eventBus;
+      this.tokensCollectedCallback = tokensCollectedCallback;
+
    }
 
    public void getTokens(String prefix)
    {
+      List<String> tokens = new ArrayList<String>();
+      
+      tokens.add("abstract");
+      tokens.add("boolean");
+      tokens.add("break");
+      tokens.add("byte");
+      tokens.add("case");
+      tokens.add("catch");
+      tokens.add("char");
+      tokens.add("class");
+      tokens.add("const");
+      tokens.add("continue");
+      tokens.add("debugger");
+      tokens.add("default");
+      tokens.add("delete");
+      tokens.add("do");
+      tokens.add("double");
+      tokens.add("else");
+      tokens.add("enum");
+      tokens.add("export");
+      tokens.add("extends");
+      tokens.add("false");
+      tokens.add("final");
+      tokens.add("finally");
+      tokens.add("float");
+      tokens.add("for");
+      tokens.add("function");
+      tokens.add("goto");
+      tokens.add("if");
+      tokens.add("implements");
+      tokens.add("import");
+      tokens.add("in");
+      tokens.add("instanceof");
+      tokens.add("int");
+      tokens.add("interface");
+      tokens.add("long");
+      tokens.add("native");
+      tokens.add("new");
+      tokens.add("null");
+      tokens.add("package");
+      tokens.add("private");
+      tokens.add("protected");
+      tokens.add("public");
+      tokens.add("return");
+      tokens.add("short");
+      tokens.add("static");
+      tokens.add("super");
+      tokens.add("switch");
+      tokens.add("synchronized");
+      tokens.add("this");
+      tokens.add("throw");
+      tokens.add("throws");
+      tokens.add("transient");
+      tokens.add("true");
+      tokens.add("try");
+      tokens.add("typeof");
+      tokens.add("var");
+      tokens.add("void");
+      tokens.add("volatile");
+      tokens.add("while");
+      tokens.add("with");
+      
+      tokensCollectedCallback.onTokensCollected(tokens);
    }
 
 }
