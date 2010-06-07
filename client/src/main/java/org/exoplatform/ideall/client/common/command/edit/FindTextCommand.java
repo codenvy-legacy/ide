@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
  */
 public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
-   private static final String ID = "Edit/Find...";
+   public static final String ID = "Edit/Find...";
 
    private static final String TITLE = "Find...";
 

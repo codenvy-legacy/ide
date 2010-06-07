@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 public class GoToLineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "View/Go to Line";
+   public static final String ID = "View/Go to Line";
 
    public GoToLineControl()
    {

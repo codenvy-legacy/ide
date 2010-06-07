@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
 public class PasteItemsCommand extends MultipleSelectionItemsCommand implements ItemsToPasteSelectedHandler,
    PasteItemsCompleteHandler, ItemsSelectedHandler
 {
-   private static final String ID = "Edit/Paste Item(s)";
+   public static final String ID = "Edit/Paste Item(s)";
 
    private boolean pastePrepared = false;
 

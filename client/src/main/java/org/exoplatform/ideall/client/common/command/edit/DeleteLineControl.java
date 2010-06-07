@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
 public class DeleteLineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
    
-   private static final String ID = "Edit/Delete Current Line";
+   public static final String ID = "Edit/Delete Current Line";
    
    public DeleteLineControl()
    {

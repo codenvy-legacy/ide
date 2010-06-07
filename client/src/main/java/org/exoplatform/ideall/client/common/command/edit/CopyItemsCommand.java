@@ -31,7 +31,7 @@ import org.exoplatform.ideall.client.model.vfs.api.Item;
 public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private static final String ID = "Edit/Copy Item(s)";
+   public static final String ID = "Edit/Copy Item(s)";
    
    private Item selectedItem;
 
