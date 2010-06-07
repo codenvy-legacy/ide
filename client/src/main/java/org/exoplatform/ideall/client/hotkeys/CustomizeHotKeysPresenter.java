@@ -77,9 +77,14 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       
       void clearHotKeyField();
       
-      void focusInHotKeyField();     
-      
       void closeForm();
+      
+      void enableHotKeyField();
+      
+      void disableHotKeyField();
+      
+      void focusOnHotKeyField();
+      
    }
    
    private HandlerManager eventBus;
@@ -100,7 +105,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       this.context = context;
       
       handlers = new Handlers(eventBus);
-//      HotKeyManager.setHotKeyPressedListener(this);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
       
    }
@@ -153,6 +157,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       });
       
       fillHotKeyList();
+      
+      display.disableHotKeyField();
    }
    
    private void fillHotKeyList()
@@ -197,6 +203,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       
       display.enableBindButton();
       display.enableUnbindButton();
+      display.enableHotKeyField();
+      display.focusOnHotKeyField();
       display.getHotKeyField().setValue(selectedItem.getHotKey());
    }
    
@@ -330,6 +338,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       display.disableUnbindButton();
       display.clearHotKeyField();
       display.enableSaveButton();
+      display.disableHotKeyField();
       display.getHotKeyItemListGrid().setValue(hotKeys);
    }
 

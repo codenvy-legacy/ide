@@ -77,7 +77,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    private HandlerManager eventBus;
    
-   private ApplicationContext applicationContext;
+   private ApplicationContext context;
    
    private CustomizeHotKeysPresenter presenter;
    
@@ -97,7 +97,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       setShowMaximizeButton(true);
       
       this.eventBus = eventBus;
-      this.applicationContext = applicationContext;
+      this.context = applicationContext;
       
       vLayout = new VLayout();
       vLayout.setMargin(10);
@@ -105,7 +105,6 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       vLayout.setAlign(VerticalAlignment.TOP);
 
       hLayout = new HLayout();
-      //hLayout.setMargin(8);
       hLayout.setAutoHeight();
       hLayout.setWidth100();
       hLayout.setPadding(10);
@@ -302,18 +301,19 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       hotKeyField.clearValue();
    }
    
-   public void enableHotKeyField()
-   {
-      hotKeyField.enable();
-   }
-   
    public void disableHotKeyField()
    {
       hotKeyField.setDisabled(true);
    }
    
-   public void focusInHotKeyField()
+   public void enableHotKeyField()
+   {
+      hotKeyField.setDisabled(false);
+   }
+   
+   public void focusOnHotKeyField()
    {
       hotKeyField.focusInItem();
    }
+   
 }
