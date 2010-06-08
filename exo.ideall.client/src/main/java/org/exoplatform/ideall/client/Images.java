@@ -64,34 +64,33 @@ public interface Images
       public static final String CUSTOMIZE_TOOLBAR = imageUrl + "menu/window/customizeToolBar.png";
 
       public static final String TEMPLATES = imageUrl + "menu/file/createFromTemplate.png";
-      
+
       public static final String GOTOFOLDER = imageUrl + "menu/file/goToFolder.png";
-      
+
       public static final String GET_URL = imageUrl + "menu/file/url.png";
-      
+
       public static final String OPENWITH = imageUrl + "menu/file/openWith.png";
-            
+
       public static final String DOWNLOAD = imageUrl + "menu/file/download.png";
-      
+
       public static final String DOWNLOAD_FOLDER = imageUrl + "menu/file/download_zip.png";
-      
+
       public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
-      
+
       public static final String HOTKEYS = imageUrl + "menu/window/hotkeys.png";
-      
+
       public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
-      
+
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
-      
+
       public static final String UPLOAD_FILE = imageUrl + "menu/file/upload_file.png";
-      
+
       public static final String UPLOAD = imageUrl + "menu/file/upload.png";
-      
-      
+
       /*
        * HTML
        */
-      
+
       public static final String PREVIEW_HTML = imageUrl + "html/preview.png";
 
       /*
@@ -109,18 +108,18 @@ public interface Images
       public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload.png";
 
       public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload.png";
-      
+
       public static final String URL = imageUrl + "groovy/url.png";
-      
+
       /*
        * GADGET
        */
       public static final String PREVIEW_GADGET = imageUrl + "gadget/preview.png";
-      
+
       public static final String DEPLOY_GADGET = imageUrl + "gadget/deployGadget.png";
-      
+
       public static final String UNDEPLOY_GADGET = imageUrl + "gadget/undeployGadget.png";
-      
+
    }
 
    public interface Edit
@@ -135,35 +134,34 @@ public interface Images
       public static final String SHOW_LINE_NUMBERS = imageUrl + "menu/edit/showLineNumbers.png";
 
       public static final String HIDE_LINE_NUMBERS = imageUrl + "menu/edit/hideLineNumbers.png";
-      
+
       public static final String COPY_FILE = imageUrl + "menu/edit/copy.png";
-      
+
       public static final String CUT_FILE = imageUrl + "menu/edit/cut.png";
-      
+
       public static final String PASTE_FILE = imageUrl + "menu/edit/paste.png";
-      
+
       public static final String DELETE_LINE = imageUrl + "menu/edit/delete_current_line.png";
-      
+
       public static final String GO_TO_LINE = imageUrl + "menu/edit/go_to_line.png";
-      
+
       public static final String FIND_TEXT = imageUrl + "menu/edit/findText.png";
-      
+
       public static final String REPLACE = imageUrl + "menu/edit/replace.png";
-      
+
    }
-   
+
    public interface ControlButtons
    {
-      
+
       public static final String MAXIMIZE = imageUrl + "buttons/minmax/maximize.png";
-      
+
       public static final String RESTORE = imageUrl + "buttons/minmax/minimize.png";
-      
+
    }
 
    public interface ViewPanel
    {
-
 
    }
 
@@ -176,13 +174,13 @@ public interface Images
 
    public interface OutputPanel
    {
-      
+
       public static final String BUTTON_CLEAR = imageUrl + "panel/output/buttonClear.png";
 
       public static final String ICON = imageUrl + "panel/output/output.png";
 
    }
-   
+
    public interface BrowserPanel
    {
 
@@ -190,14 +188,12 @@ public interface Images
 
    }
 
-   
    public interface SearchPanel
    {
 
       static final String ICON = imageUrl + "panel/search/search.png";
 
    }
-
 
    public interface FileTypes
    {
@@ -219,8 +215,10 @@ public interface Images
       public static final String CSS = imageUrl + "filetype/css.png";
 
       public static final String GADGET = imageUrl + "filetype/gadget.png";
-      
+
       public static final String FOLDER = imageUrl + "filetype/folder_closed.png";
+
+      public static final String UWA_WIDGET = imageUrl + "filetype/uwa-widget.png";
 
    }
 
@@ -228,7 +226,7 @@ public interface Images
    {
 
       public static final String ABOUT_LOGO = imageUrl + "logo/eXo-IDE-Logo.png";
-   
+
    }
 
    public interface Buttons
@@ -247,7 +245,7 @@ public interface Images
       public static final String ADD = imageUrl + "buttons/add.png";
 
       public static final String DELETE = imageUrl + "buttons/remove.png";
-      
+
       public static final String UP = imageUrl + "buttons/up.png";
 
       public static final String DOWN = imageUrl + "buttons/down.png";
@@ -273,7 +271,7 @@ public interface Images
       public static final String ASK = imageUrl + "dialog/ask.png";
 
    }
-   
+
    public static final String BLANK = imageUrl + "blank.png";
 
 }

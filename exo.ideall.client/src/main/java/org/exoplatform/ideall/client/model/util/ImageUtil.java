@@ -21,6 +21,8 @@ import java.util.HashMap;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 
+import com.smartgwt.client.widgets.menu.IMenuButton;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -45,6 +47,7 @@ public class ImageUtil
       images.put(MimeType.TEXT_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
       images.put(MimeType.APPLICATION_X_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
       images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
+      images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
    }
 
    public static String getIcon(String mimeType)

@@ -33,7 +33,7 @@ public class NewUWAWidgetCommand extends AbstractNewFileCommand
 
    public NewUWAWidgetCommand()
    {
-      super(ID, "Netvibes Widget", "Create Netvibes Widget file", Images.MainMenu.TEMPLATES,
+      super(ID, "Netvibes Widget", "Create Netvibes Widget file", Images.FileTypes.UWA_WIDGET,
          new CreateNewFileEvent(MimeType.UWA_WIDGET));
    }
 }
