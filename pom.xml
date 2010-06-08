@@ -295,8 +295,12 @@
 	</build>
 
 	<modules>
-		<module>client</module>
-		<module>component</module>
-		<module>extension</module>
+		<module>exo.ideall.component.commons</module>
+    <module>exo.ideall.component.gadget</module>
+    <module>exo.ideall.component.netvibes</module>
+    <module>exo.ideall.client</module>
+    <module>exo.ideall.extension.config</module>
+    <module>exo.ideall.extension.webapp</module>
+		<!--module>exo.ideall.packaging.gatein</module-->
 	</modules>
 </project>
