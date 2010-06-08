@@ -82,20 +82,22 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
-      System.out.println("AutoCompletionManager.onEditorAutoCompleteCalled()");
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
       cursorPos = event.getCursorPositionX();
-     // Window.alert("X" + cursorOffsetX + " Y" + cursorOffsetY);
+      // Window.alert("X" + cursorOffsetX + " Y" + cursorOffsetY);
       //TODO edit lineContent to separate one token 
       //      
       //      tokenToComplete = lineContent;
       //      
       getTokenFromLine(lineContent);
       TokenCollector collector = factories.get(event.getMimeType());
-      collector.getTokens(tokenToComplete);
+      if (collector != null)
+      {
+         collector.getTokens(tokenToComplete);
+      }
    }
 
    private void getTokenFromLine(String line)
