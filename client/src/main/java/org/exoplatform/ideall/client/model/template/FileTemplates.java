@@ -40,6 +40,8 @@ public class FileTemplates
       addEmptyTXT();
       //addTXTContent();
       addGadgetContent();
+      
+      addUWAWidgetContent();
    }
    
    public static String getTemplateFor(String mimeType) {
@@ -102,5 +104,58 @@ public class FileTemplates
 
       templates.put(MimeType.GOOGLE_GADGET, content);      
    }
-
+   
+   private static void addUWAWidgetContent()
+   {
+      String content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
+"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+"<html xmlns=\"http://www.w3.org/1999/xhtml\" \n" + 
+"  xmlns:widget=\"http://www.netvibes.com/ns/\">\n" +
+"    <head>\n" +
+"    <meta name=\"author\" content=\"John Doe\" />\n" +
+"    <meta name=\"description\" content=\"A descriptive description\" />\n" +
+"    <meta name=\"apiVersion\" content=\"1.0\" />\n" +
+"    <meta name=\"autoRefresh\" content=\"20\" />\n" +
+"    <meta name=\"debugMode\" content=\"true\" />\n" +
+"    <link rel=\"stylesheet\" type=\"text/css\"\n" +
+"       href=\"http://www.netvibes.com/themes/uwa/style.css\" />\n" +
+"    <script type=\"text/javascript\"\n"+ 
+"       src=\"http://www.netvibes.com/js/UWA/load.js.php?env=Standalone\"></script>\n" +
+"    <title>Title of the Widget</title>\n" +
+"    <link rel=\"icon\" type=\"image/png\"\n" + 
+"      href=\"http://www.example.com/favicon.ico\" />\n" +
+"<!-- Add your UWA preferences as needed -->\n" +
+"    <widget:preferences>\n" +
+"    </widget:preferences>\n" +
+"    <style type=\"text/css\">\n" +
+"        /* Add your CSS rules */ \n" +
+"    </style>\n\n" +
+"    <script type=\"text/javascript\">\n" +
+"// this is just some sample code\n" +
+"// you should delete it all to place your own code instead\n\n" +
+"      // this is how you would declare a global JS object\n" +
+"     var YourWidgetName = {};\n\n" +
+"      // this is how you would declare a global JS variable\n" +
+"     YourWidgetName.yourVariable = \"My value\";\n\n" +
+"      // this is how you would declare a global 'display()' function\n" +
+"     YourWidgetName.display = function(argument) {\n" +
+"        // display code\n" +
+"     }\n\n" +
+"      // widget.onLoad is the first method called,\n" +
+"      // nothing can be done without it,\n" +
+"      // the rest of the code must be triggered from here - not <body onload=\"\">.\n" +
+"      widget.onLoad = function() {\n" +
+"        // sample Ajax request for a feed, with 'YourWidgetName.display()' used as the callback method\n"+
+"        UWA.Data.getFeed(widget.getValue('url'), YourWidgetName.display);\n" +   
+"      }\n" +
+"    </script>\n" +
+"  </head>\n" +
+"  <body>\n" +
+"    <p>Loading...</p>\n" +
+"  </body>\n" +
+"</html>\n";
+      templates.put(MimeType.UWA_WIDGET, content);
+   }
+   
 }

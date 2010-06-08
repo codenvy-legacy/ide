@@ -154,10 +154,24 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       {
          previewGadget();
       }
+      else if(MimeType.UWA_WIDGET.equals(file.getContentType()))
+      {
+         previewUWAWidget(file);
+      }
       else
       {
          display.showPreview(file.getHref());
       }
+   }
+
+   /**
+    * 
+    */
+   private void previewUWAWidget(File file)
+   {
+      String href = file.getHref();
+      href = href.replace("jcr", "ideall/netvibes");
+      display.showPreview(href);
    }
 
    private void previewGadget()

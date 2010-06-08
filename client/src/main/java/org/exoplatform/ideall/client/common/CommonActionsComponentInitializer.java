@@ -52,6 +52,7 @@ import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCo
 import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewUWAWidgetCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
 import org.exoplatform.ideall.client.common.command.file.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.common.command.file.upload.UploadFileCommand;
@@ -107,6 +108,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
       addCommand(newGadgetCommand).disable().hide();
+      
+      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
+      addCommand(newUWAWidgetCommand).disable().hide();
 
       CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
       addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
@@ -187,6 +191,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       newFilePopupMenuCommand.getCommands().add(newJavaScriptFileCommand);
       newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
       newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
+      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
       newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
 
       /*

@@ -64,6 +64,7 @@ public class IDEMimeTypes
       add("xml", MimeType.TEXT_XML);
       add("groovy", MimeType.SCRIPT_GROOVY);
       add("xml", MimeType.GOOGLE_GADGET);
+      add("html", MimeType.UWA_WIDGET);
    }
 
    public static boolean isMimeTypeSupported(String mimeType)

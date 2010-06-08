@@ -61,7 +61,7 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
          setEnabled(false);

@@ -65,7 +65,8 @@ public class ShowPreviewCommand extends IDECommand implements EditorActiveFileCh
       }
 
       if (MimeType.TEXT_HTML.equals(event.getFile().getContentType())
-         || MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
+         || MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType())
+         || MimeType.UWA_WIDGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          if (event.getFile().isNewFile())
@@ -83,5 +84,5 @@ public class ShowPreviewCommand extends IDECommand implements EditorActiveFileCh
          setEnabled(false);
       }
    }
-   
+
 }
