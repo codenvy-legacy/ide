@@ -212,7 +212,7 @@
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.netvibes.component</artifactId>
+					<artifactId>exo.ideall.component.netvibes</artifactId>
 				</dependency>
 				<dependency>
 					<groupId>hsqldb</groupId>
