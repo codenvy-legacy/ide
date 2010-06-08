@@ -137,7 +137,9 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    public void onTokensCollected(List<String> tokens)
    {
-      new AutoCompleteForm(eventBus, cursorOffsetX, cursorOffsetY, tokenToComplete, tokens, this);
+      int x = cursorOffsetX - tokenToComplete.length() * 8 + 4;
+      int y = cursorOffsetY + 4;
+      new AutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, this);
    }
 
    /**
