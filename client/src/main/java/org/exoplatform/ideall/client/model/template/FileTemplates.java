@@ -152,7 +152,7 @@ public class FileTemplates
 "    </script>\n" +
 "  </head>\n" +
 "  <body>\n" +
-"    <p>Loading...</p>\n" +
+"    <p>Hello world!</p>\n" +
 "  </body>\n" +
 "</html>\n";
       templates.put(MimeType.UWA_WIDGET, content);

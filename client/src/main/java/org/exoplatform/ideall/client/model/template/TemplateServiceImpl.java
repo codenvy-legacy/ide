@@ -80,13 +80,13 @@ public class TemplateServiceImpl extends TemplateService
    public void deleteTemplate(Template template)
    {
       String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" +  Configuration.APPLICATION 
+         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
             + CONTEXT + "/" + template.getNodeName();
 
       String errorMessage = "Registry service is not deployed.<br>Template not found.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
       TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());
-      
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE").header(
          HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
@@ -112,7 +112,7 @@ public class TemplateServiceImpl extends TemplateService
 
       templateList.getTemplates().add(
          new Template(MimeType.TEXT_PLAIN, "Empty TEXT", "Create empty TEXT file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_PLAIN), null) );
+            .getTemplateFor(MimeType.TEXT_PLAIN), null));
 
       templateList.getTemplates().add(
          new Template(MimeType.GOOGLE_GADGET, "Google Gadget", "Sample of Google Gadget", FileTemplates
@@ -122,11 +122,14 @@ public class TemplateServiceImpl extends TemplateService
          new Template(MimeType.SCRIPT_GROOVY, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
             .getTemplateFor(MimeType.SCRIPT_GROOVY), null));
 
+      templateList.getTemplates().add(
+         new Template(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
+            .getTemplateFor(MimeType.UWA_WIDGET), null));
+
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       TemplateListReceivedEvent event = new TemplateListReceivedEvent(templateList);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-
 }

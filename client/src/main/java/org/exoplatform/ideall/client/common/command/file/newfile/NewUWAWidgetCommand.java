@@ -29,11 +29,11 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  */
 public class NewUWAWidgetCommand extends AbstractNewFileCommand
 {
-   public final static String ID = "File/New/UWA Widget";
+   public final static String ID = "File/New/Netvibes Widget";
 
    public NewUWAWidgetCommand()
    {
-      super(ID, "UWA Widget", "Create UWA Widget file", Images.MainMenu.TEMPLATES,
+      super(ID, "Netvibes Widget", "Create Netvibes Widget file", Images.MainMenu.TEMPLATES,
          new CreateNewFileEvent(MimeType.UWA_WIDGET));
    }
 }
