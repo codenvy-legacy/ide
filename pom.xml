@@ -126,12 +126,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.netvibes.component</artifactId>
+				<artifactId>exo.ideall.component.netvibes</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.gatein.gadget.register</artifactId>
+				<artifactId>exo.ideall.component.gadget</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
