@@ -32,12 +32,6 @@ public class IDE
 
    public IDE()
    {
-
-      for (int i = 0; i < 30; i++)
-      {
-         System.out.println();
-      }
-
       new SmartGWTDialogs();
 
       HandlerManager eventBus = new HandlerManager(null);
@@ -46,7 +40,6 @@ public class IDE
       
       new CookieManager(eventBus);
 
-      //eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandlerImpl());
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
       eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, Configuration.getInstance());
 
