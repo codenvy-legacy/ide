@@ -15,5 +15,6 @@
 	<modules>
 		<module>exo.ideall.gatein.gadget.register</module>
 		<module>exo.ideall.component.commons</module>
+		<module>exo.ideall.netvibes.component</module>
 	</modules>
 </project>
