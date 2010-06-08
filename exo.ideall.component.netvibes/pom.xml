@@ -2,13 +2,13 @@
 
 	<parent>
 		<groupId>org.exoplatform.ideall</groupId>
-		<artifactId>ideall.component.parent</artifactId>
+		<artifactId>ideall.parent</artifactId>
 		<version>1.0-Beta02-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.netvibes.component</artifactId>
+	<artifactId>exo.ideall.component.netvibes</artifactId>
 	<name>eXo IDE :: Server Side Netvibes Component</name>
 	<packaging>jar</packaging>
 
