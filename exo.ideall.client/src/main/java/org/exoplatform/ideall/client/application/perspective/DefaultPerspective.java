@@ -30,11 +30,15 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredEvent;
+import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
+import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEvent;
@@ -44,6 +48,7 @@ import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveHandler
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
+import org.exoplatform.ideall.client.outline.CodeHelperForm;
 import org.exoplatform.ideall.client.statusbar.StatusBarForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -64,7 +69,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHandler, RestoreEditorPanelHandler,
    MaximizeOperationPanelHandler, RestoreOperationPanelHandler, EditorActiveFileChangedHandler,
-   RestorePerspectiveHandler
+   RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler, RestoreCodeHelperPanelHandler
 {
 
    private static final int MARGIN = 3;
@@ -88,6 +93,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private EditorForm editorForm;
 
    private OperationForm operationForm;
+   
+   private CodeHelperForm codeHelperForm;
 
    //protected StatusBarForm statusBar;
 
@@ -106,6 +113,12 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private boolean editorPanelMaximized;
 
    private boolean operationPanelMaximized;
+   
+   private boolean codeHelperPanelVisible;
+   
+   private boolean codeHelperPanelMaximized;
+   
+   private int codeHelperPanelWidth;
 
    public DefaultPerspective(HandlerManager eventBus, ApplicationContext context)
    {
@@ -120,6 +133,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       eventBus.addHandler(RestoreOperationPanelEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(RestorePerspectiveEvent.TYPE, this);
+      eventBus.addHandler(RestoreCodeHelperPanelEvent.TYPE, this);
    }
 
    private void buildPerspective()
@@ -158,7 +172,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       verticalSplitLayout = new VLayout();
       verticalSplitLayout.setHeight100();
       verticalSplitLayout.setOverflow(Overflow.HIDDEN);
+      verticalSplitLayout.setResizeBarTarget("next");
+      verticalSplitLayout.setShowResizeBar(true);
       horizontalSplitLayout.addMember(verticalSplitLayout);
+      
+      codeHelperForm = new CodeHelperForm(eventBus, context);
+      codeHelperForm.setWidth("20%");
+      codeHelperForm.hide();
+      
+      horizontalSplitLayout.addMember(codeHelperForm);
 
       editorForm = new EditorForm(eventBus, context);
       editorForm.setShowResizeBar(true);
@@ -326,6 +348,55 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    public void onRestorePerspective(RestorePerspectiveEvent event)
    {
       restorePerspective();
+   }
+
+   public void onMaximizeCodeHelperPanel(MaximizeCodeHelperPanelEvent event)
+   {
+      maximizeCodeHelperPanel();
+   }
+
+   public void onRestoreCodeHelperPanel(RestoreCodeHelperPanelEvent event)
+   {
+      restoreCodeHelperPanel();
+   }
+   
+   private void maximizeCodeHelperPanel()
+   {
+      navigationPanelVisible = navigationForm.isVisible();
+      
+      navigationForm.hide();
+      
+      horizontalSplitLayout.setResizeBarSize(0);
+      verticalSplitLayout.hide();
+      
+      codeHelperPanelWidth = codeHelperForm.getWidth();
+      codeHelperForm.setWidth100();
+
+      statusBar.hide();
+
+      eventBus.fireEvent(new ClearFocusEvent());
+
+      codeHelperPanelMaximized = true;
+   }
+   
+   private void restoreCodeHelperPanel()
+   {
+      if (navigationPanelVisible)
+      {
+         navigationForm.show();
+      }
+
+      verticalSplitLayout.show();
+      
+      codeHelperForm.setWidth(codeHelperPanelWidth);
+
+      horizontalSplitLayout.setResizeBarSize(9);
+      
+      statusBar.show();
+
+      codeHelperPanelMaximized = false;
+
+      eventBus.fireEvent(new OperationPanelRestoredEvent());
    }
 
 }

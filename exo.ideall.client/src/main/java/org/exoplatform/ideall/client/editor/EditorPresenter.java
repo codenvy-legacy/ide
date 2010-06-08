@@ -16,13 +16,10 @@
  */
 package org.exoplatform.ideall.client.editor;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -79,10 +76,12 @@ import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -340,12 +339,15 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       if (curentFile == null)
       {
          context.setActiveFile(null);
+         eventBus.fireEvent(new ShowOutlineEvent(false));
          return;
       }
 
       context.setActiveFile(curentFile);
       CookieManager.getInstance().storeOpenedFiles(context);
       display.setEditorFocus(curentFile.getHref());
+      eventBus.fireEvent(new ShowOutlineEvent(
+         curentFile.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)));
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
