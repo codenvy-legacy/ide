@@ -40,6 +40,14 @@ public class Token
    private EnumArity arity;
    
    private String error;
+   
+   public Token(EnumTokenType type, String value, int from, int to)
+   {
+      this.type = type;
+      this.value = value;
+      this.from = from;
+      this.to = to;
+   }
 
    /**
     * @return the from
