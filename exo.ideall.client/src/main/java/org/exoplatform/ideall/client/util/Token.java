@@ -28,18 +28,20 @@ package org.exoplatform.ideall.client.util;
 public class Token
 {
    private String id;
-   
+
    private EnumTokenType type;
-   
+
    private String value;
-   
+
    private int from;
 
    private int to;
 
    private EnumArity arity;
-   
+
    private String error;
+
+   private int leftBindingPower;
    
    public Token(EnumTokenType type, String value, int from, int to)
    {
@@ -48,6 +50,7 @@ public class Token
       this.from = from;
       this.to = to;
    }
+   
 
    /**
     * @return the from
@@ -160,4 +163,31 @@ public class Token
    {
       this.type = type;
    }
+
+   /**
+    * @return the leftBindingPower
+    */
+   public int getLeftBindingPower()
+   {
+      return leftBindingPower;
+   }
+
+   /**
+    * @param leftBindingPower the leftBindingPower to set
+    */
+   public void setLeftBindingPower(int leftBindingPower)
+   {
+      this.leftBindingPower = leftBindingPower;
+   }
+
+   public void nullDenotation()
+   {
+
+   }
+
+   public void leftDenotation()
+   {
+
+   }
+
 }
