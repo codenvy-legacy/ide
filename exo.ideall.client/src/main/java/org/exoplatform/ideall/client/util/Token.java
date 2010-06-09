@@ -29,15 +29,17 @@ public class Token
 {
    private String id;
    
-   private String error;
+   private EnumTokenType type;
+   
+   private String value;
    
    private int from;
 
    private int to;
 
-   private String value;
-
    private EnumArity arity;
+   
+   private String error;
 
    /**
     * @return the from
@@ -134,6 +136,20 @@ public class Token
    {
       this.error = error;
    }
-   
-   
+
+   /**
+    * @return the type
+    */
+   public EnumTokenType getType()
+   {
+      return type;
+   }
+
+   /**
+    * @param type the type to set
+    */
+   public void setType(EnumTokenType type)
+   {
+      this.type = type;
+   }
 }
