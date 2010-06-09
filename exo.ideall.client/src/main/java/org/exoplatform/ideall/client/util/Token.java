@@ -37,7 +37,7 @@ public class Token
 
    private String value;
 
-   private String arity;
+   private EnumArity arity;
 
    /**
     * @return the from
@@ -90,7 +90,7 @@ public class Token
    /**
     * @return the arity
     */
-   public String getArity()
+   public EnumArity getArity()
    {
       return arity;
    }
@@ -98,7 +98,7 @@ public class Token
    /**
     * @param arity the arity to set
     */
-   public void setArity(String arity)
+   public void setArity(EnumArity arity)
    {
       this.arity = arity;
    }
