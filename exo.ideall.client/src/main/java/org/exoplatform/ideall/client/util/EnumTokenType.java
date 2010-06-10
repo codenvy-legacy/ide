@@ -27,7 +27,7 @@ package org.exoplatform.ideall.client.util;
  */
 public enum EnumTokenType {
 
-   FUNCTION("function"), VARIABLE("variable"), KEYWORD("keyword");
+   FUNCTION("function"), VARIABLE("variable"), KEYWORD("keyword"), TEMPLATE("template");
 
    /**
     * Value.
