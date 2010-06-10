@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.exoplatform.ideall</groupId>
+		<artifactId>ideall.parent</artifactId>
+		<version>1.0-Beta02-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.exoplatform.ideall</groupId>
+	<artifactId>exo.ideall.module.vfs</artifactId>
+	<packaging>jar</packaging>
+	<name>eXo IDE :: Client Module : Virtual File System</name>
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.exoplatform.gwt</groupId>
+			<artifactId>exo.gwtframework.commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.gwt</groupId>
+			<artifactId>exo.gwtframework.editor</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.gwt</groupId>
+			<artifactId>exo.gwtframework.ui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<outputDirectory>target/war/WEB-INF/classes</outputDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
