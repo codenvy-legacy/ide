@@ -20,7 +20,7 @@ package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;

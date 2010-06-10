@@ -17,14 +17,16 @@
 package org.exoplatform.ideall.client.application;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
@@ -41,6 +43,9 @@ import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHa
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
+import org.exoplatform.ideall.client.model.util.ImageUtil;
+import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -139,6 +144,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
+      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
       ConversationService.getInstance().getUserInfo();
    }
 
@@ -174,8 +180,21 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       if (context.getEntryPoint() != null) {
          new WorkspaceChecker(eventBus, context);
       } else {
-         Dialogs.getInstance().showError("Entry point not set!");
-         ExceptionThrownEventHandlerInitializer.initialize(eventBus);         
+         Dialogs.getInstance().ask("Working workspace", "Workspace is not set. Goto <strong>Window->Select workspace</strong>  in main menu for set working workspace?", new BooleanValueReceivedCallback()
+         {
+            
+            public void execute(Boolean value)
+            {
+               if (value)
+               {
+                  eventBus.fireEvent(new SelectWorkspaceEvent());
+               }
+               else
+               {
+                  ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+               }
+            }
+         });
          new ApplicationInitializer(eventBus, context);         
       }
    }

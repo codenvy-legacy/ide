@@ -16,12 +16,12 @@
  */
 package org.exoplatform.ideall.client.component;
 
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
+import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.vfs.api.Item;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;

@@ -16,19 +16,19 @@
  */
 package org.exoplatform.ideall.client.search.file;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.vfs.api.Item;
+
+import java.util.List;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;

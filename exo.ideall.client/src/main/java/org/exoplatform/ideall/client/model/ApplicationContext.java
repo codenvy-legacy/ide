@@ -20,8 +20,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;

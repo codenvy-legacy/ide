@@ -24,10 +24,10 @@ import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ideall.vfs.api.event.ItemDeletedHandler;
 
 /**
  * Created by The eXo Platform SAS .

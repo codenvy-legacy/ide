@@ -20,10 +20,10 @@ package org.exoplatform.ideall.client.search.file;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

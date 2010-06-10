@@ -112,8 +112,9 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
-//      if (config.containsKey(ENTRY_POINT))
-//         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
+      
+      if (config.containsKey(ENTRY_POINT))
+         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
 //      else
 //      {
 //         sendErrorMessage(ENTRY_POINT);

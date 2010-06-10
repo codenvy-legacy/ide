@@ -20,22 +20,22 @@
 package org.exoplatform.ideall.client.history;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

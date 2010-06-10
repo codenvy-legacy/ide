@@ -20,12 +20,11 @@
 package org.exoplatform.ideall.client.common.command.file.download;
 
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
+import org.exoplatform.ideall.vfs.api.Folder;
 
 /**
  * Created by The eXo Platform SAS .

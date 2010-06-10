@@ -16,12 +16,11 @@
  */
 package org.exoplatform.ideall.client.model.util;
 
-import java.util.HashMap;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 
-import com.smartgwt.client.widgets.menu.IMenuButton;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,6 +47,7 @@ public class ImageUtil
       images.put(MimeType.APPLICATION_X_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
       images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
       images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
+      images.put(null, Images.FileTypes.DEFAULT);
    }
 
    public static String getIcon(String mimeType)
@@ -58,6 +58,11 @@ public class ImageUtil
          icon = Images.FileTypes.DEFAULT;
       }
       return icon;
+   }
+   
+   public static Map<String, String> getIcons()
+   {
+      return images;
    }
 
 }

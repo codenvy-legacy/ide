@@ -66,8 +66,6 @@ import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.search.file.SearchForm;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
@@ -75,6 +73,8 @@ import org.exoplatform.ideall.client.upload.UploadForm;
 import org.exoplatform.ideall.client.workspace.EntryPointListForm;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

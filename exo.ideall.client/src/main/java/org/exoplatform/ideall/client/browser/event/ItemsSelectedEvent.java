@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ideall.client.browser.event;
 
-import java.util.List;
+import org.exoplatform.ideall.vfs.api.Item;
 
-import org.exoplatform.ideall.client.model.vfs.api.Item;
+import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 

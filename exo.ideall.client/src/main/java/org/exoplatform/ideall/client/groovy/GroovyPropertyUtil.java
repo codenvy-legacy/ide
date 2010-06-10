@@ -19,12 +19,12 @@
  */
 package org.exoplatform.ideall.client.groovy;
 
-import java.util.Collection;
-
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ideall.client.model.property.ItemProperty;
-import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.property.ItemProperty;
+
+import java.util.Collection;
 
 /**
  * Created by The eXo Platform SAS .

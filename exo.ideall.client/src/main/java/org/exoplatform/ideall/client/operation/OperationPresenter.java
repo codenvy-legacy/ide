@@ -32,13 +32,13 @@ import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedEven
 import org.exoplatform.ideall.client.model.gadget.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ideall.client.model.gadget.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputHandler;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
+import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;

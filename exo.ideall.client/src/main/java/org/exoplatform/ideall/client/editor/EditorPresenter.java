@@ -75,9 +75,9 @@ import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
+import org.exoplatform.ideall.vfs.api.File;
 
 import java.util.ArrayList;
 import java.util.Iterator;

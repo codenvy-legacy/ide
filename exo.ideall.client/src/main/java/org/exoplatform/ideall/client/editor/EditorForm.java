@@ -29,10 +29,9 @@ import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredHandle
 import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;

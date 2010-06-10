@@ -23,7 +23,6 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.FindTextEvent;
-import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 
 /**
  * Created by The eXo Platform SAS.

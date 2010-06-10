@@ -13,12 +13,6 @@
 	<packaging>war</packaging>
 	<name>eXo IDE :: Client</name>
 
-	<repositories>
-		<repository>
-			<id>SmartGWT</id>
-			<url>http://www.smartclient.com/maven2</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -47,6 +41,10 @@
 			<groupId>com.smartgwt</groupId>
 			<artifactId>smartgwt</artifactId>
 		</dependency>
+   <dependency>
+      <groupId>org.exoplatform.ideall</groupId>
+      <artifactId>exo.ideall.module.vfs</artifactId>
+    </dependency>
 	</dependencies>
 	<build>
 		<finalName>IDEall</finalName>
@@ -285,7 +283,8 @@
 						<configuration>
 							<module>org.exoplatform.ideall.IDEApplication</module>
 							<runTarget>org.exoplatform.ideall.IDEApplication/IDEApplication.html</runTarget>
-							<logLevel>INFO</logLevel>
+							<!--logLevel>INFO</logLevel-->
+              <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel>
 							<hostedWebapp>${basedir}/target/war</hostedWebapp>
 							<skipTests>${gwt.test.skip}</skipTests>
 							<port>${gwt.port}</port>

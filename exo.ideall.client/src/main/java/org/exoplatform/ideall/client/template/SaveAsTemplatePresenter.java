@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

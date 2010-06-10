@@ -43,14 +43,14 @@ import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultRece
 import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedHandler;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedHandler;
-import org.exoplatform.ideall.client.model.property.ItemProperty;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.client.model.wadl.WadlService;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceiveHandler;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.property.ItemProperty;
 
 /**
  * Created by The eXo Platform SAS .

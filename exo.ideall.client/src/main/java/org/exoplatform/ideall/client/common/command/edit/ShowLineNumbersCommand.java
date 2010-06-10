@@ -26,7 +26,7 @@ import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.File;
 
 /**
  * Created by The eXo Platform SAS .

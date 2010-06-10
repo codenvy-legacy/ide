@@ -26,12 +26,12 @@ import org.exoplatform.ideall.client.event.file.FileSavedEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

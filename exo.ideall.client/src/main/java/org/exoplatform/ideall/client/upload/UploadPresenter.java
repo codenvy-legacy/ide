@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ideall.client.upload;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
@@ -28,12 +25,15 @@ import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
-import org.exoplatform.ideall.client.model.util.NodeTypeUtil;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.Folder;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
 import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.vfs.webdav.NodeTypeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;

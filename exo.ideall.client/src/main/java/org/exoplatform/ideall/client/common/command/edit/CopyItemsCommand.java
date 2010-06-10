@@ -21,7 +21,7 @@ import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS.

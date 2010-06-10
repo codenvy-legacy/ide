@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.component.DialogWindow;
-import org.exoplatform.ideall.client.model.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

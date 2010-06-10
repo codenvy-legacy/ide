@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ideall.client.operation;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.editor.MinMaxControlButton;
 import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEvent;
@@ -28,10 +25,13 @@ import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEven
 import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
-import org.exoplatform.ideall.client.model.vfs.api.File;
 import org.exoplatform.ideall.client.operation.output.OutputForm;
 import org.exoplatform.ideall.client.operation.preview.PreviewForm;
 import org.exoplatform.ideall.client.operation.properties.PropertiesForm;
+import org.exoplatform.ideall.vfs.api.File;
+
+import java.util.HashMap;
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

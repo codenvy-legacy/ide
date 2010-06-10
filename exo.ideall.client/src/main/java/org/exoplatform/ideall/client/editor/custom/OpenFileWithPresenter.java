@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ideall.client.editor.custom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
@@ -26,15 +23,17 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
-import org.exoplatform.ideall.client.model.vfs.api.File;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.model.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

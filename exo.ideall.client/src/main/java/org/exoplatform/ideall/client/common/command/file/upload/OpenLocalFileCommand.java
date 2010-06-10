@@ -16,18 +16,18 @@
  */
 package org.exoplatform.ideall.client.common.command.file.upload;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
-import org.exoplatform.ideall.client.model.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.vfs.api.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
