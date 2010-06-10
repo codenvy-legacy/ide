@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ideall.client.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS.
  *	
@@ -27,125 +30,63 @@ package org.exoplatform.ideall.client.util;
  */
 public class Token
 {
-   private String id;
+   private String name;
 
    private EnumTokenType type;
 
-   private String value;
+   private int line;
 
-   private int from;
+   private List<Token> tokens;
 
-   private int to;
-
-   private EnumArity arity;
-
-   private String error;
-
-   private int leftBindingPower;
-   
-   public Token(EnumTokenType type, String value, int from, int to)
+   public Token(String name, EnumTokenType type, int line)
    {
       this.type = type;
-      this.value = value;
-      this.from = from;
-      this.to = to;
-   }
-   
-
-   /**
-    * @return the from
-    */
-   public int getFrom()
-   {
-      return from;
+      this.name = name;
+      this.line = line;
    }
 
    /**
-    * @param from the from to set
+    * @return the name
     */
-   public void setFrom(int from)
+   public String getName()
    {
-      this.from = from;
+      return name;
    }
 
    /**
-    * @return the to
+    * @param name the name to set
     */
-   public int getTo()
+   public void setName(String name)
    {
-      return to;
+      this.name = name;
    }
 
    /**
-    * @param to the to to set
+    * @return the line
     */
-   public void setTo(int to)
+   public int getLine()
    {
-      this.to = to;
+      return line;
    }
 
    /**
-    * @return the value
+    * @param line the line to set
     */
-   public String getValue()
+   public void setLine(int line)
    {
-      return value;
+      this.line = line;
    }
 
    /**
-    * @param value the value to set
+    * @return the tokens
     */
-   public void setValue(String value)
+   public List<Token> getTokens()
    {
-      this.value = value;
-   }
-
-   /**
-    * @return the arity
-    */
-   public EnumArity getArity()
-   {
-      return arity;
-   }
-
-   /**
-    * @param arity the arity to set
-    */
-   public void setArity(EnumArity arity)
-   {
-      this.arity = arity;
-   }
-
-   /**
-    * @return the id
-    */
-   public String getId()
-   {
-      return id;
-   }
-
-   /**
-    * @param id the id to set
-    */
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
-   /**
-    * @return the error
-    */
-   public String getError()
-   {
-      return error;
-   }
-
-   /**
-    * @param error the error to set
-    */
-   public void setError(String error)
-   {
-      this.error = error;
+      if (tokens == null)
+      {
+         tokens = new ArrayList<Token>();
+      }
+      return tokens;
    }
 
    /**
@@ -162,32 +103,6 @@ public class Token
    public void setType(EnumTokenType type)
    {
       this.type = type;
-   }
-
-   /**
-    * @return the leftBindingPower
-    */
-   public int getLeftBindingPower()
-   {
-      return leftBindingPower;
-   }
-
-   /**
-    * @param leftBindingPower the leftBindingPower to set
-    */
-   public void setLeftBindingPower(int leftBindingPower)
-   {
-      this.leftBindingPower = leftBindingPower;
-   }
-
-   public void nullDenotation()
-   {
-
-   }
-
-   public void leftDenotation()
-   {
-
    }
 
 }
