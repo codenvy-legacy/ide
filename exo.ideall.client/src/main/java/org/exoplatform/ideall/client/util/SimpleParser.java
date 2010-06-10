@@ -43,34 +43,6 @@ public class SimpleParser
 
    private static int countLines;
 
-   /*   public static List<Token> parse(String text)
-      {
-         HashMap<String, Integer> results = new HashMap<String, Integer>();
-
-         String[] lines = text.split("\n");
-         Window.alert("Lines count : " + lines.length);
-         if (lines.length > 0)
-         {
-            for (int i = 0; i < lines.length; i++)
-            {
-               String line = lines[i].toLowerCase();
-               int index = line.indexOf(FUNCTION);
-               if (index >= 0)
-               {
-                  String tempStr = line.substring(index + FUNCTION.length()).trim();
-                  int index2 = tempStr.indexOf("(");
-                  String name = (index2 >= 0) ? tempStr.substring(0, index2) : "";
-                  if (name.length() > 0)
-                  {
-                     Window.alert(name.trim() + " at  line " + (i + 1));
-                     results.put(name.trim(), (i + 1));
-                  }
-               }
-            }
-         }
-         return results;
-      }*/
-
    public static List<Token> parse(String text)
    {
       List<Token> tokens = new ArrayList<Token>();
@@ -83,10 +55,10 @@ public class SimpleParser
       List<String> words = Arrays.asList(text.split(" "));
       words = checkEndLines(words);
 
-     System.out.println();    
-     System.out.println();    
-     System.out.println();    
-      
+      System.out.println();
+      System.out.println();
+      System.out.println();
+
       for (int i = 0; i < words.size(); i++)
       {
          String word = words.get(i);
@@ -99,7 +71,7 @@ public class SimpleParser
          else if (word.equals(VAR))
          {
             String name = ((i + 1) < words.size()) ? words.get(i + 1) : "";
-            Token token = new Token(name, EnumTokenType.VARIABLE, countLines);
+            Token token = new Token(getVariableName(name), EnumTokenType.VARIABLE, countLines);
             tokens.add(token);
          }
          else if (word.equals(END_LINE))
@@ -107,18 +79,17 @@ public class SimpleParser
             countLines++;
          }
       }
-
       return tokens;
    }
+
+   private static String getVariableName(String name){
+      return (name.endsWith(";")) ? name.replaceAll(";", "") : name;
+   }
    
-   private static String getFunctionName(String word){
+   private static String getFunctionName(String word)
+   {
       int index = word.indexOf("(");
       return (index < 0) ? word : word.substring(0, index);
-   }
-
-   private void parseFunction(List<String> words, Token function)
-   {
-
    }
 
    private static List<String> checkEndLines(List<String> words)
