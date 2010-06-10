@@ -77,7 +77,8 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
       }
       else
       {
-         return;
+         TreeNode[] oldNodes = tree.getChildren(rootNode);
+         tree.removeList(oldNodes);
       }
       
    }

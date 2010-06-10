@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id:
  *
  */
-public interface RefreshFunctionsHandler extends EventHandler
+public interface RefreshOutlineHandler extends EventHandler
 {
 
    void onRefreshFunctions(RefreshOutlineEvent event);

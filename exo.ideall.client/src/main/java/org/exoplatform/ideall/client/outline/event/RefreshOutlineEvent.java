@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ideall.client.outline.event;
 
-import org.exoplatform.ideall.client.util.Token;
-
-import java.util.List;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -30,35 +26,23 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id:
  *
  */
-public class RefreshOutlineEvent extends GwtEvent<RefreshFunctionsHandler>
+public class RefreshOutlineEvent extends GwtEvent<RefreshOutlineHandler>
 {
 
-   public static GwtEvent.Type<RefreshFunctionsHandler> TYPE = new GwtEvent.Type<RefreshFunctionsHandler>();
+   public static GwtEvent.Type<RefreshOutlineHandler> TYPE = new GwtEvent.Type<RefreshOutlineHandler>();
    
-   private List<Token> tokens;
-
    public RefreshOutlineEvent()
    {
    }
    
-   public RefreshOutlineEvent(List<Token> tokens)
-   {
-      this.tokens = tokens;
-   }
-   
-   public List<Token> getTokens()
-   {
-      return tokens;
-   }
-
    @Override
-   protected void dispatch(RefreshFunctionsHandler handler)
+   protected void dispatch(RefreshOutlineHandler handler)
    {
       handler.onRefreshFunctions(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RefreshFunctionsHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<RefreshOutlineHandler> getAssociatedType()
    {
       return TYPE;
    }

@@ -55,7 +55,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);
-      treeGrid.setEmptyMessage("Root folder not found!");
+      treeGrid.setEmptyMessage("");
 
       treeGrid.setSelectionType(SelectionStyle.MULTIPLE);
 

@@ -21,13 +21,12 @@ package org.exoplatform.ideall.client.outline;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.RefreshFunctionsHandler;
 import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
+import org.exoplatform.ideall.client.outline.event.RefreshOutlineHandler;
 import org.exoplatform.ideall.client.util.SimpleParser;
 import org.exoplatform.ideall.client.util.Token;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -39,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class OutlinePresenter implements RefreshFunctionsHandler
+public class OutlinePresenter implements RefreshOutlineHandler
 {
    interface Display
    {
@@ -55,8 +54,6 @@ public class OutlinePresenter implements RefreshFunctionsHandler
    private Handlers handlers;
    
    private Display display;
-   
-   private Map<String, Integer> functions = new LinkedHashMap<String, Integer>();
    
    public OutlinePresenter(HandlerManager bus, ApplicationContext applicationContext)
    {
@@ -87,26 +84,23 @@ public class OutlinePresenter implements RefreshFunctionsHandler
    
    public void onRefreshFunctions(RefreshOutlineEvent event)
    {
-      refreshFunctions();
-   }
-   
-   private void refreshFunctions()
-   {
       if (context.getActiveFile() == null || context.getActiveFile().getContent() == null)
       {
          return;
       }
       
-      functions.clear();
-      
       Token rootItem = new Token("", null, -1);
       
-      for (Token token : SimpleParser.parse(context.getActiveFile().getContent()))
+      List<Token> tokens = SimpleParser.parse(context.getActiveFile().getContent());
+      
+      for (Token token : tokens)
       {
          rootItem.getTokens().add(token);
       }
       
+      System.out.println(rootItem.getTokens().size());
+      
       display.getBrowserTree().setValue(rootItem);
    }
-
+   
 }

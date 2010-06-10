@@ -75,6 +75,7 @@ import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.vfs.api.File;
@@ -351,6 +352,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          eventBus.fireEvent(new ShowOutlineEvent(curentFile.getContentType()
             .equals(MimeType.APPLICATION_JAVASCRIPT)));
+         eventBus.fireEvent(new RefreshOutlineEvent());
       }
       else
       {
