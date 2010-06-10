@@ -60,6 +60,7 @@ import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
+import org.exoplatform.ideall.client.common.command.view.RefreshOutlineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
 import org.exoplatform.ideall.client.statusbar.EditorCursorPosition;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
@@ -174,6 +175,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new GetFileURLCommand()).disable().hide();
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
+      addCommand(new RefreshOutlineControl()).disable().hide().dockOnToolbar();
       
       /*
        * RUN GROUP

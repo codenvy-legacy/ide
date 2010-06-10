@@ -335,6 +335,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      
       File curentFile = event.getFile();
       if (curentFile == null)
       {
@@ -346,8 +347,15 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       context.setActiveFile(curentFile);
       CookieManager.getInstance().storeOpenedFiles(context);
       display.setEditorFocus(curentFile.getHref());
-      eventBus.fireEvent(new ShowOutlineEvent(
-         curentFile.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)));
+      if (curentFile.getContentType() != null)
+      {
+         eventBus.fireEvent(new ShowOutlineEvent(curentFile.getContentType()
+            .equals(MimeType.APPLICATION_JAVASCRIPT)));
+      }
+      else
+      {
+         eventBus.fireEvent(new ShowOutlineEvent(false));
+      }
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)

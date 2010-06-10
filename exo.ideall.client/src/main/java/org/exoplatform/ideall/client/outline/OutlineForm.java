@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ideall.client.outline;
 
-import org.exoplatform.ideall.client.component.ItemTreeGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.client.util.Token;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
@@ -41,7 +40,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
    
    private OutlinePresenter presenter;
    
-   private ItemTreeGrid<Item> treeGrid;
+   private OutlineTreeGrid<Token> treeGrid;
    
    public OutlineForm(HandlerManager bus, ApplicationContext applicationContext)
    {
@@ -50,7 +49,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       
       setTitle("Outline");
       
-      treeGrid = new ItemTreeGrid<Item>();
+      treeGrid = new OutlineTreeGrid<Token>();
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);
@@ -65,6 +64,20 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       presenter = new OutlinePresenter(eventBus, context);
       presenter.bindDisplay(this);
       
+   }
+   
+   public void setTreeValue()
+   {
+   }
+
+   public OutlineTreeGrid<Token> getBrowserTree()
+   {
+      return treeGrid;
+   }
+   
+   public void selectTreeItem(int number)
+   {
+      treeGrid.selectRecord(number);
    }
 
 }
