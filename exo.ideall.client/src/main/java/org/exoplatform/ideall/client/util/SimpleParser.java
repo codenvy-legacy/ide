@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ideall.client.util;
 
-import org.apache.tools.ant.taskdefs.FixCRLF.AddAsisRemove;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
