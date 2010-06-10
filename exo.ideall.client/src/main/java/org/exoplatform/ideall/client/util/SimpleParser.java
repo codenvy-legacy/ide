@@ -93,7 +93,7 @@ public class SimpleParser
          if (word.equals(FUNCTION))
          {
             String name = ((i + 1) < words.size()) ? words.get(i + 1) : "";
-            Token token = new Token(name, EnumTokenType.FUNCTION, countLines);
+            Token token = new Token(getFunctionName(name), EnumTokenType.FUNCTION, countLines);
             tokens.add(token);
          }
          else if (word.equals(VAR))
@@ -109,6 +109,11 @@ public class SimpleParser
       }
 
       return tokens;
+   }
+   
+   private static String getFunctionName(String word){
+      int index = word.indexOf("(");
+      return (index < 0) ? word : word.substring(0, index);
    }
 
    private void parseFunction(List<String> words, Token function)
