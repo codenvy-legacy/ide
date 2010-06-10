@@ -89,7 +89,7 @@ public class TokenHelper
    private void loop()
    {
       c = source.charAt(i);
-      //TODO: пока не конец строки
+      //TODO: 
       while (c != '\n')
       {
          from = i;
