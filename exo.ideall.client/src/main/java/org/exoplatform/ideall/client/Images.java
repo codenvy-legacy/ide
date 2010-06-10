@@ -277,6 +277,8 @@ public interface Images
       public static final String FUNCTION_ITEM = imageUrl + "outline/function-item.png";
       
       public static final String VAR_ITEM = imageUrl + "outline/var-item.png";
+      
+      public static final String OUTLINE = imageUrl + "outline/outline.png";
    }
 
    public static final String BLANK = imageUrl + "blank.png";

@@ -21,13 +21,12 @@ package org.exoplatform.ideall.client.outline;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
 import org.exoplatform.ideall.client.outline.event.RefreshFunctionsHandler;
+import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
 import org.exoplatform.ideall.client.util.SimpleParser;
 import org.exoplatform.ideall.client.util.Token;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -78,14 +77,10 @@ public class OutlinePresenter implements RefreshFunctionsHandler
       {
          public void onSelection(SelectionEvent<Token> event)
          {
-            String name = event.getSelectedItem().getName();
-            if (functions.containsKey(name))
-            {
-               int line = functions.get(name);
-               int maxLineNumber = context.getActiveFile().getContent().split("\n").length;
-               eventBus.fireEvent(new EditorGoToLineEvent(
-                  line < maxLineNumber ? line : maxLineNumber));
-            }
+            int line = event.getSelectedItem().getLine();
+            int maxLineNumber = context.getActiveFile().getContent().split("\n").length;
+            eventBus.fireEvent(new EditorGoToLineEvent(
+               line < maxLineNumber ? line : maxLineNumber));
          }
       });
    }
@@ -104,23 +99,12 @@ public class OutlinePresenter implements RefreshFunctionsHandler
       
       functions.clear();
       
-      
-      String text = context.getActiveFile().getContent();
-      
       Token rootItem = new Token("", null, -1);
       
-      List<Token> tokens = SimpleParser.parse(text);
-      
-      for (Token token : tokens)
+      for (Token token : SimpleParser.parse(context.getActiveFile().getContent()))
       {
          rootItem.getTokens().add(token);
       }
-      
-//      Iterator<Entry<String, Integer>> it = functions.entrySet().iterator();
-//      while (it.hasNext())
-//      {
-//         Entry<String, Integer> entry = it.next();
-//      }
       
       display.getBrowserTree().setValue(rootItem);
    }

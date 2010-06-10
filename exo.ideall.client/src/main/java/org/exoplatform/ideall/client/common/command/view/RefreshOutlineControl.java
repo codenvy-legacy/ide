@@ -33,16 +33,16 @@ import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
 public class RefreshOutlineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "View/Refresh Functions";
+   public static final String ID = "View/Refresh Outline";
    
-   private static final String TITLE = "Refresh Functions";
+   private static final String TITLE = "Refresh Outline";
 
    public RefreshOutlineControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.GO_TO_LINE);
+      setIcon(Images.Outline.OUTLINE);
       setEvent(new RefreshOutlineEvent());
    }
 

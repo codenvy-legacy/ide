@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.util.Token;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.Tab;
 
 /**
@@ -47,7 +49,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       eventBus = bus;
       context = applicationContext;
       
-      setTitle("Outline");
+      setTitle("<span>" + Canvas.imgHTML(Images.Outline.OUTLINE) + "&nbsp;" + "Outline" + "</span>");
       
       treeGrid = new OutlineTreeGrid<Token>();
       treeGrid.setShowHeader(false);

@@ -58,7 +58,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
       setSelectionType(SelectionStyle.SINGLE);
 
       setCanFocus(false);
-      setShowConnectors(false);
+      setShowConnectors(true);
       setCanSort(false);
       
       rootNode = new TreeNode("root");
@@ -100,8 +100,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
          }
          if (newNode == null)
          {
-            newNode = new TreeNode("<b>" + child.getName() +"</b>" + " at " 
-               + "<font color=\"grey\">" + String.valueOf(child.getLine()) + "</font>");
+            newNode = new TreeNode(child.getName());
             newNode.setAttribute(getValuePropertyName(), child);
             if (child.getType().equals(EnumTokenType.FUNCTION))
             {
