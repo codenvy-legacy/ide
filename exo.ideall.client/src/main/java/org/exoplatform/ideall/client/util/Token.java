@@ -35,6 +35,8 @@ public class Token
    private EnumTokenType type;
 
    private int line;
+   
+   private String template;
 
    private List<Token> tokens;
 
@@ -103,6 +105,22 @@ public class Token
    public void setType(EnumTokenType type)
    {
       this.type = type;
+   }
+
+   /**
+    * @return the template
+    */
+   public String getTemplate()
+   {
+      return template;
+   }
+
+   /**
+    * @param template the template to set
+    */
+   public void setTemplate(String template)
+   {
+      this.template = template;
    }
 
 }
