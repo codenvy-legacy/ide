@@ -23,6 +23,9 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.FindTextEvent;
+import org.exoplatform.ideall.client.event.edit.FindTextHandler;
+import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent;
+import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,11 +34,12 @@ import org.exoplatform.ideall.client.event.edit.FindTextEvent;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, FindTextFormClosedHandler,
+   FindTextHandler
 {
-   public static final String ID = "Edit/Find...";
+   public static final String ID = "Edit/Find&#47Replace...";
 
-   private static final String TITLE = "Find...";
+   private static final String TITLE = "Find/Replace...";
 
    public FindTextCommand()
    {
@@ -53,6 +57,8 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      addHandler(FindTextFormClosedEvent.TYPE, this);
+      addHandler(FindTextEvent.TYPE, this);
    }
 
    /**
@@ -77,5 +83,21 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
          setVisible(false);
          setEnabled(false);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler#onFindTextFormClosed(org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent)
+    */
+   public void onFindTextFormClosed(FindTextFormClosedEvent event)
+   {
+      setEnabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ideall.client.event.edit.FindTextEvent)
+    */
+   public void onFindText(FindTextEvent event)
+   {
+      setEnabled(false);
    }
 }

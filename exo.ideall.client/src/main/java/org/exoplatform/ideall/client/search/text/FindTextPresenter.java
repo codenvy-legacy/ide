@@ -20,12 +20,19 @@ package org.exoplatform.ideall.client.search.text;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultHandler;
+
+import java.util.HashMap;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -43,7 +50,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextPresenter implements FindTextResultHandler
+public class FindTextPresenter implements FindTextResultHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler
 {
    interface Display
    {
@@ -84,12 +91,23 @@ public class FindTextPresenter implements FindTextResultHandler
 
    private ApplicationContext context;
 
+   private final String STRING_NOT_FOUND = "String not found.";
+
+   private HashMap<String, FindTextState> filesFindState;
+
+   /**
+    * @param eventBus
+    * @param context
+    */
    public FindTextPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
+      filesFindState = new HashMap<String, FindTextState>();
       handlers = new Handlers(eventBus);
       handlers.addHandler(FindTextResultEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -106,7 +124,6 @@ public class FindTextPresenter implements FindTextResultHandler
 
       display.getFindButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent arg0)
          {
             String findText = display.getFindField().getValue();
@@ -167,7 +184,6 @@ public class FindTextPresenter implements FindTextResultHandler
 
       display.getFindField().addKeyPressHandler(new KeyPressHandler()
       {
-
          public void onKeyPress(KeyPressEvent arg0)
          {
             display.enableReplaceButton(false);
@@ -192,7 +208,6 @@ public class FindTextPresenter implements FindTextResultHandler
             timer.schedule(10);
          }
       });
-
       disableAllButtons();
    }
 
@@ -207,6 +222,7 @@ public class FindTextPresenter implements FindTextResultHandler
    public void destroy()
    {
       handlers.removeHandlers();
+      eventBus.fireEvent(new FindTextFormClosedEvent());
    }
 
    private void doFind(String findText)
@@ -225,10 +241,11 @@ public class FindTextPresenter implements FindTextResultHandler
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
       String path = context.getActiveFile().getHref();
       eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path));
-      display.enableReplaceButton(false);
-      display.enableReplaceFindButton(false);
+      FindTextState findTextState = new FindTextState(false, "", findText);
+      changeState(findTextState);
+      filesFindState.put(path, findTextState);
    }
-   
+
    private void doFindReplace(String findText, String replaceText)
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
@@ -252,9 +269,106 @@ public class FindTextPresenter implements FindTextResultHandler
     */
    public void onFindTextResult(FindTextResultEvent event)
    {
-      display.enableReplaceFindButton(event.isFound());
-      display.enableReplaceButton(event.isFound());
-      String resultString = (event.isFound()) ? "" : "String not found.";
-      display.getResultLabel().setValue(resultString);
+      String resultString = (event.isFound()) ? "" : STRING_NOT_FOUND;
+      String findText = display.getFindField().getValue();
+      FindTextState findTextState = new FindTextState(event.isFound(), resultString, findText);
+      changeState(findTextState);
+      filesFindState.put(context.getActiveFile().getHref(), findTextState);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    */
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      String path = event.getFile().getHref();
+      FindTextState findTextState = filesFindState.get(path);
+      if (filesFindState.get(path) == null)
+      {
+         String findText = display.getFindField().getValue();
+         findTextState = new FindTextState(false, "", findText);
+         filesFindState.put(path, findTextState);
+      }
+      changeState(findTextState);
+   }
+
+   private void changeState(FindTextState state)
+   {
+      display.enableReplaceButton(state.isReplaceEnabled());
+      display.enableReplaceFindButton(state.isReplaceEnabled());
+      display.getResultLabel().setValue(state.getResultText());
+      display.getFindField().setValue(state.getFindText());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler#onEditorCloseFile(org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent)
+    */
+   public void onEditorCloseFile(EditorCloseFileEvent event)
+   {
+      filesFindState.remove(event.getFile().getHref());
+   }
+
+   private class FindTextState
+   {
+      private boolean replaceEnabled;
+
+      private String resultText;
+
+      private String findText;
+
+      public FindTextState(boolean replaceEnabled, String resutlText, String findText)
+      {
+         this.replaceEnabled = replaceEnabled;
+         this.resultText = resutlText;
+         this.findText = findText;
+      }
+
+      /**
+       * @return the replaceEnabled
+       */
+      public boolean isReplaceEnabled()
+      {
+         return replaceEnabled;
+      }
+
+      /**
+       * @param replaceEnabled the replaceEnabled to set
+       */
+      public void setReplaceEnabled(boolean replaceEnabled)
+      {
+         this.replaceEnabled = replaceEnabled;
+      }
+
+      /**
+       * @return the resultText
+       */
+      public String getResultText()
+      {
+         return resultText;
+      }
+
+      /**
+       * @param resultText the resultText to set
+       */
+      public void setResultText(String resultText)
+      {
+         this.resultText = resultText;
+      }
+
+      /**
+       * @return the findText
+       */
+      public String getFindText()
+      {
+         return findText;
+      }
+
+      /**
+       * @param findText the findText to set
+       */
+      public void setFindText(String findText)
+      {
+         this.findText = findText;
+      }
    }
 }

@@ -160,11 +160,11 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
-
-      addCommand(new ShowLineNumbersCommand()).disable().hide().setDelimiterBefore();
-
+      
+      addCommand(new FindTextCommand()).disable().hide().dockOnToolbar().setDelimiterBefore();
+      addCommand(new ShowLineNumbersCommand()).disable().hide();
       addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
-      addCommand(new FindTextCommand()).disable().hide().dockOnToolbar();
+      
 
       /*
        * VIEW GROUP

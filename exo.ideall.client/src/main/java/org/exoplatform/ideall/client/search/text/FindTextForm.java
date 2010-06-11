@@ -103,13 +103,13 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
 
       mainLayout.addMember(createFindForm());
       mainLayout.addMember(createButtonsLayout());
-      
+
       HLayout hLayout = new HLayout();
       hLayout.setWidth100();
       hLayout.setHeight(BUTTON_HEIGHT);
       hLayout.addMember(createFindResultLabel());
       hLayout.addMember(cancelButton);
-      
+
       mainLayout.addMember(hLayout);
 
       addItem(mainLayout);
@@ -146,10 +146,10 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     */
    protected VLayout createButtonsLayout()
    {
-      findButton = createButton("Find", Images.Edit.FIND_TEXT);
+      findButton = createButton("Find", "");
       cancelButton = createButton("Cancel", Images.Buttons.CANCEL);
       cancelButton.setLayoutAlign(Alignment.RIGHT);
-      replaceButton = createButton("Replace", Images.Edit.REPLACE);
+      replaceButton = createButton("Replace", "");
       replaceFindButton = createButton("Replace/Find", "");
       replaceAllButton = createButton("Replace All", "");
 
@@ -186,7 +186,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       replaceField = createTextField("Replace with");
 
       caseSensitiveField = createCheckBoxItem("Case sensitive");
-     // fromStartField = createCheckBoxItem("From start");
+      // fromStartField = createCheckBoxItem("From start");
 
       form.setFields(findField, replaceField, caseSensitiveField);
       return form;
@@ -278,14 +278,15 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       return findField;
    }
 
-  /* *//**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFromStartField()
-    *//*
-   public HasValue<Boolean> getFromStartField()
-   {
-      return fromStartField;
-   }
-*/
+   /* *//**
+       * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFromStartField()
+       */
+   /*
+      public HasValue<Boolean> getFromStartField()
+      {
+         return fromStartField;
+      }
+   */
    /**
     * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getReplaceAllButton()
     */
