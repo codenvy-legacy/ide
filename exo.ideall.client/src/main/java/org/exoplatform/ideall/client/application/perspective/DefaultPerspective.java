@@ -29,6 +29,7 @@ import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
+import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelHandler;
@@ -49,7 +50,6 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
-import org.exoplatform.ideall.client.statusbar.StatusBarForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Overflow;
@@ -133,6 +133,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       eventBus.addHandler(RestoreOperationPanelEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(RestorePerspectiveEvent.TYPE, this);
+      eventBus.addHandler(MaximizeCodeHelperPanelEvent.TYPE, this);
       eventBus.addHandler(RestoreCodeHelperPanelEvent.TYPE, this);
    }
 
@@ -224,12 +225,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    {
       navigationPanelVisible = navigationForm.isVisible();
       operationPanelVisible = operationForm.isVisible();
+      codeHelperPanelVisible = codeHelperForm.isVisible();
 
       navigationForm.hide();
       horizontalSplitLayout.setResizeBarSize(0);
 
       operationForm.hide();
       verticalSplitLayout.setResizeBarSize(0);
+      
+      codeHelperForm.hide();
 
       statusBar.hide();
 
@@ -248,6 +252,11 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          operationForm.show();
       }
+      
+      if (codeHelperPanelVisible)
+      {
+         codeHelperForm.show();
+      }
       verticalSplitLayout.setResizeBarSize(9);
 
       statusBar.show();
@@ -261,6 +270,9 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    {
       navigationPanelVisible = navigationForm.isVisible();
       navigationForm.hide();
+      codeHelperPanelVisible = codeHelperForm.isVisible();
+      codeHelperForm.hide();
+      
       horizontalSplitLayout.setResizeBarSize(0);
 
       editorForm.hide();
@@ -282,6 +294,11 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       if (navigationPanelVisible)
       {
          navigationForm.show();
+      }
+      
+      if (codeHelperPanelVisible)
+      {
+         codeHelperForm.show();
       }
 
       horizontalSplitLayout.setResizeBarSize(9);
@@ -343,6 +360,13 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
          return;
       }
+      
+      if (codeHelperPanelMaximized)
+      {
+         restoreCodeHelperPanel();
+         
+         return;
+      }
    }
 
    public void onRestorePerspective(RestorePerspectiveEvent event)
@@ -365,6 +389,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       navigationPanelVisible = navigationForm.isVisible();
       
       navigationForm.hide();
+      editorForm.hide();
       
       horizontalSplitLayout.setResizeBarSize(0);
       verticalSplitLayout.hide();
@@ -385,6 +410,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          navigationForm.show();
       }
+      
+      editorForm.show();
 
       verticalSplitLayout.show();
       
@@ -396,7 +423,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       codeHelperPanelMaximized = false;
 
-      eventBus.fireEvent(new OperationPanelRestoredEvent());
+      eventBus.fireEvent(new CodeHelperPanelRestoredEvent());
    }
 
 }

@@ -38,7 +38,7 @@ public class RefreshOutlineEvent extends GwtEvent<RefreshOutlineHandler>
    @Override
    protected void dispatch(RefreshOutlineHandler handler)
    {
-      handler.onRefreshFunctions(this);
+      handler.onRefreshOutline(this);
    }
 
    @Override

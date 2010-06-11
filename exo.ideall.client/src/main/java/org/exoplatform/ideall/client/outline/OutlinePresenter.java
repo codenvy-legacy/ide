@@ -19,6 +19,8 @@
 package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
@@ -38,7 +40,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class OutlinePresenter implements RefreshOutlineHandler
+public class OutlinePresenter implements RefreshOutlineHandler, EditorFileContentChangedHandler
 {
    interface Display
    {
@@ -63,6 +65,7 @@ public class OutlinePresenter implements RefreshOutlineHandler
       handlers = new Handlers(eventBus);
       
       handlers.addHandler(RefreshOutlineEvent.TYPE, this);
+      handlers.addHandler(EditorFileContentChangedEvent.TYPE, this);
       
    }
    
@@ -82,7 +85,18 @@ public class OutlinePresenter implements RefreshOutlineHandler
       });
    }
    
-   public void onRefreshFunctions(RefreshOutlineEvent event)
+   public void onRefreshOutline(RefreshOutlineEvent event)
+   {
+      refreshOutline();
+   }
+
+   @Override
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
+   {
+      refreshOutline();
+   }
+   
+   private void refreshOutline()
    {
       if (context.getActiveFile() == null || context.getActiveFile().getContent() == null)
       {
@@ -97,8 +111,6 @@ public class OutlinePresenter implements RefreshOutlineHandler
       {
          rootItem.getTokens().add(token);
       }
-      
-      System.out.println(rootItem.getTokens().size());
       
       display.getBrowserTree().setValue(rootItem);
    }

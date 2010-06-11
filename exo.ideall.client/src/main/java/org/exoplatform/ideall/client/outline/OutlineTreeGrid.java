@@ -60,6 +60,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
       setCanFocus(false);
       setShowConnectors(true);
       setCanSort(false);
+      setCanEdit(false);
       
       rootNode = new TreeNode("root");
       tree.setRoot(rootNode);

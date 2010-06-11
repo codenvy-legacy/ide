@@ -29,6 +29,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface RefreshOutlineHandler extends EventHandler
 {
 
-   void onRefreshFunctions(RefreshOutlineEvent event);
+   void onRefreshOutline(RefreshOutlineEvent event);
 
 }
