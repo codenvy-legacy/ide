@@ -47,6 +47,8 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
    
    private final static String CONTROL = "Binding";
    
+   private final static String GROUP = "Group";
+   
    public HotKeyItemListGrid()
    {
       setCanSort(false);
@@ -54,20 +56,24 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       setCanFocus(false);
       setSelectionType(SelectionStyle.SINGLE);
       setCanFreezeFields(false);
+      setGroupStartOpen("all");
+      setGroupByField(GROUP);
       
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
-      fieldName.setCanHide(false);
+//      fieldName.setCanHide(false);
       
       ListGridField fieldControl = new ListGridField(CONTROL, CONTROL);
-      fieldControl.setCanHide(false);
+//      fieldControl.setCanHide(false);
       
-      setFields(fieldName, fieldControl);
+      ListGridField fieldGroup = new ListGridField(GROUP, GROUP);
+      fieldGroup.setHidden(true);
+      
+      setFields(fieldName, fieldControl, fieldGroup);
    }
-
+   
    @Override
    protected void setRecordFields(ListGridRecord record, HotKeyItem item)
    {
-      
       String controlName = item.getControlId();
       
       if (controlName.indexOf("/") >= 0)
@@ -83,6 +89,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       
       record.setAttribute(TITLE, title);
       record.setAttribute(CONTROL, item.getHotKey());
+      record.setAttribute(GROUP, item.getGroup());
    }
 
 }

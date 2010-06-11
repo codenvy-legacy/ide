@@ -31,14 +31,22 @@ public class HotKeyItem
    private String hotKey;
    
    private String icon;
-
-   public HotKeyItem(String controlId, String hotKeys, String icon)
+   
+   private String group;
+   
+   public HotKeyItem(String controlId, String hotKeys, String icon, String group)
    {
       this.controlId = controlId;
       this.hotKey = hotKeys;
       this.icon = icon;
+      this.group = group;
    }
-
+   
+   public String getGroup()
+   {
+      return group;
+   }
+   
    /**
     * @return the control id
     */

@@ -84,6 +84,8 @@ public class ApplicationContext
    private String searchContentType;
    
    private Map<String, String> hotKeys = new HashMap<String, String>();
+   
+   private Map<String, String> reservedHotkeys = new HashMap<String, String>();
 
    /**
     * Registered components
@@ -371,6 +373,16 @@ public class ApplicationContext
    public void setHotKeys(Map<String, String> hotKeys)
    {
       this.hotKeys = hotKeys;
+   }
+   
+   public void setReservedHotkeys(Map<String, String> hotKeys)
+   {
+      this.reservedHotkeys = hotKeys;
+   }
+   
+   public Map<String, String> getReservedHotkeys()
+   {
+      return reservedHotkeys;
    }
    
    public List<String> getHotKeyList()

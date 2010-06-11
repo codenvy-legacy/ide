@@ -38,3 +38,10 @@ CUSTOMIZE TOOLBAR
 {
 	color:#333333;
 }
+
+.exo-cutomizeHotKey-label-error
+{
+	color:#e13030;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}

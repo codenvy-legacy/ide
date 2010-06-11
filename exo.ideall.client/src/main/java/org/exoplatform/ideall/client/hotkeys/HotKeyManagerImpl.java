@@ -29,14 +29,9 @@ import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
 import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
-import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
-import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCommand;
-import org.exoplatform.ideall.client.common.command.help.ShowAboutCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
-import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceCommand;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import java.util.HashMap;
@@ -79,6 +74,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private ApplicationContext context;
    
    private Map<String, String> controls = new HashMap<String, String>();
+   
+   private Map<String, String> reservedHotkeys = new HashMap<String, String>();
    
    private Handlers handlers;
    
@@ -138,22 +135,22 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       if (event.getCtrlKey()) controlKey = "Ctrl";
       if (event.getAltKey()) controlKey = "Alt";
       
-      if (controlKey == null)
-      {
-         hotKeyPressedListener.onHotKeyPressed("");
-         event.preventDefault();
-         return;
-      }
+//      if (controlKey == null)
+//      {
+//         hotKeyPressedListener.onHotKeyPressed("", "");
+//         event.preventDefault();
+//         return;
+//      }
+//      
+//      String stringHotKey = controlKey + "+";
+//      
+//      if (keyCode != 17 && keyCode != 18 
+//               && HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode)) != null)
+//      {
+//         stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode));
+//      }
       
-      String stringHotKey = controlKey + "+";
-      
-      if (keyCode != 17 && keyCode != 18 
-               && HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode)) != null)
-      {
-         stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode));
-      }
-      
-      hotKeyPressedListener.onHotKeyPressed(stringHotKey);      
+      hotKeyPressedListener.onHotKeyPressed(controlKey, String.valueOf(keyCode));      
       event.preventDefault();
    }
 
@@ -167,10 +164,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private void initDefaultHotKeys() 
    {
-      //ctrl+space reserved for autocomplete code
       controls.put("Ctrl+90", UndoTypingCommand.ID);  //Ctrl+Z
       controls.put("Ctrl+89", RedoTypingCommand.ID);  //Ctrl+Y
-      //controls.put("Ctrl+65", ) Ctlr+A reserve for select All
       controls.put("Ctrl+67", CopyItemsCommand.ID);   //Ctrl+C
       controls.put("Ctrl+86", PasteItemsCommand.ID);  //Ctrl+V
       controls.put("Ctrl+83", SaveFileCommand.ID);    //Ctrl+S
@@ -179,7 +174,23 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       controls.put("Ctrl+76", GoToLineControl.ID);    //Ctrl+L
       controls.put("Ctrl+78", CreateFileFromTemplateCommand.ID); //Ctrl+N
       
-      context.setHotKeys(controls);      
+      context.setHotKeys(controls);
+      
+      reservedHotkeys.put("Ctrl+32", "Autocomplete"); //Ctrl+Space
+      reservedHotkeys.put("Ctrl+66", "Bold");         //Ctrl+B
+      reservedHotkeys.put("Ctrl+78", "Italic");       //Ctrl+I
+      reservedHotkeys.put("Ctrl+85", "Undeline");     //Ctrl+U
+      reservedHotkeys.put("Ctrl+67", "Copy");         //Ctrl+C
+      reservedHotkeys.put("Ctrl+86", "Paste");        //Ctrl+V
+      reservedHotkeys.put("Ctrl+88", "Cut");          //Ctrl+X
+      reservedHotkeys.put("Ctrl+90", "Undo");         //Ctrl+Z
+      reservedHotkeys.put("Ctrl+89", "Redo");         //Ctrl+Y
+      reservedHotkeys.put("Ctrl+65", "Select All");   //Ctrl+A
+      reservedHotkeys.put("Ctrl+33", "Go to the start"); //Ctrl+PgUp
+      reservedHotkeys.put("Ctrl+34", "Go to the end");   //Ctrl+PgDown
+      
+      context.setReservedHotkeys(reservedHotkeys);
+      
    }
 
    public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
@@ -187,6 +198,9 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       callEventByHotKey(event.getHotKey());
    }
    
+   /**
+    * @param hotKey
+    */
    private void callEventByHotKey(String hotKey)
    {
       for (Command command : context.getCommands())

@@ -19,7 +19,6 @@
 package org.exoplatform.ideall.client.hotkeys;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
@@ -85,7 +84,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       
       void focusOnHotKeyField();
       
+      void showError(String text);
+      
    }
+   
+   private static final String EDITOR_GROUP = "Editor hotkeys";
    
    private HandlerManager eventBus;
    
@@ -134,6 +137,15 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          public void onSelection(SelectionEvent<HotKeyItem> event)
          {
+            if (event.getSelectedItem().getGroup().equals(EDITOR_GROUP))
+            {
+               selectedItem = null;
+               
+               display.disableBindButton();
+               display.disableUnbindButton();
+               display.disableHotKeyField();
+               return;
+            }
             hotKeySelected(event.getSelectedItem());
          }
       });
@@ -163,15 +175,34 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    
    private void fillHotKeyList()
    {
+      
+      
       for (Command command : context.getCommands())
       {
          if (command instanceof SimpleCommand && ((SimpleCommand)command).getEvent() != null)
          {
+            String groupName = command.getId();
+            if (groupName.indexOf("/") >= 0)
+            {
+               groupName = groupName.substring(0, groupName.lastIndexOf("/"));
+            }
+            
             hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), 
-               command.getIcon()));
+               command.getIcon(), groupName));
          }
       }
-
+      
+      Iterator<Entry<String, String>> it = context.getReservedHotkeys().entrySet().iterator();
+      while(it.hasNext())
+      {
+         Entry<String, String> entry = it.next();
+         String id = entry.getValue();
+         String hotkey = HotKeyHelper.convertCodeHotKeyToStringHotKey(entry.getKey());
+         hotKeys.add(new HotKeyItem(id, hotkey, null, EDITOR_GROUP));
+         
+      }
+      
+      
       display.getHotKeyItemListGrid().setValue(hotKeys);
    }
    
@@ -201,7 +232,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    {
       selectedItem = hotKeyItem;
       
-      display.enableBindButton();
+      display.disableBindButton();
       display.enableUnbindButton();
       display.enableHotKeyField();
       display.focusOnHotKeyField();
@@ -268,25 +299,19 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       
       if (newHotKey == null || newHotKey.length() < 1)
       {
-         Dialogs.getInstance().showError("Enter value for key");
+         display.showError("Enter value for key");
          return false;
       }
       
       if (!newHotKey.startsWith("Ctrl") && !newHotKey.startsWith("Alt"))
       {
-         Dialogs.getInstance().showError("First key must be Ctrl of Alt ");
+         display.showError("First key must be Ctrl of Alt ");
          return false;
       }
       
       if (newHotKey.endsWith("+") && !newHotKey.endsWith("++"))
       {
-         Dialogs.getInstance().showError("Hot key is invalid");
-         return false;
-      }
-      
-      if (HotKeyHelper.isCtrlSpace(newHotKey))
-      {
-         Dialogs.getInstance().showError("Combination of Ctrl+Space is reserved for code autocomplete");
+         display.showError("Hot key is invalid");
          return false;
       }
       
@@ -296,7 +321,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
                   && hotKeyIdentifier.getHotKey().equals(newHotKey) 
                   && !hotKeyIdentifier.getControlId().equals(controlId))
          {
-            Dialogs.getInstance().showError("Such hot keys already bind to another control");
+            display.showError("Such hot key already bind to another control");
             return false;
          }
       }
@@ -350,11 +375,43 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    /**
     * When hot key pressed, display this hot key in input field.
     * 
-    * @see org.exoplatform.ideall.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String)
+    * @see org.exoplatform.ideall.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String, java.lang.String)
     */
-   public void onHotKeyPressed(String hotKey)
+   public void onHotKeyPressed(String controlKey, String keyCode)
    {
-      display.getHotKeyField().setValue(hotKey);
+      if (controlKey == null)
+      {
+         display.getHotKeyField().setValue("");
+         display.showError("First key must be Ctrl of Alt ");
+         return;
+      }
+      
+      String stringHotKey = controlKey + "+";
+      
+      //17 - key code of Ctrl
+      //18 - key code of Alt
+      if (!keyCode.equals("17") && !keyCode.equals("18") 
+               && HotKeyHelper.convertKeyCodeToKeySymbol(keyCode) != null)
+      {
+         stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(keyCode);
+      }
+      
+      display.getHotKeyField().setValue(stringHotKey);
+      
+      if (context.getReservedHotkeys().containsKey(controlKey + "+" + keyCode))
+      {
+         display.showError("This hot key is reserved by editor");
+         display.disableBindButton();
+      }
+      else if (validateHotKey(stringHotKey))
+      {
+         display.showError(null);
+         display.enableBindButton();
+      }
+      else
+      {
+         display.disableBindButton();
+      }
    }
    
 }

@@ -213,20 +213,4 @@ public class HotKeyHelper
       String keyInt = convertStringSymbolToKeyCode(keyString);
       return controlKey + "+" + keyInt;
    }
-   
-   /**
-    * Check, is hot key combination "Ctrl+Space" or
-    * "Ctrl+32" (scan code of space).
-    * 
-    * @param hotKey
-    * @return boolean
-    */
-   public static boolean isCtrlSpace(String hotKey)
-   {
-      if (hotKey.equals("Ctrl+Space") || hotKey.equals("Ctrl+32"))
-         return true;
-      else
-         return false;
-         
-   }
 }

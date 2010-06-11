@@ -27,8 +27,10 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Label;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
@@ -49,15 +51,17 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    public static interface Style
    {
 
-      final static String TEXT_INPUT_ERROR = "exo-cutomizeHotKey-textField-error";
-
-      final static String TEXT_INPUT = "exo-cutomizeHotKey-textField";
+      final static String ERROR = "exo-cutomizeHotKey-label-error";
 
    }
+   
+   private static final int BUTTON_FORM_HEIGHT = 25;
    
    private static final int WIDTH = 670;
 
    private static final int HEIGHT = 400;
+   
+   private static final int BUTTON_DELIMITER_WIDTH = 3;
    
    private static final String TITLE = "Hot Keys...";
    
@@ -66,6 +70,8 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private static final int BUTTON_WIDTH = 90;
    
    private static final int BUTTON_HEIGHT = 22;
+   
+   private static final int FORM_DELIMITER_HEIGHT = 5;
    
    private HLayout hLayout;
 
@@ -88,6 +94,8 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private IButton bindButton;
    
    private IButton unbindButton;
+   
+   private Label errorLabel;
 
    public CustomizeHotKeysPanel(HandlerManager eventBus, ApplicationContext applicationContext)
    {
@@ -103,22 +111,29 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       vLayout.setMargin(10);
       vLayout.setWidth100();
       vLayout.setAlign(VerticalAlignment.TOP);
-
+      
       hLayout = new HLayout();
       hLayout.setAutoHeight();
       hLayout.setWidth100();
-      hLayout.setPadding(10);
-
-      
+      hLayout.setMargin(0);
+      hLayout.setPadding(0);
       
       createHotKeysListGrid();
+      
+      Canvas delimiter = new StatefulCanvas();
+      delimiter.setHeight(FORM_DELIMITER_HEIGHT);
+      
+      vLayout.addMember(delimiter);
       
       hLayout.addMember(createHotKeyForm());
       hLayout.addMember(createBindButtonsForm());
       hLayout.addMember(createButtonsForm());
       
+      
       vLayout.addMember(hLayout);
 
+      createErrorLabel();
+      
       addItem(vLayout);
       
       show();
@@ -151,15 +166,14 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private void createHotKeysListGrid()
    {
       hotKeyItemListGrid = new HotKeyItemListGrid();
-      hotKeyItemListGrid.setCanEdit(false);
       vLayout.addMember(hotKeyItemListGrid);
    }
    
    private DynamicForm createHotKeyForm()
    {
       DynamicForm hotKeyform = new DynamicForm();
-      hotKeyform.setMargin(3);
-      hotKeyform.setHeight(34);
+      hotKeyform.setCellPadding(0);
+      hotKeyform.setHeight(BUTTON_FORM_HEIGHT);
       
       hotKeyField = new TextField();
       hotKeyField.setWidth(TEXT_FIELD_WIDTH);
@@ -174,8 +188,8 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private DynamicForm createBindButtonsForm()
    {
       DynamicForm bindForm = new DynamicForm();
-      bindForm.setMargin(3);
-      bindForm.setHeight(34);
+      bindForm.setCellPadding(0);
+      bindForm.setHeight(BUTTON_FORM_HEIGHT);
       
       bindButton = new IButton("Bind");
       bindButton.setWidth(BUTTON_WIDTH);
@@ -190,7 +204,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       unbindButton.setDisabled(true);
       
       StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
+      delimiter1.setWidth(BUTTON_DELIMITER_WIDTH);
       
       ToolbarItem bindTbi = new ToolbarItem();
       bindTbi.setButtons(bindButton, delimiter1, unbindButton);
@@ -203,10 +217,10 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private DynamicForm createButtonsForm()
    {
       DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setMargin(3);
-      buttonsForm.setHeight(34);
+      buttonsForm.setHeight(BUTTON_FORM_HEIGHT);
       buttonsForm.setLayoutAlign(Alignment.RIGHT);
       buttonsForm.setAutoWidth();
+      buttonsForm.setCellPadding(0);
       
       saveButton = new IButton("Save");
       saveButton.setWidth(BUTTON_WIDTH);
@@ -222,13 +236,34 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       ToolbarItem tbi2 = new ToolbarItem();
       StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(3);
+      delimiter2.setWidth(BUTTON_DELIMITER_WIDTH);
       tbi2.setAlign(Alignment.RIGHT);
       tbi2.setButtons(saveButton, delimiter2, cancelButton);
       
       buttonsForm.setFields(tbi2);
       
       return buttonsForm;
+   }
+   
+   private void createErrorLabel()
+   {
+      errorLabel = new Label();
+      errorLabel.setHeight("16px");
+      errorLabel.setText("");
+      errorLabel.setStyleName(Style.ERROR);
+      vLayout.addMember(errorLabel);
+   }
+   
+   public void showError(String text)
+   {
+      if (text == null)
+      {
+         errorLabel.setText("");
+      }
+      else
+      {
+         errorLabel.setText(text);
+      }
    }
    
    public HasClickHandlers getCancelButton()
