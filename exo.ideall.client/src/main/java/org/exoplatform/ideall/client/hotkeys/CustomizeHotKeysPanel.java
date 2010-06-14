@@ -57,13 +57,13 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    
    private static final int BUTTON_FORM_HEIGHT = 25;
    
-   private static final int WIDTH = 670;
+   private static final int WIDTH = 600;
 
-   private static final int HEIGHT = 400;
+   private static final int HEIGHT = 350;
    
    private static final int BUTTON_DELIMITER_WIDTH = 3;
    
-   private static final String TITLE = "Hot Keys...";
+   private static final String TITLE = "Customize Hotkeys";
    
    private static final int TEXT_FIELD_WIDTH = 90;
    

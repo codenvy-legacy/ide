@@ -23,13 +23,8 @@ import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
-import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
 import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
-import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
-import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
-import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
-import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -135,21 +130,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       if (event.getCtrlKey()) controlKey = "Ctrl";
       if (event.getAltKey()) controlKey = "Alt";
       
-//      if (controlKey == null)
-//      {
-//         hotKeyPressedListener.onHotKeyPressed("", "");
-//         event.preventDefault();
-//         return;
-//      }
-//      
-//      String stringHotKey = controlKey + "+";
-//      
-//      if (keyCode != 17 && keyCode != 18 
-//               && HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode)) != null)
-//      {
-//         stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(String.valueOf(keyCode));
-//      }
-      
       hotKeyPressedListener.onHotKeyPressed(controlKey, String.valueOf(keyCode));      
       event.preventDefault();
    }
@@ -164,11 +144,11 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private void initDefaultHotKeys() 
    {
-      controls.put("Ctrl+90", UndoTypingCommand.ID);  //Ctrl+Z
-      controls.put("Ctrl+89", RedoTypingCommand.ID);  //Ctrl+Y
-      controls.put("Ctrl+67", CopyItemsCommand.ID);   //Ctrl+C
-      controls.put("Ctrl+86", PasteItemsCommand.ID);  //Ctrl+V
-      controls.put("Ctrl+83", SaveFileCommand.ID);    //Ctrl+S
+//      controls.put("Ctrl+90", UndoTypingCommand.ID);  //Ctrl+Z
+//      controls.put("Ctrl+89", RedoTypingCommand.ID);  //Ctrl+Y
+//      controls.put("Ctrl+67", CopyItemsCommand.ID);   //Ctrl+C
+//      controls.put("Ctrl+86", PasteItemsCommand.ID);  //Ctrl+V
+//      controls.put("Ctrl+83", SaveFileCommand.ID);    //Ctrl+S
       controls.put("Ctrl+70", FindTextCommand.ID);    //Ctrl+F
       controls.put("Ctrl+68", DeleteLineControl.ID);  //Ctrl+D
       controls.put("Ctrl+76", GoToLineControl.ID);    //Ctrl+L
