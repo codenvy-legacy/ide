@@ -37,7 +37,8 @@ import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler
 public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, FindTextFormClosedHandler,
    FindTextHandler
 {
-   public static final String ID = "Edit/Find&#47Replace...";
+//   public static final String ID = "Edit/Find&#47Replace...";
+   public static final String ID = "Edit/Find-Replace...";
 
    private static final String TITLE = "Find/Replace...";
 

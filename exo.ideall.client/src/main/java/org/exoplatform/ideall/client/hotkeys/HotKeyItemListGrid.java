@@ -60,10 +60,10 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       setGroupByField(GROUP);
       
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
-//      fieldName.setCanHide(false);
+      fieldName.setCanHide(false);
       
       ListGridField fieldControl = new ListGridField(CONTROL, CONTROL);
-//      fieldControl.setCanHide(false);
+      fieldControl.setCanHide(false);
       
       ListGridField fieldGroup = new ListGridField(GROUP, GROUP);
       fieldGroup.setHidden(true);

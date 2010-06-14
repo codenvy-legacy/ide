@@ -147,6 +147,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
                return;
             }
             hotKeySelected(event.getSelectedItem());
+            display.showError(null);
          }
       });
       
@@ -246,9 +247,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    {
       String newHotKey = display.getHotKeyField().getValue();
       
-      if (!validateHotKey(newHotKey))
-         return;
-      
       for (HotKeyItem hotKey : hotKeys)
       {
          if (hotKey.getControlId().equals(selectedItem.getControlId()))
@@ -266,11 +264,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    {
       String controlId = selectedItem.getControlId();
       
-      for (HotKeyItem hotKeyIdentifier : hotKeys)
+      for (HotKeyItem hotKeyItem : hotKeys)
       {
-         if (hotKeyIdentifier.getControlId().equals(controlId))
+         if (hotKeyItem.getControlId().equals(controlId))
          {
-            hotKeyIdentifier.setHotKey(null);
+            hotKeys.remove(hotKeyItem);
+//            hotKeyIdentifier.setHotKey(null);
          }
       }
       
@@ -280,13 +279,13 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    /**
     * Validates hot keys.
     * 
-    * If key is null or empty return false and show error dialog.
+    * If key is null or empty return false and show error message.
     * 
     * If combination of controlKey and key already exists, 
-    * return false and show error dialog.
+    * return false and show error message.
     * 
     * If combination of hot keys doesn't start with Ctrl or Alt,
-    * return false and show error dialog.
+    * return false and show error message.
     * 
     * Otherwise return true;
     * 
@@ -311,7 +310,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       
       if (newHotKey.endsWith("+") && !newHotKey.endsWith("++"))
       {
-         display.showError("Hot key is invalid");
+         display.showError("Hold control and press key");
          return false;
       }
       
@@ -335,14 +334,17 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    private void saveHotKeys()
    {
       context.getHotKeys().clear();
-      for (HotKeyItem hotKeyIdentifier : hotKeys)
+      for (HotKeyItem hotKeyItem : hotKeys)
       {
-         String hotKey = hotKeyIdentifier.getHotKey();
-         
-         if (hotKey != null && hotKey.length() > 0)
+         if (!hotKeyItem.getGroup().equals(EDITOR_GROUP))
          {
-            String keyCode = HotKeyHelper.convertStringHotKeyToCodeHotKey(hotKey);
-            context.getHotKeys().put(keyCode, hotKeyIdentifier.getControlId());
+            String hotKey = hotKeyItem.getHotKey();
+
+            if (hotKey != null && hotKey.length() > 0)
+            {
+               String keyCode = HotKeyHelper.convertStringHotKeyToCodeHotKey(hotKey);
+               context.getHotKeys().put(keyCode, hotKeyItem.getControlId());
+            }
          }
       }
       display.closeForm();
@@ -379,6 +381,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    public void onHotKeyPressed(String controlKey, String keyCode)
    {
+      if (selectedItem == null)
+      {
+         return;
+      }
+      
       if (controlKey == null)
       {
          display.getHotKeyField().setValue("");
@@ -402,8 +409,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          display.showError("This hot key is reserved by editor");
          display.disableBindButton();
+         return;
       }
-      else if (validateHotKey(stringHotKey))
+      if (validateHotKey(stringHotKey))
       {
          display.showError(null);
          display.enableBindButton();

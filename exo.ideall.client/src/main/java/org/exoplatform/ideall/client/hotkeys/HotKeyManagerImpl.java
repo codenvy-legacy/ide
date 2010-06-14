@@ -178,7 +178,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       
       reservedHotkeys.put("Ctrl+32", "Autocomplete"); //Ctrl+Space
       reservedHotkeys.put("Ctrl+66", "Bold");         //Ctrl+B
-      reservedHotkeys.put("Ctrl+78", "Italic");       //Ctrl+I
+      reservedHotkeys.put("Ctrl+73", "Italic");       //Ctrl+I
       reservedHotkeys.put("Ctrl+85", "Undeline");     //Ctrl+U
       reservedHotkeys.put("Ctrl+67", "Copy");         //Ctrl+C
       reservedHotkeys.put("Ctrl+86", "Paste");        //Ctrl+V
