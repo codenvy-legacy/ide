@@ -19,6 +19,10 @@
  */
 package org.exoplatform.ideall.client.autocompletion;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.editor.api.Token;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -29,6 +33,6 @@ package org.exoplatform.ideall.client.autocompletion;
 public interface TokenCollector
 {
 
-   void getTokens(String prefix);
+   void getTokens(String prefix, List<Token> tokenFromParser);
    
 }

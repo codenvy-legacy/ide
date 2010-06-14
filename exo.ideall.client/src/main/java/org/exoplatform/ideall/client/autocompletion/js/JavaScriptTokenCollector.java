@@ -22,6 +22,9 @@ package org.exoplatform.ideall.client.autocompletion.js;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.TokenTemplate;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.ideall.client.autocompletion.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -43,6 +46,55 @@ public class JavaScriptTokenCollector implements TokenCollector
    private ApplicationContext context;
 
    private TokensCollectedCallback tokensCollectedCallback;
+   
+   private static List<Token> keywords = new ArrayList<Token>();
+   
+   private static List<Token> templates = new ArrayList<Token>();
+   
+   static
+   {
+      keywords.add(new Token("break", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("case", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("catch", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("const", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("continue", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("default", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("delete", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("do", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("else", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("export", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("false", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("while", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("for", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("function", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("if", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("import", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("in", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("instanceOf", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("label", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("let", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("new", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("null", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("return", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("switch", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("this", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("throw", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("true", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("try", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("typeof", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("var", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("void", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("while", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("with", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
+      
+      templates.add(new TokenTemplate("for","for-iterate over array", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
+      templates.add(new TokenTemplate("if", "if-condition", "if (condition)\n{\n\n}"));
+      templates.add(new TokenTemplate("if", "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}"));
+      templates.add(new TokenTemplate("try", "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}"));
+      
+   }
 
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
       TokensCollectedCallback tokensCollectedCallback)
@@ -50,74 +102,28 @@ public class JavaScriptTokenCollector implements TokenCollector
       this.context = context;
       this.eventBus = eventBus;
       this.tokensCollectedCallback = tokensCollectedCallback;
-
+      
    }
 
-   public void getTokens(String prefix)
+   public void getTokens(String prefix, List<Token> tokenFromParser)
    {
-      List<String> tokens = new ArrayList<String>();
       
-      tokens.add("abstract");
-      tokens.add("boolean");
-      tokens.add("break");
-      tokens.add("byte");
-      tokens.add("case");
-      tokens.add("catch");
-      tokens.add("char");
-      tokens.add("class");
-      tokens.add("const");
-      tokens.add("continue");
-      tokens.add("debugger");
-      tokens.add("default");
-      tokens.add("delete");
-      tokens.add("do");
-      tokens.add("double");
-      tokens.add("else");
-      tokens.add("enum");
-      tokens.add("export");
-      tokens.add("extends");
-      tokens.add("false");
-      tokens.add("final");
-      tokens.add("finally");
-      tokens.add("float");
-      tokens.add("for");
-      tokens.add("function");
-      tokens.add("goto");
-      tokens.add("if");
-      tokens.add("implements");
-      tokens.add("import");
-      tokens.add("in");
-      tokens.add("instanceof");
-      tokens.add("int");
-      tokens.add("interface");
-      tokens.add("long");
-      tokens.add("native");
-      tokens.add("new");
-      tokens.add("null");
-      tokens.add("package");
-      tokens.add("private");
-      tokens.add("protected");
-      tokens.add("public");
-      tokens.add("return");
-      tokens.add("short");
-      tokens.add("static");
-      tokens.add("super");
-      tokens.add("switch");
-      tokens.add("synchronized");
-      tokens.add("this");
-      tokens.add("throw");
-      tokens.add("throws");
-      tokens.add("transient");
-      tokens.add("true");
-      tokens.add("try");
-      tokens.add("typeof");
-      tokens.add("var");
-      tokens.add("void");
-      tokens.add("volatile");
-      tokens.add("while");
-      tokens.add("with");
+      List<Token> tokens = new ArrayList<Token>();
+      tokens.addAll(keywords);
+      tokens.addAll(templates);
       
+      
+//      tokens.add(new Token("b", TokenType.VARIABLE, 0));
+//      tokens.add(new Token("bb", TokenType.VARIABLE, 0));
+//      tokens.add(new Token("bbb", TokenType.VARIABLE, 0));
+//      
+//      tokens.add(new Token("c", TokenType.FUNCTION, 0));
+//      tokens.add(new Token("ca", TokenType.FUNCTION, 0));
+//      tokens.add(new Token("cat", TokenType.FUNCTION, 0));
+//     
+      tokens.addAll(tokenFromParser);
       tokensCollectedCallback.onTokensCollected(tokens);
    }
+
 
 }

@@ -21,6 +21,10 @@ package org.exoplatform.ideall.client.autocompletion;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.Token;
+
+
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -31,6 +35,6 @@ import java.util.List;
 public interface TokensCollectedCallback
 {
 
-   void onTokensCollected(List<String> tokens);
+   void onTokensCollected(List<Token> tokens);
    
 }

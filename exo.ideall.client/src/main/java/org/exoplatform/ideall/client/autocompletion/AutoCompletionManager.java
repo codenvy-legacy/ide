@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
@@ -82,27 +83,31 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
+      System.out.println("AutoCompletionManager.onEditorAutoCompleteCalled()");
+
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
       cursorPos = event.getCursorPositionX();
-      // Window.alert("X" + cursorOffsetX + " Y" + cursorOffsetY);
-      //TODO edit lineContent to separate one token 
-      //      
-      //      tokenToComplete = lineContent;
-      //      
+
       getTokenFromLine(lineContent);
       TokenCollector collector = factories.get(event.getMimeType());
       if (collector != null)
       {
-         collector.getTokens(tokenToComplete);
+         collector.getTokens(tokenToComplete, event.getTokenList());
       }
    }
 
+   /**
+    * @param line
+    */
    private void getTokenFromLine(String line)
    {
       String tokenLine = "";
+      tokenToComplete = "";
+      afterToken = "";
+      beforeToken = "";
       if (line.length() > cursorPos - 1)
       {
          afterToken = line.substring(cursorPos - 1, line.length());
@@ -122,22 +127,54 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
          tokenLine = line;
       }
 
-      if (tokenLine.contains(" "))
+      for (int i = tokenLine.length() - 1; i >= 0; i--)
       {
-         beforeToken = tokenLine.substring(0, tokenLine.lastIndexOf(" ") + 1);
-         tokenLine = tokenLine.substring(tokenLine.lastIndexOf(" ") + 1);
-         tokenToComplete = tokenLine;
-      }
-      else
-      {
+         switch (tokenLine.charAt(i))
+         {
+            case ' ' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '.' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '(' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case ')' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '{' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '}' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case ';' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+         }
          beforeToken = "";
          tokenToComplete = tokenLine;
       }
+
    }
 
-   public void onTokensCollected(List<String> tokens)
+   public void onTokensCollected(List<Token> tokens)
    {
-      int x = cursorOffsetX - tokenToComplete.length() * 8 + 4;
+      int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
       int y = cursorOffsetY + 4;
       new AutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, this);
    }
@@ -149,7 +186,6 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    {
       String tokenToPaste = beforeToken + token + afterToken;
       int newCursorPos = (beforeToken + token).length() + 1;
-
       eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
    }
 

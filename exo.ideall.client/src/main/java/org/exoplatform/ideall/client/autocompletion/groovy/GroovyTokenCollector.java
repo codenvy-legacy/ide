@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client.autocompletion.groovy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ideall.client.autocompletion.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -50,9 +51,13 @@ public class GroovyTokenCollector implements TokenCollector
       this.tokensCollectedCallback = tokensCollectedCallback;
    }
 
-   public void getTokens(String prefix)
+
+   /**
+    * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
+    */
+   public void getTokens(String prefix, List<org.exoplatform.gwtframework.editor.api.Token> tokenFromParser)
    {
-      List<String> tokens = new ArrayList<String>();      
+      List<Token> tokens = new ArrayList<Token>();      
       tokensCollectedCallback.onTokensCollected(tokens);
    }
 
