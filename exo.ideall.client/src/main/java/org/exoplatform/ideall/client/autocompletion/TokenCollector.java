@@ -33,6 +33,6 @@ import org.exoplatform.gwtframework.editor.api.Token;
 public interface TokenCollector
 {
 
-   void getTokens(String prefix, List<Token> tokenFromParser);
+   void getTokens(String prefix, int currentLine, List<Token> tokenFromParser);
    
 }

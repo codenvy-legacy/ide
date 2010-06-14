@@ -55,7 +55,7 @@ public class GroovyTokenCollector implements TokenCollector
    /**
     * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
     */
-   public void getTokens(String prefix, List<org.exoplatform.gwtframework.editor.api.Token> tokenFromParser)
+   public void getTokens(String prefix, int currentLine, List<Token> tokenFromParser)
    {
       List<Token> tokens = new ArrayList<Token>();      
       tokensCollectedCallback.onTokensCollected(tokens);

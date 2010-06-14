@@ -20,6 +20,8 @@
 package org.exoplatform.ideall.client.autocompletion.js;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -46,11 +48,13 @@ public class JavaScriptTokenCollector implements TokenCollector
    private ApplicationContext context;
 
    private TokensCollectedCallback tokensCollectedCallback;
-   
+
    private static List<Token> keywords = new ArrayList<Token>();
-   
+
    private static List<Token> templates = new ArrayList<Token>();
-   
+
+   private List<Token> filteredToken = new ArrayList<Token>();
+
    static
    {
       keywords.add(new Token("break", TokenType.KEYWORD, 0, null));
@@ -88,12 +92,13 @@ public class JavaScriptTokenCollector implements TokenCollector
       keywords.add(new Token("with", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
-      
-      templates.add(new TokenTemplate("for","for-iterate over array", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
+
+      templates
+         .add(new TokenTemplate("for", "for-iterate over array", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
       templates.add(new TokenTemplate("if", "if-condition", "if (condition)\n{\n\n}"));
       templates.add(new TokenTemplate("if", "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}"));
       templates.add(new TokenTemplate("try", "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}"));
-      
+
    }
 
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
@@ -102,28 +107,102 @@ public class JavaScriptTokenCollector implements TokenCollector
       this.context = context;
       this.eventBus = eventBus;
       this.tokensCollectedCallback = tokensCollectedCallback;
-      
+
    }
 
-   public void getTokens(String prefix, List<Token> tokenFromParser)
+   public void getTokens(String prefix, int currntLine, List<Token> tokenFromParser)
    {
-      
+
       List<Token> tokens = new ArrayList<Token>();
       tokens.addAll(keywords);
       tokens.addAll(templates);
-      
-      
-//      tokens.add(new Token("b", TokenType.VARIABLE, 0));
-//      tokens.add(new Token("bb", TokenType.VARIABLE, 0));
-//      tokens.add(new Token("bbb", TokenType.VARIABLE, 0));
-//      
-//      tokens.add(new Token("c", TokenType.FUNCTION, 0));
-//      tokens.add(new Token("ca", TokenType.FUNCTION, 0));
-//      tokens.add(new Token("cat", TokenType.FUNCTION, 0));
-//     
-      tokens.addAll(tokenFromParser);
+
+      // printTokens(tokenFromParser);
+      filteredToken.clear();
+
+      //      tokens.add(new Token("b", TokenType.VARIABLE, 0));
+      //      tokens.add(new Token("bb", TokenType.VARIABLE, 0));
+      //      tokens.add(new Token("bbb", TokenType.VARIABLE, 0));
+      //      
+      //      tokens.add(new Token("c", TokenType.FUNCTION, 0));
+      //      tokens.add(new Token("ca", TokenType.FUNCTION, 0));
+      //      tokens.add(new Token("cat", TokenType.FUNCTION, 0));
+      //     
+      //      tokens.addAll(tokenFromParser);
+
+      filterToken(currntLine, tokenFromParser);
+      for (Token t : filteredToken)
+      {
+         System.out.println(t.getName() + " " + t.getLineNumber());
+      }
+
+      tokens.addAll(filteredToken);
       tokensCollectedCallback.onTokensCollected(tokens);
    }
 
+   /**
+    * @param currentLine
+    * @param token
+    */
+   private void filterToken(int currentLine, List<Token> token)
+   {
+      Token lastFunction = null;
+
+      System.out.println("token size = " + token.size());
+      for (int i = 0; i < token.size(); i++)
+      {
+         Token t = token.get(i);
+         System.out.println(t.getName());
+         if (t.getLineNumber() > currentLine)
+         {
+            System.out.println("token break - " + t.getName() + " : " + t.getLineNumber());
+            break;
+         }
+         if (t.getType().equals(TokenType.FUNCTION))
+         {
+            lastFunction = t;
+         }
+         filteredToken.add(t);
+      }
+
+      if (lastFunction != null && lastFunction.getSubTokenList() != null)
+      {
+         filterSubToken(currentLine, lastFunction.getSubTokenList());
+         
+      }
+
+   }
+
+   /**
+    * @param currentLine
+    * @param subToken
+    */
+   private void filterSubToken(int currentLine, List<Token> subToken)
+   {
+      for (int i = 0; i < subToken.size(); i++)
+      {
+         Token t = subToken.get(i);
+
+         if (t.getSubTokenList() != null)
+         {
+            filterSubToken(currentLine, t.getSubTokenList());
+         }
+         filteredToken.add(t);
+      }
+   }
+
+   private void printTokens(List<Token> token)
+   {
+      for (Token t : token)
+      {
+         System.out.println("Token - " + t.getName() + " --- " + t.getLineNumber());
+         if (t.getSubTokenList() != null)
+         {
+            System.out.println("SubTokens: ");
+            printTokens(t.getSubTokenList());
+         }
+      }
+      System.out.println("======================");
+   }
 
 }
