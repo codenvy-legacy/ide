@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewHTMLFileCommand extends AbstractNewFileCommand
 {
 
-   private static final String ID = "File/New/HTML file";
+   private static final String ID = "File/New/New HTML file";
 
    public NewHTMLFileCommand()
    {

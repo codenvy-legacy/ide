@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewCSSFileCommand extends AbstractNewFileCommand
 {
 
-   private static final String ID = "File/New/CSS file";
+   private static final String ID = "File/New/New CSS file";
 
    public NewCSSFileCommand()
    {

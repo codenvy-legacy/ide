@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 public class NewTEXTFileCommand extends AbstractNewFileCommand
 {
 
-   private final static String ID = "File/New/TEXT file";
+   private final static String ID = "File/New/New TEXT file";
 
    public NewTEXTFileCommand()
    {

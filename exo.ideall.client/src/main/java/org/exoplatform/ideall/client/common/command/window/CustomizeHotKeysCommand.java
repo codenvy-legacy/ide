@@ -35,7 +35,7 @@ public class CustomizeHotKeysCommand extends IDECommand
 
    public static final String ID = "Window/HotKeys...";
 
-   public static final String TITLE = "Customize hot keys...";
+   public static final String TITLE = "Customize Hotkeys...";
 
    public CustomizeHotKeysCommand()
    {
