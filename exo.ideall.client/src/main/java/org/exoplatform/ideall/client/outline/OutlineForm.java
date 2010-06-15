@@ -50,6 +50,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       context = applicationContext;
       
       setTitle("<span>" + Canvas.imgHTML(Images.Outline.OUTLINE) + "&nbsp;" + "Outline" + "</span>");
+      setCanClose(true);
       
       treeGrid = new OutlineTreeGrid<Token>();
       treeGrid.setShowHeader(false);

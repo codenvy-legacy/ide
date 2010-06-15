@@ -73,6 +73,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 {
 
    private static final int MARGIN = 3;
+   
+   private static final int RESIZE_BAR_SIZE = 5;
 
    private HandlerManager eventBus;
 
@@ -148,6 +150,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       horizontalSplitLayout = new HLayout();
       horizontalSplitLayout.setMargin(MARGIN);
       horizontalSplitLayout.setWidth100();
+      horizontalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
       addMember(horizontalSplitLayout);
       navigationForm = new NavigationForm(eventBus, context);
       navigationForm.setWidth("30%");
@@ -175,6 +178,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       verticalSplitLayout.setOverflow(Overflow.HIDDEN);
       verticalSplitLayout.setResizeBarTarget("next");
       verticalSplitLayout.setShowResizeBar(true);
+      verticalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
       horizontalSplitLayout.addMember(verticalSplitLayout);
       
       codeHelperForm = new CodeHelperForm(eventBus, context);
@@ -246,7 +250,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          navigationForm.show();
       }
-      horizontalSplitLayout.setResizeBarSize(9);
+      horizontalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
 
       if (operationPanelVisible)
       {
@@ -257,7 +261,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          codeHelperForm.show();
       }
-      verticalSplitLayout.setResizeBarSize(9);
+      verticalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
 
       statusBar.show();
 
@@ -301,10 +305,10 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          codeHelperForm.show();
       }
 
-      horizontalSplitLayout.setResizeBarSize(9);
+      horizontalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
 
       editorForm.show();
-      verticalSplitLayout.setResizeBarSize(9);
+      verticalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
 
       operationForm.setHeight(operationPanelHeight);
 
@@ -417,7 +421,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       codeHelperForm.setWidth(codeHelperPanelWidth);
 
-      horizontalSplitLayout.setResizeBarSize(9);
+      horizontalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
       
       statusBar.show();
 
@@ -425,5 +429,4 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       eventBus.fireEvent(new CodeHelperPanelRestoredEvent());
    }
-
 }

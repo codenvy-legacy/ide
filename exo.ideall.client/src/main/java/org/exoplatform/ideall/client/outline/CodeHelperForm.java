@@ -29,6 +29,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
+import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -63,6 +65,7 @@ CodeHelperPanelRestoredHandler
       outlineTab = new OutlineForm(eventBus, context);
       tabSet.addTab(outlineTab);
       addMember(tabSet);
+      tabSet.addCloseClickHandler(closeClickHandler);
       
       presenter = new CodeHelperPresenter(eventBus, context);
       presenter.bindDispyal(this);
@@ -87,15 +90,38 @@ CodeHelperPanelRestoredHandler
       minMaxControlButton.setMaximize(true);
    }
    
+   private CloseClickHandler closeClickHandler = new CloseClickHandler()
+   {
+      public void onCloseClick(TabCloseClickEvent event)
+      {
+         event.cancel();
+         hide();
+      }
+   };
+   
    public void showCodeHelper(boolean isShow)
    {
       if (isShow)
       {
          show();
+         //now we have only one tab in tabset
+         //if there will be more, then one tab
+         //you will need to check, is outlineTab visible
+         if (tabSet.getTabs().length < 1)
+         {
+            tabSet.addTab(outlineTab);
+         }
       }
       else
       {
          hide();
+         //now we have only one tab in tabset
+         //if there will be more, then one tab
+         //you will need to find outline tab and close it
+//         if (tabSet.getTabs().length > 0)
+//         {
+//            tabSet.removeTab(0);
+//         }
       }
    }
    
