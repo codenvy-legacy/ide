@@ -130,15 +130,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 //            String path = activeTab.getFile().getHref();
             eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), 
                activeTab.getTextEditor()));
-            
-            if (activeTab.getTextEditor().getTokenList() != null)
-            {
-               System.out.println(activeTab.getTextEditor().getTokenList().size());
-            }
-            else
-            {
-               System.out.println("token list is null");
-            }
          }
          catch (Exception exc)
          {
