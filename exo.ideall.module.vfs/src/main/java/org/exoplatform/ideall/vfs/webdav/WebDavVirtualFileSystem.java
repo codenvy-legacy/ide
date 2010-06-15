@@ -167,7 +167,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void createFolder(Folder folder)
    {
       String url = javaScriptEncodeURI(folder.getHref());
-
       FolderCreatedEvent event = new FolderCreatedEvent(folder);
 
       String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
