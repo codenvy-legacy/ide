@@ -188,8 +188,9 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       {
          if (command instanceof SimpleCommand && ((SimpleCommand)command).getEvent() != null
                   && command.getId().equals(context.getHotKeys().get(hotKey))
-                  && command.isEnabled())
+                  && (command.isEnabled() || ((SimpleCommand)command).isIgnoreDisable()))
          {
+            System.out.println("HotKeyManagerImpl.callEventByHotKey()");
             eventBus.fireEvent(((SimpleCommand)command).getEvent());
             return;
          }

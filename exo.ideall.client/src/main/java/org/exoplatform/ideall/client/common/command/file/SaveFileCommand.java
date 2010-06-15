@@ -56,6 +56,7 @@ public class SaveFileCommand extends IDECommand implements EditorActiveFileChang
       setPrompt(TITLE);
       setIcon(Images.MainMenu.SAVE);
       setEvent(new SaveFileEvent());
+      setIgnoreDisable(true);
    }
 
    @Override

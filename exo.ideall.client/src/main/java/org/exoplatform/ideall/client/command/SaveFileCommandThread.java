@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.event.file.FileSavedEvent;
+import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.event.file.SaveFileHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -62,11 +63,18 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
 
    public void onSaveFile(SaveFileEvent event)
    {
+      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
+      
+      if (file.isNewFile()) 
+      {
+         eventBus.fireEvent(new SaveFileAsEvent());
+         return;
+      }
+      
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
 
       if (file.isContentChanged())
       {
