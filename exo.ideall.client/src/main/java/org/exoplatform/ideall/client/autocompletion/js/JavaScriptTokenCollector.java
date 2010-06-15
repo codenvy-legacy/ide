@@ -117,24 +117,9 @@ public class JavaScriptTokenCollector implements TokenCollector
       tokens.addAll(keywords);
       tokens.addAll(templates);
 
-      // printTokens(tokenFromParser);
       filteredToken.clear();
 
-      //      tokens.add(new Token("b", TokenType.VARIABLE, 0));
-      //      tokens.add(new Token("bb", TokenType.VARIABLE, 0));
-      //      tokens.add(new Token("bbb", TokenType.VARIABLE, 0));
-      //      
-      //      tokens.add(new Token("c", TokenType.FUNCTION, 0));
-      //      tokens.add(new Token("ca", TokenType.FUNCTION, 0));
-      //      tokens.add(new Token("cat", TokenType.FUNCTION, 0));
-      //     
-      //      tokens.addAll(tokenFromParser);
-
       filterToken(currntLine, tokenFromParser);
-      for (Token t : filteredToken)
-      {
-         System.out.println(t.getName() + " " + t.getLineNumber());
-      }
 
       tokens.addAll(filteredToken);
       tokensCollectedCallback.onTokensCollected(tokens);
@@ -148,14 +133,11 @@ public class JavaScriptTokenCollector implements TokenCollector
    {
       Token lastFunction = null;
 
-      System.out.println("token size = " + token.size());
       for (int i = 0; i < token.size(); i++)
       {
          Token t = token.get(i);
-         System.out.println(t.getName());
          if (t.getLineNumber() > currentLine)
          {
-            System.out.println("token break - " + t.getName() + " : " + t.getLineNumber());
             break;
          }
          if (t.getType().equals(TokenType.FUNCTION))
