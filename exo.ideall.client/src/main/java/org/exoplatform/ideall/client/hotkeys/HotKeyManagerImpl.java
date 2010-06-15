@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
 import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
 import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
+import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -148,7 +149,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 //      controls.put("Ctrl+89", RedoTypingCommand.ID);  //Ctrl+Y
 //      controls.put("Ctrl+67", CopyItemsCommand.ID);   //Ctrl+C
 //      controls.put("Ctrl+86", PasteItemsCommand.ID);  //Ctrl+V
-//      controls.put("Ctrl+83", SaveFileCommand.ID);    //Ctrl+S
+      controls.put("Ctrl+83", SaveFileCommand.ID);    //Ctrl+S
       controls.put("Ctrl+70", FindTextCommand.ID);    //Ctrl+F
       controls.put("Ctrl+68", DeleteLineControl.ID);  //Ctrl+D
       controls.put("Ctrl+76", GoToLineControl.ID);    //Ctrl+L
