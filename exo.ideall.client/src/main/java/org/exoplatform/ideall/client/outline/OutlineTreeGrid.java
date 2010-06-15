@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.util.EnumTokenType;
-import org.exoplatform.ideall.client.util.Token;
 
 import java.util.List;
 
@@ -44,6 +44,10 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
    
    private static final String FUNCTION_ICON = Images.Outline.FUNCTION_ITEM;
+   
+   private static final String METHOD_ICON = Images.Outline.METHOD_ITEM;
+   
+   private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
    
    private Tree tree;
 
@@ -72,9 +76,10 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      if (getValue().getTokens().size() > 0)
+      if (getValue().getSubTokenList()!= null && getValue().getSubTokenList().size() > 0)
       {
-         fillTreeItems(rootNode, getValue().getTokens());
+         fillTreeItems(rootNode, getValue().getSubTokenList());
+         tree.openAll();
       }
       else
       {
@@ -84,7 +89,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
       
    }
    
-   public void fillTreeItems(TreeNode parentNode, List<Token> children)
+   private void fillTreeItems(TreeNode parentNode, List<Token> children)
    {
       TreeNode[] oldNodes = tree.getChildren(parentNode);
       tree.removeList(oldNodes);
@@ -104,17 +109,28 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
          {
             newNode = new TreeNode(child.getName());
             newNode.setAttribute(getValuePropertyName(), child);
-            if (child.getType().equals(EnumTokenType.FUNCTION))
+            if (child.getType().equals(TokenType.FUNCTION))
             {
                newNode.setAttribute(ICON, FUNCTION_ICON);
             }
-            else if (child.getType().equals(EnumTokenType.VARIABLE))
+            else if (child.getType().equals(TokenType.VARIABLE))
             {
                newNode.setAttribute(ICON, VAR_ICON);
             }
+            else if (child.getType().equals(TokenType.METHOD))
+            {
+               newNode.setAttribute(ICON, METHOD_ICON);
+            }
+            else if (child.getType().equals(TokenType.PROPERTY))
+            {
+               newNode.setAttribute(ICON, PROPERTY_ICON);
+            }
             tree.add(newNode, parentNode);
          }
-         fillTreeItems(newNode, child.getTokens());
+         if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
+         {
+            fillTreeItems(newNode, child.getSubTokenList());
+         }
       }
    }
 

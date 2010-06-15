@@ -19,20 +19,23 @@
 package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.editor.api.TextEditor;
+import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
-import org.exoplatform.ideall.client.outline.event.RefreshOutlineHandler;
-import org.exoplatform.ideall.client.util.SimpleParser;
-import org.exoplatform.ideall.client.util.Token;
 
 import java.util.List;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -40,79 +43,86 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class OutlinePresenter implements RefreshOutlineHandler, EditorFileContentChangedHandler
+public class OutlinePresenter implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler
 {
    interface Display
    {
-      OutlineTreeGrid<Token> getBrowserTree();
-      
+      TreeGridItem<Token> getBrowserTree();
+
       void selectTreeItem(int number);
    }
-   
+
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
-   
+
    private Handlers handlers;
-   
+
    private Display display;
-   
+
    public OutlinePresenter(HandlerManager bus, ApplicationContext applicationContext)
    {
       eventBus = bus;
       context = applicationContext;
-      
+
       handlers = new Handlers(eventBus);
-      
-      handlers.addHandler(RefreshOutlineEvent.TYPE, this);
+
       handlers.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
    }
-   
+
    public void bindDisplay(Display d)
    {
       display = d;
-      
+
       display.getBrowserTree().addSelectionHandler(new SelectionHandler<Token>()
       {
          public void onSelection(SelectionEvent<Token> event)
          {
-            int line = event.getSelectedItem().getLine();
+            int line = event.getSelectedItem().getLineNumber();
             int maxLineNumber = context.getActiveFile().getContent().split("\n").length;
-            eventBus.fireEvent(new EditorGoToLineEvent(
-               line < maxLineNumber ? line : maxLineNumber));
+            eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
          }
       });
    }
-   
-   public void onRefreshOutline(RefreshOutlineEvent event)
+
+   private void refreshOutline(TextEditor editor)
    {
-      refreshOutline();
+      List<Token> tokens = editor.getTokenList();
+
+      display.getBrowserTree().setValue(new Token("", null, -1, tokens));
    }
 
-   @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      refreshOutline();
+      if (isShowOutline())
+      {
+         refreshOutlineTimer.cancel();
+         refreshOutlineTimer.schedule(2000);
+      }
    }
    
-   private void refreshOutline()
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (context.getActiveFile() == null || context.getActiveFile().getContent() == null)
-      {
-         return;
-      }
-      
-      Token rootItem = new Token("", null, -1);
-      
-      List<Token> tokens = SimpleParser.parse(context.getActiveFile().getContent());
-      
-      for (Token token : tokens)
-      {
-         rootItem.getTokens().add(token);
-      }
-      
-      display.getBrowserTree().setValue(rootItem);
+//      System.out.println("OutlinePresenter.onEditorActiveFileChanged()");
+      //TODO: refresh outline
+//      refreshOutline(event.getEditor());
    }
    
+   private boolean isShowOutline()
+   {
+      return (context.getActiveTextEditor() != null && context.getActiveFile() != null 
+          && (context.getActiveFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+                 || context.getActiveFile().getContentType().equals(MimeType.GOOGLE_GADGET)));
+   }
+   
+   private Timer refreshOutlineTimer = new Timer() {
+      @Override
+      public void run()
+      {
+         refreshOutline(context.getActiveTextEditor());
+      }
+   };
+
 }

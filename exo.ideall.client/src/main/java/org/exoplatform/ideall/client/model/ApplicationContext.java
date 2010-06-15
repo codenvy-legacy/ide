@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.model;
 
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
@@ -52,9 +53,14 @@ public class ApplicationContext
    private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
    /**
-    * Current active file in editor
+    * Current active file in editor.
     */
    private File activeFile;
+   
+   /**
+    * Current active text editor.
+    */
+   private TextEditor activeTextEditor;
 
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
 
@@ -174,6 +180,22 @@ public class ApplicationContext
    public void setActiveFile(File activeFile)
    {
       this.activeFile = activeFile;
+   }
+   
+   /**
+    * @return the activeTextEditor
+    */
+   public TextEditor getActiveTextEditor()
+   {
+      return activeTextEditor;
+   }
+
+   /**
+    * @param activeTextEditor the activeTextEditor to set
+    */
+   public void setActiveTextEditor(TextEditor activeTextEditor)
+   {
+      this.activeTextEditor = activeTextEditor;
    }
 
    public LinkedHashMap<String, File> getPreloadFiles()

@@ -19,7 +19,6 @@ package org.exoplatform.ideall.client.editor;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -75,8 +74,6 @@ import org.exoplatform.ideall.client.event.file.SaveFileEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.RefreshOutlineEvent;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.vfs.api.File;
 
@@ -266,6 +263,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                   String fileName = (String)context.getOpenedFiles().keySet().toArray()[0];
                   File file = context.getOpenedFiles().get(fileName);
                   context.setActiveFile(file);
+                  context.setActiveTextEditor(display.getEditor(file.getHref()));
                   setFileAsActive();
                }
 
@@ -341,23 +339,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       if (curentFile == null)
       {
          context.setActiveFile(null);
-         eventBus.fireEvent(new ShowOutlineEvent(false));
+         context.setActiveTextEditor(null);
          return;
       }
 
       context.setActiveFile(curentFile);
+      context.setActiveTextEditor(display.getEditor(curentFile.getHref()));
       CookieManager.getInstance().storeOpenedFiles(context);
       display.setEditorFocus(curentFile.getHref());
-      if (curentFile.getContentType() != null)
-      {
-         eventBus.fireEvent(new ShowOutlineEvent(curentFile.getContentType()
-            .equals(MimeType.APPLICATION_JAVASCRIPT)));
-         eventBus.fireEvent(new RefreshOutlineEvent());
-      }
-      else
-      {
-         eventBus.fireEvent(new ShowOutlineEvent(false));
-      }
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
@@ -470,6 +459,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorChangeActiveFile(EditorChangeActiveFileEvent event)
    {
       context.setActiveFile(event.getFile());
+      context.setActiveTextEditor(display.getEditor(event.getFile().getHref()));
       display.selectTab(event.getFile().getHref());
 
       String href = context.getActiveFile().getHref();
@@ -507,6 +497,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          File openedFile = context.getOpenedFiles().get(file.getHref());
          context.setActiveFile(openedFile);
+         context.setActiveTextEditor(display.getEditor(openedFile.getHref()));
          display.selectTab(openedFile.getHref());
          CookieManager.getInstance().storeOpenedFiles(context);
          return;
@@ -517,6 +508,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       context.getOpenedFiles().put(file.getHref(), file);
       context.getOpenedEditors().put(file.getHref(), event.getEditor().getDescription());
       context.setActiveFile(file);
+      context.setActiveTextEditor(display.getEditor(file.getHref()));
 
       display.openTab(file, context.isShowLineNumbers(), event.getEditor(), true);
 
@@ -541,6 +533,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          {
             context.getOpenedFiles().remove(event.getSourceHref());
             context.setActiveFile(savedFile);
+            context.setActiveTextEditor(display.getEditor(savedFile.getHref()));
             context.getOpenedFiles().put(savedFile.getHref(), savedFile);
             display.relocateFile(currentOpenedFile, savedFile);
          }

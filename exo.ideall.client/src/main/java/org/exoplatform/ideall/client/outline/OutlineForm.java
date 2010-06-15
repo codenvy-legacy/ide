@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.util.Token;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
