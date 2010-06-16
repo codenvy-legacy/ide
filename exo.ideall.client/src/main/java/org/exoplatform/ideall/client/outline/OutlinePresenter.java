@@ -25,10 +25,13 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.vfs.api.File;
 
 import java.util.List;
 
@@ -43,7 +46,8 @@ import com.google.gwt.user.client.Timer;
  * @version $Id:
  *
  */
-public class OutlinePresenter implements EditorFileContentChangedHandler, EditorInitializedHandler
+public class OutlinePresenter implements EditorFileContentChangedHandler, EditorInitializedHandler,
+EditorActiveFileChangedHandler
 {
    interface Display
    {
@@ -69,6 +73,7 @@ public class OutlinePresenter implements EditorFileContentChangedHandler, Editor
 
       handlers.addHandler(EditorFileContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorInitializedEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
    }
 
@@ -87,9 +92,8 @@ public class OutlinePresenter implements EditorFileContentChangedHandler, Editor
       });
    }
 
-   private void refreshOutline()
+   private void refreshOutline(TextEditor editor)
    {
-      TextEditor editor = context.getActiveTextEditor();
       List<Token> tokens = editor.getTokenList();
 
       display.getBrowserTree().setValue(new Token("", null, -1, tokens));
@@ -110,7 +114,6 @@ public class OutlinePresenter implements EditorFileContentChangedHandler, Editor
    public void onEditorInitialized(EditorInitializedEvent event)
    {
       //TODO: when open existed js file, show outline
-      
    }
    
    private boolean isShowOutline()
@@ -124,8 +127,24 @@ public class OutlinePresenter implements EditorFileContentChangedHandler, Editor
       @Override
       public void run()
       {
-         refreshOutline();
+         refreshOutline(context.getActiveTextEditor());
       }
    };
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      File file = event.getFile();
+      TextEditor editor = event.getEditor();
+      if (editor != null && file != null && file.getContentType() != null
+               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+               || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
+      {
+         refreshOutline(editor);
+      }
+      else
+      {
+         display.getBrowserTree().setValue(new Token("", null, -1, null));
+      }
+   }
 
 }
