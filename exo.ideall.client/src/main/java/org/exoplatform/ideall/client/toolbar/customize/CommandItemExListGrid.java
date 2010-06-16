@@ -21,7 +21,9 @@ package org.exoplatform.ideall.client.toolbar.customize;
 
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ideall.client.ImageUtil;
 
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -69,7 +71,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
    @Override
    protected void setRecordFields(ListGridRecord record, CommandItemEx item)
-   {     
+   {
       if (item.isGroup())
       {
          String title = item.getTitle();
@@ -80,49 +82,56 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       else
       {
          String commandName = item.getCommand().getId();
-         
-         System.out.println("command id > " + commandName);
-         
          if (commandName.indexOf("/") >= 0)
          {
             commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
          }
-         
-         while (commandName.indexOf("\\") >= 0) {
+
+         while (commandName.indexOf("\\") >= 0)
+         {
             commandName = commandName.replace("\\", "/");
          }
-         
-         System.out.println("command name > " + commandName);
-         
-         if (item.getCommand() instanceof PopupMenuCommand) {
+
+         if (item.getCommand() instanceof PopupMenuCommand)
+         {
             commandName += "&nbsp;[Popup]";
          }
 
          String title = "";
-         
-//         if (item.getCommand().getNormalImage() != null) {
-//            FlowPanel p = new FlowPanel();
-//            DOM.setStyleAttribute(p.getElement(), "left", "-1000px");
-//            DOM.setStyleAttribute(p.getElement(), "top", "-1000px");
-//            DOM.setStyleAttribute(p.getElement(), "width", "16px");
-//            DOM.setStyleAttribute(p.getElement(), "height", "16px");
-//            DOM.setStyleAttribute(p.getElement(), "overflow", "hidden");
-//            RootPanel.get().add(p);            
-//            
-//            Image image = new Image(item.getCommand().getNormalImage());
-//            p.add(image);
-//            String imageHTML = DOM.getInnerHTML(p.getElement());
-//            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
-//         } else {
-//            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
-//         }
-         
-         if (item.getCommand().getIcon() != null) {
+         if (item.getCommand().getNormalImage() != null)
+         {
+            Image image = new Image(item.getCommand().getNormalImage());
+            String imageHTML = ImageUtil.getHTML(image);
+            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+         }
+         else
+
+         //         if (item.getCommand().getNormalImage() != null) {
+         //            FlowPanel p = new FlowPanel();
+         //            DOM.setStyleAttribute(p.getElement(), "left", "-1000px");
+         //            DOM.setStyleAttribute(p.getElement(), "top", "-1000px");
+         //            DOM.setStyleAttribute(p.getElement(), "width", "16px");
+         //            DOM.setStyleAttribute(p.getElement(), "height", "16px");
+         //            DOM.setStyleAttribute(p.getElement(), "overflow", "hidden");
+         //            RootPanel.get().add(p);            
+         //            
+         //            Image image = new Image(item.getCommand().getNormalImage());
+         //            p.add(image);
+         //            String imageHTML = DOM.getInnerHTML(p.getElement());
+         //            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+         //         } else {
+         //            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
+         //         }
+
+         if (item.getCommand().getIcon() != null)
+         {
             title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
-         } else {
+         }
+         else
+         {
             title = "<span>" + commandName + "</span>";
          }
-         
+
          record.setAttribute(TITLE, title);
       }
 
