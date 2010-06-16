@@ -86,6 +86,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private static final int MIN_CODE_HELPER_WIDTH = 100;
    
    private static final int MIN_OPERATION_HEIGHT = 50;
+   
+   /**
+    * Minimum width of outline resize bar.
+    * 
+    * Set, when outline form hides
+    * 
+    * Use 1 instead of 0, because smartgwt exception occurs
+    */
+   private static final int OUTLINE_RESIZE_BAR_SIZE = 1;
 
    private HandlerManager eventBus;
 
@@ -237,7 +246,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       codeHelperForm.hide();
       
       horizontalSplitLayout2.addMember(codeHelperForm);
-      horizontalSplitLayout2.setResizeBarSize(1);
+      horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       
       horizontalSplitLayout2.addMouseDownHandler(new MouseDownHandler()
       {
@@ -275,7 +284,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       navigationForm.hide();
       horizontalSplitLayout.setResizeBarSize(0);
-      horizontalSplitLayout2.setResizeBarSize(1);
+      horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
 
       operationForm.hide();
       verticalSplitLayout.setResizeBarSize(0);
@@ -322,7 +331,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       codeHelperForm.hide();
       
       horizontalSplitLayout.setResizeBarSize(0);
-      horizontalSplitLayout2.setResizeBarSize(1);
+      horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
 
       editorForm.hide();
 
@@ -397,7 +406,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       }
       else
       {
-         horizontalSplitLayout2.setResizeBarSize(1);
+         horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       }
       if (operationPanelMaximized)
       {
@@ -454,7 +463,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       editorForm.hide();
       
       horizontalSplitLayout.setResizeBarSize(0);
-      horizontalSplitLayout2.setResizeBarSize(1);
+      horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       verticalSplitLayout.hide();
       
       codeHelperPanelWidth = codeHelperForm.getWidth();
@@ -502,7 +511,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       }
       else
       {
-         horizontalSplitLayout2.setResizeBarSize(1);
+         horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       }
    }
 }
