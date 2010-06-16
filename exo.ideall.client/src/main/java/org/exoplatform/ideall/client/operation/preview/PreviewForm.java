@@ -56,7 +56,7 @@ public class PreviewForm extends TabPanel
    @Override
    public String getTitle()
    {
-      return "<span>" + Canvas.imgHTML(Images.MainMenu.PREVIEW_HTML) + "&nbsp;Preview</span>";
+      return "<span>" + Canvas.imgHTML(Images.MainMenu.PREVIEW) + "&nbsp;Preview</span>";
    }
 
    /**

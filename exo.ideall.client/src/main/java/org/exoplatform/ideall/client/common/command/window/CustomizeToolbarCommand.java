@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.window;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
@@ -32,9 +32,9 @@ import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEve
 
 public class CustomizeToolbarCommand extends IDECommand
 {
-   
+
    public static final String ID = "Window/Customize Toolbar...";
-   
+
    public static final String TITLE = "Customize Toolbar...";
 
    public CustomizeToolbarCommand()
@@ -42,7 +42,7 @@ public class CustomizeToolbarCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.CUSTOMIZE_TOOLBAR);
+      setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
       setEvent(new CustomizeToolbarEvent());
    }
 

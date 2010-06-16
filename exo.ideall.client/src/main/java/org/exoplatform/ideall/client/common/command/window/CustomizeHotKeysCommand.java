@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.window;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
 
@@ -42,7 +42,7 @@ public class CustomizeHotKeysCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.HOTKEYS);
+      setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
       setEvent(new CustomizeHotKeysEvent());
    }
 

@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -37,10 +37,8 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
       super(ID);
       setTitle("Launch REST Service...");
       setPrompt("Launch REST Service...");
-      setIcon(Images.MainMenu.GROOVY_OUTPUT);
+      setImages(IDEImageBundle.INSTANCE.groovyOutput(), IDEImageBundle.INSTANCE.groovyOutputDisabled());
       setEvent(new PreviewWadlOutputEvent());
-
-      //super(ID, TITLE, Images.MainMenu.GROOVY_OUTPUT, new PreviewWadlOutputEvent());
    }
 
    @Override

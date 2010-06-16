@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.window;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
 
@@ -42,7 +42,7 @@ public class SelectWorkspaceCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.WORKSPACE);
+      setImages(IDEImageBundle.INSTANCE.selectWorkspace(), IDEImageBundle.INSTANCE.selectWorkspaceDisabled());
       setEvent(new SelectWorkspaceEvent());
    }
 

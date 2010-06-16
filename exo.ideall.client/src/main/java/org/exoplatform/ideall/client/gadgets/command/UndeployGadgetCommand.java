@@ -17,12 +17,11 @@
 package org.exoplatform.ideall.client.gadgets.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetEvent;
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,16 +34,16 @@ public class UndeployGadgetCommand extends IDECommand implements EditorActiveFil
    private static final String ID = "Run/UnDeploy Gadget";
 
    private static final String TITLE = "UnDeploy Gadget from GateIn";
-   
+
    public UndeployGadgetCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.UNDEPLOY_GADGET);
+      setImages(IDEImageBundle.INSTANCE.undeployGadget(), IDEImageBundle.INSTANCE.undeployGadgetDisabled());
       setEvent(new UndeployGadgetEvent());
    }
-   
+
    @Override
    protected void onRegisterHandlers()
    {
@@ -53,21 +52,20 @@ public class UndeployGadgetCommand extends IDECommand implements EditorActiveFil
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      
-      
+
       if (event.getFile() == null)
       {
          setEnabled(false);
          setVisible(false);
          return;
       }
-      
+
       setVisible(true);
 
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
-         
+
          if (event.getFile().isNewFile())
          {
             setEnabled(false);
@@ -83,5 +81,5 @@ public class UndeployGadgetCommand extends IDECommand implements EditorActiveFil
          setEnabled(false);
       }
    }
-  
+
 }

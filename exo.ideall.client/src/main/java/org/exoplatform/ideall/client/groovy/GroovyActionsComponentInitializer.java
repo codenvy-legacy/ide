@@ -55,8 +55,6 @@ public class GroovyActionsComponentInitializer extends AbstractComponentInitiali
        * PREVIEW OUTPUT
        */
 
-      //addCommand(new PreviewGroovyOutputCommand()).disable().hide().dockOnToolbar(true);
-      //addCommand(new PreviewGroovyOutputCommand()).disable().hide().dockOnToolbar(true);
       addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);
    }
 

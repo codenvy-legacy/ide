@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -56,7 +56,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
       super(ID);
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
-      setIcon(Images.MainMenu.SET_AUTOLOAD);
+      setImages(IDEImageBundle.INSTANCE.setAutoLoad(), IDEImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
    }
 
@@ -117,7 +117,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
          // is set autoload
          setTitle(TITLE_SET);
          setPrompt(PROMPT_SET);
-         setIcon(Images.MainMenu.SET_AUTOLOAD);
+         setImages(IDEImageBundle.INSTANCE.setAutoLoad(), IDEImageBundle.INSTANCE.setAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(true));
       }
       else
@@ -125,7 +125,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
          // is unset autoload
          setTitle(TITLE_UNSET);
          setPrompt(PROMPT_UNSET);
-         setIcon(Images.MainMenu.UNSET_AUTOLOAD);
+         setImages(IDEImageBundle.INSTANCE.unsetAutoLoad(), IDEImageBundle.INSTANCE.unsetAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(false));
       }
    }

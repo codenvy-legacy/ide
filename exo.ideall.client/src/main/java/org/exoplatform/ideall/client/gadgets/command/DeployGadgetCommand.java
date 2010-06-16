@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.gadgets.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.gadgets.event.DeployGadgetEvent;
 */
 public class DeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
-   
+
    private static final String ID = "Run/Deploy Gadget";
 
    private static final String TITLE = "Deploy Gadget to GateIn";
@@ -40,27 +40,26 @@ public class DeployGadgetCommand extends IDECommand implements EditorActiveFileC
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.DEPLOY_GADGET);
+      setImages(IDEImageBundle.INSTANCE.deployGadget(), IDEImageBundle.INSTANCE.deployGadgetDisabled());
       setEvent(new DeployGadgetEvent());
    }
-   
+
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      
+
       if (event.getFile() == null)
       {
          setEnabled(false);
          setVisible(false);
          return;
       }
-      
+
       setVisible(true);
 
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))

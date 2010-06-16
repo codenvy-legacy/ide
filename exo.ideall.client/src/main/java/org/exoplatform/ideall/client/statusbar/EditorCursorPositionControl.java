@@ -34,14 +34,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class EditorCursorPosition extends StatusTextCommand implements EditorActivityHandler,
+public class EditorCursorPositionControl extends StatusTextCommand implements EditorActivityHandler,
    EditorActiveFileChangedHandler
 {
    public static final String ID = "__editor_cursor_position";
 
    private ApplicationContext context;
 
-   public EditorCursorPosition(HandlerManager eventBus, ApplicationContext context)
+   public EditorCursorPositionControl(HandlerManager eventBus, ApplicationContext context)
    {
       super(ID);
 

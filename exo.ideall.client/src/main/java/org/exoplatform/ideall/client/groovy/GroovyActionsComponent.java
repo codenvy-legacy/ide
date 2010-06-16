@@ -24,8 +24,6 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptHandler;
-import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputEvent;
-import org.exoplatform.ideall.client.groovy.event.PreviewGroovyOutputHandler;
 import org.exoplatform.ideall.client.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ideall.client.groovy.event.PreviewWadlOutputHandler;
 import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
@@ -60,7 +58,7 @@ import org.exoplatform.ideall.vfs.property.ItemProperty;
  */
 
 public class GroovyActionsComponent extends AbstractApplicationComponent implements ValidateGroosyScriptHandler,
-   DeployGroovyScriptHandler, UndeployGroovyScriptHandler, PreviewGroovyOutputHandler,
+   DeployGroovyScriptHandler, UndeployGroovyScriptHandler,
    GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler, GroovyUndeployResultReceivedHandler,
    RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler, WadlServiceOutputReceiveHandler
 {
@@ -82,7 +80,6 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       handlers.addHandler(UndeployGroovyScriptEvent.TYPE, this);
       handlers.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
 
-      handlers.addHandler(PreviewGroovyOutputEvent.TYPE, this);
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
 
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
@@ -107,11 +104,6 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
    {
 //TODO
       GroovyService.getInstance().undeploy(context.getActiveFile().getHref());
-   }
-
-   public void onPreviewGroovyOutput(PreviewGroovyOutputEvent event)
-   {
-      new RestServiceOutputPreviewForm(eventBus, context);
    }
 
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)

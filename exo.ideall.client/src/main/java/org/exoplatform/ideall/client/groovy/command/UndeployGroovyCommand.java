@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.groovy.command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -43,7 +43,7 @@ public class UndeployGroovyCommand extends IDECommand implements EditorActiveFil
       super(ID);
       setTitle("Undeploy");
       setPrompt("Undeploy REST Service Script");
-      setIcon(Images.MainMenu.UNDEPLOY_GROOVY);
+      setImages(IDEImageBundle.INSTANCE.undeployGroovy(), IDEImageBundle.INSTANCE.undeployGroovyDisabled());
       setEvent(new UndeployGroovyScriptEvent());
    }
 
