@@ -17,6 +17,8 @@
 package org.exoplatform.ideall.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,7 +30,19 @@ public class IDEApplication implements EntryPoint
 
    public void onModuleLoad()
    {
+      GWT.setUncaughtExceptionHandler(new H());
+      
       new IDE();
+   }
+   
+   private class H implements UncaughtExceptionHandler
+   {
+
+      public void onUncaughtException(Throwable e)
+      {
+         e.printStackTrace();
+      }
+      
    }
 
 }

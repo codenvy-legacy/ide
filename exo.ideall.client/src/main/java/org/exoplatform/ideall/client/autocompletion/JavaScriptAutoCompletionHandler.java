@@ -43,69 +43,71 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
 public class JavaScriptAutoCompletionHandler implements EditorAutoCompleteCalledHandler
 {
-   
+
    private Handlers handlers;
+
    private HandlerManager eventBus;
+
    private String editorId;
+
    private String context;
+
    DynamicForm form;
+
    private int cursorPositionX;
-   
-   public JavaScriptAutoCompletionHandler(HandlerManager eventBus, ApplicationContext context) {
+
+   public JavaScriptAutoCompletionHandler(HandlerManager eventBus, ApplicationContext context)
+   {
       this.eventBus = eventBus;
-      
+
       handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);      
+      handlers.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
 
    public void onEditorAutoCompleteCalled(final EditorAutoCompleteCalledEvent event)
    {
       this.editorId = event.getEditorId();
       this.context = event.getLineContent();
-      
-      if (! event.getMimeType().equals(MimeType.APPLICATION_JAVASCRIPT)
-           && ! event.getMimeType().equals(MimeType.TEXT_JAVASCRIPT)
-           && ! event.getMimeType().equals(MimeType.APPLICATION_X_JAVASCRIPT)) 
+
+      if (!event.getMimeType().equals(MimeType.APPLICATION_JAVASCRIPT)
+         && !event.getMimeType().equals(MimeType.TEXT_JAVASCRIPT)
+         && !event.getMimeType().equals(MimeType.APPLICATION_X_JAVASCRIPT))
          return;
-      
+
       int cursorOffsetX = event.getCursorOffsetX();
       int cursorOffsetY = event.getCursorOffsetY();
       cursorPositionX = event.getCursorPositionX();
-     
+
       // create and draw completion list
-      form = new DynamicForm();  
+      form = new DynamicForm();
       form.setWidth(500);
       form.setTop(cursorOffsetY);
-      form.setLeft(cursorOffsetX);      
+      form.setLeft(cursorOffsetX);
       SelectItem autoCompleteList = new SelectItem();
       autoCompleteList.setShowTitle(false);
       LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
       valueMap.put("function ()\n{\n}", "insert FUNCTION-block");
-      valueMap.put("for ()\n{\n}", "insert FOR-block");      
-      valueMap.put("if ()\n{\n} else {\n}", "insert IF-ELSE-block");      
+      valueMap.put("for ()\n{\n}", "insert FOR-block");
+      valueMap.put("if ()\n{\n} else {\n}", "insert IF-ELSE-block");
       autoCompleteList.setValueMap(valueMap);
 
-      autoCompleteList.addChangedHandler(new ChangedHandler() {  
+      autoCompleteList.addChangedHandler(new ChangedHandler()
+      {
          public void onChanged(ChangedEvent event)
          {
-            onCompletionSelected((String) event.getValue());
+            onCompletionSelected((String)event.getValue());
          }
-      });    
-      
+      });
+
       form.setItems(autoCompleteList);
-      form.draw();      
+      form.draw();
    }
 
    protected void onCompletionSelected(String completion)
    {
       form.destroy();
-      
-      this.eventBus.fireEvent(new EditorAutoCompleteEvent(
-            this.editorId, 
-            completion,
-            cursorPositionX
-         )
-      );
+
+      this.eventBus.fireEvent(new EditorAutoCompleteEvent(this.editorId, completion, cursorPositionX));
    }
 
 }

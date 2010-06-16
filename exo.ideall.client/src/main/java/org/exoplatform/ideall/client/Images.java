@@ -33,119 +33,49 @@ public interface Images
    public interface MainMenu
    {
 
-      public static final String SAVE = imageUrl + "menu/file/save.png";
-
-      public static final String SAVE_AS = imageUrl + "menu/file/saveAs.png";
-
-      public static final String SAVE_ALL = imageUrl + "menu/file/saveAll.png";
-
-      public static final String SAVE_AS_TEMPLATE = imageUrl + "menu/file/saveTemplate.png";
-
-      public static final String DELETE = imageUrl + "menu/file/delete.png";
-
-      public static final String NEW = imageUrl + "menu/file/new.png";
-
-      public static final String NEW_FOLDER = imageUrl + "menu/file/newFolder.png";
-
-      public static final String SEARCH = imageUrl + "menu/file/search.png";
-
-      public static final String PROPERTIES = imageUrl + "menu/view/properties.png";
-
-      public static final String REFRESH = imageUrl + "menu/file/refresh.png";
-
-      public static final String MOVE = imageUrl + "menu/file/move.png";
+      
 
       public static final String DELIMETER = imageUrl + "menu/delimeter.png";
 
       public static final String TOOLS = imageUrl + "menu/tools2.png";
 
-      public static final String ABOUT = imageUrl + "menu/help/about.png";
-
-      public static final String CUSTOMIZE_TOOLBAR = imageUrl + "menu/window/customizeToolBar.png";
-
       public static final String TEMPLATES = imageUrl + "menu/file/createFromTemplate.png";
-
-      public static final String GOTOFOLDER = imageUrl + "menu/file/goToFolder.png";
-
-      public static final String GET_URL = imageUrl + "menu/file/url.png";
-
-      public static final String OPENWITH = imageUrl + "menu/file/openWith.png";
-
-      public static final String DOWNLOAD = imageUrl + "menu/file/download.png";
-
-      public static final String DOWNLOAD_FOLDER = imageUrl + "menu/file/download_zip.png";
-
-      public static final String WORKSPACE = imageUrl + "menu/window/workspace.png";
-
-      public static final String HOTKEYS = imageUrl + "menu/window/hotkeys.png";
 
       public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
 
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
 
-      public static final String UPLOAD_FILE = imageUrl + "menu/file/upload_file.png";
 
-      public static final String UPLOAD = imageUrl + "menu/file/upload.png";
+      
+      public static final String PROPERTIES = imageUrl + "bundled/view/properties.png";      
+      
+      public static final String GET_URL = imageUrl + "bundled/view/url.png";
 
       /*
-       * HTML
+       * FILE
        */
+      
+      public interface File
+      {
+      
+         public static final String OPEN_LOCAL_FILE = imageUrl + "bundlel/file/open_local_file.png";
 
-      public static final String PREVIEW_HTML = imageUrl + "html/preview.png";
+         public static final String UPLOAD = imageUrl + "bundled/file/upload.png";
+         
+      }
+
+      public static final String PREVIEW = imageUrl + "bundled/run/preview.png";
 
       /*
        * GROOVY
        */
 
-      public static final String VALIDATE = imageUrl + "groovy/validate.png";
-
-      public static final String DEPLOY_GROOVY = imageUrl + "groovy/deploy.png";
-
-      public static final String UNDEPLOY_GROOVY = imageUrl + "groovy/undeploy.png";
-
-      public static final String GROOVY_OUTPUT = imageUrl + "groovy/output.png";
-
-      public static final String SET_AUTOLOAD = imageUrl + "groovy/setAutoload.png";
-
-      public static final String UNSET_AUTOLOAD = imageUrl + "groovy/unsetAutoload.png";
-
       public static final String URL = imageUrl + "groovy/url.png";
-
-      /*
-       * GADGET
-       */
-      public static final String PREVIEW_GADGET = imageUrl + "gadget/preview.png";
-
-      public static final String DEPLOY_GADGET = imageUrl + "gadget/deployGadget.png";
-
-      public static final String UNDEPLOY_GADGET = imageUrl + "gadget/undeployGadget.png";
 
    }
 
    public interface Edit
    {
-
-      public static final String UNDO = imageUrl + "menu/edit/undo.png";
-
-      public static final String REDO = imageUrl + "menu/edit/redo.png";
-
-      public static final String FORMAT = imageUrl + "menu/edit/format.png";
-
-      public static final String SHOW_LINE_NUMBERS = imageUrl + "menu/edit/showLineNumbers.png";
-
-      public static final String HIDE_LINE_NUMBERS = imageUrl + "menu/edit/hideLineNumbers.png";
-
-      public static final String COPY_FILE = imageUrl + "menu/edit/copy.png";
-
-      public static final String CUT_FILE = imageUrl + "menu/edit/cut.png";
-
-      public static final String PASTE_FILE = imageUrl + "menu/edit/paste.png";
-
-      public static final String DELETE_LINE = imageUrl + "menu/edit/delete_current_line.png";
-
-      public static final String GO_TO_LINE = imageUrl + "menu/edit/go_to_line.png";
-
-      public static final String FIND_TEXT = imageUrl + "menu/edit/findText.png";
 
       public static final String REPLACE = imageUrl + "menu/edit/replace.png";
 
@@ -157,11 +87,6 @@ public interface Images
       public static final String MAXIMIZE = imageUrl + "buttons/minmax/maximize.png";
 
       public static final String RESTORE = imageUrl + "buttons/minmax/minimize.png";
-
-   }
-
-   public interface ViewPanel
-   {
 
    }
 
