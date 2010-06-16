@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ideall.client.hotkeys;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Command;
@@ -25,12 +31,6 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -51,71 +51,71 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    public interface Display
    {
       HasClickHandlers getSaveButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getBindButton();
-      
+
       HasClickHandlers getUnbindButton();
-      
+
       ListGridItem<HotKeyItem> getHotKeyItemListGrid();
-      
+
       HasValue<String> getHotKeyField();
-      
+
       void disableSaveButton();
-      
+
       void enableSaveButton();
-      
+
       void enableBindButton();
-      
+
       void disableBindButton();
-      
+
       void enableUnbindButton();
-      
+
       void disableUnbindButton();
-      
+
       void clearHotKeyField();
-      
+
       void closeForm();
-      
+
       void enableHotKeyField();
-      
+
       void disableHotKeyField();
-      
+
       void focusOnHotKeyField();
-      
+
       void showError(String text);
-      
+
    }
-   
+
    private static final String EDITOR_GROUP = "Editor hotkeys";
-   
+
    private HandlerManager eventBus;
-   
+
    private Handlers handlers;
-   
+
    private ApplicationContext context;
-   
+
    private Display display;
-   
+
    private List<HotKeyItem> hotKeys = new ArrayList<HotKeyItem>();
-   
+
    private HotKeyItem selectedItem;
-   
+
    public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
-      
+
       handlers = new Handlers(eventBus);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
-      
+
    }
-   
+
    public void bindDisplay(Display d)
    {
       display = d;
-      
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -123,16 +123,16 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             display.closeForm();
          }
       });
-      
+
       display.getSaveButton().addClickHandler(new ClickHandler()
       {
-      
+
          public void onClick(ClickEvent event)
          {
             saveHotKeys();
          }
       });
-      
+
       display.getHotKeyItemListGrid().addSelectionHandler(new SelectionHandler<HotKeyItem>()
       {
          public void onSelection(SelectionEvent<HotKeyItem> event)
@@ -140,7 +140,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             if (event.getSelectedItem().getGroup().equals(EDITOR_GROUP))
             {
                selectedItem = null;
-               
+
                display.disableBindButton();
                display.disableUnbindButton();
                display.disableHotKeyField();
@@ -150,34 +150,32 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             display.showError(null);
          }
       });
-      
+
       display.getBindButton().addClickHandler(new ClickHandler()
       {
-      
+
          public void onClick(ClickEvent event)
          {
             bindHotKey();
          }
       });
-      
+
       display.getUnbindButton().addClickHandler(new ClickHandler()
       {
-      
+
          public void onClick(ClickEvent event)
          {
             unbindHotKey();
          }
       });
-      
+
       fillHotKeyList();
-      
+
       display.disableHotKeyField();
    }
-   
+
    private void fillHotKeyList()
    {
-      
-      
       for (Command command : context.getCommands())
       {
          if (command instanceof SimpleCommand && ((SimpleCommand)command).getEvent() != null)
@@ -187,26 +185,32 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             {
                groupName = groupName.substring(0, groupName.lastIndexOf("/"));
             }
-            
-            hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), 
-               command.getIcon(), groupName));
+
+            if (command.getNormalImage() != null)
+            {
+               hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), command.getNormalImage(),
+                  groupName));
+            }
+            else
+            {
+               hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), command.getIcon(), groupName));
+            }
+
          }
       }
-      
+
       Iterator<Entry<String, String>> it = context.getReservedHotkeys().entrySet().iterator();
-      while(it.hasNext())
+      while (it.hasNext())
       {
          Entry<String, String> entry = it.next();
          String id = entry.getValue();
          String hotkey = HotKeyHelper.convertCodeHotKeyToStringHotKey(entry.getKey());
-         hotKeys.add(new HotKeyItem(id, hotkey, null, EDITOR_GROUP));
-         
+         hotKeys.add(new HotKeyItem(id, hotkey, (String)null, EDITOR_GROUP));
       }
-      
-      
+
       display.getHotKeyItemListGrid().setValue(hotKeys);
    }
-   
+
    /**
     * Find hot key in hotKeysMap by id of control.
     * 
@@ -216,7 +220,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    private String findHotKey(String controlId)
    {
       Map<String, String> hotKeysMap = context.getHotKeys();
-      
+
       Iterator<Entry<String, String>> it = hotKeysMap.entrySet().iterator();
       while (it.hasNext())
       {
@@ -228,25 +232,25 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       }
       return "";
    }
-   
+
    private void hotKeySelected(HotKeyItem hotKeyItem)
    {
       selectedItem = hotKeyItem;
-      
+
       display.disableBindButton();
       display.enableUnbindButton();
       display.enableHotKeyField();
       display.focusOnHotKeyField();
       display.getHotKeyField().setValue(selectedItem.getHotKey());
    }
-   
+
    /**
     * Bind hot key to selected item.
     */
    private void bindHotKey()
    {
       String newHotKey = display.getHotKeyField().getValue();
-      
+
       for (HotKeyItem hotKey : hotKeys)
       {
          if (hotKey.getControlId().equals(selectedItem.getControlId()))
@@ -256,26 +260,26 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       }
       updateState();
    }
-   
+
    /**
     * Unbind hot key from selected item.
     */
    private void unbindHotKey()
    {
       String controlId = selectedItem.getControlId();
-      
+
       for (HotKeyItem hotKeyItem : hotKeys)
       {
          if (hotKeyItem.getControlId().equals(controlId))
          {
             hotKeys.remove(hotKeyItem);
-//            hotKeyIdentifier.setHotKey(null);
+            //            hotKeyIdentifier.setHotKey(null);
          }
       }
-      
+
       updateState();
    }
-   
+
    /**
     * Validates hot keys.
     * 
@@ -295,39 +299,38 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    private boolean validateHotKey(String newHotKey)
    {
       String controlId = selectedItem.getControlId();
-      
+
       if (newHotKey == null || newHotKey.length() < 1)
       {
          display.showError("Enter value for key");
          return false;
       }
-      
+
       if (!newHotKey.startsWith("Ctrl") && !newHotKey.startsWith("Alt"))
       {
          display.showError("First key must be Ctrl of Alt ");
          return false;
       }
-      
+
       if (newHotKey.endsWith("+") && !newHotKey.endsWith("++"))
       {
          display.showError("Hold control and press key");
          return false;
       }
-      
+
       for (HotKeyItem hotKeyIdentifier : hotKeys)
       {
-         if (hotKeyIdentifier.getHotKey()!= null 
-                  && hotKeyIdentifier.getHotKey().equals(newHotKey) 
-                  && !hotKeyIdentifier.getControlId().equals(controlId))
+         if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(newHotKey)
+            && !hotKeyIdentifier.getControlId().equals(controlId))
          {
             display.showError("Such hot key already bind to another control");
             return false;
          }
       }
-      
+
       return true;
    }
-   
+
    /**
     * Save hot keys.
     */
@@ -348,19 +351,19 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          }
       }
       display.closeForm();
-      
+
       eventBus.fireEvent(new RefreshHotKeysEvent());
-      
+
       SettingsService.getInstance().saveSetting(context);
    }
-   
+
    /**
     * Update state after binding or unbinding.
     */
    private void updateState()
    {
       selectedItem = null;
-      
+
       display.disableBindButton();
       display.disableUnbindButton();
       display.clearHotKeyField();
@@ -385,26 +388,25 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          return;
       }
-      
+
       if (controlKey == null)
       {
          display.getHotKeyField().setValue("");
          display.showError("First key must be Ctrl of Alt ");
          return;
       }
-      
+
       String stringHotKey = controlKey + "+";
-      
+
       //17 - key code of Ctrl
       //18 - key code of Alt
-      if (!keyCode.equals("17") && !keyCode.equals("18") 
-               && HotKeyHelper.convertKeyCodeToKeySymbol(keyCode) != null)
+      if (!keyCode.equals("17") && !keyCode.equals("18") && HotKeyHelper.convertKeyCodeToKeySymbol(keyCode) != null)
       {
          stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(keyCode);
       }
-      
+
       display.getHotKeyField().setValue(stringHotKey);
-      
+
       if (context.getReservedHotkeys().containsKey(controlKey + "+" + keyCode))
       {
          display.showError("This hot key is reserved by editor");
@@ -421,5 +423,5 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          display.disableBindButton();
       }
    }
-   
+
 }

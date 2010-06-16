@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ideall.client.hotkeys;
 
+import com.google.gwt.resources.client.ImageResource;
+
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: 
@@ -29,11 +31,13 @@ public class HotKeyItem
    private String controlId;
 
    private String hotKey;
-   
+
    private String icon;
-   
+
+   private ImageResource image;
+
    private String group;
-   
+
    public HotKeyItem(String controlId, String hotKeys, String icon, String group)
    {
       this.controlId = controlId;
@@ -41,12 +45,20 @@ public class HotKeyItem
       this.icon = icon;
       this.group = group;
    }
-   
+
+   public HotKeyItem(String controlId, String hotKeys, ImageResource image, String group)
+   {
+      this.controlId = controlId;
+      this.hotKey = hotKeys;
+      this.image = image;
+      this.group = group;
+   }
+
    public String getGroup()
    {
       return group;
    }
-   
+
    /**
     * @return the control id
     */
@@ -72,10 +84,15 @@ public class HotKeyItem
    {
       this.hotKey = hotKey;
    }
-   
+
    public String getIcon()
    {
       return icon;
    }
-   
+
+   public ImageResource getImage()
+   {
+      return image;
+   }
+
 }

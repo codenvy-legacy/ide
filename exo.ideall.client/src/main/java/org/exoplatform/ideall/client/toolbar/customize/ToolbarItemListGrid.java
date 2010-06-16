@@ -21,7 +21,9 @@ package org.exoplatform.ideall.client.toolbar.customize;
 
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ideall.client.ImageUtil;
 
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -102,9 +104,18 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
             title += "&nbsp;[Popup]";
          }
          
-         title =
-            "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title
-               + "</span>";
+         if (item.getCommand().getNormalImage() != null) {
+            Image image = new Image(item.getCommand().getNormalImage());
+            String imageHTML = ImageUtil.getHTML(image);
+            title =
+               "<span>" + imageHTML + "&nbsp;" + title
+                  + "</span>";            
+         } else {
+            title =
+               "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title
+                  + "</span>";            
+         }
+         
          record.setAttribute(TOOLBAR, title);
       }
       else if (item.getType() == ToolbarItem.Type.DELIMITER)

@@ -20,7 +20,9 @@
 package org.exoplatform.ideall.client.hotkeys;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ideall.client.ImageUtil;
 
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -44,11 +46,11 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
    }
 
    private final static String TITLE = "Control";
-   
+
    private final static String CONTROL = "Binding";
-   
+
    private final static String GROUP = "Group";
-   
+
    public HotKeyItemListGrid()
    {
       setCanSort(false);
@@ -58,35 +60,46 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       setCanFreezeFields(false);
       setGroupStartOpen("all");
       setGroupByField(GROUP);
-      
+
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
       fieldName.setCanHide(false);
-      
+
       ListGridField fieldControl = new ListGridField(CONTROL, CONTROL);
       fieldControl.setCanHide(false);
-      
+
       ListGridField fieldGroup = new ListGridField(GROUP, GROUP);
       fieldGroup.setHidden(true);
-      
+
       setFields(fieldName, fieldControl, fieldGroup);
    }
-   
+
    @Override
    protected void setRecordFields(ListGridRecord record, HotKeyItem item)
    {
       String controlName = item.getControlId();
-      
+
       if (controlName.indexOf("/") >= 0)
       {
          controlName = controlName.substring(controlName.lastIndexOf("/") + 1);
       }
-      
-      while (controlName.indexOf("\\") >= 0) {
+
+      while (controlName.indexOf("\\") >= 0)
+      {
          controlName = controlName.replace("\\", "/");
       }
-      
-      String title = "<span>" + Canvas.imgHTML(item.getIcon()) + "&nbsp;" + controlName + "</span>";
-      
+
+      String title = "";
+      if (item.getImage() != null)
+      {
+         Image image = new Image(item.getImage());
+         String imageHTML = ImageUtil.getHTML(image);
+         title = "<span>" + imageHTML + "&nbsp;" + controlName + "</span>";
+      }
+      else
+      {
+         title = "<span>" + Canvas.imgHTML(item.getIcon()) + "&nbsp;" + controlName + "</span>";
+      }
+
       record.setAttribute(TITLE, title);
       record.setAttribute(CONTROL, item.getHotKey());
       record.setAttribute(GROUP, item.getGroup());
