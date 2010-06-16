@@ -113,7 +113,18 @@ EditorActiveFileChangedHandler
     */
    public void onEditorInitialized(EditorInitializedEvent event)
    {
-      //TODO: when open existed js file, show outline
+      TextEditor editor = context.getActiveTextEditor();
+      File file = context.getActiveFile();
+      if (editor != null && file != null && file.getContentType() != null
+               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+               || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
+      {
+         refreshOutline(editor);
+      }
+      else
+      {
+         display.getBrowserTree().setValue(new Token("", null, -1, null));
+      }
    }
    
    private boolean isShowOutline()
