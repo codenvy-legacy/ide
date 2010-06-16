@@ -37,8 +37,6 @@ public interface Images
 
       public static final String TOOLS = imageUrl + "menu/tools2.png";
 
-      public static final String TEMPLATES = imageUrl + "menu/file/createFromTemplate.png";
-
       public static final String DOWNLOAD_MENU = imageUrl + "menu/file/download_menu.png";
 
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
@@ -148,16 +146,16 @@ public interface Images
 
    }
 
-   public interface RepositoryService
-   {
-
-      public static final String SERVICE = imageUrl + "repository/service.png";
-
-      public static final String REPOSITORY = imageUrl + "repository/repository.png";
-
-      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
-
-   }
+//   public interface RepositoryService
+//   {
+//
+//      public static final String SERVICE = imageUrl + "repository/service.png";
+//
+//      public static final String REPOSITORY = imageUrl + "repository/repository.png";
+//
+//      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
+//
+//   }
 
    public interface Dialogs
    {
@@ -171,8 +169,6 @@ public interface Images
       public static final String FUNCTION_ITEM = imageUrl + "outline/function-item.png";
       
       public static final String VAR_ITEM = imageUrl + "outline/var-item.png";
-      
-      public static final String OUTLINE = imageUrl + "outline/outline.png";
       
       public static final String METHOD_ITEM = imageUrl + "outline/method-item.png";
       

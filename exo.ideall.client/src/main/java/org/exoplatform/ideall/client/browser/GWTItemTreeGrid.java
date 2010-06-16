@@ -135,6 +135,7 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
             System.out.println("value > " + value);
 
             TreeNode rootNode = new TreeNode(value.getName(), value.getIcon(), value);
+            //TreeNode rootNode = new TreeNode(value.getName(), value);
             tree.setRoot(rootNode);
 
          }

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
 
 /**
@@ -38,8 +38,8 @@ public class CreateFileFromTemplateCommand extends AbstractNewFileCommand
 
    public CreateFileFromTemplateCommand()
    {
-      super(ID, "From Template...", "Create File From Template...", Images.MainMenu.TEMPLATES,
-         new CreateFileFromTemplateEvent());
+      super(ID, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+         IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
    }
-   
+
 }

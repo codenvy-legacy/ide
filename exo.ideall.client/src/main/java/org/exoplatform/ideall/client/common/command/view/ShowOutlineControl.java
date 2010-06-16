@@ -19,7 +19,7 @@
 package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -40,7 +40,7 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
       super(ID);
       setTitle("Show Outline");
       setPrompt("Show Outline");
-      setIcon(Images.Outline.OUTLINE);
+      setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
       setEvent(new ShowOutlineEvent(true));
    }
 
@@ -64,7 +64,7 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
       }
 
       if (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
-               ||event.getFile().getContentType().equals(MimeType.GOOGLE_GADGET))
+         || event.getFile().getContentType().equals(MimeType.GOOGLE_GADGET))
       {
          setVisible(true);
          setEnabled(true);

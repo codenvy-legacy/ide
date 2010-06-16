@@ -35,6 +35,83 @@ public interface IDEImageBundle extends ClientBundle
 
    public static final IDEImageBundle INSTANCE = GWT.create(IDEImageBundle.class);
 
+   /*
+    * BROWSER
+    */
+
+   @Source("../public/images/bundled/output/output.png")
+   ImageResource browser();
+
+   @Source("../public/images/bundled/browser/browser_Disabled.png")
+   ImageResource browserDisabled();
+
+   /*
+    * EDIT
+    */
+
+   @Source("../public/images/bundled/edit/cut.png")
+   ImageResource cut();
+
+   @Source("../public/images/bundled/edit/cut_Disabled.png")
+   ImageResource cutDisabled();
+
+   @Source("../public/images/bundled/edit/copy.png")
+   ImageResource copy();
+
+   @Source("../public/images/bundled/edit/copy_Disabled.png")
+   ImageResource copyDisabled();
+
+   @Source("../public/images/bundled/edit/paste.png")
+   ImageResource paste();
+
+   @Source("../public/images/bundled/edit/paste_Disabled.png")
+   ImageResource pasteDisabled();
+
+   @Source("../public/images/bundled/edit/undo.png")
+   ImageResource undo();
+
+   @Source("../public/images/bundled/edit/undo_Disabled.png")
+   ImageResource undoDisabled();
+
+   @Source("../public/images/bundled/edit/redo.png")
+   ImageResource redo();
+
+   @Source("../public/images/bundled/edit/redo_Disabled.png")
+   ImageResource redoDisabled();
+
+   @Source("../public/images/bundled/edit/format.png")
+   ImageResource format();
+
+   @Source("../public/images/bundled/edit/format_Disabled.png")
+   ImageResource formatDisabled();
+
+   @Source("../public/images/bundled/edit/find_text.png")
+   ImageResource findText();
+
+   @Source("../public/images/bundled/edit/find_text_Disabled.png")
+   ImageResource findTextDisabled();
+
+   @Source("../public/images/bundled/edit/show_line_numbers.png")
+   ImageResource showLineNumbers();
+
+   @Source("../public/images/bundled/edit/show_line_numbers_Disabled.png")
+   ImageResource showLineNumbersDisabled();
+
+   @Source("../public/images/bundled/edit/hide_line_numbers.png")
+   ImageResource hideLineNumbers();
+
+   @Source("../public/images/bundled/edit/hide_line_numbers_Disabled.png")
+   ImageResource hideLineNumbersDisabled();
+
+   @Source("../public/images/bundled/edit/delete_current_line.png")
+   ImageResource deleteCurrentLine();
+
+   @Source("../public/images/bundled/edit/delete_current_line_Disabled.png")
+   ImageResource deleteCurrentLineDisabled();
+
+   /*
+    * FILE
+    */
    @Source("../public/images/bundled/file/upload.png")
    ImageResource upload();
 
@@ -124,96 +201,32 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/file/refresh_Disabled.png")
    ImageResource refreshDisabled();
+   
+   @Source("../public/images/bundled/file/create_from_template.png")
+   ImageResource createFromTemplate();
 
-   @Source("../public/images/bundled/edit/cut.png")
-   ImageResource cut();
+   @Source("../public/images/bundled/file/create_from_template_Disabled.png")
+   ImageResource createFromTemplateDisabled();   
 
-   @Source("../public/images/bundled/edit/cut_Disabled.png")
-   ImageResource cutDisabled();
+   /*
+    * GADGET
+    */
 
-   @Source("../public/images/bundled/edit/copy.png")
-   ImageResource copy();
+   @Source("../public/images/bundled/gadget/deploy_gadget.png")
+   ImageResource deployGadget();
 
-   @Source("../public/images/bundled/edit/copy_Disabled.png")
-   ImageResource copyDisabled();
+   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
+   ImageResource deployGadgetDisabled();
 
-   @Source("../public/images/bundled/edit/paste.png")
-   ImageResource paste();
+   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
+   ImageResource undeployGadget();
 
-   @Source("../public/images/bundled/edit/paste_Disabled.png")
-   ImageResource pasteDisabled();
+   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
+   ImageResource undeployGadgetDisabled();
 
-   @Source("../public/images/bundled/edit/undo.png")
-   ImageResource undo();
-
-   @Source("../public/images/bundled/edit/undo_Disabled.png")
-   ImageResource undoDisabled();
-
-   @Source("../public/images/bundled/edit/redo.png")
-   ImageResource redo();
-
-   @Source("../public/images/bundled/edit/redo_Disabled.png")
-   ImageResource redoDisabled();
-
-   @Source("../public/images/bundled/edit/format.png")
-   ImageResource format();
-
-   @Source("../public/images/bundled/edit/format_Disabled.png")
-   ImageResource formatDisabled();
-
-   @Source("../public/images/bundled/edit/find_text.png")
-   ImageResource findText();
-
-   @Source("../public/images/bundled/edit/find_text_Disabled.png")
-   ImageResource findTextDisabled();
-
-   @Source("../public/images/bundled/edit/show_line_numbers.png")
-   ImageResource showLineNumbers();
-
-   @Source("../public/images/bundled/edit/show_line_numbers_Disabled.png")
-   ImageResource showLineNumbersDisabled();
-
-   @Source("../public/images/bundled/edit/hide_line_numbers.png")
-   ImageResource hideLineNumbers();
-
-   @Source("../public/images/bundled/edit/hide_line_numbers_Disabled.png")
-   ImageResource hideLineNumbersDisabled();
-
-   @Source("../public/images/bundled/edit/delete_current_line.png")
-   ImageResource deleteCurrentLine();
-
-   @Source("../public/images/bundled/edit/delete_current_line_Disabled.png")
-   ImageResource deleteCurrentLineDisabled();
-
-   @Source("../public/images/bundled/view/go_to_line.png")
-   ImageResource goToLine();
-
-   @Source("../public/images/bundled/view/go_to_line_Disabled.png")
-   ImageResource goToLineDisabled();
-
-   @Source("../public/images/bundled/run/preview.png")
-   ImageResource preview();
-
-   @Source("../public/images/bundled/run/preview_Disabled.png")
-   ImageResource previewDisabled();
-
-   @Source("../public/images/bundled/view/properties.png")
-   ImageResource properties();
-
-   @Source("../public/images/bundled/view/properties_Disabled.png")
-   ImageResource propertiesDisabled();
-
-   @Source("../public/images/bundled/view/url.png")
-   ImageResource url();
-
-   @Source("../public/images/bundled/view/url_Disabled.png")
-   ImageResource urlDisabled();
-
-   @Source("../public/images/bundled/view/go_to_folder.png")
-   ImageResource goToFolder();
-
-   @Source("../public/images/bundled/view/go_to_folder_Disabled.png")
-   ImageResource goToFolderDisabled();
+   /*
+    * GROOVY
+    */
 
    @Source("../public/images/bundled/groovy/set_autoload.png")
    ImageResource setAutoLoad();
@@ -251,17 +264,78 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/groovy/output_Disabled.png")
    ImageResource groovyOutputDisabled();
 
-   @Source("../public/images/bundled/gadget/deploy_gadget.png")
-   ImageResource deployGadget();
+   /*
+    * HELP
+    */
 
-   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
-   ImageResource deployGadgetDisabled();
+   @Source("../public/images/bundled/help/about.png")
+   ImageResource about();
 
-   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
-   ImageResource undeployGadget();
+   @Source("../public/images/bundled/help/about_Disabled.png")
+   ImageResource aboutDisabled();
 
-   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
-   ImageResource undeployGadgetDisabled();
+   /*
+    * OUTLINE
+    */
+   
+   @Source("../public/images/bundled/outline/outline.png")
+   ImageResource outline();
+
+   @Source("../public/images/bundled/outline/outline_Disabled.png")
+   ImageResource outlineDisabled();
+   
+   
+   /*
+    * OUTPUT
+    */
+
+   @Source("../public/images/bundled/output/output.png")
+   ImageResource output();
+
+   @Source("../public/images/bundled/output/output_Disabled.png")
+   ImageResource outputDisabled();
+
+   /*
+    * RUN
+    */
+
+   @Source("../public/images/bundled/run/preview.png")
+   ImageResource preview();
+
+   @Source("../public/images/bundled/run/preview_Disabled.png")
+   ImageResource previewDisabled();
+
+   /*
+    * VIEW
+    */
+
+   @Source("../public/images/bundled/view/go_to_line.png")
+   ImageResource goToLine();
+
+   @Source("../public/images/bundled/view/go_to_line_Disabled.png")
+   ImageResource goToLineDisabled();
+
+   @Source("../public/images/bundled/view/properties.png")
+   ImageResource properties();
+
+   @Source("../public/images/bundled/view/properties_Disabled.png")
+   ImageResource propertiesDisabled();
+
+   @Source("../public/images/bundled/view/url.png")
+   ImageResource url();
+
+   @Source("../public/images/bundled/view/url_Disabled.png")
+   ImageResource urlDisabled();
+
+   @Source("../public/images/bundled/view/go_to_folder.png")
+   ImageResource goToFolder();
+
+   @Source("../public/images/bundled/view/go_to_folder_Disabled.png")
+   ImageResource goToFolderDisabled();
+
+   /*
+    * WINDOW
+    */
 
    @Source("../public/images/bundled/window/customize_toolbar.png")
    ImageResource customizeToolbar();
@@ -280,24 +354,5 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/window/workspace_Disabled.png")
    ImageResource workspaceDisabled();
-
-   @Source("../public/images/bundled/help/about.png")
-   ImageResource about();
-
-   @Source("../public/images/bundled/help/about_Disabled.png")
-   ImageResource aboutDisabled();
-   
-   @Source("../public/images/bundled/output/output.png")
-   ImageResource output();
-
-   @Source("../public/images/bundled/output/output_Disabled.png")
-   ImageResource outputDisabled();
-
-   @Source("../public/images/bundled/output/output.png")
-   ImageResource browser();
-   
-   @Source("../public/images/bundled/browser/browser_Disabled.png")
-   ImageResource browserDisabled();
-   
 
 }

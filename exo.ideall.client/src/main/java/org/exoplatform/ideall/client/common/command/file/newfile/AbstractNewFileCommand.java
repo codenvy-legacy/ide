@@ -27,6 +27,7 @@ import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,6 +50,16 @@ public class AbstractNewFileCommand extends IDECommand implements PanelSelectedH
       setEvent(event);
    }
 
+   public AbstractNewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
+      ImageResource disabledIcon, GwtEvent<?> event)
+   {
+      super(id);
+      setTitle(title);
+      setPrompt(prompt);
+      setImages(normalIcon, disabledIcon);
+      setEvent(event);
+   }
+
    @Override
    protected void onRegisterHandlers()
    {
@@ -65,11 +76,12 @@ public class AbstractNewFileCommand extends IDECommand implements PanelSelectedH
 
    private void updateEnabling()
    {
-      if (context.getEntryPoint() == null) {
+      if (context.getEntryPoint() == null)
+      {
          setEnabled(false);
          return;
       }
-      
+
       if (browserSelected)
       {
          setEnabled(true);

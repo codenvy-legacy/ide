@@ -19,12 +19,13 @@
 package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.Tab;
 
 /**
@@ -35,23 +36,25 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class OutlineForm extends Tab implements OutlinePresenter.Display
 {
-   
+
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
-   
+
    private OutlinePresenter presenter;
-   
+
    private OutlineTreeGrid<Token> treeGrid;
-   
+
    public OutlineForm(HandlerManager bus, ApplicationContext applicationContext)
    {
       eventBus = bus;
       context = applicationContext;
-      
-      setTitle("<span>" + Canvas.imgHTML(Images.Outline.OUTLINE) + "&nbsp;" + "Outline" + "</span>");
+
+      Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
+      String imageHTML = ImageUtil.getHTML(tabIcon);
+      setTitle("<span>" + imageHTML + "&nbsp;" + "Outline" + "</span>");
       setCanClose(true);
-      
+
       treeGrid = new OutlineTreeGrid<Token>();
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
@@ -63,12 +66,12 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       treeGrid.setHeight100();
       treeGrid.setWidth100();
       setPane(treeGrid);
-      
+
       presenter = new OutlinePresenter(eventBus, context);
       presenter.bindDisplay(this);
-      
+
    }
-   
+
    public void setTreeValue()
    {
    }
@@ -77,7 +80,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
    {
       return treeGrid;
    }
-   
+
    public void selectTreeItem(int number)
    {
       treeGrid.selectRecord(number);
