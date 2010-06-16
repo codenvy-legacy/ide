@@ -69,7 +69,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
    @Override
    protected void setRecordFields(ListGridRecord record, CommandItemEx item)
-   {
+   {     
       if (item.isGroup())
       {
          String title = item.getTitle();
@@ -80,6 +80,9 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       else
       {
          String commandName = item.getCommand().getId();
+         
+         System.out.println("command id > " + commandName);
+         
          if (commandName.indexOf("/") >= 0)
          {
             commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
@@ -89,11 +92,37 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
             commandName = commandName.replace("\\", "/");
          }
          
+         System.out.println("command name > " + commandName);
+         
          if (item.getCommand() instanceof PopupMenuCommand) {
             commandName += "&nbsp;[Popup]";
          }
 
-         String title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
+         String title = "";
+         
+//         if (item.getCommand().getNormalImage() != null) {
+//            FlowPanel p = new FlowPanel();
+//            DOM.setStyleAttribute(p.getElement(), "left", "-1000px");
+//            DOM.setStyleAttribute(p.getElement(), "top", "-1000px");
+//            DOM.setStyleAttribute(p.getElement(), "width", "16px");
+//            DOM.setStyleAttribute(p.getElement(), "height", "16px");
+//            DOM.setStyleAttribute(p.getElement(), "overflow", "hidden");
+//            RootPanel.get().add(p);            
+//            
+//            Image image = new Image(item.getCommand().getNormalImage());
+//            p.add(image);
+//            String imageHTML = DOM.getInnerHTML(p.getElement());
+//            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+//         } else {
+//            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
+//         }
+         
+         if (item.getCommand().getIcon() != null) {
+            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
+         } else {
+            title = "<span>" + commandName + "</span>";
+         }
+         
          record.setAttribute(TITLE, title);
       }
 

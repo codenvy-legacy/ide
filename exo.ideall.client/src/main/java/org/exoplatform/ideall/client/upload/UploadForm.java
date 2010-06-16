@@ -170,9 +170,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadButton.setHeight(22);
       // uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
       if (openFile) {
-         uploadButton.setIcon(Images.MainMenu.UPLOAD_FILE);
+         uploadButton.setIcon(Images.MainMenu.File.OPEN_LOCAL_FILE);
       } else {
-         uploadButton.setIcon(Images.MainMenu.UPLOAD);
+         uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
       }
 
       StatefulCanvas buttonSpacer = new StatefulCanvas();
