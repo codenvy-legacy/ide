@@ -76,7 +76,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      if (getValue().getSubTokenList()!= null && getValue().getSubTokenList().size() > 0)
+      if (getValue() != null && getValue().getSubTokenList()!= null && getValue().getSubTokenList().size() > 0)
       {
          fillTreeItems(rootNode, getValue().getSubTokenList());
          tree.openAll();

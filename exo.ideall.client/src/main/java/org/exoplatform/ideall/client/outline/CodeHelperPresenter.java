@@ -23,8 +23,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -35,7 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class CodeHelperPresenter implements ShowOutlineHandler, EditorActiveFileChangedHandler
+public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 {
    interface Display
    {
@@ -56,7 +54,6 @@ public class CodeHelperPresenter implements ShowOutlineHandler, EditorActiveFile
       context = applicationContext;
       
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowOutlineEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
    
@@ -65,15 +62,11 @@ public class CodeHelperPresenter implements ShowOutlineHandler, EditorActiveFile
       display = d;
    }
 
-   public void onShowOutline(ShowOutlineEvent event)
-   {
-      display.showCodeHelper(event.isShow());
-   }
-
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       File file = event.getFile();
-      if (file != null && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+      if (file != null && file.getContentType() != null
+               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
                || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
       {
          display.showCodeHelper(true);

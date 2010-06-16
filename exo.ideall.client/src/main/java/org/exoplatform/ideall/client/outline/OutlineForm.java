@@ -19,6 +19,7 @@
 package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -61,7 +62,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       treeGrid.setShowOpenIcons(true);
       treeGrid.setEmptyMessage("");
 
-      treeGrid.setSelectionType(SelectionStyle.MULTIPLE);
+      treeGrid.setSelectionType(SelectionStyle.SINGLE);
 
       treeGrid.setHeight100();
       treeGrid.setWidth100();
@@ -76,7 +77,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
    {
    }
 
-   public OutlineTreeGrid<Token> getBrowserTree()
+   public TreeGridItem<Token> getBrowserTree()
    {
       return treeGrid;
    }

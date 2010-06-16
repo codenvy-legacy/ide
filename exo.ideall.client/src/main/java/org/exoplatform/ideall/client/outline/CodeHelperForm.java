@@ -24,6 +24,7 @@ import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredHa
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -84,6 +85,11 @@ CodeHelperPanelRestoredHandler
 
       tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
    }
+   
+   public void setTabCanClose(boolean canClose)
+   {
+      outlineTab.setCanClose(canClose);
+   }
 
    public void onCodeHelperPanelRestored(CodeHelperPanelRestoredEvent event)
    {
@@ -96,6 +102,7 @@ CodeHelperPanelRestoredHandler
       {
          event.cancel();
          hide();
+         eventBus.fireEvent(new ShowOutlineEvent(false));
       }
    };
    
@@ -104,24 +111,11 @@ CodeHelperPanelRestoredHandler
       if (isShow)
       {
          show();
-         //now we have only one tab in tabset
-         //if there will be more, then one tab
-         //you will need to check, is outlineTab visible
-         if (tabSet.getTabs().length < 1)
-         {
-            tabSet.addTab(outlineTab);
-         }
       }
       else
       {
          hide();
-         //now we have only one tab in tabset
-         //if there will be more, then one tab
-         //you will need to find outline tab and close it
-//         if (tabSet.getTabs().length > 0)
-//         {
-//            tabSet.removeTab(0);
-//         }
+//         outlineTab.getBrowserTree().setValue(null);
       }
    }
    
