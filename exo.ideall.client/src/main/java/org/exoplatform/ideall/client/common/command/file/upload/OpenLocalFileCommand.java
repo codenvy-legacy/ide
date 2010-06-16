@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.upload;
 
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
@@ -52,7 +53,8 @@ public class OpenLocalFileCommand extends IDECommand implements ItemsSelectedHan
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.UPLOAD_FILE);
+      //setIcon(Images.MainMenu.UPLOAD_FILE);
+      setImages(IDEImageBundle.INSTANCE.openLocalFile(), IDEImageBundle.INSTANCE.openLocalFileDisabled());
       setEvent(new UploadFileEvent(true));
    }
 

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.view;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -38,7 +38,7 @@ public class ViewItemPropertiesCommand extends IDECommand implements EditorActiv
    public static final String ID = "View/Properties";
 
    public static final String TITLE = "Properties";
-   
+
    public static final String PROMPT = "Show Properties";
 
    public ViewItemPropertiesCommand()
@@ -46,7 +46,7 @@ public class ViewItemPropertiesCommand extends IDECommand implements EditorActiv
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.PROPERTIES);
+      setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPropertiesEvent());
    }
 

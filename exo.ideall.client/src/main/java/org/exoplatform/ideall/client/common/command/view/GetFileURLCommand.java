@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.view;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
@@ -54,7 +54,7 @@ public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandle
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.GET_URL);
+      setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
       setEvent(new GetFileURLEvent());
    }
 

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.help;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
 
@@ -42,7 +42,7 @@ public class ShowAboutCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.ABOUT);
+      setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
       setEvent(new ShowAboutDialogEvent());
    }
 

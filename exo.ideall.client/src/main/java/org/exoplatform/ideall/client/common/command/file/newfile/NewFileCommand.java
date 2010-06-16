@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 
 /**
@@ -41,7 +41,7 @@ public class NewFileCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.NEW);
+      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
    }
 
    @Override

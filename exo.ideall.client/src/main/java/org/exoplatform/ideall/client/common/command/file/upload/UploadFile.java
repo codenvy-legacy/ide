@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.upload;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 
 /**
@@ -41,7 +41,10 @@ public class UploadFile extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.UPLOAD_MENU);
+      
+      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
+      
+      //setIcon(Images.MainMenu.UPLOAD_MENU);
    }
    
    @Override

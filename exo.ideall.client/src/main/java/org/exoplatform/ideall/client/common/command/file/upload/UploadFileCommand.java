@@ -19,7 +19,10 @@
  */
 package org.exoplatform.ideall.client.common.command.file.upload;
 
-import org.exoplatform.ideall.client.Images;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
@@ -28,9 +31,6 @@ import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.vfs.api.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,7 +57,8 @@ public class UploadFileCommand extends IDECommand implements ItemsSelectedHandle
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.UPLOAD);
+      //setIcon(Images.MainMenu.UPLOAD);
+      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       setEvent(new UploadFileEvent(false));
    }
 

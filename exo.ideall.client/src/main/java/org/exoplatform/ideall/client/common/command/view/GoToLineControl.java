@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ideall.client.common.command.view;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -39,7 +39,7 @@ public class GoToLineControl extends IDECommand implements EditorActiveFileChang
       super(ID);
       setTitle("Go to Line");
       setPrompt("Go to Line");
-      setIcon(Images.Edit.GO_TO_LINE);
+      setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
       setEvent(new GoToLineEvent());
    }
 

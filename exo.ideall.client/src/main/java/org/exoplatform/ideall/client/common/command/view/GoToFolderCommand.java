@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.view;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -44,7 +44,7 @@ public class GoToFolderCommand extends IDECommand implements EditorActiveFileCha
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.GOTOFOLDER);
+      setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
       setEvent(new GoToFolderEvent());
    }
 
