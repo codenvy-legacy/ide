@@ -276,15 +276,28 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource customizeHotKeysDisabled();
 
    @Source("../public/images/bundled/window/workspace.png")
-   ImageResource selectWorkspace();
+   ImageResource workspace();
 
    @Source("../public/images/bundled/window/workspace_Disabled.png")
-   ImageResource selectWorkspaceDisabled();
+   ImageResource workspaceDisabled();
 
    @Source("../public/images/bundled/help/about.png")
    ImageResource about();
 
    @Source("../public/images/bundled/help/about_Disabled.png")
    ImageResource aboutDisabled();
+   
+   @Source("../public/images/bundled/output/output.png")
+   ImageResource output();
+
+   @Source("../public/images/bundled/output/output_Disabled.png")
+   ImageResource outputDisabled();
+
+   @Source("../public/images/bundled/output/output.png")
+   ImageResource browser();
+   
+   @Source("../public/images/bundled/browser/browser_Disabled.png")
+   ImageResource browserDisabled();
+   
 
 }

@@ -17,12 +17,15 @@
 package org.exoplatform.ideall.client.operation.output;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.operation.TabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -102,7 +105,9 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
    @Override
    public String getTitle()
    {
-      return "<span>" + Canvas.imgHTML(Images.OutputPanel.ICON) + "&nbsp;Output</span>";
+      Image image = new Image(IDEImageBundle.INSTANCE.output());
+      String html = ImageUtil.getHTML(image);
+      return "<span>" + html + "&nbsp;Output</span>";
    }
 
    public HasClickHandlers getClearOutputButton()

@@ -266,6 +266,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton = new IButton("Get URL");
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
+      
       showUrlButton.setIcon(Images.MainMenu.GET_URL);
 
       sendRequestButton = new IButton("Send");

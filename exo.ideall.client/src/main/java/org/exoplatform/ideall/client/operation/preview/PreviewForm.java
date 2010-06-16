@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ideall.client.operation.preview;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.operation.TabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.Canvas;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.HTMLPane;
 
 /**
@@ -56,7 +56,9 @@ public class PreviewForm extends TabPanel
    @Override
    public String getTitle()
    {
-      return "<span>" + Canvas.imgHTML(Images.MainMenu.PREVIEW) + "&nbsp;Preview</span>";
+      Image image = new Image(IDEImageBundle.INSTANCE.preview());
+      String html = ImageUtil.getHTML(image);
+      return "<span>" + html + "&nbsp;Preview</span>";
    }
 
    /**

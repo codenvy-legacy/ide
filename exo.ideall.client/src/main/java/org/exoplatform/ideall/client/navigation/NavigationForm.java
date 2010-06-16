@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.navigation;
 
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.BrowserForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -25,6 +26,7 @@ import org.exoplatform.ideall.client.search.file.SearchResultsForm;
 import org.exoplatform.ideall.vfs.api.Folder;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.layout.Layout;
 
 /**
@@ -65,7 +67,8 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
       if (!tabContainer.isTabPanelExist(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
-         tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, Images.BrowserPanel.ICON, false);
+         Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
+         tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }
 //      if (!tabContainer.isTabPanelExist(BrowserFormNew.ID))
 //      {
@@ -82,7 +85,8 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
       tabContainer.closeTabPanel(SearchResultPanel.ID);
 
       SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, context, folder);
-      tabContainer.addTabPanel(searchResultForm, SearchResultsForm.TITLE, Images.SearchPanel.ICON, true);
+      Image tabIcon = new Image(IDEImageBundle.INSTANCE.search());
+      tabContainer.addTabPanel(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
       tabContainer.selectTabPanel(SearchResultsForm.ID);
    }
 

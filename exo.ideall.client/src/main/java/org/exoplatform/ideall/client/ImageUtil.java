@@ -17,11 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.window;
+package org.exoplatform.ideall.client;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,20 +31,28 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
  * @version $
  */
 
-public class SelectWorkspaceCommand extends IDECommand
+public class ImageUtil
 {
 
-   public static final String ID = "Window/Workspace...";
+   private static FlowPanel imagePanel;
 
-   public static final String TITLE = "Select Workspace...";
-
-   public SelectWorkspaceCommand()
+   public static final String getHTML(Image image)
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
-      setEvent(new SelectWorkspaceEvent());
+      if (imagePanel == null)
+      {
+         imagePanel = new FlowPanel();
+         DOM.setStyleAttribute(imagePanel.getElement(), "left", "-1000px");
+         DOM.setStyleAttribute(imagePanel.getElement(), "top", "-1000px");
+         DOM.setStyleAttribute(imagePanel.getElement(), "width", "16px");
+         DOM.setStyleAttribute(imagePanel.getElement(), "height", "16px");
+         DOM.setStyleAttribute(imagePanel.getElement(), "overflow", "hidden");
+         RootPanel.get().add(imagePanel);
+      }
+
+      imagePanel.add(image);
+      String imageHTML = DOM.getInnerHTML(imagePanel.getElement());
+      imagePanel.clear();
+      return imageHTML;
    }
 
 }

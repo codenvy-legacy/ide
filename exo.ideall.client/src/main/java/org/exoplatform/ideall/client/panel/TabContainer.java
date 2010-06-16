@@ -20,6 +20,7 @@
 package org.exoplatform.ideall.client.panel;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
@@ -27,7 +28,7 @@ import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.panel.event.SelectPanelHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.Canvas;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
@@ -75,9 +76,10 @@ public class TabContainer extends TabSet implements SelectPanelHandler
       return getTab(tabID) != null;
    }
 
-   public void addTabPanel(SimpleTabPanel tabPanel, String title, String icon, boolean canClose)
+   public void addTabPanel(SimpleTabPanel tabPanel, String title, Image image, boolean canClose)
    {
-      Tab tab = new Tab("<span>" + Canvas.imgHTML(icon) + "&nbsp;" + title);
+      String imageHTML = ImageUtil.getHTML(image);
+      Tab tab = new Tab("<span>" + imageHTML + "&nbsp;" + title);
       tab.setID(tabPanel.getPanelId());
       tab.setPane(tabPanel);
       tab.setCanClose(canClose);

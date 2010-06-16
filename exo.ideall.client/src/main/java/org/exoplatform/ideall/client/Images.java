@@ -33,8 +33,6 @@ public interface Images
    public interface MainMenu
    {
 
-      
-
       public static final String DELIMETER = imageUrl + "menu/delimeter.png";
 
       public static final String TOOLS = imageUrl + "menu/tools2.png";
@@ -45,10 +43,6 @@ public interface Images
 
       public static final String UPLOAD_MENU = imageUrl + "menu/file/upload_menu.png";
 
-
-      
-      public static final String PROPERTIES = imageUrl + "bundled/view/properties.png";      
-      
       public static final String GET_URL = imageUrl + "bundled/view/url.png";
 
       /*
@@ -63,8 +57,6 @@ public interface Images
          public static final String UPLOAD = imageUrl + "bundled/file/upload.png";
          
       }
-
-      public static final String PREVIEW = imageUrl + "bundled/run/preview.png";
 
       /*
        * GROOVY
@@ -90,33 +82,10 @@ public interface Images
 
    }
 
-   public interface PropertiesPanel
-   {
-
-      public static final String ICON = imageUrl + "panel/properties/properties.png";
-
-   }
-
    public interface OutputPanel
    {
 
       public static final String BUTTON_CLEAR = imageUrl + "panel/output/buttonClear.png";
-
-      public static final String ICON = imageUrl + "panel/output/output.png";
-
-   }
-
-   public interface BrowserPanel
-   {
-
-      public static final String ICON = imageUrl + "panel/workspace/workspace.png";
-
-   }
-
-   public interface SearchPanel
-   {
-
-      static final String ICON = imageUrl + "panel/search/search.png";
 
    }
 

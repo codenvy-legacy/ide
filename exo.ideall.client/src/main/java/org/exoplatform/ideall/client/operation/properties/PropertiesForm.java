@@ -16,13 +16,15 @@
  */
 package org.exoplatform.ideall.client.operation.properties;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.operation.TabPanel;
 import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -45,17 +47,17 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
    {
       super(eventBus, false);
       this.eventBus = eventBus;
-      
+
       presenter = new PropertiesPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
-   
-//   @Override
-//   public void destroy()
-//   {
-//      //presenter.destroy();
-//      super.destroy();
-//   }
+
+   //   @Override
+   //   public void destroy()
+   //   {
+   //      //presenter.destroy();
+   //      super.destroy();
+   //   }
 
    public void refreshProperties(File file)
    {
@@ -83,7 +85,9 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
    @Override
    public String getTitle()
    {
-      return "<span>" + Canvas.imgHTML(Images.PropertiesPanel.ICON) + "&nbsp;Properties</span>";
+      Image image = new Image(IDEImageBundle.INSTANCE.properties());
+      String html = ImageUtil.getHTML(image);
+      return "<span>" + html + "&nbsp;Properties</span>";
    }
 
    @Override
