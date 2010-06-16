@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
@@ -44,7 +44,7 @@ public class SearchFilesCommand extends IDECommand implements ItemsSelectedHandl
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.SEARCH);
+      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
       setEvent(new SearchFileEvent());
    }
 

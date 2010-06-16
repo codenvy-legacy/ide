@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -37,15 +37,15 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
 {
 
    private static final String ID = "Edit/Format";
-   
+
    private static final String TITLE = "Format";
-   
+
    public FormatSourceCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.FORMAT);
+      setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
       setEvent(new FormatFileEvent());
    }
 
@@ -63,7 +63,7 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
          setEnabled(false);
          return;
       }
-         
+
       if (event.getEditor().canFormatSource())
       {
          if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
@@ -75,7 +75,7 @@ public class FormatSourceCommand extends IDECommand implements EditorActiveFileC
          {
             setVisible(true);
             setEnabled(true);
-         }         
+         }
       }
       else
       {

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
@@ -42,7 +42,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
    private static final String ID = "Edit/Show \\ Hide Line Numbers";
 
    private static final String TITLE_SHOW = "Show Line Numbers";
-   
+
    private static final String TITLE_HIDE = "Hide Line Numbers";
 
    private File activeFile;
@@ -52,8 +52,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
       super(ID);
       setTitle(TITLE_HIDE);
       setPrompt(TITLE_HIDE);
-      setIcon(Images.Edit.HIDE_LINE_NUMBERS);
-      //setEvent(new ShowLineNumbersEvent());
+      setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
    }
 
    @Override
@@ -76,7 +75,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
          // hide
          setTitle(TITLE_HIDE);
          setPrompt(TITLE_HIDE);
-         setIcon(Images.Edit.HIDE_LINE_NUMBERS);
+         setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(false));
       }
       else
@@ -84,7 +83,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
          //show
          setTitle(TITLE_SHOW);
          setPrompt(TITLE_SHOW);
-         setIcon(Images.Edit.SHOW_LINE_NUMBERS);
+         setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(true));
       }
 
@@ -109,7 +108,7 @@ public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFi
 
    public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
    {
-      updateState();      
+      updateState();
    }
 
 }

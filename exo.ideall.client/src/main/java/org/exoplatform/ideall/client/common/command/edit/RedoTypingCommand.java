@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -49,7 +49,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.REDO);
+      setImages(IDEImageBundle.INSTANCE.redo(), IDEImageBundle.INSTANCE.redoDisabled());
       setEvent(new RedoEditingEvent());
    }
 
@@ -73,7 +73,7 @@ public class RedoTypingCommand extends IDECommand implements EditorActiveFileCha
       setVisible(true);
       if (event.getEditor() != null)
       {
-         setEnabled(event.getEditor().hasRedoChanges());         
+         setEnabled(event.getEditor().hasRedoChanges());
       }
       else
       {

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -39,7 +39,7 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
       super(ID);
       setTitle("Delete Current Line");
       setPrompt("Delete Current Line");
-      setIcon(Images.Edit.DELETE_LINE);
+      setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
       setEvent(new DeleteCurrentLineEvent());
    }
 

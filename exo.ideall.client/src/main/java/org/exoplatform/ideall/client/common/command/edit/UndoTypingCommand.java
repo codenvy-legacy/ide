@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -49,7 +49,7 @@ public class UndoTypingCommand extends IDECommand implements EditorActiveFileCha
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.UNDO);
+      setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
       setEvent(new UndoEditingEvent());
    }
 
@@ -71,9 +71,9 @@ public class UndoTypingCommand extends IDECommand implements EditorActiveFileCha
       }
 
       setVisible(true);
-      if(event.getEditor() != null)
+      if (event.getEditor() != null)
       {
-         setEnabled(event.getEditor().hasUndoChanges());         
+         setEnabled(event.getEditor().hasUndoChanges());
       }
       else
       {

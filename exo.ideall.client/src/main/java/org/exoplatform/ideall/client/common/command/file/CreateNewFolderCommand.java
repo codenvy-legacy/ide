@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
@@ -49,7 +49,7 @@ public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedH
       super(ID);
       setTitle("Folder...");
       setPrompt("Create Folder...");
-      setIcon(Images.MainMenu.NEW_FOLDER);
+      setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
    }
 

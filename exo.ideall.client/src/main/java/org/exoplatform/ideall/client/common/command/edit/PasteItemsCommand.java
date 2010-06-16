@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -43,7 +43,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       super(ID);
       setTitle("Paste Item(s)");
       setPrompt("Paste Selected Item(s)");
-      setIcon(Images.Edit.PASTE_FILE);
+      setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
       setEvent(new PasteItemsEvent());
    }
 

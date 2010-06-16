@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -42,7 +42,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       super(ID);
       setTitle("Cut Item(s)");
       setPrompt("Cut Selected Item(s)");
-      setIcon(Images.Edit.CUT_FILE);
+      setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
       setEvent(new CutItemsEvent());
    }
 

@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
@@ -39,7 +39,7 @@ public class OpenFileWithCommand extends IDECommand implements ItemsSelectedHand
       super(ID);
       setTitle("Open With...");
       setPrompt("Open File With...");
-      setIcon(Images.MainMenu.OPENWITH);
+      setImages(IDEImageBundle.INSTANCE.openWith(), IDEImageBundle.INSTANCE.openWithDisabled());
       setEvent(new OpenFileWithEvent());
    }
 

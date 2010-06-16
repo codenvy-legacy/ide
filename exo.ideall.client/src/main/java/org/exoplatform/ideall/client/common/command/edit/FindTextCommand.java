@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -37,7 +37,7 @@ import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler
 public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, FindTextFormClosedHandler,
    FindTextHandler
 {
-//   public static final String ID = "Edit/Find&#47Replace...";
+   //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
 
    private static final String TITLE = "Find/Replace...";
@@ -47,7 +47,7 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.Edit.FIND_TEXT);
+      setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
    }
 

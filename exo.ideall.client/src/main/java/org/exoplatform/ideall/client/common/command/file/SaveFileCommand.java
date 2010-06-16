@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -54,7 +54,7 @@ public class SaveFileCommand extends IDECommand implements EditorActiveFileChang
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.SAVE);
+      setImages(IDEImageBundle.INSTANCE.save(), IDEImageBundle.INSTANCE.saveDisabled());
       setEvent(new SaveFileEvent());
       setIgnoreDisable(true);
    }

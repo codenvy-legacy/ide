@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
@@ -45,7 +45,7 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
    private static final String PROMPT = "Refresh Selected Folder";
 
    private boolean browserPanelSelected = true;
-   
+
    private boolean oneItemSelected = true;
 
    public RefreshBrowserCommand()
@@ -53,7 +53,7 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.MainMenu.REFRESH);
+      setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
       setEvent(new RefreshBrowserEvent());
    }
 
@@ -73,16 +73,16 @@ public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHa
 
    private void updateEnabling()
    {
-      
-         if (browserPanelSelected && oneItemSelected)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
-  
+
+      if (browserPanelSelected && oneItemSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

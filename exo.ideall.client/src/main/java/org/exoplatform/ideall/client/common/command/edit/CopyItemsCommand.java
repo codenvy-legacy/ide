@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.common.command.edit;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -42,7 +42,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       super(ID);
       setTitle("Copy Item(s)");
       setPrompt("Copy Selected Item(s)");
-      setIcon(Images.Edit.COPY_FILE);
+      setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
       setEvent(new CopyItemsEvent());
    }
 

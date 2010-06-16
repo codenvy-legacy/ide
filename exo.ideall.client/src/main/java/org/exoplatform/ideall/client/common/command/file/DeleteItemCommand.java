@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -49,7 +49,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       super(ID);
       setTitle("Delete...");
       setPrompt("Delete Items...");
-      setIcon(Images.MainMenu.DELETE);
+      setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       setEvent(new DeleteItemEvent());
    }
 

@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -51,7 +51,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(Images.MainMenu.SAVE_AS);
+      setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
       setEvent(new SaveFileAsEvent());
    }
 

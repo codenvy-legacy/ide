@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.download;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -39,13 +39,13 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
    private final static String ID = "File/Download File...";
 
    private boolean oneItemSelected = true;
-   
+
    public DownloadFileCommand()
    {
       super(ID);
       setTitle("Download...");
       setPrompt("Download File...");
-      setIcon(Images.MainMenu.DOWNLOAD);
+      setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());
       setEvent(new DownloadFileEvent());
    }
 
@@ -67,8 +67,8 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
    {
       if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
       {
-        oneItemSelected = false;
-        updateEnabling();
+         oneItemSelected = false;
+         updateEnabling();
       }
       else
       {
@@ -89,6 +89,5 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
          setEnabled(false);
       }
    }
-
 
 }

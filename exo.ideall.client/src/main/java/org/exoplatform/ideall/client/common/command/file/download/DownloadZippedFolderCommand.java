@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common.command.file.download;
 
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
@@ -45,7 +45,7 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
       super(ID);
       setTitle("Download Zipped Folder...");
       setPrompt("Download Zipped Folder...");
-      setIcon(Images.MainMenu.DOWNLOAD_FOLDER);
+      setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
       setEvent(new DownloadZippedFolderEvent());
    }
 

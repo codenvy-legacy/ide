@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
 import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
@@ -62,7 +62,7 @@ import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.view.ShowOutlineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
-import org.exoplatform.ideall.client.statusbar.EditorCursorPosition;
+import org.exoplatform.ideall.client.statusbar.EditorCursorPositionControl;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 /**
@@ -79,8 +79,10 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    protected void onItitialize()
    {
       PopupMenuCommand newFilePopupMenuCommand =
-         PopupMenuCommandBuilder.newCommand("File/New *").prompt("New").icon(Images.MainMenu.NEW).show().enable()
-            .setDelimiterBefore().create();
+         PopupMenuCommandBuilder.newCommand("File/New *")
+            .prompt("New")
+            .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
+            .setDelimiterBefore().enable().show().create();
       addCommand(newFilePopupMenuCommand).dockOnToolbar();
 
       /*
@@ -109,7 +111,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
       addCommand(newGadgetCommand).disable().hide();
-      
+
       NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
       addCommand(newUWAWidgetCommand).disable().hide();
 
@@ -118,7 +120,6 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
 
-      
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
 
       addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
@@ -148,11 +149,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
       addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
 
-      
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
-      
 
       /*
        * EDIT GROUP
@@ -161,11 +160,10 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
       addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
-      
+
       addCommand(new FindTextCommand()).disable().hide().dockOnToolbar().setDelimiterBefore();
       addCommand(new ShowLineNumbersCommand()).disable().hide();
       addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
-      
 
       /*
        * VIEW GROUP
@@ -176,7 +174,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
       addCommand(new ShowOutlineControl()).disable().hide().dockOnToolbar();
-      
+
       /*
        * RUN GROUP
        */
@@ -201,10 +199,10 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * */
 
       addCommand(new NavigatorStatusControl(eventBus, context));
-      addCommand(new EditorCursorPosition(eventBus, context));
-      
+      addCommand(new EditorCursorPositionControl(eventBus, context));
+
       context.getStatusBarItems().add(NavigatorStatusControl.ID);
-      context.getStatusBarItems().add(EditorCursorPosition.ID);
+      context.getStatusBarItems().add(EditorCursorPositionControl.ID);
    }
 
 }
