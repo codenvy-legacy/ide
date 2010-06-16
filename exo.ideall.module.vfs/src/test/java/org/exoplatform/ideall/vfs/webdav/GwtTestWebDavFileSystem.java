@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ideall.vfs.webdav;
 
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
@@ -42,6 +41,7 @@ import java.util.HashMap;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -50,36 +50,42 @@ import com.google.gwt.junit.client.GWTTestCase;
 */
 public class GwtTestWebDavFileSystem extends GWTTestCase
 {
-   
+
    private VirtualFileSystem vfsWebDav;
+
    private HandlerManager eventbus;
-   private HashMap<String , String> images = new HashMap<String, String>();
-   private static final String BASE = "http://localhost:8081/rest/jcr/repository/dev-monit/";
-   private static final String WRONG_WS = "http://localhost:8081/rest/jcr/repository/not-found/";
-   
+
+   private HashMap<String, String> images = new HashMap<String, String>();
+
+   private static String TEST_URL;
+
+   private static String TEST_URL_WRONG_WS;
+
+   private final int DELAY_TEST = 5000;
+
    @Override
    protected void gwtSetUp() throws Exception
    {
       super.gwtSetUp();
+      TEST_URL = "http://" + Window.Location.getHost() + "/rest/jcr/repository/dev-monit/"; 
+      TEST_URL_WRONG_WS = "http://" + Window.Location.getHost() + "/rest/jcr/repository/not-found/";
       eventbus = new HandlerManager(null);
-      vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(),images, "/rest");
+      vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
    }
-   
-   
+
    @Override
    public String getModuleName()
    {
       return "org.exoplatform.ideall.IDEallVirtualFileSystem";
    }
-   
+
    /**
     * Create new folder
-    */  
+    */
    public void testCreateFolder()
    {
-      
-     
-      final String newFolderHref = BASE + "test";
+
+      final String newFolderHref = TEST_URL + "test";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(FolderCreatedEvent.TYPE, new FolderCreatedHandler()
       {
@@ -90,20 +96,17 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      WebDavVirtualFileSystem w = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
-      w.createFolder(newFolder);
-      delayTestFinish(500);
+      vfsWebDav.createFolder(newFolder);
+      delayTestFinish(DELAY_TEST);
    }
-   
-   
+
    /**
-    * Create new folder
-    */  
+//    * Create new folder
+//    */
    public void testCreateFolderFail()
    {
-      
-     
-      String newFolderHref = WRONG_WS + "test";
+
+      String newFolderHref = TEST_URL_WRONG_WS + "test";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -115,31 +118,28 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       });
       WebDavVirtualFileSystem w = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
       w.createFolder(newFolder);
-      delayTestFinish(500);
+      delayTestFinish(DELAY_TEST);
    }
-   
 
-   
    public void testDeleteItem()
    {
-      String newFolderHref = BASE + "proba";
+      String newFolderHref = TEST_URL + "proba";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(ItemDeletedEvent.TYPE, new ItemDeletedHandler()
       {
          public void onItemDeleted(ItemDeletedEvent event)
          {
-           finishTest();
+            finishTest();
          }
       });
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
       vfsWebDav.deleteItem(newFolder);
-      delayTestFinish(500);
+      delayTestFinish(DELAY_TEST);
    }
-   
-   
+
    public void testDeleteFolderFail()
    {
-      String newFolderHref = BASE + "proba-not-found";
+      String newFolderHref = TEST_URL + "proba-not-found";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -150,17 +150,16 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          }
       });
       vfsWebDav.deleteItem(newFolder);
-      delayTestFinish(500);
+      delayTestFinish(DELAY_TEST);
    }
-   
-   
+
    /**
    * Get folder content
    * 
    */
    public void testGetChildren()
    {
-      String newFolderHref = BASE + "main";
+      String newFolderHref = TEST_URL + "main";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(ChildrenReceivedEvent.TYPE, new ChildrenReceivedHandler()
       {
@@ -178,20 +177,18 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          }
       });
       vfsWebDav.getChildren(newFolder);
-      delayTestFinish(500);
-      
+      delayTestFinish(DELAY_TEST);
+
    }
 
-   
-   
    /**
     * Get content of the file
     * 
     */
    public void testGetContent()
    {
-     
-      File file = new File(BASE + "fileContent");
+
+      File file = new File(TEST_URL + "fileContent");
       eventbus.addHandler(FileContentReceivedEvent.TYPE, new FileContentReceivedHandler()
       {
          public void onFileContentReceived(FileContentReceivedEvent event)
@@ -199,7 +196,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-         
+
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -209,7 +206,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          }
       });
       vfsWebDav.getContent(file);
-      delayTestFinish(500);  
+      delayTestFinish(DELAY_TEST);
    }
 
    /**
@@ -220,27 +217,26 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
     */
    public void testSaveContent()
    {
-     final String fileContent = System.currentTimeMillis() + ""; 
-     File file = new File(BASE + "newFile");
-     file.setContentType("text/plain");
-     file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType("text/plain"));
-//     newFile.setIcon(ImageUtil.getIcon(contentType));
-     file.setNewFile(true);
-     file.setContent(fileContent);
-     file.setContentChanged(true);
-     eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
-   {
-      public void onFileContentSaved(FileContentSavedEvent event)
+      final String fileContent = System.currentTimeMillis() + "";
+      File file = new File(TEST_URL + "newFile");
+      file.setContentType("text/plain");
+      file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType("text/plain"));
+      //     newFile.setIcon(ImageUtil.getIcon(contentType));
+      file.setNewFile(true);
+      file.setContent(fileContent);
+      file.setContentChanged(true);
+      eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
       {
-         assertNotNull(event.getFile());
-         assertEquals(event.getFile().getContent(), fileContent);
-         finishTest();
-      }
-   });
-     vfsWebDav.saveContent(file);
-     delayTestFinish(500);
+         public void onFileContentSaved(FileContentSavedEvent event)
+         {
+            assertNotNull(event.getFile());
+            assertEquals(event.getFile().getContent(), fileContent);
+            finishTest();
+         }
+      });
+      vfsWebDav.saveContent(file);
+      delayTestFinish(DELAY_TEST);
    }
-
 
    /**
     * Move existed item to another location as path
@@ -249,27 +245,27 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    public void testMove()
    {
       final String newLocation = String.valueOf(System.currentTimeMillis());
-      Folder folder = new Folder(BASE + "movetest");
+      Folder folder = new Folder(TEST_URL + "movetest");
       eventbus.addHandler(MoveCompleteEvent.TYPE, new MoveCompleteHandler()
       {
          public void onMoveComplete(MoveCompleteEvent event)
          {
             assertNotNull(event.getItem());
-            assertEquals(event.getItem().getHref(), BASE + newLocation);
+            assertEquals(event.getItem().getHref(), TEST_URL + newLocation);
             finishTest();
          }
       });
-      vfsWebDav.move(folder, BASE + newLocation);
-      delayTestFinish(500);
+      vfsWebDav.move(folder, TEST_URL + newLocation);
+      delayTestFinish(DELAY_TEST);
    }
-   
+
    /**
     * Move existed item to another location as path
     * 
        */
    public void testMoveFail()
    {
-      Folder folder = new Folder(BASE + "movetest-not-found");
+      Folder folder = new Folder(TEST_URL + "movetest-not-found");
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -278,8 +274,8 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.move(folder, BASE + "new-movedtest");
-      delayTestFinish(500);
+      vfsWebDav.move(folder, TEST_URL + "new-movedtest");
+      delayTestFinish(DELAY_TEST);
    }
 
    /**
@@ -288,34 +284,41 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
     * @param item
     * @param destination
     */
-   public  void testCopy()
+   public void testCopy()
    {
       final String copyLocation = String.valueOf(System.currentTimeMillis());
-      Folder folder = new Folder(BASE + "copytest");
+      Folder folder = new Folder(TEST_URL + "copytest");
       eventbus.addHandler(CopyCompleteEvent.TYPE, new CopyCompleteHandler()
       {
          public void onCopyComplete(CopyCompleteEvent event)
          {
             assertNotNull(event.getDestination());
             assertNotNull(event.getCopiedItem());
-            assertEquals(event.getDestination(),BASE + copyLocation);
+            assertEquals(event.getDestination(), TEST_URL + copyLocation);
             finishTest();
          }
       });
-      vfsWebDav.copy(folder, BASE + copyLocation);
-      delayTestFinish(500);
+      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      {
+         public void onError(ExceptionThrownEvent event)
+         {
+            event.getError().printStackTrace();
+         }
+      });
+      vfsWebDav.copy(folder, TEST_URL + copyLocation);
+      delayTestFinish(DELAY_TEST);
    }
-   
+
    /**
     * Copy item to another locations as path
     * 
     * @param item
     * @param destination
     */
-   public  void testCopyFail()
+   public void testCopyFail()
    {
       final String copyLocation = String.valueOf(System.currentTimeMillis());
-      Folder folder = new Folder(BASE + "copytest-not-found");
+      Folder folder = new Folder(TEST_URL + "copytest-not-found");
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -324,77 +327,62 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.copy(folder, BASE + copyLocation);
-      delayTestFinish(500);
+      vfsWebDav.copy(folder, TEST_URL + copyLocation);
+      delayTestFinish(DELAY_TEST);
    }
-   
-//   /**
-//    * Get properties of file or folder
-//    * 
-//    * @param item
-//    */
-//   public void testGetProperties()
-//   {
-//      
-//   }
-//
-//   /**
-//    * Save properties of file or folder
-//    * 
-//    * @param item
-//    */
-//   public void testSaveProperties()
-//   {
-//      
-//   }
-//
-//   /**
-//    * Search files
-//    * 
-//    * @param folder
-//    * @param text
-//    * @param mimeType
-//    * @param path
-//    */
-//   public void testSsearch()
-//   {
-//   
-//   }
-   
+
+   //   /**
+   //    * Get properties of file or folder
+   //    * 
+   //    * @param item
+   //    */
+   //   public void testGetProperties()
+   //   {
+   //      
+   //   }
+   //
+   //   /**
+   //    * Save properties of file or folder
+   //    * 
+   //    * @param item
+   //    */
+   //   public void testSaveProperties()
+   //   {
+   //      
+   //   }
+   //
+   //   /**
+   //    * Search files
+   //    * 
+   //    * @param folder
+   //    * @param text
+   //    * @param mimeType
+   //    * @param path
+   //    */
+   //   public void testSsearch()
+   //   {
+   //   
+   //   }
+
    @Override
    protected void gwtTearDown() throws Exception
    {
    }
-   
-   
-   
-  private class MockExceptionThrownHandler implements ExceptionThrownHandler
-  {
-     
-//     private boolean fail; 
-//      public MockExceptionThrownHandler(boolean fail)
-//      {
-//         this.fail = fail;
-//      }
 
-   public void onError(ExceptionThrownEvent event)
+   private class MockExceptionThrownHandler implements ExceptionThrownHandler
    {
-      fail(); 
-   }
-     
-  }
-   
-   
-   
-  
-   
-   
-   
 
-   
-   
-   
-   
-   
-   
+      //     private boolean fail; 
+      //      public MockExceptionThrownHandler(boolean fail)
+      //      {
+      //         this.fail = fail;
+      //      }
+
+      public void onError(ExceptionThrownEvent event)
+      {
+         fail();
+      }
+
+   }
+
 }
