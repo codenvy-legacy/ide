@@ -93,11 +93,17 @@ public class GoToLinePresenter
             }
          }
       });
-      
-      maxLineNumber = context.getActiveFile().getContent().split("\n").length;
+
+      maxLineNumber = getLineNumber(context.getActiveFile().getContent());
       String labelCaption = "Enter line number (1.." + maxLineNumber +"):";
       display.setCaptionLabel(labelCaption);
    }
+   
+   private native int getLineNumber(String content) /*-{
+       if (! content) return 1;
+
+       return content.split("\n").length - 1;
+   }-*/;
 
    /**
     * 
