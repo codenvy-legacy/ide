@@ -22,13 +22,11 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
-import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
+import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
+import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.vfs.api.File;
@@ -46,8 +44,7 @@ import com.google.gwt.user.client.Timer;
  * @version $Id:
  *
  */
-public class OutlinePresenter implements EditorFileContentChangedHandler, EditorInitializedHandler,
-EditorActiveFileChangedHandler
+public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler
 {
    interface Display
    {
@@ -71,8 +68,7 @@ EditorActiveFileChangedHandler
 
       handlers = new Handlers(eventBus);
 
-      handlers.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      handlers.addHandler(EditorInitializedEvent.TYPE, this);
+      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
    }
@@ -99,39 +95,20 @@ EditorActiveFileChangedHandler
       display.getBrowserTree().setValue(new Token("", null, -1, tokens));
    }
 
-   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
+   public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      if (isShowOutline())
+      if (isShowOutline(context.getActiveTextEditor(), context.getActiveFile()))
       {
          refreshOutlineTimer.cancel();
          refreshOutlineTimer.schedule(2000);
       }
    }
-   
-   /*
-    *  Fired when editor is initialized
-    */
-   public void onEditorInitialized(EditorInitializedEvent event)
+
+   private boolean isShowOutline(TextEditor editor, File file)
    {
-      TextEditor editor = context.getActiveTextEditor();
-      File file = context.getActiveFile();
-      if (editor != null && file != null && file.getContentType() != null
+      return (editor != null && file != null && file.getContentType() != null 
                && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-               || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
-      {
-         refreshOutline(editor);
-      }
-      else
-      {
-         display.getBrowserTree().setValue(new Token("", null, -1, null));
-      }
-   }
-   
-   private boolean isShowOutline()
-   {
-      return (context.getActiveTextEditor() != null && context.getActiveFile() != null 
-          && (context.getActiveFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-                 || context.getActiveFile().getContentType().equals(MimeType.GOOGLE_GADGET)));
+               || file.getContentType().equals(MimeType.GOOGLE_GADGET)));
    }
    
    private Timer refreshOutlineTimer = new Timer() {
@@ -146,9 +123,7 @@ EditorActiveFileChangedHandler
    {
       File file = event.getFile();
       TextEditor editor = event.getEditor();
-      if (editor != null && file != null && file.getContentType() != null
-               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-               || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
+      if (isShowOutline(editor, file))
       {
          refreshOutline(editor);
       }
@@ -157,5 +132,4 @@ EditorActiveFileChangedHandler
          display.getBrowserTree().setValue(new Token("", null, -1, null));
       }
    }
-
 }
