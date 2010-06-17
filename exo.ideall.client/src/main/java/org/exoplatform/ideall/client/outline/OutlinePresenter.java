@@ -106,9 +106,20 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private boolean isShowOutline(TextEditor editor, File file)
    {
-      return (editor != null && file != null && file.getContentType() != null 
-               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-               || file.getContentType().equals(MimeType.GOOGLE_GADGET)));
+      if (editor == null || file == null || file.getContentType() == null)
+      {
+         return false;
+      }
+      
+      if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+               || file.getContentType().equals(MimeType.GOOGLE_GADGET))
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
    }
    
    private Timer refreshOutlineTimer = new Timer() {
