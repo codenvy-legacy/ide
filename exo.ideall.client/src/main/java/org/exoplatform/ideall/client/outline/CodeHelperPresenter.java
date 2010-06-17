@@ -65,9 +65,14 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       File file = event.getFile();
-      if (file != null && file.getContentType() != null
-               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-               || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
+      if (file == null || file.getContentType() == null)
+      {
+         display.showCodeHelper(false);
+         return;
+      }
+      
+      if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
+               || file.getContentType().equals(MimeType.GOOGLE_GADGET))
       {
          display.showCodeHelper(true);
       }
