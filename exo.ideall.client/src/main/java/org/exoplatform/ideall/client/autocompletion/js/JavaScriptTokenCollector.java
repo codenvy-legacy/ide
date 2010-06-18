@@ -20,8 +20,6 @@
 package org.exoplatform.ideall.client.autocompletion.js;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
