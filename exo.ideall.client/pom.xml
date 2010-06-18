@@ -252,6 +252,11 @@
 					<groupId>com.sun.xml.bind</groupId>
 					<artifactId>jaxb-impl</artifactId>
 				</dependency>
+       <dependency>
+         <groupId>caja</groupId>
+         <artifactId>caja</artifactId>
+         <version>r3375</version>
+        </dependency>
 			</dependencies>
 			<build>
 				<plugins>
@@ -328,7 +333,7 @@
 							<logLevel>INFO</logLevel>
 							<hostedWebapp>${basedir}/target/war</hostedWebapp>
 							<tomcat>${basedir}/target/tomcat</tomcat>
-							<skipTests>true</skipTests>
+							<skipTests>false</skipTests>
 						</configuration>
 						<executions>
 							<execution>
