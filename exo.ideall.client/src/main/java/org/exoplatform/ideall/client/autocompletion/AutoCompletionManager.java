@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
-import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutoCompleteForm;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
+import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
@@ -173,7 +173,8 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    {
       int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
       int y = cursorOffsetY + 4;
-      new AutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, this);
+      System.out.println("AutoCompletionManager.onTokensCollected()");
+      new NewAutoCompleteForm(x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
    }
 
    /**

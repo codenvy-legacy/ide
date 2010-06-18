@@ -72,7 +72,7 @@ public class JavaScriptTokenCollector implements TokenCollector
       keywords.add(new Token("if", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("import", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("in", TokenType.KEYWORD, 0, null));
-      keywords.add(new Token("instanceOf", TokenType.KEYWORD, 0, null));
+      keywords.add(new Token("instanceof", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("label", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("let", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("new", TokenType.KEYWORD, 0, null));

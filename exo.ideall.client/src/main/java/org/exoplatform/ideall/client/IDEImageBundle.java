@@ -22,6 +22,7 @@ package org.exoplatform.ideall.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * Created by The eXo Platform SAS .
@@ -354,5 +355,26 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/window/workspace_Disabled.png")
    ImageResource workspaceDisabled();
+   
+   /*
+    * AUTO COMPLETE
+    */
+   @Source("../public/images/bundled/outline/function-item.png")
+   ImageResource functionItem();
+   
+   @Source("../public/images/bundled/outline/method-item.png")
+   ImageResource methodItem();
+   
+   @Source("../public/images/bundled/outline/var-item.png")
+   ImageResource varItem();
+   
+   @Source("../public/images/bundled/outline/property-item.png")
+   ImageResource propertyItem();
+   
+   @Source("../public/images/bundled/outline/template.png")
+   ImageResource templateItem();
+   
+   @Source("../public/images/bundled/outline/keyword.png")
+   ImageResource keywordItem();
 
 }
