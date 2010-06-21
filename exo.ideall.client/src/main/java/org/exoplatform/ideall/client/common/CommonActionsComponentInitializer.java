@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.common;
 
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
@@ -78,7 +78,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    @Override
    protected void onItitialize()
    {
-      PopupMenuCommand newFilePopupMenuCommand =
+      PopupMenuControl newFilePopupMenuCommand =
          PopupMenuCommandBuilder.newCommand("File/New *")
             .prompt("New")
             .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
@@ -173,7 +173,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new GetFileURLCommand()).disable().hide();
       addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
       addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
-      addCommand(new ShowOutlineControl()).disable().hide().dockOnToolbar();
+      addCommand(new ShowOutlineControl()).disable().hide().setDelimiterBefore().dockOnToolbar();
 
       /*
        * RUN GROUP

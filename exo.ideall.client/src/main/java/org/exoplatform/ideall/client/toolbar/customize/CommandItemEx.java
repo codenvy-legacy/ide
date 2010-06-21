@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,11 +33,11 @@ public class CommandItemEx
 
    private String title;
 
-   private Command command;
+   private Control command;
 
    private boolean group = false;
 
-   public CommandItemEx(Command command)
+   public CommandItemEx(Control command)
    {
       this.command = command;
    }
@@ -53,7 +53,7 @@ public class CommandItemEx
       return title;
    }
 
-   public Command getCommand()
+   public Control getCommand()
    {
       return command;
    }

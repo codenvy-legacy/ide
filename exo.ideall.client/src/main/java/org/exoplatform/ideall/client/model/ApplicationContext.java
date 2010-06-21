@@ -16,19 +16,19 @@
  */
 package org.exoplatform.ideall.client.model;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
-import org.exoplatform.ideall.client.model.conversation.UserInfo;
-import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.exoplatform.gwtframework.editor.api.TextEditor;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.model.conversation.UserInfo;
+import org.exoplatform.ideall.client.model.template.TemplateList;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -101,7 +101,7 @@ public class ApplicationContext
    /**
     * Registered commands
     */
-   private ArrayList<Command> commands = new ArrayList<Command>();
+   private ArrayList<Control> commands = new ArrayList<Control>();
 
    /**
     * Uses for storing the current state of toolbar
@@ -320,7 +320,7 @@ public class ApplicationContext
       this.searchContentType = searchContentType;
    }
 
-   public ArrayList<Command> getCommands()
+   public ArrayList<Control> getCommands()
    {
       return commands;
    }

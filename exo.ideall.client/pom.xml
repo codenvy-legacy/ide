@@ -288,12 +288,19 @@
 						<configuration>
 							<module>org.exoplatform.ideall.IDEApplication</module>
 							<runTarget>org.exoplatform.ideall.IDEApplication/IDEApplication.html</runTarget>
-							<!--logLevel>INFO</logLevel-->
-              <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel>
+							<logLevel>INFO</logLevel>
+							<!-- 
+              				<logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel>
+              				 -->
+              				
 							<hostedWebapp>${basedir}/target/war</hostedWebapp>
+							
 							<skipTests>${gwt.test.skip}</skipTests>
+							
 							<port>${gwt.port}</port>
-							<extraJvmArgs>-Xmx1024m</extraJvmArgs>
+							
+							<extraJvmArgs>-Xmx512m</extraJvmArgs>
+
 						</configuration>
 					</plugin>
 					<plugin>

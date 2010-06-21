@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.ideall.client.ImageUtil;
 
@@ -92,7 +92,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
             commandName = commandName.replace("\\", "/");
          }
 
-         if (item.getCommand() instanceof PopupMenuCommand)
+         if (item.getCommand() instanceof PopupMenuControl)
          {
             commandName += "&nbsp;[Popup]";
          }

@@ -70,6 +70,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
          Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
          tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }
+      
 //      if (!tabContainer.isTabPanelExist(BrowserFormNew.ID))
 //      {
 //         BrowserFormNew navigatorForm = new BrowserFormNew(eventBus, context);
@@ -93,6 +94,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
    public void selectBrowserPanel()
    {
       //tabContainer.selectTabPanel(BrowserFormNew.ID);
+      
       tabContainer.selectTabPanel(BrowserForm.ID);
    }
 

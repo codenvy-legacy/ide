@@ -26,8 +26,8 @@ import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
@@ -176,9 +176,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
    private void fillHotKeyList()
    {
-      for (Command command : context.getCommands())
+      for (Control command : context.getCommands())
       {
-         if (command instanceof SimpleCommand && ((SimpleCommand)command).getEvent() != null)
+         if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null)
          {
             String groupName = command.getId();
             if (groupName.indexOf("/") >= 0)

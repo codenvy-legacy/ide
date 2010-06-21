@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,14 +41,14 @@ public class ToolbarItem
 
    private String id;
 
-   private Command command;
+   private Control command;
 
    public ToolbarItem(Type type)
    {
       this.type = type;
    }
 
-   public ToolbarItem(Type type, String id, Command command)
+   public ToolbarItem(Type type, String id, Control command)
    {
       this.type = type;
       this.id = id;
@@ -65,7 +65,7 @@ public class ToolbarItem
       return id;
    }
 
-   public Command getCommand()
+   public Control getCommand()
    {
       return command;
    }

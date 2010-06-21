@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ideall.client.hotkeys;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
 import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
 import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -184,13 +184,13 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
     */
    private void callEventByHotKey(String hotKey)
    {
-      for (Command command : context.getCommands())
+      for (Control command : context.getCommands())
       {
-         if (command instanceof SimpleCommand && ((SimpleCommand)command).getEvent() != null
+         if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null
                   && command.getId().equals(context.getHotKeys().get(hotKey))
-                  && (command.isEnabled() || ((SimpleCommand)command).isIgnoreDisable()))
+                  && (command.isEnabled() || ((SimpleControl)command).isIgnoreDisable()))
          {
-            eventBus.fireEvent(((SimpleCommand)command).getEvent());
+            eventBus.fireEvent(((SimpleControl)command).getEvent());
             return;
          }
       }

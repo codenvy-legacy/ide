@@ -21,7 +21,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
@@ -111,7 +111,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       /*
        * Initializing handlers of menu items
        */
-      for (Command command : context.getCommands())
+      for (Control command : context.getCommands())
       {
          if (command instanceof IDECommand)
          {

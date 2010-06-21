@@ -17,12 +17,16 @@
 package org.exoplatform.ideall.client.component;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.vfs.api.Folder;
 import org.exoplatform.ideall.vfs.api.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -56,6 +60,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       setCanFocus(false);
       setShowConnectors(false);
       setCanSort(false);
+      
+      //setNodeIcon(null);
+      //setFolderIcon(null);
    }
 
    public ItemTreeGrid(boolean allowSameNames)
@@ -87,13 +94,20 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
          nodeName = nodeName.substring(nodeName.lastIndexOf("/") + 1);
 
+         
+//         rootNode = new TreeNode("<span>" + iconPrefix + "</span>&nbsp;" + nodeName);
          rootNode = new TreeNode(nodeName);
          rootNode.setAttribute(getValuePropertyName(), getValue());
+
+         String iconPrefix = "";
          if (getValue().getIcon() != null)
          {
             rootNode.setAttribute("icon", getValue().getIcon());
-         }
-
+//            Image i = new Image(IDEImageBundle.INSTANCE.search());
+//            iconPrefix = ImageUtil.getHTML(i);
+         }         
+         
+         
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
 

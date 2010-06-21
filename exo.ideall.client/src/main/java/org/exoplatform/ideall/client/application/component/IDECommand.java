@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
@@ -39,7 +39,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class IDECommand extends SimpleCommand implements RegisterEventHandlersHandler, InitializeApplicationHandler
+public class IDECommand extends SimpleControl implements RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    protected HandlerManager eventBus;

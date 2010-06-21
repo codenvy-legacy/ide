@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.statusbar;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
@@ -34,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class EditorCursorPositionControl extends StatusTextCommand implements EditorActivityHandler,
+public class EditorCursorPositionControl extends StatusTextControl implements EditorActivityHandler,
    EditorActiveFileChangedHandler
 {
    public static final String ID = "__editor_cursor_position";
@@ -49,7 +49,8 @@ public class EditorCursorPositionControl extends StatusTextCommand implements Ed
 
       setVisible(true);
       setEnabled(true);
-      setSize(80);
+      setSize(20);
+      setFireEventOnSingleClick(true);
 
       setText("&nbsp;");
       
@@ -62,9 +63,14 @@ public class EditorCursorPositionControl extends StatusTextCommand implements Ed
    private void setCursorPosition(int row, int col)
    {
       String html =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height: 16px;\"><tr>"
-            + "</td><td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \">&nbsp;"
-            + row + " : " + col + "</td></tr></table>";
+         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height: 16px; width:100%;\"><tr>"
+            + "</td>" +
+            		"<td style=\"width:100%;\">&nbsp;</td>" +
+            		"<td id=\"ide-statuscontrol-cursorposition\" " +
+            		"onmouseover=\"var s = document.getElementById('ide-statuscontrol-cursorposition').style; s.color='#005500';\"" +
+                  "onmouseout=\"var s = document.getElementById('ide-statuscontrol-cursorposition').style; s.color='#000000';\"" +
+            		"style=\"cursor:pointer; border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \">" +
+            		"<nobr>" + row + " : " + col + "</nobr></td><td>&nbsp;</td></tr></table>";
       setText(html);
    }
 

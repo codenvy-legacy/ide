@@ -24,9 +24,9 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuCommand;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleCommand;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
@@ -220,18 +220,18 @@ public class CustomizeToolbarPresenter
 
    private void fillCommandListGrid()
    {
-      HashMap<String, List<Command>> groups = new LinkedHashMap<String, List<Command>>();
+      HashMap<String, List<Control>> groups = new LinkedHashMap<String, List<Control>>();
 
-      for (Command command : context.getCommands())
+      for (Control command : context.getCommands())
       {
-         if (command instanceof SimpleCommand)
+         if (command instanceof SimpleControl)
          {
-            if (((SimpleCommand)command).getEvent() != null)
+            if (((SimpleControl)command).getEvent() != null)
             {
                addCommand(groups, command);
             }
          }
-         else if (command instanceof PopupMenuCommand)
+         else if (command instanceof PopupMenuControl)
          {
             addCommand(groups, command);
          }
@@ -243,8 +243,8 @@ public class CustomizeToolbarPresenter
       {
          String groupName = keyIter.next();
          commandList.add(new CommandItemEx(groupName));
-         List<Command> commands = groups.get(groupName);
-         for (Command command : commands)
+         List<Control> commands = groups.get(groupName);
+         for (Control command : commands)
          {
             commandList.add(new CommandItemEx(command));
          }
@@ -253,7 +253,7 @@ public class CustomizeToolbarPresenter
       display.getCommandItemListGrid().setValue(commandList);
    }
 
-   private void addCommand(HashMap<String, List<Command>> groups, Command command)
+   private void addCommand(HashMap<String, List<Control>> groups, Control command)
    {
       String groupName = command.getId();
       if (groupName.indexOf("/") >= 0)
@@ -261,19 +261,19 @@ public class CustomizeToolbarPresenter
          groupName = groupName.substring(0, groupName.lastIndexOf("/"));
       }
 
-      List<Command> commands = groups.get(groupName);
+      List<Control> commands = groups.get(groupName);
       if (commands == null)
       {
-         commands = new ArrayList<Command>();
+         commands = new ArrayList<Control>();
          groups.put(groupName, commands);
       }
 
       commands.add(command);
    }
 
-   private Command getCommandById(String id)
+   private Control getCommandById(String id)
    {
-      for (Command command : context.getCommands())
+      for (Control command : context.getCommands())
       {
          if (id.equals(command.getId()))
          {
@@ -302,7 +302,7 @@ public class CustomizeToolbarPresenter
          }
          else
          {
-            Command command = getCommandById(toolbarItem);
+            Control command = getCommandById(toolbarItem);
             ToolbarItem item = new ToolbarItem(Type.COMMAND, toolbarItem, command);
             toolbarItems.add(item);
          }

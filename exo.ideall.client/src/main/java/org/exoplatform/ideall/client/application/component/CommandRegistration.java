@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ideall.client.application.component;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Command;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 /**
@@ -32,11 +32,11 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 public class CommandRegistration
 {
 
-   private Command command;
+   private Control command;
 
    private ApplicationContext context;
 
-   public CommandRegistration(Command command, ApplicationContext context)
+   public CommandRegistration(Control command, ApplicationContext context)
    {
       this.command = command;
       this.context = context;
