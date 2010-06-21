@@ -56,7 +56,7 @@ public class ApplicationContext
     * Current active file in editor.
     */
    private File activeFile;
-   
+
    /**
     * Current active text editor.
     */
@@ -88,9 +88,9 @@ public class ApplicationContext
    private String searchFileName;
 
    private String searchContentType;
-   
+
    private Map<String, String> hotKeys = new HashMap<String, String>();
-   
+
    private Map<String, String> reservedHotkeys = new HashMap<String, String>();
 
    /**
@@ -150,7 +150,9 @@ public class ApplicationContext
    private boolean initialized;
 
    private Item cached;
-   
+
+   private List<String> openedForms = new ArrayList<String>();
+
    public ApplicationContext()
    {
       toolBarItems.add("");
@@ -181,7 +183,7 @@ public class ApplicationContext
    {
       this.activeFile = activeFile;
    }
-   
+
    /**
     * @return the activeTextEditor
     */
@@ -391,28 +393,36 @@ public class ApplicationContext
    {
       return hotKeys;
    }
-   
+
    public void setHotKeys(Map<String, String> hotKeys)
    {
       this.hotKeys = hotKeys;
    }
-   
+
    public void setReservedHotkeys(Map<String, String> hotKeys)
    {
       this.reservedHotkeys = hotKeys;
    }
-   
+
    public Map<String, String> getReservedHotkeys()
    {
       return reservedHotkeys;
    }
-   
+
    public List<String> getHotKeyList()
    {
-      if (hotKeys == null) 
-      	return null;
-      
+      if (hotKeys == null)
+         return null;
+
       return new ArrayList<String>(hotKeys.keySet());
+   }
+
+   /**
+    * @return the openedForms
+    */
+   public List<String> getOpenedForms()
+   {
+      return openedForms;
    }
 
 }

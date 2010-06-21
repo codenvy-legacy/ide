@@ -46,7 +46,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class FindTextForm extends DialogWindow implements FindTextPresenter.Display
 {
-
+   public static final String ID = "FindReplace";
+   
    private static final int WIDTH = 450;
 
    private static final int HEIGHT = 210;
@@ -62,7 +63,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private final int BUTTONS_SPACE = 5;
 
    private final String TITLE = "Find/Replace";
-
+   
    private IButton findButton;
 
    private IButton cancelButton;

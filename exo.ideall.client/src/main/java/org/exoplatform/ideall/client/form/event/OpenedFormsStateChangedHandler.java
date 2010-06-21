@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.text.event;
+package org.exoplatform.ideall.client.form.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -27,10 +27,10 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id:   ${date} ${time}
  *
  */
-public interface FindTextFormClosedHandler extends EventHandler
+public interface OpenedFormsStateChangedHandler extends EventHandler
 {
    /**
     * @param event
     */
-   void onFindTextFormClosed(FindTextFormClosedEvent event);
-}
+   void onOpenedFormsStateChanged(OpenedFormsStateChangedEvent event);
+}  

@@ -23,9 +23,9 @@ import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.FindTextEvent;
-import org.exoplatform.ideall.client.event.edit.FindTextHandler;
-import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent;
-import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
+import org.exoplatform.ideall.client.search.text.FindTextForm;
 
 /**
  * Created by The eXo Platform SAS.
@@ -34,8 +34,7 @@ import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, FindTextFormClosedHandler,
-   FindTextHandler
+public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, OpenedFormsStateChangedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
@@ -58,8 +57,7 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(FindTextFormClosedEvent.TYPE, this);
-      addHandler(FindTextEvent.TYPE, this);
+      addHandler(OpenedFormsStateChangedEvent.TYPE, this);
    }
 
    /**
@@ -72,33 +70,22 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
          setVisible(false);
          setEnabled(false);
          return;
-      }
-
-      if (event.getEditor().canFindAndReplace())
-      {
+      } else {
          setVisible(true);
-         setEnabled(true);
       }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
+      
+      boolean canFindReplace = event.getEditor().canFindAndReplace();
+      boolean isOpened = context.getOpenedForms().contains(FindTextForm.ID); 
+      boolean isEnabled = canFindReplace && !isOpened;
+      setEnabled(isEnabled);
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.event.FindTextFormClosedHandler#onFindTextFormClosed(org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent)
+    * @see org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler#onOpenedFormsStateChanged(org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent)
     */
-   public void onFindTextFormClosed(FindTextFormClosedEvent event)
+   public void onOpenedFormsStateChanged(OpenedFormsStateChangedEvent event)
    {
-      setEnabled(true);
-   }
-
-   /**
-    * @see org.exoplatform.ideall.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ideall.client.event.edit.FindTextEvent)
-    */
-   public void onFindText(FindTextEvent event)
-   {
-      setEnabled(false);
+      boolean isOpened = context.getOpenedForms().contains(FindTextForm.ID); 
+      setEnabled(!isOpened);
    }
 }

@@ -16,40 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.text.event;
+package org.exoplatform.ideall.client.form.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is used when find text form has bean closed.
- * 
  * Created by The eXo Platform SAS.
  *	
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextFormClosedEvent extends GwtEvent<FindTextFormClosedHandler>
+public class OpenedFormsStateChangedEvent extends GwtEvent<OpenedFormsStateChangedHandler>
 {
 
-   public static final GwtEvent.Type<FindTextFormClosedHandler> TYPE = new GwtEvent.Type<FindTextFormClosedHandler>();
-
+   public static final GwtEvent.Type<OpenedFormsStateChangedHandler> TYPE = new GwtEvent.Type<OpenedFormsStateChangedHandler>();
+   
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(FindTextFormClosedHandler handler)
+   protected void dispatch(OpenedFormsStateChangedHandler handler)
    {
-      handler.onFindTextFormClosed(this);
+      handler.onOpenedFormsStateChanged(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FindTextFormClosedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<OpenedFormsStateChangedHandler> getAssociatedType()
    {
       return TYPE;
    }
-
+   
 }

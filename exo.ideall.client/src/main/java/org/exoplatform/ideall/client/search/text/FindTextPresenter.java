@@ -27,8 +27,8 @@ import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.search.text.event.FindTextFormClosedEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultHandler;
 
@@ -208,6 +208,9 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
             timer.schedule(10);
          }
       });
+      
+      context.getOpenedForms().add(FindTextForm.ID);
+      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
       disableAllButtons();
    }
 
@@ -222,7 +225,8 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    public void destroy()
    {
       handlers.removeHandlers();
-      eventBus.fireEvent(new FindTextFormClosedEvent());
+      context.getOpenedForms().remove(FindTextForm.ID);
+      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
 
    private void doFind(String findText)
@@ -281,6 +285,11 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      if (event.getFile() == null){
+         display.closeForm();
+         return;
+      }
+      
       String path = event.getFile().getHref();
       FindTextState findTextState = filesFindState.get(path);
       if (filesFindState.get(path) == null)
