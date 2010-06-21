@@ -19,9 +19,9 @@
 
 	<!-- Specify the app entry point class.                         -->
 	<source path="client" excludes="IDEGadget.java" />
+	<source path="template" />
 	
 	<entry-point class='org.exoplatform.ideall.client.IDEGwtTest' />
 	
 	<servlet path="/testwebdav" class="org.exoplatform.ideall.server.TestWebDavVFSServlet" />
-
 </module>
