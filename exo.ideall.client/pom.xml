@@ -41,6 +41,11 @@
 			<groupId>com.smartgwt</groupId>
 			<artifactId>smartgwt</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
    <dependency>
       <groupId>org.exoplatform.ideall</groupId>
       <artifactId>exo.ideall.module.vfs</artifactId>
