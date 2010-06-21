@@ -158,11 +158,11 @@
 								<configuration>
 									<tasks>
 										<echo>copy tomcat resources</echo>
-										<copy todir="${project.build.directory}/tomcat/">
+										<copy todir="${basedir}/tomcat/">
 											<fileset dir="${basedir}/src/test/resources/tomcat-res" />
 										</copy>
 										<echo>build rest.war</echo>
-										<war destfile="${project.build.directory}/tomcat/webapps/rest.war"
+										<war destfile="${basedir}/tomcat/webapps/rest.war"
 											basedir="${basedir}/src/test/webapp" needxmlfile='false' />
 									</tasks>
 								</configuration>
@@ -190,7 +190,7 @@
 							<testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
 							<manualMode>${manualMode}</manualMode>
 							<productionMode>${productionMode}</productionMode>
-							<extraJvmArgs>-Xms1G -Xmx1G -Xss1024k	-Dcatalina.base=${project.build.directory}/tomcat	-Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs>
+							<!-- extraJvmArgs>-Xms1G -Xmx1G -Xss1024k	-Dcatalina.base=${project.build.directory}/tomcat	-Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs-->
 						</configuration>
 						<executions>
 							<execution>
