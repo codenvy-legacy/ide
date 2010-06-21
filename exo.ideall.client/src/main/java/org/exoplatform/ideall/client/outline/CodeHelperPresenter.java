@@ -57,7 +57,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
    
-   public void bindDispyal(Display d)
+   public void bindDisplay(Display d)
    {
       display = d;
    }

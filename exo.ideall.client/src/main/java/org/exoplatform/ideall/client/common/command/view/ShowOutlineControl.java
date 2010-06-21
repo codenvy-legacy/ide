@@ -23,6 +23,9 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
+import org.exoplatform.ideall.client.outline.CodeHelperForm;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 
 /**
@@ -30,7 +33,7 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
  * @version $Id: $
  *
  */
-public class ShowOutlineControl extends IDECommand implements EditorActiveFileChangedHandler
+public class ShowOutlineControl extends IDECommand implements EditorActiveFileChangedHandler, OpenedFormsStateChangedHandler
 {
 
    public static final String ID = "View/Show Outline";
@@ -48,7 +51,7 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
+      addHandler(OpenedFormsStateChangedEvent.TYPE, this);
    }
 
    /**
@@ -63,18 +66,21 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
          return;
       }
 
-      if (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
-         || event.getFile().getContentType().equals(MimeType.GOOGLE_GADGET))
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
+      boolean isProperType = (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
+               || event.getFile().getContentType().equals(MimeType.GOOGLE_GADGET));
+      setVisible(isProperType);
+      boolean isOpened = context.getOpenedForms().contains(CodeHelperForm.ID);
+      boolean isEnabled = !isOpened && isProperType;
+      setEnabled(isEnabled);
+   }
 
+   /**
+    * @see org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler#onOpenedFormsStateChanged(org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent)
+    */
+   public void onOpenedFormsStateChanged(OpenedFormsStateChangedEvent event)
+   {  
+      boolean isOpened = context.getOpenedForms().contains(CodeHelperForm.ID);
+      setEnabled(!isOpened);
    }
 
 }

@@ -57,10 +57,13 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.events.MouseUpEvent;
 import com.smartgwt.client.widgets.events.MouseUpHandler;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -207,6 +210,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       verticalSplitLayout.setResizeBarTarget("next");
       verticalSplitLayout.setShowResizeBar(true);
       verticalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
+    
       verticalSplitLayout.setWidth("60%");
       verticalSplitLayout.setMinWidth(MIN_FORM_WIDTH);
       horizontalSplitLayout2.addMember(verticalSplitLayout);
@@ -243,7 +247,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       codeHelperForm = new CodeHelperForm(eventBus, context);
       codeHelperForm.setMinWidth(MIN_CODE_HELPER_WIDTH);
       codeHelperForm.setWidth("30%");
-      codeHelperForm.hide();
+      codeHelperForm.showCodeHelper(false);
       
       horizontalSplitLayout2.addMember(codeHelperForm);
       horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
@@ -262,6 +266,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          {
             eventBus.fireEvent(new UnlockIFrameElementsEvent());
          }
+      });
+      
+      verticalSplitLayout.addResizedHandler(new ResizedHandler(){
+
+         public void onResized(ResizedEvent event)
+         {
+            codeHelperForm.showCodeHelper(codeHelperForm.isVisible());
+         }
+         
       });
 
       statusBar = new GWTStatusBarWrapper(eventBus);
@@ -289,7 +302,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       operationForm.hide();
       verticalSplitLayout.setResizeBarSize(0);
       
-      codeHelperForm.hide();
+      codeHelperForm.showCodeHelper(false);
 
       statusBar.hide();
 
@@ -311,7 +324,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       if (codeHelperPanelVisible)
       {
-         codeHelperForm.show();
+         codeHelperForm.showCodeHelper(true);
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
       }
 
@@ -328,7 +341,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       navigationPanelVisible = navigationForm.isVisible();
       navigationForm.hide();
       codeHelperPanelVisible = codeHelperForm.isVisible();
-      codeHelperForm.hide();
+      codeHelperForm.showCodeHelper(false);
       
       horizontalSplitLayout.setResizeBarSize(0);
       horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
@@ -356,7 +369,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       if (codeHelperPanelVisible)
       {
-         codeHelperForm.show();
+         codeHelperForm.showCodeHelper(true);
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
       }
 

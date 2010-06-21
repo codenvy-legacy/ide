@@ -23,6 +23,7 @@ import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredEv
 import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
+import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 
@@ -42,6 +43,8 @@ import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 public class CodeHelperForm extends Layout implements CodeHelperPresenter.Display, 
 CodeHelperPanelRestoredHandler
 {
+   public static String ID = "CodeHelper";
+   
    private HandlerManager eventBus;
    
    private ApplicationContext context;
@@ -67,9 +70,9 @@ CodeHelperPanelRestoredHandler
       tabSet.addTab(outlineTab);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
-      
+
       presenter = new CodeHelperPresenter(eventBus, context);
-      presenter.bindDispyal(this);
+      presenter.bindDisplay(this);
    }
    
    private void createButtons()
@@ -110,13 +113,19 @@ CodeHelperPanelRestoredHandler
    {
       if (isShow)
       {
+         if (!context.getOpenedForms().contains(ID)){
+            context.getOpenedForms().add(ID);
+         }
          show();
       }
       else
       {
+         context.getOpenedForms().remove(ID);
          hide();
-//         outlineTab.getBrowserTree().setValue(null);
+         //         outlineTab.getBrowserTree().setValue(null);
       }
+
+      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
    
 }
