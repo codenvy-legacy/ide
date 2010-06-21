@@ -38,27 +38,28 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class GroovyTokenCollector implements TokenCollector
 {
-   
+
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
-   
+
    private TokensCollectedCallback tokensCollectedCallback;
-   
-   public GroovyTokenCollector(HandlerManager eventBus, ApplicationContext context, TokensCollectedCallback tokensCollectedCallback) {
+
+   public GroovyTokenCollector(HandlerManager eventBus, ApplicationContext context,
+      TokensCollectedCallback tokensCollectedCallback)
+   {
       this.eventBus = eventBus;
       this.context = context;
       this.tokensCollectedCallback = tokensCollectedCallback;
    }
 
-
    /**
     * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
     */
-   public void getTokens(String prefix, int currentLine, List<Token> tokenFromParser)
+   public void getTokens(String prefix, int currentLine, int cursorPos, List<Token> tokenFromParser)
    {
-      List<Token> tokens = new ArrayList<Token>();      
-      tokensCollectedCallback.onTokensCollected(tokens);
+      List<Token> tokens = new ArrayList<Token>();
+      tokensCollectedCallback.onTokensCollected(tokens, null, null, null);
    }
 
 }

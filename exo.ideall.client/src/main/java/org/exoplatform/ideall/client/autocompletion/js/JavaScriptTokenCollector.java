@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.TokenTemplate;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.ideall.client.autocompletion.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
@@ -52,7 +51,13 @@ public class JavaScriptTokenCollector implements TokenCollector
    private static List<Token> templates = new ArrayList<Token>();
 
    private List<Token> filteredToken = new ArrayList<Token>();
+   
+   private String beforeToken;
+   
+   private String afterToken;
 
+   private String tokenToComplete;
+   
    static
    {
       keywords.add(new Token("break", TokenType.KEYWORD, 0, null));
@@ -66,7 +71,6 @@ public class JavaScriptTokenCollector implements TokenCollector
       keywords.add(new Token("else", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("export", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("false", TokenType.KEYWORD, 0, null));
-      keywords.add(new Token("while", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("for", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("function", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("if", TokenType.KEYWORD, 0, null));
@@ -89,14 +93,18 @@ public class JavaScriptTokenCollector implements TokenCollector
       keywords.add(new Token("while", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("with", TokenType.KEYWORD, 0, null));
       keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
-      keywords.add(new Token("yield", TokenType.KEYWORD, 0, null));
 
+      templates.add(new Token("for", TokenType.TEMPLATE, "for-iterate over array",
+         "for (var i = 0; i < array.length; i++)\n{\n\n}", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
+      
       templates
-         .add(new TokenTemplate("for", "for-iterate over array", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
-      templates.add(new TokenTemplate("if", "if-condition", "if (condition)\n{\n\n}"));
-      templates.add(new TokenTemplate("if", "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}"));
-      templates.add(new TokenTemplate("try", "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}"));
-
+      .add(new Token("if", TokenType.TEMPLATE, "if-condition", "if (condition)\n{\n\n}", "if (condition)\n{\n\n}"));
+   
+      templates.add(new Token("if", TokenType.TEMPLATE, "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}",
+      "if (condition)\n{\n\n}\nelse\n{\n\n}"));
+   
+      templates.add(new Token("try", TokenType.TEMPLATE, "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}",
+      "try\n{\n\n}\ncatch(e)\n{\n\n}"));
    }
 
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
@@ -108,7 +116,7 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    }
 
-   public void getTokens(String prefix, int currntLine, List<Token> tokenFromParser)
+   public void getTokens(String line, int lineNum, int cursorPos, List<Token> tokenFromParser)
    {
 
       List<Token> tokens = new ArrayList<Token>();
@@ -117,10 +125,12 @@ public class JavaScriptTokenCollector implements TokenCollector
 
       filteredToken.clear();
 
-      filterToken(currntLine, tokenFromParser);
+      filterToken(lineNum, tokenFromParser);
+      
+      parseTokenLine(line, lineNum);
 
       tokens.addAll(filteredToken);
-      tokensCollectedCallback.onTokensCollected(tokens);
+      tokensCollectedCallback.onTokensCollected(tokens,beforeToken, tokenToComplete, afterToken);
    }
 
    /**
@@ -171,18 +181,78 @@ public class JavaScriptTokenCollector implements TokenCollector
       }
    }
 
-   private void printTokens(List<Token> token)
+
+   /**
+    * @param line
+    */
+   private void parseTokenLine(String line, int cursorPos)
    {
-      for (Token t : token)
+      String tokenLine = "";
+      tokenToComplete = "";
+      afterToken = "";
+      beforeToken = "";
+      if (line.length() > cursorPos - 1)
       {
-         System.out.println("Token - " + t.getName() + " --- " + t.getLineNumber());
-         if (t.getSubTokenList() != null)
-         {
-            System.out.println("SubTokens: ");
-            printTokens(t.getSubTokenList());
-         }
+         afterToken = line.substring(cursorPos - 1, line.length());
+         tokenLine = line.substring(0, cursorPos - 1);
+
       }
-      System.out.println("======================");
+      else
+      {
+         afterToken = "";
+         if (line.endsWith(" "))
+         {
+            tokenToComplete = "";
+            beforeToken = line;
+            return;
+         }
+
+         tokenLine = line;
+      }
+
+      for (int i = tokenLine.length() - 1; i >= 0; i--)
+      {
+         switch (tokenLine.charAt(i))
+         {
+            case ' ' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '.' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '(' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case ')' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '{' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case '}' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case ';' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+         }
+         beforeToken = "";
+         tokenToComplete = tokenLine;
+      }
+
    }
 
 }

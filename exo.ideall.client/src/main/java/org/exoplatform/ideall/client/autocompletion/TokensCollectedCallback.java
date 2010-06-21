@@ -23,8 +23,6 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 
-
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -35,6 +33,6 @@ import org.exoplatform.gwtframework.editor.api.Token;
 public interface TokensCollectedCallback
 {
 
-   void onTokensCollected(List<Token> tokens);
-   
+   void onTokensCollected(List<Token> tokens, String beforeToken, String tokenToComplete, String afterToken);
+
 }

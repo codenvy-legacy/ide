@@ -61,8 +61,6 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    private String editorId;
 
-   private String tokenToComplete;
-
    private String afterToken;
 
    private String beforeToken;
@@ -88,92 +86,21 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
       cursorPos = event.getCursorPositionX();
-      getTokenFromLine(lineContent);
       TokenCollector collector = factories.get(event.getMimeType());
       if (collector != null)
       {
-         collector.getTokens(tokenToComplete, event.getCursorPositionY(), event.getTokenList());
+         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), event.getCursorPositionX(), event
+            .getTokenList());
       }
    }
 
-   /**
-    * @param line
-    */
-   private void getTokenFromLine(String line)
+   public void onTokensCollected(List<Token> tokens, String beforeToken, String tokenToComplete, String afterToken)
    {
-      String tokenLine = "";
-      tokenToComplete = "";
-      afterToken = "";
-      beforeToken = "";
-      if (line.length() > cursorPos - 1)
-      {
-         afterToken = line.substring(cursorPos - 1, line.length());
-         tokenLine = line.substring(0, cursorPos - 1);
+      this.beforeToken = beforeToken;
+      this.afterToken = afterToken;
 
-      }
-      else
-      {
-         afterToken = "";
-         if (line.endsWith(" "))
-         {
-            tokenToComplete = "";
-            beforeToken = line;
-            return;
-         }
-
-         tokenLine = line;
-      }
-
-      for (int i = tokenLine.length() - 1; i >= 0; i--)
-      {
-         switch (tokenLine.charAt(i))
-         {
-            case ' ' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case '.' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case '(' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case ')' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case '{' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case '}' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-
-            case ';' :
-               beforeToken = tokenLine.substring(0, i + 1);
-               tokenToComplete = tokenLine.substring(i + 1);
-               return;
-         }
-         beforeToken = "";
-         tokenToComplete = tokenLine;
-      }
-
-   }
-
-   public void onTokensCollected(List<Token> tokens)
-   {
       int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
       int y = cursorOffsetY + 4;
-      System.out.println("AutoCompletionManager.onTokensCollected()");
       new NewAutoCompleteForm(x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
    }
 
