@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
+import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
@@ -75,6 +76,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       factories.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
       factories.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
       factories.put(MimeType.GOOGLE_GADGET, new JavaScriptTokenCollector(eventBus, context, this));
+      factories.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
