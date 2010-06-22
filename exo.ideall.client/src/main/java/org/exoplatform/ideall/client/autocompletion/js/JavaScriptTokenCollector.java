@@ -127,7 +127,7 @@ public class JavaScriptTokenCollector implements TokenCollector
 
       filterToken(lineNum, tokenFromParser);
       
-      parseTokenLine(line, lineNum);
+      parseTokenLine(line, cursorPos);
 
       tokens.addAll(filteredToken);
       tokensCollectedCallback.onTokensCollected(tokens,beforeToken, tokenToComplete, afterToken);

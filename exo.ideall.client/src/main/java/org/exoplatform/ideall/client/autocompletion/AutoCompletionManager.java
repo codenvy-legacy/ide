@@ -89,8 +89,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       TokenCollector collector = factories.get(event.getMimeType());
       if (collector != null)
       {
-         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), event.getCursorPositionX(), event
-            .getTokenList());
+         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), cursorPos, event.getTokenList());
       }
    }
 
@@ -110,10 +109,26 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    public void onAutocompleteTokenSelected(String token)
    {
       String tokenToPaste = beforeToken + token + afterToken;
-      int newCursorPos = (beforeToken + token).length() + 1;
+
+      int newCursorPos = getCursorPos(beforeToken + token);
+//      if (token.contains("("))
+//      {
+//         newCursorPos = (beforeToken + token).indexOf("(") + 2;
+//      }
+//      else if (token.contains("\n"))
+//      {
+//         newCursorPos = (beforeToken + token).indexOf("\n") + 1;
+//      }
+      
       eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
    }
-
+   
+   private native int getCursorPos(String token)/*-{
+      pattern = "[({]|\\n";
+      d = token.search(pattern);
+      return (d == -1) ? (token.length+1) : (d+2);
+   }-*/;
+   
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()
     */
