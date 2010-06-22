@@ -20,6 +20,9 @@ package org.exoplatform.ideall.client.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -28,6 +31,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.smartgwt.client.types.KeyNames;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -39,7 +45,7 @@ public class GoToLinePresenter
 
    public interface Display
    {
-      HasValue<String> getLineNumberField();
+      TextField getLineNumberField();
 
       HasClickHandlers getGoButton();
 
@@ -60,6 +66,8 @@ public class GoToLinePresenter
    private ApplicationContext context;
    
    private int maxLineNumber;
+   
+   private Browser currentBrowser = BrowserResolver.currentBrowser;   
 
    public GoToLinePresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -94,15 +102,36 @@ public class GoToLinePresenter
          }
       });
 
+      display.getLineNumberField().addKeyPressHandler(new KeyPressHandler(){
+
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getKeyName().equals(KeyNames.ENTER)) 
+            {
+               goToLine();           
+            }               
+         }
+         
+      });
+      
       maxLineNumber = getLineNumber(context.getActiveFile().getContent());
       String labelCaption = "Enter line number (1.." + maxLineNumber +"):";
       display.setCaptionLabel(labelCaption);
    }
    
    private native int getLineNumber(String content) /*-{
-       if (! content) return 1;
+      if (! content) return 1;
 
-       return content.split("\n").length - 1;
+      switch (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser) {          
+         // fix bug with CodeMirror in the IE
+         case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE :
+            return content.split("\n").length;
+            break;
+            
+         default:
+            return content.split("\n").length - 1;     
+      } 
+      
    }-*/;
 
    /**

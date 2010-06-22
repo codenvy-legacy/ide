@@ -179,11 +179,11 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    /**
     * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getLineNumberField()
     */
-   public HasValue<String> getLineNumberField()
+   public TextField getLineNumberField()
    {
       return lineNumberField;
    }
-
+   
    /**
     * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
     */
