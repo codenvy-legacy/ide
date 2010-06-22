@@ -140,7 +140,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
       else
       {
-         display.getBrowserTree().setValue(new Token("", null, -1, null));
+         display.getBrowserTree().setValue(new Token("", null, -1));
       }
    }
 }
