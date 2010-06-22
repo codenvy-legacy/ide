@@ -51,13 +51,13 @@ public class JavaScriptTokenCollector implements TokenCollector
    private static List<Token> templates = new ArrayList<Token>();
 
    private List<Token> filteredToken = new ArrayList<Token>();
-   
+
    private String beforeToken;
-   
+
    private String afterToken;
 
    private String tokenToComplete;
-   
+
    static
    {
       keywords.add(new Token("break", TokenType.KEYWORD, 0, null));
@@ -96,15 +96,15 @@ public class JavaScriptTokenCollector implements TokenCollector
 
       templates.add(new Token("for", TokenType.TEMPLATE, "for-iterate over array",
          "for (var i = 0; i < array.length; i++)\n{\n\n}", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
-      
-      templates
-      .add(new Token("if", TokenType.TEMPLATE, "if-condition", "if (condition)\n{\n\n}", "if (condition)\n{\n\n}"));
-   
+
+      templates.add(new Token("if", TokenType.TEMPLATE, "if-condition", "if (condition)\n{\n\n}",
+         "if (condition)\n{\n\n}"));
+
       templates.add(new Token("if", TokenType.TEMPLATE, "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}",
-      "if (condition)\n{\n\n}\nelse\n{\n\n}"));
-   
+         "if (condition)\n{\n\n}\nelse\n{\n\n}"));
+
       templates.add(new Token("try", TokenType.TEMPLATE, "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}",
-      "try\n{\n\n}\ncatch(e)\n{\n\n}"));
+         "try\n{\n\n}\ncatch(e)\n{\n\n}"));
    }
 
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
@@ -120,17 +120,78 @@ public class JavaScriptTokenCollector implements TokenCollector
    {
 
       List<Token> tokens = new ArrayList<Token>();
-      tokens.addAll(keywords);
-      tokens.addAll(templates);
 
       filteredToken.clear();
 
-      filterToken(lineNum, tokenFromParser);
-      
       parseTokenLine(line, cursorPos);
 
+      //      printTokens(tokenFromParser);
+
+      if (beforeToken.endsWith("."))
+      {
+         filterToken(beforeToken, tokenFromParser);
+      }
+      else
+      {
+         tokens.addAll(keywords);
+         tokens.addAll(templates);
+         filterToken(lineNum, tokenFromParser);
+      }
       tokens.addAll(filteredToken);
-      tokensCollectedCallback.onTokensCollected(tokens,beforeToken, tokenToComplete, afterToken);
+
+      tokensCollectedCallback.onTokensCollected(tokens, beforeToken, tokenToComplete, afterToken);
+   }
+
+   /**
+    * @param beforeToken2
+    * @param tokenFromParser
+    */
+   private void filterToken(String token, List<Token> list)
+   {
+      filteredToken.clear();
+      token = token.substring(0, token.length() - 1);
+      //      if(token.contains(" "))
+      //      {
+      //        token = token.substring(token.lastIndexOf(" "), token.length());
+      //        
+      //      }
+
+      String tokens[] = token.split("[({)}; ]");
+      Token t = null;
+      if (tokens.length != 0)
+      {
+         t = findToken(tokens[tokens.length - 1], list);
+      }
+      else
+      {
+         t = findToken(token, list);
+      }
+      if (t != null)
+      {
+         if (t.getSubTokenList() != null)
+         {
+            for (Token sub : t.getSubTokenList())
+            {
+               filteredToken.add(sub);
+            }
+         }
+      }
+   }
+
+   /**
+    * @param token
+    * @return
+    */
+   private Token findToken(String token, List<Token> list)
+   {
+      for (Token t : list)
+      {
+         if (token.equals(t.getName()))
+         {
+            return t;
+         }
+      }
+      return null;
    }
 
    /**
@@ -158,7 +219,7 @@ public class JavaScriptTokenCollector implements TokenCollector
       if (lastFunction != null && lastFunction.getSubTokenList() != null)
       {
          filterSubToken(currentLine, lastFunction.getSubTokenList());
-         
+
       }
 
    }
@@ -180,7 +241,6 @@ public class JavaScriptTokenCollector implements TokenCollector
          filteredToken.add(t);
       }
    }
-
 
    /**
     * @param line
@@ -248,11 +308,34 @@ public class JavaScriptTokenCollector implements TokenCollector
                beforeToken = tokenLine.substring(0, i + 1);
                tokenToComplete = tokenLine.substring(i + 1);
                return;
+
+            case '[' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            case ']' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
          }
          beforeToken = "";
          tokenToComplete = tokenLine;
       }
 
+   }
+
+   private void printTokens(List<Token> token)
+   {
+      for (Token t : token)
+      {
+         if (t.getSubTokenList() != null)
+         {
+            printTokens(t.getSubTokenList());
+         }
+         System.out.println(t.getName() + " " + t.getType());
+      }
+      System.out.println("+++++++++++++++++++++++++");
    }
 
 }
