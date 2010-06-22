@@ -25,18 +25,6 @@
   </component>
 
   <component>
-    <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>
-    <init-params>
-       <value-param>
-         <name>keyFile</name>
-         <description>shindig key file locaton</description>
-         <value>../gatein/conf/gadgets/key.txt</value>
-       </value-param>
-    </init-params>
-    
-  </component>
-  
-  <component>
     <type>org.exoplatform.ideall.conversationstate.RestConversationState</type>
   </component>
   

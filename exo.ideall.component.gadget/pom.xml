@@ -17,6 +17,21 @@
 			<artifactId>exo.portal.component.application-registry</artifactId>
 			<type>jar</type>
 		</dependency>
+		  <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <scope>test</scope>
+      </dependency>
+        <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.testframework</artifactId>
+      <scope>test</scope>
+    </dependency> 
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>

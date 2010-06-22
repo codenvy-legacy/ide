@@ -31,11 +31,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>exo.ws.testframework</artifactId>
-      <scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.exoplatform.core</groupId>
 			<artifactId>exo.core.component.security.core</artifactId>
 		</dependency>
