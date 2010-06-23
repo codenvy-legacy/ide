@@ -56,7 +56,7 @@ public class IDE
 
       new GadgetServiceImpl(eventBus, IDELoader.getInstance());
 
-      new TemplateServiceImpl(eventBus, IDELoader.getInstance());
+     // new TemplateServiceImpl(eventBus, IDELoader.getInstance());
 
       new WadlServiceImpl(eventBus, IDELoader.getInstance());
 

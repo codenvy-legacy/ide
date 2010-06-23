@@ -47,24 +47,25 @@ public class TemplateServiceImpl extends TemplateService
    private static final String CONTEXT = "/templates";
 
    private static final String TEMPLATE = "template-";
+   
+   private String restContext;
 
    private HandlerManager eventBus;
 
    private Loader loader;
 
-   public TemplateServiceImpl(HandlerManager eventBus, Loader loader)
+   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String restContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
+      this.restContext = restContext;
+      
    }
 
    @Override
    public void createTemplate(Template template)
    {
-      String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
-            + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
-
+      String url =  restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";   
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
 
@@ -79,10 +80,8 @@ public class TemplateServiceImpl extends TemplateService
    @Override
    public void deleteTemplate(Template template)
    {
-      String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
-            + CONTEXT + "/" + template.getNodeName();
-
+      String url = restContext + CONTEXT + "/" + template.getNodeName();
+      System.out.println("TemplateServiceImpl.deleteTemplate()"+url);
       String errorMessage = "Registry service is not deployed.<br>Template not found.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
       TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());
@@ -96,9 +95,8 @@ public class TemplateServiceImpl extends TemplateService
    @Override
    public void getTemplates()
    {
-      String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION
-            + CONTEXT + "/?noCache=" + Random.nextInt();
+      String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
+      System.out.println("TemplateServiceImpl.getTemplates()"+url);
 
       TemplateList templateList = new TemplateList();
 
