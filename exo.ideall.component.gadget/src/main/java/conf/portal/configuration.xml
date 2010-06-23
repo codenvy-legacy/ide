@@ -20,7 +20,7 @@
 		<type>org.exoplatform.ideall.service.gatein.RestGadgetRegistryService</type>
 	</component>
 	
-	<!-- component>
+	<component>
     <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>
     <init-params>
        <value-param>
@@ -29,7 +29,7 @@
          <value>../gatein/conf/gadgets/key.txt</value>
        </value-param>
     </init-params>
-  </component-->
+  </component>
   
 
 	<external-component-plugins>
