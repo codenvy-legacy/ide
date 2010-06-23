@@ -14,11 +14,10 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<wiki.url>http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29</wiki.url>
-		<exo.product.name>ideall</exo.product.name>
+		<!-- exo.product.name>ideall</exo.product.name>
 		<org.exoplatform.kernel.version>2.2.1-GA</org.exoplatform.kernel.version>
-		<org.exoplatform.core.version>2.3.1-GA</org.exoplatform.core.version>
-		<org.exoplatform.ws.version>2.1.1-GA</org.exoplatform.ws.version>
+		<org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
+		<org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
 		<org.exoplatform.jcr.version>1.12.1-GA</org.exoplatform.jcr.version>
 		<org.exoplatform.gwtframework.version>1.0-Beta04-SNAPSHOT</org.exoplatform.gwtframework.version>
 		<org.exoplatform.gatein.version>3.0.0-GA</org.exoplatform.gatein.version>
@@ -27,7 +26,21 @@
 		<shindig.version>1.1-BETA5-incubating</shindig.version>
 		<gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
 		<maven.compiler.source>1.5</maven.compiler.source>
-		<maven.compiler.target>1.5</maven.compiler.target>
+		<maven.compiler.target>1.5</maven.compiler.target-->
+		<org.exoplatform.kernel.version>2.2.2-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
+    <org.shindig.version>1.0-r790473-Patch02</org.shindig.version>
+	  <gwt.version>2.0.3</gwt.version>
+    <smartgwt.version>2.1</smartgwt.version>
+    <shindig.version>1.1-BETA5-incubating</shindig.version>
+    <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>	
+    <org.slf4j.version>1.5.6</org.slf4j.version>
+    <org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
+    <org.exoplatform.gwtframework.version>1.0-Beta04-SNAPSHOT</org.exoplatform.gwtframework.version>
 	</properties>
 	
 	<scm>
@@ -54,6 +67,11 @@
 				<artifactId>exo.core.component.security.core</artifactId>
 				<version>${org.exoplatform.core.version}</version>
 			</dependency>
+      <dependency>
+        <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.document</artifactId>
+        <version>${org.exoplatform.core.version}</version>
+       </dependency>
 			<dependency>
 				<groupId>org.exoplatform.ws</groupId>
 				<artifactId>exo.ws.frameworks.servlet</artifactId>
@@ -169,6 +187,11 @@
 				<artifactId>gwt-user</artifactId>
 				<version>${gwt.version}</version>
 			</dependency>
+      <dependency>
+       <groupId>com.google.gwt</groupId>
+       <artifactId>gwt-dev</artifactId>
+       <version>${gwt.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>com.smartgwt</groupId>
 				<artifactId>smartgwt</artifactId>
@@ -204,11 +227,21 @@
 				<artifactId>shindig-social-api</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
-			<dependency>
+			<!-- dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>1.2.14</version>
-			</dependency>
+			</dependency-->
+			<dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.8</version>
+      </dependency> 
 			<dependency>
 				<groupId>com.google.code.guice</groupId>
 				<artifactId>guice</artifactId>
