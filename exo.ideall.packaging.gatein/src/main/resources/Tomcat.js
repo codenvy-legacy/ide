@@ -123,12 +123,9 @@ Tomcat.prototype.postDeploy = function(product) {
 	
   // Copy configuration
   new java.io.File(this.gateInConfigDir).mkdirs();
+//  eXo.core.IOUtil.cp(eXo.env.currentDir + "/../../component/common/src/main/java/conf/configuration-tomcat.properties", this.gateInConfigDir + "/configuration.properties")
   eXo.core.IOUtil.cp(eXo.env.currentDir + "/src/main/resources/configuration.properties", this.gateInConfigDir + "/configuration.properties")
 
-  // Copy sample skin in the deploy directory without affecting gatein.ear/META-INF/application.xml
-//  eXo.core.IOUtil.cp(eXo.env.currentDir + "/../../examples/skins/simpleskin/target/gatein-sample-skin.war", this.deployWebappDir);
-
-  
   var configFileInWar = "WEB-INF/conf/configuration.xml";
   var portalwar = new java.io.File(this.deployWebappDir + "/" + product.portalwar);
   eXo.System.info("CONF", "Patching " + configFileInWar + " in " + portalwar + " : remove wsrp configuration");
