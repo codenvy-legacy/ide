@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
@@ -31,6 +32,7 @@ import org.exoplatform.gwtframework.ui.client.component.autocomplete.Autocomplet
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
 import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -77,6 +79,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       factories.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
       factories.put(MimeType.GOOGLE_GADGET, new JavaScriptTokenCollector(eventBus, context, this));
       factories.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
+      factories.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus, context, this));
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
@@ -108,17 +111,70 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteTokenSelected(java.lang.String)
     */
-   public void onAutocompleteTokenSelected(String token)
+   public void onAutocompleteTokenSelected(Token token)
    {
-      String tokenToPaste = beforeToken + token + afterToken;
-      
-      int newCursorPos = 0;
 
-      if (token.contains("\n"))
-         newCursorPos = getCursorPos(beforeToken + token);
-      else
-         newCursorPos = (beforeToken + token).length() + 1;
-      
+      String tokenToPaste = "";
+      int newCursorPos = 1;
+      switch (token.getType())
+      {
+         case FUNCTION :
+            if (token.getCode() != null && !"".equals(token.getCode()))
+            {
+               tokenToPaste = beforeToken + token.getCode() + "()" + afterToken;
+               newCursorPos = (beforeToken + token.getCode() + "(").length() + 1;
+            }
+            else
+            {
+               tokenToPaste = beforeToken + token.getName() + "()" + afterToken;
+               newCursorPos = (beforeToken + token.getName() + "(").length() + 1;
+            }
+            break;
+
+         case TEMPLATE :
+            if (token.getCode() != null && !"".equals(token.getCode()))
+            {
+               tokenToPaste = beforeToken + token.getCode() + afterToken;
+               newCursorPos = getCursorPos(beforeToken + token.getCode());
+            }
+            else
+            {
+               tokenToPaste = beforeToken + token.getName() + afterToken;
+               newCursorPos = getCursorPos(beforeToken + token.getName());
+            }
+            break;
+
+         case ATTRIBUTE :
+            if (!beforeToken.endsWith(" "))
+               beforeToken += " ";
+            tokenToPaste = beforeToken + token.getCode() + afterToken;
+
+            newCursorPos = (beforeToken + token.getCode()).lastIndexOf("\"") + 1;
+
+            break;
+
+         case TAG :
+            if (beforeToken.endsWith("<"))
+               beforeToken = beforeToken.substring(0, beforeToken.length() - 1);
+            tokenToPaste = beforeToken + token.getCode() + afterToken;
+            if (token.getCode().contains("/"))
+               newCursorPos = (beforeToken + token.getCode()).indexOf("/", beforeToken.length());
+            else
+               newCursorPos = (beforeToken + token.getCode()).length() + 1;
+            break;
+         default :
+            if (token.getCode() != null && !"".equals(token.getCode()))
+            {
+               tokenToPaste = beforeToken + token.getCode() + afterToken;
+               newCursorPos = (beforeToken + token.getCode()).length() + 1;
+            }
+            else
+            {
+               tokenToPaste = beforeToken + token.getName() + afterToken;
+               newCursorPos = (beforeToken + token.getName()).length() + 1;
+            }
+            break;
+      }
       eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
    }
 

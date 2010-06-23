@@ -33,9 +33,9 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class TokenImageResolver
 {
-   
+
    private static HashMap<TokenType, ImageResource> images = new HashMap<TokenType, ImageResource>();
-   
+
    static
    {
       images.put(TokenType.FUNCTION, IDEImageBundle.INSTANCE.functionItem());
@@ -44,16 +44,18 @@ public class TokenImageResolver
       images.put(TokenType.PROPERTY, IDEImageBundle.INSTANCE.propertyItem());
       images.put(TokenType.TEMPLATE, IDEImageBundle.INSTANCE.templateItem());
       images.put(TokenType.KEYWORD, IDEImageBundle.INSTANCE.keywordItem());
+      images.put(TokenType.TAG, IDEImageBundle.INSTANCE.workspace());
+      images.put(TokenType.ATTRIBUTE, IDEImageBundle.INSTANCE.about());
    }
-   
+
    public static Image getImage(TokenType type)
    {
       ImageResource resource = images.get(type);
-      if(resource == null)
+      if (resource == null)
       {
          resource = IDEImageBundle.INSTANCE.copy();
       }
-     
+
       Image image = new Image(resource);
       return image;
    }
@@ -65,6 +67,5 @@ public class TokenImageResolver
    {
       return images;
    }
-   
-   
+
 }
