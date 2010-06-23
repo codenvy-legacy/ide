@@ -34,12 +34,4 @@ public interface BuildNumber extends com.google.gwt.i18n.client.Messages
    @Key("version")
    String version();
 
-   /**
-    * Translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\"".
-    * 
-    * @return translated "\"http://wiki-int.exoplatform.org/display/exoproducts/IDE+%28Development+tool%29\""
-    */
-   @DefaultMessage("")
-   @Key("wiki")
-   String wiki();
 }
