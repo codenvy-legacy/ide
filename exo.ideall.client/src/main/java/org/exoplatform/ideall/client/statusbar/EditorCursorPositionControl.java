@@ -21,6 +21,7 @@ package org.exoplatform.ideall.client.statusbar;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
+import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
@@ -41,37 +42,36 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
 
    private ApplicationContext context;
 
+   private int row;
+
+   private int column;
+
    public EditorCursorPositionControl(HandlerManager eventBus, ApplicationContext context)
    {
       super(ID);
 
       this.context = context;
 
-      setVisible(true);
+      setVisible(false);
       setEnabled(true);
-      setSize(20);
+      setSize(70);
       setFireEventOnSingleClick(true);
 
-      setText("&nbsp;");
-      
+      //setText("&nbsp;");
+      setTextAlignment(StatusTextAlign.MIDDLE);
+
       setEvent(new GoToLineEvent());
 
       eventBus.addHandler(EditorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
-   private void setCursorPosition(int row, int col)
+   private void setCursorPosition(int row, int column)
    {
-      String html =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height: 16px; width:100%;\"><tr>"
-            + "</td>" +
-            		"<td style=\"width:100%;\">&nbsp;</td>" +
-            		"<td id=\"ide-statuscontrol-cursorposition\" " +
-            		"onmouseover=\"var s = document.getElementById('ide-statuscontrol-cursorposition').style; s.color='#005500';\"" +
-                  "onmouseout=\"var s = document.getElementById('ide-statuscontrol-cursorposition').style; s.color='#000000';\"" +
-            		"style=\"cursor:pointer; border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \">" +
-            		"<nobr>" + row + " : " + col + "</nobr></td><td>&nbsp;</td></tr></table>";
-      setText(html);
+      this.row = row;
+      this.column = column;
+
+      setText("<nobr>" + row + " : " + column + "</nobr>");
    }
 
    /**
@@ -94,17 +94,19 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      TextEditor editor = event.getEditor();
-
-      if (editor == null)
+      if (event.getFile() == null)
       {
          setText("&nbsp;");
+         setEvent(null);
          return;
       }
-            
-      if(editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
+
+      setEvent(new GoToLineEvent());
+
+      TextEditor editor = event.getEditor();
+      if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
       {
-          setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
+         setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
       }
       else
       {
