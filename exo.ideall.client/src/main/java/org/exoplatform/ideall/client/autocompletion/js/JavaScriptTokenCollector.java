@@ -95,16 +95,16 @@ public class JavaScriptTokenCollector implements TokenCollector
       keywords.add(new Token("yield", TokenType.KEYWORD));
 
       templates.add(new Token("for", TokenType.TEMPLATE, "for-iterate over array",
-         "for (var i = 0; i < array.length; i++)\n{\n\n}", "for (var i = 0; i < array.length; i++)\n{\n\n}"));
+         "for (var i = 0; i < array.length; i++)\n{\n\n}", "<pre>for (var i = 0; i < array.length; i++)\n{\n\n}</pre>"));
 
       templates.add(new Token("if", TokenType.TEMPLATE, "if-condition", "if (condition)\n{\n\n}",
-         "if (condition)\n{\n\n}"));
+         "<pre>if (condition)\n{\n\n}</pre>"));
 
       templates.add(new Token("if", TokenType.TEMPLATE, "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}",
-         "if (condition)\n{\n\n}\nelse\n{\n\n}"));
+         "<pre>if (condition)\n{\n\n}\nelse\n{\n\n}</pre>"));
 
       templates.add(new Token("try", TokenType.TEMPLATE, "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}",
-         "try\n{\n\n}\ncatch(e)\n{\n\n}"));
+         "<pre>try\n{\n\n}\ncatch(e)\n{\n\n}</pre>"));
    }
 
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
@@ -124,8 +124,6 @@ public class JavaScriptTokenCollector implements TokenCollector
       filteredToken.clear();
 
       parseTokenLine(line, cursorPos);
-
-      //      printTokens(tokenFromParser);
 
       if (beforeToken.endsWith("."))
       {
@@ -150,11 +148,6 @@ public class JavaScriptTokenCollector implements TokenCollector
    {
       filteredToken.clear();
       token = token.substring(0, token.length() - 1);
-      //      if(token.contains(" "))
-      //      {
-      //        token = token.substring(token.lastIndexOf(" "), token.length());
-      //        
-      //      }
 
       String tokens[] = token.split("[({)}; ]");
       Token t = null;

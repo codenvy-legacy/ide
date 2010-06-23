@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -30,8 +32,6 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.vfs.api.File;
-
-import java.util.List;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -140,7 +140,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
       else
       {
-         display.getBrowserTree().setValue(new Token("", null, -1));
+         display.getBrowserTree().setValue(new Token("", null));
       }
    }
 }

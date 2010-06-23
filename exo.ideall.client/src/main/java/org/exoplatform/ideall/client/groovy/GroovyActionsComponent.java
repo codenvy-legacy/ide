@@ -32,6 +32,7 @@ import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.client.groovy.event.ValidateGroovyScriptEvent;
+import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.groovy.GroovyService;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
@@ -245,7 +246,8 @@ public class GroovyActionsComponent extends AbstractApplicationComponent impleme
       {
          path = "/" + path;
       }
-      String url = "/rest" + path;
+      String url = Configuration.getInstance().getContext() + path;
+     
       WadlService.getInstance().getWadl(url);
    }
 
