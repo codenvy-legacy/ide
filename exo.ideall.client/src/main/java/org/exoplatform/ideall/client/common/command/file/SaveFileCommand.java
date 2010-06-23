@@ -45,9 +45,9 @@ public class SaveFileCommand extends IDECommand implements EditorActiveFileChang
    EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
 {
 
-   public static final String ID = "File/Save File";
+   public static final String ID = "File/Save";
 
-   public static final String TITLE = "Save File";
+   public static final String TITLE = "Save";
 
    public SaveFileCommand()
    {

@@ -60,8 +60,8 @@ import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
-import org.exoplatform.ideall.client.common.command.view.ShowOutlineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
+import org.exoplatform.ideall.client.outline.ShowOutlineControl;
 import org.exoplatform.ideall.client.statusbar.EditorCursorPositionControl;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
@@ -118,7 +118,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
       addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
-      addCommand(new OpenFileWithCommand()).disable().hide().dockOnToolbar();
+      addCommand(new OpenFileWithCommand()).disable().hide();
 
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
 
@@ -137,11 +137,12 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
       addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();
-      addCommand(new SaveAllFilesCommand()).disable().hide().dockOnToolbar();
-      addCommand(new SaveFileAsTemplateCommand()).disable().hide().dockOnToolbar();
+      addCommand(new SaveAllFilesCommand()).disable().hide();
+      addCommand(new SaveFileAsTemplateCommand()).disable().hide();
 
-      addCommand(new CreateNewFolderCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new RenameItemCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      CreateNewFolderCommand createFolderControl = new CreateNewFolderCommand();
+      
+      addCommand(createFolderControl).disable().hide().setDelimiterBefore();
       /*
        * COPY, CUT, PASTE COMMAND
        */
@@ -149,6 +150,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
       addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
 
+      addCommand(new RenameItemCommand()).disable().hide().setDelimiterBefore();
       addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
       addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
       addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
@@ -163,7 +165,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new FindTextCommand()).disable().hide().dockOnToolbar().setDelimiterBefore();
       addCommand(new ShowLineNumbersCommand()).disable().hide();
-      addCommand(new DeleteLineControl()).disable().hide().dockOnToolbar();
+      addCommand(new DeleteLineControl()).disable().hide();
 
       /*
        * VIEW GROUP
@@ -171,9 +173,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 
       addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true);
       addCommand(new GetFileURLCommand()).disable().hide();
-      addCommand(new GoToFolderCommand()).disable().hide().dockOnToolbar();
-      addCommand(new GoToLineControl()).disable().hide().dockOnToolbar();
-      addCommand(new ShowOutlineControl()).disable().hide().setDelimiterBefore().dockOnToolbar();
+      addCommand(new GoToFolderCommand()).disable().hide();
+      addCommand(new GoToLineControl()).disable().hide();
+      addCommand(new ShowOutlineControl()).setDelimiterBefore().dockOnToolbar();
 
       /*
        * RUN GROUP
@@ -193,6 +195,8 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
       newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
       newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
+      
+      newFilePopupMenuCommand.getCommands().add(createFolderControl);
 
       /*
        * STATUS BAR

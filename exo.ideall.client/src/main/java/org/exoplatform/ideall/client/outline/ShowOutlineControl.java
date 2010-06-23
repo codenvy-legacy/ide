@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.common.command.view;
+package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
@@ -45,6 +45,8 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
       setPrompt("Show Outline");
       setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
       setEvent(new ShowOutlineEvent(true));
+      setEnabled(true);
+      
    }
 
    @Override
@@ -62,16 +64,16 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
       if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
-         setEnabled(false);
+         //setEnabled(false);
          return;
       }
 
-      boolean isProperType = (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
+      boolean visible = (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
                || event.getFile().getContentType().equals(MimeType.GOOGLE_GADGET));
-      setVisible(isProperType);
+      setVisible(visible);
       boolean isOpened = context.getOpenedForms().contains(CodeHelperForm.ID);
-      boolean isEnabled = !isOpened && isProperType;
-      setEnabled(isEnabled);
+      boolean isEnabled = !isOpened && visible;
+      //setEnabled(isEnabled);
    }
 
    /**
@@ -80,7 +82,7 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
    public void onOpenedFormsStateChanged(OpenedFormsStateChangedEvent event)
    {  
       boolean isOpened = context.getOpenedForms().contains(CodeHelperForm.ID);
-      setEnabled(!isOpened);
+      //setEnabled(!isOpened);
    }
 
 }

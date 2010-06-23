@@ -41,9 +41,9 @@ public class SaveAllFilesCommand extends IDECommand implements EditorFileContent
    FileContentSavedHandler, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "File/Save All Files";
+   public static final String ID = "File/Save All";
 
-   public static final String TITLE = "Save All Files";
+   public static final String TITLE = "Save All";
 
    public SaveAllFilesCommand()
    {

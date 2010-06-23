@@ -38,9 +38,9 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    ItemsSelectedHandler
 {
 
-   private static final String ID = "File/Save File As...";
+   private static final String ID = "File/Save As...";
 
-   private static final String TITLE = "Save File As...";
+   private static final String TITLE = "Save As...";
 
    private boolean activeFileSelected = false;
    
