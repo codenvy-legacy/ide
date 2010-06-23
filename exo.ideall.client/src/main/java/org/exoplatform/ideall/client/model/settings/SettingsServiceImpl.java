@@ -50,7 +50,7 @@ public class SettingsServiceImpl extends SettingsService
    private HandlerManager eventBus;
 
    private Loader loader;
-
+   
    public SettingsServiceImpl(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
@@ -69,19 +69,29 @@ public class SettingsServiceImpl extends SettingsService
    public void getSettings(ApplicationContext context)
    {
       String url = getURL(context) + "/?nocache=" + Random.nextInt();
-
-      ApplicationContextReceivedEvent event = new ApplicationContextReceivedEvent(context);
-      ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(eventBus, context);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      getSettings(context, url);
    }
 
    @Override
    public void saveSetting(ApplicationContext context)
    {
       String url = getURL(context) + "/?createIfNotExist=true";
-
+      saveSettings(context, url);
+   }
+   
+   @Override
+   protected void getSettings(ApplicationContext context, String url)
+   {
+      ApplicationContextReceivedEvent event = new ApplicationContextReceivedEvent(context);
+      ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(eventBus, context);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+   
+   @Override
+   protected void saveSettings(ApplicationContext context, String url)
+   {
       ApplicationContextMarshaller marshaller = new ApplicationContextMarshaller(context);
       ApplicationContextSavedEvent event = new ApplicationContextSavedEvent(context);
 

@@ -47,4 +47,8 @@ public abstract class SettingsService
 
    public abstract void saveSetting(ApplicationContext context);
    
+   protected abstract void getSettings(ApplicationContext context, String url);
+   
+   protected abstract void saveSettings(ApplicationContext context, String url);
+   
 }
