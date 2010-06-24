@@ -29,11 +29,16 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.KeyNames;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyUpEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyUpHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,7 +50,9 @@ public class GoToLinePresenter
 
    public interface Display
    {
-      TextField getLineNumberField();
+      com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField();
+      
+      HasValue<String> getLineNumberValue();
 
       HasClickHandlers getGoButton();
 
@@ -66,6 +73,8 @@ public class GoToLinePresenter
    private ApplicationContext context;
    
    private int maxLineNumber;
+   
+   private HandlerRegistration keyUpHandler;
    
    private Browser currentBrowser = BrowserResolver.currentBrowser;   
 
@@ -95,24 +104,17 @@ public class GoToLinePresenter
 
          public void onClick(ClickEvent event)
          {
-            if (display.getLineNumberField().getValue() != null && !"".equals(display.getLineNumberField().getValue()) )
+            if (display.getLineNumberValue().getValue() != null && !"".equals(display.getLineNumberValue().getValue()) )
             {
                goToLine();
             }
          }
       });
 
-      display.getLineNumberField().addKeyPressHandler(new KeyPressHandler(){
+      keyUpHandler = display.getLineNumberField().addKeyUpHandler(new KeyUPHandler());
 
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getKeyName().equals(KeyNames.ENTER)) 
-            {
-               goToLine();           
-            }               
-         }
-         
-      });
+
+        
       
       maxLineNumber = getLineNumber(context.getActiveFile().getContent());
       String labelCaption = "Enter line number (1.." + maxLineNumber +"):";
@@ -139,7 +141,7 @@ public class GoToLinePresenter
     */
    private void goToLine()
    {
-      String lineString = display.getLineNumberField().getValue();
+      String lineString = display.getLineNumberValue().getValue();
       try
       {
          int line = Integer.parseInt(lineString);
@@ -150,7 +152,17 @@ public class GoToLinePresenter
          }
          else
          {
+            keyUpHandler.removeHandler();
             Dialogs.getInstance().showError("Line number out of range");
+            new Timer()
+            {
+               
+               @Override
+               public void run()
+               {
+                  keyUpHandler = display.getLineNumberField().addKeyUpHandler(new KeyUPHandler());
+               }
+            }.schedule(1000);
          }
       }
       catch (NumberFormatException e)
@@ -164,4 +176,20 @@ public class GoToLinePresenter
       handlers.removeHandlers();
    }
 
+   private class KeyUPHandler implements KeyUpHandler
+   {
+
+      /**
+       * @see com.smartgwt.client.widgets.form.fields.events.KeyUpHandler#onKeyUp(com.smartgwt.client.widgets.form.fields.events.KeyUpEvent)
+       */
+      public void onKeyUp(KeyUpEvent event)
+      {
+         if (event.getKeyName().equals(KeyNames.ENTER)) 
+         {
+            goToLine();           
+         }              
+      }
+      
+   }
+   
 }

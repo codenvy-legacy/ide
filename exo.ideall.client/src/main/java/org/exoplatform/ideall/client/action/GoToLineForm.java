@@ -25,6 +25,7 @@ import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
@@ -35,6 +36,8 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.form.fields.events.KeyUpEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyUpHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -179,7 +182,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    /**
     * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getLineNumberField()
     */
-   public TextField getLineNumberField()
+   public com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField()
    {
       return lineNumberField;
    }
@@ -190,6 +193,14 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    public void setCaptionLabel(String caption)
    {
       this.caption.setDefaultValue(caption);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getLineNumberValue()
+    */
+   public HasValue<String> getLineNumberValue()
+   {
+      return lineNumberField;
    }
 
 }
