@@ -167,8 +167,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       reservedHotkeys.put("Ctrl+90", "Undo");         //Ctrl+Z
       reservedHotkeys.put("Ctrl+89", "Redo");         //Ctrl+Y
       reservedHotkeys.put("Ctrl+65", "Select All");   //Ctrl+A
-      reservedHotkeys.put("Ctrl+33", "Go to the start"); //Ctrl+PgUp
-      reservedHotkeys.put("Ctrl+34", "Go to the end");   //Ctrl+PgDown
+      reservedHotkeys.put("Ctrl+36", "Go to the start"); //Ctrl+Home
+      reservedHotkeys.put("Ctrl+35", "Go to the end");   //Ctrl+End
       
       context.setReservedHotkeys(reservedHotkeys);
       
