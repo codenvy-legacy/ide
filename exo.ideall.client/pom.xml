@@ -97,6 +97,12 @@
 			<artifactId>exo.ideall.component.commons</artifactId>
 			<scope>test</scope>
 		</dependency>
+                <dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.component.gadget</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -581,7 +587,7 @@
 						<executions>
 							<execution>
 								<goals>
-									<goal>compile</goal>
+									<!--goal>compile</goal-->
 									<goal>test</goal>
 								</goals>
 							</execution>
