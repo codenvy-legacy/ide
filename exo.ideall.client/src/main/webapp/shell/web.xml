@@ -17,11 +17,13 @@
     <param-value>
       org.apache.shindig.common.PropertiesModule:
       org.apache.shindig.gadgets.DefaultGuiceModule:
-      org.apache.shindig.social.sample.SampleModule:
-      org.apache.shindig.gadgets.oauth.OAuthModule:
-      org.apache.shindig.common.cache.ehcache.EhCacheModule
+      org.apache.shindig.gadgets.servlet.AuthenticationModule:
+      org.exoplatform.portal.gadget.core.ExoOAuthModule:
+      org.apache.shindig.common.cache.ehcache.EhCacheModule:
+      org.exoplatform.portal.gadget.core.ExoModule
     </param-value>
   </context-param>
+
 
   <listener>
     <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
