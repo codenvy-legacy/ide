@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
@@ -51,7 +52,7 @@ public class GoToLinePresenter
    public interface Display
    {
       com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField();
-      
+
       HasValue<String> getLineNumberValue();
 
       HasClickHandlers getGoButton();
@@ -59,8 +60,10 @@ public class GoToLinePresenter
       HasClickHandlers getCancelButton();
 
       void closeForm();
-      
+
       void setCaptionLabel(String caption);
+      
+      void removeFocusFromLineNumber();
 
    }
 
@@ -71,12 +74,12 @@ public class GoToLinePresenter
    private Handlers handlers;
 
    private ApplicationContext context;
-   
+
    private int maxLineNumber;
-   
+
    private HandlerRegistration keyUpHandler;
-   
-   private Browser currentBrowser = BrowserResolver.currentBrowser;   
+
+   private Browser currentBrowser = BrowserResolver.currentBrowser;
 
    public GoToLinePresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -104,7 +107,7 @@ public class GoToLinePresenter
 
          public void onClick(ClickEvent event)
          {
-            if (display.getLineNumberValue().getValue() != null && !"".equals(display.getLineNumberValue().getValue()) )
+            if (display.getLineNumberValue().getValue() != null && !"".equals(display.getLineNumberValue().getValue()))
             {
                goToLine();
             }
@@ -112,29 +115,27 @@ public class GoToLinePresenter
       });
 
       keyUpHandler = display.getLineNumberField().addKeyUpHandler(new KeyUPHandler());
-
-
-        
       
+
       maxLineNumber = getLineNumber(context.getActiveFile().getContent());
-      String labelCaption = "Enter line number (1.." + maxLineNumber +"):";
+      String labelCaption = "Enter line number (1.." + maxLineNumber + "):";
       display.setCaptionLabel(labelCaption);
    }
-   
-   private native int getLineNumber(String content) /*-{
-      if (! content) return 1;
 
-      switch (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser) {          
-         // fix bug with CodeMirror in the IE
-         case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE :
-            return content.split("\n").length;
-            break;
-            
-         default:
-            return content.split("\n").length - 1;     
-      } 
-      
-   }-*/;
+   private native int getLineNumber(String content) /*-{
+                                                    if (! content) return 1;
+
+                                                    switch (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser) {          
+                                                    // fix bug with CodeMirror in the IE
+                                                    case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE :
+                                                    return content.split("\n").length;
+                                                    break;
+                                                    
+                                                    default:
+                                                    return content.split("\n").length - 1;     
+                                                    } 
+                                                    
+                                                    }-*/;
 
    /**
     * 
@@ -145,28 +146,20 @@ public class GoToLinePresenter
       try
       {
          int line = Integer.parseInt(lineString);
-         if (line >0 && line <= maxLineNumber)
+         if (line > 0 && line <= maxLineNumber)
          {
             display.closeForm();
             eventBus.fireEvent(new EditorGoToLineEvent(line));
          }
          else
          {
-            keyUpHandler.removeHandler();
-            Dialogs.getInstance().showError("Line number out of range");
-            new Timer()
-            {
-               
-               @Override
-               public void run()
-               {
-                  keyUpHandler = display.getLineNumberField().addKeyUpHandler(new KeyUPHandler());
-               }
-            }.schedule(1000);
+             display.removeFocusFromLineNumber();
+             Dialogs.getInstance().showError("Line number out of range");
          }
       }
       catch (NumberFormatException e)
       {
+         display.removeFocusFromLineNumber();
          Dialogs.getInstance().showError("Can't parse line number.");
       }
    }
@@ -184,12 +177,12 @@ public class GoToLinePresenter
        */
       public void onKeyUp(KeyUpEvent event)
       {
-         if (event.getKeyName().equals(KeyNames.ENTER)) 
+         if (event.getKeyName().equals(KeyNames.ENTER))
          {
-            goToLine();           
-         }              
+            goToLine();
+         }
       }
-      
+
    }
-   
+
 }

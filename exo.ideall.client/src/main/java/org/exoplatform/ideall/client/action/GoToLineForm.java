@@ -25,7 +25,6 @@ import org.exoplatform.ideall.client.component.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
@@ -36,8 +35,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.form.fields.events.KeyUpEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyUpHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -63,6 +60,10 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    private IButton cancelButton;
    
    private StaticTextItem caption;
+   
+   private DynamicForm paramsForm; 
+   
+   private DynamicForm buttonsForm;
    
    public GoToLineForm(HandlerManager eventBus, ApplicationContext context)
    {
@@ -99,7 +100,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    
    private void createFieldForm()
    {
-      DynamicForm paramsForm = new DynamicForm();
+      paramsForm = new DynamicForm();
       paramsForm.setPadding(5);
       paramsForm.setWidth(340);
       paramsForm.setLayoutAlign(Alignment.CENTER);
@@ -128,7 +129,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    private void createButtons()
    {
-      DynamicForm buttonsForm = new DynamicForm();
+      buttonsForm = new DynamicForm();
       buttonsForm.setPadding(5);
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
@@ -201,6 +202,14 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    public HasValue<String> getLineNumberValue()
    {
       return lineNumberField;
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#removeFocusFromLineNumber()
+    */
+   public void removeFocusFromLineNumber()
+   {
+      buttonsForm.focusInItem(0);
    }
 
 }
