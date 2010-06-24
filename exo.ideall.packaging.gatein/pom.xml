@@ -35,7 +35,7 @@
             <groupId>org.gatein.tools</groupId>
             <artifactId>packager</artifactId>
             <type>zip</type>
-            <version>1.0.0-CR01</version>
+            <version>1.0.0-CR02</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
@@ -270,6 +270,19 @@
                             <tasks>
                                 <copy file="${basedir}/src/main/resources/Tomcat.js"
                                     tofile="${project.build.directory}/packager/javascript/eXo/server/Tomcat.js" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                     <execution>
+                        <id>copy-server.xml</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="${basedir}/src/main/resources/server.xml"
+                                    tofile="${project.build.directory}/tomcat/conf/server.xml" overwrite="true" />
                             </tasks>
                         </configuration>
                         <goals>
