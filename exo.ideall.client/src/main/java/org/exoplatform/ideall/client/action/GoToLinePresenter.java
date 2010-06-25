@@ -132,7 +132,7 @@ public class GoToLinePresenter
                                                     break;
                                                     
                                                     default:
-                                                    return content.split("\n").length - 1;     
+                                                    return content.split("\n").length;     
                                                     } 
                                                     
                                                     }-*/;

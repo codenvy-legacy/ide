@@ -154,14 +154,16 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
             break;
 
          case TAG :
-            if (beforeToken.endsWith("<"))
+            if (beforeToken.endsWith("<") || beforeToken.endsWith(" "))
                beforeToken = beforeToken.substring(0, beforeToken.length() - 1);
             tokenToPaste = beforeToken + token.getCode() + afterToken;
+            
             if (token.getCode().contains("/"))
                newCursorPos = (beforeToken + token.getCode()).indexOf("/", beforeToken.length());
             else
                newCursorPos = (beforeToken + token.getCode()).length() + 1;
             break;
+         
          default :
             if (token.getCode() != null && !"".equals(token.getCode()))
             {

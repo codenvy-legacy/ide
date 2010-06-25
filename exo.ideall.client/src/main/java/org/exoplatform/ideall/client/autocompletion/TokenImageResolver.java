@@ -44,8 +44,8 @@ public class TokenImageResolver
       images.put(TokenType.PROPERTY, IDEImageBundle.INSTANCE.propertyItem());
       images.put(TokenType.TEMPLATE, IDEImageBundle.INSTANCE.templateItem());
       images.put(TokenType.KEYWORD, IDEImageBundle.INSTANCE.keywordItem());
-      images.put(TokenType.TAG, IDEImageBundle.INSTANCE.workspace());
-      images.put(TokenType.ATTRIBUTE, IDEImageBundle.INSTANCE.about());
+      images.put(TokenType.TAG, IDEImageBundle.INSTANCE.tagItem());
+      images.put(TokenType.ATTRIBUTE, IDEImageBundle.INSTANCE.attributeItem());
    }
 
    public static Image getImage(TokenType type)

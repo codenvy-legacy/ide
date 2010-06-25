@@ -376,5 +376,11 @@ public interface IDEImageBundle extends ClientBundle
    
    @Source("../public/images/bundled/outline/keyword.png")
    ImageResource keywordItem();
+   
+   @Source("../public/images/bundled/outline/tag.png")
+   ImageResource tagItem();
+   
+   @Source("../public/images/bundled/outline/attribute.png")
+   ImageResource attributeItem();
 
 }
