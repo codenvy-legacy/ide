@@ -51,10 +51,15 @@ public class DiscoveryServiceImpl extends DiscoveryService
    public void getEntryPoints()
    {
       String url = Configuration.getInstance().getContext() + CONTEXT;
+      getEntryPoints(url);
+   }
 
+   @Override
+   protected void getEntryPoints(String url)
+   {
       EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
-
+      
       String errorMessage = "Service is not deployed.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
       
