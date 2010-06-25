@@ -31,16 +31,16 @@
     <org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
-    <org.shindig.version>1.0-r790473-Patch02</org.shindig.version>
 	  <gwt.version>2.0.3</gwt.version>
     <smartgwt.version>2.1</smartgwt.version>
-    <shindig.version>1.1-BETA5-incubating</shindig.version>
+    <shindig.version>1.0-r790473-Patch02</shindig.version>
     <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>	
     <org.slf4j.version>1.5.6</org.slf4j.version>
     <org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
     <org.exoplatform.gwtframework.version>1.0-Beta04-SNAPSHOT</org.exoplatform.gwtframework.version>
+    <version.chromattic>1.0.3</version.chromattic>
 	</properties>
 	
 	<scm>
@@ -208,22 +208,22 @@
 				<version>1.8.0.7</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.shindig</groupId>
+				<groupId>org.gatein.shindig</groupId>
 				<artifactId>shindig-common</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.shindig</groupId>
+				<groupId>org.gatein.shindig</groupId>
 				<artifactId>shindig-features</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.shindig</groupId>
+				<groupId>org.gatein.shindig</groupId>
 				<artifactId>shindig-gadgets</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.shindig</groupId>
+				<groupId>org.gatein.shindig</groupId>
 				<artifactId>shindig-social-api</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
@@ -317,6 +317,39 @@
 				<artifactId>exo.portal.starter.war</artifactId>
 				<version>${org.exoplatform.gatein.version}</version>
 			</dependency>
+      <dependency>
+       <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.gadgets-core</artifactId>
+<version>${org.exoplatform.gatein.version}</version>
+    </dependency>
+      <!-- Chromattic -->
+         <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.apt</artifactId>
+            <version>${version.chromattic}</version>
+            <scope>compile</scope>
+         </dependency>
+         <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.api</artifactId>
+            <version>${version.chromattic}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.spi</artifactId>
+            <version>${version.chromattic}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.core</artifactId>
+            <version>${version.chromattic}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.ext</artifactId>
+            <version>${version.chromattic}</version>
+         </dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
