@@ -35,11 +35,6 @@
 			<artifactId>exo.core.component.security.core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.shindig</groupId>
-			<artifactId>shindig-common</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
 		</dependency>
