@@ -37,26 +37,32 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 {
    interface Display
    {
-      void showCodeHelper(boolean isShow);
+
+      //void showCodeHelper(boolean isShow);
+
+      void show();
+
+      void hide();
+
    }
-   
+
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
-   
+
    private Handlers handlers;
-   
+
    private Display display;
-   
+
    public CodeHelperPresenter(HandlerManager bus, ApplicationContext applicationContext)
    {
       eventBus = bus;
       context = applicationContext;
-      
+
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
+
    public void bindDisplay(Display d)
    {
       display = d;
@@ -67,18 +73,21 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
       File file = event.getFile();
       if (file == null || file.getContentType() == null)
       {
-         display.showCodeHelper(false);
+         display.show();
+         //display.showCodeHelper(false);
          return;
       }
-      
-      if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-               || file.getContentType().equals(MimeType.GOOGLE_GADGET))
+
+      if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
+         || file.getContentType().equals(MimeType.GOOGLE_GADGET))
       {
-         display.showCodeHelper(true);
+         display.show();
+         //display.showCodeHelper(true);
       }
       else
       {
-         display.showCodeHelper(false);
+         display.hide();
+         //display.showCodeHelper(false);
       }
    }
 

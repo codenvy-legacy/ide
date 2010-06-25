@@ -49,11 +49,11 @@ public interface Images
       
       public interface File
       {
-      
-         public static final String OPEN_LOCAL_FILE = imageUrl + "bundlel/file/open_local_file.png";
+
+         public static final String OPEN_LOCAL_FILE = imageUrl + "bundled/file/open_local_file.png";
 
          public static final String UPLOAD = imageUrl + "bundled/file/upload.png";
-         
+
       }
 
       /*

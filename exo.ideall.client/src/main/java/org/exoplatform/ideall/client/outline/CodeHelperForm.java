@@ -109,23 +109,44 @@ CodeHelperPanelRestoredHandler
       }
    };
    
-   public void showCodeHelper(boolean isShow)
+   @Override
+   public void show()
    {
-      if (isShow)
-      {
-         if (!context.getOpenedForms().contains(ID)){
-            context.getOpenedForms().add(ID);
-         }
-         show();
+      if (!context.getOpenedForms().contains(ID)){
+         context.getOpenedForms().add(ID);
       }
-      else
-      {
-         context.getOpenedForms().remove(ID);
-         hide();
-         //         outlineTab.getBrowserTree().setValue(null);
-      }
-
+      
+      super.show();
+      
       eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
    
+   @Override
+   public void hide()
+   {
+      context.getOpenedForms().remove(ID);
+      super.hide();
+      
+      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+   }
+   
+//   public void showCodeHelper(boolean isShow)
+//   {
+//      if (isShow)
+//      {
+//         if (!context.getOpenedForms().contains(ID)){
+//            context.getOpenedForms().add(ID);
+//         }
+//         show();
+//      }
+//      else
+//      {
+//         context.getOpenedForms().remove(ID);
+//         hide();
+//         //         outlineTab.getBrowserTree().setValue(null);
+//      }
+//
+//      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+//   }
+//   
 }

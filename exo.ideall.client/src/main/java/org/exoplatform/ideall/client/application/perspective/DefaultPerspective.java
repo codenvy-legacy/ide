@@ -57,7 +57,6 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.events.MouseUpEvent;
@@ -247,7 +246,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       codeHelperForm = new CodeHelperForm(eventBus, context);
       codeHelperForm.setMinWidth(MIN_CODE_HELPER_WIDTH);
       codeHelperForm.setWidth("30%");
-      codeHelperForm.showCodeHelper(false);
+      //codeHelperForm.showCodeHelper(false);
+      codeHelperForm.hide();
       
       horizontalSplitLayout2.addMember(codeHelperForm);
       horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
@@ -272,7 +272,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
          public void onResized(ResizedEvent event)
          {
-            codeHelperForm.showCodeHelper(codeHelperForm.isVisible());
+            // TODO
+            //codeHelperForm.showCodeHelper(codeHelperForm.isVisible());
          }
          
       });
@@ -302,7 +303,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       operationForm.hide();
       verticalSplitLayout.setResizeBarSize(0);
       
-      codeHelperForm.showCodeHelper(false);
+      //codeHelperForm.showCodeHelper(false);
+      codeHelperForm.hide();
 
       statusBar.hide();
 
@@ -324,7 +326,10 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       if (codeHelperPanelVisible)
       {
-         codeHelperForm.showCodeHelper(true);
+         
+         codeHelperForm.show();
+         //codeHelperForm.showCodeHelper(true);
+         
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
       }
 
@@ -341,7 +346,10 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       navigationPanelVisible = navigationForm.isVisible();
       navigationForm.hide();
       codeHelperPanelVisible = codeHelperForm.isVisible();
-      codeHelperForm.showCodeHelper(false);
+
+      
+      //codeHelperForm.showCodeHelper(false);
+      codeHelperForm.hide();
       
       horizontalSplitLayout.setResizeBarSize(0);
       horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
@@ -369,7 +377,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       if (codeHelperPanelVisible)
       {
-         codeHelperForm.showCodeHelper(true);
+         //codeHelperForm.showCodeHelper(true);
+         codeHelperForm.show();
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
       }
 
@@ -517,7 +526,14 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    public void onShowOutline(ShowOutlineEvent event)
    {
-      codeHelperForm.showCodeHelper(event.isShow());
+      if (event.isShow()) {
+         codeHelperForm.show();
+      } else {
+         codeHelperForm.hide();
+      }
+      
+      //codeHelperForm.showCodeHelper(event.isShow());
+      
       if (event.isShow())
       {
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
@@ -526,5 +542,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       }
+      
    }
 }
