@@ -1,0 +1,187 @@
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ideall.client.model.groovy;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedHandler;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
+
+import java.util.HashMap;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Window;
+
+/**
+ * Created by The eXo Platform SAS.
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id:
+ *
+ */
+public class GwtTestGroovyService extends GWTTestCase
+{
+   
+   private VirtualFileSystem vfsWebDav;
+   
+   private GroovyService groovyService;
+   
+   private HashMap<String, String> images = new HashMap<String, String>();
+   
+   private HandlerManager eventbus;
+
+   private final int DELAY_TEST = 5000;
+   
+   private static String TEST_URL_CREATE;
+   
+   private static String TEST_URL_VALIDATE;
+   
+   private File file;
+
+   private final static String groovyFileContent = "// simple groovy script\n" 
+      + "import javax.ws.rs.Path;\n" 
+      + "import javax.ws.rs.GET;\n" 
+      + "import javax.ws.rs.PathParam;\n"
+      + "@Path(\"/mine\")\n" 
+      + "public class HelloWorld {\n" 
+         + "@GET\n" 
+         + "@Path(\"helloworld/{name}\")\n"
+         + "public String hello(@PathParam(\"name\") String name) {\n" 
+            + "return \"Hello \" + name;\n" 
+         + "}\n" 
+      + "}\n";
+   
+   @Override
+   protected void gwtSetUp() throws Exception
+   {
+      super.gwtSetUp();
+      eventbus = new HandlerManager(null);
+      vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/ideall");
+      groovyService = new GroovyServiceImpl(eventbus, new EmptyLoader());
+      initUrls();
+      initFile();
+   }
+   
+   @Override
+   protected void gwtTearDown() throws Exception
+   {
+      super.gwtTearDown();
+      eventbus = null;
+      vfsWebDav = null;
+      groovyService = null;
+      TEST_URL_CREATE = null;
+      file = null;
+   }
+
+   /**
+    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    */
+   @Override
+   public String getModuleName()
+   {
+      return "org.exoplatform.ideall.IDEGwtTest";
+   }
+   
+   /**
+    * Save file content
+    * 
+    * @param file
+    * @param path
+    */
+   public void testValidate()
+   {
+      
+      eventbus.addHandler(GroovyValidateResultReceivedEvent.TYPE, new GroovyValidateResultReceivedHandler()
+      {
+      
+         public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
+         {
+            final String fileName = TEST_URL_CREATE + "newFile.groovy";
+//            final String fileName = "http://" + Window.Location.getHost() + "/ideall/rest/jcr/repository/dev-monit/newFile.groovy";
+            assertEquals(fileName, event.getFileName());
+            
+            if (event.getException() != null)
+            {
+               fail(event.getException().getMessage());
+            }
+            finishTest();
+         }
+      });
+      eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
+      {
+         public void onFileContentSaved(FileContentSavedEvent event)
+         {
+            assertNotNull(event.getFile());
+            assertEquals(event.getFile().getContent(), groovyFileContent);
+            vfsWebDav.getContent(event.getFile());
+         }
+      });
+      
+      eventbus.addHandler(FileContentReceivedEvent.TYPE, new FileContentReceivedHandler()
+      {
+         public void onFileContentReceived(FileContentReceivedEvent event)
+         {
+            groovyService.validate(event.getFile().getHref(), groovyFileContent, TEST_URL_VALIDATE);
+         }
+      });
+
+      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      {
+         public void onError(ExceptionThrownEvent event)
+         {
+            if (event.getError() != null && event.getError().getMessage() != null)
+            {
+               fail(event.getError().getMessage());
+               finishTest();
+            }
+            
+         }
+      });
+      
+      vfsWebDav.saveContent(file);
+      delayTestFinish(DELAY_TEST);
+   }
+   
+   private void initUrls()
+   {
+      TEST_URL_CREATE = "http://" + Window.Location.getHost() + "/ideall/rest/jcr/repository/dev-monit/";
+      TEST_URL_VALIDATE = "http://" + Window.Location.getHost() 
+      + "/ideall/rest/private/services/groovy/validate";
+   }
+   
+   private void initFile()
+   {
+      file = new File(TEST_URL_CREATE + "newFile.groovy");
+      file.setContentType("script/groovy");
+      file.setJcrContentNodeType("exo:groovyResourceContainer");
+      //     newFile.setIcon(ImageUtil.getIcon(contentType));
+      file.setNewFile(true);
+      file.setContent(groovyFileContent);
+      file.setContentChanged(true);
+   }
+   
+}

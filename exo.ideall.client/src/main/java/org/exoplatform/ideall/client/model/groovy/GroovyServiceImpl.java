@@ -72,7 +72,15 @@ public class GroovyServiceImpl extends GroovyService
    public void deploy(String href)
    {
       String url = Configuration.getInstance().getContext() + CONTEXT + LOAD + "?state=true";
-
+      deploy(href, url);
+   }
+   
+   /**
+    * @see org.exoplatform.ideall.client.model.groovy.GroovyService#deploy(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected void deploy(String href, String url)
+   {
       GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
@@ -97,7 +105,11 @@ public class GroovyServiceImpl extends GroovyService
    public void validate(String href, String content)
    {
       String url = Configuration.getInstance().getContext() + CONTEXT + VALIDATE;
-
+      validate(href, content, url);
+   }
+   
+   protected void validate(String href, String content, String url)
+   {
       GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 

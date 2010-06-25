@@ -49,6 +49,8 @@ public abstract class GroovyService
     * @param content
     */
    public abstract void validate(String href, String content);
+   
+   protected abstract void validate(String href, String content, String url);
 
    /**
     * Deploy Groovy script
@@ -56,6 +58,16 @@ public abstract class GroovyService
     * @param path
     */
    public abstract void deploy(String href);
+   
+   /**
+    * Deploy Groovy script.
+    * 
+    * Used for test.
+    * 
+    * @param href
+    * @param url
+    */
+   protected abstract void deploy(String href, String url);
 
    /**
     * Undeploy deployed Groovy script
