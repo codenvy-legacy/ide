@@ -94,7 +94,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setText("&nbsp;");
          setEvent(null);
