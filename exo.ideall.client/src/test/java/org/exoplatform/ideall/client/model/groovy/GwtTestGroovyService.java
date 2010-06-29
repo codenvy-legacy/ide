@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.model.SimpleParameterEntry;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
@@ -45,7 +46,6 @@ import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -54,7 +54,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id:
  *
  */
-public class GwtTestGroovyService extends GWTTestCase
+public class GwtTestGroovyService extends AbstractGwtTest
 {
    
    private VirtualFileSystem vfsWebDav;
@@ -116,15 +116,6 @@ public class GwtTestGroovyService extends GWTTestCase
    }
 
    /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ideall.IDEGwtTest";
-   }
-   
-   /**
     * Save file content
     * 
     * @param file
@@ -138,7 +129,7 @@ public class GwtTestGroovyService extends GWTTestCase
       
          public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
          {
-            final String fileName = TEST_URL_CREATE + "newFile.groovy";
+            final String fileName = TEST_URL_CREATE + "/newFile.groovy";
             assertEquals(fileName, event.getFileName());
             
             if (event.getException() != null)
@@ -194,6 +185,28 @@ public class GwtTestGroovyService extends GWTTestCase
       deployGroovyScript();
    }
    
+   public void testDeployUnexistedGroovy()
+   {
+      eventbus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
+      {
+         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+         {
+            if (event.getException() == null)
+            {
+               fail();
+               finishTest();
+            }
+            else
+            {
+               finishTest();
+            }
+         }
+      });
+      
+      groovyService.deploy(TEST_URL_CREATE + "/unexisted.file", TEST_URL_DEPLOY);
+      delayTestFinish(DELAY_TEST);
+   }
+   
    public void testUndeploy()
    {
       eventbus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler()
@@ -231,6 +244,28 @@ public class GwtTestGroovyService extends GWTTestCase
       });
       
       deployGroovyScript();
+   }
+   
+   public void testUndeployUnexistedGroovy()
+   {
+      eventbus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler()
+      {
+         public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
+         {
+            if (event.getException() == null)
+            {
+               fail();
+               finishTest();
+            }
+            else
+            {
+               finishTest();
+            }
+         }
+      });
+      
+      groovyService.undeploy(TEST_URL_CREATE + "/unexisted.file", TEST_URL_UNDEPLOY);
+      delayTestFinish(DELAY_TEST);
    }
    
    public void testGetOutput()
@@ -315,7 +350,7 @@ public class GwtTestGroovyService extends GWTTestCase
    
    private void initUrls()
    {
-      TEST_URL_CREATE = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/dev-monit/";
+      TEST_URL_CREATE = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/dev-monit";
       TEST_URL_VALIDATE = "http://" + Window.Location.getHost() + "/ideall/rest/private/services/groovy/validate";
       TEST_URL_DEPLOY = "http://" + Window.Location.getHost() + "/ideall/rest/private/services/groovy/load?state=true";
       TEST_URL_UNDEPLOY = "http://" + Window.Location.getHost() + "/ideall/rest/private/services/groovy/load?state=false";
@@ -323,7 +358,7 @@ public class GwtTestGroovyService extends GWTTestCase
    
    private void initFile()
    {
-      file = new File(TEST_URL_CREATE + "newFile.groovy");
+      file = new File(TEST_URL_CREATE + "/newFile.groovy");
       file.setContentType(MimeType.SCRIPT_GROOVY);
       file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(MimeType.SCRIPT_GROOVY));
       file.setNewFile(true);
