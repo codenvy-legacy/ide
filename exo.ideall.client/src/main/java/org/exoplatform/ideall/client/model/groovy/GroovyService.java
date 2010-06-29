@@ -50,6 +50,15 @@ public abstract class GroovyService
     */
    public abstract void validate(String href, String content);
    
+   /**
+    * Validate Groovy script.
+    * 
+    * Used for test.
+    * 
+    * @param href
+    * @param content
+    * @param url
+    */
    protected abstract void validate(String href, String content, String url);
 
    /**
