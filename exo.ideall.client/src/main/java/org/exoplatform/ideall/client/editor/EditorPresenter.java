@@ -95,8 +95,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoEditingHandler,
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler,
-   EditorFindTextHandler,
+   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusOnActiveFileHandler, RefreshHotKeysHandler
 {
 
@@ -172,7 +171,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
 
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
-      
+
       handlers.addHandler(RefreshHotKeysEvent.TYPE, this);
 
       handlers.addHandler(EditorFindTextEvent.TYPE, this);
@@ -229,7 +228,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
 
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorSetFocusOnActiveFileEvent.TYPE, this);
 
    }
@@ -334,7 +333,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      
+
       File curentFile = event.getFile();
       if (curentFile == null)
       {
@@ -370,7 +369,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       file.setContent(null);
       file.setContentChanged(false);
 
-      context.getOpenedFiles().remove(file.getHref());      
+      context.getOpenedFiles().remove(file.getHref());
       CookieManager.getInstance().storeOpenedFiles(context);
    }
 
@@ -463,9 +462,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.selectTab(event.getFile().getHref());
 
       String href = context.getActiveFile().getHref();
-      //      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-      //         display.hasRedoChanges(href)));
-
       eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
       CookieManager.getInstance().storeOpenedFiles(context);
    }
@@ -483,8 +479,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
 
       String href = context.getActiveFile().getHref();
-      //      eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.hasUndoChanges(href),
-      //         display.hasRedoChanges(href)));
       eventBus.fireEvent(new EditorActiveFileChangedEvent(context.getActiveFile(), display.getEditor(href)));
    }
 
@@ -569,8 +563,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorFindText(EditorFindTextEvent event)
    {
-      boolean isFound =
-         display.findText(event.getFindText(), event.isCaseSensitive(), event.getPath());
+      boolean isFound = display.findText(event.getFindText(), event.isCaseSensitive(), event.getPath());
       eventBus.fireEvent(new FindTextResultEvent(isFound));
    }
 
@@ -606,11 +599,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       display.setEditorFocus(context.getActiveFile().getHref());
    }
-   
-    public void onRefreshHotKeys(RefreshHotKeysEvent event)
+
+   public void onRefreshHotKeys(RefreshHotKeysEvent event)
    {
-      List<String> hotKeyList = context.getHotKeyList();
-      
+      List<String> hotKeyList = new ArrayList<String>(context.getHotKeys().keySet());
       Iterator<String> it = context.getOpenedFiles().keySet().iterator();
       while (it.hasNext())
       {

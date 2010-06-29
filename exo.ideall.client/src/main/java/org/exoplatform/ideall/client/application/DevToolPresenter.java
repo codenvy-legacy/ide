@@ -32,6 +32,7 @@ import org.exoplatform.ideall.client.application.component.AbstractApplicationCo
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.ClearFocusEvent;
+import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -110,7 +111,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(context.getCommands()));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), context.getCommands()));
-      
+
       /*
        * Initializing handlers of menu items
        */
@@ -173,34 +174,45 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    {
       CookieManager.getInstance().getApplicationState(context);
 
-      if (context.getEntryPoint() == null) {
+      if (context.getEntryPoint() == null)
+      {
          context.setEntryPoint(Configuration.getInstance().getDefaultEntryPoint());
       }
-      
-//      context.getToolBarItems().clear();
-//      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
+
+      //      context.getToolBarItems().clear();
+      //      context.getToolBarItems().addAll(context.getToolBarDefaultItems());
 
       eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
-      
-      if (context.getEntryPoint() != null) {
+
+      eventBus.fireEvent(new RefreshHotKeysEvent());
+
+      if (context.getEntryPoint() != null)
+      {
          new WorkspaceChecker(eventBus, context);
-      } else {
-         Dialogs.getInstance().ask("Working workspace", "Workspace is not set. Goto <strong>Window->Select workspace</strong>  in main menu for set working workspace?", new BooleanValueReceivedCallback()
-         {
-            
-            public void execute(Boolean value)
-            {
-               if (value)
+      }
+      else
+      {
+         Dialogs
+            .getInstance()
+            .ask(
+               "Working workspace",
+               "Workspace is not set. Goto <strong>Window->Select workspace</strong>  in main menu for set working workspace?",
+               new BooleanValueReceivedCallback()
                {
-                  eventBus.fireEvent(new SelectWorkspaceEvent());
-               }
-               else
-               {
-                  ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-               }
-            }
-         });
-         new ApplicationInitializer(eventBus, context);         
+
+                  public void execute(Boolean value)
+                  {
+                     if (value)
+                     {
+                        eventBus.fireEvent(new SelectWorkspaceEvent());
+                     }
+                     else
+                     {
+                        ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+                     }
+                  }
+               });
+         new ApplicationInitializer(eventBus, context);
       }
    }
 

@@ -48,6 +48,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 {
+   
    public interface Display
    {
       HasClickHandlers getSaveButton();
@@ -109,7 +110,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       handlers = new Handlers(eventBus);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
-
    }
 
    public void bindDisplay(Display d)

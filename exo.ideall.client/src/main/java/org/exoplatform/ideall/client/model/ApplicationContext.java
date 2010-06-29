@@ -409,14 +409,6 @@ public class ApplicationContext
       return reservedHotkeys;
    }
 
-   public List<String> getHotKeyList()
-   {
-      if (hotKeys == null)
-         return null;
-
-      return new ArrayList<String>(hotKeys.keySet());
-   }
-
    /**
     * @return the openedForms
     */

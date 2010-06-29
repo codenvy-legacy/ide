@@ -29,6 +29,7 @@ import com.google.gwt.user.client.Event;
  */
 public abstract class HotKeyManager
 {
+   
    private static HotKeyManager instance;
    
    public static HotKeyManager getInstance()
@@ -48,4 +49,5 @@ public abstract class HotKeyManager
    public abstract void onKeyPress(final Event event);
 
    public abstract void onKeyUp(final Event event);
+   
 }

@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ideall.client.editor;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
@@ -64,7 +68,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    private EditorTab activeTab;
 
    private MinMaxControlButton minMaxControlButton;
-   
+
    private ApplicationContext context;
 
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
@@ -127,9 +131,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          try
          {
             activeTab = (EditorTab)event.getTab();
-//            String path = activeTab.getFile().getHref();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), 
-               activeTab.getTextEditor()));
+            //            String path = activeTab.getFile().getHref();
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
          catch (Exception exc)
          {
@@ -144,7 +147,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          event.cancel();
          EditorTab tab = (EditorTab)event.getTab();
-         eventBus.fireEvent(new EditorCloseFileEvent(tab.getFile()));         
+         eventBus.fireEvent(new EditorCloseFileEvent(tab.getFile()));
       }
    };
 
@@ -152,31 +155,36 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       EditorTab tab = getEditorTab(file.getHref());
       boolean addTab = false;
-      if (tab == null) {
+      if (tab == null)
+      {
          tab = new EditorTab(file);
          tab.setCanClose(true);
          addTab = true;
       }
-      
+
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
-      
+
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-      smartGwtTextEditor.setHotKeyList(context.getHotKeyList());
+
+      List<String> hotKeyList = new ArrayList<String>(context.getHotKeys().keySet());
+      smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
       tab.setFile(file);
-      
-      if (addTab) {
+
+      if (addTab)
+      {
          redraw();
          tabSet.addTab(tab);
-         redraw();         
+         redraw();
       }
-      
-      if (fireEvent) {
+
+      if (fireEvent)
+      {
          eventBus.fireEvent(new EditorActiveFileChangedEvent(file, textEditor));
-      }             
+      }
    }
 
    public void selectTab(String path)
@@ -281,8 +289,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          {
             editorTab.setFile(newFile);
             //String newFilePath = newFile.getHref();
-//            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
-//               hasRedoChanges(newFilePath)));
+            //            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
+            //               hasRedoChanges(newFilePath)));
             eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, editorTab.getTextEditor()));
             return;
          }
@@ -335,8 +343,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
     */
    public void deleteCurrentLune(String path)
    {
-      TextEditor editor = getEditorTab(path).getTextEditor(); 
-      if( editor.canDeleteCurrentLine())
+      TextEditor editor = getEditorTab(path).getTextEditor();
+      if (editor.canDeleteCurrentLine())
       {
          editor.deleteCurrentLine();
       }
@@ -347,11 +355,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
     */
    public void goToLine(String path, int lineNuber)
    {
-      TextEditor editor = getEditorTab(path).getTextEditor(); 
-      if( editor.canGoToLine())
+      TextEditor editor = getEditorTab(path).getTextEditor();
+      if (editor.canGoToLine())
       {
          editor.goToLine(lineNuber);
-         
+
       }
    }
 
@@ -398,7 +406,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
     */
    public void replaceAllText(String findText, String replace, boolean caseSensitive, String path)
    {
-      while (getEditor(path).findAndSelect(findText, caseSensitive)){
+      while (getEditor(path).findAndSelect(findText, caseSensitive))
+      {
          getEditor(path).replaceFoundedText(findText, replace, caseSensitive);
       }
    }
