@@ -79,7 +79,7 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.ideall.client.model.groovy.GroovyService#deploy(java.lang.String, java.lang.String)
     */
    @Override
-   protected void deploy(String href, String url)
+   public void deploy(String href, String url)
    {
       GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);

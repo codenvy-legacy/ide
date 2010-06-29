@@ -76,7 +76,7 @@ public abstract class GroovyService
     * @param href
     * @param url
     */
-   protected abstract void deploy(String href, String url);
+   public abstract void deploy(String href, String url);
 
    /**
     * Undeploy deployed Groovy script.
