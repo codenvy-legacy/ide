@@ -41,6 +41,7 @@ import org.exoplatform.ideall.client.model.configuration.InvalidConfigurationRec
 import org.exoplatform.ideall.client.model.conversation.ConversationService;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHandler;
+import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
@@ -148,6 +149,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    {
       new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
       new TemplateServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION);
+      new GadgetServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getInstance().getContext(), Configuration.getInstance().getGadgetServer(), Configuration.getInstance().getPublicContext());
       ConversationService.getInstance().getUserInfo();
    }
 

@@ -54,7 +54,7 @@ public class IDE
 
       new GroovyServiceImpl(eventBus, IDELoader.getInstance());
 
-      new GadgetServiceImpl(eventBus, IDELoader.getInstance());
+      //new GadgetServiceImpl(eventBus, IDELoader.getInstance());
 
      // new TemplateServiceImpl(eventBus, IDELoader.getInstance());
 
