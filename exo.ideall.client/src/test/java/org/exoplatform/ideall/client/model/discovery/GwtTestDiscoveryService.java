@@ -21,13 +21,13 @@ package org.exoplatform.ideall.client.model.discovery;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id:
  *
  */
-public class GwtTestDiscoveryService extends GWTTestCase
+public class GwtTestDiscoveryService extends AbstractGwtTest
 {
    
    private HandlerManager eventbus;
@@ -71,15 +71,6 @@ public class GwtTestDiscoveryService extends GWTTestCase
       TEST_URL_WRONG = null;
    }
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ideall.IDEGwtTest";
-   }
-   
    public void testGetEntryPoints()
    {
       eventbus.addHandler(EntryPointsReceivedEvent.TYPE, new EntryPointsReceivedHandler()

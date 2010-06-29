@@ -19,6 +19,7 @@ package org.exoplatform.ideall.client.model.settings;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.Window;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: $
  */
-public class GwtTestSettings extends GWTTestCase
+public class GwtTestSettingsService extends AbstractGwtTest
 {
    
    private HandlerManager eventbus;
