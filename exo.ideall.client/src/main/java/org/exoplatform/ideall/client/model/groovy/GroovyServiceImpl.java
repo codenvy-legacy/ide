@@ -93,6 +93,15 @@ public class GroovyServiceImpl extends GroovyService
    public void undeploy(String href)
    {
       String url = Configuration.getInstance().getContext() + CONTEXT + LOAD + "?state=false";
+      undeploy(href, url);
+   }
+   
+   /**
+    * @see org.exoplatform.ideall.client.model.groovy.GroovyService#undeploy(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected void undeploy(String href, String url)
+   {
       GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
