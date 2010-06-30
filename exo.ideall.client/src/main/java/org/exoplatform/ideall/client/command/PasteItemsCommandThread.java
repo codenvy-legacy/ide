@@ -318,8 +318,24 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    public void onItemDeleted(ItemDeletedEvent event)
    {
-      context.getItemsToCopy().remove(event.getItem());
-      context.getItemsToCut().remove(event.getItem());
+      Item del = event.getItem();
+      for(Item i : context.getItemsToCopy())
+      {
+         if(i.getHref().equals(del.getHref()))
+         {
+            context.getItemsToCopy().remove(i);
+            break;
+         }
+      }
+      
+      for(Item i : context.getItemsToCut())
+      {
+         if(i.getHref().equals(del.getHref()))
+         {
+            context.getItemsToCut().remove(i);
+            break;
+         }
+      }
    }
 
 }
