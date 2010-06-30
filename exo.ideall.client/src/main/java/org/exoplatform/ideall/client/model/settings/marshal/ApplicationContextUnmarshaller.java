@@ -46,6 +46,8 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
    private HandlerManager eventBus;
 
    private ApplicationContext context;
+   
+   public final static String ERROR_MESSAGE = "Can't parse user settings!";
 
    public ApplicationContextUnmarshaller(HandlerManager eventBus, ApplicationContext context)
    {
@@ -82,8 +84,7 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       }
       catch (Exception exc)
       {
-         String message = "Can't parse user settings!";
-         throw new UnmarshallerException(message);
+         throw new UnmarshallerException(ERROR_MESSAGE);
       }
    }
 

@@ -77,15 +77,6 @@ public class GwtTestSettingsService extends AbstractGwtTest
       TEST_URL_WRONG = null;
    }
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ideall.IDEGwtTest";
-   }
-   
    public void testGetSettingsWhenNoSettingsOnServer()
    {
       eventbus.addHandler(ApplicationContextReceivedEvent.TYPE, new ApplicationContextReceivedHandler()
