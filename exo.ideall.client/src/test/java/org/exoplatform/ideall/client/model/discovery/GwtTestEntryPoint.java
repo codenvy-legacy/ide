@@ -39,6 +39,9 @@ public class GwtTestEntryPoint extends AbstractGwtTest
       +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/wsrp-system/\"},"
       +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/pc-system/\"}]}";
    
+   /**
+    * Test the unmarshaller for entry points response.
+    */
    public void testEntryPointUnmarshaller(){
       EntryPointList entryPointList = EntryPointList.build(entryPoints);
       assertEquals(6, entryPointList.getEntryPoints().length());
