@@ -308,7 +308,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       if (!newHotKey.startsWith("Ctrl") && !newHotKey.startsWith("Alt"))
       {
-         display.showError("First key must be Ctrl of Alt ");
+         display.showError("First key should be Ctrl or Alt ");
          return false;
       }
 
@@ -323,7 +323,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(newHotKey)
             && !hotKeyIdentifier.getControlId().equals(controlId))
          {
-            display.showError("Such hot key already bind to another control");
+            display.showError("Such hot key already binded to another control");
             return false;
          }
       }
@@ -392,7 +392,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       if (controlKey == null)
       {
          display.getHotKeyField().setValue("");
-         display.showError("First key must be Ctrl of Alt ");
+         display.showError("First key shoud be Ctrl or Alt ");
          return;
       }
 
@@ -409,7 +409,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       if (context.getReservedHotkeys().containsKey(controlKey + "+" + keyCode))
       {
-         display.showError("This hot key is reserved by editor");
+         display.showError("This hot key is used by Code or WYSIWYG Editors");
          display.disableBindButton();
          return;
       }
