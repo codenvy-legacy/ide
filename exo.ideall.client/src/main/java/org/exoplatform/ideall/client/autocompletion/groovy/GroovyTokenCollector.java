@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.ideall.client.autocompletion.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
+import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;

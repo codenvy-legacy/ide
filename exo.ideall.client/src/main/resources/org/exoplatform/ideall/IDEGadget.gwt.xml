@@ -50,4 +50,10 @@
     <!--    <stylesheet src='fckeditor/content.css' /> -->
     <script src="fckeditor/ckeditor.js" />
     <script src="fckeditor/config.js" />
+    
+    <!-- Load tokens for auto-complete -->
+    <script src="token/html_tokens.js" />
+    <script src="token/javascript_tokens.js" />
+	<script src="token/css_tokens.js" />
+	<script src="token/html_tokens.js" />
 </module>

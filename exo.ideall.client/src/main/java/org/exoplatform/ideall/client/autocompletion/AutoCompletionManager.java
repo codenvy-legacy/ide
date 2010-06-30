@@ -24,12 +24,13 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
+import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
 import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;

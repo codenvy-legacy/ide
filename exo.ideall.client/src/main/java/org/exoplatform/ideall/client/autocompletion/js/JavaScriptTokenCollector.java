@@ -24,11 +24,14 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.ideall.client.autocompletion.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.TokensCollectedCallback;
+import org.exoplatform.ideall.client.autocompletion.JSONTokenParser;
+import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.json.client.JSONArray;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,15 +43,13 @@ import com.google.gwt.event.shared.HandlerManager;
 public class JavaScriptTokenCollector implements TokenCollector
 {
 
+   private static List<Token> defaultTokens;
+   
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
    private TokensCollectedCallback tokensCollectedCallback;
-
-   private static List<Token> keywords = new ArrayList<Token>();
-
-   private static List<Token> templates = new ArrayList<Token>();
 
    private List<Token> filteredToken = new ArrayList<Token>();
 
@@ -58,55 +59,6 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    private String tokenToComplete;
 
-   static
-   {
-      keywords.add(new Token("break", TokenType.KEYWORD));
-      keywords.add(new Token("case", TokenType.KEYWORD));
-      keywords.add(new Token("catch", TokenType.KEYWORD));
-      keywords.add(new Token("const", TokenType.KEYWORD));
-      keywords.add(new Token("continue", TokenType.KEYWORD));
-      keywords.add(new Token("default", TokenType.KEYWORD));
-      keywords.add(new Token("delete", TokenType.KEYWORD));
-      keywords.add(new Token("do", TokenType.KEYWORD));
-      keywords.add(new Token("else", TokenType.KEYWORD));
-      keywords.add(new Token("export", TokenType.KEYWORD));
-      keywords.add(new Token("false", TokenType.KEYWORD));
-      keywords.add(new Token("for", TokenType.KEYWORD));
-      keywords.add(new Token("function", TokenType.KEYWORD));
-      keywords.add(new Token("if", TokenType.KEYWORD));
-      keywords.add(new Token("import", TokenType.KEYWORD));
-      keywords.add(new Token("in", TokenType.KEYWORD));
-      keywords.add(new Token("instanceof", TokenType.KEYWORD));
-      keywords.add(new Token("label", TokenType.KEYWORD));
-      keywords.add(new Token("let", TokenType.KEYWORD));
-      keywords.add(new Token("new", TokenType.KEYWORD));
-      keywords.add(new Token("null", TokenType.KEYWORD));
-      keywords.add(new Token("return", TokenType.KEYWORD));
-      keywords.add(new Token("switch", TokenType.KEYWORD));
-      keywords.add(new Token("this", TokenType.KEYWORD));
-      keywords.add(new Token("throw", TokenType.KEYWORD));
-      keywords.add(new Token("true", TokenType.KEYWORD));
-      keywords.add(new Token("try", TokenType.KEYWORD));
-      keywords.add(new Token("typeof", TokenType.KEYWORD));
-      keywords.add(new Token("var", TokenType.KEYWORD));
-      keywords.add(new Token("void", TokenType.KEYWORD));
-      keywords.add(new Token("while", TokenType.KEYWORD));
-      keywords.add(new Token("with", TokenType.KEYWORD));
-      keywords.add(new Token("yield", TokenType.KEYWORD));
-
-      templates.add(new Token("for", TokenType.TEMPLATE, "for-iterate over array",
-         "for (var i = 0; i < array.length; i++)\n{\n\n}", "<pre>for (var i = 0; i < array.length; i++)\n{\n\n}</pre>"));
-
-      templates.add(new Token("if", TokenType.TEMPLATE, "if-condition", "if (condition)\n{\n\n}",
-         "<pre>if (condition)\n{\n\n}</pre>"));
-
-      templates.add(new Token("if", TokenType.TEMPLATE, "if-condition-else", "if (condition)\n{\n\n}\nelse\n{\n\n}",
-         "<pre>if (condition)\n{\n\n}\nelse\n{\n\n}</pre>"));
-
-      templates.add(new Token("try", TokenType.TEMPLATE, "try-catch", "try\n{\n\n}\ncatch(e)\n{\n\n}",
-         "<pre>try\n{\n\n}\ncatch(e)\n{\n\n}</pre>"));
-   }
-
    public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
       TokensCollectedCallback tokensCollectedCallback)
    {
@@ -115,7 +67,11 @@ public class JavaScriptTokenCollector implements TokenCollector
       this.tokensCollectedCallback = tokensCollectedCallback;
 
    }
-
+   
+   private native JavaScriptObject getTokens() /*-{
+                                               return $wnd.javascript_tokens;
+                                               }-*/;
+   
    public void getTokens(String line, int lineNum, int cursorPos, List<Token> tokenFromParser)
    {
 
@@ -131,8 +87,15 @@ public class JavaScriptTokenCollector implements TokenCollector
       }
       else
       {
-         tokens.addAll(keywords);
-         tokens.addAll(templates);
+         if(defaultTokens == null)
+         {
+            JSONTokenParser parser = new JSONTokenParser();
+            JSONArray tokenArray = new JSONArray(getTokens());
+            
+            defaultTokens = parser.getTokens(tokenArray);
+         }
+         tokens.addAll(defaultTokens);
+         printTokens(defaultTokens);
          filterToken(lineNum, tokenFromParser);
       }
       tokens.addAll(filteredToken);
