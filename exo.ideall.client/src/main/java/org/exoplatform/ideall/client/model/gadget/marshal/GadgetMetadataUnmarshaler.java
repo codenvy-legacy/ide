@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ideall.client.model.gadget.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
@@ -26,7 +25,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -54,6 +52,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       }
       catch (Exception exc)
       {
+         exc.printStackTrace();
          String message = "Can't parse gadget meta data at <b>" + metadata.getTitle() + "</b>";
          throw new UnmarshallerException(message);
       }

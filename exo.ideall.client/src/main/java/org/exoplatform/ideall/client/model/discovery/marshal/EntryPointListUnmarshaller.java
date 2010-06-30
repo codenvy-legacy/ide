@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 
 /**
@@ -34,7 +35,7 @@ import com.google.gwt.http.client.Response;
 
 public class EntryPointListUnmarshaller implements Unmarshallable
 {
-
+   
    private EntryPointsReceivedEvent event;
    
    public EntryPointListUnmarshaller(EntryPointsReceivedEvent event)
@@ -44,6 +45,7 @@ public class EntryPointListUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {      
+      GWT.log("EntryPointListUnmarshaller.unmarshal()"+response.getText());
       EntryPointList entryPointList = EntryPointList.build(response.getText());
       event.setEntryPointList(entryPointList);
    }

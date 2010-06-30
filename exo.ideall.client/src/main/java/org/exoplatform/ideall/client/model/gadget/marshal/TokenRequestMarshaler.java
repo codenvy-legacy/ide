@@ -38,7 +38,6 @@ public class TokenRequestMarshaler implements Marshallable
     */
    public String marshal()
    {
-      
       return tokenRequest.toString();
    }
 }

@@ -17,13 +17,11 @@
 package org.exoplatform.ideall.client.model.template;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
@@ -96,8 +94,6 @@ public class TemplateServiceImpl extends TemplateService
    public void getTemplates()
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
-      System.out.println("TemplateServiceImpl.getTemplates()"+url);
-
       TemplateList templateList = new TemplateList();
 
       templateList.getTemplates().add(
