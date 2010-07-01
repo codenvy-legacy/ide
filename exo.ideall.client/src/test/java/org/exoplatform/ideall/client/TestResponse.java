@@ -45,6 +45,11 @@ public class TestResponse extends Response
     * Status code.
     */
    private int statusCode;
+   
+   /**
+    * Headers.
+    */
+   private Header[] headers;
 
    /**
     * 
@@ -63,12 +68,40 @@ public class TestResponse extends Response
    }
 
    /**
+    * @param headers
+    * @param statusCode
+    * @param statusText
+    * @param text
+    */
+   public TestResponse(Header[] headers, int statusCode, String statusText,
+      String text)
+   {
+      super();
+      this.headers = headers;
+      this.statusCode = statusCode;
+      this.statusText = statusText;
+      this.text = text;
+   }
+
+   /**
     * @see com.google.gwt.http.client.Response#getHeader(java.lang.String)
     */
    @Override
-   public String getHeader(String arg0)
+   public String getHeader(String header) throws NullPointerException, IllegalArgumentException
    {
-      // TODO Auto-generated method stub
+      if (header == null)
+         throw new NullPointerException();
+      
+      if (header.isEmpty())
+         throw new IllegalArgumentException();
+      
+      for (Header h : headers)
+      {
+         if (header.equals(h.getName()))
+         {
+            return h.getValue();
+         }
+      }
       return null;
    }
 
@@ -78,8 +111,7 @@ public class TestResponse extends Response
    @Override
    public Header[] getHeaders()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return headers;
    }
 
    /**
@@ -88,8 +120,12 @@ public class TestResponse extends Response
    @Override
    public String getHeadersAsString()
    {
-      // TODO Auto-generated method stub
-      return null;
+      String result = new String();
+      for (Header header : headers)
+      {
+         result += "\n" + header.getName() + " : " + header.getValue();
+      }
+      return result.substring(1);
    }
 
    /**
@@ -102,14 +138,6 @@ public class TestResponse extends Response
    }
 
    /**
-    * @param statusCode the statusCode to set
-    */
-   public void setStatusCode(int statusCode)
-   {
-      this.statusCode = statusCode;
-   }
-
-   /**
     * @see com.google.gwt.http.client.Response#getStatusText()
     */
    @Override
@@ -119,27 +147,11 @@ public class TestResponse extends Response
    }
 
    /**
-    * @param statusText the statusText to set
-    */
-   public void setStatusText(String statusText)
-   {
-      this.statusText = statusText;
-   }
-
-   /**
     * @see com.google.gwt.http.client.Response#getText()
     */
    @Override
    public String getText()
    {
       return text;
-   }
-
-   /**
-    * @param text the text to set
-    */
-   public void setText(String text)
-   {
-      this.text = text;
    }
 }
