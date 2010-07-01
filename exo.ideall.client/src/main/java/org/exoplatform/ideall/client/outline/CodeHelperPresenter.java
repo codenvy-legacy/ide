@@ -37,9 +37,6 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 {
    interface Display
    {
-
-      //void showCodeHelper(boolean isShow);
-
       void show();
 
       void hide();
@@ -74,20 +71,21 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
       if (file == null || file.getContentType() == null)
       {
          display.show();
-         //display.showCodeHelper(false);
          return;
       }
 
       if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
-         || file.getContentType().equals(MimeType.GOOGLE_GADGET))
+         || file.getContentType().equals(MimeType.GOOGLE_GADGET)
+         || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT))
       {
-         display.show();
-         //display.showCodeHelper(true);
+         if (context.isShowOutline())
+         {
+            display.show();
+         }
       }
       else
       {
          display.hide();
-         //display.showCodeHelper(false);
       }
    }
 

@@ -129,24 +129,4 @@ CodeHelperPanelRestoredHandler
       
       eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
-   
-//   public void showCodeHelper(boolean isShow)
-//   {
-//      if (isShow)
-//      {
-//         if (!context.getOpenedForms().contains(ID)){
-//            context.getOpenedForms().add(ID);
-//         }
-//         show();
-//      }
-//      else
-//      {
-//         context.getOpenedForms().remove(ID);
-//         hide();
-//         //         outlineTab.getBrowserTree().setValue(null);
-//      }
-//
-//      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
-//   }
-//   
 }

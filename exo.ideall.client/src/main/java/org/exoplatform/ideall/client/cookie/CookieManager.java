@@ -47,6 +47,8 @@ public class CookieManager
       static final String ACTIVE_FILE = "active-file";
       
       static final String LINE_NUMBERS = "line-numbers";
+      
+      static final String OUTLINE = "outline";
 
       static final String ENTRY_POINT = "entry-point";
 
@@ -168,6 +170,7 @@ public class CookieManager
       restoreOpenedFiles(context);
       restoreActiveFile(context);
       restoreLineNumbers(context);
+      restoreOutline(context);
    }
 
    private void restoreOpenedFiles(ApplicationContext context)
@@ -210,6 +213,14 @@ public class CookieManager
       eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
    }
    
+   /**
+    * @param context
+    */
+   public void storeOutline(ApplicationContext context) {      
+      Cookies.setCookie(Cookie.OUTLINE, "" + context.isShowOutline());
+      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
+   }
+   
    private void restoreLineNumbers(ApplicationContext context) {
       String cookie = Cookies.getCookie(Cookie.LINE_NUMBERS);
       if (cookie == null) {
@@ -218,6 +229,16 @@ public class CookieManager
       
       boolean lineNumbers = Boolean.parseBoolean(cookie);
       context.setShowLineNumbers(lineNumbers);
+   }
+   
+   private void restoreOutline(ApplicationContext context) {
+      String cookie = Cookies.getCookie(Cookie.OUTLINE);
+      if (cookie == null) {
+         return;
+      }
+      
+      boolean outline = Boolean.parseBoolean(cookie);
+      context.setShowOutline(outline);
    }
 
 }

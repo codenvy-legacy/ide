@@ -21,6 +21,8 @@ package org.exoplatform.ideall.client.outline;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
@@ -33,16 +35,21 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
  *
  */
 public class ShowOutlineControl extends IDECommand implements EditorActiveFileChangedHandler,
-   OpenedFormsStateChangedHandler
+   OpenedFormsStateChangedHandler, BrowserCookiesUpdatedHandler
 {
 
    public static final String ID = "View/Show Outline";
 
+   public static final String TITLE = "Show Outline";
+
+   public static final String PROMPT_SHOW = "Show Outline";
+
+   public static final String PROMPT_HIDE = "Hide Outline";
+
    public ShowOutlineControl()
    {
       super(ID);
-      setTitle("Show Outline");
-      setPrompt("Show Outline");
+      setTitle(TITLE);
       setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
       setEvent(new ShowOutlineEvent(true));
       setEnabled(true);
@@ -54,6 +61,7 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
       addHandler(OpenedFormsStateChangedEvent.TYPE, this);
+      addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
    }
 
    /**
@@ -91,6 +99,31 @@ public class ShowOutlineControl extends IDECommand implements EditorActiveFileCh
          setEvent(new ShowOutlineEvent(true));
       }
 
+   }
+
+   /**
+    * Update the control state - change prompt and event parameter.
+    */
+   private void update()
+   {
+      if (context.isShowOutline())
+      {
+         setPrompt(PROMPT_HIDE);
+         setEvent(new ShowOutlineEvent(false));
+      }
+      else
+      {
+         setPrompt(PROMPT_SHOW);
+         setEvent(new ShowOutlineEvent(true));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler#onBrowserCookiesUpdated(org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent)
+    */
+   public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
+   {
+      update();
    }
 
 }

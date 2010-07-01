@@ -146,6 +146,8 @@ public class ApplicationContext
    private String selectedEditorDescription;
 
    private boolean showLineNumbers = true;
+   
+   private boolean showOutline = true;
 
    private boolean initialized;
 
@@ -353,6 +355,22 @@ public class ApplicationContext
    public void setShowLineNumbers(boolean showLineNumbers)
    {
       this.showLineNumbers = showLineNumbers;
+   }
+
+   /**
+    * @return the showOutline
+    */
+   public boolean isShowOutline()
+   {
+      return showOutline;
+   }
+
+   /**
+    * @param showOutline the showOutline to set
+    */
+   public void setShowOutline(boolean showOutline)
+   {
+      this.showOutline = showOutline;
    }
 
    /**

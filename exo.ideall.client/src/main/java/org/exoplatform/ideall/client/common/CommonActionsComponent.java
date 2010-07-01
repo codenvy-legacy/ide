@@ -66,6 +66,8 @@ import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
+import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
+import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.client.search.file.SearchForm;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
@@ -86,7 +88,7 @@ import org.exoplatform.ideall.vfs.api.Item;
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler,
-   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler, FindTextHandler
+   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler, FindTextHandler, ShowOutlineHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -128,6 +130,7 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       addHandler(SaveAsTemplateEvent.TYPE, this);
 
       addHandler(ShowLineNumbersEvent.TYPE, this);
+      addHandler(ShowOutlineEvent.TYPE, this);
 
       addHandler(GetFileURLEvent.TYPE, this);
 
@@ -260,6 +263,15 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    public void onFindText(FindTextEvent event)
    {
       new FindTextForm(eventBus, context);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ideall.client.outline.event.ShowOutlineEvent)
+    */
+   public void onShowOutline(ShowOutlineEvent event)
+   {
+      context.setShowOutline(event.isShow());
+      CookieManager.getInstance().storeOutline(context);
    }
 
 }
