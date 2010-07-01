@@ -209,14 +209,14 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    }
 
    private Item renamedItem;
-   
+
    private String sourceHref;
-   
+
    public void onMoveComplete(MoveCompleteEvent event)
    {
       renamedItem = event.getItem();
       sourceHref = event.getSourceHref();
-      
+
       if (event.getItem() instanceof File)
       {
          File file = (File)event.getItem();
@@ -227,10 +227,10 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             openedFle.setHref(file.getHref());
             context.getOpenedFiles().remove(event.getSourceHref());
             context.getOpenedFiles().put(openedFle.getHref(), openedFle);
-            
+
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
-         
+
          VirtualFileSystem.getInstance().getProperties(event.getItem());
       }
       else
@@ -243,14 +243,16 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      if (event.getItem().getHref().equals(renamedItem.getHref())) {
+      if (event.getItem().getHref().equals(renamedItem.getHref()) && context.getOpenedFiles().get(renamedItem.getHref()) != null)
+      {
          context.getOpenedFiles().get(renamedItem.getHref()).getProperties().clear();
          context.getOpenedFiles().get(renamedItem.getHref()).getProperties().addAll(event.getItem().getProperties());
       }
       completeMove();
    }
 
-   private void completeMove() {
+   private void completeMove()
+   {
       String href = sourceHref;
       if (href.endsWith("/"))
       {
@@ -259,11 +261,10 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
       href = href.substring(0, href.lastIndexOf("/") + 1);
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
-      
-      handlers.removeHandlers();
-      display.closeForm();      
-   }
 
+      handlers.removeHandlers();
+      display.closeForm();
+   }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
