@@ -146,24 +146,25 @@ public class HotKeyHelper
    /**
     * For example, converts from "Ctrl+65" to "Ctrl+A"
     * 
-    * @param hotKey
-    * @return {@String}
+    * @param codeCombination - combination of hotkey, wich consists of Ctrl or Alt
+    * and of code of key
+    * @return {@link String}
     */
-   public static String convertCodeHotKeyToStringHotKey(String hotKey)
+   public static String convertToStringCombination(String codeCombination)
    {
-      if (hotKey == null || hotKey.length() < 1)
+      if (codeCombination == null || codeCombination.length() < 1)
          return "";
       
-      if (! hotKey.contains("+") || hotKey.endsWith("+"))
-         return hotKey;
+      if (! codeCombination.contains("+") || codeCombination.endsWith("+"))
+         return codeCombination;
       
-      String controlKey = hotKey.substring(0, hotKey.indexOf("+"));
-      String keyCode = hotKey.substring(hotKey.indexOf("+") + 1, hotKey.length());
+      String controlKey = codeCombination.substring(0, codeCombination.indexOf("+"));
+      String keyCode = codeCombination.substring(codeCombination.indexOf("+") + 1, codeCombination.length());
       
       String charKey = (keycodes.get(keyCode) != null) ? keycodes.get(keyCode) : null;
       
       if (charKey == null)
-         throw new IllegalArgumentException("Can't find " + hotKey + " code in keycodes map");
+         throw new IllegalArgumentException("Can't find " + codeCombination + " code in keycodes map");
       
       return controlKey + "+" + charKey;
    }
@@ -172,9 +173,9 @@ public class HotKeyHelper
     * Return string for key code.
     * 
     * @param keyCode
-    * @return {@String}
+    * @return {@link String}
     */
-   public static String convertKeyCodeToKeySymbol(String keyCode)
+   public static String getKeyName(String keyCode)
    {
       return keycodes.get(keyCode);
    }
@@ -182,16 +183,16 @@ public class HotKeyHelper
    /**
     * Find in keycodes map value of keyString and return the key code.
     * 
-    * @param keyString
-    * @return
+    * @param keyName
+    * @return {@link String}
     */
-   public static String convertStringSymbolToKeyCode(String keyString)
+   public static String getKeyCode(String keyName)
    {
       Iterator<Entry<String, String>> it = keycodes.entrySet().iterator();
       while (it.hasNext())
       {
          Entry<String, String> entry = it.next();
-         if (entry.getValue().equals(keyString))
+         if (entry.getValue().equals(keyName))
          {
             return entry.getKey();
          }
@@ -203,14 +204,15 @@ public class HotKeyHelper
    /**
     * For example, converts from "Ctrl+A" to "Ctrl+65".
     * 
-    * @param hotKey
-    * @return {@String}
+    * @param stringCombination - combination of hotkey, than consists of Ctrl or Alt
+    * and of key name
+    * @return {@link String}
     */
-   public static String convertStringHotKeyToCodeHotKey(String hotKey)
+   public static String convertToCodeCombination(String stringCombination)
    {
-      String controlKey = hotKey.substring(0, hotKey.indexOf("+"));
-      String keyString = hotKey.substring(hotKey.indexOf("+") + 1, hotKey.length());
-      String keyInt = convertStringSymbolToKeyCode(keyString);
+      String controlKey = stringCombination.substring(0, stringCombination.indexOf("+"));
+      String keyString = stringCombination.substring(stringCombination.indexOf("+") + 1, stringCombination.length());
+      String keyInt = getKeyCode(keyString);
       return controlKey + "+" + keyInt;
    }
 }

@@ -228,7 +228,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
          Control control = getControl(controlId);
          if (control != null)
          {
-            String k = HotKeyHelper.convertCodeHotKeyToStringHotKey(key);
+            String k = HotKeyHelper.convertToStringCombination(key);
             control.setHotKey(k);
          }
       }

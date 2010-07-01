@@ -204,7 +204,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          Entry<String, String> entry = it.next();
          String id = entry.getValue();
-         String hotkey = HotKeyHelper.convertCodeHotKeyToStringHotKey(entry.getKey());
+         String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
          hotKeys.add(new HotKeyItem(id, hotkey, (String)null, EDITOR_GROUP));
       }
 
@@ -227,7 +227,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          Entry<String, String> entry = it.next();
          if (entry.getValue().equals(controlId))
          {
-            return HotKeyHelper.convertCodeHotKeyToStringHotKey(entry.getKey());
+            return HotKeyHelper.convertToStringCombination(entry.getKey());
          }
       }
       return "";
@@ -344,7 +344,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
             if (hotKey != null && hotKey.length() > 0)
             {
-               String keyCode = HotKeyHelper.convertStringHotKeyToCodeHotKey(hotKey);
+               String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
                context.getHotKeys().put(keyCode, hotKeyItem.getControlId());
             }
          }
@@ -391,7 +391,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       if (controlKey == null)
       {
          display.getHotKeyField().setValue("");
-         display.showError("First key shoud be Ctrl or Alt ");
+         display.showError("First key should be Ctrl or Alt ");
          return;
       }
 
@@ -399,9 +399,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       //17 - key code of Ctrl
       //18 - key code of Alt
-      if (!keyCode.equals("17") && !keyCode.equals("18") && HotKeyHelper.convertKeyCodeToKeySymbol(keyCode) != null)
+      if (!keyCode.equals("17") && !keyCode.equals("18") && HotKeyHelper.getKeyName(keyCode) != null)
       {
-         stringHotKey += HotKeyHelper.convertKeyCodeToKeySymbol(keyCode);
+         stringHotKey += HotKeyHelper.getKeyName(keyCode);
       }
 
       display.getHotKeyField().setValue(stringHotKey);
