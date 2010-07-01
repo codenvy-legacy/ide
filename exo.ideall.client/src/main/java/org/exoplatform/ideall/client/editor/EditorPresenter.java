@@ -515,8 +515,11 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       if (closeFileAfterSaving)
       {
-         closeFile(event.getFile());
-
+         File file = event.getFile();
+         if (event.getSourceHref() != null){
+            file.setHref(event.getSourceHref());
+         }
+         closeFile(file);
          closeFileAfterSaving = false;
       }
       else
@@ -610,5 +613,4 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          display.getEditor(file).setHotKeyList(hotKeyList);
       }
    }
-
 }

@@ -216,7 +216,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       if (tab == null)
       {
          return;
-
       }
       tabSet.removeTab(tab);
       if (tabSet.getTabs().length == 0)
