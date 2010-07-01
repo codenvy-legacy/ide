@@ -49,6 +49,7 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextRece
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -150,6 +151,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
    {
       new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
       new TemplateServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION);
+      new GroovyServiceImpl(eventBus, Configuration.getInstance().getContext(), IDELoader.getInstance());      
       new GadgetServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getInstance().getContext(), Configuration.getInstance().getGadgetServer(), Configuration.getInstance().getPublicContext());
       ConversationService.getInstance().getUserInfo();
    }

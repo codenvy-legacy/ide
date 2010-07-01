@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.component;
 
-import org.exoplatform.ideall.client.model.SimpleParameterEntry;
+import org.exoplatform.ideall.groovy.SimpleParameterEntry;
 
 /**
  * Created by The eXo Platform SAS.

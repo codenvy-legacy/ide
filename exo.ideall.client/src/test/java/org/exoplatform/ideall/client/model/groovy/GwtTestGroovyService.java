@@ -18,31 +18,33 @@
  */
 package org.exoplatform.ideall.client.model.groovy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.model.SimpleParameterEntry;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyUndeployResultReceivedEvent;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyUndeployResultReceivedHandler;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedEvent;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyValidateResultReceivedHandler;
-import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedEvent;
-import org.exoplatform.ideall.client.model.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ideall.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.GroovyServiceImpl;
+import org.exoplatform.ideall.groovy.SimpleParameterEntry;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.vfs.webdav.NodeTypeUtil;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;

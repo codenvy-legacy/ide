@@ -13,10 +13,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryServiceImpl;
-import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
-import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
-import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -52,7 +49,7 @@ public class IDE
 
 //      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
 
-      new GroovyServiceImpl(eventBus, IDELoader.getInstance());
+      //new GroovyServiceImpl(eventBus, IDELoader.getInstance());
 
       //new GadgetServiceImpl(eventBus, IDELoader.getInstance());
 

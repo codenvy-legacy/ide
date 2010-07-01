@@ -34,8 +34,8 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ideall.client.component.WadlParameterEntry;
 import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.SimpleParameterEntry;
-import org.exoplatform.ideall.client.model.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.SimpleParameterEntry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

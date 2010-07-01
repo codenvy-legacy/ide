@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ideall.client.model.wadl;
 
+import java.util.HashMap;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
@@ -26,20 +28,18 @@ import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.model.groovy.GroovyService;
-import org.exoplatform.ideall.client.model.groovy.GroovyServiceImpl;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.client.model.groovy.event.GroovyDeployResultReceivedHandler;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceiveHandler;
 import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceivedEvent;
+import org.exoplatform.ideall.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.GroovyServiceImpl;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.vfs.webdav.NodeTypeUtil;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
-
-import java.util.HashMap;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
