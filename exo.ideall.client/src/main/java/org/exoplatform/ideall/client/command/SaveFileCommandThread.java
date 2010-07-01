@@ -33,6 +33,8 @@ import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -44,7 +46,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileCommandThread implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
-   ExceptionThrownHandler, SaveFileHandler
+   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler
 {
 
    private ApplicationContext context;
@@ -64,17 +66,17 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    public void onSaveFile(SaveFileEvent event)
    {
       File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
-      
-      if (file.isNewFile()) 
+
+      if (file.isNewFile())
       {
          eventBus.fireEvent(new SaveFileAsEvent());
          return;
       }
-      
+
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-
+      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
 
       if (file.isContentChanged())
       {
@@ -107,7 +109,15 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
+      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
+   }
 
+   /**
+    * @see org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent)
+    */
+   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   {
+      handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
    }
 
