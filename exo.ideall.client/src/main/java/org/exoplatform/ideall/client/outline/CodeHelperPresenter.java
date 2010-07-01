@@ -70,7 +70,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
       File file = event.getFile();
       if (file == null || file.getContentType() == null)
       {
-         display.show();
+         display.hide();
          return;
       }
 
