@@ -142,6 +142,11 @@
         <artifactId>exo.ideall.module.vfs</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.exoplatform.ideall</groupId>
+        <artifactId>exo.ideall.module.groovy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
 				<artifactId>exo.ideall.component.commons</artifactId>
@@ -370,6 +375,7 @@
     <module>exo.ideall.component.gadget</module>
     <module>exo.ideall.component.netvibes</module>
     <module>exo.ideall.module.vfs</module>
+    <module>exo.ideall.module.groovy</module>
     <module>exo.ideall.client</module>
     <module>exo.ideall.extension.config</module>
     <module>exo.ideall.extension.webapp</module>
