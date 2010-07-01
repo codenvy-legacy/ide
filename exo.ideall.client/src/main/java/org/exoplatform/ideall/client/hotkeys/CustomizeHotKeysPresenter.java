@@ -272,8 +272,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          if (hotKeyItem.getControlId().equals(controlId))
          {
-            hotKeys.remove(hotKeyItem);
-            //            hotKeyIdentifier.setHotKey(null);
+            hotKeyItem.setHotKey(null);
          }
       }
 

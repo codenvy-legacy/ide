@@ -101,7 +101,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       }
 
       record.setAttribute(TITLE, title);
-      record.setAttribute(CONTROL, item.getHotKey());
+      record.setAttribute(CONTROL, item.getHotKey() == null ? "" : item.getHotKey());
       record.setAttribute(GROUP, item.getGroup());
    }
 
