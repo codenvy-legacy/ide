@@ -48,8 +48,7 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
    {
       try
       {
-         WadlProcessor processor = new WadlProcessor(application, response.getText());
-//         application = processor.unmarshal();
+         WadlProcessor.unmarshal(application, response.getText());
       }
       catch (IllegalWADLException e)
       {
