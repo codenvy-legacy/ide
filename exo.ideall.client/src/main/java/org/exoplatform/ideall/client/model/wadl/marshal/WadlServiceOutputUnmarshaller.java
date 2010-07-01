@@ -46,11 +46,10 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      WadlProcessor processor;
       try
       {
-         processor = new WadlProcessor(application, response.getText());
-         processor.unmarshal();
+         WadlProcessor processor = new WadlProcessor(application, response.getText());
+//         application = processor.unmarshal();
       }
       catch (IllegalWADLException e)
       {

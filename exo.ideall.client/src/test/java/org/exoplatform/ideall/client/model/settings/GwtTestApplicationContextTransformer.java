@@ -18,6 +18,7 @@ package org.exoplatform.ideall.client.model.settings;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ideall.client.AbstractGwtTest;
+import org.exoplatform.ideall.client.TestResponse;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextMarshaller;
 import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextUnmarshaller;
@@ -133,7 +134,7 @@ public class GwtTestApplicationContextTransformer extends AbstractGwtTest
       int statusCode = 200;
       String statusText = "OK";
       String text = SETTINGS_XML;
-      Response response = new ApplicationContextResponse(headers, statusCode, statusText, text);
+      Response response = new TestResponse(headers, statusCode, statusText, text);
       try
       {
          unmarshaller.unmarshal(response);
@@ -160,7 +161,7 @@ public class GwtTestApplicationContextTransformer extends AbstractGwtTest
       int statusCode = 200;
       String statusText = "OK";
       String text = null;
-      Response response = new ApplicationContextResponse(headers, statusCode, statusText, text);
+      Response response = new TestResponse(headers, statusCode, statusText, text);
       try
       {
          unmarshaller.unmarshal(response);
@@ -179,7 +180,7 @@ public class GwtTestApplicationContextTransformer extends AbstractGwtTest
       int statusCode = 200;
       String statusText = "OK";
       String text = WRONG_XML;
-      Response response = new ApplicationContextResponse(headers, statusCode, statusText, text);
+      Response response = new TestResponse(headers, statusCode, statusText, text);
       try
       {
          unmarshaller.unmarshal(response);
