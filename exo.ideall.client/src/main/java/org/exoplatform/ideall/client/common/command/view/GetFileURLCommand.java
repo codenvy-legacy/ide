@@ -85,11 +85,11 @@ public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandle
 
    private void updateEnabling()
    {
-      if (!browserPanelSelected)
-      {
-         setEnabled(false);
-         return;
-      }
+//      if (!browserPanelSelected)
+//      {
+//         setEnabled(false);
+//         return;
+//      }
 
       if (selectedItem == null)
       {
