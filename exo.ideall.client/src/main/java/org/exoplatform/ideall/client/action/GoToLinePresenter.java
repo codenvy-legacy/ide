@@ -123,19 +123,21 @@ public class GoToLinePresenter
    }
 
    private native int getLineNumber(String content) /*-{
-                                                    if (! content) return 1;
+     if (! content) return 1;
 
-                                                    switch (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser) {          
-                                                    // fix bug with CodeMirror in the IE
-                                                    case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE :
-                                                    return content.split("\n").length;
-                                                    break;
-                                                    
-                                                    default:
-                                                    return content.split("\n").length;     
-                                                    } 
-                                                    
-                                                    }-*/;
+     // test if content is not ended with line break
+     if (content.charAt(content.length - 1) !== "\n") {
+        return content.split("\n").length;
+     }
+
+     // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
+     if (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+     {          
+       return content.split("\n").length;
+     }
+       
+     return content.split("\n").length - 1;     
+   }-*/;
 
    /**
     * 
