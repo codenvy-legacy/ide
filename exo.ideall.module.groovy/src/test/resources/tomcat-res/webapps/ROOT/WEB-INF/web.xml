@@ -1,0 +1,24 @@
+<web-app>
+
+	<servlet>
+		<servlet-name>shell</servlet-name>
+		<servlet-class>com.google.gwt.dev.shell.GWTShellServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>testservlet</servlet-name>
+		<servlet-class>org.exoplatform.ideall.server.Servlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>shell</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>testservlet</servlet-name>
+		<url-pattern>/test_servlet/*</url-pattern>
+	</servlet-mapping>	
+
+</web-app>
+
