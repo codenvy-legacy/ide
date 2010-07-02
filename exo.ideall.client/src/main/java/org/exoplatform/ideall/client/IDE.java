@@ -17,13 +17,14 @@ import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class IDE
+public class IDE extends VerticalPanel
 {
 
    public IDE()
@@ -81,5 +82,7 @@ public class IDE
 
       Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
    }
+
+   
 
 }
