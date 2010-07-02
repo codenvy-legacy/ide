@@ -78,12 +78,6 @@ public class Servlet extends HttpServlet
    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
       IOException
    {
-      System.out.println("GroovyServlet.service()");
-
-      System.out.println("request.getRequestURI() " + request.getRequestURI());
-      System.out.println("request.getPathInfo() " + request.getPathInfo());
-      System.out.println("request.getContextPath() " + request.getContextPath());
-
       String pathInfo = request.getPathInfo();
 
       if (pathInfo.startsWith("/"))
@@ -92,17 +86,12 @@ public class Servlet extends HttpServlet
       }
 
       String mapping = pathInfo.substring(0, pathInfo.indexOf("/"));
-
-      System.out.println("mapping [" + mapping + "]");
-
       pathInfo = pathInfo.substring(pathInfo.indexOf("/"));
-
-      System.out.println("path info [" + pathInfo + "]");
 
       MockRequestHandler handler = handlers.get(mapping);
       if (handler == null)
       {
-         response.setStatus(HTTPStatus.METHOD_NOT_ALLOWED);
+         response.setStatus(HTTPStatus.NOT_IMPLEMENTED);
          return;
       }
 

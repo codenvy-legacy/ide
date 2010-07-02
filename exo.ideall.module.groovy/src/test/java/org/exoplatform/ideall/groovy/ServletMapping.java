@@ -41,6 +41,14 @@ public class ServletMapping
    
    public static final String DEPLOY_FAILURE = "deploy_groovy_failure";
    
+   public static final String UNDEPLOY_SUCCESSFULL = "undeploy_groovy_successfull";
+   
+   public static final String UNDEPLOY_FAILURE = "undeploy_groovy_failure";
+   
+   public static final String GETOUTPUT_SUCCESSFULL = "get_output_successfull";
+   
+   public static final String GETOUTPUT_CUSTOM_STATUS = "get_output_custom_status";
+   
    public static String getURLFor(String mapping) {
       return "http://" + Window.Location.getHost() + TEST_SERVLET_MAPPING + "/" + mapping;
    }

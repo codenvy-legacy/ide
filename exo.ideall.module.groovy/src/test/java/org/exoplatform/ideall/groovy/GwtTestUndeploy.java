@@ -21,8 +21,10 @@ package org.exoplatform.ideall.groovy;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,93 +35,80 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GwtTestDeploy extends Test
+public class GwtTestUndeploy extends Test
 {
-
-   private final static String groovyFileContent =
-      "// simple groovy script\n" + "import javax.ws.rs.Path;\n" + "import javax.ws.rs.GET;\n"
-         + "import javax.ws.rs.PathParam;\n" + "@Path(\"/mine\")\n" + "public class HelloWorld {\n" + "@GET\n"
-         + "@Path(\"helloworld/{name}\")\n" + "public String hello(@PathParam(\"name\") String name) {\n"
-         + "return \"Hello, \" + name +\"!\";\n" + "}\n" + "}\n";
-
-   public void testDeploySuccessfull()
-   {
-      System.out.println("GwtTestDeploy.testDeploySuccessfull()");
-
-      String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_SUCCESSFULL);
-
+   
+   public void testUndeploySuccessfull() {
+      System.out.println("GwtTestUndeploy.testUndeploySuccessfull()");
+      
+      String serviceContext = ServletMapping.getURLFor(ServletMapping.UNDEPLOY_SUCCESSFULL);
+      
       String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
-
+      
       HandlerManager eventBus = new HandlerManager(null);
-
+      
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
-
-      eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
-      {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+      
+      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler() {
+         public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
          {
-            if (event.getException() == null)
-            {
+            if (event.getException() == null) {
                finishTest();
-            }
-            else
-            {
+            } else {
                fail();
             }
          }
       });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
+      
+      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler() {
          public void onError(ExceptionThrownEvent event)
          {
             fail();
          }
       });
-
-      service.deploy(fileHref);
-
-      sleepTest();
+      
+      service.undeploy(fileHref);
+      
+      sleepTest();      
    }
-
-   public void testDeployFailure()
-   {
-      System.out.println("GwtTestDeploy.testDeployFailure()");
-
-      String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_FAILURE);
-
+   
+   public void testUndeployFailure() {
+      System.out.println("GwtTestUndeploy.testUndeployFailure()");
+      
+      String serviceContext = ServletMapping.getURLFor(ServletMapping.UNDEPLOY_FAILURE);
+      
       String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
-
+      
       HandlerManager eventBus = new HandlerManager(null);
-
+      
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
-
-      eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
-      {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+      
+      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler() {
+         public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
          {
-            if (event.getException() != null)
-            {
-               finishTest();
-            }
-            else
-            {
+            if (event.getException() == null) {
                fail();
+            } else {
+               ServerException e = (ServerException)event.getException();
+               if (e.getHTTPStatus() != HTTPStatus.CONFLICT) {
+                  fail();
+               } else {
+                  finishTest();
+               }
             }
          }
       });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
+      
+      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler() {
          public void onError(ExceptionThrownEvent event)
          {
             fail();
          }
       });
-
-      service.deploy(fileHref);
-
-      sleepTest();
+      
+      service.undeploy(fileHref);
+      
+      sleepTest();      
    }
 
 }

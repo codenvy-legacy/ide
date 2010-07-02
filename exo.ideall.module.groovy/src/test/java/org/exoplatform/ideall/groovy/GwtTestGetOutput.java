@@ -19,10 +19,14 @@
  */
 package org.exoplatform.ideall.groovy;
 
+import java.util.ArrayList;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,30 +37,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GwtTestDeploy extends Test
+public class GwtTestGetOutput extends Test
 {
 
-   private final static String groovyFileContent =
-      "// simple groovy script\n" + "import javax.ws.rs.Path;\n" + "import javax.ws.rs.GET;\n"
-         + "import javax.ws.rs.PathParam;\n" + "@Path(\"/mine\")\n" + "public class HelloWorld {\n" + "@GET\n"
-         + "@Path(\"helloworld/{name}\")\n" + "public String hello(@PathParam(\"name\") String name) {\n"
-         + "return \"Hello, \" + name +\"!\";\n" + "}\n" + "}\n";
-
-   public void testDeploySuccessfull()
+   public void testGetOutputSuccessfull()
    {
-      System.out.println("GwtTestDeploy.testDeploySuccessfull()");
+      System.out.println("GwtTestGwtOutput.testGetOutputSuccessfull()");
 
-      String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_SUCCESSFULL);
+      String serviceContext = "";
 
-      String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
+      String url = ServletMapping.getURLFor(ServletMapping.GETOUTPUT_SUCCESSFULL) + "/jcr/dev-monit/myfile.groovy";
+      String method = "POST";
 
       HandlerManager eventBus = new HandlerManager(null);
 
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
 
-      eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
+      eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, new RestServiceOutputReceivedHandler()
       {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+         public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
          {
             if (event.getException() == null)
             {
@@ -77,34 +76,39 @@ public class GwtTestDeploy extends Test
          }
       });
 
-      service.deploy(fileHref);
+      service.getOutput(url, method, new ArrayList<SimpleParameterEntry>(), new ArrayList<SimpleParameterEntry>(),
+         "test body");
 
       sleepTest();
    }
 
-   public void testDeployFailure()
+   public void testGetOutputCustomStatus()
    {
-      System.out.println("GwtTestDeploy.testDeployFailure()");
+      System.out.println("GwtTestGwtOutput.testGetOutputFailure()");
 
-      String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_FAILURE);
+      String serviceContext = "";
 
-      String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
+      String url = ServletMapping.getURLFor(ServletMapping.GETOUTPUT_CUSTOM_STATUS) + "/jcr/dev-monit/myfile.groovy";
+      String method = "POST";
 
       HandlerManager eventBus = new HandlerManager(null);
 
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
 
-      eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
+      eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, new RestServiceOutputReceivedHandler()
       {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+         public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
          {
             if (event.getException() != null)
             {
+               assertEquals(((ServerException)event.getException()).getHTTPStatus(), HTTPStatus.LOCKED);
                finishTest();
             }
             else
             {
-               fail();
+               RestServiceOutput output = event.getOutput();
+               assertEquals(output.getResponse().getStatusCode(), HTTPStatus.LOCKED);
+               finishTest();
             }
          }
       });
@@ -117,7 +121,8 @@ public class GwtTestDeploy extends Test
          }
       });
 
-      service.deploy(fileHref);
+      service.getOutput(url, method, new ArrayList<SimpleParameterEntry>(), new ArrayList<SimpleParameterEntry>(),
+         "test body");
 
       sleepTest();
    }
