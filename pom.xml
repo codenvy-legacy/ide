@@ -14,25 +14,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<!-- exo.product.name>ideall</exo.product.name>
-		<org.exoplatform.kernel.version>2.2.1-GA</org.exoplatform.kernel.version>
-		<org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
-		<org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
-		<org.exoplatform.jcr.version>1.12.1-GA</org.exoplatform.jcr.version>
-		<org.exoplatform.gwtframework.version>1.0-Beta04-SNAPSHOT</org.exoplatform.gwtframework.version>
-		<org.exoplatform.gatein.version>3.0.0-GA</org.exoplatform.gatein.version>
-		<gwt.version>2.0.3</gwt.version>
-		<smartgwt.version>2.1</smartgwt.version>
-		<shindig.version>1.1-BETA5-incubating</shindig.version>
-		<gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
-		<maven.compiler.source>1.5</maven.compiler.source>
-		<maven.compiler.target>1.5</maven.compiler.target-->
+		<exo.product.name>ideall</exo.product.name>
 		<org.exoplatform.kernel.version>2.2.2-GA</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
 	  <gwt.version>2.0.3</gwt.version>
-    <smartgwt.version>2.1</smartgwt.version>
+    <smartgwt.version>2.2</smartgwt.version>
     <shindig.version>1.0-r790473-Patch02</shindig.version>
     <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
     <maven.compiler.source>1.5</maven.compiler.source>
