@@ -83,13 +83,37 @@ public class SearchRequestMarshaller implements Marshallable
 
    }
 
+   /**
+    * Escape special characters.
+    * 
+    * @param request - request
+    * @return request in which special characters are escaped
+    */
    private String escapeRegisteredSymbols(String request)
    {
+      //Lucene supports escaping special characters that are part of the query syntax. 
+      //The current list special characters are
+      //+ - && || ! ( ) { } [ ] ^ " ~ * ? : \
       String escapedRequest = request;
       escapedRequest = escapedRequest.replace("\\", "\\\\"); // to replace \ on \\
+      escapedRequest = escapedRequest.replace("+", "\\+"); // to replace + on \+
       escapedRequest = escapedRequest.replace("-", "\\-"); // to replace - on \-
+//      escapedRequest = escapedRequest.replace("&&", "\\&&"); // to replace && on \&&
+//      escapedRequest = escapedRequest.replace("||", "\\||"); // to replace || on \||
+      escapedRequest = escapedRequest.replace("!", "\\!"); // to replace ! on \!
+      escapedRequest = escapedRequest.replace("(", "\\("); // to replace ( on \(
+      escapedRequest = escapedRequest.replace(")", "\\)"); // to replace ) on \)
+      escapedRequest = escapedRequest.replace("{", "\\{"); // to replace { on \{
+      escapedRequest = escapedRequest.replace("}", "\\}"); // to replace } on \}
+      escapedRequest = escapedRequest.replace("[", "\\["); // to replace [ on \[
+      escapedRequest = escapedRequest.replace("]", "\\]"); // to replace ] on \]
+      escapedRequest = escapedRequest.replace("^", "\\^"); // to replace ^ on \^
+      escapedRequest = escapedRequest.replace("~", "\\~"); // to replace ~ on \~
+      escapedRequest = escapedRequest.replace("*", "\\*"); // to replace * on \*
+      escapedRequest = escapedRequest.replace("?", "\\?"); // to replace ? on \?
+      escapedRequest = escapedRequest.replace(":", "\\:"); // to replace : on \:
       escapedRequest = escapedRequest.replace("\"", "\\\""); // to replace " on \"
-      escapedRequest = escapedRequest.replace("'", "\\'"); // to replace ' on \'
+//      escapedRequest = escapedRequest.replace("'", "\\'"); // to replace ' on \'
       return escapedRequest;
    }
 
