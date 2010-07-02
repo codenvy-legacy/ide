@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.ideall.client.ImageUtil;
 
 import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -58,7 +59,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       setCanFocus(false);
       setSelectionType(SelectionStyle.SINGLE);
       setCanFreezeFields(false);
-      setGroupStartOpen("all");
+      setGroupStartOpen(GroupStartOpen.ALL);
       setGroupByField(GROUP);
 
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
