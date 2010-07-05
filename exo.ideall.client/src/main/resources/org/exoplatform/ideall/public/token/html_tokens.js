@@ -367,7 +367,7 @@ var html_tokens = [
 		}, {
 			"name" : "script",
 			"type" : "TAG",
-			"code" : "<script>/<script>",
+			"code" : "<script></script>",
 			"fullDescription" : "Defines a client-side script"
 		}, {
 			"name" : "select",
