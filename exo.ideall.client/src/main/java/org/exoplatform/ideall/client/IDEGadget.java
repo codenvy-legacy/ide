@@ -1,5 +1,8 @@
 package org.exoplatform.ideall.client;
 
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
 import com.google.gwt.gadgets.client.Gadget;
 import com.google.gwt.gadgets.client.NeedsDynamicHeight;
@@ -17,16 +20,26 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
 {
    private DynamicHeightFeature dynamicHeightFeature;
    
-   private static Integer defHeight = 470; 
-   
+      
    @Override
    protected void init(UserPreferences preferences)
    {
       final IDE ide = new IDE();
       RootPanel.get().add(ide);
-      Integer h = getFixHeight();
-      if (h!= null) ide.setHeight(h + "px");
-      dynamicHeightFeature.adjustHeight();
+      if (BrowserResolver.currentBrowser == Browser.CHROME)
+      {
+         Utils.expandGadgetHeight();
+      }
+      else
+      {
+         Integer h = getFixHeight();
+         if (h!= null)
+         { 
+            ide.setHeight(h + "px");
+            dynamicHeightFeature.adjustHeight();
+         }
+      }
+      
       
    }
    
@@ -42,8 +55,7 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
      var y = $wnd.parent.document.getElementById("UIGadgetPortlet").parentNode;
      return y.style.height;
   }-*/;
-   
-   
+     
 
    private Integer getFixHeight()
    {
@@ -51,20 +63,13 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
       Integer newHeight;
       if (height.contains("px"))
       {
-         try {
-            newHeight = Integer.parseInt(height.replace("px", "")) - 30;
-         } catch (NumberFormatException e) {
-            newHeight = defHeight;
-         }
-      } else
-      {
-         try {
-            newHeight = Integer.parseInt(height) - 10;
-         } catch (NumberFormatException e) {
-            newHeight = defHeight;
-         }
+        newHeight = Integer.parseInt(height.replace("px", "")) - 30;
+        return newHeight;
       }
-     return newHeight;  
+      else 
+      {
+         return null;
+      }
    }
    
    

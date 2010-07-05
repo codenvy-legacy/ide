@@ -58,6 +58,14 @@ public class Utils
        }
        $wnd.frameElement.style.width = '100%';
      }-*/;
+   
+   public static native void expandGadgetHeight() /*-{
+   // set width of gadget to 100%
+   if ($wnd.frameElement == null) {
+     return;
+   }
+   $wnd.frameElement.style.width = '100%';
+ }-*/;
 
    // return if result of JavaScript function string.match(new RegExp(pattern, modifiers)) is not null
    public static native boolean match(String string, String pattern, String modifiers) /*-{
