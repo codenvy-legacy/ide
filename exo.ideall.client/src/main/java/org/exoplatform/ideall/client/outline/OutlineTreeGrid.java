@@ -36,23 +36,23 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @version $Id:
  *
  */
-public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
+public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
 {
-   
+
    private static final String ICON = "icon";
-   
+
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
-   
+
    private static final String FUNCTION_ICON = Images.Outline.FUNCTION_ITEM;
-   
+
    private static final String METHOD_ICON = Images.Outline.METHOD_ITEM;
-   
+
    private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
-   
+
    private Tree tree;
 
    private TreeNode rootNode;
-   
+
    public OutlineTreeGrid()
    {
       tree = new Tree();
@@ -65,18 +65,17 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
       setShowConnectors(true);
       setCanSort(false);
       setCanEdit(false);
-      
+
       rootNode = new TreeNode("root");
       tree.setRoot(rootNode);
 
       setShowRoot(false);
    }
 
-
    @Override
    protected void doUpdateValue()
    {
-      if (getValue() != null && getValue().getSubTokenList()!= null && getValue().getSubTokenList().size() > 0)
+      if (getValue() != null && getValue().getSubTokenList() != null && getValue().getSubTokenList().size() > 0)
       {
          fillTreeItems(rootNode, getValue().getSubTokenList());
          tree.openAll();
@@ -86,9 +85,9 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
          TreeNode[] oldNodes = tree.getChildren(rootNode);
          tree.removeList(oldNodes);
       }
-      
+
    }
-   
+
    private void fillTreeItems(TreeNode parentNode, List<Token> children)
    {
       TreeNode[] oldNodes = tree.getChildren(parentNode);
@@ -105,7 +104,7 @@ public class OutlineTreeGrid <T extends Token> extends TreeGrid<T>
                break;
             }
          }
-         if (newNode == null)
+         if (newNode == null && child.getName() != null)
          {
             newNode = new TreeNode(child.getName());
             newNode.setAttribute(getValuePropertyName(), child);

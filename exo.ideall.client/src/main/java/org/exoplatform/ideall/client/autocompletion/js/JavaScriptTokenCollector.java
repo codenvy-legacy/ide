@@ -95,7 +95,7 @@ public class JavaScriptTokenCollector implements TokenCollector
             defaultTokens = parser.getTokens(tokenArray);
          }
          tokens.addAll(defaultTokens);
-         printTokens(defaultTokens);
+//         printTokens(defaultTokens);
          filterToken(lineNum, tokenFromParser);
       }
       tokens.addAll(filteredToken);

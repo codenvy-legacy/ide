@@ -56,9 +56,7 @@ public class JSONTokenParser
 
    public List<Token> getTokens(JSONArray json)
    {
-      System.out.println("JSONTokenParser.getTokens()");
       List<Token> tokens = new ArrayList<Token>();
-      System.out.println(json.size());
       for (int i = 0; i < json.size(); i++)
       {
          JSONObject jObject = json.get(i).isObject();

@@ -121,8 +121,7 @@ public class HtmlTokenCollector implements TokenCollector
       }
       else
       {
-         long start = System.currentTimeMillis();
-         long end = System.currentTimeMillis() - start;
+         token.addAll(getTokensByType(TokenType.TAG));
       }
 
       tokensCollectedCallback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
@@ -172,10 +171,10 @@ public class HtmlTokenCollector implements TokenCollector
    private List<Token> getTokensByType(TokenType type)
    {
       List<Token> tokens = new ArrayList<Token>();
-      if (type != TokenType.TAG && type != TokenType.ATTRIBUTE)
-      {
-         return tokens;
-      }
+//      if (type != TokenType.TAG && type != TokenType.ATTRIBUTE)
+//      {
+//         return tokens;
+//      }
 
       if (htmlTokens == null)
       {

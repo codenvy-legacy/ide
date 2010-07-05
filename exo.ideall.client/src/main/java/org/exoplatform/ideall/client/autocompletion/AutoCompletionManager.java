@@ -19,11 +19,13 @@
  */
 package org.exoplatform.ideall.client.autocompletion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
@@ -78,11 +80,27 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
       factories.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
       factories.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
-      factories.put(MimeType.GOOGLE_GADGET, new JavaScriptTokenCollector(eventBus, context, this));
+      //factories.put(MimeType.GOOGLE_GADGET, new GoogleGadgetTokenCollector(eventBus, context, this));
       factories.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
       factories.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus, context, this));
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
+   }
+
+   private List<Token> filterTokensByMimeType(List<Token> tokens, String mimeType)
+   {
+      List<Token> token = new ArrayList<Token>();
+
+      for (Token t : tokens)
+      {
+         if (t.getMimeType().equals(mimeType)
+            && (t.getType() != TokenType.START_DELIMITER && t.getType() != TokenType.FINISH_DELIMITER && t.getName() != null))
+         {
+            token.add(t);
+         }
+      }
+
+      return token;
    }
 
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
@@ -92,10 +110,12 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
       cursorPos = event.getCursorPositionX();
-      TokenCollector collector = factories.get(event.getMimeType());
+      TokenCollector collector = factories.get(event.getLineMimeType());
+
       if (collector != null)
       {
-         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), cursorPos, event.getTokenList());
+         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), cursorPos, filterTokensByMimeType(
+            event.getTokenList(), event.getLineMimeType()));
       }
    }
 
@@ -158,13 +178,13 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
             if (beforeToken.endsWith("<") || beforeToken.endsWith(" "))
                beforeToken = beforeToken.substring(0, beforeToken.length() - 1);
             tokenToPaste = beforeToken + token.getCode() + afterToken;
-            
+
             if (token.getCode().contains("/"))
                newCursorPos = (beforeToken + token.getCode()).indexOf("/", beforeToken.length());
             else
                newCursorPos = (beforeToken + token.getCode()).length() + 1;
             break;
-         
+
          default :
             if (token.getCode() != null && !"".equals(token.getCode()))
             {

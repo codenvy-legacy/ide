@@ -484,6 +484,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
+      System.out.println("EditorPresenter.onEditorOpenFile()");
       File file = event.getFile();
 
       if (context.getOpenedFiles().get(file.getHref()) != null
