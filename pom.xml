@@ -27,7 +27,7 @@
     <maven.compiler.target>1.5</maven.compiler.target>	
     <org.slf4j.version>1.5.6</org.slf4j.version>
     <org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
-    <org.exoplatform.gwtframework.version>1.0-Beta04-SNAPSHOT</org.exoplatform.gwtframework.version>
+    <org.exoplatform.gwtframework.version>1.0-Beta04</org.exoplatform.gwtframework.version>
     <version.chromattic>1.0.3</version.chromattic>
 	</properties>
 	
