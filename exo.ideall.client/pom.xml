@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>org.exoplatform.ideall</groupId>
 		<artifactId>ideall.parent</artifactId>
-		<version>1.0-Beta02-SNAPSHOT</version>
+		<version>1.0-Beta02</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -99,11 +98,8 @@
 						<phase>initialize</phase>
 						<configuration>
 							<tasks>
-								<delete
-									file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties" />
-								<echo
-									file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties"
-									append="false">
+								<delete file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties" />
+								<echo file="src/main/resources/org/exoplatform/ideall/client/BuildNumber.properties" append="false">
 									buildNumber: ${buildNumber}
 									buildTime: ${timestamp}
 									version: ${project.version}
@@ -593,8 +589,7 @@
 											<fileset dir="${basedir}/src/test/resources/tomcat-res" />
 										</copy>
 										<echo>build ideall.war</echo>
-										<war destfile="${basedir}/tomcat/webapps/ideall.war"
-											basedir="${basedir}/src/test/webapp" needxmlfile='false' />
+										<war destfile="${basedir}/tomcat/webapps/ideall.war" basedir="${basedir}/src/test/webapp" needxmlfile="false" />
 									</tasks>
 								</configuration>
 							</execution>

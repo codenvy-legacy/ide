@@ -10,7 +10,7 @@
 	<groupId>org.exoplatform.ideall</groupId>
 	<artifactId>ideall.parent</artifactId>
 	<name>eXo IDE :: Parent</name>
-	<version>1.0-Beta02-SNAPSHOT</version>
+	<version>1.0-Beta02</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -32,9 +32,9 @@
 	</properties>
 	
 	<scm>
-	  <connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</connection>
-          <developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</developerConnection>
-          <url>http://fisheye.exoplatform.org/browse/projects/parent/trunk</url>
+	  <connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/tags/1.0-Beta02</connection>
+          <developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/tags/1.0-Beta02</developerConnection>
+          <url>http://fisheye.exoplatform.org/browse/projects/parent/tags/1.0-Beta02</url>
          </scm>
 
 	
