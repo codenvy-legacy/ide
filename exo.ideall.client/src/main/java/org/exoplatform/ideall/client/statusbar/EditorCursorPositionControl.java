@@ -60,7 +60,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
       //setText("&nbsp;");
       setTextAlignment(StatusTextAlign.MIDDLE);
 
-      setEvent(new GoToLineEvent());
+      //setEvent(new GoToLineEvent());
 
       eventBus.addHandler(EditorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -81,10 +81,12 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
    {
       if (event.getRow() > 0 && event.getColumn() > 0)
       {
+         setEvent(new GoToLineEvent());
          setCursorPosition(event.getRow(), event.getColumn());
       }
       else
       {
+         setEvent(null);
          setText("&nbsp;");
       }
    }
@@ -101,15 +103,15 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
          return;
       }
 
-      setEvent(new GoToLineEvent());
-
       TextEditor editor = event.getEditor();
       if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
       {
+         setEvent(new GoToLineEvent());
          setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
       }
       else
       {
+         setEvent(null);
          setText("&nbsp;");
       }
    }
