@@ -78,7 +78,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public UploadForm(HandlerManager eventBus, ApplicationContext context, String path, boolean openFile)
    {
       super(eventBus, WIDTH, HEIGHT);
-
       this.eventBus = eventBus;
       this.openFile = openFile;
 
@@ -194,7 +193,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    {
       HLayout uploadLayout = new HLayout();
       uploadLayout.setWidth(330);
-      uploadLayout.setHeight(20);
+      uploadLayout.setHeight(22);
 
       DynamicForm textFieldForm = new DynamicForm();
       textFieldForm.setCellPadding(0);
@@ -207,13 +206,13 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       Canvas uploadButtonCanvas = new Canvas();
       uploadButtonCanvas.setWidth(85);
-      uploadButtonCanvas.setHeight(20);
+      uploadButtonCanvas.setHeight(22);
       uploadLayout.addMember(uploadButtonCanvas);
       textFieldForm.setWidth("*");
 
       Canvas uploadCanvas = new Canvas();
       uploadCanvas.setWidth(80);
-      uploadCanvas.setHeight(20);
+      uploadCanvas.setHeight(22);
       uploadCanvas.setLeft(5);
       uploadCanvas.setOverflow(Overflow.HIDDEN);
       uploadButtonCanvas.addChild(uploadCanvas);
@@ -225,7 +224,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       Canvas fileUploadCanvas = new Canvas();
       fileUploadCanvas.setWidth(80);
-      fileUploadCanvas.setHeight(20);
+      fileUploadCanvas.setHeight(22);
       uploadCanvas.addChild(fileUploadCanvas);
 
       fileUploadCanvas.setOpacity(0);
@@ -243,7 +242,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       FileUploadInput upload = new FileUploadInput(eventBus);
       upload.setWidth("80px");
-      upload.setHeight("20px");      
+      upload.setHeight("22px");      
       postFieldsPanel.add(upload);
       
       //uploadForm.setEncoding(encodingType)
