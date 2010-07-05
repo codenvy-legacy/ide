@@ -2,27 +2,27 @@ var css_tokens =
 		[
 			{
 				"name" : "!important",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "@charset",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "@import",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "@font-face",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "@media",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "@page",
-				"type" : "PROPERTY",
+				"type" : "PROPERTY"
 			},
 			{
 				"name" : "background",
