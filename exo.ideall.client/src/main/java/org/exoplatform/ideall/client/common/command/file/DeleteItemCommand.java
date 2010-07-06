@@ -41,14 +41,16 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 {
 
    private static final String ID = "File/Delete...";
+   private static final String TITLE = "Delete...";
+   private static final String PROMPT = "Delete Item(s)...";
 
    private Item selectedItem;
 
    public DeleteItemCommand()
    {
       super(ID);
-      setTitle("Delete...");
-      setPrompt("Delete Items...");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       setEvent(new DeleteItemEvent());
    }
