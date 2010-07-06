@@ -22,13 +22,13 @@ import org.exoplatform.ideall.client.gadgets.event.DeployGadgetEvent;
 import org.exoplatform.ideall.client.gadgets.event.DeployGadgetHadndler;
 import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetEvent;
 import org.exoplatform.ideall.client.gadgets.event.UndeployGadgetHandler;
-import org.exoplatform.ideall.client.model.gadget.GadgetService;
-import org.exoplatform.ideall.client.model.gadget.event.GadgetDeployResultEvent;
-import org.exoplatform.ideall.client.model.gadget.event.GadgetDeployResultHandler;
-import org.exoplatform.ideall.client.model.gadget.event.GadgetUndeployResultEvent;
-import org.exoplatform.ideall.client.model.gadget.event.GadgetUndeployResultHandler;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputMessage;
+import org.exoplatform.ideall.gadget.GadgetService;
+import org.exoplatform.ideall.gadget.event.GadgetDeployResultEvent;
+import org.exoplatform.ideall.gadget.event.GadgetDeployResultHandler;
+import org.exoplatform.ideall.gadget.event.GadgetUndeployResultEvent;
+import org.exoplatform.ideall.gadget.event.GadgetUndeployResultHandler;
 
 /**
  * Created by The eXo Platform SAS.

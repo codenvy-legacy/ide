@@ -17,8 +17,8 @@
 package org.exoplatform.ideall.client.gadgets;
 
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
 import org.exoplatform.ideall.client.operation.TabPanel;
+import org.exoplatform.ideall.gadget.GadgetMetadata;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;

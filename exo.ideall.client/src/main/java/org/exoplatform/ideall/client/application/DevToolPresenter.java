@@ -42,13 +42,13 @@ import org.exoplatform.ideall.client.model.configuration.InvalidConfigurationRec
 import org.exoplatform.ideall.client.model.conversation.ConversationService;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHandler;
-import org.exoplatform.ideall.client.model.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
