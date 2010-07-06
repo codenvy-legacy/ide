@@ -126,7 +126,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
       int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
       int y = cursorOffsetY + 4;
-      new NewAutoCompleteForm(x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
+      new NewAutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
    }
 
    /**
