@@ -39,9 +39,9 @@ import org.exoplatform.ideall.vfs.api.Item;
 public class GetFileURLCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "View/Get URL";
+   private static final String ID = "View/Get URL...";
 
-   private static final String TITLE = "Get URL";
+   private static final String TITLE = "Get URL...";
 
    private static final String PROMPT = "Get URL";
 

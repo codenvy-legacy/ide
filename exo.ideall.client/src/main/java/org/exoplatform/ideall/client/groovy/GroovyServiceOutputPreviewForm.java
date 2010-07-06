@@ -55,7 +55,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private static final int HEIGHT = 400;
 
-   private static final String TITLE = "Launch REST Service...";
+   private static final String TITLE = "Launch REST Service";
 
    private IButton showUrlButton;
 

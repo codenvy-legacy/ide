@@ -32,12 +32,12 @@ import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 public class GoToLineControl extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "View/Go to Line";
+   public static final String ID = "View/Go to Line...";
 
    public GoToLineControl()
    {
       super(ID);
-      setTitle("Go to Line");
+      setTitle("Go to Line...");
       setPrompt("Go to Line");
       setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
       setEvent(new GoToLineEvent());

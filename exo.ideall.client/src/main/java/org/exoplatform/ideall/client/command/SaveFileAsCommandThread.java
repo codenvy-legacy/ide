@@ -99,7 +99,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
-      new AskForValueDialog("Save file as...", "Enter new file name:", newFileName, 400, new ValueCallback()
+      new AskForValueDialog("Save file as", "Enter new file name:", newFileName, 400, new ValueCallback()
       {
          public void execute(String value)
          {

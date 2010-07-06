@@ -42,7 +42,7 @@ public class RenameItemCommand extends IDECommand implements ItemsSelectedHandle
    PanelSelectedHandler
 {
 
-   private static final String ID = "File/Rename";
+   private static final String ID = "File/Rename...";
 
    private boolean browserPanelSelected = true;
 
@@ -51,7 +51,7 @@ public class RenameItemCommand extends IDECommand implements ItemsSelectedHandle
    public RenameItemCommand()
    {
       super(ID);
-      setTitle("Rename");
+      setTitle("Rename...");
       setPrompt("Rename Item");
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());
