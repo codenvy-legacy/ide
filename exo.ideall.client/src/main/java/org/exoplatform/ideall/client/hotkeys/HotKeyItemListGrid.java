@@ -45,7 +45,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
    }
 
-   private final static String TITLE = "Control";
+   private final static String TITLE = "Command";
 
    private final static String CONTROL = "Binding";
 
