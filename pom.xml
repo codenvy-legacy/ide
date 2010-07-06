@@ -165,6 +165,16 @@
 				<artifactId>exo.ideall.extension.config</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+      <dependency>
+        <groupId>org.exoplatform.ideall</groupId>
+        <artifactId>exo.ideall.testframework</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+       <dependency>
+        <groupId>org.exoplatform.ideall</groupId>
+        <artifactId>exo.ideall.module.gadget</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>org.exoplatform.portal</groupId>
 				<artifactId>exo.portal.component.application-registry</artifactId>
@@ -359,14 +369,15 @@
 	</build>
 
 	<modules>
+    <module>exo.ideall.testframework</module>
 		<module>exo.ideall.component.commons</module>
     <module>exo.ideall.component.gadget</module>
     <module>exo.ideall.component.netvibes</module>
     <module>exo.ideall.module.vfs</module>
     <module>exo.ideall.module.groovy</module>
+    <module>exo.ideall.module.gadget</module>
     <module>exo.ideall.client</module>
     <module>exo.ideall.extension.config</module>
     <module>exo.ideall.extension.webapp</module>
-		<!--module>exo.ideall.packaging.gatein</module-->
 	</modules>
 </project>
