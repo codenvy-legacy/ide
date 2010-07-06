@@ -21,12 +21,12 @@ package org.exoplatform.ideall.client.gadget;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.TestResponse;
-import org.exoplatform.ideall.client.model.gadget.GadgetMetadata;
-import org.exoplatform.ideall.client.model.gadget.TokenRequest;
-import org.exoplatform.ideall.client.model.gadget.TokenResponse;
-import org.exoplatform.ideall.client.model.gadget.marshal.GadgetMetadataUnmarshaler;
-import org.exoplatform.ideall.client.model.gadget.marshal.TokenRequestMarshaler;
-import org.exoplatform.ideall.client.model.gadget.marshal.TokenResponseUnmarshal;
+import org.exoplatform.ideall.gadget.GadgetMetadata;
+import org.exoplatform.ideall.gadget.TokenRequest;
+import org.exoplatform.ideall.gadget.TokenResponse;
+import org.exoplatform.ideall.gadget.marshal.GadgetMetadataUnmarshaler;
+import org.exoplatform.ideall.gadget.marshal.TokenRequestMarshaler;
+import org.exoplatform.ideall.gadget.marshal.TokenResponseUnmarshal;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONParser;

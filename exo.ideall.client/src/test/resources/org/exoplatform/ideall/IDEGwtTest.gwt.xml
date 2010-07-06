@@ -17,6 +17,7 @@
 	<inherits name='org.exoplatform.gwtframework.ui.UI' />	
 	<inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
 	
+	<inherits name='org.exoplatform.ideall.IDEallGadgetModule' />
 	<inherits name="org.exoplatform.ideall.IDEallVirtualFileSystem"/>
 
 	<!-- Specify the app entry point class.                         -->
