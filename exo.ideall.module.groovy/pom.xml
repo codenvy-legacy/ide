@@ -84,6 +84,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.testframework</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<scope>test</scope>

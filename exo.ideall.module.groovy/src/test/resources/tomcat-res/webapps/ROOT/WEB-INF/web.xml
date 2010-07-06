@@ -7,7 +7,7 @@
 	
 	<servlet>
 		<servlet-name>testservlet</servlet-name>
-		<servlet-class>org.exoplatform.ideall.server.Servlet</servlet-class>
+		<servlet-class>org.exoplatform.ideall.server.GroovyTestServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

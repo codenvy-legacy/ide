@@ -19,9 +19,7 @@
  */
 package org.exoplatform.ideall.server;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
+import org.exoplatform.ideall.testframework.server.AbstractTestServlet;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,10 +28,7 @@ import java.lang.annotation.RetentionPolicy;
  * @version $
  */
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface CanHandleRequest
+public class GroovyTestServlet extends AbstractTestServlet
 {
    
-   String value();
-
 }

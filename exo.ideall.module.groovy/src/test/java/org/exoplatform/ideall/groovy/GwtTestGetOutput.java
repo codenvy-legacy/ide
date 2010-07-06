@@ -37,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GwtTestGetOutput extends Test
+public class GwtTestGetOutput extends ClientTest
 {
 
    public void testGetOutputSuccessfull()

@@ -31,23 +31,24 @@ import com.google.gwt.user.client.Window;
 public class ServletMapping
 {
 
-   private static final String TEST_SERVLET_MAPPING = "/test_servlet";
-   
    public static final String VALIDATE_SUCCESSFULL = "validate_groovy_successfull";
-   
+
    public static final String VALIDATE_FAILURE = "validate_groovy_failure";
-   
+
    public static final String DEPLOY_SUCCESSFULL = "deploy_groovy_successfull";
-   
+
    public static final String DEPLOY_FAILURE = "deploy_groovy_failure";
-   
+
    public static final String UNDEPLOY_SUCCESSFULL = "undeploy_groovy_successfull";
-   
+
    public static final String UNDEPLOY_FAILURE = "undeploy_groovy_failure";
-   
+
    public static final String GETOUTPUT_SUCCESSFULL = "get_output_successfull";
-   
+
    public static final String GETOUTPUT_CUSTOM_STATUS = "get_output_custom_status";
+   
+   
+   private static final String TEST_SERVLET_MAPPING = "/test_servlet";
    
    public static String getURLFor(String mapping) {
       return "http://" + Window.Location.getHost() + TEST_SERVLET_MAPPING + "/" + mapping;

@@ -33,7 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GwtTestDeploy extends Test
+public class GwtTestDeploy extends ClientTest
 {
 
    private final static String groovyFileContent =

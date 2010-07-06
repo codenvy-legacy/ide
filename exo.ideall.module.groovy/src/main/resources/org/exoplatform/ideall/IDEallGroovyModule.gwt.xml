@@ -13,6 +13,11 @@
 	<!-- Specify the app entry point class. -->
 	<!-- entry-point class='org.exoplatform.ideall.client.IDEApplication' /-->
 	
-	<source path="groovy" />
+
+<!-- 
+	<inherits name='org.exoplatform.ideall.testframework.IDEallTestFramework' />
+-->
 	
+	<source path="groovy" />
+
 </module>

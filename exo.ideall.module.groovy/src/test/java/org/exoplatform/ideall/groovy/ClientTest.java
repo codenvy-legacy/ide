@@ -1,7 +1,3 @@
-package org.exoplatform.ideall.groovy;
-
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Copyright (C) 2009 eXo Platform SAS.
  *
@@ -21,6 +17,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
+package org.exoplatform.ideall.groovy;
+
+import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,27 +28,19 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NoGwtTestGroovyModule extends Test
+public abstract class ClientTest extends GWTTestCase
 {
    
-   public void testGroovyModule() {
-      System.out.println("alalal!");
-      
-      System.out.println("GwtTestGroovyModule.testGroovyModule()");
-      
-      HandlerManager eventBus = new HandlerManager(null);
-      
-      String url = ServletMapping.getURLFor(ServletMapping.VALIDATE_SUCCESSFULL);
-      
-      System.out.println("try connect to: " + url);
-      
-      long start = System.currentTimeMillis();
-      
-      GroovyService service = new GroovyServiceImpl(eventBus, url, null);
-      service.deploy("/dev-monit/");
-      
-      long time = System.currentTimeMillis() - start;
-      System.out.println();
+   protected static final int SLEEP_TIME = 10000;
+   
+   @Override
+   public String getModuleName()
+   {
+      return "org.exoplatform.ideall.IDEallGroovyModule";
+   }
+   
+   protected void sleepTest() {
+      delayTestFinish(SLEEP_TIME);
    }
 
 }

@@ -35,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GwtTestUndeploy extends Test
+public class GwtTestUndeploy extends ClientTest
 {
    
    public void testUndeploySuccessfull() {
