@@ -641,7 +641,6 @@
 							<tomcat>${basedir}/tomcat</tomcat>
 							<skipTests>false</skipTests>
 							<webXml>${basedir}/src/test/webapp/WEB-INF/web.xml</webXml>
-							<includes>**/GwtTestGa*.java</includes>
 						</configuration>
 						<executions>
 							<execution>
