@@ -55,6 +55,8 @@ import org.exoplatform.ideall.client.outline.CodeHelperForm;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.SearchResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
@@ -76,7 +78,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHandler, RestoreEditorPanelHandler,
    MaximizeOperationPanelHandler, RestoreOperationPanelHandler, EditorActiveFileChangedHandler,
    RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler, RestoreCodeHelperPanelHandler,
-   ShowOutlineHandler
+   ShowOutlineHandler, SearchResultReceivedHandler
 {
 
    private static final int MARGIN = 3;
@@ -162,6 +164,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       eventBus.addHandler(MaximizeCodeHelperPanelEvent.TYPE, this);
       eventBus.addHandler(RestoreCodeHelperPanelEvent.TYPE, this);
       eventBus.addHandler(ShowOutlineEvent.TYPE, this);
+      eventBus.addHandler(SearchResultReceivedEvent.TYPE, this);
    }
 
    private void buildPerspective()
@@ -543,5 +546,16 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          horizontalSplitLayout2.setResizeBarSize(OUTLINE_RESIZE_BAR_SIZE);
       }
       
+   }
+
+   /**
+    * @see org.exoplatform.ideall.vfs.api.event.SearchResultReceivedHandler#onSearchResultReceived(org.exoplatform.ideall.vfs.api.event.SearchResultReceivedEvent)
+    */
+   public void onSearchResultReceived(SearchResultReceivedEvent event)
+   {
+      if (editorPanelMaximized || operationPanelMaximized || codeHelperPanelMaximized)
+      {
+         restorePerspective();
+      }
    }
 }
