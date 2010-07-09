@@ -202,10 +202,10 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    }
 
    private native int getCursorPos(String token)/*-{
-                                                pattern = "[({]|\\n";
-                                                d = token.search(pattern);
-                                                return (d == -1) ? (token.length+1) : (d+2);
-                                                }-*/;
+         pattern = "[({]|\\n";
+         d = token.search(pattern);
+         return (d == -1) ? (token.length+1) : (d+2);
+   }-*/;
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()

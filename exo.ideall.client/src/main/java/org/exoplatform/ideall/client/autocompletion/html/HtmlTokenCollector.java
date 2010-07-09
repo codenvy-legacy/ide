@@ -19,6 +19,7 @@
 package org.exoplatform.ideall.client.autocompletion.html;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -41,9 +42,17 @@ public class HtmlTokenCollector implements TokenCollector
 {
 
    private static List<Token> htmlTokens;
+   
+   private static List<Token> htmlCoreAttributes;
+   
+   private static List<Token> htmlBaseEvents;
 
    private static List<String> noEndTag = new ArrayList<String>();
 
+   private static List<String> noCoreAttributes = new ArrayList<String>();
+   
+   private static List<String> noBaseEvents = new ArrayList<String>();
+   
    static
    {
 
@@ -59,6 +68,29 @@ public class HtmlTokenCollector implements TokenCollector
       noEndTag.add("meta");
       noEndTag.add("param");
 
+      noCoreAttributes.add("base");
+      noCoreAttributes.add("head");
+      noCoreAttributes.add("html");
+      noCoreAttributes.add("meta");
+      noCoreAttributes.add("param");
+      noCoreAttributes.add("script");
+      noCoreAttributes.add("style");
+      noCoreAttributes.add("title");
+      
+      
+      noBaseEvents.add("base");
+      noBaseEvents.add("bdo");
+      noBaseEvents.add("br");
+      noBaseEvents.add("frame");
+      noBaseEvents.add("frameset");
+      noBaseEvents.add("head");
+      noBaseEvents.add("html");
+      noBaseEvents.add("iframe");
+      noBaseEvents.add("meta");
+      noBaseEvents.add("param");
+      noBaseEvents.add("script");
+      noBaseEvents.add("style");
+      noBaseEvents.add("title");
    }
 
    private HandlerManager eventBus;
@@ -94,7 +126,7 @@ public class HtmlTokenCollector implements TokenCollector
 
       if (!isTag)
       {
-         token.addAll(getTokensByType(TokenType.TAG));
+         token.addAll(getHtmlTagTokens());
          tokensCollectedCallback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
          return;
       }
@@ -117,14 +149,84 @@ public class HtmlTokenCollector implements TokenCollector
          }
          beforeToken += tokenToComplete;
          tokenToComplete = "";
-         token.addAll(getTokensByType(TokenType.ATTRIBUTE));
+         if(noCoreAttributes.contains(tag))
+         {
+            //TODO Add only no attributes;
+            Token t = findTokenByName(tag);
+            fillAttributes(t,token);
+         }
+         else
+         {
+           fillCoreAttributes(token);
+           Token t = findTokenByName(tag);
+           fillAttributes(t,token);
+         }
+         if(!noBaseEvents.contains(tag))
+           token.addAll(getBaseEvent());
+        // token.addAll(getTokensByType(TokenType.ATTRIBUTE));
       }
       else
       {
-         token.addAll(getTokensByType(TokenType.TAG));
+         token.addAll(getHtmlTagTokens());
       }
 
       tokensCollectedCallback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
+   }
+
+
+
+   /**
+    * @return
+    */
+   private List<Token> getBaseEvent()
+   {
+      if(htmlBaseEvents == null)
+      {
+         JSONTokenParser parser = new JSONTokenParser();
+         htmlBaseEvents = parser.getTokens(new JSONArray(getHtmlBaseEvents()));
+      }
+      
+      return htmlBaseEvents;
+   }
+
+   /**
+    * @param name
+    * @return
+    */
+   private Token findTokenByName(String name)
+   {
+      for(Token t : getHtmlTagTokens())
+      {
+         if(t.getName().equals(name))
+            return t;
+      }
+      return null;
+   }
+
+   /**
+    * @param token 
+    * @param token
+    */
+   private void fillAttributes(Token token, List<Token> tokens)
+   {
+      if(token.getSubTokenList()!= null)
+      {
+         tokens.addAll(token.getSubTokenList());
+      }
+   }
+
+   /**
+    * @param token
+    */
+   private void fillCoreAttributes(List<Token> token)
+   {
+      if(htmlCoreAttributes == null)
+      {
+         JSONTokenParser parser = new JSONTokenParser();
+         htmlCoreAttributes = parser.getTokens(new JSONArray(getHtmlCoreAttributes()));
+      }
+      
+      token.addAll(htmlCoreAttributes);
    }
 
    /**
@@ -159,18 +261,29 @@ public class HtmlTokenCollector implements TokenCollector
 
    }
 
-   private native JavaScriptObject getTokens() /*-{
+   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
                                                return $wnd.html_tokens;
                                                }-*/;
 
+   
+   private native JavaScriptObject getHtmlCoreAttributes()/*-{
+      return $wnd.html_attributes;
+   }-*/;
+   
+   private native JavaScriptObject getHtmlBaseEvents()/*-{
+      return $wnd.html_baseEvents;
+   }-*/;
+   
+  
+   
    /**
     * Filter token list by TokenType
     * @param type 
     * @return List<Token>
     */
-   private List<Token> getTokensByType(TokenType type)
+   private List<Token> getHtmlTagTokens()
    {
-      List<Token> tokens = new ArrayList<Token>();
+//      List<Token> tokens = new ArrayList<Token>();
 //      if (type != TokenType.TAG && type != TokenType.ATTRIBUTE)
 //      {
 //         return tokens;
@@ -179,15 +292,15 @@ public class HtmlTokenCollector implements TokenCollector
       if (htmlTokens == null)
       {
          JSONTokenParser parser = new JSONTokenParser();
-         htmlTokens = parser.getTokens(new JSONArray(getTokens()));
+         htmlTokens = parser.getTokens(new JSONArray(getHtmlTagTokensJSO()));
       }
 
-      for (Token t : htmlTokens)
-      {
-         if (t.getType() == type)
-            tokens.add(t);
-      }
+//      for (Token t : htmlTokens)
+//      {
+//         if (t.getType() == type)
+//            tokens.add(t);
+//      }
 
-      return tokens;
+      return htmlTokens;
    }
 }
