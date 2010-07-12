@@ -59,6 +59,7 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
          String message = "Can't parse output wadl service output!";
          throw new UnmarshallerException(message);
       }
+      
    }
 
 }

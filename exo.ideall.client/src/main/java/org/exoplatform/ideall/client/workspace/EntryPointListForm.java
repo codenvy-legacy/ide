@@ -19,7 +19,7 @@ package org.exoplatform.ideall.client.workspace;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.component.DialogWindow;
+import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;

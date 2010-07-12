@@ -30,7 +30,6 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
 import org.exoplatform.ideall.client.editor.EditorForm;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
@@ -48,6 +47,7 @@ import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEven
 import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveHandler;
+import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;

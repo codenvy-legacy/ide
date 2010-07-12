@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.component.DialogWindow;
+import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;

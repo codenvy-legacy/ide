@@ -164,9 +164,6 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       }
    }
 
-   /**
-    * 
-    */
    private void previewUWAWidget(File file)
    {
       String href = file.getHref();

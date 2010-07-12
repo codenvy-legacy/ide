@@ -37,6 +37,9 @@
 	<inherits name='org.exoplatform.ideall.IDEallVirtualFileSystem'/>  
 	<inherits name='org.exoplatform.ideall.IDEallGroovyModule'/>
 	<inherits name='org.exoplatform.ideall.IDEallGadgetModule'/>
+	
+	<inherits name='org.exoplatform.ideall.client.framework.IDEallClientFramework'/>
+	
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.exoplatform.ideall.client.IDEApplication' />

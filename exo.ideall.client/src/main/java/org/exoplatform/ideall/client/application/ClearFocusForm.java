@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.application;
 
-import org.exoplatform.ideall.client.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.event.ClearFocusHandler;
+import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ideall.client.framework.ui.event.ClearFocusHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;

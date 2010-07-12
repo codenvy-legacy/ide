@@ -3,7 +3,7 @@ package org.exoplatform.ideall.client.editor.custom;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.component.DialogWindow;
+import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
