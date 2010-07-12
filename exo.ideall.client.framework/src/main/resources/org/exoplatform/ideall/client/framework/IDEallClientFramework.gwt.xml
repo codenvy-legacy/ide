@@ -14,4 +14,6 @@
 	<source path="control" />
 	<source path="editor" />
 	<source path="model" />
+	<source path="plugin" />
+	<source path="ui" />
 </module>
