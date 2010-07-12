@@ -93,8 +93,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
       for (Token t : tokens)
       {
-         if (t.getMimeType().equals(mimeType)
-            && (t.getType() != TokenType.START_DELIMITER && t.getType() != TokenType.FINISH_DELIMITER && t.getName() != null))
+         if (t.getMimeType().equals(mimeType))
          {
             token.add(t);
          }
