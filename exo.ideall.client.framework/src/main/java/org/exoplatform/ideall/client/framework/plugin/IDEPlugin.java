@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ideall.client.framework.plugin;
 
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -25,4 +29,6 @@ package org.exoplatform.ideall.client.framework.plugin;
 public interface IDEPlugin
 {
 
+   void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context);
+   
 }
