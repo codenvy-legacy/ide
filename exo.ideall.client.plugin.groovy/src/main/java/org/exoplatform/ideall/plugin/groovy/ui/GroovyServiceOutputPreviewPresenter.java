@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.groovy;
+package org.exoplatform.ideall.plugin.groovy.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +31,9 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.SimpleParameterEntry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -105,7 +108,7 @@ public class GroovyServiceOutputPreviewPresenter
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   private AbstractApplicationContext context;
 
    private Display display;
 
@@ -135,7 +138,7 @@ public class GroovyServiceOutputPreviewPresenter
 
    private String currentPath;
 
-   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, ApplicationContext context,
+   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, AbstractApplicationContext context,
       WadlApplication wadlApplication)
    {
       this.eventBus = eventBus;

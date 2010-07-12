@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ValidateGroosyScriptHandler extends EventHandler
+public interface ValidateGroovyScriptHandler extends EventHandler
 {
 
    void onValidateGroovyScript(ValidateGroovyScriptEvent event);

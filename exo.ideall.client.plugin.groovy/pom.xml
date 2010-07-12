@@ -15,6 +15,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.module.groovy</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.exoplatform.gwt</groupId>
 			<artifactId>exo.gwtframework.commons</artifactId>
 		</dependency>

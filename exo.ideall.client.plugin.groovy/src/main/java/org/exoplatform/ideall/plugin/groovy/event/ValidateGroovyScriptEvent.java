@@ -28,20 +28,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ValidateGroovyScriptEvent extends GwtEvent<ValidateGroosyScriptHandler>
+public class ValidateGroovyScriptEvent extends GwtEvent<ValidateGroovyScriptHandler>
 {
 
-   public static final GwtEvent.Type<ValidateGroosyScriptHandler> TYPE =
-      new GwtEvent.Type<ValidateGroosyScriptHandler>();
+   public static final GwtEvent.Type<ValidateGroovyScriptHandler> TYPE =
+      new GwtEvent.Type<ValidateGroovyScriptHandler>();
 
    @Override
-   protected void dispatch(ValidateGroosyScriptHandler handler)
+   protected void dispatch(ValidateGroovyScriptHandler handler)
    {
       handler.onValidateGroovyScript(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ValidateGroosyScriptHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ValidateGroovyScriptHandler> getAssociatedType()
    {
       return TYPE;
    }

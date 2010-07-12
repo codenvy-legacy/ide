@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.groovy;
+package org.exoplatform.ideall.plugin.groovy.ui;
 
 import java.util.LinkedHashMap;
 
@@ -22,7 +22,9 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
+import org.exoplatform.ideall.plugin.groovy.Images;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -84,7 +86,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private TabSet parametersTabSet;
 
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, ApplicationContext context,
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, AbstractApplicationContext context,
       WadlApplication wadlApplication)
    {
       super(eventBus, WIDTH, HEIGHT);
@@ -264,7 +266,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
       
-      showUrlButton.setIcon(Images.MainMenu.GET_URL);
+      showUrlButton.setIcon(Images.Buttons.URL);
 
       sendRequestButton = new IButton("Send");
       sendRequestButton.setWidth(90);

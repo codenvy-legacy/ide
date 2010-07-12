@@ -17,15 +17,40 @@
 package org.exoplatform.ideall.plugin.groovy;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
+import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+import org.exoplatform.ideall.groovy.GroovyService;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ideall.groovy.model.wadl.WadlService;
+import org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceiveHandler;
+import org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent;
+import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptHandler;
 import org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent;
+import org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputHandler;
 import org.exoplatform.ideall.plugin.groovy.event.SetAutoloadEvent;
+import org.exoplatform.ideall.plugin.groovy.event.SetAutoloadHandler;
 import org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent;
+import org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptEvent;
+import org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptHandler;
+import org.exoplatform.ideall.plugin.groovy.ui.GroovyServiceOutputPreviewForm;
+import org.exoplatform.ideall.plugin.groovy.util.GroovyPropertyUtil;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.sun.net.ssl.internal.www.protocol.https.Handler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,21 +58,25 @@ import com.sun.net.ssl.internal.www.protocol.https.Handler;
  * @version $Id: $
  */
 
-public class GroovyPluginEventHandler
+public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, DeployGroovyScriptHandler,
+   UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
+   GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
+   WadlServiceOutputReceiveHandler
 {
 
    private HandlerManager eventBus;
-   
+
    private AbstractApplicationContext context;
-   
+
    private Handlers handlers;
-   
-   public GroovyPluginEventHandler(HandlerManager eventBus, AbstractApplicationContext context) {
+
+   public GroovyPluginEventHandler(HandlerManager eventBus, AbstractApplicationContext context)
+   {
       this.eventBus = eventBus;
       this.context = context;
-      
+
       handlers = new Handlers(eventBus);
-      
+
       handlers.addHandler(ValidateGroovyScriptEvent.TYPE, this);
       handlers.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
 
@@ -62,7 +91,211 @@ public class GroovyPluginEventHandler
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
 
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
-      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);      
+      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
    }
-   
+
+   /**
+    * @see org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptHandler#onValidateGroovyScript(org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptEvent)
+    */
+   @Override
+   public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
+   {
+      GroovyService.getInstance().validate(context.getActiveFile().getName(), context.getActiveFile().getContent());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptHandler#onDeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent)
+    */
+   @Override
+   public void onDeployGroovyScript(DeployGroovyScriptEvent event)
+   {
+      GroovyService.getInstance().deploy(context.getActiveFile().getHref());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptHandler#onUndeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent)
+    */
+   @Override
+   public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
+   {
+      GroovyService.getInstance().undeploy(context.getActiveFile().getHref());
+   }
+
+   /**
+    * @see org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent)
+    */
+   @Override
+   public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
+   {
+      if (event.getException() == null)
+      {
+         /*
+          * Validation successfully
+          */
+         String outputContent = "<b>" + event.getFileName() + "</b> validated successfully.";
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      }
+      else
+      {
+         /*
+          * Validation failed
+          */
+         ServerException exception = (ServerException)event.getException();
+
+         String outputContent = "<b>" + event.getFileName() + "</b> validation failed.&nbsp;";
+         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler#onGroovyDeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent)
+    */
+   @Override
+   public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+   {
+      if (event.getException() == null)
+      {
+         /*
+          * Deploying successfully
+          */
+         String outputContent = "<b>" + event.getPath() + "</b> deployed successfully.";
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      }
+      else
+      {
+         /*
+          * Deploying failed
+          */
+         ServerException exception = (ServerException)event.getException();
+
+         String outputContent = "<b>" + event.getPath() + "</b> deploy failed.&nbsp;";
+         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+
+   }
+
+   /**
+    * @see org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent)
+    */
+   @Override
+   public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
+   {
+      if (event.getException() == null)
+      {
+         /*
+          * Undeploy successfully
+          */
+         String outputContent = "<b>" + event.getPath() + "</b> undeployed successfully.";
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      }
+      else
+      {
+         /*
+          * Undeploy failed
+          */
+         ServerException exception = (ServerException)event.getException();
+
+         String outputContent = "<b>" + event.getPath() + "</b> undeploy failed.&nbsp;";
+         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler#onRestServiceOutputReceived(org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent)
+    */
+   @Override
+   public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
+   {
+      if (event.getException() == null)
+      {
+         String response = event.getOutput().getResponseAsHtmlString();
+
+         OutputEvent outputEvent = new OutputEvent(response, OutputMessage.Type.OUTPUT);
+         eventBus.fireEvent(outputEvent);
+      }
+      else
+      {
+         ServerException exception = (ServerException)event.getException();
+
+         if (exception.isErrorMessageProvided())
+         {
+            String message =
+               "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
+                  + exception.getStatusText() + "<hr>" + exception.getMessage();
+
+            OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
+            eventBus.fireEvent(errorEvent);
+         }
+         else
+         {
+            String message =
+               "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
+                  + exception.getStatusText();
+            OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
+            eventBus.fireEvent(errorEvent);
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ideall.plugin.groovy.event.SetAutoloadHandler#onSetAutoload(org.exoplatform.ideall.plugin.groovy.event.SetAutoloadEvent)
+    */
+   @Override
+   public void onSetAutoload(SetAutoloadEvent event)
+   {
+      File file = context.getActiveFile();
+      Property jcrContentProperty = GroovyPropertyUtil.getProperty(file.getProperties(), ItemProperty.JCR_CONTENT);
+      Property autoloadProperty =
+         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
+      autoloadProperty.setValue("" + event.isAutoload());
+
+      VirtualFileSystem.getInstance().saveProperties(file);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent)
+    */
+   @Override
+   public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
+   {
+      String content = context.getActiveFile().getContent();
+      int indStart = content.indexOf("\"");
+      int indEnd = content.indexOf("\"", indStart + 1);
+      String path = content.substring(indStart + 1, indEnd);
+      if (!path.startsWith("/"))
+      {
+         path = "/" + path;
+      }
+      //TODO : fix configuration
+      String url = ""; //Configuration.getInstance().getContext() + path;
+
+      WadlService.getInstance().getWadl(url);
+   }
+
+   /**
+    * @see org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceivedEvent)
+    */
+   @Override
+   public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
+   {
+      new GroovyServiceOutputPreviewForm(eventBus, context, event.getApplication());
+   }
+
 }

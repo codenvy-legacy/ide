@@ -31,39 +31,39 @@ public interface GroovyPluginImageBundle extends ClientBundle
 
    public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
    
-   @Source("../public/images/bundled/groovy/set_autoload.png")
+   @Source("../public/images/bundled/set_autoload.png")
    ImageResource setAutoLoad();
 
-   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
+   @Source("../public/images/bundled/set_autoload_Disabled.png")
    ImageResource setAutoLoadDisabled();
 
-   @Source("../public/images/bundled/groovy/unset_autoload.png")
+   @Source("../public/images/bundled/unset_autoload.png")
    ImageResource unsetAutoLoad();
 
-   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
+   @Source("../public/images/bundled/unset_autoload_Disabled.png")
    ImageResource unsetAutoLoadDisabled();
 
-   @Source("../public/images/bundled/groovy/validate.png")
+   @Source("../public/images/bundled/validate.png")
    ImageResource validateGroovy();
 
-   @Source("../public/images/bundled/groovy/validate_Disabled.png")
+   @Source("../public/images/bundled/validate_Disabled.png")
    ImageResource validateGroovyDisabled();
 
-   @Source("../public/images/bundled/groovy/deploy.png")
+   @Source("../public/images/bundled/deploy.png")
    ImageResource deployGroovy();
 
-   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
+   @Source("../public/images/bundled/deploy_Disabled.png")
    ImageResource deployGroovyDisabled();
 
-   @Source("../public/images/bundled/groovy/undeploy.png")
+   @Source("../public/images/bundled/undeploy.png")
    ImageResource undeployGroovy();
 
-   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
+   @Source("../public/images/bundled/undeploy_Disabled.png")
    ImageResource undeployGroovyDisabled();
 
-   @Source("../public/images/bundled/groovy/output.png")
+   @Source("../public/images/bundled/output.png")
    ImageResource groovyOutput();
 
-   @Source("../public/images/bundled/groovy/output_Disabled.png")
+   @Source("../public/images/bundled/output_Disabled.png")
    ImageResource groovyOutputDisabled();
 }

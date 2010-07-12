@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ideall.plugin.groovy;
 
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -24,6 +26,20 @@ package org.exoplatform.ideall.plugin.groovy;
 
 public class Images
 {
-  
+   
+   public static final String imageUrl = UIHelper.getGadgetImagesURL();
+
+   public interface Buttons
+   {
+      
+      public static String OK = "/public/images/button/ok.png";
+      
+      public static String NO = "/public/images/button/no.png";
+      
+      public static String YES = "/public/images/button/yes.png";
+      
+      public static String URL = "/public/images/button/url.png";
+   
+   }
    
 }
