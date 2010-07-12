@@ -9,9 +9,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.client.plugin.groovy</artifactId>
+	<artifactId>exo.ideall.client.plugin.netvibes</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Client : Groovy Plugin</name>
+	<name>eXo IDE :: Client : Netvibes Plugin</name>
 
 	<dependencies>
 		<dependency>
