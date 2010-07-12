@@ -17,15 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.api.control;
+package org.exoplatform.ideall.client.framework.control;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.ideall.client.api.AbstractApplicationContext;
-import org.exoplatform.ideall.client.api.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.api.application.event.InitializeApplicationHandler;
-import org.exoplatform.ideall.client.api.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.api.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;

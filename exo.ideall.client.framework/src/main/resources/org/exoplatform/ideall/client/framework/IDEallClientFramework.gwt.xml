@@ -10,5 +10,8 @@
 	<inherits name='com.google.gwt.json.JSON' />
 	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
 
-	<source path="api" />	
+	<source path="application" />	
+	<source path="control" />
+	<source path="editor" />
+	<source path="model" />
 </module>

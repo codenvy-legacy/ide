@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.api.application.event;
+package org.exoplatform.ideall.client.framework.application.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler>
+public interface RegisterEventHandlersHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE = new GwtEvent.Type<InitializeApplicationHandler>();
-
-   @Override
-   protected void dispatch(InitializeApplicationHandler handler)
-   {
-      handler.onInitializeApplication(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InitializeApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onRegisterEventHandlers(RegisterEventHandlersEvent event);
 
 }

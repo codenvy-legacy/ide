@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.api;
+package org.exoplatform.ideall.client.framework.model;
 
 /**
  * Created by The eXo Platform SAS.
@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.api;
  * @version $Id: $
  */
 
-public class AbstractApplicationContext
+public abstract class AbstractApplicationContext
 {
 
 }

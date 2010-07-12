@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.api.editor.event;
+package org.exoplatform.ideall.client.framework.editor.event;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ideall.vfs.api.File;
