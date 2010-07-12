@@ -16,7 +16,9 @@
  */
 package org.exoplatform.ideall.plugin.gadget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS.
@@ -24,7 +26,20 @@ import com.google.gwt.resources.client.ClientBundle;
  * @version $Id: $
  */
 
-public class GadgetPluginImageBundle implements ClientBundle
+public interface GadgetPluginImageBundle extends ClientBundle
 {
 
+   public static final GadgetPluginImageBundle INSTANCE = GWT.create(GadgetPluginImageBundle.class);
+
+   @Source("../public/images/bundled/deploy_gadget.png")
+   ImageResource deployGadget();
+
+   @Source("../public/images/bundled/deploy_gadget_Disabled.png")
+   ImageResource deployGadgetDisabled();
+
+   @Source("../public/images/bundled/undeploy_gadget.png")
+   ImageResource undeployGadget();
+
+   @Source("../public/images/bundled/undeploy_gadget_Disabled.png")
+   ImageResource undeployGadgetDisabled();
 }

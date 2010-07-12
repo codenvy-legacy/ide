@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>org.exoplatform.ideall</groupId>
@@ -15,8 +16,25 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.module.gadget</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.exoplatform.gwt</groupId>
 			<artifactId>exo.gwtframework.commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.client.framework</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.gwt</groupId>
+			<artifactId>exo.gwtframework.ui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.smartgwt</groupId>
+			<artifactId>smartgwt</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -28,13 +46,14 @@
 			<artifactId>gwt-user</artifactId>
 		</dependency>
 		<dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<!--
 			dependency> <groupId>emma</groupId> <artifactId>emma</artifactId>
-			<version>2.0.5312-patched</version> <scope>test</scope> </dependency -->
+			<version>2.0.5312-patched</version> <scope>test</scope> </dependency
+		-->
 	</dependencies>
 	<build>
 		<resources>
@@ -60,9 +79,9 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<dependencies>    
+			<dependencies>
 			</dependencies>
-			
+
 			<build>
 				<plugins>
 					<plugin>
@@ -82,7 +101,8 @@
 											<fileset dir="${basedir}/src/test/resources/tomcat-res" />
 										</copy>
 										<echo>build rest.war</echo>
-										<war destfile="${basedir}/tomcat/webapps/rest.war" basedir="${basedir}/src/test/webapp" needxmlfile="false" />
+										<war destfile="${basedir}/tomcat/webapps/rest.war"
+											basedir="${basedir}/src/test/webapp" needxmlfile="false" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -109,7 +129,11 @@
 							<testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
 							<manualMode>${manualMode}</manualMode>
 							<productionMode>${productionMode}</productionMode>
-							<!-- extraJvmArgs>-Xms1G -Xmx1G -Xss1024k	-Dcatalina.base=${project.build.directory}/tomcat	-Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs-->
+							<!--
+								extraJvmArgs>-Xms1G -Xmx1G -Xss1024k
+								-Dcatalina.base=${project.build.directory}/tomcat
+								-Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs
+							-->
 						</configuration>
 						<executions>
 							<execution>
