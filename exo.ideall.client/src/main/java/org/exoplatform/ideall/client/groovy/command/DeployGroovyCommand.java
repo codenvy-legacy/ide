@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.groovy.event.DeployGroovyScriptEvent;
+import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent;
 
 /**
  * Created by The eXo Platform SAS .

@@ -36,6 +36,13 @@
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+	<dependency>
+			<groupId>com.google.gwt</groupId>
+	       <artifactId>gwt-dev</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+		
 		<dependency>
 			<groupId>com.smartgwt</groupId>
 			<artifactId>smartgwt</artifactId>
@@ -61,6 +68,13 @@
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.module.vfs</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.client.groovy</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>IDEall</finalName>

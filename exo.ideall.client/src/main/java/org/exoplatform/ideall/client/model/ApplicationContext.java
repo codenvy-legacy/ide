@@ -37,9 +37,9 @@ import org.exoplatform.ideall.vfs.api.Item;
  * @version @version $Id: $
  */
 
-public class ApplicationContext
+public class ApplicationContext extends AbstractApplicationContext
 {
-
+   
    /**
     * Logged user information
     */
@@ -111,16 +111,19 @@ public class ApplicationContext
    /**
     * Uses for storing default state of toolbar
     */
+   //TODO
    private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
 
    /*
     * Store status bar control id's here
     */
+   
    private List<String> statusBarItems = new ArrayList<String>();
 
    /**
     * Uses for storing the current state of defaults editors
     */
+   //TODO
    private HashMap<String, String> defaultEditors = new HashMap<String, String>();
 
    /**
@@ -150,8 +153,6 @@ public class ApplicationContext
    private boolean showOutline = true;
 
    private boolean initialized;
-
-   private Item cached;
 
    private List<String> openedForms = new ArrayList<String>();
 
@@ -390,16 +391,6 @@ public class ApplicationContext
    public void setSelectedEditorDescription(String selectedEditor)
    {
       this.selectedEditorDescription = selectedEditor;
-   }
-
-   public Item getCache()
-   {
-      return cached;
-   }
-
-   public void setCache(Item cache)
-   {
-      this.cached = cache;
    }
 
    public List<String> getStatusBarItems()
