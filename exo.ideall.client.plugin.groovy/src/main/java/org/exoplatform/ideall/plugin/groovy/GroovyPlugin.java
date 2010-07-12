@@ -16,14 +16,25 @@
  */
 package org.exoplatform.ideall.plugin.groovy;
 
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.plugin.IDEPlugin;
+
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class Images
+public class GroovyPlugin implements IDEPlugin
 {
-  
-   
+
+   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   {
+      // add controls
+      
+      new GroovyPluginEventHandler(eventBus, context);
+   }
+
 }
