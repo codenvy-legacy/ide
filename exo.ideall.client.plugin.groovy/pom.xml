@@ -19,6 +19,19 @@
 			<artifactId>exo.gwtframework.commons</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.exoplatform.gwt</groupId>
+			<artifactId>exo.gwtframework.ui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.smartgwt</groupId>
+			<artifactId>smartgwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.client.framework</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<scope>runtime</scope>

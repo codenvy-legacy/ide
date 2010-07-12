@@ -17,14 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy;
+package org.exoplatform.ideall.plugin.groovy;
 
-import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.groovy.command.DeployGroovyCommand;
-import org.exoplatform.ideall.client.groovy.command.PreviewWadlOutputCommand;
-import org.exoplatform.ideall.client.groovy.command.SetAutoloadCommand;
-import org.exoplatform.ideall.client.groovy.command.UndeployGroovyCommand;
-import org.exoplatform.ideall.client.groovy.command.ValidateGroovyCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.DeployGroovyCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.PreviewWadlOutputCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.SetAutoloadCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.UndeployGroovyCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.ValidateGroovyCommand;
 
 /**
  * Created by The eXo Platform SAS .

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.groovy;
+package org.exoplatform.ideall.plugin.groovy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,11 +31,6 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.ideall.client.component.WadlParameterEntry;
-import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.groovy.GroovyService;
-import org.exoplatform.ideall.groovy.SimpleParameterEntry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

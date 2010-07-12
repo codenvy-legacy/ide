@@ -24,5 +24,5 @@ package org.exoplatform.ideall.plugin.groovy;
 
 public class Images
 {
-
+   
 }

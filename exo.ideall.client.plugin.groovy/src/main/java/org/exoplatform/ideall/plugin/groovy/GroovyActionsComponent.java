@@ -17,26 +17,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy;
+package org.exoplatform.ideall.plugin.groovy;
+
+import javax.security.auth.login.Configuration;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
-import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.wadl.WadlService;
-import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ideall.client.model.wadl.event.WadlServiceOutputReceivedEvent;
-import org.exoplatform.ideall.client.operation.output.OutputEvent;
-import org.exoplatform.ideall.client.operation.output.OutputMessage;
-import org.exoplatform.ideall.groovy.GroovyService;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler;
-import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent;
-import org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler;
-import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent;
-import org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler;
-import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent;
-import org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptHandler;
 import org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent;
@@ -47,6 +33,7 @@ import org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ideall.plugin.groovy.event.ValidateGroosyScriptHandler;
 import org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptEvent;
+import org.exoplatform.ideall.plugin.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
 import org.exoplatform.ideall.vfs.property.ItemProperty;

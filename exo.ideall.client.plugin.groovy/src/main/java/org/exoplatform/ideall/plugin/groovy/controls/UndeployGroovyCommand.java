@@ -17,14 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy.command;
+package org.exoplatform.ideall.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.groovy.event.UndeployGroovyScriptEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.plugin.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,7 +43,7 @@ public class UndeployGroovyCommand extends IDECommand implements EditorActiveFil
       super(ID);
       setTitle("Undeploy");
       setPrompt("Undeploy REST Service");
-      setImages(IDEImageBundle.INSTANCE.undeployGroovy(), IDEImageBundle.INSTANCE.undeployGroovyDisabled());
+      setImages(GroovyPluginImageBundle.INSTANCE.undeployGroovy(), GroovyPluginImageBundle.INSTANCE.undeployGroovyDisabled());
       setEvent(new UndeployGroovyScriptEvent());
    }
 

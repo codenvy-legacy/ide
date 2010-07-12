@@ -17,15 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy.command;
+package org.exoplatform.ideall.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.groovy.GroovyPropertyUtil;
-import org.exoplatform.ideall.client.groovy.event.SetAutoloadEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.plugin.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ideall.plugin.groovy.event.SetAutoloadEvent;
+import org.exoplatform.ideall.plugin.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
@@ -56,7 +56,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
       super(ID);
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
-      setImages(IDEImageBundle.INSTANCE.setAutoLoad(), IDEImageBundle.INSTANCE.setAutoLoadDisabled());
+      setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
    }
 
@@ -117,7 +117,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
          // is set autoload
          setTitle(TITLE_SET);
          setPrompt(PROMPT_SET);
-         setImages(IDEImageBundle.INSTANCE.setAutoLoad(), IDEImageBundle.INSTANCE.setAutoLoadDisabled());
+         setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(true));
       }
       else
@@ -125,7 +125,7 @@ public class SetAutoloadCommand extends IDECommand implements EditorActiveFileCh
          // is unset autoload
          setTitle(TITLE_UNSET);
          setPrompt(PROMPT_UNSET);
-         setImages(IDEImageBundle.INSTANCE.unsetAutoLoad(), IDEImageBundle.INSTANCE.unsetAutoLoadDisabled());
+         setImages(GroovyPluginImageBundle.INSTANCE.unsetAutoLoad(), GroovyPluginImageBundle.INSTANCE.unsetAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(false));
       }
    }

@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.groovy.command;
+package org.exoplatform.ideall.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.plugin.groovy.GroovyPluginImageBundle;
 import org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent;
 
 /**
@@ -37,7 +37,7 @@ public class PreviewWadlOutputCommand extends IDECommand implements EditorActive
       super(ID);
       setTitle("Launch REST Service...");
       setPrompt("Launch REST Service...");
-      setImages(IDEImageBundle.INSTANCE.groovyOutput(), IDEImageBundle.INSTANCE.groovyOutputDisabled());
+      setImages(GroovyPluginImageBundle.INSTANCE.groovyOutput(), GroovyPluginImageBundle.INSTANCE.groovyOutputDisabled());
       setEvent(new PreviewWadlOutputEvent());
    }
 

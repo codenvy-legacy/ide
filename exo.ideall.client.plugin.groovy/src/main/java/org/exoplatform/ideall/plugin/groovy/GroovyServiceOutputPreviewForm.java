@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.groovy;
+package org.exoplatform.ideall.plugin.groovy;
 
 import java.util.LinkedHashMap;
 
@@ -22,10 +22,7 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.component.DialogWindow;
-import org.exoplatform.ideall.client.component.WadlParameterEntryListGrid;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

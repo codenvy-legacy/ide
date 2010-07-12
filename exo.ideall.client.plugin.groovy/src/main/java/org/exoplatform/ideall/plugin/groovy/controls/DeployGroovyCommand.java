@@ -17,9 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.groovy.command;
+package org.exoplatform.ideall.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.plugin.groovy.GroovyPluginImageBundle;
 import org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent;
 
 /**
@@ -39,7 +43,7 @@ public class DeployGroovyCommand extends IDECommand implements EditorActiveFileC
       super(ID);
       setTitle("Deploy");
       setPrompt("Deploy REST Service");
-      setImages(IDEImageBundle.INSTANCE.deployGroovy(), IDEImageBundle.INSTANCE.deployGroovyDisabled());
+      setImages(GroovyPluginImageBundle.INSTANCE.deployGroovy(), GroovyPluginImageBundle.INSTANCE.deployGroovyDisabled());
       setEvent(new DeployGroovyScriptEvent());
    }
 
