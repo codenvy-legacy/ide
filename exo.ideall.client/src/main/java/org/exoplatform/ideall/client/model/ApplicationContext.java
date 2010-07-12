@@ -25,6 +25,7 @@ import java.util.Map;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 import org.exoplatform.ideall.vfs.api.File;
@@ -52,10 +53,6 @@ public class ApplicationContext extends AbstractApplicationContext
     */
    private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
-   /**
-    * Current active file in editor.
-    */
-   private File activeFile;
 
    /**
     * Current active text editor.
@@ -171,21 +168,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.userInfo = userInfo;
    }
 
-   /**
-    * @return the activeFile
-    */
-   public File getActiveFile()
-   {
-      return activeFile;
-   }
-
-   /**
-    * @param activeFile
-    */
-   public void setActiveFile(File activeFile)
-   {
-      this.activeFile = activeFile;
-   }
 
    /**
     * @return the activeTextEditor

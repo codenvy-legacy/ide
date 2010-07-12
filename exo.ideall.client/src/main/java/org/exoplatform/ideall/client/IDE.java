@@ -7,7 +7,6 @@ import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
-import org.exoplatform.ideall.client.groovy.GroovyActionsComponent;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
@@ -68,7 +67,7 @@ public class IDE extends VerticalPanel
        */
 
       context.getComponents().add(new CommonActionsComponent());
-      context.getComponents().add(new GroovyActionsComponent());
+      //context.getComponents().add(new GroovyActionsComponent());
 
       context.getComponents().add(new GadgetActionsComponent());
 

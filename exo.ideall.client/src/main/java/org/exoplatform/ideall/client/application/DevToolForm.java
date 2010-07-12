@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ideall.client.application;
 
+import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
 import org.exoplatform.ideall.client.application.perspective.DefaultPerspective;
 import org.exoplatform.ideall.client.download.DownloadContentForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -26,7 +27,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.Layout;
-import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +59,6 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display
       draw();
       Window.addResizeHandler(new ResizeHandler()
       {
-         
          public void onResize(ResizeEvent event)
          {
            eventBus.fireEvent(new WindowResizeEvent()); 
