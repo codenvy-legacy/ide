@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ideall.client.framework.model;
 
+import org.exoplatform.ideall.vfs.api.File;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -24,5 +26,26 @@ package org.exoplatform.ideall.client.framework.model;
 
 public abstract class AbstractApplicationContext
 {
+   
+   /**
+    * Current active file in editor.
+    */
+   private File activeFile;
+
+   /**
+    * @return the activeFile
+    */
+   public File getActiveFile()
+   {
+      return activeFile;
+   }
+
+   /**
+    * @param activeFile
+    */
+   public void setActiveFile(File activeFile)
+   {
+      this.activeFile = activeFile;
+   }  
 
 }
