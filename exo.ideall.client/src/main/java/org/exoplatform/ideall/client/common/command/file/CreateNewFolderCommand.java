@@ -28,6 +28,8 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -51,11 +53,16 @@ public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedH
       setPrompt("Create Folder...");
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
+      
+      Window.alert("Creatring........");
+      
    }
 
    @Override
    protected void onRegisterHandlers()
    {
+      Window.alert("Registyerlasdkfj asdlflasdkj");
+      
       addHandler(PanelSelectedEvent.TYPE, this);
       addHandler(ItemsSelectedEvent.TYPE, this);
    }
@@ -63,6 +70,8 @@ public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedH
    @Override
    protected void onInitializeApplication()
    {
+      Window.alert("000000000000000000000000000000000");
+      
       setVisible(true);
       updateEnabling();
    }

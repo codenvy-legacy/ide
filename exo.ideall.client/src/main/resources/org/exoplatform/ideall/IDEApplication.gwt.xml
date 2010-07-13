@@ -39,6 +39,7 @@
 	<inherits name='org.exoplatform.ideall.IDEallGadgetModule'/>
 	
 	<inherits name='org.exoplatform.ideall.client.framework.IDEallClientFramework'/>
+	<inherits name='org.exoplatform.ideall.client.plugin.IDEallGadgetPlugin'/>
 	
 
 	<!-- Specify the app entry point class. -->

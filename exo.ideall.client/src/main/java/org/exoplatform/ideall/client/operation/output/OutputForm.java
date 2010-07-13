@@ -20,7 +20,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.operation.TabPanel;
+import org.exoplatform.ideall.client.framework.ui.TabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

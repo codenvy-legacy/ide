@@ -20,8 +20,8 @@
 package org.exoplatform.ideall.client.application.component;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.EventHandler;

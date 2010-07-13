@@ -25,11 +25,12 @@ import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEve
 import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEvent;
-import org.exoplatform.ideall.client.gadgets.GadgetPreviewPane;
+import org.exoplatform.ideall.client.framework.ui.TabPanel;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.operation.output.OutputForm;
 import org.exoplatform.ideall.client.operation.preview.PreviewForm;
 import org.exoplatform.ideall.client.operation.properties.PropertiesForm;
+import org.exoplatform.ideall.client.plugin.gadget.ui.GadgetPreviewPane;
 import org.exoplatform.ideall.gadget.GadgetMetadata;
 import org.exoplatform.ideall.vfs.api.File;
 
@@ -341,7 +342,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    public void showGadget(GadgetMetadata metadata)
    {
       show();
-      gadgetPreviewPane = new GadgetPreviewPane(eventBus, metadata);
+      gadgetPreviewPane = new GadgetPreviewPane(eventBus, context, metadata);
       // if preview already opened
       gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
       if (gadgetPreviewTab == null)

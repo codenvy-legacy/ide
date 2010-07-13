@@ -18,8 +18,8 @@ package org.exoplatform.ideall.client.operation.properties;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.ImageUtil;
+import org.exoplatform.ideall.client.framework.ui.TabPanel;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.operation.TabPanel;
 import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
 import org.exoplatform.ideall.vfs.api.File;
 

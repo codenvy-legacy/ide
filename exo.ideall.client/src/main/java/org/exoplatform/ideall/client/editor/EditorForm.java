@@ -17,7 +17,6 @@
 package org.exoplatform.ideall.client.editor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;

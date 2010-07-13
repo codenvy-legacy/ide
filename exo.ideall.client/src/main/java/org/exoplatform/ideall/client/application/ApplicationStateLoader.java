@@ -32,6 +32,7 @@ import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .

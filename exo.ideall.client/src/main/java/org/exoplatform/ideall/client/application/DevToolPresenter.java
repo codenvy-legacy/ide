@@ -56,6 +56,7 @@ import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -123,6 +124,9 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       {
          if (command instanceof IDECommand)
          {
+            
+            System.out.println("initialization " + command.getId());
+            
             ((IDECommand)command).initialize(eventBus, context);
          }
       }

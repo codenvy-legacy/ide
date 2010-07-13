@@ -81,6 +81,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+			<artifactId>exo.ideall.client.plugin.gadget</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>IDEall</finalName>

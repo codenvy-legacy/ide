@@ -5,11 +5,10 @@ import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
 import org.exoplatform.ideall.client.common.HelpActionsComponent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
+import org.exoplatform.ideall.groovy.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -62,7 +61,7 @@ public class IDE extends VerticalPanel
       context.getComponents().add(new CommonActionsComponent());
       //context.getComponents().add(new GroovyActionsComponent());
 
-      context.getComponents().add(new GadgetActionsComponent());
+      //context.getComponents().add(new GadgetActionsComponent());
 
       context.getComponents().add(new HelpActionsComponent());
       
@@ -73,7 +72,12 @@ public class IDE extends VerticalPanel
       new DevToolForm(eventBus, context);
 
       Configuration configuration = new Configuration(eventBus, context);
-      configuration.loadConfiguration(IDELoader.getInstance());
+      configuration.loadConfiguration(IDELoader.getInstance());         
+
+      try {
+      } catch (Exception exc) {
+         exc.printStackTrace();
+      }
       
       //Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
    }

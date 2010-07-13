@@ -17,12 +17,12 @@
 
 package org.exoplatform.ideall.client.browser;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.panel.SimpleTabPanel;
 import org.exoplatform.ideall.vfs.api.Item;
-
-import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
