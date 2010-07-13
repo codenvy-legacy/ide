@@ -274,8 +274,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
       {
          path = "/" + path;
       }
-      //TODO : fix configuration
-      String url = ""; //Configuration.getInstance().getContext() + path;
+      String url = context.getApplicationConfiguration().getContext() + path;
 
       WadlService.getInstance().getWadl(url);
    }
