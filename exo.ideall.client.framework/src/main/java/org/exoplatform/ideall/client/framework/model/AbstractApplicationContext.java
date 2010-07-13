@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
+import org.exoplatform.ideall.client.framework.model.configuration.ApplicationConfiguration;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**
@@ -39,19 +39,19 @@ public abstract class AbstractApplicationContext
     * Current active file in editor.
     */
    private File activeFile;
-   
+
    private List<String> openedForms = new ArrayList<String>();
-   
+
    private boolean showLineNumbers = true;
-   
+
    private String entryPoint;
-   
+
    private boolean showOutline = true;
-   
+
    /**
     * Opened files in editor
     */
-   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();   
+   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    public ApplicationConfiguration getApplicationConfiguration()
    {
@@ -78,7 +78,7 @@ public abstract class AbstractApplicationContext
    {
       this.activeFile = activeFile;
    }
-   
+
    /**
     * @return the openedForms
     */
@@ -86,7 +86,7 @@ public abstract class AbstractApplicationContext
    {
       return openedForms;
    }
-   
+
    public boolean isShowLineNumbers()
    {
       return showLineNumbers;
@@ -96,7 +96,7 @@ public abstract class AbstractApplicationContext
    {
       this.showLineNumbers = showLineNumbers;
    }
-   
+
    public String getEntryPoint()
    {
       return entryPoint;
@@ -106,7 +106,7 @@ public abstract class AbstractApplicationContext
    {
       this.entryPoint = entryPoint;
    }
-   
+
    /**
     * @return the showOutline
     */
@@ -122,13 +122,13 @@ public abstract class AbstractApplicationContext
    {
       this.showOutline = showOutline;
    }
-   
+
    /**
     * @return the openedFiles
     */
    public HashMap<String, File> getOpenedFiles()
    {
       return openedFiles;
-   }   
+   }
 
 }
