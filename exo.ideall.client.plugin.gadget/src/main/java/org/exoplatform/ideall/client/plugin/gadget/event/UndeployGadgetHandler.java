@@ -14,30 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.gadget.event;
+package org.exoplatform.ideall.client.plugin.gadget.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DeployGadgetEvent extends GwtEvent<DeployGadgetHadndler>
+public interface UndeployGadgetHandler extends EventHandler
 {
-
-   public static Type<DeployGadgetHadndler> TYPE = new Type<DeployGadgetHadndler>();
-
-   @Override
-   protected void dispatch(DeployGadgetHadndler hadndler)
-   {
-      hadndler.onDeployGadget(this);
-   }
-
-   @Override
-   public Type<DeployGadgetHadndler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onUndeployGadget(UndeployGadgetEvent event);
 }

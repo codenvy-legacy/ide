@@ -14,35 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.gadget.controls;
+package org.exoplatform.ideall.client.plugin.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.plugin.gadget.GadgetPluginImageBundle;
-import org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetEvent;
+import org.exoplatform.ideall.client.plugin.gadget.GadgetPluginImageBundle;
+import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class UndeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class DeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Run/UnDeploy Gadget";
+   private static final String ID = "Run/Deploy Gadget";
 
-   private static final String TITLE = "UnDeploy Gadget from GateIn";
+   private static final String TITLE = "Deploy Gadget to GateIn";
 
-   public UndeployGadgetCommand()
+   public DeployGadgetCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(), GadgetPluginImageBundle.INSTANCE
-         .undeployGadgetDisabled());
-      setEvent(new UndeployGadgetEvent());
+      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
+         .deployGadgetDisabled());
+      setEvent(new DeployGadgetEvent());
    }
 
    @Override
@@ -66,7 +66,6 @@ public class UndeployGadgetCommand extends IDECommand implements EditorActiveFil
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
-
          if (event.getFile().isNewFile())
          {
             setEnabled(false);

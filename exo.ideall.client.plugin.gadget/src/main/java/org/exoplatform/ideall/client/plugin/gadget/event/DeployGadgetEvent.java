@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.gadget.event;
+package org.exoplatform.ideall.client.plugin.gadget.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -23,33 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler>
+public class DeployGadgetEvent extends GwtEvent<DeployGadgetHadndler>
 {
 
-   public static Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
+   public static Type<DeployGadgetHadndler> TYPE = new Type<DeployGadgetHadndler>();
 
-   private String url;
-
-   public GadgetPeviewEvent(String url)
+   @Override
+   protected void dispatch(DeployGadgetHadndler hadndler)
    {
-      this.url = url;
+      hadndler.onDeployGadget(this);
    }
 
    @Override
-   protected void dispatch(GadgetPeviewHandler handler)
-   {
-      handler.onGadgetPreview(this);
-   }
-
-   @Override
-   public Type<GadgetPeviewHandler> getAssociatedType()
+   public Type<DeployGadgetHadndler> getAssociatedType()
    {
       return TYPE;
-   }
-
-   public String getUrl()
-   {
-      return url;
    }
 
 }

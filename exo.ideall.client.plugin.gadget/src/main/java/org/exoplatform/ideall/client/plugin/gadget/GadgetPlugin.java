@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.plugin.gadget;
+package org.exoplatform.ideall.client.plugin.gadget;
 
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.IDEPlugin;
@@ -34,7 +34,6 @@ public class GadgetPlugin implements IDEPlugin
    /**
     * @see org.exoplatform.ideall.client.framework.plugin.IDEPlugin#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
     */
-   @Override
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
 //      add controll

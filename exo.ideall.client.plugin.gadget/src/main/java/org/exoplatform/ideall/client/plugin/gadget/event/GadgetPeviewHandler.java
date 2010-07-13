@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.plugin.gadget.event;
+package org.exoplatform.ideall.client.plugin.gadget.event;
 
 import com.google.gwt.event.shared.EventHandler;
 

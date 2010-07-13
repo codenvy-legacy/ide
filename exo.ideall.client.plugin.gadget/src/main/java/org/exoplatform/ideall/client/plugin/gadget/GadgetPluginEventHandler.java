@@ -16,23 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.plugin.gadget;
+package org.exoplatform.ideall.client.plugin.gadget;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
 import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetEvent;
+import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetHadndler;
+import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetEvent;
+import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetHandler;
 import org.exoplatform.ideall.gadget.GadgetService;
 import org.exoplatform.ideall.gadget.event.GadgetDeployResultEvent;
 import org.exoplatform.ideall.gadget.event.GadgetDeployResultHandler;
 import org.exoplatform.ideall.gadget.event.GadgetUndeployResultEvent;
 import org.exoplatform.ideall.gadget.event.GadgetUndeployResultHandler;
-
-import org.exoplatform.ideall.plugin.gadget.event.DeployGadgetEvent;
-import org.exoplatform.ideall.plugin.gadget.event.DeployGadgetHadndler;
-import org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetEvent;
-import org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
