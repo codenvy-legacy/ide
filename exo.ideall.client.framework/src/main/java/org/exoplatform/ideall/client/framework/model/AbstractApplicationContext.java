@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ideall.client.framework.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**
@@ -26,11 +30,27 @@ import org.exoplatform.ideall.vfs.api.File;
 
 public abstract class AbstractApplicationContext
 {
-   
+
+   private ApplicationConfiguration applicationConfiguration;
+
    /**
     * Current active file in editor.
     */
    private File activeFile;
+   
+   private List<String> openedForms = new ArrayList<String>();
+   
+   private boolean showLineNumbers = true;   
+
+   public ApplicationConfiguration getApplicationConfiguration()
+   {
+      return applicationConfiguration;
+   }
+
+   public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration)
+   {
+      this.applicationConfiguration = applicationConfiguration;
+   }
 
    /**
     * @return the activeFile
@@ -46,6 +66,24 @@ public abstract class AbstractApplicationContext
    public void setActiveFile(File activeFile)
    {
       this.activeFile = activeFile;
-   }  
+   }
+   
+   /**
+    * @return the openedForms
+    */
+   public List<String> getOpenedForms()
+   {
+      return openedForms;
+   }
+   
+   public boolean isShowLineNumbers()
+   {
+      return showLineNumbers;
+   }
+
+   public void setShowLineNumbers(boolean showLineNumbers)
+   {
+      this.showLineNumbers = showLineNumbers;
+   }
 
 }
