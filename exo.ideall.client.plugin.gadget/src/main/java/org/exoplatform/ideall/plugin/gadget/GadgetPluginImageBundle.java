@@ -31,15 +31,15 @@ public interface GadgetPluginImageBundle extends ClientBundle
 
    public static final GadgetPluginImageBundle INSTANCE = GWT.create(GadgetPluginImageBundle.class);
 
-   @Source("../public/images/bundled/deploy_gadget.png")
+   @Source("../public/images/plugin/gadget/bundled/deploy_gadget.png")
    ImageResource deployGadget();
 
-   @Source("../public/images/bundled/deploy_gadget_Disabled.png")
+   @Source("../public/images/plugin/gadgetbundled/deploy_gadget_Disabled.png")
    ImageResource deployGadgetDisabled();
 
-   @Source("../public/images/bundled/undeploy_gadget.png")
+   @Source("../public/images/plugin/gadgetbundled/undeploy_gadget.png")
    ImageResource undeployGadget();
 
-   @Source("../public/images/bundled/undeploy_gadget_Disabled.png")
+   @Source("../public/images/plugin/gadgetbundled/undeploy_gadget_Disabled.png")
    ImageResource undeployGadgetDisabled();
 }
