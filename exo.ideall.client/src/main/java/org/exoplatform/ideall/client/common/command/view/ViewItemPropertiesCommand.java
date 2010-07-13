@@ -20,9 +20,9 @@
 package org.exoplatform.ideall.client.common.command.view;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 
 /**

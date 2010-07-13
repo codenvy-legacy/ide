@@ -61,10 +61,6 @@ public class ApplicationContext extends AbstractApplicationContext
 
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
 
-   /**
-    * Opened files in editor
-    */
-   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
 
@@ -73,7 +69,6 @@ public class ApplicationContext extends AbstractApplicationContext
     */
    private TemplateList templateList;
 
-   private String entryPoint;
 
    /*
     * Last entered value in Groovy script output form
@@ -145,7 +140,6 @@ public class ApplicationContext extends AbstractApplicationContext
 
    private String selectedEditorDescription;
    
-   private boolean showOutline = true;
 
    private boolean initialized;
 
@@ -188,13 +182,6 @@ public class ApplicationContext extends AbstractApplicationContext
       return preloadFiles;
    }
 
-   /**
-    * @return the openedFiles
-    */
-   public HashMap<String, File> getOpenedFiles()
-   {
-      return openedFiles;
-   }
 
    public LinkedHashMap<String, String> getOpenedEditors()
    {
@@ -240,16 +227,6 @@ public class ApplicationContext extends AbstractApplicationContext
    public void setTemplateList(TemplateList templateList)
    {
       this.templateList = templateList;
-   }
-
-   public String getEntryPoint()
-   {
-      return entryPoint;
-   }
-
-   public void setEntryPoint(String entryPoint)
-   {
-      this.entryPoint = entryPoint;
    }
 
    /**
@@ -328,21 +305,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.initialized = initialized;
    }
 
-   /**
-    * @return the showOutline
-    */
-   public boolean isShowOutline()
-   {
-      return showOutline;
-   }
-
-   /**
-    * @param showOutline the showOutline to set
-    */
-   public void setShowOutline(boolean showOutline)
-   {
-      this.showOutline = showOutline;
-   }
 
    /**
     * 

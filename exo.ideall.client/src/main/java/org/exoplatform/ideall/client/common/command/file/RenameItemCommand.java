@@ -20,11 +20,12 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.RenameItemEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.vfs.api.Item;
@@ -75,7 +76,9 @@ public class RenameItemCommand extends IDECommand implements ItemsSelectedHandle
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      ApplicationContext applicationContext = (ApplicationContext)context;
+      
+      if (applicationContext.getSelectedItems(applicationContext.getSelectedNavigationPanel()).size() != 1)
       {
          setEnabled(false);
          return;

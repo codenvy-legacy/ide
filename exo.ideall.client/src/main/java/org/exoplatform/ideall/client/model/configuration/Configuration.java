@@ -17,14 +17,13 @@
 
 package org.exoplatform.ideall.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.framework.model.configuration.ApplicationConfiguration;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window.Location;
@@ -53,26 +52,12 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    public static final String UPLOAD_SERVICE_CONTEXT = "/services/upload";
 
-   private String defaultEntryPoint;
-
-   private String context;
-
-   private String loopbackServiceContext;
-
-   private String uploadServiceContext;
-
-   private String publicContext;
-
-   private String gadgetURL = GWT.getModuleBaseURL();
-
-   private String gadgetServer;
-
    private boolean loaded = false;
 
    private static Configuration instance;
 
    private HandlerManager eventBus;
-   
+
    private ApplicationContext applicationContext;
 
    public static Configuration getInstance()
@@ -95,15 +80,15 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
    {
-      JSONObject config = event.getApplicationConfiguration().getConfiguration().isObject();
-      
-      
-      
-      if (config.containsKey(CONTEXT))
+      JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
+
+      ApplicationConfiguration configuration = new ApplicationConfiguration();
+
+      if (jsonConfiguration.containsKey(CONTEXT))
       {
-         context = config.get(Configuration.CONTEXT).isString().stringValue();
-         loopbackServiceContext = context + LOOPBACK_SERVICE_CONTEXT;
-         uploadServiceContext = context + UPLOAD_SERVICE_CONTEXT;
+         configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
+         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
       }
       else
       {
@@ -111,27 +96,26 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
-      if (config.containsKey(PUBLIC_CONTEXT))
-         publicContext = config.get(Configuration.PUBLIC_CONTEXT).isString().stringValue();
+      if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
+         configuration.setPublicContext(jsonConfiguration.get(Configuration.PUBLIC_CONTEXT).isString().stringValue());
       else
       {
          sendErrorMessage(PUBLIC_CONTEXT);
          return;
       }
 
-      
-      if (config.containsKey(ENTRY_POINT))
-         defaultEntryPoint = config.get(Configuration.ENTRY_POINT).isString().stringValue();
-//      else
-//      {
-//         sendErrorMessage(ENTRY_POINT);
-//         return;
-//      }
+      if (jsonConfiguration.containsKey(ENTRY_POINT))
+         configuration.setDefaultEntryPoint(jsonConfiguration.get(Configuration.ENTRY_POINT).isString().stringValue());
+      //      else
+      //      {
+      //         sendErrorMessage(ENTRY_POINT);
+      //         return;
+      //      }
 
-      if (config.containsKey(GADGET_SERVER))
+      if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host
-         gadgetServer =
-            Location.getProtocol() + "//" + Location.getHost() + config.get(GADGET_SERVER).isString().stringValue();
+         configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
+            + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
       else
       {
          sendErrorMessage(GADGET_SERVER);
@@ -142,96 +126,9 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent());
    }
 
-   /**
-    * @return the context
-    */
-   public String getContext()
-   {
-      return context;
-   }
-
-   public String getDefaultEntryPoint()
-   {
-      return defaultEntryPoint;
-   }
-
-   /**
-    * @param context the context to set
-    */
-   public void setContext(String context)
-   {
-      this.context = context;
-   }
-
-   /**
-    * @return the publicContext
-    */
-   public String getPublicContext()
-   {
-      return publicContext;
-   }
-
-   /**
-    * @param publicContext the publicContext to set
-    */
-   public void setPublicContext(String publicContext)
-   {
-      this.publicContext = publicContext;
-   }
-
-   /**
-    * @return the gadgetServer
-    */
-   public String getGadgetServer()
-   {
-      return gadgetServer;
-   }
-
-   /**
-    * @param gadgetServer the gadgetServer to set
-    */
-   public void setGadgetServer(String gadgetServer)
-   {
-      this.gadgetServer = gadgetServer;
-   }
-
-   /**
-    * @return the gadgetURL
-    */
-   public String getGadgetURL()
-   {
-      return gadgetURL;
-   }
-
    public boolean isLoaded()
    {
       return loaded;
-   }
-
-   /**
-    * @return the loopbackServiceContext
-    */
-   public String getLoopbackServiceContext()
-   {
-      return loopbackServiceContext;
-   }
-
-   /**
-    * @param loopbackServiceContext the loopbackServiceContext to set
-    */
-   public void setLoopbackServiceContext(String loopbackServiceContext)
-   {
-      this.loopbackServiceContext = loopbackServiceContext;
-   }
-
-   public String getUploadServiceContext()
-   {
-      return uploadServiceContext;
-   }
-
-   public void setUploadServiceContext(String uploadServiceContext)
-   {
-      this.uploadServiceContext = uploadServiceContext;
    }
 
    private void sendErrorMessage(String message)
@@ -241,7 +138,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    }
 
    public static native String getRegistryURL() /*-{
-       return $wnd.registryURL;
-    }-*/;
+         return $wnd.registryURL;
+      }-*/;
 
 }

@@ -20,10 +20,10 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 
 /**
  * Created by The eXo Platform SAS .

@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;

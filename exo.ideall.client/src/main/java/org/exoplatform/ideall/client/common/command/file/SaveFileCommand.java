@@ -20,12 +20,12 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
 import org.exoplatform.ideall.vfs.api.File;

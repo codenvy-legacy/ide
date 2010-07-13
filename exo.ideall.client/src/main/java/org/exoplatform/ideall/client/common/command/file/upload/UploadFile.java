@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.upload;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 
 /**
  * Created by The eXo Platform SAS .

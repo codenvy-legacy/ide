@@ -20,10 +20,10 @@
 package org.exoplatform.ideall.client.common.command.file;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 
 /**
  * Created by The eXo Platform SAS .

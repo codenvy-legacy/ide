@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
 /**

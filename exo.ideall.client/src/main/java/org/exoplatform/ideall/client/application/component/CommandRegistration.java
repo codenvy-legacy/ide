@@ -78,7 +78,7 @@ public class CommandRegistration
       return this;
    }
 
-   public void dockOnToolbar(boolean rightDocking)
+   public CommandRegistration dockOnToolbar(boolean rightDocking)
    {
       if (rightDocking)
       {
@@ -103,7 +103,8 @@ public class CommandRegistration
          
          context.getToolBarItems().add(position, command.getId());
       }
-
+      
+      return this;
    }
 
 }
