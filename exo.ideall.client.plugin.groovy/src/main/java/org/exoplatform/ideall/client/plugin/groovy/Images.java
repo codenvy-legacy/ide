@@ -32,13 +32,13 @@ public class Images
    public interface Buttons
    {
       
-      public static String OK = "/public/images/plugin/groovy/button/ok.png";
+      public static String OK = "../public/images/plugin/groovy/button/ok.png";
       
-      public static String NO = "/public/images/plugin/groovy/button/no.png";
+      public static String NO = "../public/images/plugin/groovy/button/no.png";
       
-      public static String YES = "/public/images/plugin/groovy/button/yes.png";
+      public static String YES = "../public/images/plugin/groovy/button/yes.png";
       
-      public static String URL = "/public/images/plugin/groovy/button/url.png";
+      public static String URL = "../public/images/plugin/groovy/button/url.png";
    
    }
    
