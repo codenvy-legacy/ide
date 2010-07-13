@@ -27,6 +27,8 @@ import com.google.gwt.core.client.GWT;
 public class ApplicationConfiguration
 {
 
+   private String registryURL;
+
    private String defaultEntryPoint;
 
    private String context;
@@ -40,6 +42,25 @@ public class ApplicationConfiguration
    private String gadgetURL = GWT.getModuleBaseURL();
 
    private String gadgetServer;
+
+   public ApplicationConfiguration()
+   {
+   }
+
+   public ApplicationConfiguration(String registryURL)
+   {
+      this.registryURL = registryURL;
+   }
+
+   public String getRegistryURL()
+   {
+      return registryURL;
+   }
+
+   public void setRegistryURL(String registryURL)
+   {
+      this.registryURL = registryURL;
+   }
 
    public String getDefaultEntryPoint()
    {
