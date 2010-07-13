@@ -37,6 +37,9 @@ public class GadgetPlugin implements IDEPlugin
    @Override
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
+//      add controll
+//      addCommand(new DeployGadgetCommand()).disable().setDelimiterBefore().dockOnToolbar(true);
+//      addCommand(new UndeployGadgetCommand()).disable().dockOnToolbar(true);
       new GadgetPluginEventHandler(eventBus, context);
    }
 
