@@ -17,6 +17,8 @@
 package org.exoplatform.ideall.client.framework.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
@@ -40,7 +42,16 @@ public abstract class AbstractApplicationContext
    
    private List<String> openedForms = new ArrayList<String>();
    
-   private boolean showLineNumbers = true;   
+   private boolean showLineNumbers = true;
+   
+   private String entryPoint;
+   
+   private boolean showOutline = true;
+   
+   /**
+    * Opened files in editor
+    */
+   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();   
 
    public ApplicationConfiguration getApplicationConfiguration()
    {
@@ -85,5 +96,39 @@ public abstract class AbstractApplicationContext
    {
       this.showLineNumbers = showLineNumbers;
    }
+   
+   public String getEntryPoint()
+   {
+      return entryPoint;
+   }
+
+   public void setEntryPoint(String entryPoint)
+   {
+      this.entryPoint = entryPoint;
+   }
+   
+   /**
+    * @return the showOutline
+    */
+   public boolean isShowOutline()
+   {
+      return showOutline;
+   }
+
+   /**
+    * @param showOutline the showOutline to set
+    */
+   public void setShowOutline(boolean showOutline)
+   {
+      this.showOutline = showOutline;
+   }
+   
+   /**
+    * @return the openedFiles
+    */
+   public HashMap<String, File> getOpenedFiles()
+   {
+      return openedFiles;
+   }   
 
 }

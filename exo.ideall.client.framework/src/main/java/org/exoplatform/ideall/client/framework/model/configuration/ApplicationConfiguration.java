@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ideall.client.framework.model.configuration;
 
+import com.google.gwt.core.client.GWT;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -24,5 +26,89 @@ package org.exoplatform.ideall.client.framework.model.configuration;
 
 public class ApplicationConfiguration
 {
+
+   private String defaultEntryPoint;
+
+   private String context;
+
+   private String loopbackServiceContext;
+
+   private String uploadServiceContext;
+
+   private String publicContext;
+
+   private String gadgetURL = GWT.getModuleBaseURL();
+
+   private String gadgetServer;
+
+   public String getDefaultEntryPoint()
+   {
+      return defaultEntryPoint;
+   }
+
+   public void setDefaultEntryPoint(String defaultEntryPoint)
+   {
+      this.defaultEntryPoint = defaultEntryPoint;
+   }
+
+   public String getContext()
+   {
+      return context;
+   }
+
+   public void setContext(String context)
+   {
+      this.context = context;
+   }
+
+   public String getLoopbackServiceContext()
+   {
+      return loopbackServiceContext;
+   }
+
+   public void setLoopbackServiceContext(String loopbackServiceContext)
+   {
+      this.loopbackServiceContext = loopbackServiceContext;
+   }
+
+   public String getUploadServiceContext()
+   {
+      return uploadServiceContext;
+   }
+
+   public void setUploadServiceContext(String uploadServiceContext)
+   {
+      this.uploadServiceContext = uploadServiceContext;
+   }
+
+   public String getPublicContext()
+   {
+      return publicContext;
+   }
+
+   public void setPublicContext(String publicContext)
+   {
+      this.publicContext = publicContext;
+   }
+
+   public String getGadgetURL()
+   {
+      return gadgetURL;
+   }
+
+   public void setGadgetURL(String gadgetURL)
+   {
+      this.gadgetURL = gadgetURL;
+   }
+
+   public String getGadgetServer()
+   {
+      return gadgetServer;
+   }
+
+   public void setGadgetServer(String gadgetServer)
+   {
+      this.gadgetServer = gadgetServer;
+   }
 
 }
