@@ -97,7 +97,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptHandler#onValidateGroovyScript(org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptEvent)
     */
-   @Override
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
       GroovyService.getInstance().validate(context.getActiveFile().getName(), context.getActiveFile().getContent());
@@ -106,7 +105,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptHandler#onDeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent)
     */
-   @Override
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
       GroovyService.getInstance().deploy(context.getActiveFile().getHref());
@@ -115,7 +113,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptHandler#onUndeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent)
     */
-   @Override
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
       GroovyService.getInstance().undeploy(context.getActiveFile().getHref());
@@ -124,7 +121,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent)
     */
-   @Override
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
    {
       if (event.getException() == null)
@@ -156,7 +152,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler#onGroovyDeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent)
     */
-   @Override
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
    {
       if (event.getException() == null)
@@ -189,7 +184,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent)
     */
-   @Override
    public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
    {
       if (event.getException() == null)
@@ -220,7 +214,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler#onRestServiceOutputReceived(org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent)
     */
-   @Override
    public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
    {
       if (event.getException() == null)
@@ -257,7 +250,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.plugin.groovy.event.SetAutoloadHandler#onSetAutoload(org.exoplatform.ideall.plugin.groovy.event.SetAutoloadEvent)
     */
-   @Override
    public void onSetAutoload(SetAutoloadEvent event)
    {
       File file = context.getActiveFile();
@@ -272,7 +264,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent)
     */
-   @Override
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
       String content = context.getActiveFile().getContent();
@@ -292,7 +283,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    /**
     * @see org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceivedEvent)
     */
-   @Override
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
       new GroovyServiceOutputPreviewForm(eventBus, context, event.getApplication());
