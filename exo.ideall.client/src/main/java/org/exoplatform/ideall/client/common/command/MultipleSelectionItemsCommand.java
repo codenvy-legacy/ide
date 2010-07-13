@@ -16,15 +16,15 @@
  */
 package org.exoplatform.ideall.client.common.command;
 
-import org.exoplatform.ideall.client.application.component.IDECommand;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.vfs.api.Folder;
 import org.exoplatform.ideall.vfs.api.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

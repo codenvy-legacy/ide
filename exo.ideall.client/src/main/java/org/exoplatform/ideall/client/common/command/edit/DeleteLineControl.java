@@ -19,10 +19,10 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

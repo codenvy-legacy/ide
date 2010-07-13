@@ -144,14 +144,12 @@ public class ApplicationContext extends AbstractApplicationContext
    }
 
    private String selectedEditorDescription;
-
-   private boolean showLineNumbers = true;
    
    private boolean showOutline = true;
 
    private boolean initialized;
 
-   private List<String> openedForms = new ArrayList<String>();
+   
 
    public ApplicationContext()
    {
@@ -330,16 +328,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.initialized = initialized;
    }
 
-   public boolean isShowLineNumbers()
-   {
-      return showLineNumbers;
-   }
-
-   public void setShowLineNumbers(boolean showLineNumbers)
-   {
-      this.showLineNumbers = showLineNumbers;
-   }
-
    /**
     * @return the showOutline
     */
@@ -398,14 +386,6 @@ public class ApplicationContext extends AbstractApplicationContext
    public Map<String, String> getReservedHotkeys()
    {
       return reservedHotkeys;
-   }
-
-   /**
-    * @return the openedForms
-    */
-   public List<String> getOpenedForms()
-   {
-      return openedForms;
    }
 
 }

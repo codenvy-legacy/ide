@@ -20,12 +20,12 @@
 package org.exoplatform.ideall.client.common.command.edit;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**

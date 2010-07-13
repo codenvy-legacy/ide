@@ -17,10 +17,12 @@
 
 package org.exoplatform.ideall.client.model.configuration;
 
+import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -70,15 +72,18 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    private static Configuration instance;
 
    private HandlerManager eventBus;
+   
+   private ApplicationContext applicationContext;
 
    public static Configuration getInstance()
    {
       return instance;
    }
 
-   public Configuration(HandlerManager eventBus)
+   public Configuration(HandlerManager eventBus, ApplicationContext applicationContext)
    {
       this.eventBus = eventBus;
+      this.applicationContext = applicationContext;
       instance = this;
    }
 
@@ -91,7 +96,9 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
    {
       JSONObject config = event.getApplicationConfiguration().getConfiguration().isObject();
-
+      
+      
+      
       if (config.containsKey(CONTEXT))
       {
          context = config.get(Configuration.CONTEXT).isString().stringValue();

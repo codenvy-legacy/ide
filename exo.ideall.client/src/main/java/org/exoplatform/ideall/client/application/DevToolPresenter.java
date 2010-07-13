@@ -29,8 +29,8 @@ import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateTool
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
-import org.exoplatform.ideall.client.application.component.IDECommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
+import org.exoplatform.ideall.client.framework.control.IDECommand;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
