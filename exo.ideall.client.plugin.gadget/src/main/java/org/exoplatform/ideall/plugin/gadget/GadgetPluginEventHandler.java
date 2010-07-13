@@ -67,7 +67,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    /**
     * @see org.exoplatform.ideall.plugin.gadget.event.DeployGadgetHadndler#onDeployGadget(org.exoplatform.ideall.plugin.gadget.event.DeployGadgetEvent)
     */
-   @Override
    public void onDeployGadget(DeployGadgetEvent event)
    {
       GadgetService.getInstance().deployGadget(context.getActiveFile().getHref());
@@ -76,7 +75,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    /**
     * @see org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetHandler#onUndeployGadget(org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetEvent)
     */
-   @Override
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
       GadgetService.getInstance().undeployGadget(context.getActiveFile().getHref());
@@ -85,7 +83,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    /**
     * @see org.exoplatform.ideall.gadget.event.GadgetDeployResultHandler#onGadgetDeployResultReceived(org.exoplatform.ideall.gadget.event.GadgetDeployResultEvent)
     */
-   @Override
    public void onGadgetDeployResultReceived(GadgetDeployResultEvent event)
    {
       if (event.getException() == null)
@@ -106,7 +103,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    /**
     * @see org.exoplatform.ideall.gadget.event.GadgetUndeployResultHandler#onGadgetUndeployResultReceived(org.exoplatform.ideall.gadget.event.GadgetUndeployResultEvent)
     */
-   @Override
    public void onGadgetUndeployResultReceived(GadgetUndeployResultEvent event)
    {
       if (event.getException() == null)
