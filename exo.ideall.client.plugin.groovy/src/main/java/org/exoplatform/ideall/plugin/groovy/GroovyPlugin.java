@@ -18,6 +18,11 @@ package org.exoplatform.ideall.plugin.groovy;
 
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.IDEPlugin;
+import org.exoplatform.ideall.plugin.groovy.controls.DeployGroovyCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.PreviewWadlOutputCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.SetAutoloadCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.UndeployGroovyCommand;
+import org.exoplatform.ideall.plugin.groovy.controls.ValidateGroovyCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,6 +38,22 @@ public class GroovyPlugin implements IDEPlugin
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
       // add controls
+      
+      /*
+       * RUN GROUP
+       */
+
+//      addCommand(new SetAutoloadCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+//
+//      addCommand(new ValidateGroovyCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+//      addCommand(new DeployGroovyCommand()).disable().hide().dockOnToolbar(true);
+//      addCommand(new UndeployGroovyCommand()).disable().hide().dockOnToolbar(true);
+//
+//      /*
+//       * PREVIEW OUTPUT
+//       */
+//
+//      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);      
       
       new GroovyPluginEventHandler(eventBus, context);
    }
