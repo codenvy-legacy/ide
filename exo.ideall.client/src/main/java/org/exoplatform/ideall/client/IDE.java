@@ -1,6 +1,5 @@
 package org.exoplatform.ideall.client;
 
-import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ideall.client.application.DevToolForm;
 import org.exoplatform.ideall.client.common.CommonActionsComponent;
@@ -10,9 +9,6 @@ import org.exoplatform.ideall.client.gadgets.GadgetActionsComponent;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ideall.client.model.discovery.DiscoveryServiceImpl;
-import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -32,20 +28,19 @@ public class IDE extends VerticalPanel
 
       HandlerManager eventBus = new HandlerManager(null);
 
-      new Configuration(eventBus);
+      final ApplicationContext context = new ApplicationContext();
       
       new CookieManager(eventBus);
 
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, Configuration.getInstance());
 
       /*
        * Initializing services
        */
 
-      new SettingsServiceImpl(eventBus, IDELoader.getInstance());
-
-      new ConversationServiceImpl(eventBus, IDELoader.getInstance());
+//      new SettingsServiceImpl(eventBus, IDELoader.getInstance());
+//
+//      new ConversationServiceImpl(eventBus, IDELoader.getInstance());
 
 //      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
 
@@ -58,9 +53,7 @@ public class IDE extends VerticalPanel
       new WadlServiceImpl(eventBus, IDELoader.getInstance());
 
       //new MockDiscoveryServiceImpl(eventBus);
-      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance());
-
-      final ApplicationContext context = new ApplicationContext();
+//      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance());
 
       /*
        * PLUGINS INITIALIZATION
@@ -79,9 +72,10 @@ public class IDE extends VerticalPanel
 
       new DevToolForm(eventBus, context);
 
-      Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
+      Configuration configuration = new Configuration(eventBus, context);
+      configuration.loadConfiguration(IDELoader.getInstance());
+      
+      //Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
    }
-
-   
 
 }

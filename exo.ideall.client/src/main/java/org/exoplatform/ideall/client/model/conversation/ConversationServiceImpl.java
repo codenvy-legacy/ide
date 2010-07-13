@@ -22,7 +22,6 @@ package org.exoplatform.ideall.client.model.conversation;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
 import org.exoplatform.ideall.client.model.conversation.marshal.UserInfoUnmarshaller;
 
@@ -39,24 +38,27 @@ import com.google.gwt.http.client.RequestBuilder;
 public class ConversationServiceImpl extends ConversationService
 {
 
-   private static final String CONTEXT = "/conversation-state";
+   private static final String CONVERSATION_SERVICE_CONTEXT = "/conversation-state";
 
    private static final String WHOAMI = "/whoami";
 
    private HandlerManager eventBus;
 
    private Loader loader;
+   
+   private String restServiceContext;
 
-   public ConversationServiceImpl(HandlerManager eventBus, Loader loader)
+   public ConversationServiceImpl(HandlerManager eventBus, Loader loader, String restServiceContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
+      this.restServiceContext = restServiceContext;
    }
 
    @Override
    public void getUserInfo()
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT + WHOAMI;
+      String url = restServiceContext + CONVERSATION_SERVICE_CONTEXT + WHOAMI;
 
       UserInfo userInfo = new UserInfo(UserInfo.DEFAULT_USER_NAME);
       UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);

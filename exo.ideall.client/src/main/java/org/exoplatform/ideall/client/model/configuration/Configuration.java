@@ -36,7 +36,7 @@ import com.google.gwt.user.client.Window.Location;
 public class Configuration implements ApplicationConfigurationReceivedHandler
 {
 
-   public final static String APPLICATION = "IDEall";
+   public final static String APPLICATION_NAME = "IDEall";
 
    private static final String CONFIG_NODENAME = "configuration";
 
@@ -54,27 +54,24 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private boolean loaded = false;
 
-   private static Configuration instance;
-
    private HandlerManager eventBus;
 
    private ApplicationContext applicationContext;
-
-   public static Configuration getInstance()
-   {
-      return instance;
-   }
 
    public Configuration(HandlerManager eventBus, ApplicationContext applicationContext)
    {
       this.eventBus = eventBus;
       this.applicationContext = applicationContext;
-      instance = this;
+      
+      eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);      
+      
+      ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(getRegistryURL());
+      applicationContext.setApplicationConfiguration(applicationConfiguration);      
    }
 
-   public void loadConfiguration(HandlerManager eventBus, Loader loader)
+   public void loadConfiguration(Loader loader)
    {
-      ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION, loader);
+      ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
       applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
    }
 
@@ -82,8 +79,8 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    {
       JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
 
-      ApplicationConfiguration configuration = new ApplicationConfiguration();
-
+      ApplicationConfiguration configuration = applicationContext.getApplicationConfiguration();
+      
       if (jsonConfiguration.containsKey(CONTEXT))
       {
          configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
@@ -137,7 +134,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       eventBus.fireEvent(new InvalidConfigurationRecievedEvent(m));
    }
 
-   public static native String getRegistryURL() /*-{
+   private static native String getRegistryURL() /*-{
          return $wnd.registryURL;
       }-*/;
 

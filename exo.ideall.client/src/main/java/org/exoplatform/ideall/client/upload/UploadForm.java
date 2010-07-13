@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -52,6 +51,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 225;
+   
+   private ApplicationContext context;
 
    private FormPanel uploadForm;
 
@@ -80,6 +81,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       super(eventBus, WIDTH, HEIGHT);
       this.eventBus = eventBus;
       this.openFile = openFile;
+      this.context = context;
 
       if (openFile)
       {
@@ -249,11 +251,11 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       if (openFile)
       {
-         uploadForm.setAction(Configuration.getInstance().getLoopbackServiceContext() + "/");
+         uploadForm.setAction(context.getApplicationConfiguration().getLoopbackServiceContext() + "/");
       }
       else
       {
-         uploadForm.setAction(Configuration.getInstance().getUploadServiceContext() + "/");
+         uploadForm.setAction(context.getApplicationConfiguration().getUploadServiceContext() + "/");
       }
 
       uploadForm.setWidget(postFieldsPanel);

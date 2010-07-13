@@ -23,7 +23,6 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputHandler;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
@@ -154,7 +153,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       {
          previewGadget();
       }
-      else if(MimeType.UWA_WIDGET.equals(file.getContentType()))
+      else if (MimeType.UWA_WIDGET.equals(file.getContentType()))
       {
          previewUWAWidget(file);
       }
@@ -180,7 +179,9 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       String domain = null;
 
       String href = context.getActiveFile().getHref();
-      href = href.replace(Configuration.getInstance().getContext(), Configuration.getInstance().getPublicContext());
+      href =
+         href.replace(context.getApplicationConfiguration().getContext(), context.getApplicationConfiguration()
+            .getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest);

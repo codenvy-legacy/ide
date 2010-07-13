@@ -40,9 +40,12 @@ import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSu
 import org.exoplatform.ideall.client.model.configuration.InvalidConfigurationRecievedEvent;
 import org.exoplatform.ideall.client.model.configuration.InvalidConfigurationRecievedHandler;
 import org.exoplatform.ideall.client.model.conversation.ConversationService;
+import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
 import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHandler;
+import org.exoplatform.ideall.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
+import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
@@ -149,11 +152,24 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), Configuration.getInstance().getContext());
-      new TemplateServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION);
-      new GroovyServiceImpl(eventBus, Configuration.getInstance().getContext(), IDELoader.getInstance());      
-      new GadgetServiceImpl(eventBus, IDELoader.getInstance(), Configuration.getInstance().getContext(), Configuration.getInstance().getGadgetServer(), Configuration.getInstance().getPublicContext());
+      new SettingsServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getRegistryURL());
+
+      new ConversationServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());
+
+      new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), context
+         .getApplicationConfiguration().getContext());
+
+      new TemplateServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getRegistryURL()
+         + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION_NAME);
+
+      new GroovyServiceImpl(eventBus, context.getApplicationConfiguration().getContext(), IDELoader.getInstance());
+
+      new GadgetServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext(),
+         context.getApplicationConfiguration().getGadgetServer(), context.getApplicationConfiguration()
+            .getPublicContext());
       ConversationService.getInstance().getUserInfo();
+      
+      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());            
    }
 
    /**
@@ -178,7 +194,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
 
       if (context.getEntryPoint() == null)
       {
-         context.setEntryPoint(Configuration.getInstance().getDefaultEntryPoint());
+         context.setEntryPoint(context.getApplicationConfiguration().getDefaultEntryPoint());
       }
 
       //      context.getToolBarItems().clear();

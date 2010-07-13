@@ -20,7 +20,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointListUnmarshaller;
 
@@ -35,22 +34,25 @@ import com.google.gwt.http.client.RequestBuilder;
 public class DiscoveryServiceImpl extends DiscoveryService
 {
 
-   private static final String CONTEXT = "/services/discovery/entrypoints";
+   private static final String DISCOVERY_SERVICE_CONTEXT = "/services/discovery/entrypoints";
 
    private HandlerManager eventBus;
 
    private Loader loader;
+   
+   private String restServiceContext;
 
-   public DiscoveryServiceImpl(HandlerManager eventBus, Loader loader)
+   public DiscoveryServiceImpl(HandlerManager eventBus, Loader loader, String restServiceContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
+      this.restServiceContext = restServiceContext;
    }
 
    @Override
    public void getEntryPoints()
    {
-      String url = Configuration.getInstance().getContext() + CONTEXT;
+      String url = restServiceContext + DISCOVERY_SERVICE_CONTEXT;
       getEntryPoints(url);
    }
 

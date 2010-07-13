@@ -50,18 +50,21 @@ public class SettingsServiceImpl extends SettingsService
    private HandlerManager eventBus;
 
    private Loader loader;
-   
-   public SettingsServiceImpl(HandlerManager eventBus, Loader loader)
+
+   private String registryServiceURL;
+
+   public SettingsServiceImpl(HandlerManager eventBus, Loader loader, String registryServiceURL)
    {
       this.eventBus = eventBus;
       this.loader = loader;
+      this.registryServiceURL = registryServiceURL;
    }
 
    private String getURL(ApplicationContext context)
    {
       String url =
-         Configuration.getRegistryURL() + "/" + RegistryConstants.EXO_USERS + "/" + context.getUserInfo().getName()
-            + "/" + Configuration.APPLICATION;
+         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + context.getUserInfo().getName() + "/"
+            + Configuration.APPLICATION_NAME;
       return url;
    }
 
@@ -78,17 +81,17 @@ public class SettingsServiceImpl extends SettingsService
       String url = getURL(context) + "/?createIfNotExist=true";
       saveSettings(context, url);
    }
-   
+
    @Override
    protected void getSettings(ApplicationContext context, String url)
    {
       ApplicationContextReceivedEvent event = new ApplicationContextReceivedEvent(context);
       ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(eventBus, context);
-      
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-   
+
    @Override
    protected void saveSettings(ApplicationContext context, String url)
    {
