@@ -213,57 +213,57 @@ public interface IDEImageBundle extends ClientBundle
     * GADGET
     */
 
-   @Source("../public/images/bundled/gadget/deploy_gadget.png")
-   ImageResource deployGadget();
-
-   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
-   ImageResource deployGadgetDisabled();
-
-   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
-   ImageResource undeployGadget();
-
-   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
-   ImageResource undeployGadgetDisabled();
+//   @Source("../public/images/bundled/gadget/deploy_gadget.png")
+//   ImageResource deployGadget();
+//
+//   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
+//   ImageResource deployGadgetDisabled();
+//
+//   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
+//   ImageResource undeployGadget();
+//
+//   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
+//   ImageResource undeployGadgetDisabled();
 
    /*
     * GROOVY
     */
 
-   @Source("../public/images/bundled/groovy/set_autoload.png")
-   ImageResource setAutoLoad();
-
-   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
-   ImageResource setAutoLoadDisabled();
-
-   @Source("../public/images/bundled/groovy/unset_autoload.png")
-   ImageResource unsetAutoLoad();
-
-   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
-   ImageResource unsetAutoLoadDisabled();
-
-   @Source("../public/images/bundled/groovy/validate.png")
-   ImageResource validateGroovy();
-
-   @Source("../public/images/bundled/groovy/validate_Disabled.png")
-   ImageResource validateGroovyDisabled();
-
-   @Source("../public/images/bundled/groovy/deploy.png")
-   ImageResource deployGroovy();
-
-   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
-   ImageResource deployGroovyDisabled();
-
-   @Source("../public/images/bundled/groovy/undeploy.png")
-   ImageResource undeployGroovy();
-
-   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
-   ImageResource undeployGroovyDisabled();
-
-   @Source("../public/images/bundled/groovy/output.png")
-   ImageResource groovyOutput();
-
-   @Source("../public/images/bundled/groovy/output_Disabled.png")
-   ImageResource groovyOutputDisabled();
+//   @Source("../public/images/bundled/groovy/set_autoload.png")
+//   ImageResource setAutoLoad();
+//
+//   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
+//   ImageResource setAutoLoadDisabled();
+//
+//   @Source("../public/images/bundled/groovy/unset_autoload.png")
+//   ImageResource unsetAutoLoad();
+//
+//   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
+//   ImageResource unsetAutoLoadDisabled();
+//
+//   @Source("../public/images/bundled/groovy/validate.png")
+//   ImageResource validateGroovy();
+//
+//   @Source("../public/images/bundled/groovy/validate_Disabled.png")
+//   ImageResource validateGroovyDisabled();
+//
+//   @Source("../public/images/bundled/groovy/deploy.png")
+//   ImageResource deployGroovy();
+//
+//   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
+//   ImageResource deployGroovyDisabled();
+//
+//   @Source("../public/images/bundled/groovy/undeploy.png")
+//   ImageResource undeployGroovy();
+//
+//   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
+//   ImageResource undeployGroovyDisabled();
+//
+//   @Source("../public/images/bundled/groovy/output.png")
+//   ImageResource groovyOutput();
+//
+//   @Source("../public/images/bundled/groovy/output_Disabled.png")
+//   ImageResource groovyOutputDisabled();
 
    /*
     * HELP

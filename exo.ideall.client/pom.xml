@@ -58,7 +58,7 @@
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.module.groovy</artifactId>
 		</dependency>
-		
+		 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.module.gadget</artifactId>
@@ -68,13 +68,13 @@
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.module.vfs</artifactId>
 		</dependency>
-		
+		<!--
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.client.groovy</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
 			<artifactId>exo.ideall.client.framework</artifactId>
