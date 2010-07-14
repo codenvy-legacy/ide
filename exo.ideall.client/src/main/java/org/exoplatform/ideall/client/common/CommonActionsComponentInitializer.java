@@ -19,9 +19,6 @@
  */
 package org.exoplatform.ideall.client.common;
 
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
-import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
-import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
@@ -45,12 +42,12 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
    @Override
    protected void onItitialize()
    {
-      PopupMenuControl newFilePopupMenuCommand =
-         PopupMenuCommandBuilder.newCommand("File/New *")
-            .prompt("New")
-            .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
-            .setDelimiterBefore().enable().show().create();
-      addCommand(newFilePopupMenuCommand).dockOnToolbar();
+//      PopupMenuControl newFilePopupMenuCommand =
+//         PopupMenuCommandBuilder.newCommand("File/New *")
+//            .prompt("New")
+//            .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
+//            .setDelimiterBefore().enable().show().create();
+//      addCommand(newFilePopupMenuCommand).dockOnToolbar();
 
       /*
        * FILE GROUP
@@ -71,31 +68,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 //      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
 //      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
-//      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
-//      addCommand(newGroovyFileCommand).disable().hide();
-//
-//      NewHTMLFileCommand newHTMLFileCommand = new NewHTMLFileCommand();
-//      addCommand(newHTMLFileCommand).disable().hide();
-//
-//      NewTEXTFileCommand newTEXTFileCommand = new NewTEXTFileCommand();
-//      addCommand(newTEXTFileCommand).disable().hide();
-//
-//      NewJavaScriptFileCommand newJavaScriptFileCommand = new NewJavaScriptFileCommand();
-//      addCommand(newJavaScriptFileCommand).disable().hide();
-//
-//      NewCSSFileCommand newCSSFileCommand = new NewCSSFileCommand();
-//      addCommand(newCSSFileCommand).disable().hide();
-//
-//      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
-//      addCommand(newGadgetCommand).disable().hide();
-//
-//      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
-//      addCommand(newUWAWidgetCommand).disable().hide();
-//
-//      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
-//      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
-
-     
+      
+      
+      
 
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
 
@@ -151,7 +126,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 //      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
 //      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
       
-//      newFilePopupMenuCommand.getCommands().add(createFolderControl);
+      //newFilePopupMenuCommand.getCommands().add(createFolderControl);
 
       /*
        * STATUS BAR

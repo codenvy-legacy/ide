@@ -17,11 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.window;
+package org.exoplatform.ideall.client.module.preferences.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,25 +30,27 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
  * @version $
  */
 
-public class SelectWorkspaceCommand extends IDEControl
+public class CustomizeToolbarCommand extends IDEControl
 {
 
-   public static final String ID = "Window/Workspace...";
+   public static final String ID = "Window/Customize Toolbar...";
 
-   public static final String TITLE = "Select Workspace...";
+   public static final String TITLE = "Customize Toolbar...";
 
-   public SelectWorkspaceCommand()
+   public CustomizeToolbarCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
+      setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
+      setEvent(new CustomizeToolbarEvent());
+   }
 
-      setEnabled(true);
+   @Override
+   protected void onRegisterHandlers()
+   {
       setVisible(true);
-      setDelimiterBefore(true);
-
-      setEvent(new SelectWorkspaceEvent());
+      setEnabled(true);
    }
 
 }

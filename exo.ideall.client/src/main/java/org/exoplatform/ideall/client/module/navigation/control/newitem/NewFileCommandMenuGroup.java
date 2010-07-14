@@ -17,13 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common;
+package org.exoplatform.ideall.client.module.navigation.control.newitem;
 
-import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.help.ShowAboutCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeHotKeysCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeToolbarCommand;
-import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceCommand;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,16 +29,26 @@ import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceComman
  * @version $
  */
 
-public class HelpActionsComponentInitializer extends AbstractComponentInitializer
+public class NewFileCommandMenuGroup extends IDEControl
 {
 
-   @Override
-   protected void onItitialize()
+   public static final String ID = "File/New";
+
+   public static final String TITLE = "New";
+
+   public NewFileCommandMenuGroup()
    {
-      addCommand(new SelectWorkspaceCommand()).enable().show().setDelimiterBefore();
-      addCommand(new CustomizeToolbarCommand()).disable().hide();
-      addCommand(new CustomizeHotKeysCommand()).enable().show();
-      addCommand(new ShowAboutCommand()).enable().show();
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+   }
+
+   @Override
+   protected void onRegisterHandlers()
+   {
+      setVisible(true);
+      setEnabled(true);
    }
 
 }

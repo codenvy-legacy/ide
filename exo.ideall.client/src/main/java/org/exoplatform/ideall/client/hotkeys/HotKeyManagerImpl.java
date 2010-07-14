@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
@@ -35,6 +34,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
 import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;

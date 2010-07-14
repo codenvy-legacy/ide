@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ideall.client.module.preferences;
 
-import org.exoplatform.ideall.client.common.command.help.ShowAboutCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeHotKeysCommand;
-import org.exoplatform.ideall.client.common.command.window.CustomizeToolbarCommand;
-import org.exoplatform.ideall.client.common.command.window.SelectWorkspaceCommand;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.preferences.control.CustomizeHotKeysCommand;
+import org.exoplatform.ideall.client.module.preferences.control.CustomizeToolbarCommand;
+import org.exoplatform.ideall.client.module.preferences.control.SelectWorkspaceCommand;
+import org.exoplatform.ideall.client.module.preferences.control.ShowAboutCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 

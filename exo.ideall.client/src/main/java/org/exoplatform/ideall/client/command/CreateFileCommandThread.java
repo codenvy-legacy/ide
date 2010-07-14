@@ -66,6 +66,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
+      System.out.println("CreateFileCommandThread.onCreateNewFile()");
+      
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
 
       String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());

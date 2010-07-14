@@ -17,10 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.newfile;
+package org.exoplatform.ideall.client.module.preferences.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,17 +30,22 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends NewFileCommand
+public class CustomizeHotKeysCommand extends IDEControl
 {
 
-   private boolean browserPanelSelected = true;
+   public static final String ID = "Window/HotKeys...";
 
-   public final static String ID = "File/New/Create File From Template...";
+   public static final String TITLE = "Customize Hotkeys...";
 
-   public CreateFileFromTemplateCommand()
+   public CustomizeHotKeysCommand()
    {
-      super(ID, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
-         IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setEnabled(true);
+      setVisible(true);
+      setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
+      setEvent(new CustomizeHotKeysEvent());
    }
 
 }

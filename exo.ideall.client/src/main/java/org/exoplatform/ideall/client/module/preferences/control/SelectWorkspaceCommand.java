@@ -17,10 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.newfile;
+package org.exoplatform.ideall.client.module.preferences.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,26 +30,25 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
  * @version $
  */
 
-public class NewFileCommandMenuGroup extends IDEControl
+public class SelectWorkspaceCommand extends IDEControl
 {
 
-   public static final String ID = "File/New";
+   public static final String ID = "Window/Workspace...";
 
-   public static final String TITLE = "New";
+   public static final String TITLE = "Select Workspace...";
 
-   public NewFileCommandMenuGroup()
+   public SelectWorkspaceCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-   }
+      setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      setVisible(true);
       setEnabled(true);
+      setVisible(true);
+      setDelimiterBefore(true);
+
+      setEvent(new SelectWorkspaceEvent());
    }
 
 }
