@@ -42,6 +42,8 @@ public class ShowAboutCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setEnabled(true);
+      setVisible(true);
       setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
       setEvent(new ShowAboutDialogEvent());
    }

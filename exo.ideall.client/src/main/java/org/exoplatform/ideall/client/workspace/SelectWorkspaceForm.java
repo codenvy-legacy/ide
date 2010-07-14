@@ -40,7 +40,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointListForm extends DialogWindow implements EntryPointListPresenter.Display
+public class SelectWorkspaceForm extends DialogWindow implements EntryPointListPresenter.Display
 {
    
    private static final int WIDTH = 500;
@@ -62,7 +62,7 @@ public class EntryPointListForm extends DialogWindow implements EntryPointListPr
    private EntryPointListGrid entryPointListGrid;
    
    
-   public EntryPointListForm(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
+   public SelectWorkspaceForm(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
       super(eventBus, WIDTH, HEIGHT);
       

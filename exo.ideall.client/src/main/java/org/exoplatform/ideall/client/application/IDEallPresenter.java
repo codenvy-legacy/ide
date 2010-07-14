@@ -28,9 +28,9 @@ import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateSt
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.IDELoader;
-import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -56,7 +56,6 @@ import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -65,7 +64,7 @@ import com.google.gwt.user.client.Window;
  * @version @version $Id: $
  */
 
-public class DevToolPresenter implements InvalidConfigurationRecievedHandler, ConfigurationReceivedSuccessfullyHandler,
+public class IDEallPresenter implements InvalidConfigurationRecievedHandler, ConfigurationReceivedSuccessfullyHandler,
    ApplicationContextReceivedHandler, UserInfoReceivedHandler, ExceptionThrownHandler
 {
 
@@ -84,7 +83,7 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
 
    private ApplicationContext context;
 
-   public DevToolPresenter(HandlerManager eventBus, ApplicationContext context)
+   public IDEallPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -103,33 +102,25 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
       handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationContextReceivedEvent.TYPE, this);
 
-      /*
-       * Intializing application components
-       */
-      for (AbstractApplicationComponent plugin : context.getComponents())
-      {
-         plugin.initialize(eventBus, context);
+      for (IDEModule module : context.getModules()) {
+         module.initializePlugin(eventBus, context);
       }
+      
+//      /*
+//       * Intializing application components
+//       */
+//      for (AbstractApplicationComponent plugin : context.getComponents())
+//      {
+//         plugin.initialize(eventBus, context);
+//      }
 
       /*
        * Updating top menu
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(context.getCommands()));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), context.getCommands()));
-
-      /*
-       * Initializing handlers of menu items
-       */
-      for (Control command : context.getCommands())
-      {
-         if (command instanceof IDECommand)
-         {
-            
-            System.out.println("initialization " + command.getId());
-            
-            ((IDECommand)command).initialize(eventBus, context);
-         }
-      }
+      
+      initializeControls();
 
       /*
        * Copy state of toolbar to defaultToolBarItems list.
@@ -137,6 +128,24 @@ public class DevToolPresenter implements InvalidConfigurationRecievedHandler, Co
        */
       context.getToolBarDefaultItems().clear();
       context.getToolBarDefaultItems().addAll(context.getToolBarItems());
+   }
+   
+   private void initializeModules() {
+      
+   }
+   
+   private void initializeControls() {
+      /*
+       * Initializing handlers of menu items
+       */
+      for (Control command : context.getCommands())
+      {
+         if (command instanceof IDECommand)
+         {            
+            System.out.println("initialization " + command.getId());
+            ((IDECommand)command).initialize(eventBus, context);
+         }
+      }      
    }
 
    /**

@@ -41,7 +41,7 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version $
  */
 
-public class DownloadContentForm implements RegisterEventHandlersHandler, DownloadFileHandler,
+public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileHandler,
    DownloadZippedFolderHandler
 {
 
@@ -55,7 +55,7 @@ public class DownloadContentForm implements RegisterEventHandlersHandler, Downlo
 
    private HTMLPane htmlPane;
 
-   public DownloadContentForm(HandlerManager eventBus, ApplicationContext context)
+   public DownloadForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;

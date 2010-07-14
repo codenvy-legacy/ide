@@ -42,6 +42,8 @@ public class CustomizeHotKeysCommand extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setEnabled(true);
+      setVisible(true);
       setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
       setEvent(new CustomizeHotKeysEvent());
    }

@@ -18,7 +18,7 @@ package org.exoplatform.ideall.client.application;
 
 import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
 import org.exoplatform.ideall.client.application.perspective.DefaultPerspective;
-import org.exoplatform.ideall.client.download.DownloadContentForm;
+import org.exoplatform.ideall.client.download.DownloadForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -35,16 +35,16 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version @version $Id: $
  */
 
-public class DevToolForm extends Layout implements DevToolPresenter.Display
+public class IDEallForm extends Layout implements IDEallPresenter.Display
 {
 
-   private DevToolPresenter presenter;
+   private IDEallPresenter presenter;
 
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
-   public DevToolForm(final HandlerManager eventBus, ApplicationContext context)
+   public IDEallForm(final HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -54,7 +54,7 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display
       setOverflow(Overflow.HIDDEN);
 
       new ClearFocusForm(eventBus);
-      new DownloadContentForm(eventBus, context);
+      new DownloadForm(eventBus, context);
 
       draw();
       Window.addResizeHandler(new ResizeHandler()
@@ -65,7 +65,7 @@ public class DevToolForm extends Layout implements DevToolPresenter.Display
          }
       });
 
-      presenter = new DevToolPresenter(eventBus, context);
+      presenter = new IDEallPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
 

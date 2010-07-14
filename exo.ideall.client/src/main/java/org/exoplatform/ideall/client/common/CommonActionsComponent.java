@@ -63,18 +63,14 @@ import org.exoplatform.ideall.client.event.file.SearchFileHandler;
 import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.event.file.UploadFileHandler;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ideall.client.search.file.SearchForm;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
-import org.exoplatform.ideall.client.workspace.EntryPointListForm;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.Item;
 
@@ -88,7 +84,7 @@ import org.exoplatform.ideall.vfs.api.Item;
 public class CommonActionsComponent extends AbstractApplicationComponent implements UploadFileHandler,
    CreateFolderHandler, DeleteItemHandler, RenameItemHander, SearchFileHandler, SaveAsTemplateHandler,
    ShowLineNumbersHandler, GetFileURLHandler, OpenFileWithHandler, CopyItemsHandler, CutItemsHandler,
-   SelectWorkspaceHandler, EntryPointsReceivedHandler, GoToLineHandler, FindTextHandler, ShowOutlineHandler
+   GoToLineHandler, FindTextHandler, ShowOutlineHandler
 {
 
    private SaveFileCommandThread saveFileCommandHandler;
@@ -138,9 +134,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       addHandler(CopyItemsEvent.TYPE, this);
       addHandler(CutItemsEvent.TYPE, this);
-
-      addHandler(SelectWorkspaceEvent.TYPE, this);
-      addHandler(EntryPointsReceivedEvent.TYPE, this);
 
       addHandler(GoToLineEvent.TYPE, this);
       addHandler(FindTextEvent.TYPE, this);
@@ -234,16 +227,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
 
       context.getItemsToCut().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
-   }
-
-   public void onSelectWorkspace(SelectWorkspaceEvent event)
-   {
-      DiscoveryService.getInstance().getEntryPoints();
-   }
-
-   public void onEntryPointsReceived(EntryPointsReceivedEvent event)
-   {
-      new EntryPointListForm(eventBus, context, event.getEntryPointList());
    }
 
    /**

@@ -43,6 +43,11 @@ public class SelectWorkspaceCommand extends IDECommand
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
+      
+      setEnabled(true);
+      setVisible(true);
+      setDelimiterBefore(true);
+      
       setEvent(new SelectWorkspaceEvent());
    }
 

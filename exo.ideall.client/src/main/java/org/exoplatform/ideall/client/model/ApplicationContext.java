@@ -23,9 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
 import org.exoplatform.ideall.vfs.api.File;
@@ -40,7 +39,7 @@ import org.exoplatform.ideall.vfs.api.Item;
 
 public class ApplicationContext extends AbstractApplicationContext
 {
-   
+
    /**
     * Logged user information
     */
@@ -53,7 +52,6 @@ public class ApplicationContext extends AbstractApplicationContext
     */
    private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
-
    /**
     * Current active text editor.
     */
@@ -61,14 +59,12 @@ public class ApplicationContext extends AbstractApplicationContext
 
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
 
-
    private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
 
    /**
     * List of available templates
     */
    private TemplateList templateList;
-
 
    /*
     * Last entered value in Groovy script output form
@@ -85,32 +81,18 @@ public class ApplicationContext extends AbstractApplicationContext
 
    private Map<String, String> reservedHotkeys = new HashMap<String, String>();
 
-   /**
-    * Registered components
-    */
-   private ArrayList<AbstractApplicationComponent> components = new ArrayList<AbstractApplicationComponent>();
+//   /**
+//    * Registered components
+//    */
+//   private ArrayList<AbstractApplicationComponent> components = new ArrayList<AbstractApplicationComponent>();
 
-   /**
-    * Registered commands
-    */
-   private ArrayList<Control> commands = new ArrayList<Control>();
+   private List<IDEModule> modules = new ArrayList<IDEModule>();
 
-   /**
-    * Uses for storing the current state of toolbar
-    */
-   private ArrayList<String> toolBarItems = new ArrayList<String>();
+   public List<IDEModule> getModules()
+   {
+      return modules;
+   }
 
-   /**
-    * Uses for storing default state of toolbar
-    */
-   //TODO
-   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
-
-   /*
-    * Store status bar control id's here
-    */
-   
-   private List<String> statusBarItems = new ArrayList<String>();
 
    /**
     * Uses for storing the current state of defaults editors
@@ -139,16 +121,8 @@ public class ApplicationContext extends AbstractApplicationContext
    }
 
    private String selectedEditorDescription;
-   
 
    private boolean initialized;
-
-   
-
-   public ApplicationContext()
-   {
-      toolBarItems.add("");
-   }
 
    public UserInfo getUserInfo()
    {
@@ -159,7 +133,6 @@ public class ApplicationContext extends AbstractApplicationContext
    {
       this.userInfo = userInfo;
    }
-
 
    /**
     * @return the activeTextEditor
@@ -181,7 +154,6 @@ public class ApplicationContext extends AbstractApplicationContext
    {
       return preloadFiles;
    }
-
 
    public LinkedHashMap<String, String> getOpenedEditors()
    {
@@ -245,10 +217,10 @@ public class ApplicationContext extends AbstractApplicationContext
       this.testGroovyScriptURL = testGroovyScriptURL;
    }
 
-   public ArrayList<AbstractApplicationComponent> getComponents()
-   {
-      return components;
-   }
+//   public ArrayList<AbstractApplicationComponent> getComponents()
+//   {
+//      return components;
+//   }
 
    public String getSearchContent()
    {
@@ -280,21 +252,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.searchContentType = searchContentType;
    }
 
-   public ArrayList<Control> getCommands()
-   {
-      return commands;
-   }
-
-   public ArrayList<String> getToolBarItems()
-   {
-      return toolBarItems;
-   }
-
-   public ArrayList<String> getToolBarDefaultItems()
-   {
-      return toolBarDefaultItems;
-   }
-
    public boolean isInitialized()
    {
       return initialized;
@@ -304,7 +261,6 @@ public class ApplicationContext extends AbstractApplicationContext
    {
       this.initialized = initialized;
    }
-
 
    /**
     * 
@@ -325,10 +281,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.selectedEditorDescription = selectedEditor;
    }
 
-   public List<String> getStatusBarItems()
-   {
-      return statusBarItems;
-   }
 
    public Map<String, String> getHotKeys()
    {

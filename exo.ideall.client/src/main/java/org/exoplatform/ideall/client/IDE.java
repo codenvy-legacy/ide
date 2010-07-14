@@ -1,13 +1,15 @@
 package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
-import org.exoplatform.ideall.client.application.DevToolForm;
-import org.exoplatform.ideall.client.common.CommonActionsComponent;
-import org.exoplatform.ideall.client.common.HelpActionsComponent;
+import org.exoplatform.ideall.client.application.IDEallForm;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
+import org.exoplatform.ideall.client.module.IDEInfoModule;
+import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
+import org.exoplatform.ideall.client.plugin.gadget.GadgetPlugin;
+import org.exoplatform.ideall.client.plugin.groovy.GroovyPlugin;
 import org.exoplatform.ideall.groovy.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -26,8 +28,7 @@ public class IDE extends VerticalPanel
       new SmartGWTDialogs();
 
       HandlerManager eventBus = new HandlerManager(null);
-
-      final ApplicationContext context = new ApplicationContext();
+      ApplicationContext context = new ApplicationContext();
       
       new CookieManager(eventBus);
 
@@ -56,20 +57,22 @@ public class IDE extends VerticalPanel
 
       /*
        * PLUGINS INITIALIZATION
-       */
+       */      
+      context.getModules().add(new PreferencesModule(eventBus, context));
+      context.getModules().add(new GadgetPlugin());
+      context.getModules().add(new GroovyPlugin());
+      context.getModules().add(new IDEInfoModule());
 
-      context.getComponents().add(new CommonActionsComponent());
+      //context.getComponents().add(new CommonActionsComponent());
       //context.getComponents().add(new GroovyActionsComponent());
-
       //context.getComponents().add(new GadgetActionsComponent());
-
-      context.getComponents().add(new HelpActionsComponent());
+      //context.getComponents().add(new HelpActionsComponent());
       
       new HotKeyManagerImpl(eventBus, context);
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
-      new DevToolForm(eventBus, context);
+      new IDEallForm(eventBus, context);
 
       Configuration configuration = new Configuration(eventBus, context);
       configuration.loadConfiguration(IDELoader.getInstance());         

@@ -16,7 +16,10 @@
  */
 package org.exoplatform.ideall.client.module;
 
-import com.google.gwt.core.client.GWT;
+import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.plugin.IDEModule;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -24,26 +27,12 @@ import com.google.gwt.core.client.GWT;
  * @version $Id: $
  */
 
-public class MyModuleInitializer {
+public class IDEInfoModule implements IDEModule
+{
 
-	public MyModuleInitializer() {
-	   //Window.alert("TestModuleInitializer");
-	   try {
-	      
-	      Object o = GWT.create(IDEModuleInitializer.class);
-	      
-	      System.out.println("created object " + o);
-	      
-//	      IDEModuleInitializer initializer = (IDEModuleInitializer)GWT.create(IDEModuleInitializer.class);
-//	      
-//	      System.out.println("received initializer: " + initializer);
-	      
-	      //initializer.initializeModules();	      
-	   } catch (Throwable e) {
-	      e.printStackTrace();
-	   }
-	   
-	}
-	
+   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   {
+      System.out.println("IDEInfoModule.enclosing_method()");
+   }
+
 }
-

@@ -14,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.server;
-
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+package org.exoplatform.ideall.client.module.edit;
 
 /**
  * Created by The eXo Platform SAS.
@@ -26,34 +22,7 @@ import java.io.PrintWriter;
  * @version $Id: $
  */
 
-public class PWriter extends PrintWriter
+public class FileEditModule
 {
-   
-   public PWriter(OutputStream out)
-   {
-      super(out);
-      // TODO Auto-generated constructor stub
-   }
-
-   private PrintWriter nativeWriter;
-   
-   public PWriter(PrintWriter nativeWriter) {
-      super(new ByteArrayOutputStream());
-      this.nativeWriter = nativeWriter;
-   }
-   
-   @Override
-   public void print(String s)
-   {
-      System.out.print(s);
-      nativeWriter.print(s);
-   }
-   
-   @Override
-   public void println()
-   {
-      System.out.println();
-      nativeWriter.println();
-   }   
 
 }
