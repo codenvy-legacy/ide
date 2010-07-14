@@ -23,13 +23,10 @@ import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.GoToLineForm;
 import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
 import org.exoplatform.ideall.client.autocompletion.AutoCompletionManager;
-import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,7 +35,7 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineHandler;
  * @version $
  */
 
-public class CommonActionsComponent extends AbstractApplicationComponent implements ShowOutlineHandler,
+public class CommonActionsComponent extends AbstractApplicationComponent implements 
    GoToLineHandler, GetFileURLHandler
 {
 
@@ -62,7 +59,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
    protected void registerHandlers()
    {
 
-      addHandler(ShowOutlineEvent.TYPE, this);
 
       addHandler(GetFileURLEvent.TYPE, this);
 
@@ -91,13 +87,6 @@ public class CommonActionsComponent extends AbstractApplicationComponent impleme
       }
    }
 
-   /**
-    * @see org.exoplatform.ideall.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ideall.client.outline.event.ShowOutlineEvent)
-    */
-   public void onShowOutline(ShowOutlineEvent event)
-   {
-      context.setShowOutline(event.isShow());
-      CookieManager.getInstance().storeOutline(context);
-   }
+
 
 }

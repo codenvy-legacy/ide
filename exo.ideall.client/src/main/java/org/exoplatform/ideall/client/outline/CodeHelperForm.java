@@ -25,7 +25,7 @@ import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEv
 import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
+import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

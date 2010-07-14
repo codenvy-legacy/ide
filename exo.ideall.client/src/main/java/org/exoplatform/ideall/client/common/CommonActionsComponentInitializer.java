@@ -20,12 +20,10 @@
 package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.common.command.view.ViewItemPropertiesCommand;
-import org.exoplatform.ideall.client.outline.ShowOutlineControl;
 import org.exoplatform.ideall.client.statusbar.EditorCursorPositionControl;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
@@ -105,24 +103,23 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       
       addCommand(new GetFileURLCommand()).disable().hide(); // navigation
       addCommand(new GoToFolderCommand()).disable().hide(); // navigation
-      addCommand(new GoToLineControl()).disable().hide(); // edit
+      context.getStatusBarItems().add(NavigatorStatusControl.ID); // navigation
+      addCommand(new NavigatorStatusControl(eventBus, context));  // navigation
       
 
       /*
        * RUN GROUP
        */
 
-      addCommand(new ShowOutlineControl()).setDelimiterBefore().dockOnToolbar(); //dev 
-      addCommand(new ShowPreviewCommand()).disable().hide().dockOnToolbar(true); //dev
+      
 
 
       /*
        * STATUS BAR
        * */
 
-      addCommand(new NavigatorStatusControl(eventBus, context));  // navigation
-      context.getStatusBarItems().add(NavigatorStatusControl.ID); // navigation
       
+      addCommand(new GoToLineControl()).disable().hide(); // edit
       addCommand(new EditorCursorPositionControl(eventBus, context)); // edit
       context.getStatusBarItems().add(EditorCursorPositionControl.ID); // edit
    }
