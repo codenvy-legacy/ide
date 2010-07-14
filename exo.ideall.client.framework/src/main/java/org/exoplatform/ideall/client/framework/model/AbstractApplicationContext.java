@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ideall.client.framework.model.configuration.ApplicationConfiguration;
 import org.exoplatform.ideall.vfs.api.File;
 
@@ -47,6 +48,33 @@ public abstract class AbstractApplicationContext
    private String entryPoint;
 
    private boolean showOutline = true;
+
+   /**
+    * Registered commands
+    */
+   private ArrayList<Control> commands = new ArrayList<Control>();
+
+   /**
+    * Uses for storing the current state of toolbar
+    */
+   private ArrayList<String> toolBarItems = new ArrayList<String>();
+
+   /**
+    * Uses for storing default state of toolbar
+    */
+   //TODO
+   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
+
+   /*
+    * Store status bar control id's here
+    */
+
+   private List<String> statusBarItems = new ArrayList<String>();
+
+   public AbstractApplicationContext()
+   {
+      toolBarItems.add("");
+   }
 
    /**
     * Opened files in editor
@@ -129,6 +157,26 @@ public abstract class AbstractApplicationContext
    public HashMap<String, File> getOpenedFiles()
    {
       return openedFiles;
+   }
+
+   public ArrayList<Control> getCommands()
+   {
+      return commands;
+   }
+
+   public ArrayList<String> getToolBarItems()
+   {
+      return toolBarItems;
+   }
+
+   public ArrayList<String> getToolBarDefaultItems()
+   {
+      return toolBarDefaultItems;
+   }
+
+   public List<String> getStatusBarItems()
+   {
+      return statusBarItems;
    }
 
 }

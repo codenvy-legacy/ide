@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public interface IDEPlugin
+public interface IDEModule
 {
 
    void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context);
