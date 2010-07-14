@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.plugin.groovy;
 
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.IDEPlugin;
+import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -27,11 +27,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class GroovyPlugin implements IDEPlugin
+public class GroovyPlugin implements IDEModule
 {
 
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
+      
+      System.out.println("GroovyPlugin.initializePlugin()");
+      
       // add controls
       
       /*
