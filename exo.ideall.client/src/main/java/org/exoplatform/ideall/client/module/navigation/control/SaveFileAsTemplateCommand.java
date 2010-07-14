@@ -22,8 +22,8 @@ package org.exoplatform.ideall.client.module.navigation.control;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateEvent;
 
 /**
  * Created by The eXo Platform SAS .

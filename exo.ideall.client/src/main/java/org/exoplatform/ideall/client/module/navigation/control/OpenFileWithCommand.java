@@ -19,8 +19,8 @@ package org.exoplatform.ideall.client.module.navigation.control;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.navigation.event.OpenFileWithEvent;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**

@@ -24,8 +24,8 @@ import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**

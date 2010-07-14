@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.module.edit.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,9 +25,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface SaveFileHandler extends EventHandler
+public class UndoEditingEvent extends GwtEvent<UndoEditingHandler>
 {
 
-   void onSaveFile(SaveFileEvent event);
+   public static final GwtEvent.Type<UndoEditingHandler> TYPE = new GwtEvent.Type<UndoEditingHandler>();
+
+   @Override
+   protected void dispatch(UndoEditingHandler handler)
+   {
+      handler.onUndoEditing(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UndoEditingHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

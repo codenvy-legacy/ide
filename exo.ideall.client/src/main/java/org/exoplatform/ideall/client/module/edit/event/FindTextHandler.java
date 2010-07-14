@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,22 +15,22 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.module.edit.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Created by The eXo Platform SAS.
+ *	
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:   ${date} ${time}
+ *
  */
-
-public interface SaveAllFilesHandler extends EventHandler
+public interface FindTextHandler extends EventHandler
 {
-
-   void onSaveAllFiles(SaveAllFilesEvent event);
-
+   /**
+    * @param event event
+    */
+   void onFindText(FindTextEvent event);
 }

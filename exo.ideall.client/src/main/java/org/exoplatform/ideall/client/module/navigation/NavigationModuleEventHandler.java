@@ -21,6 +21,7 @@ package org.exoplatform.ideall.client.module.navigation;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.action.CreateFolderForm;
 import org.exoplatform.ideall.client.action.DeleteItemForm;
+import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.RenameItemForm;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
@@ -30,27 +31,29 @@ import org.exoplatform.ideall.client.command.SaveAllFilesCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileAsCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
-import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
-import org.exoplatform.ideall.client.event.edit.CopyItemsHandler;
-import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
-import org.exoplatform.ideall.client.event.edit.CutItemsHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
-import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
-import org.exoplatform.ideall.client.event.file.CreateFolderHandler;
-import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
-import org.exoplatform.ideall.client.event.file.DeleteItemHandler;
-import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
-import org.exoplatform.ideall.client.event.file.OpenFileWithHandler;
-import org.exoplatform.ideall.client.event.file.RenameItemEvent;
-import org.exoplatform.ideall.client.event.file.RenameItemHander;
-import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
-import org.exoplatform.ideall.client.event.file.SaveAsTemplateHandler;
-import org.exoplatform.ideall.client.event.file.SearchFileEvent;
-import org.exoplatform.ideall.client.event.file.SearchFileHandler;
-import org.exoplatform.ideall.client.event.file.UploadFileEvent;
-import org.exoplatform.ideall.client.event.file.UploadFileHandler;
+import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
+import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.event.CopyItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.CopyItemsHandler;
+import org.exoplatform.ideall.client.module.navigation.event.CutItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.CutItemsHandler;
+import org.exoplatform.ideall.client.module.navigation.event.DeleteItemEvent;
+import org.exoplatform.ideall.client.module.navigation.event.DeleteItemHandler;
+import org.exoplatform.ideall.client.module.navigation.event.OpenFileWithEvent;
+import org.exoplatform.ideall.client.module.navigation.event.OpenFileWithHandler;
+import org.exoplatform.ideall.client.module.navigation.event.RenameItemEvent;
+import org.exoplatform.ideall.client.module.navigation.event.RenameItemHander;
+import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateEvent;
+import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateHandler;
+import org.exoplatform.ideall.client.module.navigation.event.SearchFileEvent;
+import org.exoplatform.ideall.client.module.navigation.event.SearchFileHandler;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderEvent;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderHandler;
+import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileEvent;
+import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileHandler;
 import org.exoplatform.ideall.client.search.file.SearchForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
@@ -65,7 +68,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class NavigationModuleEventHandler implements OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,  GetFileURLHandler
 {
    private SaveFileCommandThread saveFileCommandHandler;
 
@@ -112,6 +115,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(DeleteItemEvent.TYPE, this);
       handlers.addHandler(RenameItemEvent.TYPE, this);
       handlers.addHandler(SearchFileEvent.TYPE, this);
+      handlers.addHandler(GetFileURLEvent.TYPE, this);
 
    }
 
@@ -182,5 +186,11 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
    public void onSearchFile(SearchFileEvent event)
    {
       new SearchForm(eventBus, context);
+   }
+   
+   public void onGetFileURL(GetFileURLEvent event)
+   {
+      String url = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+      new GetItemURLForm(eventBus, url);
    }
 }

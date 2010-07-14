@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
 
 /**
  * Created by The eXo Platform SAS .

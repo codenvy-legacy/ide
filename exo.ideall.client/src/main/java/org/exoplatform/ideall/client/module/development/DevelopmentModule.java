@@ -36,6 +36,7 @@ public class DevelopmentModule extends AbstractIDEModule
    public DevelopmentModule(HandlerManager eventBus, ApplicationContext context)
    {
       super(eventBus, context);
+      new DevelopmentModuleEventHandler(eventBus, context);
    }
 
    /**
@@ -44,7 +45,7 @@ public class DevelopmentModule extends AbstractIDEModule
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
       addControl(new ShowOutlineControl(), true); 
-      addControl(new ShowPreviewCommand(), true);
+      addControl(new ShowPreviewCommand(), true, true);
    }
 
 }

@@ -18,7 +18,6 @@ package org.exoplatform.ideall.client.module.navigation;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
@@ -37,12 +36,11 @@ import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.SearchFilesCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadZippedFolderCommand;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateNewFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -84,10 +82,6 @@ public class NavigationModule extends AbstractIDEModule
       addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS,
          new CreateNewFileEvent(MimeType.TEXT_CSS)));
 
-      addControl(new CreateFileFromTemplateControl());
-      
-      addControl(new CreateNewFolderControl());
-      
       addControl(new OpenFileWithCommand());
       
       addControl(new UploadFileCommand());

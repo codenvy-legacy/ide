@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.module.navigation.control.newitem;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 
 /**
  * Created by The eXo Platform SAS .

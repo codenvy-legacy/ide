@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2009 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,17 +15,22 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.module.edit.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface SaveAsTemplateHandler extends EventHandler
+
+public interface ShowLineNumbersHandler extends EventHandler
 {
-   void onSaveAsTemplate(SaveAsTemplateEvent event);
+
+   void onShowLineNumbers(ShowLineNumbersEvent event);
+
 }

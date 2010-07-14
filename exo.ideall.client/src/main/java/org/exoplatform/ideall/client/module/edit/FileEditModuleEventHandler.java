@@ -19,12 +19,15 @@
 package org.exoplatform.ideall.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.action.GoToLineForm;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.event.edit.FindTextEvent;
-import org.exoplatform.ideall.client.event.edit.FindTextHandler;
-import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler;
+import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
+import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.edit.event.FindTextEvent;
+import org.exoplatform.ideall.client.module.edit.event.FindTextHandler;
+import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
+import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -34,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class FileEditModuleEventHandler implements ShowLineNumbersHandler, FindTextHandler
+public class FileEditModuleEventHandler implements ShowLineNumbersHandler, FindTextHandler, GoToLineHandler
 {
    private HandlerManager eventBus;
 
@@ -69,4 +72,13 @@ public class FileEditModuleEventHandler implements ShowLineNumbersHandler, FindT
    {
       new FindTextForm(eventBus, context);
    }
+
+   public void onGoToLine(GoToLineEvent event)
+   {
+      if (context.getActiveFile() != null)
+      {
+         new GoToLineForm(eventBus, context);
+      }
+   }
+
 }

@@ -23,8 +23,8 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 

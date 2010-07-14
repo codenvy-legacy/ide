@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.module.edit.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +28,33 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface CreateFileFromTemplateHandler extends EventHandler
+public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
 {
 
-   void onCreateFileFromTemplate(CreateFileFromTemplateEvent event);
+   public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
+
+   private boolean showLineNumber;
+
+   public ShowLineNumbersEvent(boolean showLineNumber)
+   {
+      this.showLineNumber = showLineNumber;
+   }
+
+   @Override
+   protected void dispatch(ShowLineNumbersHandler handler)
+   {
+      handler.onShowLineNumbers(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   public boolean isShowLineNumber()
+   {
+      return showLineNumber;
+   }
 
 }

@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ideall.client.module.edit.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,21 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class DeleteItemEvent extends GwtEvent<DeleteItemHandler>
+public interface UndoEditingHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<DeleteItemHandler> TYPE = new GwtEvent.Type<DeleteItemHandler>();
-
-   @Override
-   protected void dispatch(DeleteItemHandler handler)
-   {
-      handler.onDeleteItem(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteItemHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onUndoEditing(UndoEditingEvent event);
 
 }

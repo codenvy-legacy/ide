@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.module.navigation.control;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.DeleteItemEvent;
+import org.exoplatform.ideall.client.module.navigation.event.DeleteItemEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.vfs.api.Item;
 import org.exoplatform.ideall.vfs.api.event.ItemDeletedEvent;

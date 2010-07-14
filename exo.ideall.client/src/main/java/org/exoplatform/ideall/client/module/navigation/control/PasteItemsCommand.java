@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
-import org.exoplatform.ideall.client.event.edit.PasteItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.PasteItemsEvent;
 
 /**
  * Created by The eXo Platform SAS.
