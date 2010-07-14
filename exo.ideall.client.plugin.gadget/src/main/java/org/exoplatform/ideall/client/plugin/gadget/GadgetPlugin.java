@@ -19,7 +19,7 @@
 package org.exoplatform.ideall.client.plugin.gadget;
 
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.IDEPlugin;
+import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class GadgetPlugin implements IDEPlugin
+public class GadgetPlugin implements IDEModule
 {
 
    /**
@@ -36,6 +36,8 @@ public class GadgetPlugin implements IDEPlugin
     */
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
+      System.out.println("GadgetPlugin.initializePlugin()");
+      
 //      add controll
 //      addCommand(new DeployGadgetCommand()).disable().setDelimiterBefore().dockOnToolbar(true);
 //      addCommand(new UndeployGadgetCommand()).disable().dockOnToolbar(true);
