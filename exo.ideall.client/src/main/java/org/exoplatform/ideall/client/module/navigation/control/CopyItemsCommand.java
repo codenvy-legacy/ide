@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.common.command.edit;
+package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
-import org.exoplatform.ideall.client.event.edit.CutItemsEvent;
+import org.exoplatform.ideall.client.event.edit.CopyItemsEvent;
 import org.exoplatform.ideall.vfs.api.Item;
 
 /**
@@ -28,22 +28,22 @@ import org.exoplatform.ideall.vfs.api.Item;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CutItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private static final String ID = "Edit/Cut Item(s)";
-
-   private boolean cutReady = false;
-
+   public static final String ID = "Edit/Copy Item(s)";
+   
    private Item selectedItem;
 
-   public CutItemsCommand()
+   private boolean copyReady = false;
+   
+   public CopyItemsCommand()
    {
       super(ID);
-      setTitle("Cut Item(s)");
-      setPrompt("Cut Selected Item(s)");
-      setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
-      setEvent(new CutItemsEvent());
+      setTitle("Copy Item(s)");
+      setPrompt("Copy Selected Item(s)");
+      setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
+      setEvent(new CopyItemsEvent());
    }
 
    @Override
@@ -60,6 +60,16 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       super.onRegisterHandlers();
    }
 
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if(event.getSelectedItems().size() != 0)
+      {
+         selectedItem = event.getSelectedItems().get(0);
+         copyReady = isItemsInSameFolder(event.getSelectedItems());
+         updateEnabling();
+      }
+   }
+   
    @Override
    protected void updateEnabling()
    {
@@ -74,8 +84,8 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
          setEnabled(false);
          return;
       }
-
-      if (cutReady)
+      
+      if(copyReady)
       {
          setEnabled(true);
       }
@@ -83,17 +93,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       {
          setEnabled(false);
       }
-   }
-
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 0)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-         cutReady = isItemsInSameFolder(event.getSelectedItems());
-         updateEnabling();
-      }
-
+     
    }
 
 }

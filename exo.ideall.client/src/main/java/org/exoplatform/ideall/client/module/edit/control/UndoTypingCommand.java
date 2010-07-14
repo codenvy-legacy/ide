@@ -17,18 +17,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveAllFilesEvent;
+import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,61 +36,61 @@ import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
  * @version $
  */
 
-public class SaveAllFilesCommand extends IDEControl implements EditorFileContentChangedHandler,
-   FileContentSavedHandler, EditorActiveFileChangedHandler
+public class UndoTypingCommand extends IDEControl implements EditorActiveFileChangedHandler,
+   EditorFileContentChangedHandler, FileContentReceivedHandler
 {
 
-   public static final String ID = "File/Save All";
+   public static final String ID = "Edit/Undo Typing";
 
-   public static final String TITLE = "Save All";
+   public static final String TITLE = "Undo Typing";
 
-   public SaveAllFilesCommand()
+   public UndoTypingCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveAll(), IDEImageBundle.INSTANCE.saveAllDisabled());
-      setEvent(new SaveAllFilesEvent());
+      setDelimiterBefore(true);
+      setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
+      setEvent(new UndoEditingEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
-      setVisible(true);
-
-      addHandler(EditorFileContentChangedEvent.TYPE, this);
-      addHandler(FileContentSavedEvent.TYPE, this);
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
-
-   private void checkItemEnabling()
-   {
-      boolean enable = false;
-      for (File file : context.getOpenedFiles().values())
-      {
-         if (!file.isNewFile() && file.isContentChanged())
-         {
-            enable = true;
-            break;
-         }
-      }
-
-      setEnabled(enable);
-   }
-
-   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
-   {
-      checkItemEnabling();
-   }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      checkItemEnabling();
+      addHandler(EditorFileContentChangedEvent.TYPE, this);
+      addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      checkItemEnabling();
+      if (event.getFile() == null)
+      {
+         setVisible(false);
+         setEnabled(false);
+         return;
+      }
+
+      setVisible(true);
+      if (event.getEditor() != null)
+      {
+         setEnabled(event.getEditor().hasUndoChanges());
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
+   {
+      setEnabled(event.hasUndoChanges());
+   }
+
+   public void onFileContentReceived(FileContentReceivedEvent event)
+   {
+      setVisible(true);
+      setEnabled(false);
    }
 
 }

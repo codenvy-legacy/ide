@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.common.command.edit;
+package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.event.edit.FindTextEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 
 /**
@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.search.text.FindTextForm;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends IDECommand implements EditorActiveFileChangedHandler, OpenedFormsStateChangedHandler
+public class FindTextCommand extends IDEControl implements EditorActiveFileChangedHandler, OpenedFormsStateChangedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";

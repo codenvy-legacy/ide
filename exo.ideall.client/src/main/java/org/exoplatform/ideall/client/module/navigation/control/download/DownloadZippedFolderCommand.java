@@ -17,13 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.navigation.control.download;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.SearchFileEvent;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
+import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
+import org.exoplatform.ideall.vfs.api.Folder;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,39 +33,60 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
  * @version $
  */
 
-public class SearchFilesCommand extends IDEControl implements ItemsSelectedHandler
+public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   public static final String ID = "File/Search...";
+   private final static String ID = "File/Download Zipped Folder...";
 
-   public static final String TITLE = "Search...";
+   private boolean oneItemSelected = true;
 
-   public SearchFilesCommand()
+   public DownloadZippedFolderCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
-      setEvent(new SearchFileEvent());
+      setTitle("Download Zipped Folder...");
+      setPrompt("Download Zipped Folder...");
+      setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
+      setEvent(new DownloadZippedFolderEvent());
+   }
+
+   @Override
+   protected void onInitializeApplication()
+   {
+      setVisible(true);
+      setEnabled(false);
    }
 
    @Override
    protected void onRegisterHandlers()
    {
+      super.onRegisterHandlers();
       addHandler(ItemsSelectedEvent.TYPE, this);
-      setVisible(true);
-      setEnabled(true);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
       {
-         setEnabled(false);
+         oneItemSelected = false;
+         updateEnabling();
       }
       else
       {
+         oneItemSelected = true;
+         updateEnabling();
+      }
+   }
+
+   @Override
+   protected void updateEnabling()
+   {
+      if (browserSelected && oneItemSelected)
+      {
          setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
       }
    }
 

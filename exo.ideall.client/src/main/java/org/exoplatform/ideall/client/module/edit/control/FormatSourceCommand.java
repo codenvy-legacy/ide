@@ -17,12 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.edit.control;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
+import org.exoplatform.ideall.client.event.edit.FormatFileEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
@@ -32,39 +33,55 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
  * @version $
  */
 
-public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class FormatSourceCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "File/Save As Template...";
+   private static final String ID = "Edit/Format";
 
-   public static final String TITLE = "Save As Template...";
+   private static final String TITLE = "Format";
 
-   public SaveFileAsTemplateCommand()
+   public FormatSourceCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
-      setEvent(new SaveAsTemplateEvent());
+      setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
+      setEvent(new FormatFileEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
-      setVisible(true);
-
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getEditor() == null)
       {
+         setVisible(false);
          setEnabled(false);
          return;
       }
 
-      setEnabled(true);
+      if (event.getEditor().canFormatSource())
+      {
+         if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+         {
+            setVisible(false);
+            setEnabled(false);
+         }
+         else
+         {
+            setVisible(true);
+            setEnabled(true);
+         }
+      }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
+      }
    }
 
 }

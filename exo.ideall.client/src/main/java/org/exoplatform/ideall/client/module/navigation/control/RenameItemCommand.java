@@ -17,20 +17,20 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.upload;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.UploadFileEvent;
+import org.exoplatform.ideall.client.event.file.RenameItemEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ideall.vfs.api.event.ItemDeletedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,33 +39,32 @@ import org.exoplatform.ideall.vfs.api.Item;
  * @version $
  */
 
-public class UploadFileCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class RenameItemCommand extends IDEControl implements ItemsSelectedHandler, ItemDeletedHandler,
+   PanelSelectedHandler
 {
 
-   private final static String ID = "File/Upload File...";
-
-   private final static String TITLE = "Upload...";
-
-   private final static String PROMPT = "Upload File...";
+   private static final String ID = "File/Rename...";
 
    private boolean browserPanelSelected = true;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+   private Item selectedItem;
 
-   public UploadFileCommand()
+   public RenameItemCommand()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      //setIcon(Images.MainMenu.UPLOAD);
-      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      setEvent(new UploadFileEvent(false));
+      setTitle("Rename...");
+      setPrompt("Rename Item");
+      setDelimiterBefore(true);
+      setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
+      setEvent(new RenameItemEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(ItemsSelectedEvent.TYPE, this);
+      addHandler(ItemDeletedEvent.TYPE, this);
+
       addHandler(PanelSelectedEvent.TYPE, this);
    }
 
@@ -76,34 +75,54 @@ public class UploadFileCommand extends IDEControl implements ItemsSelectedHandle
       updateEnabling();
    }
 
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      ApplicationContext applicationContext = (ApplicationContext)context;
+
+      if (applicationContext.getSelectedItems(applicationContext.getSelectedNavigationPanel()).size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      selectedItem = event.getSelectedItems().get(0);
+      updateEnabling();
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      selectedItem = null;
+      updateEnabling();
+   }
+
    private void updateEnabling()
    {
-      if (browserPanelSelected)
+      if (!browserPanelSelected)
       {
-         if (selectedItems.size() == 1)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
+         setEnabled(false);
+         return;
       }
-      else
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem.getHref().equals(context.getEntryPoint()))
       {
          setEnabled(false);
       }
-   }
-
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
+      else
+      {
+         setEnabled(true);
+      }
    }
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
    }
 
 }

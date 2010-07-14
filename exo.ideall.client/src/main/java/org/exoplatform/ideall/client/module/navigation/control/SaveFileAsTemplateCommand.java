@@ -17,17 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.edit;
+package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
-import org.exoplatform.ideall.client.event.edit.UndoEditingEvent;
+import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,61 +32,39 @@ import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
  * @version $
  */
 
-public class UndoTypingCommand extends IDEControl implements EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler, FileContentReceivedHandler
+public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Edit/Undo Typing";
+   public static final String ID = "File/Save As Template...";
 
-   public static final String TITLE = "Undo Typing";
+   public static final String TITLE = "Save As Template...";
 
-   public UndoTypingCommand()
+   public SaveFileAsTemplateCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setDelimiterBefore(true);
-      setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
-      setEvent(new UndoEditingEvent());
+      setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
+      setEvent(new SaveAsTemplateEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
+      setVisible(true);
+
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(EditorFileContentChangedEvent.TYPE, this);
-      addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
       {
-         setVisible(false);
          setEnabled(false);
          return;
       }
 
-      setVisible(true);
-      if (event.getEditor() != null)
-      {
-         setEnabled(event.getEditor().hasUndoChanges());
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
-
-   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
-   {
-      setEnabled(event.hasUndoChanges());
-   }
-
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      setVisible(true);
-      setEnabled(false);
+      setEnabled(true);
    }
 
 }

@@ -24,7 +24,24 @@ import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.control.CopyItemsCommand;
+import org.exoplatform.ideall.client.module.navigation.control.CreateNewFolderCommand;
+import org.exoplatform.ideall.client.module.navigation.control.CutItemsCommand;
+import org.exoplatform.ideall.client.module.navigation.control.DeleteItemCommand;
 import org.exoplatform.ideall.client.module.navigation.control.NewFilePopupMenuControl;
+import org.exoplatform.ideall.client.module.navigation.control.OpenFileWithCommand;
+import org.exoplatform.ideall.client.module.navigation.control.PasteItemsCommand;
+import org.exoplatform.ideall.client.module.navigation.control.RefreshBrowserCommand;
+import org.exoplatform.ideall.client.module.navigation.control.RenameItemCommand;
+import org.exoplatform.ideall.client.module.navigation.control.SaveAllFilesCommand;
+import org.exoplatform.ideall.client.module.navigation.control.SaveFileAsCommand;
+import org.exoplatform.ideall.client.module.navigation.control.SaveFileAsTemplateCommand;
+import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
+import org.exoplatform.ideall.client.module.navigation.control.SearchFilesCommand;
+import org.exoplatform.ideall.client.module.navigation.control.download.DownloadFileCommand;
+import org.exoplatform.ideall.client.module.navigation.control.download.DownloadZippedFolderCommand;
+import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
+import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -44,14 +61,13 @@ public class NavigationModule extends AbstractIDEModule
 
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
-      
+
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
       addControl(newFilePopupMenuControl, true);
-      
+
       addControl(new NewFileCommandMenuGroup());
 
-      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML,
-         new CreateNewFileEvent(MimeType.TEXT_XML)));
+      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML)));
 
       addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File",
          Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML)));
@@ -64,5 +80,28 @@ public class NavigationModule extends AbstractIDEModule
 
       addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS,
          new CreateNewFileEvent(MimeType.TEXT_CSS)));
+      
+      CreateNewFolderCommand newFolderCommand =  new CreateNewFolderCommand();
+      newFilePopupMenuControl.getCommands().add(newFolderCommand);
+      addControl(new OpenFileWithCommand());
+      addControl(new UploadFileCommand());
+      addControl(new OpenLocalFileCommand());
+      addControl(new DownloadFileCommand());
+      addControl(new DownloadZippedFolderCommand());
+      addControl(new SaveFileCommand(), true);
+      addControl(new SaveFileAsCommand(), true);
+      addControl(new SaveAllFilesCommand());
+      addControl(new SaveFileAsTemplateCommand());
+
+      addControl(newFolderCommand);
+      addControl(new CutItemsCommand(), true);
+      addControl(new CopyItemsCommand(), true);
+      addControl(new PasteItemsCommand(), true);
+
+      addControl(new RenameItemCommand());
+      addControl(new DeleteItemCommand(), true);
+      addControl(new SearchFilesCommand(), true);
+      addControl(new RefreshBrowserCommand(), true);
    }
+
 }

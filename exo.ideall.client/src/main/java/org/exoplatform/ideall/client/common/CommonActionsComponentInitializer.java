@@ -23,24 +23,6 @@ import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl
 import org.exoplatform.gwtframework.ui.client.component.command.builder.PopupMenuCommandBuilder;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
-import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
-import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
-import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
-import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
-import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
-import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
-import org.exoplatform.ideall.client.common.command.file.RefreshBrowserCommand;
-import org.exoplatform.ideall.client.common.command.file.RenameItemCommand;
-import org.exoplatform.ideall.client.common.command.file.SaveAllFilesCommand;
-import org.exoplatform.ideall.client.common.command.file.SaveFileAsCommand;
-import org.exoplatform.ideall.client.common.command.file.SaveFileAsTemplateCommand;
-import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
-import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
-import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommandMenuGroup;
-import org.exoplatform.ideall.client.common.command.file.upload.OpenLocalFileCommand;
-import org.exoplatform.ideall.client.common.command.file.upload.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
 import org.exoplatform.ideall.client.common.command.view.GetFileURLCommand;
 import org.exoplatform.ideall.client.common.command.view.GoToFolderCommand;
@@ -74,7 +56,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * FILE GROUP
        */
 
-      addCommand(new NewFileCommandMenuGroup()).disable().hide();
+//      addCommand(new NewFileCommandMenuGroup()).disable().hide();
 
 //      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
 //      addCommand(newGroovyFileCommand).disable().hide();
@@ -89,47 +71,50 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 //      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
 //      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
-      
-      
-      
-      addCommand(new OpenFileWithCommand()).disable().hide();
+//      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
+//      addCommand(newGroovyFileCommand).disable().hide();
+//
+//      NewHTMLFileCommand newHTMLFileCommand = new NewHTMLFileCommand();
+//      addCommand(newHTMLFileCommand).disable().hide();
+//
+//      NewTEXTFileCommand newTEXTFileCommand = new NewTEXTFileCommand();
+//      addCommand(newTEXTFileCommand).disable().hide();
+//
+//      NewJavaScriptFileCommand newJavaScriptFileCommand = new NewJavaScriptFileCommand();
+//      addCommand(newJavaScriptFileCommand).disable().hide();
+//
+//      NewCSSFileCommand newCSSFileCommand = new NewCSSFileCommand();
+//      addCommand(newCSSFileCommand).disable().hide();
+//
+//      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
+//      addCommand(newGadgetCommand).disable().hide();
+//
+//      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
+//      addCommand(newUWAWidgetCommand).disable().hide();
+//
+//      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
+//      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
+
+     
 
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
 
-      addCommand(new UploadFileCommand()).disable().hide().setDelimiterBefore();
-      addCommand(new OpenLocalFileCommand()).disable().hide();
+     
 
       /*
        * DOWNLOAD GROUP
        */
       //addCommand(new DownloadFile()).disable().hide();
-      addCommand(new DownloadFileCommand()).disable().hide();
-      addCommand(new DownloadZippedFolderCommand()).disable().hide();
+     
       /*
        * END DOWNLOAD GROUP
        */
 
-      addCommand(new SaveFileCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new SaveFileAsCommand()).disable().hide().dockOnToolbar();
-      addCommand(new SaveAllFilesCommand()).disable().hide();
-      addCommand(new SaveFileAsTemplateCommand()).disable().hide();
-
-      
-      CreateNewFolderCommand createFolderControl = new CreateNewFolderCommand();
-      
-      
-      addCommand(createFolderControl).disable().hide().setDelimiterBefore();
+    
       /*
        * COPY, CUT, PASTE COMMAND
        */
-      addCommand(new CutItemsCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new CopyItemsCommand()).disable().hide().dockOnToolbar();
-      addCommand(new PasteItemsCommand()).disable().hide().dockOnToolbar();
-
-      addCommand(new RenameItemCommand()).disable().hide().setDelimiterBefore();
-      addCommand(new DeleteItemCommand()).disable().hide().dockOnToolbar();
-      addCommand(new SearchFilesCommand()).disable().hide().dockOnToolbar();
-      addCommand(new RefreshBrowserCommand()).disable().hide().dockOnToolbar();
+   
 
       /*
        * EDIT GROUP
@@ -166,7 +151,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
 //      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
 //      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
       
-      newFilePopupMenuCommand.getCommands().add(createFolderControl);
+//      newFilePopupMenuCommand.getCommands().add(createFolderControl);
 
       /*
        * STATUS BAR

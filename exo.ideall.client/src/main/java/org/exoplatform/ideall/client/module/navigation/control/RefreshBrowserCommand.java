@@ -17,18 +17,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
+import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
-
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,53 +35,46 @@ import com.google.gwt.user.client.Window;
  * @version $
  */
 
-public class CreateNewFolderCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private boolean folderItemSelected = true;
+   private static final String ID = "File/Refresh Selected Folder";
+
+   private static final String TITLE = "Refresh";
+
+   private static final String PROMPT = "Refresh Selected Folder";
 
    private boolean browserPanelSelected = true;
 
-   public final static String ID = "File/New/Create Folder...";
+   private boolean oneItemSelected = true;
 
-   public CreateNewFolderCommand()
+   public RefreshBrowserCommand()
    {
       super(ID);
-      setTitle("Folder...");
-      setPrompt("Create Folder...");
-      setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
-      setEvent(new CreateFolderEvent());
-
-      Window.alert("Creatring........");
-
+      setTitle(TITLE);
+      setPrompt(PROMPT);
+      setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
+      setEvent(new RefreshBrowserEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
-      Window.alert("Registyerlasdkfj asdlflasdkj");
-
-      addHandler(PanelSelectedEvent.TYPE, this);
       addHandler(ItemsSelectedEvent.TYPE, this);
+      addHandler(PanelSelectedEvent.TYPE, this);
    }
 
    @Override
    protected void onInitializeApplication()
    {
-      Window.alert("000000000000000000000000000000000");
-
       setVisible(true);
       updateEnabling();
    }
 
    private void updateEnabling()
    {
-      if (!browserPanelSelected)
-      {
-         setEnabled(false);
-         return;
-      }
-      if (folderItemSelected)
+
+      if (browserPanelSelected && oneItemSelected)
       {
          setEnabled(true);
       }
@@ -91,20 +82,21 @@ public class CreateNewFolderCommand extends IDEControl implements ItemsSelectedH
       {
          setEnabled(false);
       }
+
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {
-         folderItemSelected = false;
+         oneItemSelected = false;
          updateEnabling();
-         return;
       }
-
-      folderItemSelected = true;
-      updateEnabling();
-
+      else
+      {
+         oneItemSelected = true;
+         updateEnabling();
+      }
    }
 
    public void onPanelSelected(PanelSelectedEvent event)

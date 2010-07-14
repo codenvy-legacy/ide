@@ -17,15 +17,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,57 +36,44 @@ import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
  * @version $
  */
 
-public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements EditorActiveFileChangedHandler,
-   ItemsSelectedHandler
+public class RedoTypingCommand extends IDEControl implements EditorActiveFileChangedHandler,
+   EditorFileContentChangedHandler, FileContentReceivedHandler
 {
 
-   private static final String ID = "File/Save As...";
+   public static final String ID = "Edit/Redo Typing";
 
-   private static final String TITLE = "Save As...";
+   public static final String TITLE = "Redo Typing";
 
-   private boolean activeFileSelected = false;
-   
-   private boolean singleItemSelected = true; 
-
-   public SaveFileAsCommand()
+   public RedoTypingCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
-      setEvent(new SaveFileAsEvent());
+      setImages(IDEImageBundle.INSTANCE.redo(), IDEImageBundle.INSTANCE.redoDisabled());
+      setEvent(new RedoEditingEvent());
    }
 
    @Override
    protected void onRegisterHandlers()
    {
-      super.onRegisterHandlers();
-      setVisible(true);
-      setEnabled(false);
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(ItemsSelectedEvent.TYPE, this);
+      addHandler(EditorFileContentChangedEvent.TYPE, this);
+      addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
       {
-         activeFileSelected = false;
-         updateEnabling();
+         setVisible(false);
+         setEnabled(false);
+         return;
       }
-      else
-      {
-         activeFileSelected = true;
-         updateEnabling();
-      }
-   }
 
-   @Override
-   protected void updateEnabling()
-   {
-      if (browserSelected && activeFileSelected && singleItemSelected)
+      setVisible(true);
+      if (event.getEditor() != null)
       {
-         setEnabled(true);
+         setEnabled(event.getEditor().hasRedoChanges());
       }
       else
       {
@@ -92,18 +81,15 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       }
    }
 
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      if (event.getSelectedItems().size() == 1)
-      {
-         singleItemSelected = true;
-         updateEnabling();
-      }
-      else
-      {
-         singleItemSelected = false;
-         updateEnabling();
-      }
+      setEnabled(event.hasRedoChanges());
+   }
+
+   public void onFileContentReceived(FileContentReceivedEvent event)
+   {
+      setVisible(true);
+      setEnabled(false);
    }
 
 }

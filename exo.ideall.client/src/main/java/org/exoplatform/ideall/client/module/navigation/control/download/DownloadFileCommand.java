@@ -17,14 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file.download;
+package org.exoplatform.ideall.client.module.navigation.control.download;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.common.command.MultipleSelectionItemsCommand;
-import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.client.event.file.DownloadFileEvent;
+import org.exoplatform.ideall.vfs.api.File;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,20 +33,20 @@ import org.exoplatform.ideall.vfs.api.Folder;
  * @version $
  */
 
-public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class DownloadFileCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private final static String ID = "File/Download Zipped Folder...";
+   private final static String ID = "File/Download File...";
 
    private boolean oneItemSelected = true;
 
-   public DownloadZippedFolderCommand()
+   public DownloadFileCommand()
    {
       super(ID);
-      setTitle("Download Zipped Folder...");
-      setPrompt("Download Zipped Folder...");
-      setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
-      setEvent(new DownloadZippedFolderEvent());
+      setTitle("Download...");
+      setPrompt("Download File...");
+      setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());
+      setEvent(new DownloadFileEvent());
    }
 
    @Override
@@ -65,7 +65,7 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
+      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
       {
          oneItemSelected = false;
          updateEnabling();

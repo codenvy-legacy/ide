@@ -16,15 +16,15 @@
  */
 package org.exoplatform.ideall.client.module.edit;
 
-import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
-import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
-import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
-import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
-import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
-import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
+import org.exoplatform.ideall.client.module.edit.control.FormatSourceCommand;
+import org.exoplatform.ideall.client.module.edit.control.RedoTypingCommand;
+import org.exoplatform.ideall.client.module.edit.control.ShowLineNumbersCommand;
+import org.exoplatform.ideall.client.module.edit.control.UndoTypingCommand;
+import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 

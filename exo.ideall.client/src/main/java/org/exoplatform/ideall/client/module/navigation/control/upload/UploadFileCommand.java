@@ -17,16 +17,20 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.common.command.file;
+package org.exoplatform.ideall.client.module.navigation.control.upload;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.event.file.UploadFileEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,26 +39,28 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class UploadFileCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "File/Refresh Selected Folder";
+   private final static String ID = "File/Upload File...";
 
-   private static final String TITLE = "Refresh";
+   private final static String TITLE = "Upload...";
 
-   private static final String PROMPT = "Refresh Selected Folder";
+   private final static String PROMPT = "Upload File...";
 
    private boolean browserPanelSelected = true;
 
-   private boolean oneItemSelected = true;
+   private List<Item> selectedItems = new ArrayList<Item>();
 
-   public RefreshBrowserCommand()
+   public UploadFileCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
-      setEvent(new RefreshBrowserEvent());
+      setDelimiterBefore(true);
+      //setIcon(Images.MainMenu.UPLOAD);
+      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
+      setEvent(new UploadFileEvent(false));
    }
 
    @Override
@@ -73,36 +79,32 @@ public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHa
 
    private void updateEnabling()
    {
-
-      if (browserPanelSelected && oneItemSelected)
+      if (browserPanelSelected)
       {
-         setEnabled(true);
+         if (selectedItems.size() == 1)
+         {
+            setEnabled(true);
+         }
+         else
+         {
+            setEnabled(false);
+         }
       }
       else
       {
          setEnabled(false);
       }
-
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
-      {
-         oneItemSelected = false;
-         updateEnabling();
-      }
-      else
-      {
-         oneItemSelected = true;
-         updateEnabling();
-      }
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
    }
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
    }
 
 }
