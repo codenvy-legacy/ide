@@ -46,6 +46,7 @@ public class FindTextCommand extends IDECommand implements EditorActiveFileChang
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
    }

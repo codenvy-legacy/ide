@@ -49,6 +49,7 @@ public class UndoTypingCommand extends IDECommand implements EditorActiveFileCha
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
       setEvent(new UndoEditingEvent());
    }

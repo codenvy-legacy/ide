@@ -25,13 +25,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.application.component.AbstractComponentInitializer;
 import org.exoplatform.ideall.client.common.command.edit.CopyItemsCommand;
 import org.exoplatform.ideall.client.common.command.edit.CutItemsCommand;
-import org.exoplatform.ideall.client.common.command.edit.DeleteLineControl;
-import org.exoplatform.ideall.client.common.command.edit.FindTextCommand;
-import org.exoplatform.ideall.client.common.command.edit.FormatSourceCommand;
 import org.exoplatform.ideall.client.common.command.edit.PasteItemsCommand;
-import org.exoplatform.ideall.client.common.command.edit.RedoTypingCommand;
-import org.exoplatform.ideall.client.common.command.edit.ShowLineNumbersCommand;
-import org.exoplatform.ideall.client.common.command.edit.UndoTypingCommand;
 import org.exoplatform.ideall.client.common.command.file.CreateNewFolderCommand;
 import org.exoplatform.ideall.client.common.command.file.DeleteItemCommand;
 import org.exoplatform.ideall.client.common.command.file.OpenFileWithCommand;
@@ -159,13 +153,7 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * EDIT GROUP
        */
 
-      addCommand(new UndoTypingCommand()).disable().hide().setDelimiterBefore().dockOnToolbar();
-      addCommand(new RedoTypingCommand()).disable().hide().dockOnToolbar();
-      addCommand(new FormatSourceCommand()).disable().hide().dockOnToolbar();
-
-      addCommand(new FindTextCommand()).disable().hide().dockOnToolbar().setDelimiterBefore();
-      addCommand(new ShowLineNumbersCommand()).disable().hide();
-      addCommand(new DeleteLineControl()).disable().hide();
+     
 
       /*
        * VIEW GROUP
