@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.help;
+package org.exoplatform.ideall.client.module.preferences.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ShowAboutDialogEvent extends GwtEvent<ShowAboutDialogHandler>
+public interface ShowAboutDialogHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<ShowAboutDialogHandler> TYPE = new GwtEvent.Type<ShowAboutDialogHandler>();
-
-   @Override
-   protected void dispatch(ShowAboutDialogHandler handler)
-   {
-      handler.onShowAboutDialog(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowAboutDialogHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onShowAboutDialog(ShowAboutDialogEvent event);
 
 }

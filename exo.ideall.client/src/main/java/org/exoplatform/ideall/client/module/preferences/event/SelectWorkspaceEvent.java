@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.hotkeys.event;
+package org.exoplatform.ideall.client.module.preferences.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -28,19 +28,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class CustomizeHotKeysEvent extends GwtEvent<CustomizeHotKeysHandler>
+public class SelectWorkspaceEvent extends GwtEvent<SelectWorkspaceHandler>
 {
 
-   public static final GwtEvent.Type<CustomizeHotKeysHandler> TYPE = new GwtEvent.Type<CustomizeHotKeysHandler>();
+   public static final GwtEvent.Type<SelectWorkspaceHandler> TYPE = new GwtEvent.Type<SelectWorkspaceHandler>();
 
    @Override
-   protected void dispatch(CustomizeHotKeysHandler handler)
+   protected void dispatch(SelectWorkspaceHandler handler)
    {
-      handler.onCustomizeHotKeys(this);
+      handler.onSelectWorkspace(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeHotKeysHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectWorkspaceHandler> getAssociatedType()
    {
       return TYPE;
    }

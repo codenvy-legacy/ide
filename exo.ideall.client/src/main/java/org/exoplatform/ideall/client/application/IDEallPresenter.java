@@ -54,7 +54,7 @@ import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ideall.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;

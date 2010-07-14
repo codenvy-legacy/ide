@@ -18,21 +18,21 @@ package org.exoplatform.ideall.client.module.preferences;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.component.AboutForm;
-import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
-import org.exoplatform.ideall.client.event.help.ShowAboutDialogHandler;
 import org.exoplatform.ideall.client.hotkeys.CustomizeHotKeysPanel;
-import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
-import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
+import org.exoplatform.ideall.client.module.preferences.event.CustomizeHotKeysEvent;
+import org.exoplatform.ideall.client.module.preferences.event.CustomizeHotKeysHandler;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceHandler;
+import org.exoplatform.ideall.client.module.preferences.event.ShowAboutDialogEvent;
+import org.exoplatform.ideall.client.module.preferences.event.ShowAboutDialogHandler;
 import org.exoplatform.ideall.client.toolbar.customize.CustomizeToolbarForm;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarHandler;
 import org.exoplatform.ideall.client.workspace.SelectWorkspaceForm;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

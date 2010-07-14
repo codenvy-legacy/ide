@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.module.preferences.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
 
 /**
  * Created by The eXo Platform SAS .

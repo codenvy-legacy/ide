@@ -101,42 +101,30 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * VIEW GROUP
        */
 
-      addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true);
-      addCommand(new GetFileURLCommand()).disable().hide();
-      addCommand(new GoToFolderCommand()).disable().hide();
-      addCommand(new GoToLineControl()).disable().hide();
-      addCommand(new ShowOutlineControl()).setDelimiterBefore().dockOnToolbar();
+      addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true); // navigation
+      
+      addCommand(new GetFileURLCommand()).disable().hide(); // navigation
+      addCommand(new GoToFolderCommand()).disable().hide(); // navigation
+      addCommand(new GoToLineControl()).disable().hide(); // edit
+      
 
       /*
        * RUN GROUP
        */
 
-      addCommand(new ShowPreviewCommand()).disable().hide().dockOnToolbar(true);
+      addCommand(new ShowOutlineControl()).setDelimiterBefore().dockOnToolbar(); //dev 
+      addCommand(new ShowPreviewCommand()).disable().hide().dockOnToolbar(true); //dev
 
-      /*
-       * filling new item popup menu
-       */
-//      newFilePopupMenuCommand.getCommands().add(newXmlFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newGroovyFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newHTMLFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newTEXTFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newJavaScriptFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
-//      newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
-//      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
-//      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
-      
-      //newFilePopupMenuCommand.getCommands().add(createFolderControl);
 
       /*
        * STATUS BAR
        * */
 
-      addCommand(new NavigatorStatusControl(eventBus, context));
-      addCommand(new EditorCursorPositionControl(eventBus, context));
-
-      context.getStatusBarItems().add(NavigatorStatusControl.ID);
-      context.getStatusBarItems().add(EditorCursorPositionControl.ID);
+      addCommand(new NavigatorStatusControl(eventBus, context));  // navigation
+      context.getStatusBarItems().add(NavigatorStatusControl.ID); // navigation
+      
+      addCommand(new EditorCursorPositionControl(eventBus, context)); // edit
+      context.getStatusBarItems().add(EditorCursorPositionControl.ID); // edit
    }
 
 }

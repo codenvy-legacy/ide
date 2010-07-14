@@ -20,8 +20,8 @@
 package org.exoplatform.ideall.client.module.preferences.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.preferences.event.ShowAboutDialogEvent;
 
 /**
  * Created by The eXo Platform SAS .
