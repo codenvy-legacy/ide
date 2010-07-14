@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
 import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateCommand;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -166,7 +166,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       controls.put("Ctrl+70", FindTextCommand.ID); //Ctrl+F
       controls.put("Ctrl+68", DeleteLineControl.ID); //Ctrl+D
       controls.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L
-      controls.put("Ctrl+78", CreateFileFromTemplateCommand.ID); //Ctrl+N
+      controls.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
 
       context.setHotKeys(controls);
 

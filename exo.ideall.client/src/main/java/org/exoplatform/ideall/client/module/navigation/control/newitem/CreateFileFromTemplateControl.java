@@ -29,15 +29,16 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends NewFileCommand
+public class CreateFileFromTemplateControl extends NewFileCommand
 {
 
    public final static String ID = "File/New/Create File From Template...";
 
-   public CreateFileFromTemplateCommand()
+   public CreateFileFromTemplateControl()
    {
       super(ID, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
+      setDelimiterBefore(true);
    }
 
 }

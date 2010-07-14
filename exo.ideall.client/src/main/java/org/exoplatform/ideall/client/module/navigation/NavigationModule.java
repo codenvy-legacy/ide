@@ -37,6 +37,8 @@ import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.SearchFilesCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadZippedFolderCommand;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateNewFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
@@ -82,6 +84,10 @@ public class NavigationModule extends AbstractIDEModule
       addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS,
          new CreateNewFileEvent(MimeType.TEXT_CSS)));
 
+      addControl(new CreateFileFromTemplateControl());
+      
+      addControl(new CreateNewFolderControl());
+      
       addControl(new OpenFileWithCommand());
       
       addControl(new UploadFileCommand());
