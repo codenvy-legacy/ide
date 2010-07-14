@@ -23,10 +23,11 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
+import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,26 +36,26 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class GetFileURLControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
-   private static final String ID = "File/Refresh Selected Folder";
+   private static final String ID = "View/Get URL...";
 
-   private static final String TITLE = "Refresh";
+   private static final String TITLE = "Get URL...";
 
-   private static final String PROMPT = "Refresh Selected Folder";
+   private static final String PROMPT = "Get URL";
 
    private boolean browserPanelSelected = true;
 
-   private boolean oneItemSelected = true;
+   private Item selectedItem;
 
-   public RefreshBrowserCommand()
+   public GetFileURLControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
-      setEvent(new RefreshBrowserEvent());
+      setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
+      setEvent(new GetFileURLEvent());
    }
 
    @Override
@@ -68,34 +69,35 @@ public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHa
    protected void onInitializeApplication()
    {
       setVisible(true);
-      updateEnabling();
-   }
-
-   private void updateEnabling()
-   {
-
-      if (browserPanelSelected && oneItemSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-
+      setEnabled(false);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
       {
-         oneItemSelected = false;
-         updateEnabling();
+         setEnabled(false);
+         return;
+      }
+      selectedItem = event.getSelectedItems().get(0);
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+//      if (!browserPanelSelected)
+//      {
+//         setEnabled(false);
+//         return;
+//      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
       }
       else
       {
-         oneItemSelected = true;
-         updateEnabling();
+         setEnabled(true);
       }
    }
 

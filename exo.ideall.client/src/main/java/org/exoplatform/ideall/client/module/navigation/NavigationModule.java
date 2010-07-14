@@ -25,9 +25,11 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.control.CopyItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.control.CutItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.control.DeleteItemCommand;
+import org.exoplatform.ideall.client.module.navigation.control.GetFileURLControl;
+import org.exoplatform.ideall.client.module.navigation.control.GoToFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.OpenFileWithCommand;
 import org.exoplatform.ideall.client.module.navigation.control.PasteItemsCommand;
-import org.exoplatform.ideall.client.module.navigation.control.RefreshBrowserCommand;
+import org.exoplatform.ideall.client.module.navigation.control.RefreshBrowserControl;
 import org.exoplatform.ideall.client.module.navigation.control.RenameItemCommand;
 import org.exoplatform.ideall.client.module.navigation.control.SaveAllFilesCommand;
 import org.exoplatform.ideall.client.module.navigation.control.SaveFileAsCommand;
@@ -41,6 +43,7 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePo
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
+import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -93,8 +96,6 @@ public class NavigationModule extends AbstractIDEModule
       addControl(new SaveAllFilesCommand());
       addControl(new SaveFileAsTemplateCommand());
 
-      //addControl(newFolderCommand);
-      
       addControl(new CutItemsCommand(), true);
       addControl(new CopyItemsCommand(), true);
       addControl(new PasteItemsCommand(), true);
@@ -102,7 +103,14 @@ public class NavigationModule extends AbstractIDEModule
       addControl(new RenameItemCommand());
       addControl(new DeleteItemCommand(), true);
       addControl(new SearchFilesCommand(), true);
-      addControl(new RefreshBrowserCommand(), true);
+      addControl(new RefreshBrowserControl(), true);
+      
+      addControl(new GoToFolderControl());
+      addControl(new GetFileURLControl());
+      
+      NavigatorStatusControl navigatorStatusControl = new NavigatorStatusControl(eventBus, (ApplicationContext)context);
+      addControl(navigatorStatusControl);
+      context.getStatusBarItems().add(navigatorStatusControl.getId());
       
    }
 }

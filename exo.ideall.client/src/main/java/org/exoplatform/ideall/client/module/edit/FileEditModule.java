@@ -16,12 +16,12 @@
  */
 package org.exoplatform.ideall.client.module.edit;
 
-import org.exoplatform.ideall.client.common.command.view.GoToLineControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.edit.control.FormatSourceCommand;
+import org.exoplatform.ideall.client.module.edit.control.GoToLineControl;
 import org.exoplatform.ideall.client.module.edit.control.RedoTypingCommand;
 import org.exoplatform.ideall.client.module.edit.control.ShowLineNumbersCommand;
 import org.exoplatform.ideall.client.module.edit.control.UndoTypingCommand;
@@ -63,6 +63,7 @@ public class FileEditModule extends AbstractIDEModule
       addControl(new DeleteLineControl());
       
       addControl(new GoToLineControl());
+      
       addControl(new EditorCursorPositionControl(eventBus, (ApplicationContext)context));
       context.getStatusBarItems().add(EditorCursorPositionControl.ID);
    }

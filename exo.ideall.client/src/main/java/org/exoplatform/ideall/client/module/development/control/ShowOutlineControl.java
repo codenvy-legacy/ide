@@ -39,9 +39,9 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    OpenedFormsStateChangedHandler, BrowserCookiesUpdatedHandler
 {
 
-   public static final String ID = "View/Show Outline";
+   public static final String ID = "View/Show \\ Hide Outline";
 
-   public static final String TITLE = "Show Outline";
+   public static final String TITLE = "Outline";
 
    public static final String PROMPT_SHOW = "Show Outline";
 

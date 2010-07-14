@@ -19,10 +19,6 @@
 package org.exoplatform.ideall.client.module.navigation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.action.CreateFolderForm;
-import org.exoplatform.ideall.client.action.DeleteItemForm;
-import org.exoplatform.ideall.client.action.GetItemURLForm;
-import org.exoplatform.ideall.client.action.RenameItemForm;
 import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
@@ -36,6 +32,10 @@ import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
 import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.action.CreateFolderForm;
+import org.exoplatform.ideall.client.module.navigation.action.DeleteItemForm;
+import org.exoplatform.ideall.client.module.navigation.action.GetItemURLForm;
+import org.exoplatform.ideall.client.module.navigation.action.RenameItemForm;
 import org.exoplatform.ideall.client.module.navigation.event.CopyItemsEvent;
 import org.exoplatform.ideall.client.module.navigation.event.CopyItemsHandler;
 import org.exoplatform.ideall.client.module.navigation.event.CutItemsEvent;
