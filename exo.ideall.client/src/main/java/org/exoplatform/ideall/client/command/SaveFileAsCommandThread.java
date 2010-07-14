@@ -22,13 +22,13 @@ package org.exoplatform.ideall.client.command;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.component.AskForValueDialog;
 import org.exoplatform.ideall.client.component.ValueCallback;
 import org.exoplatform.ideall.client.event.file.FileSavedEvent;
-import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
-import org.exoplatform.ideall.client.event.file.SaveFileAsHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsHandler;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.Folder;
 import org.exoplatform.ideall.vfs.api.Item;
@@ -75,7 +75,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     * Add handlers
     * Open Save As Dialog
     * 
-    * @see org.exoplatform.ideall.client.event.file.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ideall.client.event.file.SaveFileAsEvent)
+    * @see org.exoplatform.ideall.client.module.navigation.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent)
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {

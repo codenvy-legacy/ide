@@ -21,8 +21,8 @@ package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 
 /**
  * Created by The eXo Platform SAS .

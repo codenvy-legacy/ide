@@ -31,76 +31,80 @@ public class CommonActionsComponentInitializer
 
    protected void onItitialize()
    {
-      //      PopupMenuControl newFilePopupMenuCommand =
-      //         PopupMenuCommandBuilder.newCommand("File/New *")
-      //            .prompt("New")
-      //            .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
-      //            .setDelimiterBefore().enable().show().create();
-      //      addCommand(newFilePopupMenuCommand).dockOnToolbar();
+//      PopupMenuControl newFilePopupMenuCommand =
+//         PopupMenuCommandBuilder.newCommand("File/New *")
+//            .prompt("New")
+//            .images(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled())
+//            .setDelimiterBefore().enable().show().create();
+//      addCommand(newFilePopupMenuCommand).dockOnToolbar();
 
       /*
        * FILE GROUP
        */
 
-      //      addCommand(new NewFileCommandMenuGroup()).disable().hide();
-      //      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
-      //      addCommand(newGroovyFileCommand).disable().hide();
-      //
-      //
-      //      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
-      //      addCommand(newGadgetCommand).disable().hide();
-      //
-      //      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
-      //      addCommand(newUWAWidgetCommand).disable().hide();
-      //
-      //      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
-      //      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
+//      addCommand(new NewFileCommandMenuGroup()).disable().hide();
+
+//      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
+//      addCommand(newGroovyFileCommand).disable().hide();
+//
+//
+//      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
+//      addCommand(newGadgetCommand).disable().hide();
+//
+//      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
+//      addCommand(newUWAWidgetCommand).disable().hide();
+//
+//      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
+//      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
+
+      
+      
+      
 
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
+
+     
 
       /*
        * DOWNLOAD GROUP
        */
       //addCommand(new DownloadFile()).disable().hide();
+     
       /*
        * END DOWNLOAD GROUP
        */
 
+    
       /*
        * COPY, CUT, PASTE COMMAND
        */
+   
 
       /*
        * EDIT GROUP
        */
 
-      //      /*
-      //       * VIEW GROUP
-      //       */
-      //
-      //      addCommand(new ViewItemPropertiesCommand()).disable().hide().dockOnToolbar(true); // navigation
-      //      
-      //      addCommand(new GetFileURLCommand()).disable().hide(); // navigation
-      //      addCommand(new GoToFolderCommand()).disable().hide(); // navigation
-      //      context.getStatusBarItems().add(NavigatorStatusControl.ID); // navigation
-      //      addCommand(new NavigatorStatusControl(eventBus, context));  // navigation
-      //      
-      //
-      //      /*
-      //       * RUN GROUP
-      //       */
-      //
-      //      
-      //
-      //
-      //      /*
-      //       * STATUS BAR
-      //       * */
-      //
-      //      
-      //      addCommand(new GoToLineControl()).disable().hide(); // edit
-      //      addCommand(new EditorCursorPositionControl(eventBus, context)); // edit
-      //      context.getStatusBarItems().add(EditorCursorPositionControl.ID); // edit
+     
+
+      /*
+       * VIEW GROUP
+       */
+
+      
+
+      /*
+       * RUN GROUP
+       */
+
+      
+
+
+      /*
+       * STATUS BAR
+       * */
+
+      
+      
    }
 
 }

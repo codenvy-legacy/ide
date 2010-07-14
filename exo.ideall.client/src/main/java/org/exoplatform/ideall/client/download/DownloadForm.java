@@ -20,13 +20,13 @@
 package org.exoplatform.ideall.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.event.file.DownloadFileEvent;
-import org.exoplatform.ideall.client.event.file.DownloadFileHandler;
-import org.exoplatform.ideall.client.event.file.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.client.event.file.DownloadZippedFolderHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileEvent;
+import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileHandler;
+import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
+import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderHandler;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.Item;
 
