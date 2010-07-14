@@ -39,7 +39,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class IDECommand extends SimpleControl implements RegisterEventHandlersHandler, InitializeApplicationHandler
+public class IDEControl extends SimpleControl implements RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    protected HandlerManager eventBus;
@@ -52,7 +52,7 @@ public class IDECommand extends SimpleControl implements RegisterEventHandlersHa
 
    private HandlerRegistration initializeApplicationHandler;
 
-   protected IDECommand(String id)
+   protected IDEControl(String id)
    {
       super(id);
    }
