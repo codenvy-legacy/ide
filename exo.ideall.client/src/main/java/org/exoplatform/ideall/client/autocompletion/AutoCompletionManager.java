@@ -53,7 +53,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    AutocompleteTokenSelectedHandler
 {
 
-   private HashMap<String, TokenCollector> factories = new HashMap<String, TokenCollector>();
+   private HashMap<String, TokenCollector> tokenCollectors = new HashMap<String, TokenCollector>();
 
    private HandlerManager eventBus;
 
@@ -78,11 +78,11 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       this.context = context;
       this.eventBus = eventBus;
 
-      factories.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
-      factories.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
+      tokenCollectors.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
+      tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
       //factories.put(MimeType.GOOGLE_GADGET, new GoogleGadgetTokenCollector(eventBus, context, this));
-      factories.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
-      factories.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus, context, this));
+      tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
+      tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus, context, this));
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
@@ -109,7 +109,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
       cursorPos = event.getCursorPositionX();
-      TokenCollector collector = factories.get(event.getLineMimeType());
+      TokenCollector collector = tokenCollectors.get(event.getLineMimeType());
 
       if (collector != null)
       {
