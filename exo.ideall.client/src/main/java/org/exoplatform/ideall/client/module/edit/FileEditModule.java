@@ -52,7 +52,6 @@ public class FileEditModule extends AbstractIDEModule
     */
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
-      
       addControl(new UndoTypingCommand(),true);
       addControl(new RedoTypingCommand(), true);
       addControl(new FormatSourceCommand(), true);

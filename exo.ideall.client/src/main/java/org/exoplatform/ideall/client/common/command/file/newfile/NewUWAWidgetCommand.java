@@ -27,7 +27,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $Id: $
  *
  */
-public class NewUWAWidgetCommand extends AbstractNewFileCommand
+public class NewUWAWidgetCommand extends NewFileCommand
 {
    public final static String ID = "File/New/New Netvibes Widget";
 

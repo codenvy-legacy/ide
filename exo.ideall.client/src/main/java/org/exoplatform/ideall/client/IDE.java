@@ -6,8 +6,8 @@ import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.module.IDEInfoModule;
 import org.exoplatform.ideall.client.module.edit.FileEditModule;
+import org.exoplatform.ideall.client.module.navigation.NavigationModule;
 import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
 import org.exoplatform.ideall.client.plugin.gadget.GadgetPlugin;
 import org.exoplatform.ideall.client.plugin.groovy.GroovyPlugin;
@@ -59,11 +59,13 @@ public class IDE extends VerticalPanel
       /*
        * PLUGINS INITIALIZATION
        */      
-      context.getModules().add(new PreferencesModule(eventBus, context));
+      context.getModules().add(new NavigationModule(eventBus, context));
       context.getModules().add(new FileEditModule(eventBus, context));
       context.getModules().add(new GadgetPlugin());
-      context.getModules().add(new GroovyPlugin());
-      context.getModules().add(new IDEInfoModule());
+      context.getModules().add(new GroovyPlugin());      
+      context.getModules().add(new PreferencesModule(eventBus, context));
+
+      
 
       //context.getComponents().add(new CommonActionsComponent());
       //context.getComponents().add(new GroovyActionsComponent());
@@ -86,5 +88,7 @@ public class IDE extends VerticalPanel
       
       //Configuration.getInstance().loadConfiguration(eventBus, IDELoader.getInstance());
    }
-
+   
+   
+   
 }

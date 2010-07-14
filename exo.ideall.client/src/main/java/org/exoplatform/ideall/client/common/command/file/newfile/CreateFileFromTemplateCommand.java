@@ -29,7 +29,7 @@ import org.exoplatform.ideall.client.event.file.CreateFileFromTemplateEvent;
  * @version $
  */
 
-public class CreateFileFromTemplateCommand extends AbstractNewFileCommand
+public class CreateFileFromTemplateCommand extends NewFileCommand
 {
 
    private boolean browserPanelSelected = true;

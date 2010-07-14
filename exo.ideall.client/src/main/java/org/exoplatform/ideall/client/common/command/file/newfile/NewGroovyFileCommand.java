@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewGroovyFileCommand extends AbstractNewFileCommand
+public class NewGroovyFileCommand extends NewFileCommand
 {
 
    public static final String ID = "File/New/New REST Service";

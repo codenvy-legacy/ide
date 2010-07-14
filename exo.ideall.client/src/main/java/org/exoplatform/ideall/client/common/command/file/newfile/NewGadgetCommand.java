@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewGadgetCommand extends AbstractNewFileCommand
+public class NewGadgetCommand extends NewFileCommand
 {
 
    private static final String ID = "File/New/New Google Gadget";

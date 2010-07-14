@@ -19,8 +19,15 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
+
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,26 +36,71 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
  * @version $
  */
 
-public class NewFileCommand extends IDEControl
+public class NewFileCommand extends IDEControl implements PanelSelectedHandler, SwitchEntryPointHandler
 {
 
-   public static final String ID = "File/New";
+   private boolean browserSelected = false;
 
-   public static final String TITLE = "New";
-
-   public NewFileCommand()
+   public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+      super(id);
+      setTitle(title);
+      setPrompt(prompt);
+      setIcon(icon);
+      setEvent(event);
+   }
+
+   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
+      ImageResource disabledIcon, GwtEvent<?> event)
+   {
+      super(id);
+      setTitle(title);
+      setPrompt(prompt);
+      setImages(normalIcon, disabledIcon);
+      setEvent(event);
    }
 
    @Override
    protected void onRegisterHandlers()
    {
+      addHandler(PanelSelectedEvent.TYPE, this);
+      addHandler(SwitchEntryPointEvent.TYPE, this);
+   }
+
+   @Override
+   protected void onInitializeApplication()
+   {
       setVisible(true);
-      setEnabled(true);
+      updateEnabling();
+   }
+
+   private void updateEnabling()
+   {
+      if (context.getEntryPoint() == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (browserSelected)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+   }
+
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
+      updateEnabling();
+   }
+
+   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
+   {
+      updateEnabling();
    }
 
 }

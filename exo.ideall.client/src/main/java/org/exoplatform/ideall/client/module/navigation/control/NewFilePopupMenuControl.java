@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module;
+package org.exoplatform.ideall.client.module.navigation.control;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.IDEModule;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
+import org.exoplatform.ideall.client.IDEImageBundle;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,12 +25,18 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class IDEInfoModule implements IDEModule
+public class NewFilePopupMenuControl extends PopupMenuControl
 {
-
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
-   {
-      System.out.println("IDEInfoModule.enclosing_method()");
+   
+   public static final String ID = "File/New *";
+   
+   public NewFilePopupMenuControl() {
+      super(ID);
+      setPrompt("New");
+      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+      setDelimiterBefore(true);
+      setEnabled(true);
+      setVisible(true);
    }
 
 }

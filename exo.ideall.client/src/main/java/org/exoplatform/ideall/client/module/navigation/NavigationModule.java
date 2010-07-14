@@ -16,8 +16,15 @@
  */
 package org.exoplatform.ideall.client.module.navigation;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommandMenuGroup;
+import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
+import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.IDEModule;
+import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.control.NewFilePopupMenuControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -27,17 +34,35 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class NavigationModule implements IDEModule
+public class NavigationModule extends AbstractIDEModule
 {
-   
-   public NavigationModule() {
-      
+
+   public NavigationModule(HandlerManager eventBus, ApplicationContext context)
+   {
+      super(eventBus, context);
    }
 
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
-      // TODO Auto-generated method stub
       
-   }
+      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
+      addControl(newFilePopupMenuControl, true);
+      
+      addControl(new NewFileCommandMenuGroup());
 
+      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML,
+         new CreateNewFileEvent(MimeType.TEXT_XML)));
+
+      addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File",
+         Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML)));
+
+      addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File",
+         Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN)));
+
+      addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File",
+         Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT)));
+
+      addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS,
+         new CreateNewFileEvent(MimeType.TEXT_CSS)));
+   }
 }

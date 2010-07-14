@@ -38,16 +38,7 @@ import org.exoplatform.ideall.client.common.command.file.SaveFileCommand;
 import org.exoplatform.ideall.client.common.command.file.SearchFilesCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.common.command.file.download.DownloadZippedFolderCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.CreateFileFromTemplateCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewCSSFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewGadgetCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewGroovyFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewHTMLFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewJavaScriptFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewTEXTFileCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewUWAWidgetCommand;
-import org.exoplatform.ideall.client.common.command.file.newfile.NewXMLFileCommand;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommandMenuGroup;
 import org.exoplatform.ideall.client.common.command.file.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.common.command.file.upload.UploadFileCommand;
 import org.exoplatform.ideall.client.common.command.run.ShowPreviewCommand;
@@ -83,35 +74,24 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
        * FILE GROUP
        */
 
-      addCommand(new NewFileCommand()).disable().hide();
+      addCommand(new NewFileCommandMenuGroup()).disable().hide();
 
-      NewXMLFileCommand newXmlFileCommand = new NewXMLFileCommand();
-      addCommand(newXmlFileCommand).disable().hide();
+//      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
+//      addCommand(newGroovyFileCommand).disable().hide();
+//
+//
+//      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
+//      addCommand(newGadgetCommand).disable().hide();
+//
+//      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
+//      addCommand(newUWAWidgetCommand).disable().hide();
+//
+//      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
+//      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
 
-      NewGroovyFileCommand newGroovyFileCommand = new NewGroovyFileCommand();
-      addCommand(newGroovyFileCommand).disable().hide();
-
-      NewHTMLFileCommand newHTMLFileCommand = new NewHTMLFileCommand();
-      addCommand(newHTMLFileCommand).disable().hide();
-
-      NewTEXTFileCommand newTEXTFileCommand = new NewTEXTFileCommand();
-      addCommand(newTEXTFileCommand).disable().hide();
-
-      NewJavaScriptFileCommand newJavaScriptFileCommand = new NewJavaScriptFileCommand();
-      addCommand(newJavaScriptFileCommand).disable().hide();
-
-      NewCSSFileCommand newCSSFileCommand = new NewCSSFileCommand();
-      addCommand(newCSSFileCommand).disable().hide();
-
-      NewGadgetCommand newGadgetCommand = new NewGadgetCommand();
-      addCommand(newGadgetCommand).disable().hide();
-
-      NewUWAWidgetCommand newUWAWidgetCommand = new NewUWAWidgetCommand();
-      addCommand(newUWAWidgetCommand).disable().hide();
-
-      CreateFileFromTemplateCommand createFileFromTemplateCommand = new CreateFileFromTemplateCommand();
-      addCommand(createFileFromTemplateCommand).disable().hide().setDelimiterBefore();
-
+      
+      
+      
       addCommand(new OpenFileWithCommand()).disable().hide();
 
       //addCommand(new UploadFile()).disable().hide().setDelimiterBefore();
@@ -134,7 +114,9 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       addCommand(new SaveAllFilesCommand()).disable().hide();
       addCommand(new SaveFileAsTemplateCommand()).disable().hide();
 
+      
       CreateNewFolderCommand createFolderControl = new CreateNewFolderCommand();
+      
       
       addCommand(createFolderControl).disable().hide().setDelimiterBefore();
       /*
@@ -174,15 +156,15 @@ public class CommonActionsComponentInitializer extends AbstractComponentInitiali
       /*
        * filling new item popup menu
        */
-      newFilePopupMenuCommand.getCommands().add(newXmlFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newGroovyFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newHTMLFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newTEXTFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newJavaScriptFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
-      newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
-      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
-      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
+//      newFilePopupMenuCommand.getCommands().add(newXmlFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newGroovyFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newHTMLFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newTEXTFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newJavaScriptFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newCSSFileCommand);
+//      newFilePopupMenuCommand.getCommands().add(newGadgetCommand);
+//      newFilePopupMenuCommand.getCommands().add(newUWAWidgetCommand);
+//      newFilePopupMenuCommand.getCommands().add(createFileFromTemplateCommand);
       
       newFilePopupMenuCommand.getCommands().add(createFolderControl);
 

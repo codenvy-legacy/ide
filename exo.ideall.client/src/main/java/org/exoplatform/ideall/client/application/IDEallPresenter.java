@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateSt
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.IDELoader;
+import org.exoplatform.ideall.client.common.command.file.newfile.NewFileCommand;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
@@ -115,6 +117,8 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       //         plugin.initialize(eventBus, context);
       //      }
 
+      createNewItemControlsGroup();
+
       /*
        * Updating top menu
        */
@@ -131,9 +135,35 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       context.getToolBarDefaultItems().addAll(context.getToolBarItems());
    }
 
-   private void initializeModules()
+   private void createNewItemControlsGroup()
    {
+      while (true)
+      {
+         NewItemControl control = getNewItemControl();
+         if (control == null)
+         {
+            break;
+         }
 
+         int position = context.getCommands().indexOf(control);
+         NewFileCommand command =
+            new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+               control.getEvent());
+         context.getCommands().set(position, command);
+      }
+   }
+
+   private NewItemControl getNewItemControl()
+   {
+      for (Control control : context.getCommands())
+      {
+         if (control instanceof NewItemControl)
+         {
+            return (NewItemControl)control;
+         }
+      }
+
+      return null;
    }
 
    private void initializeControls()

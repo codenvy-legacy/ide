@@ -19,9 +19,8 @@
  */
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
+import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,18 +29,26 @@ import org.exoplatform.ideall.client.event.file.CreateNewFileEvent;
  * @version $
  */
 
-public class NewTEXTFileCommand extends AbstractNewFileCommand
+public class NewFileCommandMenuGroup extends IDEControl
 {
 
-   private final static String ID = "File/New/New TEXT file";
+   public static final String ID = "File/New";
 
-   public NewTEXTFileCommand()
+   public static final String TITLE = "New";
+
+   public NewFileCommandMenuGroup()
    {
-      super(ID,
-         "Text File",
-         "Create New Text File",
-         Images.FileTypes.TXT,
-         new CreateNewFileEvent(MimeType.TEXT_PLAIN));
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+   }
+
+   @Override
+   protected void onRegisterHandlers()
+   {
+      setVisible(true);
+      setEnabled(true);
    }
 
 }
