@@ -22,11 +22,11 @@ import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceive
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.event.file.SaveFileAsEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.discovery.Scheme;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ideall.vfs.api.File;
 import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
