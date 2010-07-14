@@ -42,4 +42,14 @@ public class NewItemControl extends SimpleControl
       setEvent(event);
    }
 
+   public NewItemControl(String id, String title, String prompt, String icon, GwtEvent<?> event)
+   {
+      super(id);
+
+      setTitle(title);
+      setPrompt(prompt);
+      setIcon(icon);
+      setEvent(event);
+   }
+
 }
