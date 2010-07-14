@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
@@ -112,6 +113,7 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       }
 
       createNewItemControlsGroup();
+      fillNewItemPopupControl();
 
       /*
        * Updating top menu
@@ -141,11 +143,11 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
 
          int position = context.getCommands().indexOf(control);
          NewFileCommand command =
-            new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
-               control.getEvent());
-         
+            new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(), control
+               .getEvent());
+
          System.out.println("event > " + control.getEvent());
-         
+
          context.getCommands().set(position, command);
       }
    }
@@ -163,24 +165,31 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       return null;
    }
 
-   private void fillNewItemPopupControl() {
-      PopupMenuControl popup = null;
-      for (Control control : context.getCommands()) {
-         if (NewFilePopupMenuControl.ID.equals(control.getId())) {
-            popup = (PopupMenuControl)control;
+   private void fillNewItemPopupControl()
+   {
+      NewFilePopupMenuControl popup = null;
+      for (Control control : context.getCommands())
+      {
+         if (NewFilePopupMenuControl.ID.equals(control.getId()))
+         {
+            popup = (NewFilePopupMenuControl)control;
          }
       }
-      
-      if (popup == null) {
+
+      if (popup == null)
+      {
          return;
       }
-      
-//      for (Control contro1l : context.getCommands()) {
-//         if () {
-//         }
-//      }
-//      
-//      popup.getCommands().
+
+      System.out.println("popup > " + popup);
+
+      for (Control control : context.getCommands())
+      {
+         if (control.getId().startsWith("File/New/") && control instanceof SimpleControl)
+         {
+            popup.getCommands().add((SimpleControl)control);
+         }
+      }
    }
 
    private void initializeControls()

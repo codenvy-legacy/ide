@@ -21,8 +21,6 @@ package org.exoplatform.ideall.client.common;
 
 import org.exoplatform.ideall.client.action.GetItemURLForm;
 import org.exoplatform.ideall.client.action.GoToLineForm;
-import org.exoplatform.ideall.client.application.component.AbstractApplicationComponent;
-import org.exoplatform.ideall.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.event.file.GetFileURLEvent;
@@ -35,58 +33,39 @@ import org.exoplatform.ideall.client.event.file.GetFileURLHandler;
  * @version $
  */
 
-public class CommonActionsComponent extends AbstractApplicationComponent implements 
-   GoToLineHandler, GetFileURLHandler
+public class CommonActionsComponent
 {
 
-
-
-   public CommonActionsComponent()
-   {
-      super(new CommonActionsComponentInitializer());
-   }
-
-   @Override
-   protected void onInitializeComponent()
-   {
-
-
-      //new JavaScriptAutoCompletionHandler(eventBus, context);
-      new AutoCompletionManager(eventBus, context);
-   }
-
-   @Override
-   protected void registerHandlers()
-   {
-
-
-      addHandler(GetFileURLEvent.TYPE, this);
-
-      addHandler(GoToLineEvent.TYPE, this);
-
-      /*
-       * Initializing Save, Save As, Save All Command Handlers
-       */
-
-   }
-
-   public void onGetFileURL(GetFileURLEvent event)
-   {
-      String url = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
-      new GetItemURLForm(eventBus, url);
-   }
-
-   /**
-    * @see org.exoplatform.ideall.client.event.edit.GoToLineHandler#onGoToLine(org.exoplatform.ideall.client.event.edit.GoToLineEvent)
-    */
-   public void onGoToLine(GoToLineEvent event)
-   {
-      if (context.getActiveFile() != null)
-      {
-         new GoToLineForm(eventBus, context);
-      }
-   }
-
-
+//   @Override
+//   protected void onInitializeComponent()
+//   {
+//      //new JavaScriptAutoCompletionHandler(eventBus, context);
+//      
+//      //new AutoCompletionManager(eventBus, context);
+//   }
+//
+//   @Override
+//   protected void registerHandlers()
+//   {
+////      addHandler(GetFileURLEvent.TYPE, this);
+////      addHandler(GoToLineEvent.TYPE, this);
+//   }
+//
+//   public void onGetFileURL(GetFileURLEvent event)
+//   {
+//      String url = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+//      new GetItemURLForm(eventBus, url);
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ideall.client.event.edit.GoToLineHandler#onGoToLine(org.exoplatform.ideall.client.event.edit.GoToLineEvent)
+//    */
+//   public void onGoToLine(GoToLineEvent event)
+//   {
+//      if (context.getActiveFile() != null)
+//      {
+//         new GoToLineForm(eventBus, context);
+//      }
+//   }
 
 }
