@@ -22,7 +22,7 @@ package org.exoplatform.ideall.client.common.command.view;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 
 /**
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEv
  * @version $
  */
 
-public class ViewItemPropertiesCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class ViewItemPropertiesCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "View/Properties";

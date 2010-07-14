@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
@@ -36,7 +36,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $
  */
 
-public class AbstractNewFileCommand extends IDECommand implements PanelSelectedHandler, SwitchEntryPointHandler
+public class AbstractNewFileCommand extends IDEControl implements PanelSelectedHandler, SwitchEntryPointHandler
 {
 
    private boolean browserSelected = false;

@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.newfile;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,7 +29,7 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
  * @version $
  */
 
-public class NewFileCommand extends IDECommand
+public class NewFileCommand extends IDEControl
 {
 
    public static final String ID = "File/New";

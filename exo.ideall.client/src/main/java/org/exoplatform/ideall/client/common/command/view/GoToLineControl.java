@@ -22,14 +22,14 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class GoToLineControl extends IDECommand implements EditorActiveFileChangedHandler
+public class GoToLineControl extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "View/Go to Line...";

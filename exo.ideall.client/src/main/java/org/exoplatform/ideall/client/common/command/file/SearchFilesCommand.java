@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.SearchFileEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
  * @version $
  */
 
-public class SearchFilesCommand extends IDECommand implements ItemsSelectedHandler
+public class SearchFilesCommand extends IDEControl implements ItemsSelectedHandler
 {
 
    public static final String ID = "File/Search...";

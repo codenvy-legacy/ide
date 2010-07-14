@@ -26,7 +26,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
 
 /**
@@ -34,7 +34,7 @@ import org.exoplatform.ideall.client.outline.event.ShowOutlineEvent;
  * @version $Id: $
  *
  */
-public class ShowOutlineControl extends IDECommand implements EditorActiveFileChangedHandler,
+public class ShowOutlineControl extends IDEControl implements EditorActiveFileChangedHandler,
    OpenedFormsStateChangedHandler, BrowserCookiesUpdatedHandler
 {
 

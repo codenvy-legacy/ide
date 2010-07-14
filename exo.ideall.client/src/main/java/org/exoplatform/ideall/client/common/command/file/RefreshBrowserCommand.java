@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.browser.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class RefreshBrowserCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
+public class RefreshBrowserCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";

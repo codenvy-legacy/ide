@@ -25,7 +25,7 @@ import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**
@@ -35,7 +35,7 @@ import org.exoplatform.ideall.vfs.api.File;
  * @version $
  */
 
-public class ShowLineNumbersCommand extends IDECommand implements EditorActiveFileChangedHandler,
+public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFileChangedHandler,
    BrowserCookiesUpdatedHandler
 {
 

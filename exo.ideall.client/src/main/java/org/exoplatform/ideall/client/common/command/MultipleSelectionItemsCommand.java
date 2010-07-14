@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.vfs.api.Folder;
@@ -31,7 +31,7 @@ import org.exoplatform.ideall.vfs.api.Item;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends IDECommand implements PanelSelectedHandler
+public abstract class MultipleSelectionItemsCommand extends IDEControl implements PanelSelectedHandler
 {
 
    protected boolean browserSelected = true;

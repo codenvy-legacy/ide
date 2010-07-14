@@ -25,7 +25,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.edit.RedoEditingEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
 
@@ -36,7 +36,7 @@ import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
  * @version $
  */
 
-public class RedoTypingCommand extends IDECommand implements EditorActiveFileChangedHandler,
+public class RedoTypingCommand extends IDEControl implements EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileContentReceivedHandler
 {
 

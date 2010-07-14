@@ -20,7 +20,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.OpenFileWithEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.vfs.api.File;
 
 /**
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.vfs.api.File;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends IDECommand implements ItemsSelectedHandler
+public class OpenFileWithCommand extends IDEControl implements ItemsSelectedHandler
 {
    private static final String ID = "File/Open File With...";
 

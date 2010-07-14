@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.file.upload;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,11 +29,11 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
  * @version $
  */
 
-public class UploadFile extends IDECommand
+public class UploadFile extends IDEControl
 {
-   
+
    public static final String ID = "File/Upload";
-   
+
    public static final String TITLE = "Upload";
 
    public UploadFile()
@@ -41,17 +41,17 @@ public class UploadFile extends IDECommand
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      
+
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      
+
       //setIcon(Images.MainMenu.UPLOAD_MENU);
    }
-   
+
    @Override
    protected void onInitializeApplication()
    {
       setVisible(true);
       setEnabled(true);
-   }   
+   }
 
 }

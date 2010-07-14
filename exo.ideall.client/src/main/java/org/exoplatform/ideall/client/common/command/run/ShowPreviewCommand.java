@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.operation.preview.PreviewFileEvent;
  * @version $
  */
 
-public class ShowPreviewCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class ShowPreviewCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    public static String ID = "Run/Show Preview";

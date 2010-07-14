@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.file.CreateFolderEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.Window;
  * @version $
  */
 
-public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedHandler, PanelSelectedHandler
+public class CreateNewFolderCommand extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -53,16 +53,16 @@ public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedH
       setPrompt("Create Folder...");
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
-      
+
       Window.alert("Creatring........");
-      
+
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       Window.alert("Registyerlasdkfj asdlflasdkj");
-      
+
       addHandler(PanelSelectedEvent.TYPE, this);
       addHandler(ItemsSelectedEvent.TYPE, this);
    }
@@ -71,7 +71,7 @@ public class CreateNewFolderCommand extends IDECommand implements ItemsSelectedH
    protected void onInitializeApplication()
    {
       Window.alert("000000000000000000000000000000000");
-      
+
       setVisible(true);
       updateEnabling();
    }

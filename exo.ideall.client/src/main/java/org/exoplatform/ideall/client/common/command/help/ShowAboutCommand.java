@@ -21,7 +21,7 @@ package org.exoplatform.ideall.client.common.command.help;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.event.help.ShowAboutDialogEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
  * @version $
  */
 
-public class ShowAboutCommand extends IDECommand
+public class ShowAboutCommand extends IDEControl
 {
 
    public static final String ID = "Help/About...";

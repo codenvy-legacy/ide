@@ -25,7 +25,7 @@ import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveFileEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
 import org.exoplatform.ideall.vfs.api.File;
@@ -41,7 +41,7 @@ import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
  * @version $
  */
 
-public class SaveFileCommand extends IDECommand implements EditorActiveFileChangedHandler, ItemPropertiesSavedHandler,
+public class SaveFileCommand extends IDEControl implements EditorActiveFileChangedHandler, ItemPropertiesSavedHandler,
    EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
 {
 

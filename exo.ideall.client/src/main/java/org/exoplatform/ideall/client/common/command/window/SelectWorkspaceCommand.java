@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
 
 /**
@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.workspace.event.SelectWorkspaceEvent;
  * @version $
  */
 
-public class SelectWorkspaceCommand extends IDECommand
+public class SelectWorkspaceCommand extends IDEControl
 {
 
    public static final String ID = "Window/Workspace...";
@@ -43,11 +43,11 @@ public class SelectWorkspaceCommand extends IDECommand
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
-      
+
       setEnabled(true);
       setVisible(true);
       setDelimiterBefore(true);
-      
+
       setEvent(new SelectWorkspaceEvent());
    }
 

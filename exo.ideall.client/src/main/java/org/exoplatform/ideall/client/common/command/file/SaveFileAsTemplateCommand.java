@@ -23,7 +23,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.file.SaveAsTemplateEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.framework.control.IDECommand;
  * @version $
  */
 
-public class SaveFileAsTemplateCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "File/Save As Template...";

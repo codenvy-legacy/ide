@@ -22,18 +22,18 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class DeleteLineControl extends IDECommand implements EditorActiveFileChangedHandler
+public class DeleteLineControl extends IDEControl implements EditorActiveFileChangedHandler
 {
-   
+
    public static final String ID = "Edit/Delete Current Line";
-   
+
    public DeleteLineControl()
    {
       super(ID);
@@ -46,14 +46,14 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
    @Override
    protected void onInitializeApplication()
    {
-      
+
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-     
+
    }
 
    /**
@@ -61,14 +61,14 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      
-      if (event.getFile() == null || event.getEditor() ==null)
+
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
-      
+
       if (event.getEditor().canDeleteCurrentLine())
       {
          setVisible(true);
@@ -80,5 +80,5 @@ public class DeleteLineControl extends IDECommand implements EditorActiveFileCha
          setEnabled(false);
       }
    }
-   
+
 }

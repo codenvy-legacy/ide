@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.common.command.window;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
 
 /**
@@ -30,7 +30,7 @@ import org.exoplatform.ideall.client.hotkeys.event.CustomizeHotKeysEvent;
  * @version $
  */
 
-public class CustomizeHotKeysCommand extends IDECommand
+public class CustomizeHotKeysCommand extends IDEControl
 {
 
    public static final String ID = "Window/HotKeys...";

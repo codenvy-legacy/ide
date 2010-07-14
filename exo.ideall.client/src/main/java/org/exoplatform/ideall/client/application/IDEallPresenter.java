@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateTool
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.plugin.IDEModule;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
@@ -102,24 +102,25 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationContextReceivedEvent.TYPE, this);
 
-      for (IDEModule module : context.getModules()) {
+      for (IDEModule module : context.getModules())
+      {
          module.initializePlugin(eventBus, context);
       }
-      
-//      /*
-//       * Intializing application components
-//       */
-//      for (AbstractApplicationComponent plugin : context.getComponents())
-//      {
-//         plugin.initialize(eventBus, context);
-//      }
+
+      //      /*
+      //       * Intializing application components
+      //       */
+      //      for (AbstractApplicationComponent plugin : context.getComponents())
+      //      {
+      //         plugin.initialize(eventBus, context);
+      //      }
 
       /*
        * Updating top menu
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(context.getCommands()));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), context.getCommands()));
-      
+
       initializeControls();
 
       /*
@@ -129,23 +130,25 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       context.getToolBarDefaultItems().clear();
       context.getToolBarDefaultItems().addAll(context.getToolBarItems());
    }
-   
-   private void initializeModules() {
-      
+
+   private void initializeModules()
+   {
+
    }
-   
-   private void initializeControls() {
+
+   private void initializeControls()
+   {
       /*
        * Initializing handlers of menu items
        */
       for (Control command : context.getCommands())
       {
-         if (command instanceof IDECommand)
-         {            
+         if (command instanceof IDEControl)
+         {
             System.out.println("initialization " + command.getId());
-            ((IDECommand)command).initialize(eventBus, context);
+            ((IDEControl)command).initialize(eventBus, context);
          }
-      }      
+      }
    }
 
    /**
@@ -181,8 +184,8 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
          context.getApplicationConfiguration().getGadgetServer(), context.getApplicationConfiguration()
             .getPublicContext());
       ConversationService.getInstance().getUserInfo();
-      
-      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());            
+
+      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());
    }
 
    /**
