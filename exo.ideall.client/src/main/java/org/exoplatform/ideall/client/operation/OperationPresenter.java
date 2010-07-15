@@ -25,18 +25,18 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ideall.client.module.development.event.PreviewFileHandler;
+import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
+import org.exoplatform.ideall.client.module.gadget.service.GadgetService;
+import org.exoplatform.ideall.client.module.gadget.service.TokenRequest;
+import org.exoplatform.ideall.client.module.gadget.service.TokenResponse;
+import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRecievedEvent;
+import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
+import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedEvent;
+import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedHandler;
 import org.exoplatform.ideall.client.operation.output.OutputEvent;
 import org.exoplatform.ideall.client.operation.output.OutputHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
-import org.exoplatform.ideall.client.plugin.gadget.service.GadgetMetadata;
-import org.exoplatform.ideall.client.plugin.gadget.service.GadgetService;
-import org.exoplatform.ideall.client.plugin.gadget.service.TokenRequest;
-import org.exoplatform.ideall.client.plugin.gadget.service.TokenResponse;
-import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetMetadaRecievedHandler;
-import org.exoplatform.ideall.client.plugin.gadget.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ideall.client.plugin.gadget.service.event.SecurityTokenRecievedHandler;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;

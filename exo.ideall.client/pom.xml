@@ -79,7 +79,7 @@
 		
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.client.plugin.gadget</artifactId>
+			<artifactId>exo-ideall-client-module-gadget</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

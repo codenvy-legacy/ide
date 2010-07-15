@@ -38,7 +38,7 @@
 	<inherits name='org.exoplatform.ideall.IDEallGroovyModule'/>
 	
 	<inherits name='org.exoplatform.ideall.client.framework.IDEallClientFramework'/>
-	<inherits name='org.exoplatform.ideall.client.plugin.IDEallGadgetPlugin'/>
+	<inherits name='org.exoplatform.ideall.client.module.IDEallGadgetPlugin'/>
 	<inherits name='org.exoplatform.ideall.client.plugin.IDEallGroovyPlugin'/>	
 
 	<!-- Specify the app entry point class. -->

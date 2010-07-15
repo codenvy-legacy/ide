@@ -8,10 +8,9 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.module.development.DevelopmentModule;
 import org.exoplatform.ideall.client.module.edit.FileEditModule;
+import org.exoplatform.ideall.client.module.gadget.GadgetPlugin;
 import org.exoplatform.ideall.client.module.navigation.NavigationModule;
 import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
-import org.exoplatform.ideall.client.plugin.gadget.GadgetPlugin;
-import org.exoplatform.ideall.client.plugin.groovy.GroovyPlugin;
 import org.exoplatform.ideall.groovy.model.wadl.WadlServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
