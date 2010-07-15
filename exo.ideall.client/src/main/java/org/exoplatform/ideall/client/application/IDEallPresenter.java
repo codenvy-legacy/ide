@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ideall.client.application;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
@@ -32,7 +35,7 @@ import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.plugin.IDEModule;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -52,12 +55,14 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextRece
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetServiceImpl;
+import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyServiceImpl;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.groovy.GroovyServiceImpl;
+import org.exoplatform.ideall.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -109,11 +114,13 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
 
       for (IDEModule module : context.getModules())
       {
-         module.initializePlugin(eventBus, context);
+         module.initializeModule();
       }
 
       createNewItemControlsGroup();
       fillNewItemPopupControl();
+      
+      Collections.sort(context.getCommands(), controlComparator);
 
       /*
        * Updating top menu
@@ -130,6 +137,35 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       context.getToolBarDefaultItems().clear();
       context.getToolBarDefaultItems().addAll(context.getToolBarItems());
    }
+
+   private Comparator<Control> controlComparator = new Comparator<Control>() {
+      public int compare(Control control1, Control control2)
+      {
+         if (!control1.getId().startsWith("File/New/")) {
+            return 0;
+         }
+         
+         if (!control2.getId().startsWith("File/New/")) {
+            return 0;
+         }
+         
+         System.out.println("control1 " + control1.getId());
+         System.out.println("control2 " + control2.getId());
+
+         if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateFolderControl) {
+            return -1;
+         } else if (control1 instanceof CreateFolderControl && control2 instanceof CreateFileFromTemplateControl) {
+            return 1;
+         } else if (control1 instanceof CreateFolderControl && !(control2 instanceof CreateFolderControl)) {
+            System.out.println("(control1 instanceof CreateFolderControl && !(control2 instanceof CreateFolderControl))");
+            return 1;
+         } else if (control1 instanceof CreateFileFromTemplateControl && !(control2 instanceof CreateFileFromTemplateControl)) {
+            return 1; 
+         }
+         
+         return 0;
+      }
+   };
 
    private void createNewItemControlsGroup()
    {
@@ -231,12 +267,15 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
    /**
     * Called in case the valid configuration of the application is received
     * 
-    * @see org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent)
+    * @see org.exoplatform.ideall.client.model.configuration.ApplicationConfigurationReceivedHandler#onApplicationConfigurationReceived(org.exoplatform.ideall.client.model.configuration.ApplicationConfigurationReceivedEvent)
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
+      for (IDEModule module : context.getModules()) {
+         module.initializeServices(IDELoader.getInstance());
+      }
+      
       new SettingsServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getRegistryURL());
-
       new ConversationServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());
 
       new WebDavVirtualFileSystem(eventBus, IDELoader.getInstance(), ImageUtil.getIcons(), context
@@ -245,7 +284,7 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       new TemplateServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getRegistryURL()
          + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION_NAME);
 
-      new GroovyServiceImpl(eventBus, context.getApplicationConfiguration().getContext(), IDELoader.getInstance());
+//      new GroovyServiceImpl(eventBus, context.getApplicationConfiguration().getContext(), IDELoader.getInstance());
 
       new GadgetServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext(),
          context.getApplicationConfiguration().getGadgetServer(), context.getApplicationConfiguration()
@@ -254,7 +293,7 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
 
       new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext());
    }
-
+   
    /**
     * Called when user information ( name, ect ) is received
     * 

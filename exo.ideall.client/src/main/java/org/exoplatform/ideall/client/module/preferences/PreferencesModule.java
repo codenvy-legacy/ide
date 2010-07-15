@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.module.preferences;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.preferences.control.CustomizeHotKeysCommand;
 import org.exoplatform.ideall.client.module.preferences.control.CustomizeToolbarCommand;
@@ -34,18 +34,25 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class PreferencesModule extends AbstractIDEModule
 {
-   
-   public PreferencesModule(HandlerManager eventBus, ApplicationContext context) {
-      super(eventBus, context);      
+
+   public PreferencesModule(HandlerManager eventBus, ApplicationContext context)
+   {
+      super(eventBus, context);
       new PreferencesModuleEventHandler(eventBus, context);
    }
 
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   public void initializeModule()
    {
       addControl(new SelectWorkspaceCommand());
       addControl(new CustomizeToolbarCommand());
       addControl(new CustomizeHotKeysCommand());
       addControl(new ShowAboutCommand());
+   }
+
+   public void initializeServices(Loader loader)
+   {
+      // TODO Auto-generated method stub
+
    }
 
 }

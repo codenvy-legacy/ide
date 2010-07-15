@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.event.ValueChangeEventImpl;
-import org.exoplatform.ideall.groovy.SimpleParameterEntry;
+import org.exoplatform.ideall.client.module.groovy.service.SimpleParameterEntry;
 
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;

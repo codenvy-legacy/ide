@@ -8,10 +8,11 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.module.development.DevelopmentModule;
 import org.exoplatform.ideall.client.module.edit.FileEditModule;
-import org.exoplatform.ideall.client.module.gadget.GadgetPlugin;
+import org.exoplatform.ideall.client.module.groovy.GroovyModule;
+import org.exoplatform.ideall.client.module.groovy.service.wadl.WadlServiceImpl;
 import org.exoplatform.ideall.client.module.navigation.NavigationModule;
 import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
-import org.exoplatform.ideall.groovy.model.wadl.WadlServiceImpl;
+import org.exoplatform.ideall.client.plugin.gadget.GadgetPlugin;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -51,7 +52,7 @@ public class IDE extends VerticalPanel
 
      // new TemplateServiceImpl(eventBus, IDELoader.getInstance());
 
-      new WadlServiceImpl(eventBus, IDELoader.getInstance());
+      //new WadlServiceImpl(eventBus, IDELoader.getInstance());
 
       //new MockDiscoveryServiceImpl(eventBus);
 //      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance());
@@ -63,8 +64,8 @@ public class IDE extends VerticalPanel
       context.getModules().add(new FileEditModule(eventBus, context));
       context.getModules().add(new DevelopmentModule(eventBus, context));
       context.getModules().add(new PreferencesModule(eventBus, context));
-      context.getModules().add(new GadgetPlugin(eventBus, context));
-//      context.getModules().add(new GroovyPlugin());
+      //context.getModules().add(new GadgetPlugin());
+      context.getModules().add(new GroovyModule(eventBus, context));
 
       //context.getComponents().add(new CommonActionsComponent());
       //context.getComponents().add(new GroovyActionsComponent());

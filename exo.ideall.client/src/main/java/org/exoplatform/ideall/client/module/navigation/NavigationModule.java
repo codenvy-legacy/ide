@@ -16,11 +16,11 @@
  */
 package org.exoplatform.ideall.client.module.navigation;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.control.CopyItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.control.CutItemsCommand;
@@ -45,7 +45,6 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCo
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -65,7 +64,7 @@ public class NavigationModule extends AbstractIDEModule
       new NavigationModuleEventHandler(eventBus, context);
    }
 
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   public void initializeModule()
    {
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
       addControl(newFilePopupMenuControl, true);
@@ -74,8 +73,6 @@ public class NavigationModule extends AbstractIDEModule
 
       addControl(new CreateFileFromTemplateControl());
       addControl(new CreateFolderControl());
-
-      
       
       //addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML)));
       addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML));
@@ -118,6 +115,10 @@ public class NavigationModule extends AbstractIDEModule
       NavigatorStatusControl navigatorStatusControl = new NavigatorStatusControl(eventBus, (ApplicationContext)context);
       addControl(navigatorStatusControl);
       context.getStatusBarItems().add(navigatorStatusControl.getId());
-      
    }
+
+   public void initializeServices(Loader loader)
+   {
+   }
+   
 }

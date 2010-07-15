@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.module.edit;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.edit.control.FormatSourceCommand;
@@ -49,23 +49,24 @@ public class FileEditModule extends AbstractIDEModule
       new FileEditModuleEventHandler(eventBus, context);
    }
 
-   /**
-    * @see org.exoplatform.ideall.client.framework.plugin.IDEModule#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
-    */
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   public void initializeModule()
    {
-      addControl(new UndoTypingCommand(),true);
+      addControl(new UndoTypingCommand(), true);
       addControl(new RedoTypingCommand(), true);
       addControl(new FormatSourceCommand(), true);
 
       addControl(new FindTextCommand(), true);
       addControl(new ShowLineNumbersCommand());
       addControl(new DeleteLineControl());
-      
+
       addControl(new GoToLineControl());
-      
+
       addControl(new EditorCursorPositionControl(eventBus, (ApplicationContext)context));
       context.getStatusBarItems().add(EditorCursorPositionControl.ID);
+   }
+
+   public void initializeServices(Loader loader)
+   {
    }
 
 }

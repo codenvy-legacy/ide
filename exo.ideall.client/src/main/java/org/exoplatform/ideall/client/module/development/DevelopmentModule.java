@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ideall.client.module.development;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ideall.client.module.development.control.ShowPreviewCommand;
@@ -39,13 +39,14 @@ public class DevelopmentModule extends AbstractIDEModule
       new DevelopmentModuleEventHandler(eventBus, context);
    }
 
-   /**
-    * @see org.exoplatform.ideall.client.framework.plugin.IDEModule#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
-    */
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   public void initializeModule()
    {
-      addControl(new ShowOutlineControl(), true); 
+      addControl(new ShowOutlineControl(), true);
       addControl(new ShowPreviewCommand(), true, true);
+   }
+
+   public void initializeServices(Loader loader)
+   {
    }
 
 }
