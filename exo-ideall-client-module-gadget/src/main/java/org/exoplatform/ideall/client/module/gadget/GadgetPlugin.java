@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ideall.client.module.gadget;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ideall.client.module.gadget.controls.DeployGadgetCommand;
 import org.exoplatform.ideall.client.module.gadget.controls.UndeployGadgetCommand;
+import org.exoplatform.ideall.client.module.gadget.service.GadgetServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -34,24 +36,41 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class GadgetPlugin extends AbstractIDEModule
 {
-   
+
+   private HandlerManager eventBus;
+
+   private AbstractApplicationContext context;
+
    public GadgetPlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
       super(eventBus, context);
+      this.eventBus = eventBus;
+      this.context = context;
       new GadgetPluginEventHandler(eventBus, context);
    }
 
    /**
-    * @see org.exoplatform.ideall.client.framework.plugin.IDEPlugin#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
+    * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeModule()
     */
-   public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
-   {      
+   @Override
+   public void initializeModule()
+   {
       addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
          Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
       addControl(new DeployGadgetCommand(), true, true);
       addControl(new UndeployGadgetCommand(), true, true);
-      
+
       new GadgetPluginEventHandler(eventBus, context);
+
    }
 
+   /**
+    * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeServices(org.exoplatform.gwtframework.commons.loader.Loader)
+    */
+   @Override
+   public void initializeServices(Loader loader)
+   {
+      new GadgetServiceImpl(eventBus, loader, context.getApplicationConfiguration().getContext(), context
+         .getApplicationConfiguration().getGadgetServer(), context.getApplicationConfiguration().getPublicContext());
+   }
 }
