@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.framework.plugin;
+package org.exoplatform.ideall.client.framework.module;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 
 /**
  * Created by The eXo Platform SAS.
@@ -29,6 +27,8 @@ import com.google.gwt.event.shared.HandlerManager;
 public interface IDEModule
 {
 
-   void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context);
+   void initializeModule();
+   
+   void initializeServices(Loader loader);
    
 }
