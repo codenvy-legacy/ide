@@ -30,8 +30,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.operation.output.OutputForm;
 import org.exoplatform.ideall.client.operation.preview.PreviewForm;
 import org.exoplatform.ideall.client.operation.properties.PropertiesForm;
+import org.exoplatform.ideall.client.plugin.gadget.service.GadgetMetadata;
 import org.exoplatform.ideall.client.plugin.gadget.ui.GadgetPreviewPane;
-import org.exoplatform.ideall.gadget.GadgetMetadata;
 import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;

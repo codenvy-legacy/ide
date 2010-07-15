@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
@@ -57,7 +56,7 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCo
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.gadget.GadgetServiceImpl;
+import org.exoplatform.ideall.client.plugin.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ideall.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
