@@ -55,6 +55,7 @@ import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
+import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ideall.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.groovy.GroovyServiceImpl;
@@ -142,9 +143,20 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
          }
 
          int position = context.getCommands().indexOf(control);
-         NewFileCommand command =
-            new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(), control
-               .getEvent());
+
+         NewFileCommand command = null;
+         if (control.getMimeType() == null)
+         {
+            command =
+               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(), control
+                  .getEvent());
+         }
+         else
+         {
+            command =
+               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+                  new CreateNewFileEvent(control.getMimeType()));
+         }
 
          System.out.println("event > " + control.getEvent());
 

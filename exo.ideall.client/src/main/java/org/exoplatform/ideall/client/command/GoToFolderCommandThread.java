@@ -19,19 +19,19 @@
  */
 package org.exoplatform.ideall.client.command;
 
+import java.util.ArrayList;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
-import org.exoplatform.ideall.client.event.navigation.GoToFolderEvent;
-import org.exoplatform.ideall.client.event.navigation.GoToFolderHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.event.GoToFolderEvent;
+import org.exoplatform.ideall.client.module.navigation.event.GoToFolderHandler;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.vfs.api.Folder;
 import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedHandler;
-
-import java.util.ArrayList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

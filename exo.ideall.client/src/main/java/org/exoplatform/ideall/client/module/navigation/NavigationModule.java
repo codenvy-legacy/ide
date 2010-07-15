@@ -39,6 +39,8 @@ import org.exoplatform.ideall.client.module.navigation.control.SearchFilesComman
 import org.exoplatform.ideall.client.module.navigation.control.ViewItemPropertiesCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.download.DownloadZippedFolderCommand;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
@@ -65,27 +67,31 @@ public class NavigationModule extends AbstractIDEModule
 
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
-      
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
       addControl(newFilePopupMenuControl, true);
-      
       addControl(new NewFileCommandMenuGroup());
+      
 
-      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML,
-         new CreateNewFileEvent(MimeType.TEXT_XML)));
+      addControl(new CreateFileFromTemplateControl());
+      addControl(new CreateFolderControl());
 
-      addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File",
-         Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML)));
+      
+      
+      //addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML)));
+      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML));
 
-      addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File",
-         Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN)));
+      //addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML)));
+      addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML));
 
-      addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File",
-         Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT)));
+      //addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN)));
+      addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN));
 
-      addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS,
-         new CreateNewFileEvent(MimeType.TEXT_CSS)));
+      //addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT)));
+      addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT));
 
+      //addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, new CreateNewFileEvent(MimeType.TEXT_CSS)));
+      addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS));
+      
       addControl(new ViewItemPropertiesCommand(), true, true);
       addControl(new OpenFileWithCommand());
       

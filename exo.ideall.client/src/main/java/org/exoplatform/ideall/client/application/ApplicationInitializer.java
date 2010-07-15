@@ -25,7 +25,6 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,14 +38,15 @@ public class ApplicationInitializer
 
    public ApplicationInitializer(final HandlerManager eventBus, ApplicationContext context)
    {
-      Window.alert("eventBus.fireEvent(new RegisterEventHandlersEvent())");
-      
-      try {
-         eventBus.fireEvent(new RegisterEventHandlersEvent());         
-      } catch (Throwable e) {
+      try
+      {
+         eventBus.fireEvent(new RegisterEventHandlersEvent());
+      }
+      catch (Throwable e)
+      {
          e.printStackTrace();
       }
-      
+
       context.setInitialized(true);
 
       new Timer()
@@ -54,9 +54,12 @@ public class ApplicationInitializer
          @Override
          public void run()
          {
-            try {
+            try
+            {
                eventBus.fireEvent(new InitializeApplicationEvent());
-            } catch (Throwable e) {
+            }
+            catch (Throwable e)
+            {
                e.printStackTrace();
             }
          }

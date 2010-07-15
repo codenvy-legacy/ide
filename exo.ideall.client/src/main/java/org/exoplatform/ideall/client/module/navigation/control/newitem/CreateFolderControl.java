@@ -35,7 +35,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class CreateNewFolderControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class CreateFolderControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -44,7 +44,7 @@ public class CreateNewFolderControl extends IDEControl implements ItemsSelectedH
 
    public final static String ID = "File/New/Create Folder...";
 
-   public CreateNewFolderControl()
+   public CreateFolderControl()
    {
       super(ID);
       setTitle("Folder...");

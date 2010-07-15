@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.navigation;
+package org.exoplatform.ideall.client.module.navigation.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -28,9 +28,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface GoToFolderHandler extends EventHandler
+public interface GetFileURLHandler extends EventHandler
 {
 
-   void onGoToFolder(GoToFolderEvent event);
+   void onGetFileURL(GetFileURLEvent event);
 
 }
