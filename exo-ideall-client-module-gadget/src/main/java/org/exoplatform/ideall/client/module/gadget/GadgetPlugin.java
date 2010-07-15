@@ -52,7 +52,6 @@ public class GadgetPlugin extends AbstractIDEModule
    /**
     * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeModule()
     */
-   @Override
    public void initializeModule()
    {
       addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
@@ -67,7 +66,6 @@ public class GadgetPlugin extends AbstractIDEModule
    /**
     * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeServices(org.exoplatform.gwtframework.commons.loader.Loader)
     */
-   @Override
    public void initializeServices(Loader loader)
    {
       new GadgetServiceImpl(eventBus, loader, context.getApplicationConfiguration().getContext(), context
