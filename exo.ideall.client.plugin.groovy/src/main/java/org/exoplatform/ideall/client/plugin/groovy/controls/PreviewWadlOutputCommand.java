@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.plugin.groovy.GroovyPluginImageBundle;
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.plugin.groovy.event.PreviewWadlOutputEvent;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PreviewWadlOutputCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class PreviewWadlOutputCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
    private static final String ID = "Run/Launch REST Service";
 

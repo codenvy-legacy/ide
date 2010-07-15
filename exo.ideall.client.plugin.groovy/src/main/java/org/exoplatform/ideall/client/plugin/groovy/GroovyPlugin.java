@@ -32,27 +32,42 @@ public class GroovyPlugin implements IDEModule
 
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
-      
+
       System.out.println("GroovyPlugin.initializePlugin()");
-      
+
+      //      public class NewGroovyFileCommand extends NewFileCommand
+      //      {
+      //
+      //         public static final String ID = "File/New/New REST Service";
+      //
+      //         public NewGroovyFileCommand()
+      //         {
+      //            super(ID,
+      //               "REST Service",
+      //               "Create New REST Service",
+      //               Images.FileTypes.GROOVY,
+      //               new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
+      //         }
+      //
+      //      }
+
       // add controls
-      
+
       /*
        * RUN GROUP
        */
 
-//      addCommand(new SetAutoloadCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
-//
-//      addCommand(new ValidateGroovyCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
-//      addCommand(new DeployGroovyCommand()).disable().hide().dockOnToolbar(true);
-//      addCommand(new UndeployGroovyCommand()).disable().hide().dockOnToolbar(true);
-//
-//      /*
-//       * PREVIEW OUTPUT
-//       */
-//
-//      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);      
-      
+      //      addCommand(new SetAutoloadCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+      //
+      //      addCommand(new ValidateGroovyCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
+      //      addCommand(new DeployGroovyCommand()).disable().hide().dockOnToolbar(true);
+      //      addCommand(new UndeployGroovyCommand()).disable().hide().dockOnToolbar(true);
+      //
+      //      /*
+      //       * PREVIEW OUTPUT
+      //       */
+      //
+      //      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);      
       new GroovyPluginEventHandler(eventBus, context);
    }
 

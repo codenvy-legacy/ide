@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.plugin.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.plugin.groovy.GroovyPluginImageBundle;
@@ -33,7 +33,7 @@ import org.exoplatform.ideall.client.plugin.groovy.event.UndeployGroovyScriptEve
  * @version $
  */
 
-public class UndeployGroovyCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class UndeployGroovyCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Undeploy";
