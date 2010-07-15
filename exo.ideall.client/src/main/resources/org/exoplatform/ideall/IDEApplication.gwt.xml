@@ -35,11 +35,10 @@
 	<inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
 	
 	<inherits name='org.exoplatform.ideall.IDEallVirtualFileSystem'/>  
-	<inherits name='org.exoplatform.ideall.IDEallGroovyModule'/>
 	
 	<inherits name='org.exoplatform.ideall.client.framework.IDEallClientFramework'/>
 	<inherits name='org.exoplatform.ideall.client.module.IDEallGadgetPlugin'/>
-	<inherits name='org.exoplatform.ideall.client.plugin.IDEallGroovyPlugin'/>	
+	<inherits name='org.exoplatform.ideall.client.module.IDEallGroovyModule'/>	
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.exoplatform.ideall.client.IDEApplication' />

@@ -9,10 +9,8 @@ import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.module.development.DevelopmentModule;
 import org.exoplatform.ideall.client.module.edit.FileEditModule;
 import org.exoplatform.ideall.client.module.groovy.GroovyModule;
-import org.exoplatform.ideall.client.module.groovy.service.wadl.WadlServiceImpl;
 import org.exoplatform.ideall.client.module.navigation.NavigationModule;
 import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
-import org.exoplatform.ideall.client.plugin.gadget.GadgetPlugin;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.VerticalPanel;

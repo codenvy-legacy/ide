@@ -55,14 +55,13 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextRece
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
 import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyServiceImpl;
+import org.exoplatform.ideall.client.module.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.gadget.GadgetServiceImpl;
 import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;

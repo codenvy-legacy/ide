@@ -54,11 +54,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.module.groovy</artifactId>
-		</dependency>
-		 
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
@@ -73,7 +68,7 @@
 -->
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.client.framework</artifactId>
+			<artifactId>exo-ideall-client-framework</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
@@ -85,7 +80,7 @@
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.client.plugin.groovy</artifactId>
+			<artifactId>exo-ideall-client-module-groovy</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
