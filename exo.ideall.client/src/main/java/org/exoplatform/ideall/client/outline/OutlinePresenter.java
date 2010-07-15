@@ -27,9 +27,9 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.vfs.api.File;
 

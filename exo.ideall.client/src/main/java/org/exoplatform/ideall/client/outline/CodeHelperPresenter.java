@@ -20,8 +20,8 @@ package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.vfs.api.File;
 

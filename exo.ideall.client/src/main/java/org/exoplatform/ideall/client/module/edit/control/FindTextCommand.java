@@ -19,11 +19,11 @@
 package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.edit.event.FindTextEvent;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 

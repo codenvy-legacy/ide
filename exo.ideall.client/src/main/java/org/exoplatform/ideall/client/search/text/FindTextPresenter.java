@@ -18,21 +18,21 @@
  */
 package org.exoplatform.ideall.client.search.text;
 
+import java.util.HashMap;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultHandler;
-
-import java.util.HashMap;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

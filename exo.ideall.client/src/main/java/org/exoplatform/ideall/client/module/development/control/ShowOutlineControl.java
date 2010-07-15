@@ -22,11 +22,11 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
 

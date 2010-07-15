@@ -64,8 +64,8 @@ public class IDE extends VerticalPanel
       context.getModules().add(new FileEditModule(eventBus, context));
       context.getModules().add(new DevelopmentModule(eventBus, context));
       context.getModules().add(new PreferencesModule(eventBus, context));
-      context.getModules().add(new GadgetPlugin());
-      context.getModules().add(new GroovyPlugin());
+      context.getModules().add(new GadgetPlugin(eventBus, context));
+//      context.getModules().add(new GroovyPlugin());
 
       //context.getComponents().add(new CommonActionsComponent());
       //context.getComponents().add(new GroovyActionsComponent());

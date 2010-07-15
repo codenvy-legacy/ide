@@ -25,12 +25,12 @@ import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.vfs.api.File;
 

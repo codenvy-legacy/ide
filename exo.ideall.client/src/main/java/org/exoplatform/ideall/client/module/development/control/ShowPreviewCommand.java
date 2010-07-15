@@ -21,9 +21,9 @@ package org.exoplatform.ideall.client.module.development.control;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.development.event.PreviewFileEvent;
 
 /**
@@ -57,6 +57,7 @@ public class ShowPreviewCommand extends IDEControl implements EditorActiveFileCh
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      System.out.println("ShowPreviewCommand.onEditorActiveFileChanged()");
       if (event.getFile() == null)
       {
          setVisible(false);

@@ -125,7 +125,7 @@ public class GoToLinePresenter
      }
 
      // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-     if (this.@org.exoplatform.ideall.client.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+     if (this.@org.exoplatform.ideall.client.module.navigation.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
      {          
        return content.split("\n").length;
      }

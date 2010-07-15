@@ -23,9 +23,9 @@ import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;

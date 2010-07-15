@@ -36,8 +36,6 @@ import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
@@ -65,6 +63,8 @@ import org.exoplatform.ideall.client.framework.application.event.InitializeAppli
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
