@@ -11,7 +11,7 @@
 	<groupId>org.exoplatform.ideall</groupId>
 	<artifactId>exo.ideall.module.vfs</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Client Module : Virtual File System</name>
+	<name>eXo IDE :: Client : Virtual File System</name>
 
 	<dependencies>
 		<dependency>

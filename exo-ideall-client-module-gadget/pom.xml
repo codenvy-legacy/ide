@@ -12,7 +12,7 @@
 	<groupId>org.exoplatform.ideall</groupId>
 	<artifactId>exo-ideall-client-module-gadget</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Client : Gadget Plugin</name>
+	<name>eXo IDE :: Client : Gadget Module</name>
 
 	<dependencies>
 		<dependency>
@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.client.framework</artifactId>
+			<artifactId>exo-ideall-client-framework</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
