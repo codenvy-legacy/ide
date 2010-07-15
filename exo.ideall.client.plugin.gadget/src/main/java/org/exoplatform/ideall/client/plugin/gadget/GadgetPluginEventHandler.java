@@ -27,11 +27,11 @@ import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetEvent;
 import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetHadndler;
 import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetEvent;
 import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetHandler;
-import org.exoplatform.ideall.gadget.GadgetService;
-import org.exoplatform.ideall.gadget.event.GadgetDeployResultEvent;
-import org.exoplatform.ideall.gadget.event.GadgetDeployResultHandler;
-import org.exoplatform.ideall.gadget.event.GadgetUndeployResultEvent;
-import org.exoplatform.ideall.gadget.event.GadgetUndeployResultHandler;
+import org.exoplatform.ideall.client.plugin.gadget.service.GadgetService;
+import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetDeployResultEvent;
+import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetDeployResultHandler;
+import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetUndeployResultEvent;
+import org.exoplatform.ideall.client.plugin.gadget.service.event.GadgetUndeployResultHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
