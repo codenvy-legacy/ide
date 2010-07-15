@@ -19,7 +19,7 @@
 package org.exoplatform.ideall.client.plugin.gadget;
 
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.plugin.IDEModule;
+import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -28,8 +28,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class GadgetPlugin implements IDEModule
+public class GadgetPlugin extends AbstractIDEModule
 {
+
+   public GadgetPlugin(HandlerManager eventBus, AbstractApplicationContext context)
+   {
+      super(eventBus, context);
+      // TODO Auto-generated constructor stub
+   }
 
    /**
     * @see org.exoplatform.ideall.client.framework.plugin.IDEPlugin#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
@@ -37,10 +43,21 @@ public class GadgetPlugin implements IDEModule
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
       System.out.println("GadgetPlugin.initializePlugin()");
-      
-//      add controll
-//      addCommand(new DeployGadgetCommand()).disable().setDelimiterBefore().dockOnToolbar(true);
-//      addCommand(new UndeployGadgetCommand()).disable().dockOnToolbar(true);
+
+      //      private static final String ID = "File/New/New Google Gadget";
+
+      //      public NewGadgetCommand()
+      //      {
+      //         super(ID,
+      //            "Google Gadget",
+      //            "Create New Google Gadget",
+      //            Images.FileTypes.GADGET,
+      //            new CreateNewFileEvent(MimeType.GOOGLE_GADGET));
+      //      }
+
+      //      add controll
+      //      addCommand(new DeployGadgetCommand()).disable().setDelimiterBefore().dockOnToolbar(true);
+      //      addCommand(new UndeployGadgetCommand()).disable().dockOnToolbar(true);
       new GadgetPluginEventHandler(eventBus, context);
    }
 

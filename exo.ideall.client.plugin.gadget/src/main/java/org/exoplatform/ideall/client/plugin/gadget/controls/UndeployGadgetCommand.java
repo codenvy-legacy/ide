@@ -17,7 +17,7 @@
 package org.exoplatform.ideall.client.plugin.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.framework.control.IDECommand;
+import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.plugin.gadget.GadgetPluginImageBundle;
@@ -28,7 +28,7 @@ import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetEvent;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class UndeployGadgetCommand extends IDECommand implements EditorActiveFileChangedHandler
+public class UndeployGadgetCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/UnDeploy Gadget";
