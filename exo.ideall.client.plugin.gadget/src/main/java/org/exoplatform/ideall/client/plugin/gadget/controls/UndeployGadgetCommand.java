@@ -20,8 +20,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.plugin.gadget.GadgetPluginImageBundle;
+import org.exoplatform.ideall.client.plugin.gadget.Images;
 import org.exoplatform.ideall.client.plugin.gadget.event.UndeployGadgetEvent;
+
 
 /**
  * Created by The eXo Platform SAS.
@@ -40,12 +41,13 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(), GadgetPluginImageBundle.INSTANCE
-         .undeployGadgetDisabled());
+//      setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(), GadgetPluginImageBundle.INSTANCE
+//         .undeployGadgetDisabled());
+      setIcon(Images.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
    }
 
-   @Override
+
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -53,7 +55,6 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-
       if (event.getFile() == null)
       {
          setEnabled(false);
@@ -61,7 +62,7 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
          return;
       }
 
-      setVisible(true);
+//      setVisible(true);
 
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {

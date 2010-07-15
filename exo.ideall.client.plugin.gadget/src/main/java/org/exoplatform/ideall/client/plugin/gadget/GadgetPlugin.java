@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ideall.client.plugin.gadget;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.plugin.AbstractIDEModule;
+import org.exoplatform.ideall.client.plugin.gadget.controls.DeployGadgetCommand;
+import org.exoplatform.ideall.client.plugin.gadget.controls.UndeployGadgetCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -30,34 +34,23 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class GadgetPlugin extends AbstractIDEModule
 {
-
+   
    public GadgetPlugin(HandlerManager eventBus, AbstractApplicationContext context)
    {
       super(eventBus, context);
-      // TODO Auto-generated constructor stub
+      new GadgetPluginEventHandler(eventBus, context);
    }
 
    /**
     * @see org.exoplatform.ideall.client.framework.plugin.IDEPlugin#initializePlugin(com.google.gwt.event.shared.HandlerManager, org.exoplatform.ideall.client.framework.model.AbstractApplicationContext)
     */
    public void initializePlugin(HandlerManager eventBus, AbstractApplicationContext context)
-   {
-      System.out.println("GadgetPlugin.initializePlugin()");
-
-      //      private static final String ID = "File/New/New Google Gadget";
-
-      //      public NewGadgetCommand()
-      //      {
-      //         super(ID,
-      //            "Google Gadget",
-      //            "Create New Google Gadget",
-      //            Images.FileTypes.GADGET,
-      //            new CreateNewFileEvent(MimeType.GOOGLE_GADGET));
-      //      }
-
-      //      add controll
-      //      addCommand(new DeployGadgetCommand()).disable().setDelimiterBefore().dockOnToolbar(true);
-      //      addCommand(new UndeployGadgetCommand()).disable().dockOnToolbar(true);
+   {      
+      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
+         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
+      addControl(new DeployGadgetCommand(), true, true);
+      addControl(new UndeployGadgetCommand(), true, true);
+      
       new GadgetPluginEventHandler(eventBus, context);
    }
 

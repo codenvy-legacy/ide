@@ -20,7 +20,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.plugin.gadget.GadgetPluginImageBundle;
+import org.exoplatform.ideall.client.plugin.gadget.Images;
 import org.exoplatform.ideall.client.plugin.gadget.event.DeployGadgetEvent;
 
 /**
@@ -40,12 +40,14 @@ public class DeployGadgetCommand extends IDEControl implements EditorActiveFileC
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
-         .deployGadgetDisabled());
+      setDelimiterBefore(true);
+//      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
+//         .deployGadgetDisabled());
+      setIcon(Images.DEPLOY_GADGET);
       setEvent(new DeployGadgetEvent());
    }
 
-   @Override
+
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -53,7 +55,6 @@ public class DeployGadgetCommand extends IDEControl implements EditorActiveFileC
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-
       if (event.getFile() == null)
       {
          setEnabled(false);

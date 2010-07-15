@@ -16,9 +16,7 @@
  */
 package org.exoplatform.ideall.client.plugin.gadget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS.
@@ -29,17 +27,17 @@ import com.google.gwt.resources.client.ImageResource;
 public interface GadgetPluginImageBundle extends ClientBundle
 {
 
-   public static final GadgetPluginImageBundle INSTANCE = GWT.create(GadgetPluginImageBundle.class);
-
-   @Source("../public/images/plugin/gadget/bundled/deploy_gadget.png")
-   ImageResource deployGadget();
-
-   @Source("../public/images/plugin/gadgetbundled/deploy_gadget_Disabled.png")
-   ImageResource deployGadgetDisabled();
-
-   @Source("../public/images/plugin/gadgetbundled/undeploy_gadget.png")
-   ImageResource undeployGadget();
-
-   @Source("../public/images/plugin/gadgetbundled/undeploy_gadget_Disabled.png")
-   ImageResource undeployGadgetDisabled();
+//   public static final GadgetPluginImageBundle INSTANCE = GWT.create(GadgetPluginImageBundle.class);
+//
+//   @Source("../images/plugin/gadget/bundled/deploy_gadget.png")
+//   ImageResource deployGadget();
+//
+//   @Source("../images/plugin/gadget/bundled/deploy_gadget_Disabled.png")
+//   ImageResource deployGadgetDisabled();
+//
+//   @Source("../images/plugin/gadget/bundled/undeploy_gadget.png")
+//   ImageResource undeployGadget();
+//
+//   @Source("../images/plugin/gadget/bundled/undeploy_gadget_Disabled.png")
+//   ImageResource undeployGadgetDisabled();
 }
