@@ -30,6 +30,8 @@ import com.google.gwt.resources.client.ImageResource;
 public class NewItemControl extends SimpleControl
 {
 
+   private String mimeType;
+
    public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
       GwtEvent<?> event)
    {
@@ -50,6 +52,26 @@ public class NewItemControl extends SimpleControl
       setPrompt(prompt);
       setIcon(icon);
       setEvent(event);
+   }
+
+   public NewItemControl(String id, String title, String prompt, String icon, String mimeType)
+   {
+      super(id);
+
+      setTitle(title);
+      setPrompt(prompt);
+      setIcon(icon);
+      this.mimeType = mimeType;
+   }
+
+   public String getMimeType()
+   {
+      return mimeType;
+   }
+
+   public void setMimeType(String mimeType)
+   {
+      this.mimeType = mimeType;
    }
 
 }
