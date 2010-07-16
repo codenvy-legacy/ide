@@ -20,7 +20,7 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.CopyItemsEvent;
-import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS.

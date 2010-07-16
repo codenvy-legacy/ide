@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.browser.BrowserPanel;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS.

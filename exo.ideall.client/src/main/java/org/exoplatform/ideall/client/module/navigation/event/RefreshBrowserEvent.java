@@ -16,11 +16,11 @@
  */
 package org.exoplatform.ideall.client.module.navigation.event;
 
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.Item;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 

@@ -27,8 +27,8 @@ import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

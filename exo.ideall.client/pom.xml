@@ -57,7 +57,8 @@
 
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.module.vfs</artifactId>
+			<artifactId>exo-ideall-client-module-vfs</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<!--
 		<dependency>

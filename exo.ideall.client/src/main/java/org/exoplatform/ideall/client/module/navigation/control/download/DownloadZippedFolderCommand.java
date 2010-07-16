@@ -24,7 +24,7 @@ import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
 
 /**
  * Created by The eXo Platform SAS .

@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ideall.client.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
@@ -27,21 +30,18 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.PasteItemsEvent;
 import org.exoplatform.ideall.client.module.navigation.event.PasteItemsHandler;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.Item;
-import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.vfs.api.event.CopyCompleteEvent;
-import org.exoplatform.ideall.vfs.api.event.CopyCompleteHandler;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ideall.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ideall.vfs.api.event.MoveCompleteHandler;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.api.event.CopyCompleteEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.CopyCompleteHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.MoveCompleteEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

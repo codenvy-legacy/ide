@@ -51,12 +51,12 @@ import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.SearchResultReceivedHandler;
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.event.SearchResultReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.SearchResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;

@@ -32,10 +32,10 @@ import org.exoplatform.ideall.client.framework.application.event.RegisterEventHa
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

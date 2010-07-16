@@ -19,12 +19,12 @@
  */
 package org.exoplatform.ideall.client.cookie;
 
-import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.File;
-
 import java.util.HashMap;
 import java.util.Iterator;
+
+import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Cookies;

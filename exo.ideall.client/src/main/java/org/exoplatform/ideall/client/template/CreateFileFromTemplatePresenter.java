@@ -30,9 +30,9 @@ import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEv
 import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
 import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
-import org.exoplatform.ideall.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

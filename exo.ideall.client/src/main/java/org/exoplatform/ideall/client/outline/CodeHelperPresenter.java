@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 

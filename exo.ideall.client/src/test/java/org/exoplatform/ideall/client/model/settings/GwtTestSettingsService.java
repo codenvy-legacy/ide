@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ideall.client.model.settings;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
@@ -25,9 +28,6 @@ import org.exoplatform.ideall.client.model.settings.event.ApplicationContextRece
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Random;

@@ -16,15 +16,15 @@
  */
 package org.exoplatform.ideall.client.model.settings;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.TestResponse;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextMarshaller;
 import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextUnmarshaller;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Header;

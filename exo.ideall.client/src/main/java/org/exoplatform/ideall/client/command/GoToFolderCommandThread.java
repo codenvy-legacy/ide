@@ -29,9 +29,9 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.GoToFolderEvent;
 import org.exoplatform.ideall.client.module.navigation.event.GoToFolderHandler;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

@@ -26,10 +26,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

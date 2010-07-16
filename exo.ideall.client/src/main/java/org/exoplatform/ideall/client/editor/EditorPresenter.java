@@ -78,8 +78,8 @@ import org.exoplatform.ideall.client.module.edit.event.UndoEditingEvent;
 import org.exoplatform.ideall.client.module.edit.event.UndoEditingHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileEvent;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
-import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

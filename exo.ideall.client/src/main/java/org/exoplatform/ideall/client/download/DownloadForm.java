@@ -27,8 +27,8 @@ import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFi
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileHandler;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderHandler;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;

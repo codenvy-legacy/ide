@@ -32,7 +32,7 @@ import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

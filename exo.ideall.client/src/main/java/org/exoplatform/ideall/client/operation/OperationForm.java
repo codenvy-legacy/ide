@@ -29,10 +29,10 @@ import org.exoplatform.ideall.client.framework.ui.TabPanel;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ideall.client.module.gadget.ui.GadgetPreviewPane;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.operation.output.OutputForm;
 import org.exoplatform.ideall.client.operation.preview.PreviewForm;
 import org.exoplatform.ideall.client.operation.properties.PropertiesForm;
-import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

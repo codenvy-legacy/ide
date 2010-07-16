@@ -40,17 +40,17 @@ import org.exoplatform.ideall.client.framework.application.event.RegisterEventHa
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Folder;
-import org.exoplatform.ideall.vfs.api.Item;
-import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.ChildrenReceivedHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;

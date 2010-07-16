@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ideall.client.editor.custom;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
@@ -28,12 +31,9 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

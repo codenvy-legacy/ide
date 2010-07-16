@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ideall.client.model.wadl;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
@@ -26,9 +28,7 @@ import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.TestResponse;
-import org.exoplatform.ideall.client.model.wadl.marshal.WadlServiceOutputUnmarshaller;
-
-import java.util.List;
+import org.exoplatform.ideall.client.module.groovy.service.wadl.marshal.WadlServiceOutputUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Header;

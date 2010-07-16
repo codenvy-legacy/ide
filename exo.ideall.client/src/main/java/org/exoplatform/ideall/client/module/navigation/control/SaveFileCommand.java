@@ -26,13 +26,13 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileEvent;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
 
 /**
  * Created by The eXo Platform SAS .

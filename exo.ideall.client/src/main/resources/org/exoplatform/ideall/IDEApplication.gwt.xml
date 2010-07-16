@@ -34,7 +34,7 @@
 	<inherits name='org.exoplatform.gwtframework.ui.UI' />	
 	<inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
 	
-	<inherits name='org.exoplatform.ideall.IDEallVirtualFileSystem'/>  
+	<inherits name='org.exoplatform.ideall.client.module.IDEallVirtualFileSystem'/>  
 	
 	<inherits name='org.exoplatform.ideall.client.framework.IDEallClientFramework'/>
 	<inherits name='org.exoplatform.ideall.client.module.IDEallGadgetModule'/>

@@ -17,13 +17,12 @@
 package org.exoplatform.ideall.client.navigation;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.browser.BrowserForm;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.panel.TabContainer;
 import org.exoplatform.ideall.client.search.file.SearchResultPanel;
 import org.exoplatform.ideall.client.search.file.SearchResultsForm;
-import org.exoplatform.ideall.vfs.api.Folder;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;

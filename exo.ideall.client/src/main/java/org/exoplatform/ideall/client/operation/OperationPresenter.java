@@ -35,9 +35,9 @@ import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRec
 import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
-import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;

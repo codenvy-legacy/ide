@@ -20,8 +20,8 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.ImageUtil;
 import org.exoplatform.ideall.client.framework.ui.TabPanel;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
-import org.exoplatform.ideall.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;

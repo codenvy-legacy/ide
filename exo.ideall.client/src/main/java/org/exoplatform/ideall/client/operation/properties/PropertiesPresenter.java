@@ -18,12 +18,12 @@ package org.exoplatform.ideall.client.operation.properties;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

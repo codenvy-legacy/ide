@@ -54,11 +54,11 @@ import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolde
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderHandler;
 import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.search.file.SearchForm;
 import org.exoplatform.ideall.client.template.SaveAsTemplateForm;
 import org.exoplatform.ideall.client.upload.UploadForm;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 

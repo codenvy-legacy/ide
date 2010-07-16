@@ -33,10 +33,10 @@ import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileF
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
 import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.Item;
-import org.exoplatform.ideall.vfs.webdav.NodeTypeUtil;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -26,8 +26,8 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.edit.event.UndoEditingEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .
