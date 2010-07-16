@@ -18,7 +18,7 @@
 package org.exoplatform.ideall.client.framework.editor.event;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ideall.client.framework.model.configuration.ApplicationConfiguration;
-import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 /**
  * Created by The eXo Platform SAS.
