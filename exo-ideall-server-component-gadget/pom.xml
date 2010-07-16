@@ -8,7 +8,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.component.gadget</artifactId>
+	<artifactId>exo-ideall-server-component-gadget</artifactId>
 	<name>eXo IDE :: GateIn Gadget Register</name>
 	<packaging>jar</packaging>
 	<dependencies>
