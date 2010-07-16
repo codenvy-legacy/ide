@@ -6,7 +6,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>exo.ideall.extension.config</artifactId>
+	<artifactId>exo-ideall-packaging-gatein-extension-config</artifactId>
 	<name>eXo IDE :: Extension configuration jar</name>
 	<packaging>jar</packaging>
 </project>
