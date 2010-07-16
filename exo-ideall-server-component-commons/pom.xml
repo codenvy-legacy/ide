@@ -8,7 +8,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.component.commons</artifactId>
+	<artifactId>exo-ideall-server-component-commons</artifactId>
 	<name>eXo IDE :: Server Side Commos Component</name>
 	<packaging>jar</packaging>
 
