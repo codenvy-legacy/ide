@@ -46,9 +46,9 @@ import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServic
 import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.module.groovy.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ideall.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -74,6 +74,8 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    {
       this.eventBus = eventBus;
       this.context = context;
+      
+      System.out.println("registering handler..............");
 
       handlers = new Handlers(eventBus);
 
@@ -92,6 +94,9 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
 
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
+      
+      System.out.println("handlers are registered!!!!!!!");
+      
    }
 
    /**
@@ -99,6 +104,8 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
+      System.out.println("GroovyPluginEventHandler.onValidateGroovyScript()");
+      
       GroovyService.getInstance().validate(context.getActiveFile().getName(), context.getActiveFile().getContent());
    }
 

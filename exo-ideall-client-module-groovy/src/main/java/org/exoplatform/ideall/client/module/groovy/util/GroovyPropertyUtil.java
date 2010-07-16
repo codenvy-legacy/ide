@@ -23,8 +23,8 @@ import java.util.Collection;
 
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ideall.vfs.api.File;
+import org.exoplatform.ideall.vfs.property.ItemProperty;
 
 /**
  * Created by The eXo Platform SAS .

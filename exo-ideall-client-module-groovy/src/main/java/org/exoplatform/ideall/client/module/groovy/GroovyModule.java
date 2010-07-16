@@ -45,12 +45,6 @@ public class GroovyModule extends AbstractIDEModule
       super(eventBus, applicationContext);
    }
 
-   public void initialize(HandlerManager eventBus, AbstractApplicationContext context)
-   {
-      System.out.println("GroovyPlugin.initializePlugin()");
-      new GroovyPluginEventHandler(eventBus, context);
-   }
-
    public void initializeModule()
    {
       addControl(new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
@@ -63,23 +57,7 @@ public class GroovyModule extends AbstractIDEModule
 
       addControl(new PreviewWadlOutputCommand(), true, true);
 
-      // add controls
-
-      /*
-       * RUN GROUP
-       */
-
-      //      addCommand(new SetAutoloadCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
-      //
-      //      addCommand(new ValidateGroovyCommand()).disable().hide().setDelimiterBefore().dockOnToolbar(true);
-      //      addCommand(new DeployGroovyCommand()).disable().hide().dockOnToolbar(true);
-      //      addCommand(new UndeployGroovyCommand()).disable().hide().dockOnToolbar(true);
-      //
-      //      /*
-      //       * PREVIEW OUTPUT
-      //       */
-      //
-      //      addCommand(new PreviewWadlOutputCommand()).disable().hide().dockOnToolbar(true);      
+      new GroovyPluginEventHandler(eventBus, context);
    }
 
    public void initializeServices(Loader loader)
