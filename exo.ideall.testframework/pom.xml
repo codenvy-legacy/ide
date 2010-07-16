@@ -81,7 +81,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.component.commons</artifactId>
+			<artifactId>exo-ideall-server-component-commons</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
