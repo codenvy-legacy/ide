@@ -46,9 +46,9 @@ import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServic
 import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ideall.client.module.groovy.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ideall.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.vfs.property.ItemProperty;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 
