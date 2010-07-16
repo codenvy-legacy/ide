@@ -10,7 +10,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.testframework</artifactId>
+	<artifactId>exo-ideall-testframework</artifactId>
 	<packaging>jar</packaging>
 	<name>eXo IDE :: Test Framework</name>
 
