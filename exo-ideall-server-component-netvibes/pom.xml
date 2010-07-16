@@ -8,7 +8,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.component.netvibes</artifactId>
+	<artifactId>exo-ideall-server-component-netvibes</artifactId>
 	<name>eXo IDE :: Server Side Netvibes Component</name>
 	<packaging>jar</packaging>
 
