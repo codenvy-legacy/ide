@@ -11,6 +11,7 @@ import org.exoplatform.ideall.client.module.edit.FileEditModule;
 import org.exoplatform.ideall.client.module.gadget.GadgetPlugin;
 import org.exoplatform.ideall.client.module.groovy.GroovyModule;
 import org.exoplatform.ideall.client.module.navigation.NavigationModule;
+import org.exoplatform.ideall.client.module.netvibes.NetvibesModule;
 import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
 
 import com.google.gwt.event.shared.HandlerManager;

@@ -62,7 +62,7 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCo
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
