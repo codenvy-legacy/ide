@@ -17,8 +17,15 @@
 package org.exoplatform.ideall.client.module.groovy;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.framework.control.NewItemControl;
 import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
+import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ideall.client.module.groovy.controls.DeployGroovyCommand;
+import org.exoplatform.ideall.client.module.groovy.controls.PreviewWadlOutputCommand;
+import org.exoplatform.ideall.client.module.groovy.controls.SetAutoloadCommand;
+import org.exoplatform.ideall.client.module.groovy.controls.UndeployGroovyCommand;
+import org.exoplatform.ideall.client.module.groovy.controls.ValidateGroovyCommand;
 import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ideall.client.module.groovy.service.wadl.WadlServiceImpl;
 
@@ -30,17 +37,12 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class GroovyModule implements IDEModule
+public class GroovyModule extends AbstractIDEModule
 {
-
-   private HandlerManager eventBus;
-
-   private AbstractApplicationContext applicationContext;
 
    public GroovyModule(HandlerManager eventBus, AbstractApplicationContext applicationContext)
    {
-      this.eventBus = eventBus;
-      this.applicationContext = applicationContext;
+      super(eventBus, applicationContext);
    }
 
    public void initialize(HandlerManager eventBus, AbstractApplicationContext context)
@@ -51,21 +53,15 @@ public class GroovyModule implements IDEModule
 
    public void initializeModule()
    {
-      //      public class NewGroovyFileCommand extends NewFileCommand
-      //      {
-      //
-      //         public static final String ID = "File/New/New REST Service";
-      //
-      //         public NewGroovyFileCommand()
-      //         {
-      //            super(ID,
-      //               "REST Service",
-      //               "Create New REST Service",
-      //               Images.FileTypes.GROOVY,
-      //               new CreateNewFileEvent(MimeType.SCRIPT_GROOVY));
-      //         }
-      //
-      //      }
+      addControl(new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
+         Images.FileType.GROOVY, MimeType.SCRIPT_GROOVY));
+
+      addControl(new SetAutoloadCommand(), true, true);
+      addControl(new ValidateGroovyCommand(), true, true);
+      addControl(new DeployGroovyCommand(), true, true);
+      addControl(new UndeployGroovyCommand(), true, true);
+
+      addControl(new PreviewWadlOutputCommand(), true, true);
 
       // add controls
 
@@ -88,8 +84,8 @@ public class GroovyModule implements IDEModule
 
    public void initializeServices(Loader loader)
    {
-      new GroovyServiceImpl(eventBus, applicationContext.getApplicationConfiguration().getContext(), loader);
-      new WadlServiceImpl(eventBus, loader);      
+      new GroovyServiceImpl(eventBus, context.getApplicationConfiguration().getContext(), loader);
+      new WadlServiceImpl(eventBus, loader);
    }
 
 }

@@ -23,6 +23,7 @@ package org.exoplatform.ideall.client.module.groovy.service.wadl;
 */
 public abstract class WadlService
 {
+
    private static WadlService instance;
 
    public static WadlService getInstance()
@@ -41,4 +42,5 @@ public abstract class WadlService
     * @param url
     */
    public abstract void getWadl(String url);
+
 }

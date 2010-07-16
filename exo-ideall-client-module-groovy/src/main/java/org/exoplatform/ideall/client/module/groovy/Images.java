@@ -26,20 +26,44 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 public class Images
 {
-   
+
    public static final String imageUrl = UIHelper.getGadgetImagesURL();
 
    public interface Buttons
    {
-      
-      public static String OK = "../public/images/plugin/groovy/button/ok.png";
-      
-      public static String NO = "../public/images/plugin/groovy/button/no.png";
-      
-      public static String YES = "../public/images/plugin/groovy/button/yes.png";
-      
-      public static String URL = "../public/images/plugin/groovy/button/url.png";
-   
+
+      public static String OK = imageUrl + "module/groovy/buttons/ok.png";
+
+      public static String NO = imageUrl + "module/groovy/buttons/no.png";
+
+      public static String YES = imageUrl + "module/groovy/buttons/yes.png";
+
+      public static String URL = imageUrl + "module/groovy/buttons/url.png";
+
    }
-   
+
+   public interface Controls
+   {
+
+      static final String DEPLOY = imageUrl + "module/groovy/bundled/deploy.png";
+
+      static final String OUTPUT = imageUrl + "module/groovy/bundled/output.png";
+
+      static final String SET_AUTOLOAD = imageUrl + "module/groovy/bundled/set_autoload.png";
+
+      static final String UNSET_AUTOLOAD = imageUrl + "module/groovy/bundled/unset_autoload.png";
+
+      static final String UNDEPLOY = imageUrl + "module/groovy/bundled/undeploy.png";
+
+      static final String VALIDATE = imageUrl + "module/groovy/bundled/validate.png";
+
+   }
+
+   public interface FileType
+   {
+
+      static final String GROOVY = imageUrl + "module/groovy/filetype/groovy.png";
+
+   }
+
 }

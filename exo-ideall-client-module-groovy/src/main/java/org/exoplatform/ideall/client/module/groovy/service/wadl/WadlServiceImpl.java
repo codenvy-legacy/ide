@@ -62,7 +62,6 @@ public class WadlServiceImpl extends WadlService
 
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
       request.send(callback);
-
    }
 
 }

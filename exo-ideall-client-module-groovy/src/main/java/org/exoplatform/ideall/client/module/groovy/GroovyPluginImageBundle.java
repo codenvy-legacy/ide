@@ -29,41 +29,42 @@ import com.google.gwt.resources.client.ImageResource;
 public interface GroovyPluginImageBundle extends ClientBundle
 {
 
-   public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
+   public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);   
+
+   //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
+//   ImageResource setAutoLoad();
+//
+//   @Source("../public/images/module/groovy/bundled/set_autoload_Disabled.png")
+//   ImageResource setAutoLoadDisabled();
+//
+//   @Source("../public/images/module/groovy/bundled/unset_autoload.png")
+//   ImageResource unsetAutoLoad();
+//
+//   @Source("../public/images/module/groovy/bundled/unset_autoload_Disabled.png")
+//   ImageResource unsetAutoLoadDisabled();
+//
+//   @Source("../public/images/module/groovy/bundled/validate.png")
+//   ImageResource validateGroovy();
+//
+//   @Source("../public/images/module/groovy/bundled/validate_Disabled.png")
+//   ImageResource validateGroovyDisabled();
+//
+//   @Source("../public/images/module/groovy/bundled/deploy.png")
+//   ImageResource deployGroovy();
+//
+//   @Source("../public/images/module/groovy/bundled/deploy_Disabled.png")
+//   ImageResource deployGroovyDisabled();
+//
+//   @Source("../public/images/module/groovy/bundled/undeploy.png")
+//   ImageResource undeployGroovy();
+//
+//   @Source("../public/images/module/groovy/bundled/undeploy_Disabled.png")
+//   ImageResource undeployGroovyDisabled();
+//
+//   @Source("../public/images/module/groovy/bundled/output.png")
+//   ImageResource groovyOutput();
+//
+//   @Source("../public/images/module/groovy/bundled/output_Disabled.png")
+//   ImageResource groovyOutputDisabled();
    
-   @Source("../public/images/plugin/groovy/bundled/set_autoload.png")
-   ImageResource setAutoLoad();
-
-   @Source("../public/images/plugin/groovy/bundled/set_autoload_Disabled.png")
-   ImageResource setAutoLoadDisabled();
-
-   @Source("../public/images/plugin/groovy/bundled/unset_autoload.png")
-   ImageResource unsetAutoLoad();
-
-   @Source("../public/images/plugin/groovy/bundled/unset_autoload_Disabled.png")
-   ImageResource unsetAutoLoadDisabled();
-
-   @Source("../public/images/plugin/groovy/bundled/validate.png")
-   ImageResource validateGroovy();
-
-   @Source("../public/images/plugin/groovy/bundled/validate_Disabled.png")
-   ImageResource validateGroovyDisabled();
-
-   @Source("../public/images/plugin/groovy/bundled/deploy.png")
-   ImageResource deployGroovy();
-
-   @Source("../public/images/plugin/groovy/bundled/deploy_Disabled.png")
-   ImageResource deployGroovyDisabled();
-
-   @Source("../public/images/plugin/groovy/bundled/undeploy.png")
-   ImageResource undeployGroovy();
-
-   @Source("../public/images/plugin/groovy/bundled/undeploy_Disabled.png")
-   ImageResource undeployGroovyDisabled();
-
-   @Source("../public/images/plugin/groovy/bundled/output.png")
-   ImageResource groovyOutput();
-
-   @Source("../public/images/plugin/groovy/bundled/output_Disabled.png")
-   ImageResource groovyOutputDisabled();
 }

@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ideall.client.module.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ideall.vfs.api.File;
@@ -56,7 +56,8 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
       super(ID);
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
-      setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
+      setIcon(Images.Controls.SET_AUTOLOAD);
+      //setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
    }
 
@@ -117,7 +118,8 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
          // is set autoload
          setTitle(TITLE_SET);
          setPrompt(PROMPT_SET);
-         setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
+         setIcon(Images.Controls.SET_AUTOLOAD);
+         //setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(true));
       }
       else
@@ -125,7 +127,8 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
          // is unset autoload
          setTitle(TITLE_UNSET);
          setPrompt(PROMPT_UNSET);
-         setImages(GroovyPluginImageBundle.INSTANCE.unsetAutoLoad(), GroovyPluginImageBundle.INSTANCE.unsetAutoLoadDisabled());
+         setIcon(Images.Controls.UNSET_AUTOLOAD);
+         //setImages(GroovyPluginImageBundle.INSTANCE.unsetAutoLoad(), GroovyPluginImageBundle.INSTANCE.unsetAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(false));
       }
    }

@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.ValidateGroovyScriptEvent;
 
 /**
@@ -43,8 +43,10 @@ public class ValidateGroovyCommand extends IDEControl implements EditorActiveFil
       super(ID);
       setTitle("Validate");
       setPrompt("Validate REST Service");
-      setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
+      setIcon(Images.Controls.VALIDATE);
+      //setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
       setEvent(new ValidateGroovyScriptEvent());
+      setDelimiterBefore(true);
    }
 
    @Override

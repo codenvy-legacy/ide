@@ -20,7 +20,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.PreviewWadlOutputEvent;
 
 /**
@@ -37,7 +37,8 @@ public class PreviewWadlOutputCommand extends IDEControl implements EditorActive
       super(ID);
       setTitle("Launch REST Service...");
       setPrompt("Launch REST Service...");
-      setImages(GroovyPluginImageBundle.INSTANCE.groovyOutput(), GroovyPluginImageBundle.INSTANCE.groovyOutputDisabled());
+      setIcon(Images.Controls.OUTPUT);
+      //setImages(GroovyPluginImageBundle.INSTANCE.groovyOutput(), GroovyPluginImageBundle.INSTANCE.groovyOutputDisabled());
       setEvent(new PreviewWadlOutputEvent());
    }
 
