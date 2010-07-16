@@ -19,6 +19,10 @@ package org.exoplatform.ideall.client.operation.output;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
+import org.exoplatform.ideall.client.framework.output.event.OutputHandler;
+import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;

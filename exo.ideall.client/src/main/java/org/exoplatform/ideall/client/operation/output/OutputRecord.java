@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.operation.output;
 
+import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.MouseOutEvent;

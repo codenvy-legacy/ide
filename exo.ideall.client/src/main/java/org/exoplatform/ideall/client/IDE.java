@@ -8,6 +8,7 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
 import org.exoplatform.ideall.client.module.development.DevelopmentModule;
 import org.exoplatform.ideall.client.module.edit.FileEditModule;
+import org.exoplatform.ideall.client.module.gadget.GadgetPlugin;
 import org.exoplatform.ideall.client.module.groovy.GroovyModule;
 import org.exoplatform.ideall.client.module.navigation.NavigationModule;
 import org.exoplatform.ideall.client.module.netvibes.NetvibesModule;
@@ -63,7 +64,7 @@ public class IDE extends VerticalPanel
       context.getModules().add(new FileEditModule(eventBus, context));
       context.getModules().add(new DevelopmentModule(eventBus, context));
       context.getModules().add(new PreferencesModule(eventBus, context));
-      //context.getModules().add(new GadgetPlugin());
+      context.getModules().add(new GadgetPlugin(eventBus, context));
       context.getModules().add(new GroovyModule(eventBus, context));
       context.getModules().add(new NetvibesModule(eventBus, context));
       //context.getComponents().add(new CommonActionsComponent());
