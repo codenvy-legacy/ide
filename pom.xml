@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>org.exoplatform</groupId>
@@ -16,28 +17,28 @@
 	<properties>
 		<exo.product.name>ideall</exo.product.name>
 		<org.exoplatform.kernel.version>2.2.2-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
-	  <gwt.version>2.0.3</gwt.version>
-    <smartgwt.version>2.1</smartgwt.version>
-    <shindig.version>1.0-r790473-Patch02</shindig.version>
-    <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>	
-    <org.slf4j.version>1.5.6</org.slf4j.version>
-    <org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
-    <org.exoplatform.gwtframework.version>1.0-Beta05-SNAPSHOT</org.exoplatform.gwtframework.version>
-    <version.chromattic>1.0.3</version.chromattic>
+		<org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
+		<org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
+		<org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
+		<gwt.version>2.0.3</gwt.version>
+		<smartgwt.version>2.1</smartgwt.version>
+		<shindig.version>1.0-r790473-Patch02</shindig.version>
+		<gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
+		<maven.compiler.source>1.5</maven.compiler.source>
+		<maven.compiler.target>1.5</maven.compiler.target>
+		<org.slf4j.version>1.5.6</org.slf4j.version>
+		<org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
+		<org.exoplatform.gwtframework.version>1.0-Beta05-SNAPSHOT</org.exoplatform.gwtframework.version>
+		<version.chromattic>1.0.3</version.chromattic>
 	</properties>
-	
-	<scm>
-	  <connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</connection>
-          <developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</developerConnection>
-          <url>http://fisheye.exoplatform.org/browse/projects/parent/trunk</url>
-         </scm>
 
-	
+	<scm>
+		<connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</connection>
+		<developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/trunk</developerConnection>
+		<url>http://fisheye.exoplatform.org/browse/projects/parent/trunk</url>
+	</scm>
+
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -55,11 +56,11 @@
 				<artifactId>exo.core.component.security.core</artifactId>
 				<version>${org.exoplatform.core.version}</version>
 			</dependency>
-      <dependency>
-        <groupId>org.exoplatform.core</groupId>
-         <artifactId>exo.core.component.document</artifactId>
-        <version>${org.exoplatform.core.version}</version>
-       </dependency>
+			<dependency>
+				<groupId>org.exoplatform.core</groupId>
+				<artifactId>exo.core.component.document</artifactId>
+				<version>${org.exoplatform.core.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ws</groupId>
 				<artifactId>exo.ws.frameworks.servlet</artifactId>
@@ -125,16 +126,16 @@
 				<artifactId>exo.gwtframework.smartgwt</artifactId>
 				<version>${org.exoplatform.gwtframework.version}</version>
 			</dependency>
-      <dependency>
-        <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo.ideall.module.vfs</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo.ideall.module.groovy</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo-ideall-client-module-vfs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo-ideall-client-module-groovy</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
 				<artifactId>exo.ideall.component.commons</artifactId>
@@ -165,16 +166,26 @@
 				<artifactId>exo.ideall.extension.config</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-      <dependency>
-        <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo.ideall.testframework</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-       <dependency>
-        <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo.ideall.module.gadget</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo.ideall.testframework</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo-ideall-client-module-gadget</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo-ideall-client-module-netvibes</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.ideall</groupId>
+				<artifactId>exo-ideall-client-framework</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.portal</groupId>
 				<artifactId>exo.portal.component.application-registry</artifactId>
@@ -190,11 +201,11 @@
 				<artifactId>gwt-user</artifactId>
 				<version>${gwt.version}</version>
 			</dependency>
-      <dependency>
-       <groupId>com.google.gwt</groupId>
-       <artifactId>gwt-dev</artifactId>
-       <version>${gwt.version}</version>
-      </dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-dev</artifactId>
+				<version>${gwt.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.smartgwt</groupId>
 				<artifactId>smartgwt</artifactId>
@@ -230,21 +241,20 @@
 				<artifactId>shindig-social-api</artifactId>
 				<version>${shindig.version}</version>
 			</dependency>
-			<!-- dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.14</version>
-			</dependency-->
+			<!--
+				dependency> <groupId>log4j</groupId> <artifactId>log4j</artifactId>
+				<version>1.2.14</version> </dependency
+			-->
 			<dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.5.8</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.8</version>
-      </dependency> 
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.5.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.5.8</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.code.guice</groupId>
 				<artifactId>guice</artifactId>
@@ -320,38 +330,38 @@
 				<artifactId>exo.portal.starter.war</artifactId>
 				<version>${org.exoplatform.gatein.version}</version>
 			</dependency>
-      <dependency>
-       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.gadgets-core</artifactId>
-<version>${org.exoplatform.gatein.version}</version>
-    </dependency>
-      <!-- Chromattic -->
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.apt</artifactId>
-            <version>${version.chromattic}</version>
-            <scope>compile</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.api</artifactId>
-            <version>${version.chromattic}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.spi</artifactId>
-            <version>${version.chromattic}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.core</artifactId>
-            <version>${version.chromattic}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.ext</artifactId>
-            <version>${version.chromattic}</version>
-         </dependency>
+			<dependency>
+				<groupId>org.exoplatform.portal</groupId>
+				<artifactId>exo.portal.gadgets-core</artifactId>
+				<version>${org.exoplatform.gatein.version}</version>
+			</dependency>
+			<!-- Chromattic -->
+			<dependency>
+				<groupId>org.chromattic</groupId>
+				<artifactId>chromattic.apt</artifactId>
+				<version>${version.chromattic}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.chromattic</groupId>
+				<artifactId>chromattic.api</artifactId>
+				<version>${version.chromattic}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.chromattic</groupId>
+				<artifactId>chromattic.spi</artifactId>
+				<version>${version.chromattic}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.chromattic</groupId>
+				<artifactId>chromattic.core</artifactId>
+				<version>${version.chromattic}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.chromattic</groupId>
+				<artifactId>chromattic.ext</artifactId>
+				<version>${version.chromattic}</version>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -372,15 +382,17 @@
 		<module>exo.ideall.component.commons</module>
 		<module>exo.ideall.component.gadget</module>
 		<module>exo.ideall.component.netvibes</module>
-		
+
 		<module>exo.ideall.testframework</module>
-		<module>exo.ideall.module.vfs</module>
-		
+		<module>exo-ideall-client-module-vfs</module>
 		<module>exo-ideall-client-framework</module>
+
+
 		<module>exo-ideall-client-module-groovy</module>
 		<module>exo-ideall-client-module-gadget</module>
+		<module>exo-ideall-client-module-netvibes</module>
 		<module>exo.ideall.client</module>
-		
+
 		<module>exo.ideall.extension.config</module>
 		<module>exo.ideall.extension.webapp</module>
 	</modules>
