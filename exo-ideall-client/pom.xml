@@ -9,7 +9,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.exoplatform.ideall</groupId>
-	<artifactId>exo.ideall.client</artifactId>
+	<artifactId>exo-ideall-client</artifactId>
 	<packaging>war</packaging>
 	<name>eXo IDE :: Client</name>
 
