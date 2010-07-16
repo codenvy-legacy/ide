@@ -153,22 +153,22 @@
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.client</artifactId>
+				<artifactId>exo-ideall-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.extension.webapp</artifactId>
+				<artifactId>exo-ideall-packaging-gatein-extension-webapp</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.extension.config</artifactId>
+				<artifactId>exo-ideall-packaging-gatein-extension-config</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.testframework</artifactId>
+				<artifactId>exo-ideall-testframework</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -383,7 +383,7 @@
 		<module>exo-ideall-server-component-gadget</module>
 		<module>exo-ideall-server-component-netvibes</module>
 
-		<module>exo.ideall.testframework</module>
+		<module>exo-ideall-testframework</module>
 		<module>exo-ideall-client-module-vfs</module>
 		<module>exo-ideall-client-framework</module>
 
@@ -391,9 +391,9 @@
 		<module>exo-ideall-client-module-groovy</module>
 		<module>exo-ideall-client-module-gadget</module>
 		<module>exo-ideall-client-module-netvibes</module>
-		<module>exo.ideall.client</module>
+		<module>exo-ideall-client</module>
 
-		<module>exo.ideall.extension.config</module>
-		<module>exo.ideall.extension.webapp</module>
+		<module>exo.ideall-packaging-gatein-extension-config</module>
+		<module>exo-ideall-packaging-gatein-extension-webapp</module>
 	</modules>
 </project>
