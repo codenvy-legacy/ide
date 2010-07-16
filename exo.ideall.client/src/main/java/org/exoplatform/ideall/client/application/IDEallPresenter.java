@@ -62,7 +62,7 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCo
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ideall.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -117,9 +117,8 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       }
 
       createNewItemControlsGroup();
-      fillNewItemPopupControl();
-      
       Collections.sort(context.getCommands(), controlComparator);
+      fillNewItemPopupControl();      
 
       /*
        * Updating top menu
@@ -247,7 +246,6 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       {
          if (command instanceof IDEControl)
          {
-            System.out.println("initialization " + command.getId());
             ((IDEControl)command).initialize(eventBus, context);
          }
       }
