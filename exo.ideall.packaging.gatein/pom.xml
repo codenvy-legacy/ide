@@ -81,7 +81,7 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.component.commons</artifactId>
+            <artifactId>exo-ideall-server-component-commons</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -106,19 +106,19 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.component.commons</artifactId>
+            <artifactId>exo-ideall-server-component-commons</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.component.gadget</artifactId>
+            <artifactId>exo-ideall-server-component-gadget</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.component.netvibes</artifactId>
+            <artifactId>exo-ideall-server-component-netvibes</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
