@@ -83,7 +83,11 @@
 			<artifactId>exo-ideall-client-module-groovy</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.exoplatform.ideall</groupId>
+	 		<artifactId>exo-ideall-client-module-netvibes</artifactId>
+	 		<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>IDEall</finalName>
