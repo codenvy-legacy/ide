@@ -393,7 +393,7 @@
 		<module>exo-ideall-client-module-netvibes</module>
 		<module>exo-ideall-client</module>
 
-		<module>exo.ideall-packaging-gatein-extension-config</module>
+		<module>exo-ideall-packaging-gatein-extension-config</module>
 		<module>exo-ideall-packaging-gatein-extension-webapp</module>
 	</modules>
 </project>
