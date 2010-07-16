@@ -29,10 +29,10 @@ public interface Images
 {
    public static final String imageUrl = UIHelper.getGadgetImagesURL();
    
-   public static final String GOOGLE_GADGET = imageUrl +  "/plugin/gadget/gadget.png";
+   public static final String GOOGLE_GADGET = imageUrl +  "/module/gadget/gadget.png";
    
-   public static final String DEPLOY_GADGET = imageUrl + "/plugin/gadget/bundled/deploy_gadget.png";
+   public static final String DEPLOY_GADGET = imageUrl + "/module/gadget/bundled/deploy_gadget.png";
    
-   public static final String UNDEPLOY_GADGET = imageUrl + "/plugin/gadget/bundled/undeploy_gadget.png";
+   public static final String UNDEPLOY_GADGET = imageUrl + "/module/gadget/bundled/undeploy_gadget.png";
    
 }
