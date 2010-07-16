@@ -7,7 +7,7 @@
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
 
-  <artifactId>exo.ideall.extension.webapp</artifactId>
+  <artifactId>exo-ideall-packaging-gatein-extension-webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo IDE :: GateIn Extension Configuration WebApp</name>
   <build>
