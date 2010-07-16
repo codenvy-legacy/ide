@@ -26,9 +26,9 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ideall.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ideall.vfs.api.File;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 /**
  * Created by The eXo Platform SAS .
