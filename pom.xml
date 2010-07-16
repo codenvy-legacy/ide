@@ -138,17 +138,17 @@
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.component.commons</artifactId>
+				<artifactId>exo-ideall-server-component-commons</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.component.netvibes</artifactId>
+				<artifactId>exo-ideall-server-component-netvibes</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.exoplatform.ideall</groupId>
-				<artifactId>exo.ideall.component.gadget</artifactId>
+				<artifactId>exo-ideall-server-component-gadget</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -379,9 +379,9 @@
 	</build>
 
 	<modules>
-		<module>exo.ideall.component.commons</module>
-		<module>exo.ideall.component.gadget</module>
-		<module>exo.ideall.component.netvibes</module>
+		<module>exo-ideall-server-component-commons</module>
+		<module>exo-ideall-server-component-gadget</module>
+		<module>exo-ideall-server-component-netvibes</module>
 
 		<module>exo.ideall.testframework</module>
 		<module>exo-ideall-client-module-vfs</module>
