@@ -251,15 +251,15 @@
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.component.commons</artifactId>
+					<artifactId>exo-ideall-server-component-commons</artifactId>
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.component.netvibes</artifactId>
+					<artifactId>exo-ideall-server-component-netvibes</artifactId>
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.component.gadget</artifactId>
+					<artifactId>exo-ideall-server-component-gadget</artifactId>
 					<exclusions>
 						<exclusion>
 							<groupId>pull-parser</groupId>
@@ -538,12 +538,12 @@
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.component.commons</artifactId>
+					<artifactId>exo-ideall-server-component-commons</artifactId>
 
 				</dependency>
 				<dependency>
 					<groupId>org.exoplatform.ideall</groupId>
-					<artifactId>exo.ideall.component.gadget</artifactId>
+					<artifactId>exo-ideall-server-component-gadget</artifactId>
 					<exclusions>
 						<exclusion>
 							<groupId>pull-parser</groupId>
