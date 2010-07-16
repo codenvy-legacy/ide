@@ -35,7 +35,7 @@
 		
 		<dependency>
 			<groupId>org.exoplatform.ideall</groupId>
-			<artifactId>exo.ideall.testframework</artifactId>
+			<artifactId>exo-ideall-testframework</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>		
