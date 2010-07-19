@@ -22,14 +22,18 @@ package org.exoplatform.ideall.download;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,8 +61,9 @@ public class DirectoryContentEntity implements StreamingOutput, Const
     */
    public void write(OutputStream outputStream) throws IOException, WebApplicationException
    {
-      ZipOutputStream zipOut = new ZipOutputStream(outputStream);
-
+      ZipArchiveOutputStream zipOut = new ZipArchiveOutputStream(outputStream);
+      zipOut.setEncoding("UTF-8");
+      
       try
       {
          pathPrefix = nodeToPack.getPath();
@@ -83,7 +88,7 @@ public class DirectoryContentEntity implements StreamingOutput, Const
     * @throws RepositoryException
     * @throws IOException
     */
-   private void zipNodeContent(Node node, ZipOutputStream zipOutputStream) throws RepositoryException, IOException
+   private void zipNodeContent(Node node, ZipArchiveOutputStream zipOutputStream) throws RepositoryException, IOException
    {
       String path = node.getPath();
       path = path.substring(pathPrefix.length());
@@ -92,11 +97,11 @@ public class DirectoryContentEntity implements StreamingOutput, Const
       {
          InputStream inputStream = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getStream();
 
-         ZipEntry zipEntry = new ZipEntry(path);
-         zipOutputStream.putNextEntry(zipEntry);
+         ZipArchiveEntry zipEntry = new ZipArchiveEntry(path);
+         zipOutputStream.putArchiveEntry(zipEntry);
          flushJCRData(inputStream, zipOutputStream);
 
-         zipOutputStream.closeEntry();
+         zipOutputStream.closeArchiveEntry();
       }
       else
       {
@@ -104,9 +109,9 @@ public class DirectoryContentEntity implements StreamingOutput, Const
          {
             path += "/";
 
-            ZipEntry zipEntry = new ZipEntry(path);
-            zipOutputStream.putNextEntry(zipEntry);
-            zipOutputStream.closeEntry();
+            ZipArchiveEntry zipEntry = new ZipArchiveEntry(path);
+            zipOutputStream.putArchiveEntry(zipEntry);
+            zipOutputStream.closeArchiveEntry();
          }
 
          NodeIterator nodeIterator = node.getNodes();
@@ -126,7 +131,7 @@ public class DirectoryContentEntity implements StreamingOutput, Const
     * @param zipOutputStream
     * @throws IOException
     */
-   private void flushJCRData(InputStream inputStream, ZipOutputStream zipOutputStream) throws IOException
+   private void flushJCRData(InputStream inputStream, ZipArchiveOutputStream zipOutputStream) throws IOException
    {
       byte[] buffer = new byte[4096];
       while (true)
