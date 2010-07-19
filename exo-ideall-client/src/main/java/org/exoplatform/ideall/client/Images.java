@@ -111,6 +111,9 @@ public interface Images
       public static final String FOLDER = imageUrl + "filetype/folder_closed.png";
 
       public static final String UWA_WIDGET = imageUrl + "filetype/uwa-widget.png";
+      
+      // TODO add appropriate icon 
+      public static final String GROOVY_TEMPLATE = imageUrl + "filetype/groovy.png";      
 
    }
 

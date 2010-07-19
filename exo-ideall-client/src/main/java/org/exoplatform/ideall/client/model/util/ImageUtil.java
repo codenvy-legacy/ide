@@ -47,6 +47,7 @@ public class ImageUtil
       images.put(MimeType.APPLICATION_X_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
       images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
       images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
+      images.put(MimeType.GROOVY_TEMPLATE, Images.FileTypes.GROOVY_TEMPLATE);      
       images.put(null, Images.FileTypes.DEFAULT);
    }
 

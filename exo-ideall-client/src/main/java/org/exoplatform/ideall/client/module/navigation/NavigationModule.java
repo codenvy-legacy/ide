@@ -89,6 +89,8 @@ public class NavigationModule extends AbstractIDEModule
       //addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, new CreateNewFileEvent(MimeType.TEXT_CSS)));
       addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS));
       
+      addControl(new NewItemControl("File/New/New Groovy Template file", "Groovy Template file", "Create New Groovy Template File", Images.FileTypes.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE));
+      
       addControl(new ViewItemPropertiesCommand(), true, true);
       addControl(new OpenFileWithCommand());
       
