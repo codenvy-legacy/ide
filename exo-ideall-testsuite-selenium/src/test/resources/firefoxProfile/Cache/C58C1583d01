@@ -1,0 +1,1587 @@
+/****************************************************************************************
+ AUTOCOMPLETE FORM
+ 
+ style prefix: exo-auto-
+ ****************************************************************************************/
+
+.exo-autocomplete-panel
+{
+  background-color: #FFFFFF;
+  border: #A7ABB4 1px solid;
+}
+
+
+.exo-autocomplete-edit,
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-overed,
+.exo-autocomplete-list-item-selected
+{
+	background-color: #FFFFFF;
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-list-item TBODY TR TD DIV,
+.exo-autocomplete-list-item-overed TBODY TR TD DIV,
+.exo-autocomplete-list-item-selected TBODY TR TD DIV
+{
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+.exo-autocomplete-edit
+{
+	height: 20px;
+	border-bottom: #A7ABB4 1px solid;
+}
+
+
+.exo-autocomplete-list
+{
+	border: 0 none;
+	background:white;
+}
+
+.exo-autocomplete-list option
+{
+	cursor:default;
+    font-family: monospace;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-selected,
+.exo-autocomplete-list-item-overed
+{
+	height: 20px;
+	border-collapse: collapse;
+	cursor: default;
+	outline: none;
+}
+.exo-autocomplete-list-item-selected
+{
+	background-image: url("images/autoComplete/row-selected.png");
+	background-repeat: repeat-x;
+}
+
+.exo-autocomplete-list-item-overed
+{
+	background-image: url("images/autoComplete/row_over.png");
+	background-repeat: repeat-x;
+}
+
+.exo-autocomplete-description
+{
+	border: #A7ABB4 1px solid;
+	background-color: #e0e9ee;
+	font-family: monospace;
+    font-size: 10pt;
+    overflow: scroll;
+}
+
+.exo-autocomplete-list-variable
+{
+	background-color: #ecbeae;
+}
+.exo-autocomplete-list-function
+{
+	background-color: #b1d4b4;
+}
+
+.exo-autocomplete-list-keyword
+{
+	background-color: #FFFFFF;
+}
+
+.exo-autocomplete-list-template
+{
+	background-color: #efebb1;
+}
+/****************************************************************************************
+BUTTON
+
+style prefix: exo-button-
+****************************************************************************************/
+
+/*
+BUTTON x 20
+*/
+
+.exo-button-table
+{
+	border-collapse: collapse;
+}
+
+.exo-button-left-20,
+.exo-button-left-20-down,
+.exo-button-left-20-disabled,
+.exo-button-middle-20,
+.exo-button-middle-20-down,
+.exo-button-middle-20-disabled,
+.exo-button-right-20,
+.exo-button-right-20-down,
+.exo-button-right-20-disabled
+{
+	height: 20px;
+}
+
+.exo-button-left-20,
+.exo-button-left-20-down,
+.exo-button-left-20-disabled,
+.exo-button-right-20,
+.exo-button-right-20-down,
+.exo-button-right-20-disabled
+{
+	width: 4px;
+}
+
+.exo-button-middle-20,
+.exo-button-middle-20-down,
+.exo-button-middle-20-disabled
+{
+	text-align: center;
+}
+
+.exo-button-left-20
+{
+	background: url("images/button/20/button_left.png ") no-repeat;
+}
+
+.exo-button-left-20-down
+{
+	background: url("images/button/20/button_Down_left.png ") no-repeat;
+}
+
+.exo-button-left-20-disabled
+{
+	background: url("images/button/20/button_Disabled_left.png ") no-repeat;
+}
+
+.exo-button-middle-20
+{
+	background: url("images/button/20/button_middle.png ") repeat-x;
+}
+
+.exo-button-middle-20-down
+{
+	background: url("images/button/20/button_Down_middle.png ") repeat-x;
+}
+
+.exo-button-middle-20-disabled
+{
+	background: url("images/button/20/button_middle.png ") repeat-x;
+}
+
+.exo-button-right-20
+{
+	background: url("images/button/20/button_right.png ") no-repeat;
+}
+
+.exo-button-right-20-down
+{
+	background: url("images/button/20/button_Down_right.png ") no-repeat;
+}
+
+.exo-button-right-20-disabled
+{
+	background: url("images/button/20/button_right.png ") no-repeat;
+}
+
+/*
+BUTTON x 22
+*/
+
+.exo-button-left-22,
+.exo-button-left-22-down,
+.exo-button-left-22-disabled,
+.exo-button-middle-22,
+.exo-button-middle-22-down,
+.exo-button-middle-22-disabled,
+.exo-button-right-22,
+.exo-button-right-22-down,
+.exo-button-right-22-disabled
+{
+	height: 22px;
+}
+
+.exo-button-left-22,
+.exo-button-left-22-down,
+.exo-button-left-22-disabled,
+.exo-button-right-22,
+.exo-button-right-22-down,
+.exo-button-right-22-disabled
+{
+	width: 4px;
+}
+
+.exo-button-middle-22,
+.exo-button-middle-22-down,
+.exo-button-middle-22-disabled
+{
+	text-align: center;
+}
+
+.exo-button-left-22
+{
+	background: url("images/button/22/button_left.png ") no-repeat;
+}
+
+.exo-button-left-22-down
+{
+	background: url("images/button/22/button_Down_left.png ") no-repeat;
+}
+
+.exo-button-left-22-disabled
+{
+	background: url("images/button/22/button_Disabled_left.png ") no-repeat;
+}
+
+.exo-button-middle-22
+{
+	background: url("images/button/22/button_middle.png ") repeat-x;
+}
+
+.exo-button-middle-22-down
+{
+	background: url("images/button/22/button_Down_middle.png ") repeat-x;
+}
+
+.exo-button-middle-22-disabled
+{
+	background: url("images/button/22/button_middle.png ") repeat-x;
+}
+
+.exo-button-right-22
+{
+	background: url("images/button/22/button_right.png ") no-repeat;
+}
+
+.exo-button-right-22-down
+{
+	background: url("images/button/22/button_Down_right.png ") no-repeat;
+}
+
+.exo-button-right-22-disabled
+{
+	background: url("images/button/22/button_right.png ") no-repeat;
+}
+
+/*
+BUTTON TITLE
+*/
+
+.exo-button-title-table
+{
+	border-collapse: collapse;
+	height: 100%;
+	margin: auto;
+}
+
+.exo-button-title-icon
+{
+	width: 16px;
+}
+
+.exo-button-title-text,
+.exo-button-title-text-down,
+.exo-button-title-text-disabled
+{
+    font-family:Verdana,sans-serif;
+    font-size:11px;
+	color:#4C4C4C;
+    padding-left:2px;
+    padding-right:2px;
+}
+
+
+.exo-button-title-text
+{
+	color:#4C4C4C;
+	font-weight:bold;
+}
+
+.exo-button-title-text-down
+{
+	color:#4C4C4C;
+	font-weight:bold;
+}
+
+.exo-button-title-text-disabled
+{
+	color:#AAAAAA;
+	font-weight:normal;
+}
+/**********************************************************************************************
+MENU BAR
+
+style prefix: exo-menuBar-
+***********************************************************************************************/
+
+.exo-menuBarTable
+{
+}
+
+.exo-menuBar,
+.exo-menuBarItem,
+.exo-menuBarItemOver,
+.exo-menuBarItemSelected,
+.exo-menuBarItemDisabled
+{
+	height: 20px;
+}
+
+.exo-menuBarItem,
+.exo-menuBarItemOver,
+.exo-menuBarItemSelected,
+.exo-menuBarItemDisabled
+{
+	padding-left: 8px;
+	padding-right: 8px;
+	cursor: default;	
+	
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-menuBar
+{
+	width:100%;
+	background: #FFFFFF url(images/menuBar/menuBarBackground.png) repeat-x;
+}
+
+.exo-menuBarItem {
+	color:#333333;
+}
+
+.exo-menuBarItemOver {
+	color:#333333;
+	background-image: url("images/menuBar/menuBarItemOver.png");
+}
+
+.exo-menuBarItemSelected {
+	color:#333333;
+	background-image: url("images/menuBar/menuBarItemSelected.png");
+}
+
+.exo-menuBarItemDisabled {
+	color:#AAAAAA;
+}
+/****************************************************************************************
+POPUP MENU
+
+style prefix: exo-popupMenu-
+****************************************************************************************/
+
+.exo-popupMenuMain
+{
+    background:#FFFFFF url(images/popupMenu/menu_background.png) repeat-y scroll;
+ 	position:absolute;
+}
+
+.exo-popupMenuTable
+{
+    border: 1px solid #93A9C0;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px;
+    position:relative;
+    left:0px;
+    top:0px;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled,
+.exo-popupMenuIconField,
+.exo-popupMenuTitleField,
+.exo-popupMenuHotKeyField,
+.exo-popupMenuSubMenuField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled,
+.exo-popupMenuDelimiter
+{
+	height:22px;
+	cursor: default;	
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled
+{
+	width:9px;
+	padding-left: 1px;
+	padding-right: 3px;
+}
+
+.exo-popupMenuIconField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuIconFieldDisabled
+{
+	width:23px;
+	padding-left:4px;
+	padding-right:1px; 
+}
+
+.exo-popupMenuTitleField
+ {
+    color:#333333;
+	padding-top:2px;
+	padding-bottom:2px;    
+}
+
+.exo-popupMenuHotKeyField
+{
+}
+
+.exo-popupMenuSubMenuField,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	width:10px; 
+}
+
+.exo-popupMenuHotKeyField,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuHotKeyFieldDisabled
+{
+	width:10px;
+	padding-left:6px;
+	padding-right:6px;
+}
+
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver
+{
+	background:#FFFFFF url(images/popupMenu/menu_rollover.png) repeat-x scroll 0px 1px;
+}
+
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	color:#AAAAAA;	
+}
+
+.exo-popupMenuSubMenuImage
+{
+	width:7px;
+	height:7px;
+}
+
+.exo-popupMenuDelimiter
+{
+	padding-left: 4px;
+	padding-right: 4px;
+}
+/****************************************************************************************
+SHADOW
+
+style prefix: exo-shadow-
+****************************************************************************************/
+
+.exo-shadow-panel
+{
+	position: absolute;
+	z-index: 0;
+}
+
+.exo-shadow-table
+{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+
+.exo-shadow-tl,
+.exo-shadow-t,
+.exo-shadow-tr,
+.exo-shadow-bl,
+.exo-shadow-b,
+.exo-shadow-br
+{
+	height: 10px;
+}
+
+.exo-shadow-tl,
+.exo-shadow-tr,
+.exo-shadow-l,
+.exo-shadow-r,
+.exo-shadow-bl,
+.exo-shadow-br
+{
+	width: 10px;
+}
+
+.exo-shadow-tl
+{
+	background: url("images/shadow/shadow_TL.png") no-repeat;
+}
+
+.exo-shadow-t
+{
+	background: url("images/shadow/shadow_T.png") repeat-x;
+}
+
+.exo-shadow-tr
+{
+	background: url("images/shadow/shadow_TR.png") no-repeat;
+}
+
+.exo-shadow-l
+{
+	background: url("images/shadow/shadow_L.png") repeat-y;
+}
+
+.exo-shadow-m
+{
+}
+
+.exo-shadow-r
+{
+	background: url("images/shadow/shadow_R.png") repeat-y;
+}
+
+.exo-shadow-bl
+{
+	background: url("images/shadow/shadow_BL.png") no-repeat;
+}
+
+.exo-shadow-b
+{
+	background: url("images/shadow/shadow_B.png") repeat-x;
+}
+
+.exo-shadow-br
+{
+	background: url("images/shadow/shadow_BR.png") no-repeat;
+}
+/****************************************************************************************
+STATUS BAR
+
+style prefix: exo-statusBar-
+****************************************************************************************/
+
+.exo-statusBar-panel
+{
+	width: 100%;
+	height:30px;
+	background: #FFFFFF url(images/statusbar/statusbar_background.png) repeat-x;
+	cursor: default;
+}
+
+.exo-statusBar-table
+{
+	border-collapse: collapse;
+	width: 100%;
+	height: 100%;
+}
+
+.exo-statusBar-table-spacer-image
+{
+	width: 3px;
+	height: 24px;
+}
+
+.exo-statusBar-element
+{
+	height: 24px;
+}
+
+/****************************************************************************************
+STATUS BAR INFO
+****************************************************************************************/
+.exo-statusText-panel
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;	
+	cursor: default;
+	height: 24px;	
+}
+
+.exo-statusText-table
+{
+	height:24px;
+	border-collapse: collapse;
+	width:100%;
+}
+
+.exo-statusText-table-left,
+.exo-statusText-table-left-over,
+.exo-statusText-table-left-down,
+.exo-statusText-table-middle,
+.exo-statusText-table-middle-over,
+.exo-statusText-table-middle-down,
+.exo-statusText-table-right,
+.exo-statusText-table-right-over,
+.exo-statusText-table-right-down
+{
+	height:24px;
+}
+
+.exo-statusText-table-left,
+.exo-statusText-table-left-over,
+.exo-statusText-table-left-down
+{
+	background: url(images/statusbar/statustext/statusTextLeft.png);
+	width: 3px;
+}
+
+.exo-statusText-table-left
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-left-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-left-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-middle,
+.exo-statusText-table-middle-over,
+.exo-statusText-table-middle-down
+{
+	background: url(images/statusbar/statustext/statusTextMiddle.png) repeat-x;
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-statusText-table-middle
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-middle-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-middle-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-right,
+.exo-statusText-table-right-over,
+.exo-statusText-table-right-down
+{
+	background: url(images/statusbar/statustext/statusTextRight.png);
+	width: 3px;
+}
+
+.exo-statusText-table-right
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-right-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-right-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-middle
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;	
+}
+
+/****************************************************************************************
+STATUS BAR LOADER
+****************************************************************************************/
+.exo-statusBar-loader-panel
+{
+	width: 246px;
+}
+
+.exo-statusBar-loader-panel-single
+{
+	width: 222px;
+}
+
+.exo-statusBar-loader-panel-hidden
+{
+	width: 0px;
+	overflow: hidden;
+}
+
+.exo-statusBar-loader-table
+{
+	border-collapse: collapse;
+	width: 246px;
+}
+
+.exo-statusBar-loader-table-single
+{
+	border-collapse: collapse;
+	width: 222px;
+}
+
+.exo-statusBar-loader-table-left,
+.exo-statusBar-loader-table-left-over,
+.exo-statusBar-loader-table-left-down,
+
+.exo-statusBar-loader-table-stretch,
+.exo-statusBar-loader-table-stretch-over,
+.exo-statusBar-loader-table-stretch-down,
+
+.exo-statusBar-loader-table-delimiter,
+.exo-statusBar-loader-table-delimiter-over,
+.exo-statusBar-loader-table-delimiter-down,
+
+.exo-statusBar-loader-table-button,
+.exo-statusBar-loader-table-button-over,
+.exo-statusBar-loader-table-button-down,
+
+.exo-statusBar-loader-table-right,
+.exo-statusBar-loader-table-right-over,
+.exo-statusBar-loader-table-right-down
+{
+	height: 24px;
+}
+
+/*
+LEFT
+*/
+.exo-statusBar-loader-table-left,
+.exo-statusBar-loader-table-left-over,
+.exo-statusBar-loader-table-left-down
+{
+	background: url(images/statusbar/loader/loaderLeft.png);
+	width: 3px;
+}
+
+.exo-statusBar-loader-table-left
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusBar-loader-table-left-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusBar-loader-table-left-down
+{
+	background-position: 0px -48px;
+}
+
+
+/*
+RIGHT
+*/
+.exo-statusBar-loader-table-right,
+.exo-statusBar-loader-table-right-over,
+.exo-statusBar-loader-table-right-down
+{
+	background: url(images/statusbar/loader/loaderRight.png);
+	width: 3px;
+}
+
+.exo-statusBar-loader-table-right
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusBar-loader-table-right-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusBar-loader-table-right-down
+{
+	background-position: 0px -48px;
+}
+
+/*
+STRETCH
+*/
+.exo-statusBar-loader-table-stretch,
+.exo-statusBar-loader-table-stretch-over,
+.exo-statusBar-loader-table-stretch-down
+{
+	background: url(images/statusbar/loader/loaderMiddle.png) repeat-x;
+}
+
+.exo-statusBar-loader-table-stretch
+{
+	background-position: 0px 0px;	
+}
+
+.exo-statusBar-loader-table-stretch-over
+{
+	background-position: 0px -24px;	
+}
+
+.exo-statusBar-loader-table-stretch-down
+{
+	background-position: 0px -48px;	
+}
+
+/*
+DELIMITER
+*/
+.exo-statusBar-loader-table-delimiter,
+.exo-statusBar-loader-table-delimiter-over,
+.exo-statusBar-loader-table-delimiter-down
+{
+	width: 3px;
+	background: url(images/statusbar/loader/loaderDelimiter.png);
+}
+
+.exo-statusBar-loader-table-delimiter
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusBar-loader-table-delimiter-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusBar-loader-table-delimiter-down
+{
+	background-position: 0px -48px;
+}
+
+/*
+BUTTON
+*/
+.exo-statusBar-loader-table-button,
+.exo-statusBar-loader-table-button-over,
+.exo-statusBar-loader-table-button-down
+{
+	width:24px;
+	background: url(images/statusbar/loader/loaderMiddle.png) repeat-x;
+}
+
+.exo-statusBar-loader-table-button
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusBar-loader-table-button-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusBar-loader-table-button-down
+{
+	background-position: 0px -48px;
+}
+
+/*
+PANEL
+*/
+.exo-statusBar-loader-image-panel
+{
+	height: 24px;
+	width: 214px;
+}
+
+.exo-statusBar-loader-image
+{
+	margin-top: 5px;
+	margin-left: 4px;
+	width: : 208px;
+	height: 13px;	
+}
+
+.exo-statusBar-loader-button-panel
+{
+	width: 24px;
+	height: 24px;
+}
+
+.exo-statusBar-loader-button-icon
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 4px;
+	margin-top: 4px;
+	cursor: pointer;
+}
+.exo-blank
+{
+	width: 1px;
+	height: 1px;
+}
+
+.exo-lockLayer
+{
+	
+ 	background: url("images/blank.png") repeat;
+ 	
+ 	/*
+ 	background: url("images/blank_alpha.png") repeat;
+ 	*/
+}
+
+.exo-icon-16
+{
+	width: 16px;
+	height: 16px;
+}
+
+.exo-canvas
+{
+	position: absolute;	
+}
+/****************************************************************************************
+TOOLBAR
+toolbar 16 has height 32 pixels
+****************************************************************************************/
+
+.exo-toolbar16Panel
+{
+	width:100%;
+	background: #FFFFFF url(images/toolbar/toolbar_Background.png) repeat-x;
+	height:32px;
+	cursor: default;
+}
+
+.exo-toolbar16Panel-nobackground
+{
+	width:100%;
+	height:32px;
+	cursor: default;
+}
+
+/*
+TOOLBAR BUTTONS PANEL
+*/
+
+.exo-toolbar16ButtonsPanel
+{
+	width:100%;
+	padding-top:4px;
+	height:28px;
+}
+
+/****************************************************************************************
+BUTTONS, DELIMITER
+****************************************************************************************/
+
+.exo-toolbar16ButtonPanel_Left,
+.exo-toolbar16ButtonPanel_LeftHidden,
+.exo-toolbar16PopupButtonPanel_Left,
+.exo-toolbar16PopupButtonPanel_LeftHidden,
+.exo-toolbar16ButtonPanel_Right,
+.exo-toolbar16ButtonPanel_RightHidden,
+.exo-toolbar16PopupButtonPanel_Right,
+.exo-toolbar16PopupButtonPanel_RightHidden,
+.exo-toolbar16Delimiter_Left,
+.exo-toolbar16Delimiter_LeftHidden,
+.exo-toolbar16Delimiter_Right,
+.exo-toolbar16Delimiter_RightHidden
+{
+	height:24px;
+}
+
+/*
+TOOLBAR BUTTON PANEL ONLY
+*/
+.exo-toolbar16ButtonPanel_LeftHidden,
+.exo-toolbar16ButtonPanel_RightHidden,
+.exo-toolbar16PopupButtonPanel_LeftHidden,
+.exo-toolbar16PopupButtonPanel_RightHidden,
+.exo-toolbar16Delimiter_LeftHidden,
+.exo-toolbar16Delimiter_RightHidden
+{
+	overflow: hidden;
+	width:0px;
+}
+
+.exo-toolbar16ButtonPanel_LeftHidden,
+.exo-toolbar16PopupButtonPanel_LeftHidden,
+.exo-toolbar16Delimiter_LeftHidden
+{
+	float:left;
+}
+
+.exo-toolbar16ButtonPanel_RightHidden,
+.exo-toolbar16PopupButtonPanel_RightHidden,
+.exo-toolbar16Delimiter_RightHidden
+{
+	float:right;
+}
+
+
+/*
+TOOLBAR DELIMITER
+*/
+.exo-toolbar16Delimiter_Left,
+.exo-toolbar16Delimiter_Right
+{
+	width:1px;
+}
+
+/*
+LEFT DOCKED BUTTON, DELIMITER
+*/
+.exo-toolbar16ButtonPanel_Left,
+.exo-toolbar16PopupButtonPanel_Left,
+.exo-toolbar16Delimiter_Left
+{
+	padding-left: 4px;
+	float: left;
+}
+
+/*
+RIGHT DOCKED BUTTON, DELIMITER
+*/
+.exo-toolbar16ButtonPanel_Right,
+.exo-toolbar16PopupButtonPanel_Right,
+.exo-toolbar16Delimiter_Right
+{
+	padding-right: 4px;
+	float: right;
+}
+
+/*
+SPACER
+*/
+.exo-toolbar16SpacerPanel
+{
+	float: left;
+}
+
+/*
+DELIMITER
+*/
+
+.exo-toolbar16DelimiterImage
+{
+	width: 1px;
+	height: 24px;
+}
+
+/*
+TOOLBAR BUTTON
+*/
+
+.exo-toolbar16Button,
+.exo-toolbar16ButtonOver,
+.exo-toolbar16ButtonDown,
+.exo-toolbar16Button-selected,
+.exo-toolbar16Button-selectedOver,
+.exo-toolbar16Button-selectedDown,
+.exo-toolbar16PopupButton,
+.exo-toolbar16PopupButtonOver,
+.exo-toolbar16PopupButtonDown
+{
+	height:24px;
+}
+
+.exo-toolbar16Button,
+.exo-toolbar16ButtonOver,
+.exo-toolbar16ButtonDown,
+.exo-toolbar16Button-selected,
+.exo-toolbar16Button-selectedOver,
+.exo-toolbar16Button-selectedDown
+{
+	width:24px;
+	height:24px;
+	background: url(images/toolbar/button.png);
+	overflow: hidden;
+}
+
+.exo-toolbar16PopupButton,
+.exo-toolbar16PopupButtonOver,
+.exo-toolbar16PopupButtonDown
+{
+	width: 38px;
+}
+
+.exo-toolbar16Button
+{
+	background-position: 0px 0px;
+}
+
+.exo-toolbar16ButtonOver
+{
+	background-position: 0px -24px;
+}
+
+.exo-toolbar16ButtonDown
+{
+	background-position: 0px -48px;
+}
+
+.exo-toolbar16Button-selected
+{
+	background-position: 0px -72px;
+}
+
+.exo-toolbar16Button-selectedOver
+{
+	background-position: 0px -96px;
+}
+
+.exo-toolbar16Button-selectedDown
+{
+	background-position: 0px -120px;
+}
+
+
+.exo-toolbar16PopupButton
+{
+	background: url(images/toolbar/buttonPopup.png) no-repeat;
+}
+
+.exo-toolbar16PopupButtonOver
+{
+	background: url(images/toolbar/buttonPopupOver.png) no-repeat;
+}
+
+.exo-toolbar16PopupButtonDown
+{
+	background: url(images/toolbar/buttonPopupDown.png) no-repeat;
+}
+
+/*
+TOOLBAR ICON
+*/
+
+.exo-toolbar16Icon
+{
+	width:16px;
+	height:16px;
+	margin: 4px;
+}
+
+/****************************************************************************************
+TEXT INPUT
+****************************************************************************************/
+
+.exo-toolbar16TextPanel_LeftHidden,
+.exo-toolbar16TextPanel_RightHidden
+{
+	overflow: hidden;
+	width: 0px;
+	height: 24px;
+}
+
+.exo-toolbar16TextPanel_LeftHidden
+{
+	float: left;
+}
+
+.exo-toolbar16TextPanel_RightHidden
+{
+	float: right;
+}
+
+.exo-toolbar16TextPanel_Left,
+.exo-toolbar16TextPanel_Right
+{
+	height: 24px;
+}
+
+.exo-toolbar16TextPanel_Left
+{
+	float: left;
+	padding-left: 4px;
+}
+
+.exo-toolbar16TextPanel_Right
+{
+	float: right;
+	padding-right: 4px;
+}
+
+.exo-toolbar16TextTable
+{
+	border-collapse: collapse;
+	height: 24px;
+	width: 100%;
+}
+
+.exo-toolbar16TextLeft,
+.exo-toolbar16TextLeftDown,
+.exo-toolbar16TextArea,
+.exo-toolbar16TextAreaDown,
+.exo-toolbar16TextDelimiter,
+.exo-toolbar16TextDelimiterDown,
+.exo-toolbar16TextButton,
+.exo-toolbar16TextButtonDown,
+.exo-toolbar16TextRight,
+.exo-toolbar16TextRightDown
+{
+	height: 24px;
+}
+
+.exo-toolbar16TextLeft
+{
+	background: url(images/toolbar/text/textInputLeftOver.png) no-repeat;
+	width: 3px;
+}
+
+.exo-toolbar16TextLeftDown
+{
+	background: url(images/toolbar/text/textInputLeftDown.png) no-repeat;
+	width: 3px;
+}
+
+.exo-toolbar16TextArea,
+.exo-toolbar16TextButton
+{
+	background: url(images/toolbar/text/textInputMiddleOver.png) repeat-x;
+}
+
+.exo-toolbar16TextAreaDown,
+.exo-toolbar16TextButtonDown
+{
+	background: url(images/toolbar/text/textInputMiddleDown.png) repeat-x;
+}
+
+.exo-toolbar16TextDelimiter
+{
+	background: url(images/toolbar/text/textInputDelimiterOver.png) no-repeat;
+	width: 3px;
+}
+
+.exo-toolbar16TextDelimiterDown
+{
+	background: url(images/toolbar/text/textInputDelimiterDown.png) no-repeat;
+	width: 3px;
+}
+
+
+.exo-toolbar16TextRight
+{
+	background: url(images/toolbar/text/textInputRightOver.png) no-repeat;
+	width: 3px;
+}
+
+.exo-toolbar16TextRightDown
+{
+	background: url(images/toolbar/text/textInputRightDown.png) no-repeat;
+	width: 3px;
+}
+
+.exo-toolbar16TextButton,
+.exo-toolbar16TextButtonDown
+{
+	width: 20px;
+}
+
+.exo-toolbar16TextButtonPanel
+{
+	width: 21px;
+	height: 24px;
+}
+
+.exo-toolbar16TextButtonIcon,
+.exo-toolbar16TextButtonIconDisabled
+{
+	width: 16px;
+	height: 16px;
+	margin-top: 4px;
+	margin-left: 3px;
+}
+
+.exo-toolbar16TextButtonIcon
+{
+	cursor: pointer;
+}
+
+.exo-toolbar16TextInputField,
+.exo-toolbar16TextInputFieldDown
+{
+	border: none;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif;
+	font-size:12px;	
+}
+
+.exo-toolbar16TextInputField
+{
+	background: #FDFCFD;
+}
+
+.exo-toolbar16TextInputFieldDown
+{
+	background: #E1EFFF;
+}
+
+/****************************************************************************************
+TREE
+****************************************************************************************/
+
+.exo-tree-panel
+{
+	width: 100%;
+}
+
+.exo-tree-row,
+
+.exo-tree-row-overed,
+.exo-tree-row-selected,
+.exo-tree-row-selected-overed,
+
+.exo-tree-control-image-panel,
+.exo-tree-control-icon-panel,
+.exo-tree-control-title-panel
+{
+	height: 20px;
+}
+
+.exo-tree-row-overed
+{
+	width: 100%;
+	background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected
+{
+	width: 100%;
+	background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-overed
+{
+	width: 100%;
+	background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+
+.exo-tree-row
+{
+	width: 100%;
+}
+
+.exo-tree-row-over
+{
+	background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected
+{
+	background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-over
+{
+	background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+.exo-tree-control-image-panel
+{
+	width: 20px;
+	float: left;
+	overflow: hidden;
+	cursor: default;
+}
+
+.exo-tree-control-image
+{
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	cursor: pointer;
+}
+
+.exo-tree-control-icon-panel
+{
+	width: 20px;
+	float: left;
+	cursor: default;
+}
+
+.exo-tree-control-icon-image
+{
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	float: left;
+	cursor: default;
+}
+
+.exo-tree-control-title-panel
+{
+    float: left;
+}
+
+.exo-tree-control-title-table
+{
+	height: 100%;
+	border-collapse: collapse;
+}
+
+.exo-tree-control-title-table-tr
+{
+	vertical-align: middle;
+}
+
+.exo-tree-control-title-table-td
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 11px;
+    cursor: default;
+}
+/****************************************************************************************
+WINDOW
+
+style prefix: exo-window-
+****************************************************************************************/
+
+.exo-window-panel
+{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1;
+}
+
+.exo-window-table
+{
+	width: 100%;
+	height:100%;
+	border-collapse: collapse;
+}
+
+.exo-window-tl,
+.exo-window-t,
+.exo-window-tr
+{
+	height: 23px;
+}
+
+.exo-window-bl,
+.exo-window-b,
+.exo-window-br
+{
+	height: 6px;
+}
+
+.exo-window-tr,
+.exo-window-tl,
+.exo-window-l,
+.exo-window-bl
+{
+	width: 6px;
+}
+
+.exo-window-tl
+{
+	background: url("images/window/window_TL.png") no-repeat;
+}
+
+.exo-window-t
+{
+	background: url("images/window/window_T.png") repeat-x;
+}
+
+.exo-window-tr
+{
+	background: url("images/window/window_TR.png") no-repeat;
+}
+
+.exo-window-l
+{
+	background: url("images/window/window_L.png") repeat-y;
+}
+
+.exo-window-r
+{
+	background: url("images/window/window_R.png") repeat-y;
+}
+
+.exo-window-bl
+{
+	background: url("images/window/window_BL.png") no-repeat;
+}
+
+.exo-window-b
+{
+	background: url("images/window/window_B.png") repeat-x;
+}
+
+.exo-window-br
+{
+	background: url("images/window/window_BR.png") no-repeat;
+}
+
+.exo-window-m
+{
+	background: #FFFFFF;
+}
+
+/****************************************************************************************
+WINDOW HEADER
+****************************************************************************************/
+
+.exo-window-header-table
+{
+	width: 100%;
+	height:17px;
+	margin-top: 1px;
+	border-collapse: collapse;
+}
+
+/****************************************************************************************
+WINDOW TITLE
+****************************************************************************************/
+
+.exo-window-header-title
+{
+    font-family:Verdana,sans-serif;
+    font-size:11px;
+    font-weight:bold;
+	color:#4C4C4C;
+    padding-left:2px;
+    padding-right:2px;
+    padding-bottom:2px;
+}
+
+/****************************************************************************************
+WINDOW ICON, BUTTONS
+****************************************************************************************/
+
+.exo-window-icon,
+.exo-window-control-button
+{
+	width: 16px;
+}
+
+.exo-window-control-image
+{
+	width: 16px;
+	height: 16px;
+}
+
