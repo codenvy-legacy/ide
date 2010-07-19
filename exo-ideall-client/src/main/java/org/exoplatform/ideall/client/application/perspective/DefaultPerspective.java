@@ -20,7 +20,6 @@
 package org.exoplatform.ideall.client.application.perspective;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
@@ -57,6 +56,7 @@ import org.exoplatform.ideall.client.module.vfs.api.event.SearchResultReceivedHa
 import org.exoplatform.ideall.client.navigation.NavigationForm;
 import org.exoplatform.ideall.client.operation.OperationForm;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
+import org.exoplatform.ideall.client.outline.OutlineTreeGrid;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
@@ -424,8 +424,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       File file = event.getFile();
       TextEditor editor = event.getEditor();
       if (editor != null && file != null && file.getContentType() != null
-               && (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) 
-                        || file.getContentType().equals(MimeType.GOOGLE_GADGET)))
+               && OutlineTreeGrid.haveOutline(file))
+               
       {
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);
       }

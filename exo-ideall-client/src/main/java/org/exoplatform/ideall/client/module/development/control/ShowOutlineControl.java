@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ideall.client.module.development.control;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
@@ -29,6 +28,7 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
+import org.exoplatform.ideall.client.outline.OutlineTreeGrid;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -77,9 +77,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
          return;
       }
 
-      boolean visible =
-         (event.getFile().getContentType().equals(MimeType.APPLICATION_JAVASCRIPT) || event.getFile().getContentType()
-            .equals(MimeType.GOOGLE_GADGET));
+      boolean visible = OutlineTreeGrid.haveOutline(event.getFile());
       setVisible(visible);
    }
 

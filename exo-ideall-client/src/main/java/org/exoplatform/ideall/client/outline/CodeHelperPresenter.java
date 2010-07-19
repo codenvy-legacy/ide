@@ -74,9 +74,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
          return;
       }
 
-      if (file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
-         || file.getContentType().equals(MimeType.GOOGLE_GADGET)
-         || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT))
+      if (OutlineTreeGrid.haveOutline(file))
       {
          if (context.isShowOutline())
          {

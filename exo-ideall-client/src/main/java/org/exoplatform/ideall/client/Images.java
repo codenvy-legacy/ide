@@ -176,6 +176,10 @@ public interface Images
       public static final String METHOD_ITEM = imageUrl + "outline/method-item.png";
       
       public static final String PROPERTY_ITEM = imageUrl + "outline/property-item.png";
+      
+      public static final String TAG_ITEM = imageUrl + "outline/tag.png";
+      
+      public static final String CDATA_ITEM = imageUrl + "outline/cdata-item.png";
    }
 
    public static final String BLANK = imageUrl + "blank.png";

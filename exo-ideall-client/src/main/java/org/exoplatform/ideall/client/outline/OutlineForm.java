@@ -73,18 +73,25 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
    }
 
-   public void setTreeValue()
-   {
-   }
-
    public TreeGridItem<Token> getBrowserTree()
    {
       return treeGrid;
    }
 
-   public void selectTreeItem(int number)
+   public void selectToken(Token token)
    {
-      treeGrid.selectRecord(number);
+      if (token != null)
+      {
+         treeGrid.selectToken(token);
+      }
+   }
+
+   public void openToken(Token token)
+   {
+      if (token != null)
+      {
+         treeGrid.openToken(token);
+      }
    }
 
 }

@@ -18,15 +18,18 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import java.util.List;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
@@ -48,6 +51,12 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    private static final String METHOD_ICON = Images.Outline.METHOD_ITEM;
 
    private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
+   
+   private static final String TAG_ICON = Images.Outline.TAG_ITEM;
+   
+   private static final String CDATA_ICON = Images.Outline.CDATA_ITEM;
+   
+   protected static String NAME_ATTRIBUTE;
 
    private Tree tree;
 
@@ -55,30 +64,29 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
 
    public OutlineTreeGrid()
    {
-      tree = new Tree();
-      tree.setModelType(TreeModelType.CHILDREN);
-      setData(tree);
-
       setSelectionType(SelectionStyle.SINGLE);
-
+      
       setCanFocus(false);
       setShowConnectors(true);
       setCanSort(false);
       setCanEdit(false);
-
+      setShowRoot(false);
+      
+      tree = new Tree();
+      tree.setModelType(TreeModelType.CHILDREN);
       rootNode = new TreeNode("root");
       tree.setRoot(rootNode);
-
-      setShowRoot(false);
+      setData(tree);
    }
 
    @Override
    protected void doUpdateValue()
    {
-      if (getValue() != null && getValue().getSubTokenList() != null && getValue().getSubTokenList().size() > 0)
+      if (getValue() != null && getValue().getSubTokenList() != null 
+               && getValue().getSubTokenList().size() > 0)
       {
          fillTreeItems(rootNode, getValue().getSubTokenList());
-         tree.openAll();
+//         tree.openAll();
       }
       else
       {
@@ -104,33 +112,95 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                break;
             }
          }
-         if (newNode == null && child.getName() != null)
+         
+         if (child.getName() != null)
          {
-            newNode = new TreeNode(child.getName());
-            newNode.setAttribute(getValuePropertyName(), child);
-            if (child.getType().equals(TokenType.FUNCTION))
+            if (newNode == null)
             {
-               newNode.setAttribute(ICON, FUNCTION_ICON);
+               newNode = new TreeNode(child.getName());
+               newNode.setAttribute(getValuePropertyName(), child);
+               if (child.getType().equals(TokenType.FUNCTION))
+               {
+                  newNode.setAttribute(ICON, FUNCTION_ICON);
+               }
+               else if (child.getType().equals(TokenType.VARIABLE))
+               {
+                  newNode.setAttribute(ICON, VAR_ICON);
+               }
+               else if (child.getType().equals(TokenType.METHOD))
+               {
+                  newNode.setAttribute(ICON, METHOD_ICON);
+               }
+               else if (child.getType().equals(TokenType.PROPERTY))
+               {
+                  newNode.setAttribute(ICON, PROPERTY_ICON);
+               }
+               else if (child.getType().equals(TokenType.TAG))
+               {
+                  newNode.setAttribute(ICON, TAG_ICON);
+               }
+               else if (child.getType().equals(TokenType.CDATA))
+               {
+                  newNode.setAttribute(ICON, CDATA_ICON);
+               }
+               tree.add(newNode, parentNode);
             }
-            else if (child.getType().equals(TokenType.VARIABLE))
+            
+            if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
             {
-               newNode.setAttribute(ICON, VAR_ICON);
+               fillTreeItems(newNode, child.getSubTokenList());
             }
-            else if (child.getType().equals(TokenType.METHOD))
-            {
-               newNode.setAttribute(ICON, METHOD_ICON);
-            }
-            else if (child.getType().equals(TokenType.PROPERTY))
-            {
-               newNode.setAttribute(ICON, PROPERTY_ICON);
-            }
-            tree.add(newNode, parentNode);
-         }
-         if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
-         {
-            fillTreeItems(newNode, child.getSubTokenList());
          }
       }
+   }
+   
+   public void selectToken(Token token)
+   {
+      if (token.getName() == null) return;
+      
+      final String name = token.getName(); 
+      final int lineNumber = token.getLineNumber();
+      
+      deselectAllRecords();
+      
+      for (ListGridRecord record : getRecords())
+      {
+         if (record.getAttributeAsObject(getValuePropertyName()) instanceof Token)
+         {
+            Token  currentToken =  (Token)record.getAttributeAsObject(getValuePropertyName());
+            if (name.equals(currentToken.getName()) && lineNumber == currentToken.getLineNumber())
+            {
+               selectRecord(record);
+               return;
+            }
+         }
+      }
+   }
+   
+   public void openToken(Token token)
+   {
+      final String name = token.getName(); 
+      final int lineNumber = token.getLineNumber();
+      
+      for (TreeNode node : tree.getAllNodes())
+      {
+         Token nodeToken = (Token)node.getAttributeAsObject(getValuePropertyName());
+         if (nodeToken.getName().equals(name) && nodeToken.getLineNumber() == lineNumber)
+         {
+            tree.openFolder(node);
+            break;
+         }
+      }
+   }
+   
+   public static boolean haveOutline(File file)
+   {
+      return file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
+         || file.getContentType().equals(MimeType.APPLICATION_X_JAVASCRIPT)
+         || file.getContentType().equals(MimeType.GOOGLE_GADGET)
+         || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT)
+         || file.getContentType().equals(MimeType.APPLICATION_XML)
+         || file.getContentType().equals(MimeType.TEXT_XML);
    }
 
 }
