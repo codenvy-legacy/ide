@@ -48,7 +48,9 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    private static final int WIDTH = 450;
 
    private static final int HEIGHT = 270;
-
+   
+   private static final String ID = "ideallSaveAsTemplateForm";
+   
    private static final int BUTTON_WIDTH = 90;
 
    private static final int BUTTON_HEIGHT = 22;
@@ -75,7 +77,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    public SaveAsTemplateForm(HandlerManager eventBus, File file)
    {
-      super(eventBus, WIDTH, HEIGHT);      
+      super(eventBus, WIDTH, HEIGHT, ID);      
       setTitle(TITLE);
 
       VLayout centerLayout = new VLayout();

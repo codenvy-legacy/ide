@@ -49,6 +49,8 @@ public class GetRestServiceURLForm extends DialogWindow
    private static final int HEIGHT = 160;
 
    private static final String TITLE = "REST Service URL";
+   
+   private static final String ID = "ideallGetRestServiceURLForm";
 
    private TextField URLField;
 
@@ -56,7 +58,7 @@ public class GetRestServiceURLForm extends DialogWindow
 
    public GetRestServiceURLForm(HandlerManager eventBus, String url)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
 
       setTitle(TITLE);
 

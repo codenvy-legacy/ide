@@ -46,7 +46,9 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
    private static final int WIDTH = 500;
 
    private static final int HEIGHT = 200;
-
+   
+   private static final String ID = "ideallSelectWorkspaceForm";
+   
    private static final String TITLE = "Workspace";
 
    private EntryPointListPresenter presenter;
@@ -64,7 +66,7 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
    
    public SelectWorkspaceForm(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       
       setTitle(TITLE);
       

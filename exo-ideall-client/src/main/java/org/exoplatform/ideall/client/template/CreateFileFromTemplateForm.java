@@ -50,7 +50,9 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    public static final int WIDTH = 550;
 
    public static final int HEIGHT = 350;
-
+   
+   private static final String ID = "ideallCreateFileFromTemplateForm";
+   
    private CreateFileFromTemplatePresenter presenter;
 
    private VLayout windowLayout;
@@ -67,7 +69,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
    public CreateFileFromTemplateForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
 
       this.eventBus = eventBus;
 

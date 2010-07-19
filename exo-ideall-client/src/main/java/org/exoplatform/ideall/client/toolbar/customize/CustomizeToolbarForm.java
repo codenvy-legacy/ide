@@ -47,7 +47,9 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    private static final int WIDTH = 700;
 
    private static final int HEIGHT = 360;
-
+   
+   private static final String ID = "ideallCustomizeToolbarForm";
+   
    private static final String TITLE = "Customize Toolbar";
 
    private static final String BUTTON_OK = "OK";
@@ -98,7 +100,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    public CustomizeToolbarForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setShowMaximizeButton(true);
       setTitle(TITLE);
       setCanDragResize(true);

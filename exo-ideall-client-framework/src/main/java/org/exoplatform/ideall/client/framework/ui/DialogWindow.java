@@ -36,11 +36,12 @@ public class DialogWindow extends Window
    
    protected HandlerManager eventBus;
 
-   public DialogWindow(HandlerManager eventBus, int width, int height)
+   public DialogWindow(HandlerManager eventBus, int width, int height, String id)
    {
       this.eventBus = eventBus;
       eventBus.fireEvent(new ClearFocusEvent());
-      
+
+      setID(id);
       setShowShadow(true);
       setWidth(width);
       setHeight(height);

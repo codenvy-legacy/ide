@@ -48,7 +48,9 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    public static final int WIDTH = 500;
 
    public static final int HEIGHT = 130;
-
+   
+   public static final String ID = "ideallDeleteItemForm";
+   
    private HLayout hLayout;
 
    private String prompt;
@@ -61,7 +63,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    public DeleteItemForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
 
       if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
       {

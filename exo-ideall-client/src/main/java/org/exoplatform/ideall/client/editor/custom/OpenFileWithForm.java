@@ -21,7 +21,9 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private static final int WIDTH = 400;
 
    private static final int HEIGHT = 250;
-
+   
+   private static final String ID = "ideallOpenFileWithForm";
+   
    private static final String TITLE = "Open File With";
 
    private EditorsListGrid editorsListGrid;
@@ -37,7 +39,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    public OpenFileWithForm(HandlerManager eventBus, ApplicationContext context)
    {
 
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       createEditorListGrid();

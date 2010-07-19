@@ -47,7 +47,9 @@ public class GetItemURLForm extends DialogWindow
    private static final int WIDTH = 500;
 
    private static final int HEIGHT = 160;
-
+   
+   public static final String ID = "ideallGetItemURLForm";
+   
    private static final String TITLE = "Item URL";
 
    private TextField itemURLField;
@@ -56,7 +58,7 @@ public class GetItemURLForm extends DialogWindow
 
    public GetItemURLForm(HandlerManager eventBus, String url)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
 
       setTitle(TITLE);
 

@@ -46,7 +46,9 @@ public class AboutForm extends DialogWindow
    private static final int WINDOW_WIDTH = 300;
 
    private static final int WINDOW_HEIGHT = 355;
-
+   
+   private static final String ID = "ideallAboutForm";
+   
    private final int LOGO_WIDTH = 200;
 
    private final int LOGO_HEIGHT = 75;
@@ -84,7 +86,7 @@ public class AboutForm extends DialogWindow
 
    public AboutForm(HandlerManager eventBus)//, String name, String version, String year, String info, String built)
    {
-      super(eventBus, WINDOW_WIDTH, WINDOW_HEIGHT);
+      super(eventBus, WINDOW_WIDTH, WINDOW_HEIGHT, ID);
 
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
       

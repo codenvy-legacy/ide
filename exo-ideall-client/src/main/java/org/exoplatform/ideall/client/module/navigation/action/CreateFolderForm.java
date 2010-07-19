@@ -49,7 +49,9 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 160;
-
+   
+   public static final String ID = "ideallCreateFolderForm";
+   
    private VLayout vLayout;
 
    private TextField folderNameField;
@@ -62,7 +64,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
    public CreateFolderForm(HandlerManager eventBus, ApplicationContext context, String href)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Create folder");
 
       vLayout = new VLayout();

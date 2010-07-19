@@ -44,6 +44,8 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private static final int WIDTH = 450;
 
    private static final int HEIGHT = 190;
+   
+   private static final String ID = "ideallSearchForm";
 
    private final int BUTTON_WIDTH = 90;
 
@@ -91,7 +93,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
 
    public SearchForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Search");
 
       VLayout mainLayout = new VLayout();

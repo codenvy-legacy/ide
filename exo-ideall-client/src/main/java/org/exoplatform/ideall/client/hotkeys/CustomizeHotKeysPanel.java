@@ -61,6 +61,8 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    private static final int HEIGHT = 350;
    
+   private static final String ID = "ideallCustomizeHotKeysPanel";
+   
    private static final int BUTTON_DELIMITER_WIDTH = 3;
    
    private static final String TITLE = "Customize hotkeys";
@@ -99,7 +101,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    public CustomizeHotKeysPanel(HandlerManager eventBus, ApplicationContext applicationContext)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       
       setTitle(TITLE);
       setShowMaximizeButton(true);

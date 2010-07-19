@@ -52,6 +52,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    public static final int HEIGHT = 225;
    
+   private static final String ID = "ideallUploadForm";
+   
    private ApplicationContext context;
 
    private FormPanel uploadForm;
@@ -78,7 +80,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    public UploadForm(HandlerManager eventBus, ApplicationContext context, String path, boolean openFile)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
       this.openFile = openFile;
       this.context = context;

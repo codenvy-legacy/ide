@@ -49,6 +49,8 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    private static final int HEIGHT = 160;
    
+   private static final String ID = "ideallGoToLineForm";
+   
    private GoToLinePresenter presenter;
    
    private VLayout vLayout;
@@ -67,7 +69,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    
    public GoToLineForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Go to Line");
       
       vLayout = new VLayout();

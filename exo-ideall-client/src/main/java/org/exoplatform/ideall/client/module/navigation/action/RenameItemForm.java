@@ -49,6 +49,8 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 160;
+   
+   private static final String ID = "ideallRenameItemForm";
 
    private VLayout vLayout;
 
@@ -62,7 +64,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public RenameItemForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Rename item");
 
       vLayout = new VLayout();

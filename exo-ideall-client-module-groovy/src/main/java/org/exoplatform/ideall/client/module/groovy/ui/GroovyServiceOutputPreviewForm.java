@@ -53,6 +53,8 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private static final int WIDTH = 530;
 
    private static final int HEIGHT = 400;
+   
+   private static final String ID = "ideallGroovyServiceOutputPreviewForm";
 
    private static final String TITLE = "Launch REST Service";
 
@@ -89,7 +91,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    public GroovyServiceOutputPreviewForm(HandlerManager eventBus, AbstractApplicationContext context,
       WadlApplication wadlApplication)
    {
-      super(eventBus, WIDTH, HEIGHT);
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       vLayout = new VLayout();
