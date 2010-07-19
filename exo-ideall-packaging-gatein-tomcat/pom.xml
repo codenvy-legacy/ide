@@ -134,6 +134,12 @@
             <version>${org.exoplatform.gatein.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>${apache.commons-compress.version}</version>
+			<type>jar</type>
+		</dependency>
     </dependencies>
 
     <build>
@@ -190,7 +196,7 @@
                         </goals>
                         <configuration>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>exo.core.component.script.groovy,exo-ideall-server-component-commons,exo-ideall-packaging-gatein-extension-config,exo-ideall-server-component-gadget,exo-ideall-server-component-netvibes</includeArtifactIds>
+                            <includeArtifactIds>exo.core.component.script.groovy,exo-ideall-server-component-commons,exo-ideall-packaging-gatein-extension-config,exo-ideall-server-component-gadget,exo-ideall-server-component-netvibes,commons-compress</includeArtifactIds>
                             <stripVersion>false</stripVersion>
                             <outputDirectory>${project.build.directory}/packager-conf/jar</outputDirectory>
                         </configuration>
@@ -252,7 +258,9 @@
 																<copy
                                     file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-netvibes-${project.version}.jar"
                                     tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-netvibes-${project.version}.jar" />
-
+								<copy 
+									file="${project.build.directory}/packager-conf/jar/commons-compress-${apache.commons-compress.version}.jar"
+                                    tofile="${project.build.directory}/tomcat/lib/commons-compress-${apache.commons-compress.version}.jar" />
                                 <unwar
                                     src="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war"
                                     dest="${project.build.directory}/tomcat/webapps/starter.war" />
