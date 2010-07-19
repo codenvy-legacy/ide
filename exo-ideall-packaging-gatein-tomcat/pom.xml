@@ -222,7 +222,7 @@
                         <configuration>
                             <tasks>
                                 <copy
-                                    file="${project.build.directory}/packager-conf/war/exo.ideall.extension.webapp-${project.version}.war"
+                                    file="${project.build.directory}/packager-conf/war/exo-ideall-packaging-gatein-extension-webapp-${project.version}.war"
                                     tofile="${project.build.directory}/tomcat/webapps/ideall-extension.war" />
 
                                 <copy
