@@ -87,20 +87,20 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.client</artifactId>
+            <artifactId>exo-ideall-client</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.extension.webapp</artifactId>
+            <artifactId>exo-ideall-packaging-gatein-extension-webapp</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ideall</groupId>
-            <artifactId>exo.ideall.extension.config</artifactId>
+            <artifactId>exo-ideall-packaging-gatein-extension-config</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -226,7 +226,7 @@
                                     tofile="${project.build.directory}/tomcat/webapps/ideall-extension.war" />
 
                                 <copy
-                                    file="${project.build.directory}/packager-conf/war/exo.ideall.client-${project.version}.war"
+                                    file="${project.build.directory}/packager-conf/war/exo-ideall-client-${project.version}.war"
                                     tofile="${project.build.directory}/tomcat/webapps/IDEall.war" />
 
                                 <copy
@@ -238,20 +238,20 @@
                                     tofile="${project.build.directory}/tomcat/lib/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar" />
 
                                 <copy
-                                    file="${project.build.directory}/packager-conf/jar/exo.ideall.extension.config-${project.version}.jar"
-                                    tofile="${project.build.directory}/tomcat/lib/exo.ideall.extension.config-${project.version}.jar" />
+                                    file="${project.build.directory}/packager-conf/jar/exo-ideall-packaging-gatein-extension-config-${project.version}.jar"
+                                    tofile="${project.build.directory}/tomcat/lib/exo-ideall-packaging-gatein-extension-config-${project.version}.jar" />
 
                                 <copy
-                                    file="${project.build.directory}/packager-conf/jar/exo.ideall.component.commons-${project.version}.jar"
-                                    tofile="${project.build.directory}/tomcat/lib/exo.ideall.component.commons-${project.version}.jar" />
+                                    file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-commons-${project.version}.jar"
+                                    tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-commons-${project.version}.jar" />
 
                                 <copy
-                                    file="${project.build.directory}/packager-conf/jar/exo.ideall.component.gadget-${project.version}.jar"
-                                    tofile="${project.build.directory}/tomcat/lib/exo.ideall.component.gadget-${project.version}.jar" />
+                                    file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-gadget-${project.version}.jar"
+                                    tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-gadget-${project.version}.jar" />
 																
 																<copy
-                                    file="${project.build.directory}/packager-conf/jar/exo.ideall.component.netvibes-${project.version}.jar"
-                                    tofile="${project.build.directory}/tomcat/lib/exo.ideall.component.netvibes-${project.version}.jar" />
+                                    file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-netvibes-${project.version}.jar"
+                                    tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-netvibes-${project.version}.jar" />
 
                                 <unwar
                                     src="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war"
