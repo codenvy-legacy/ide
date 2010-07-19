@@ -30,6 +30,7 @@
 		<org.exoplatform.gatein.version>3.1.0-GA</org.exoplatform.gatein.version>
 		<org.exoplatform.gwtframework.version>1.0-Beta05-SNAPSHOT</org.exoplatform.gwtframework.version>
 		<version.chromattic>1.0.3</version.chromattic>
+		<apache.commons-compress.version>1.0</apache.commons-compress.version>
 	</properties>
 
 	<scm>
@@ -362,7 +363,11 @@
 				<artifactId>chromattic.ext</artifactId>
 				<version>${version.chromattic}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>${apache.commons-compress.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
