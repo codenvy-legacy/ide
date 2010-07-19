@@ -47,18 +47,18 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    public ItemTreeGrid()
    {
+      setShowRoot(false);
+      
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
+      tree.setRoot(new TreeNode("root"));      
       setData(tree);
 
       setSelectionType(SelectionStyle.SINGLE);
 
       setCanFocus(false);
       setShowConnectors(false);
-      setCanSort(false);
-      
-      //setNodeIcon(null);
-      //setFolderIcon(null);
+      setCanSort(false);      
    }
 
    public ItemTreeGrid(boolean allowSameNames)
@@ -80,7 +80,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       
       if (rootNode == null)
       {
-         tree.setRoot(new TreeNode("root"));
+//         tree.setRoot(new TreeNode("root"));
 
          String nodeName = getValue().getHref();
          if (nodeName.endsWith("/"))
