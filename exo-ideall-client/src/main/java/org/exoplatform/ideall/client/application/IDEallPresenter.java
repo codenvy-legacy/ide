@@ -147,15 +147,14 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
             return 0;
          }
          
-         System.out.println("control1 " + control1.getId());
-         System.out.println("control2 " + control2.getId());
+//         System.out.println("control1 " + control1.getId());
+//         System.out.println("control2 " + control2.getId());
 
          if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateFolderControl) {
             return -1;
          } else if (control1 instanceof CreateFolderControl && control2 instanceof CreateFileFromTemplateControl) {
             return 1;
          } else if (control1 instanceof CreateFolderControl && !(control2 instanceof CreateFolderControl)) {
-            System.out.println("(control1 instanceof CreateFolderControl && !(control2 instanceof CreateFolderControl))");
             return 1;
          } else if (control1 instanceof CreateFileFromTemplateControl && !(control2 instanceof CreateFileFromTemplateControl)) {
             return 1; 
@@ -190,9 +189,7 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
                new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
                   new CreateNewFileEvent(control.getMimeType()));
          }
-
-         System.out.println("event > " + control.getEvent());
-
+         
          context.getCommands().set(position, command);
       }
    }
@@ -225,8 +222,6 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       {
          return;
       }
-
-      System.out.println("popup > " + popup);
 
       for (Control control : context.getCommands())
       {

@@ -37,6 +37,7 @@ import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -81,13 +82,13 @@ public class UploadPresenter implements UploadFileSelectedHandler
       void disableMimeTypeSelect();
 
       void setDefaultMimeType(String mimeType);
-      
+
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
 
    }
 
    private HandlerManager eventBus;
-   
+
    private ApplicationContext context;
 
    private Display display;
@@ -97,7 +98,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private String path;
 
    private boolean openLocalFile;
-   
+
    public UploadPresenter(HandlerManager eventBus, ApplicationContext context, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
@@ -110,7 +111,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    void bindDisplay(Display d)
    {
       display = d;
-      
+
       if (openLocalFile)
       {
          display.getUploadButton().addClickHandler(new ClickHandler()
@@ -159,40 +160,43 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.disableUploadButton();
       display.disableMimeTypeSelect();
    }
-   
+
    /**
     * @param url
     * @return result of javaScript function <code>encodeURI(url)</code>
     */
    public static native String encodeURI(String url) /*-{
-       return encodeURI(url);
-     }-*/;   
+         return encodeURI(url);
+       }-*/;
 
    private void uploadFile()
    {
       String mimeType = display.getMimeType().getValue();
-      
-      if (mimeType == null || "".equals(mimeType)) {
+
+      if (mimeType == null || "".equals(mimeType))
+      {
          return;
       }
-      
+
       String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
 
       String fileName = display.getFileNameField().getValue();
-      if (fileName.contains("/")) {
+      if (fileName.contains("/"))
+      {
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
-      
+
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String href = item.getHref();
-      if (item instanceof File) {
+      if (item instanceof File)
+      {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
       href += fileName;
       href = encodeURI(href);
-      
+
       display.setHiddenFields(href, mimeType, "", contentNodeType);
-      display.getUploadForm().submit();      
+      display.getUploadForm().submit();
    }
 
    void destroy()
@@ -339,10 +343,20 @@ public class UploadPresenter implements UploadFileSelectedHandler
       IDELoader.getInstance().hide();
       if (openLocalFile)
       {
+         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>")) {
+            Dialogs.getInstance().showError("Can not open local file!");
+            return;
+         }
+         
          completeOpenLocalFile(uploadServiceResponse);
       }
       else
       {
+         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>")) {
+            Dialogs.getInstance().showError("Can not upload file!");
+            return;
+         }
+         
          completeUpload();
       }
    }
@@ -391,15 +405,16 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private void completeUpload()
    {
       display.closeDisplay();
-      
+
       Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String href = item.getHref();
-      if (item instanceof File) {
-         href = href.substring(0,href.lastIndexOf("/") + 1);
+      if (item instanceof File)
+      {
+         href = href.substring(0, href.lastIndexOf("/") + 1);
       }
-            
+
       Folder folder = new Folder(href);
-      eventBus.fireEvent(new RefreshBrowserEvent(folder));      
+      eventBus.fireEvent(new RefreshBrowserEvent(folder));
    }
 
 }

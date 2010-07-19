@@ -84,8 +84,12 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       if (jsonConfiguration.containsKey(CONTEXT))
       {
          configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
-         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+//         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+//         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+         
+         configuration.setLoopbackServiceContext("1" + configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+         configuration.setUploadServiceContext("1" + configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+         
       }
       else
       {
