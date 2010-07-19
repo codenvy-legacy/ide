@@ -190,7 +190,7 @@
                         </goals>
                         <configuration>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>exo.core.component.script.groovy,exo.ideall.component.commons,exo.ideall.extension.config,exo.ideall.component.gadget,exo.ideall.component.netvibes</includeArtifactIds>
+                            <includeArtifactIds>exo.core.component.script.groovy,exo-ideall-server-component-commons,exo-ideall-packaging-gatein-extension-config,exo-ideall-server-component-gadget,exo-ideall-server-component-netvibes</includeArtifactIds>
                             <stripVersion>false</stripVersion>
                             <outputDirectory>${project.build.directory}/packager-conf/jar</outputDirectory>
                         </configuration>
@@ -204,7 +204,7 @@
                         </goals>
                         <configuration>
                             <includeTypes>war</includeTypes>
-                            <includeArtifactIds>exo.ideall.extension.webapp,exo.ideall.client,exo.gwtframework.smartgwt,exo.portal.starter.war</includeArtifactIds>
+                            <includeArtifactIds>exo-ideall-packaging-gatein-extension-webapp,exo-ideall-client,exo.gwtframework.smartgwt,exo.portal.starter.war</includeArtifactIds>
                             <stripVersion>false</stripVersion>
                             <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
                         </configuration>
