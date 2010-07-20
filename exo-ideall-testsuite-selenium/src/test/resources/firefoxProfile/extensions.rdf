@@ -2,21 +2,14 @@
 <RDF:RDF xmlns:NS1="http://www.mozilla.org/2004/em-rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Description RDF:about="urn:mozilla:item:{CAFEEFAC-0015-0000-0022-ABCDEFFEDCBA}"
-                   NS1:installLocation="app-global"
-                   NS1:version="5.0.22"
-                   NS1:name="Java Console">
-    <NS1:type NC:parseType="Integer">2</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$K2Nz63"/>
-  </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$z2Nz63"
+  <RDF:Description RDF:about="rdf:#$vLb102"
                    NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="1.0"
-                   NS1:maxVersion="5.0+" />
-  <RDF:Description RDF:about="rdf:#$e3Nz63"
+                   NS1:minVersion="3.0"
+                   NS1:maxVersion="3.6.*" />
+  <RDF:Description RDF:about="rdf:#$aLb102"
                    NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="3.6.6"
-                   NS1:maxVersion="3.6.6" />
+                   NS1:minVersion="1.5"
+                   NS1:maxVersion="3.*.*" />
   <RDF:Description RDF:about="urn:mozilla:item:gwt-dev-plugin@google.com"
                    NS1:installLocation="app-profile"
                    NS1:version="1.0.7511"
@@ -28,34 +21,32 @@
                    NS1:creator="Google, Inc."
                    NS1:homepageURL="http://code.google.com/webtoolkit/">
     <NS1:type NC:parseType="Integer">2</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$cZWcw3"/>
+    <NS1:targetApplication RDF:resource="rdf:#$vLb102"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:{20a82645-c095-46ed-80e3-08825760534b}"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.1"
+                   NS1:updateURL="https://go.microsoft.com/fwlink/?LinkID=139711"
+                   NS1:optionsURL="chrome://dotnetassistant/content/options.xul"
+                   NS1:name="Microsoft .NET Framework Assistant"
+                   NS1:description="Adds ClickOnce support and the ability to report installed .NET versions to the web server."
+                   NS1:creator="Microsoft"
+                   NS1:homepageURL="http://www.windowsclient.net/">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$aLb102"/>
   </RDF:Description>
   <RDF:Seq RDF:about="urn:mozilla:item:root">
     <RDF:li RDF:resource="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"/>
-    <RDF:li RDF:resource="urn:mozilla:item:{CAFEEFAC-0015-0000-0022-ABCDEFFEDCBA}"/>
-    <RDF:li RDF:resource="urn:mozilla:item:{CAFEEFAC-0016-0000-0018-ABCDEFFEDCBA}"/>
-    <RDF:li RDF:resource="urn:mozilla:item:jqs@sun.com"/>
-    <RDF:li RDF:resource="urn:mozilla:item:httpanalyzerffaddonv5@ieinspector.com"/>
+    <RDF:li RDF:resource="urn:mozilla:item:{20a82645-c095-46ed-80e3-08825760534b}"/>
     <RDF:li RDF:resource="urn:mozilla:item:gwt-dev-plugin@google.com"/>
   </RDF:Seq>
-  <RDF:Description RDF:about="urn:mozilla:item:jqs@sun.com"
-                   NS1:installLocation="winreg-app-global"
-                   NS1:version="1.0"
-                   NS1:name="Java Quick Starter">
-    <NS1:type NC:parseType="Integer">2</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$o2Nz63"/>
-  </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$o2Nz63"
+  <RDF:Description RDF:about="rdf:#$2Uo0Z1"
                    NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="1.5"
-                   NS1:maxVersion="*" />
-  <RDF:Description RDF:about="rdf:#$d2Nz63"
-                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="3.0.0.11"
-                   NS1:maxVersion="3.9.9.99" />
+                   NS1:minVersion="3.6.3"
+                   NS1:maxVersion="3.6.3" />
   <RDF:Description RDF:about="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"
                    NS1:installLocation="app-global"
-                   NS1:version="3.6.6"
+                   NS1:version="3.6.3"
                    NS1:internalName="classic/1.0"
                    NS1:locked="true"
                    NS1:appManaged="true"
@@ -64,31 +55,6 @@
                    NS1:creator="Mozilla"
                    NS1:contributor="Mozilla Contributors">
     <NS1:type NC:parseType="Integer">4</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$e3Nz63"/>
-  </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$cZWcw3"
-                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="3.0"
-                   NS1:maxVersion="3.6.*" />
-  <RDF:Description RDF:about="rdf:#$K2Nz63"
-                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   NS1:minVersion="1.0"
-                   NS1:maxVersion="5.0+" />
-  <RDF:Description RDF:about="urn:mozilla:item:httpanalyzerffaddonv5@ieinspector.com"
-                   NS1:installLocation="winreg-app-user"
-                   NS1:version="5.0.1"
-                   NS1:name="Http Analyzer"
-                   NS1:description="Allows HttpAnalyzer to be used in Firefox"
-                   NS1:creator="IEInspector Software"
-                   NS1:homepageURL="http://www.ieinspctor.com/httpanalyzer">
-    <NS1:type NC:parseType="Integer">2</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$d2Nz63"/>
-  </RDF:Description>
-  <RDF:Description RDF:about="urn:mozilla:item:{CAFEEFAC-0016-0000-0018-ABCDEFFEDCBA}"
-                   NS1:installLocation="app-global"
-                   NS1:version="6.0.18"
-                   NS1:name="Java Console">
-    <NS1:type NC:parseType="Integer">2</NS1:type>
-    <NS1:targetApplication RDF:resource="rdf:#$z2Nz63"/>
+    <NS1:targetApplication RDF:resource="rdf:#$2Uo0Z1"/>
   </RDF:Description>
 </RDF:RDF>

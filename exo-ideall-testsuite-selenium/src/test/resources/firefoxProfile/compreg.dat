@@ -4,63 +4,61 @@ Generated File. Do not edit.
 Version,0,5
 
 [COMPONENTS]
-rel:nsFormAutoComplete.js,1279011653437
-rel:brwsrcmp.dll,1279011652390
-rel:nsURLFormatter.js,1279011654156
-rel:nsUpdateTimerManager.js,1279011654281
-rel:nsBadCertHandler.js,1279011652468
-rel:nsSessionStartup.js,1279011653953
-rel:nsTryToClose.js,1279011654140
-rel:nsWebHandlerApp.js,1279011654312
-rel:nsUpdateService.js,1279011654281
-rel:FeedWriter.js,1279011652250
-rel:GPSDGeolocationProvider.js,1279011652250
-rel:pluginGlue.js,1279011654312
-rel:nsContentPrefService.js,1279011652984
-rel:nsMicrosummaryService.js,1279011653703
-rel:nsPlacesTransactionsService.js,1279011653734
-rel:nsLoginManagerPrompter.js,1279011653625
-rel:nsSearchSuggestions.js,1279011653937
-abs:D:\eXo\eXoProjects\ideall\trunk\exo-ideall-testsuite-selenium\src\test\resources\firefoxProfile\extensions\gwt-dev-plugin@google.com\lib\WINNT_x86-msvc\ff36\xpGwtDevPlugin.dll,1264780484000
-rel:browserdirprovider.dll,1279011652359
-rel:nsBrowserGlue.js,1279011652640
-rel:nsLoginInfo.js,1279011653531
-rel:storage-mozStorage.js,1279011654406
-rel:nsTaggingService.js,1279011654109
-rel:nsDownloadManagerUI.js,1279011653031
-rel:nsLivemarkService.js,1279011653515
-rel:FeedConverter.js,1279011652125
-rel:nsUrlClassifierListManager.js,1279011654312
-rel:nsExtensionManager.js,1279011653421
-rel:fuelApplication.js,1279011652453
-rel:nsSessionStore.js,1279011654062
-abs:D:\eXo\eXoProjects\ideall\trunk\exo-ideall-testsuite-selenium\src\test\resources\firefoxProfile\extensions\gwt-dev-plugin@google.com\components\stub.js,1264580652000
-rel:nsUpdateServiceStub.js,1279011654281
-abs:C:\Program Files\IEInspector\HTTPAnalyzerFullV5\firefox\components\HttpAnalyzerFFV5.dll,1244913582000
-rel:nsSetDefaultBrowser.js,1279011654078
-rel:NetworkGeolocationProvider.js,1279011652265
-rel:nsUrlClassifierLib.js,1279011654281
-rel:txEXSLTRegExFunctions.js,1279011654406
-rel:jsconsole-clhandler.js,1279011652468
-rel:nsAddonRepository.js,1279011652468
-rel:nsBlocklistService.js,1279011652531
-rel:nsSidebar.js,1279011654109
-rel:WebContentConverter.js,1279011652281
-rel:nsPlacesAutoComplete.js,1279011653703
-rel:nsINIProcessor.js,1279011653468
-rel:nsContentDispatchChooser.js,1279011652796
-rel:nsPrivateBrowsingService.js,1279011653781
-rel:nsSearchService.js,1279011653921
-rel:nsPlacesDBFlush.js,1279011653718
-rel:nsHandlerService.js,1279011653453
-rel:nsLoginManager.js,1279011653578
-rel:nsDefaultCLH.js,1279011653031
-rel:nsSafebrowsingApplication.js,1279011653828
-rel:nsBrowserContentHandler.js,1279011652562
-rel:FeedProcessor.js,1279011652187
-rel:nsHelperAppDlg.js,1279011653453
-rel:storage-Legacy.js,1279011654328
-rel:nsProxyAutoConfig.js,1279011653781
+rel:nsFormAutoComplete.js,1270137378000
+rel:brwsrcmp.dll,1270145211000
+rel:nsURLFormatter.js,1270137378000
+rel:nsUpdateTimerManager.js,1270137378000
+rel:nsBadCertHandler.js,1270137378000
+rel:nsSessionStartup.js,1270137378000
+rel:nsTryToClose.js,1270137378000
+rel:nsWebHandlerApp.js,1270137378000
+rel:nsUpdateService.js,1270137378000
+rel:FeedWriter.js,1270137378000
+rel:GPSDGeolocationProvider.js,1270137378000
+rel:pluginGlue.js,1270137378000
+rel:nsContentPrefService.js,1270137378000
+rel:nsMicrosummaryService.js,1270137378000
+rel:nsPlacesDBFlush.js,1270137378000
+rel:nsLoginManagerPrompter.js,1270137378000
+rel:nsSearchSuggestions.js,1270137378000
+rel:browserdirprovider.dll,1270145211000
+rel:nsBrowserGlue.js,1270137378000
+rel:nsLoginInfo.js,1270137378000
+rel:storage-mozStorage.js,1270137378000
+rel:nsTaggingService.js,1270137378000
+rel:nsDownloadManagerUI.js,1270137378000
+rel:nsLivemarkService.js,1270137378000
+rel:FeedConverter.js,1270137378000
+rel:nsUrlClassifierListManager.js,1270137378000
+abs:extensions\gwt-dev-plugin@google.com\lib\WINNT_x86-msvc\ff36\xpGwtDevPlugin.dll,1264780484000
+rel:nsExtensionManager.js,1270137378000
+rel:fuelApplication.js,1270137378000
+rel:nsSessionStore.js,1270137378000
+rel:nsUpdateServiceStub.js,1270137378000
+rel:nsSetDefaultBrowser.js,1270137378000
+rel:NetworkGeolocationProvider.js,1270137378000
+rel:nsUrlClassifierLib.js,1270137378000
+rel:txEXSLTRegExFunctions.js,1270137378000
+rel:jsconsole-clhandler.js,1270137378000
+rel:nsAddonRepository.js,1270137378000
+rel:nsBlocklistService.js,1270137378000
+rel:nsSidebar.js,1270137378000
+rel:WebContentConverter.js,1270137378000
+rel:nsPlacesTransactionsService.js,1270137378000
+rel:nsContentDispatchChooser.js,1270137378000
+rel:nsPrivateBrowsingService.js,1270137378000
+rel:nsSearchService.js,1270137378000
+rel:nsPlacesAutoComplete.js,1270137378000
+rel:nsHandlerService.js,1270137378000
+rel:nsLoginManager.js,1270137378000
+rel:nsDefaultCLH.js,1270137378000
+rel:nsSafebrowsingApplication.js,1270137378000
+rel:nsBrowserContentHandler.js,1270137378000
+rel:FeedProcessor.js,1270137378000
+abs:extensions\gwt-dev-plugin@google.com\components\stub.js,1264580652000
+rel:nsHelperAppDlg.js,1270137378000
+rel:storage-Legacy.js,1270137378000
+rel:nsProxyAutoConfig.js,1270137378000
 
 [CLASSIDS]
 {bfc310d2-38a0-11d3-8cd3-0060b0fc14a3},,application/x-mozilla-static,,nsLayoutModule
@@ -68,12 +66,11 @@ rel:nsProxyAutoConfig.js,1279011653781
 {a277189c-1dd1-11b2-a8c9-e4e8bfb1338e},,application/x-mozilla-static,,NSS
 {75656ad9-bd13-4c5d-939a-ec6351eea0cc},,application/x-mozilla-static,,nsComposerModule
 {ba6151ad-1dfa-11d3-b3bf-00805f8a6670},,application/x-mozilla-static,,nsUConvModule
-{6ec5f479-8e13-4403-b6ca-fe4c2dca14fd},,text/javascript,,rel:nsINIProcessor.js
 {495eca42-0a5c-11d4-a135-005004832142},,application/x-mozilla-static,,nsUConvModule
 {0cd233e0-7a86-11d3-915c-006008a6edf6},,application/x-mozilla-static,,nsI18nModule
 {73bb7c12-dbab-4ae2-aecf-a0331dec916f},,application/x-mozilla-static,,nsUCvMathModule
 {cb6593e0-f9b2-11d2-bdd6-000064657374},@mozilla.org/js/xpc/XPConnect;1,application/x-mozilla-static,,xpconnect
-{9868b4ce-da08-11d3-8cda-0060b0fc14a3},,application/x-mozilla-static,,necko
+{9868b4ce-da08-11d3-8cda-0060b0fc14a3},@mozilla.org/network/buffered-output-stream;1,application/x-mozilla-static,nsBufferedOutputStream,necko
 {5d0ce354-df01-421a-83fb-7ead0990c24e},,text/javascript,,rel:nsBrowserContentHandler.js
 {4bfaa9f0-1dd2-11b2-afae-a82cbaa0b606},,application/x-mozilla-static,,PKI
 {f1299dc2-1dd1-11b2-a347-ee6b7660e048},,application/x-mozilla-static,,JavaScript_Debugger
@@ -108,7 +105,6 @@ rel:nsProxyAutoConfig.js,1279011653781
 {0c4f1ddc-1dd2-11b2-9d95-f2fdf113044b},,application/x-mozilla-static,,NSS
 {7b8556ac-ec79-11d2-8aac-00600811a836},,application/x-mozilla-static,,nsUConvModule
 {a15789aa-8903-462b-81e9-4aa2cff4d5cb},,application/x-mozilla-static,,NSS
-{12663f3a-a311-4606-83eb-b6b9108dcc36},,text/javascript,,rel:pluginGlue.js
 {bc0017e3-2438-47be-a567-41db58f17627},,application/x-mozilla-static,,docshell_provider
 {ff41913b-546a-4bff-9201-dc9b2c032eba},@mozilla.org/network/url-parser;1?auth=maybe,application/x-mozilla-static,nsStdURLParser,necko
 {7fa5237d-b0eb-438f-9e50-ca0166e63788},,application/x-mozilla-static,,necko
@@ -175,7 +171,6 @@ rel:nsProxyAutoConfig.js,1279011653781
 {74b7a390-3b41-11d4-8a80-006008c844c3},,application/x-mozilla-static,,NSS
 {f57899d0-4e2c-4ac6-9e29-50c736103b0c},,text/javascript,,rel:nsSetDefaultBrowser.js
 {9de95a0c-39a4-4d64-9a53-17940dd7cabb},,application/x-mozilla-static,,nsPlacesModule
-{931774cf-1b7c-41bb-a7e4-0a7f64e773ed},,application/x-mozilla-native,,abs:C:\Program Files\IEInspector\HTTPAnalyzerFullV5\firefox\components\HttpAnalyzerFFV5.dll
 {66856477-6596-40eb-bb87-59ca2dabb6f7},,application/x-mozilla-static,,nsLayoutModule
 {dbded6ec-edbf-4054-a834-287b82c260f9},,text/javascript,,rel:nsBadCertHandler.js
 {892ffeb0-3f80-11d3-a16c-0050041caf44},,application/x-mozilla-static,,necko
@@ -486,7 +481,7 @@ rel:nsProxyAutoConfig.js,1279011653781
 {6ebc941a-f2ff-4d56-b3b6-f7d0b9d73344},,text/javascript,,rel:nsDefaultCLH.js
 {22117140-9c6e-11d3-aaf1-00805f8a4905},,text/javascript,,rel:nsSidebar.js
 {1abdcc96-1dd2-11b2-b520-f8f59cdd67bc},,application/x-mozilla-static,,nsLayoutModule
-{028dd88b-6d65-401d-aafd-17e497d15d09},,application/x-mozilla-native,,abs:D:\eXo\eXoProjects\ideall\trunk\exo-ideall-testsuite-selenium\src\test\resources\firefoxProfile\extensions\gwt-dev-plugin@google.com\lib\WINNT_x86-msvc\ff36\xpGwtDevPlugin.dll
+{028dd88b-6d65-401d-aafd-17e497d15d09},,application/x-mozilla-native,,abs:extensions\gwt-dev-plugin@google.com\lib\WINNT_x86-msvc\ff36\xpGwtDevPlugin.dll
 {e09af32d-2a54-4d76-9ef0-3070e83f8be7},,application/x-mozilla-static,,nsLayoutModule
 {a665e49a-f3e6-4fed-9f31-f7c568a29899},@mozilla.org/intl/unicodenormalizer;1,application/x-mozilla-static,Unicode Normlization,nsI18nModule
 {ba6151b6-1dfa-11d3-b3bf-00805f8a6670},,application/x-mozilla-static,,nsUConvModule
@@ -716,7 +711,7 @@ rel:nsProxyAutoConfig.js,1279011653781
 {2ea2e7d0-4095-11d3-9144-006008a6edf6},,application/x-mozilla-static,,nsI18nModule
 {dd156d62-d26f-4441-9cdb-e8f09107c273},,application/x-mozilla-static,,nsSecurityManagerModule
 {6394eeb1-fc3d-11d2-b3b8-00805f8a6670},,application/x-mozilla-static,,nsUConvModule
-{c272fee0-c7e9-11d3-8cda-0060b0fc14a3},,application/x-mozilla-static,,necko
+{c272fee0-c7e9-11d3-8cda-0060b0fc14a3},@mozilla.org/network/file-output-stream;1,application/x-mozilla-static,nsFileOutputStream,necko
 {96ec4163-efc8-407a-8735-007fb26be4e8},,application/x-mozilla-static,,nsAuthModule
 {e38e53b9-5bb0-456a-b553-579370cb1567},,application/x-mozilla-static,,xpconnect
 {a6cf90e3-15b3-11d2-932e-00805f8add32},,application/x-mozilla-static,,nsLayoutModule
@@ -901,11 +896,9 @@ rel:nsProxyAutoConfig.js,1279011653781
 @mozilla.org/network/request-observer-proxy;1,{51fa28c7-74c0-4b85-9c46-d03faa7b696b}
 @mozilla.org/browser/clh;1,{5d0ce354-df01-421a-83fb-7ead0990c24e}
 @mozilla.org/embedcomp/controller-command-group;1,{ecd55a01-2780-11d5-a73c-ca641a6813bc}
-@ieinspector.com/httpanalyzerfirefoxaddon;1,{931774cf-1b7c-41bb-a7e4-0a7f64e773ed}
 @mozilla.org/uriloader/content-handler;1?type=text/plain,{5d0ce354-df01-421a-83fb-7ead0990c24e}
 @mozilla.org/network/socket;2?type=starttls,{b9507aec-1dd1-11b2-8cd5-c48ee0c50307}
 @mozilla.org/uriloader/external-helper-app-service;1,{a7f800e0-4306-11d4-98d0-001083010e9b}
-@mozilla.org/plugin-bindings;1,{12663f3a-a311-4606-83eb-b6b9108dcc36}
 @mozilla.org/scriptsecuritymanager;1,{7ee2a4c0-4b93-17d3-ba18-0060b0f199a2}
 @mozilla.org/browser/browserglue;1,{eab9012e-5f74-4cbc-b2b5-a590235513cc}
 @mozilla.org/network/protocol;1?name=ftp,{25029490-f132-11d2-9588-00805f369f95}
@@ -1128,7 +1121,6 @@ rel:nsProxyAutoConfig.js,1279011653781
 @mozilla.org/appshell/trytoclose;1,{b69155f4-a8bf-453d-8653-91d1456e1d3d}
 @mozilla.org/image/decoder;2?type=image/x-png,{36fa00c2-1dd2-11b2-be07-d16eeb4c50ed}
 @mozilla.org/cookieService;1,{c375fa80-150f-11d6-a618-0010a401eb10}
-@mozilla.org/xpcom/ini-processor-factory;1,{6ec5f479-8e13-4403-b6ca-fe4c2dca14fd}
 @mozilla.org/principal;1,{36102b6b-7b62-451a-a1c8-a0d456c92dc5}
 @mozilla.org/nsCMSDecoder;1,{9dcef3a4-a3bc-11d5-ba47-00108303b117}
 @mozilla.org/intl/unicode/encoder;1?charset=EUC-JP,{45c23a20-d71c-11d2-8aac-00600811a836}
@@ -1719,8 +1711,7 @@ JavaScript global constructor,BrowserFeedWriter,@mozilla.org/browser/feeds/resul
 JavaScript global constructor,Image,@mozilla.org/content/element/html;1?name=img
 JavaScript global constructor,Audio,@mozilla.org/content/element/html;1?name=audio
 JavaScript global constructor,Option,@mozilla.org/content/element/html;1?name=option
-agent-style-sheets,pluginproblem xbl binding,chrome://mozapps/content/plugins/pluginProblemBinding.css
-agent-style-sheets,pluginfinder xbl binding,chrome://mozapps/content/plugins/pluginFinderBinding.css
+agent-style-sheets,pluginfinder xbl binding,chrome://mozapps/content/plugins/missingPluginBinding.css
 xpcom-directory-providers,spellcheck-directory-provider,@mozilla.org/spellcheck/dir-provider;1
 xpcom-directory-providers,browser-directory-provider,@mozilla.org/browser/directory-provider;1
 uconv-charset-titles,chrome://global/locale/charsetTitles.properties,

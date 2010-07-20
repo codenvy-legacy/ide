@@ -1,53 +1,71 @@
 <?xml version="1.0"?>
 <RDF:RDF xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:root"
+                   NC:ru_defaultHandlersVersion="4" />
+  <RDF:Description RDF:about="urn:scheme:handler:irc"
+                   NC:alwaysAsk="true">
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://www.mibbit.com/?url=%s"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:mailto"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="false">
+    <NC:possibleApplication RDF:resource="urn:handler:web:http://win.mail.ru/cgi-bin/sentmsg?mailto=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.google.com/mail/?extsrc=mailto&amp;url=%s"/>
+  </RDF:Description>
+  <RDF:Seq RDF:about="urn:mimetypes:root">
+  </RDF:Seq>
   <RDF:Seq RDF:about="urn:schemes:root">
     <RDF:li RDF:resource="urn:scheme:mailto"/>
     <RDF:li RDF:resource="urn:scheme:webcal"/>
+    <RDF:li RDF:resource="urn:scheme:irc"/>
+    <RDF:li RDF:resource="urn:scheme:ircs"/>
   </RDF:Seq>
-  <RDF:Seq RDF:about="urn:mimetypes:root">
-  </RDF:Seq>
-  <RDF:Description RDF:about="urn:handler:web:https://calendar.yandex.ru/importics.xml?ics=%s"
-                   NC:prettyName="Яндекс.Календар"
-                   NC:uriTemplate="https://calendar.yandex.ru/importics.xml?ics=%s" />
-  <RDF:Description RDF:about="urn:schemes">
-    <NC:Protocol-Schemes RDF:resource="urn:schemes:root"/>
+  <RDF:Description RDF:about="urn:scheme:ircs"
+                   NC:value="ircs">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:ircs"/>
   </RDF:Description>
-  <RDF:Description RDF:about="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"
-                   NC:prettyName="Яндекс.Пошта"
-                   NC:uriTemplate="https://mail.yandex.ru/compose?mailto=%s" />
   <RDF:Description RDF:about="urn:scheme:webcal"
                    NC:value="webcal">
     <NC:handlerProp RDF:resource="urn:scheme:handler:webcal"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetypes">
+    <NC:MIME-types RDF:resource="urn:mimetypes:root"/>
   </RDF:Description>
   <RDF:Description RDF:about="urn:scheme:mailto"
                    NC:value="mailto">
     <NC:handlerProp RDF:resource="urn:scheme:handler:mailto"/>
   </RDF:Description>
-  <RDF:Description RDF:about="urn:mimetypes">
-    <NC:MIME-types RDF:resource="urn:mimetypes:root"/>
+  <RDF:Description RDF:about="urn:scheme:handler:ircs"
+                   NC:alwaysAsk="true">
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://www.mibbit.com/?url=%s"/>
   </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:irc"
+                   NC:value="irc">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:irc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"
+                   NC:prettyName="Яндекс.Почта"
+                   NC:uriTemplate="https://mail.yandex.ru/compose?mailto=%s" />
+  <RDF:Description RDF:about="urn:handler:web:https://www.mibbit.com/?url=%s"
+                   NC:prettyName="Mibbit"
+                   NC:uriTemplate="https://www.mibbit.com/?url=%s" />
   <RDF:Description RDF:about="urn:handler:web:https://mail.google.com/mail/?extsrc=mailto&amp;url=%s"
                    NC:prettyName="Gmail"
                    NC:uriTemplate="https://mail.google.com/mail/?extsrc=mailto&amp;url=%s" />
+  <RDF:Description RDF:about="urn:schemes">
+    <NC:Protocol-Schemes RDF:resource="urn:schemes:root"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:web:https://calendar.yandex.ru/importics.xml?ics=%s"
+                   NC:prettyName="Яндекс.Календарь"
+                   NC:uriTemplate="https://calendar.yandex.ru/importics.xml?ics=%s" />
+  <RDF:Description RDF:about="urn:handler:web:http://win.mail.ru/cgi-bin/sentmsg?mailto=%s"
+                   NC:prettyName="Mail.Ru"
+                   NC:uriTemplate="http://win.mail.ru/cgi-bin/sentmsg?mailto=%s" />
   <RDF:Description RDF:about="urn:scheme:handler:webcal"
+                   NC:useSystemDefault="true"
                    NC:alwaysAsk="true">
     <NC:possibleApplication RDF:resource="urn:handler:web:https://calendar.yandex.ru/importics.xml?ics=%s"/>
   </RDF:Description>
-  <RDF:Description RDF:about="urn:root"
-                   NC:uk_defaultHandlersVersion="2" />
-  <RDF:Description RDF:about="urn:scheme:handler:mailto"
-                   NC:useSystemDefault="true"
-                   NC:alwaysAsk="false">
-    <NC:possibleApplication RDF:resource="urn:handler:web:http://mbox.i.ua/compose/?mailto=%s"/>
-    <NC:possibleApplication RDF:resource="urn:handler:web:http://webmail.meta.ua/compose.php?mail_to=%s"/>
-    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"/>
-    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.google.com/mail/?extsrc=mailto&amp;url=%s"/>
-  </RDF:Description>
-  <RDF:Description RDF:about="urn:handler:web:http://mbox.i.ua/compose/?mailto=%s"
-                   NC:prettyName="Пошта I.ua"
-                   NC:uriTemplate="http://mbox.i.ua/compose/?mailto=%s" />
-  <RDF:Description RDF:about="urn:handler:web:http://webmail.meta.ua/compose.php?mail_to=%s"
-                   NC:prettyName="Метапошта"
-                   NC:uriTemplate="http://webmail.meta.ua/compose.php?mail_to=%s" />
 </RDF:RDF>
