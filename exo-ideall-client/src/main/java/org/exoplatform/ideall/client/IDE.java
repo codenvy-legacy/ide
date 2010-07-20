@@ -2,6 +2,7 @@ package org.exoplatform.ideall.client;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ideall.client.application.IDEallForm;
+import org.exoplatform.ideall.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -52,7 +53,9 @@ public class IDE extends VerticalPanel
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       new IDEallForm(eventBus, context);
-
+      
+      new AutoCompletionManager(eventBus, context);
+      
       Configuration configuration = new Configuration(eventBus, context);
       configuration.loadConfiguration(IDELoader.getInstance());         
    }

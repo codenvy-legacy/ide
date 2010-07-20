@@ -111,6 +111,8 @@ public class AskForValueDialog extends Window
 
          public void onKeyPress(KeyPressEvent event)
          {
+            if(event.getKeyName() == null)
+               return;
             if (event.getKeyName().equals(KeyNames.ENTER)) 
             {
                onOk();            

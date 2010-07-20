@@ -5,13 +5,12 @@ var countDiv = 10;
 
 var imagesId = "image-container";
 
-var imageCount = images.length;
+var imageCount = imagesSC.length;
 var count = 0;
 var url = document.URL;
 
 function preloadImg(){
     url = url.match(/^http[s]*:\/\/([^\/]*)\//)[0];
-    imageCount = imagesSC.length;
     count = 0;
     preloadFrom(imagesSC);
 }
@@ -61,7 +60,7 @@ function preloadNexImage(id, arr){
     div1.appendChild(document.createElement("img"));
     
     img = div1.lastChild;
-    img.src = url + images[images.length - 1];
+    img.src = url + arr[arr.length - 1];
     arr.length = arr.length - 1;
     img.onload = preloadNexImage(div1.id, arr);
 }
