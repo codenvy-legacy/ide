@@ -25,6 +25,16 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+       <groupId>org.exoplatform.gwt</groupId>
+       <artifactId>exo.gwtframework.editor</artifactId>
+       <version>${org.exoplatform.gwtframework.version}</version>
+    </dependency>
+       <dependency>
+       <groupId>com.smartgwt</groupId>
+       <artifactId>smartgwt</artifactId>
+       <version>${smartgwt.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
       <scope>runtime</scope>

@@ -21,6 +21,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.ideall</groupId>
+      <artifactId>exo-ideall-client-module-vfs</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.gwt</groupId>
       <artifactId>exo.gwtframework.ui</artifactId>
     </dependency>

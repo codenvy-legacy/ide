@@ -30,6 +30,11 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ideall</groupId>
+      <artifactId>exo-ideall-client-module-vfs</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ideall</groupId>
       <artifactId>exo-ideall-testframework</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
