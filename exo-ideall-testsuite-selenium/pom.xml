@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ideall</groupId>
   <artifactId>exo-ideall-testsuite-selenium</artifactId>
@@ -27,6 +29,15 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <pluginRepositories>
+    <!--  
+      Configuring repository to get maven testng-xslt plugin
+    --> 
+    <pluginRepository>
+      <id>testng-xslt-plugin</id>
+      <url>http://www.cosminaru.ro/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <plugins>
       <plugin>
@@ -44,9 +55,9 @@
           <skip>true</skip>
         </configuration>
         <!-- To run test in parallel  -->
-        <!--<parallel>true</parallel>
-					<threadCount>10</threadCount>
-					-->
+        <!--
+          <parallel>true</parallel> <threadCount>10</threadCount>
+        -->
         <!-- To run test by groups  -->
         <!--<groups>functest,perftest</groups>
 				-->
@@ -81,4 +92,28 @@
       </plugin>
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.testng.xslt</groupId>
+        <artifactId>testng-xslt-plugin</artifactId>
+        <version>1.1</version>
+        <configuration>
+          <!--Setting the output directory-->
+          <!--
+            <outputDir>${project.basedir}/target/site/${pom.artifactId}</outputDir>
+          -->
+          <!--Setting the testNgXslt.showRuntimeTotals flag-->
+          <showRuntimeTotals>true</showRuntimeTotals>
+          <!--
+            Setting the testNgXslt.cssFile parameter. This should be
+            relative to the '${basedir}/target/site/testng-xslt'
+            directory
+          -->
+          <sortTestCaseLinks>true</sortTestCaseLinks>
+          <testDetailsFilter>FAIL,PASS,SKIP,CONF</testDetailsFilter>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
