@@ -30,5 +30,5 @@ public interface Images
    
    public static final String imageUrl = UIHelper.getGadgetImagesURL();
    
-   public static final String UWA_WIGET =  imageUrl + "/module/netvibes/uwa-widget.png";
+   public static final String UWA_WIGET =  imageUrl + "module/netvibes/uwa-widget.png";
 }
