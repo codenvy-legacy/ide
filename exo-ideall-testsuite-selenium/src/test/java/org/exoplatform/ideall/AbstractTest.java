@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ideall;
 
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -28,14 +27,15 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id:
+ *	
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:   ${date} ${time}
  *
  */
 @Test
-public class SampleTest
+public class AbstractTest
 {
-   private Selenium selenium;
+   protected Selenium selenium;
 
    @BeforeClass
    public void startSelenium()
@@ -44,20 +44,6 @@ public class SampleTest
       this.selenium.start();
    }
 
-   @Test
-   public void test1() throws Exception
-   {
-      selenium.open("http://127.0.0.1:8888/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
-      Thread.sleep(10000);
-     /* selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      Thread.sleep(3000);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Upload...')]", "");
-      selenium.mouseDownAt("//div[@class='windowBody']", "");
-      selenium.mouseUpAt("//div[@class='windowBody']", "");*/
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]");
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideallUploadForm\"]/body/"));
-   }
-   
    @AfterClass(alwaysRun = true)
    public void stopSelenium()
    {
