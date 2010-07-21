@@ -47,7 +47,9 @@ public class AboutForm extends DialogWindow
 
    private static final int WINDOW_HEIGHT = 355;
    
-   private static final String ID = "ideallAboutForm";
+   private static final String ID = "ideAboutForm";
+   
+   private static final String OK_BUTTON_ID = "ideAboutFormOkButton";
    
    private final int LOGO_WIDTH = 200;
 
@@ -69,7 +71,7 @@ public class AboutForm extends DialogWindow
 
    private final String COMPANY_NAME = "eXo Platform SAS";
 
-   private static final String NAME = "IDEall";
+   private static final String NAME = "eXo IDE";
 
    private static final String YEAR = "2009-2010";
 
@@ -130,6 +132,7 @@ public class AboutForm extends DialogWindow
    private DynamicForm createButtonLayout()
    {
       okButton = new IButton(OK);
+      okButton.setID(OK_BUTTON_ID);
       okButton.setIcon(Images.Buttons.OK);
       okButton.setWidth(BUTTON_WIDTH);
       okButton.setHeight(BUTTON_HEIGHT);
