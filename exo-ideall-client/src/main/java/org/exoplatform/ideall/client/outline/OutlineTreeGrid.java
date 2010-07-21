@@ -200,7 +200,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.GOOGLE_GADGET)
          || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT)
          || file.getContentType().equals(MimeType.APPLICATION_XML)
-         || file.getContentType().equals(MimeType.TEXT_XML);
+         || file.getContentType().equals(MimeType.TEXT_XML)
+         || file.getContentType().equals(MimeType.TEXT_HTML);
    }
 
 }
