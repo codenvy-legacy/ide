@@ -50,7 +50,11 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
    public static final int HEIGHT = 160;
    
-   public static final String ID = "ideallCreateFolderForm";
+   public static final String ID = "ideCreateFolderForm";
+   
+   public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
+   
+   public final String ID_CANCEL_BUTTON = "ideCreateFolderFormCancelButton";
    
    private VLayout vLayout;
 
@@ -123,11 +127,13 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       createButton = new IButton("Create");
+      createButton.setID(ID_CREATE_BUTTON);
       createButton.setWidth(90);
       createButton.setHeight(22);
       createButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);

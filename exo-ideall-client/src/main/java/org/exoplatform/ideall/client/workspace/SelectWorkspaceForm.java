@@ -47,7 +47,11 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
 
    private static final int HEIGHT = 200;
    
-   private static final String ID = "ideallSelectWorkspaceForm";
+   private static final String ID = "ideSelectWorkspaceForm";
+   
+   private final String ID_OK_BUTTON = "ideSelectWorkspaceFormOkButton";
+   
+   private final String ID_CANCEL_BUTTON = "ideSelectWorkspaceFormCancelButton";
    
    private static final String TITLE = "Workspace";
 
@@ -106,11 +110,13 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       okButton = new IButton("OK");
+      okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(90);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.YES);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);

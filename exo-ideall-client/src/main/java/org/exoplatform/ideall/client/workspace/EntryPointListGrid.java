@@ -31,9 +31,11 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 */
 public class EntryPointListGrid extends ListGrid<EntryPoint>
 {
-
+   private final String ID = "ideEntryPointListGrid"; 
+   
    public EntryPointListGrid()
    {
+      setID(ID);
       setHeaderHeight(22);
 
       ListGridField entryName = new ListGridField("entryPoint", "Entry Point");
