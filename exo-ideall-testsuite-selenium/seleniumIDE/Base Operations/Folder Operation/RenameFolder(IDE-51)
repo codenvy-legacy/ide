@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>RenameFolder(IDE-51)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">RenameFolder(IDE-51)</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//div[@title='New']//img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//div[@title='New']//img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//td[@class=&quot;exo-popupMenuTitleField&quot;]//nobr[contains(text(), &quot;Folder&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>scLocator=//Window[ID=&quot;ideCreateFolderForm&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>scLocator=//DynamicForm[ID=&quot;ideCreateFolderFormDynamicForm&quot;]/item[name=ideCreateFolderFormNameField]/element</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>scLocator=//DynamicForm[ID=&quot;ideCreateFolderFormDynamicForm&quot;]/item[name=ideCreateFolderFormNameField]/element</td>
+	<td></td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>scLocator=//DynamicForm[ID=&quot;ideCreateFolderFormDynamicForm&quot;]/item[name=ideCreateFolderFormNameField]/element</td>
+	<td>Folder To Rename</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>scLocator=//DynamicForm[ID=&quot;ideCreateFolderFormDynamicForm&quot;]/item[name=ideCreateFolderFormNameField]/element</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>scLocator=//Window[ID=&quot;ideCreateFolderForm&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Folder To Rename</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>scLocator=//TreeGrid[ID=&quot;ideItemTreeGrid&quot;]/body/row[name=Folder To Rename]/col[fieldName=nodeTitle||0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//td[@class='exo-menuBarItem' and @menubartitle='File']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Rename')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>scLocator=//Window[ID=&quot;ideRenameItemForm&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>scLocator=//Window[ID=&quot;ideallRenameItemForm&quot;]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
