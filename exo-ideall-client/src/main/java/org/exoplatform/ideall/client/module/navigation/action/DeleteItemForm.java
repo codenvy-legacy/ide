@@ -49,7 +49,11 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    public static final int HEIGHT = 130;
    
-   public static final String ID = "ideallDeleteItemForm";
+   public static final String ID = "ideDeleteItemForm";
+   
+   public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
+   
+   public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
    
    private HLayout hLayout;
 
@@ -130,11 +134,13 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       deleteButton = new IButton("Yes");
+      deleteButton.setID(ID_OK_BUTTON);
       deleteButton.setWidth(90);
       deleteButton.setHeight(22);
       deleteButton.setIcon(Images.Buttons.YES);
 
       cancelButton = new IButton("No");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);

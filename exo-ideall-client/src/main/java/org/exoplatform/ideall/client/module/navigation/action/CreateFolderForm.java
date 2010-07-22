@@ -56,6 +56,10 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
    
    public final String ID_CANCEL_BUTTON = "ideCreateFolderFormCancelButton";
    
+   public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
+   
+   public final String NAME_FIELD = "ideCreateFolderFormNameField";
+   
    private VLayout vLayout;
 
    private TextField folderNameField;
@@ -94,6 +98,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
    private void createFieldForm()
    {
       DynamicForm paramsForm = new DynamicForm();
+      paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(300);
       paramsForm.setLayoutAlign(Alignment.CENTER);
@@ -110,6 +115,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
       delimiter.setHeight(5);
 
       folderNameField = new TextField();
+      folderNameField.setName(NAME_FIELD);
       folderNameField.setShowTitle(false);
       folderNameField.setWidth(300);
 

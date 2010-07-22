@@ -44,9 +44,12 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    private TreeNode rootNode;
 
    private boolean allowSameNames = false;
+   
+   private final String ID = "ideItemTreeGrid";
 
    public ItemTreeGrid()
    {
+      setID(ID);
       setShowRoot(false);
       
       tree = new Tree();
@@ -102,7 +105,6 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 //            Image i = new Image(IDEImageBundle.INSTANCE.search());
 //            iconPrefix = ImageUtil.getHTML(i);
          }         
-         
          
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
