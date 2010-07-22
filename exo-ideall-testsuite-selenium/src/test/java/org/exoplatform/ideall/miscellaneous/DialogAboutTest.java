@@ -67,24 +67,4 @@ public class DialogAboutTest extends BaseTest
       assertFalse(selenium.isTextPresent("Revision"));
       assertFalse(selenium.isTextPresent("Build Time"));
    }
-
-   private void selectWorkspace() throws Exception
-   {
-      selenium.deleteAllVisibleCookies();
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
-      selenium.waitForPageToLoad("10000");
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      assertTrue(selenium
-         .isTextPresent("Workspace is not set. Goto Window->Select workspace in main menu for set working workspace?"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(1000);
-      selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]");
-      selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[0]/col[fieldName=entryPoint||0]");
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]/");
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      Thread.sleep(1000);
-   }
-
 }
