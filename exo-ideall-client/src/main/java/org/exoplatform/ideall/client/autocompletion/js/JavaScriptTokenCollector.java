@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.ideall.client.autocompletion.JSONTokenParser;
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
@@ -47,10 +46,6 @@ public class JavaScriptTokenCollector implements TokenCollector
    
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
-   private TokensCollectedCallback tokensCollectedCallback;
-
    private List<Token> filteredToken = new ArrayList<Token>();
 
    private String beforeToken;
@@ -59,20 +54,16 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    private String tokenToComplete;
 
-   public JavaScriptTokenCollector(HandlerManager eventBus, ApplicationContext context,
-      TokensCollectedCallback tokensCollectedCallback)
+   public JavaScriptTokenCollector(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
-      this.tokensCollectedCallback = tokensCollectedCallback;
-
    }
    
    private native JavaScriptObject getTokens() /*-{
                                                return $wnd.javascript_tokens;
                                                }-*/;
    
-   public void getTokens(String line, int lineNum, int cursorPos, List<Token> tokenFromParser)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
    {
 
       List<Token> tokens = new ArrayList<Token>();

@@ -41,8 +41,6 @@ public class CssTokenCollector implements TokenCollector
 
    private static List<Token> cssProperty;
 
-   private ApplicationContext context;
-
    private HandlerManager eventBus;
 
    private TokensCollectedCallback tokensCollectedCallback;
@@ -53,19 +51,15 @@ public class CssTokenCollector implements TokenCollector
 
    private String beforeToken;
 
-   public CssTokenCollector(HandlerManager eventBus, ApplicationContext context,
-      TokensCollectedCallback tokensCollectedCallback)
+   public CssTokenCollector(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
-      this.tokensCollectedCallback = tokensCollectedCallback;
-
    }
 
    /**
     * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
     */
-   public void getTokens(String line, int lineNum, int cursorPos, List<Token> tokenFromParser)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
    {
       List<Token> tokens = new ArrayList<Token>();
       if(cssProperty == null)

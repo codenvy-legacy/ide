@@ -19,7 +19,6 @@
 package org.exoplatform.ideall.client.autocompletion.html;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -27,7 +26,6 @@ import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.ideall.client.autocompletion.JSONTokenParser;
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
@@ -95,10 +93,6 @@ public class HtmlTokenCollector implements TokenCollector
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
-   private TokensCollectedCallback tokensCollectedCallback;
-
    private String beforeToken;
 
    private String afterToken;
@@ -107,18 +101,15 @@ public class HtmlTokenCollector implements TokenCollector
 
    private boolean isTag = false;
 
-   public HtmlTokenCollector(HandlerManager eventBus, ApplicationContext context,
-      TokensCollectedCallback tokensCollectedCallback)
+   public HtmlTokenCollector(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
-      this.tokensCollectedCallback = tokensCollectedCallback;
    }
 
    /**
     * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
     */
-   public void getTokens(String line, int lineNum, int cursorPos, List<Token> tokenFromParser)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
    {
       List<Token> token = new ArrayList<Token>();
 

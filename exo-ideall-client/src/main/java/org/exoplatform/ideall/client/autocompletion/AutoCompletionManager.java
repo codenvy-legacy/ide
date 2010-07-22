@@ -20,12 +20,9 @@
 package org.exoplatform.ideall.client.autocompletion;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
@@ -33,10 +30,6 @@ import org.exoplatform.gwtframework.ui.client.component.autocomplete.Autocomplet
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
-import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
@@ -52,8 +45,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, TokensCollectedCallback,
    AutocompleteTokenSelectedHandler
 {
-
-   private HashMap<String, TokenCollector> tokenCollectors = new HashMap<String, TokenCollector>();
 
    private HandlerManager eventBus;
 
@@ -71,34 +62,33 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    private String beforeToken;
 
-   private int cursorPos;
-
    public AutoCompletionManager(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
       this.eventBus = eventBus;
 
-      tokenCollectors.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus, context, this));
-      tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus, context, this));
-      //factories.put(MimeType.GOOGLE_GADGET, new GoogleGadgetTokenCollector(eventBus, context, this));
-      tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus, context, this));
-      tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus, context, this));
-
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
 
-   private List<Token> filterTokensByMimeType(List<Token> tokens, String mimeType)
+   private List<Token> filterTokens(List<Token> tokens)
    {
+
       List<Token> token = new ArrayList<Token>();
 
-      for (Token t : tokens)
+      for (int i = 0; i < tokens.size(); i++)
       {
-         if (t.getMimeType().equals(mimeType) && t.getName() != null)
+         Token t = tokens.get(i);
+         if (t.getName() != null)
          {
             token.add(t);
-         }
+            if (t.getSubTokenList() != null)
+            {
+               List<Token> subTokens = filterTokens(t.getSubTokenList());
+               t.getSubTokenList().clear();
+               t.getSubTokenList().addAll(subTokens);
+            }
+         }         
       }
-
       return token;
    }
 
@@ -108,13 +98,14 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
-      cursorPos = event.getCursorPositionX();
-      TokenCollector collector = tokenCollectors.get(event.getLineMimeType());
-
+      TokenCollector collector = TokenCollectors.getTokenCollector(eventBus, event.getMimeType());
       if (collector != null)
       {
-         collector.getTokens(event.getLineContent(), event.getCursorPositionY(), cursorPos, filterTokensByMimeType(
-            event.getTokenList(), event.getLineMimeType()));
+         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event
+            .getCursorPositionX(), filterTokens(event.getTokenList()), this);
+         //         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event.getCursorPositionX(), event.getTokenList(), this);
+
+         System.out.println(event.getMimeType());
       }
    }
 
@@ -201,10 +192,10 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    }
 
    private native int getCursorPos(String token)/*-{
-         pattern = "[({]|\\n";
-         d = token.search(pattern);
-         return (d == -1) ? (token.length+1) : (d+2);
-   }-*/;
+                                                pattern = "[({]|\\n";
+                                                d = token.search(pattern);
+                                                return (d == -1) ? (token.length+1) : (d+2);
+                                                }-*/;
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()
