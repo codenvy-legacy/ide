@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ideall.miscellaneous;
 
-import org.exoplatform.ideall.AbstractTest;
+import org.exoplatform.ideall.BaseTest;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,14 +28,11 @@ import org.junit.Test;
  * @version $Id:
  *
  */
-public class DialogAboutTest extends AbstractTest
+public class DialogAboutTest extends BaseTest
 {
    @Test
    public void testDialogAbout() throws Exception
    {
-//      selectWorkspace();
-
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Help']", "");
       Thread.sleep(1000);
