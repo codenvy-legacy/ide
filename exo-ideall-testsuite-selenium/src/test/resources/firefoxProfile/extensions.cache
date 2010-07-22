@@ -1,0 +1,5 @@
+app-global	{972ce4c6-7e08-4474-a285-3208198ce6fd}	rel%{972ce4c6-7e08-4474-a285-3208198ce6fd}	1279710628	
+winreg-app-global	jqs@sun.com	abs%C:\Program Files\Java\jre6\lib\deploy\jqs\ff	1268916283	
+winreg-app-user	httpanalyzerffaddonv5@ieinspector.com	abs%C:\Program Files\IEInspector\HTTPAnalyzerFullV5\firefox	1277898473	
+app-profile	gwt-dev-plugin@google.com	rel%gwt-dev-plugin@google.com	1279798633	
+app-profile	{a6fd85ed-e919-4a43-a5af-8da18bda539f}	rel%{a6fd85ed-e919-4a43-a5af-8da18bda539f}	1279799748	
