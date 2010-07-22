@@ -19,8 +19,6 @@
 package org.exoplatform.ideall.operation.folder;
 
 import org.exoplatform.ideall.AbstractTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * Created by The eXo Platform SAS.
@@ -29,7 +27,6 @@ import org.testng.annotations.Test;
  * @version $Id:   ${date} ${time}
  *
  */
-@Test
 public class FolderOperationsTest extends AbstractTest
 {
    /*private void selectWorkspace() throws Exception
@@ -56,7 +53,6 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
-   @Test
    public void testCreateFolderFromToolbar() throws Exception
    {
       selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
@@ -64,11 +60,11 @@ public class FolderOperationsTest extends AbstractTest
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
-      Assert.assertTrue(selenium.isTextPresent("Name of new folder:"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
+      assertTrue(selenium.isTextPresent("Name of new folder:"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
       selenium
@@ -84,10 +80,9 @@ public class FolderOperationsTest extends AbstractTest
             "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
             "\\13");
       Thread.sleep(1000);
-      Assert.assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      Assert.assertTrue(selenium.isTextPresent("Test Folder"));
-      Assert
-         .assertTrue(selenium
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isTextPresent("Test Folder"));
+      assertTrue(selenium
             .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test Folder]/col[fieldName=nodeTitle||0]"));
    }
 
@@ -96,7 +91,6 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
-   @Test
    public void testCreateFolderMenu() throws Exception
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
@@ -104,21 +98,19 @@ public class FolderOperationsTest extends AbstractTest
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'New')]", "");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Folder...']", "");
-      Assert.assertTrue(selenium.isTextPresent("Name of new folder:"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
+      assertTrue(selenium.isTextPresent("Name of new folder:"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
       selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]");
       Thread.sleep(1000);
-      Assert.assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      Assert.assertTrue(selenium.isTextPresent("New Folder"));
-      Assert
-         .assertTrue(selenium
-            .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test Folder]/col[fieldName=nodeTitle||0]"));
-      Assert
-         .assertTrue(selenium
-            .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=New Folder]/col[fieldName=nodeTitle||0]"));
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isTextPresent("New Folder"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test Folder]/col[fieldName=nodeTitle||0]"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=New Folder]/col[fieldName=nodeTitle||0]"));
    }
 
    /**
@@ -126,7 +118,6 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
-   @Test
    public void testDeleteFolder() throws Exception
    {
       selenium.refresh();
@@ -135,7 +126,7 @@ public class FolderOperationsTest extends AbstractTest
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
       selenium
@@ -151,23 +142,21 @@ public class FolderOperationsTest extends AbstractTest
             "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
             "\\13");
       Thread.sleep(1000);
-      Assert.assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      Assert.assertTrue(selenium.isTextPresent("FolderToDelete"));
-      Assert
-         .assertTrue(selenium
-            .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=FolderToDelete]/col[fieldName=nodeTitle||0]"));
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isTextPresent("FolderToDelete"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=FolderToDelete]/col[fieldName=nodeTitle||0]"));
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
       selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
       Thread.sleep(1000);
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      Assert.assertTrue(selenium.isTextPresent("exact:Do you want to delete FolderToDelete ?"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
+      assertTrue(selenium.isTextPresent("exact:Do you want to delete FolderToDelete ?"));
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(1000);
-      Assert.assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      Assert
-         .assertFalse(selenium
-            .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=FolderToDelete]/col[fieldName=nodeTitle||0]"));
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      assertFalse(selenium
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=FolderToDelete]/col[fieldName=nodeTitle||0]"));
    }
 }

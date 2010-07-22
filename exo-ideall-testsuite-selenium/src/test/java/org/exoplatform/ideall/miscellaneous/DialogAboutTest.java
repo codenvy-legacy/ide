@@ -19,8 +19,7 @@
 package org.exoplatform.ideall.miscellaneous;
 
 import org.exoplatform.ideall.AbstractTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,31 +27,30 @@ import org.testng.annotations.Test;
  * @version $Id:
  *
  */
-@Test
 public class DialogAboutTest extends AbstractTest
 {
    @Test
    public void testDialogAbout() throws Exception
    {
-      selectWorkspace();
+//      selectWorkspace();
 
       selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Help']", "");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'About')]", "");
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]"));
-      Assert.assertTrue(selenium.isTextPresent("eXo IDE"));
-      Assert.assertTrue(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      Assert.assertTrue(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
-      Assert.assertTrue(selenium.isTextPresent("Revision"));
-      Assert.assertTrue(selenium.isTextPresent("Build Time"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]"));
+      assertTrue(selenium.isTextPresent("eXo IDE"));
+      assertTrue(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      assertTrue(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
+      assertTrue(selenium.isTextPresent("Revision"));
+      assertTrue(selenium.isTextPresent("Build Time"));
       selenium.click("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]");
       for (int second = 0;; second++)
       {
          if (second >= 60)
-            Assert.fail("timeout");
+            fail("timeout");
          try
          {
             if (!selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"))
@@ -64,12 +62,12 @@ public class DialogAboutTest extends AbstractTest
          Thread.sleep(1000);
       }
 
-      Assert.assertFalse(selenium.isTextPresent("About"));
-      Assert.assertFalse(selenium.isTextPresent("eXo IDE"));
-      Assert.assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      Assert.assertFalse(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
-      Assert.assertFalse(selenium.isTextPresent("Revision"));
-      Assert.assertFalse(selenium.isTextPresent("Build Time"));
+      assertFalse(selenium.isTextPresent("About"));
+      assertFalse(selenium.isTextPresent("eXo IDE"));
+      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      assertFalse(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
+      assertFalse(selenium.isTextPresent("Revision"));
+      assertFalse(selenium.isTextPresent("Build Time"));
    }
 
    private void selectWorkspace() throws Exception
@@ -77,17 +75,17 @@ public class DialogAboutTest extends AbstractTest
       selenium.deleteAllVisibleCookies();
       selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("10000");
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      Assert.assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      Assert.assertTrue(selenium
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium
          .isTextPresent("Workspace is not set. Goto Window->Select workspace in main menu for set working workspace?"));
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
       Thread.sleep(1000);
       selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]");
       selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[0]/col[fieldName=entryPoint||0]");
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]/");
-      Assert.assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       Thread.sleep(1000);
    }
 

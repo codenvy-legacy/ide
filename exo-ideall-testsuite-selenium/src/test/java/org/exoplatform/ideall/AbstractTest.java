@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ideall;
 
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+
+import junit.framework.TestCase;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -32,19 +31,28 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id:   ${date} ${time}
  *
  */
-@Test
-public class AbstractTest
+public abstract class AbstractTest extends TestCase
 {
    protected Selenium selenium;
+   
+   @Override
+   public void setUp() throws Exception
+   {
+      startSelenium();
+   }
+   
+   @Override
+   public void tearDown() throws Exception
+   {
+      stopSelenium();
+   }
 
-   @BeforeClass
    public void startSelenium()
    {
       this.selenium = new DefaultSelenium("localhost", 4444, "*firefox", "http://127.0.0.1:8888/");
       this.selenium.start();
    }
 
-   @AfterClass(alwaysRun = true)
    public void stopSelenium()
    {
       this.selenium.stop();
