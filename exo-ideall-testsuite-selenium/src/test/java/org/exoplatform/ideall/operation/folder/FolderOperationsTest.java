@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ideall.operation.folder;
 
-import org.exoplatform.ideall.AbstractTest;
+import org.exoplatform.ideall.BaseTest;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,7 +29,7 @@ import org.exoplatform.ideall.AbstractTest;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FolderOperationsTest extends AbstractTest
+public class FolderOperationsTest extends BaseTest
 {
    /*private void selectWorkspace() throws Exception
    {
@@ -53,10 +55,9 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
+   @Test
    public void testCreateFolderFromToolbar() throws Exception
    {
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
-      selenium.waitForPageToLoad("10000");
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
@@ -83,7 +84,7 @@ public class FolderOperationsTest extends AbstractTest
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
       assertTrue(selenium.isTextPresent("Test Folder"));
       assertTrue(selenium
-            .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test Folder]/col[fieldName=nodeTitle||0]"));
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test Folder]/col[fieldName=nodeTitle||0]"));
    }
 
    /**
@@ -91,6 +92,7 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
+   @Test
    public void testCreateFolderMenu() throws Exception
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
@@ -118,10 +120,11 @@ public class FolderOperationsTest extends AbstractTest
     * 
     * @throws Exception
     */
+   @Test
    public void testDeleteFolder() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad("20000");
+      selenium.waitForPageToLoad("30000");
       Thread.sleep(10000);
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");

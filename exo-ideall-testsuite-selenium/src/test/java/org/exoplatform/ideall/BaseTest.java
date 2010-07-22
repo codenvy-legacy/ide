@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ideall;
 
-
-import junit.framework.TestCase;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -31,30 +31,23 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id:   ${date} ${time}
  *
  */
-public abstract class AbstractTest extends TestCase
+public abstract class BaseTest
 {
-   protected Selenium selenium;
-   
-   @Override
-   public void setUp() throws Exception
+   protected static Selenium selenium;
+
+   @BeforeClass
+   public static void startSelenium()
    {
-      startSelenium();
-   }
-   
-   @Override
-   public void tearDown() throws Exception
-   {
-      stopSelenium();
+      selenium = new DefaultSelenium("localhost", 4444, "*firefox", "http://127.0.0.1:8888/");
+      selenium.start();
+      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
+      selenium.waitForPageToLoad("10000");
+      selenium.windowMaximize();
    }
 
-   public void startSelenium()
+   @AfterClass
+   public static void stopSelenium()
    {
-      this.selenium = new DefaultSelenium("localhost", 4444, "*firefox", "http://127.0.0.1:8888/");
-      this.selenium.start();
-   }
-
-   public void stopSelenium()
-   {
-      this.selenium.stop();
+      selenium.stop();
    }
 }
