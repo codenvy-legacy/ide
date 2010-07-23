@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- ===================================================================== -->
+<!-- =====================================================================
+-->
 <!-- This file contains the default descriptor for web applications.       -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
 <!-- The intent of this descriptor is to include jetty specific or common  -->
 <!-- configuration for all webapps.   If a context has a webdefault.xml    -->
 <!-- descriptor, it is applied before the contexts own web.xml file        -->
@@ -11,12 +13,15 @@
 <!--  + Calling WebApplicationContext.setDefaultsDescriptor                -->
 <!--  + Passed an arg to addWebApplications                                -->
 <!--                                                                       -->
-<!-- This file is used both as the resource within the jetty.jar (which is -->
-<!-- used as the default if no explicit defaults descriptor is set) and it -->
+<!-- This file is used both as the resource within the jetty.jar (which is
+-->
+<!-- used as the default if no explicit defaults descriptor is set) and it
+-->
 <!-- is copied to the etc directory of the Jetty distro and explicitly     -->
 <!-- by the jetty.xml file.                                                -->
 <!--                                                                       -->
-<!-- ===================================================================== -->
+<!-- =====================================================================
+-->
 <web-app 
    xmlns="http://java.sun.com/xml/ns/javaee" 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -30,7 +35,8 @@
   </description>
 
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <!-- Context params to control Session Cookies                            -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
   <!-- UNCOMMENT TO ACTIVATE
@@ -57,9 +63,11 @@
             
 
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <!-- The default servlet.                                                 -->
-  <!-- This servlet, normally mapped to /, provides the handling for static -->
+  <!-- This servlet, normally mapped to /, provides the handling for static
+-->
   <!-- content, OPTIONS and TRACE methods for the context.                  -->
   <!-- The following initParameters are supported:                          -->
   <!--                                                                      -->
@@ -73,7 +81,8 @@
   <!--                    else use request dispatcher forwards              -->
   <!--                                                                      -->
   <!--   gzip             If set to true, then static content will be served--> 
-  <!--                    as gzip content encoded if a matching resource is -->
+  <!--                    as gzip content encoded if a matching resource is
+-->
   <!--                    found ending with ".gz"                           -->
   <!--                                                                      -->
   <!--   resoureBase      Can be set to replace the context resource base   -->
@@ -81,7 +90,8 @@
   <!--   relativeResourceBase                                               -->
   <!--                    Set with a pathname relative to the base of the   -->
   <!--                    servlet context root. Useful for only serving     -->
-  <!--                    static content from only specific subdirectories. -->
+  <!--                    static content from only specific subdirectories.
+-->
   <!--                                                                      -->
   <!--   useFileMappedBuffer                                                -->
   <!--                    If set to true (the default), a  memory mapped    -->
@@ -157,18 +167,22 @@
   <servlet-mapping> <servlet-name>default</servlet-name> <url-pattern>/</url-pattern> </servlet-mapping>
   
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <!-- JSP Servlet                                                          -->
   <!-- This is the jasper JSP servlet from the jakarta project              -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
   <!-- The JSP page compiler and execution servlet, which is the mechanism  -->
-  <!-- used by Glassfish to support JSP pages.  Traditionally, this servlet -->
+  <!-- used by Glassfish to support JSP pages.  Traditionally, this servlet
+-->
   <!-- is mapped to URL patterh "*.jsp".  This servlet supports the         -->
   <!-- following initialization parameters (default values are in square    -->
   <!-- brackets):                                                           -->
   <!--                                                                      -->
-  <!--   checkInterval       If development is false and reloading is true, -->
-  <!--                       background compiles are enabled. checkInterval -->
+  <!--   checkInterval       If development is false and reloading is true,
+-->
+  <!--                       background compiles are enabled. checkInterval
+-->
   <!--                       is the time in seconds between checks to see   -->
   <!--                       if a JSP page needs to be recompiled. [300]    -->
   <!--                                                                      -->
@@ -185,13 +199,16 @@
   <!--                       Set to ? to make the container explicitly set  -->
   <!--                       this parameter.                                -->
   <!--                                                                      -->
-  <!--   development         Is Jasper used in development mode (will check -->
-  <!--                       for JSP modification on every access)?  [true] -->
+  <!--   development         Is Jasper used in development mode (will check
+-->
+  <!--                       for JSP modification on every access)?  [true]
+-->
   <!--                                                                      -->
   <!--   enablePooling       Determines whether tag handler pooling is      -->
   <!--                       enabled  [true]                                -->
   <!--                                                                      -->
-  <!--   fork                Tell Ant to fork compiles of JSP pages so that -->
+  <!--   fork                Tell Ant to fork compiles of JSP pages so that
+-->
   <!--                       a separate JVM is used for JSP page compiles   -->
   <!--                       from the one Tomcat is running in. [true]      -->
   <!--                                                                      -->
@@ -207,8 +224,10 @@
   <!--                                                                      -->
   <!--   logVerbosityLevel   The level of detailed messages to be produced  -->
   <!--                       by this servlet.  Increasing levels cause the  -->
-  <!--                       generation of more messages.  Valid values are -->
-  <!--                       FATAL, ERROR, WARNING, INFORMATION, and DEBUG. -->
+  <!--                       generation of more messages.  Valid values are
+-->
+  <!--                       FATAL, ERROR, WARNING, INFORMATION, and DEBUG.
+-->
   <!--                       [WARNING]                                      -->
   <!--                                                                      -->
   <!--   mappedfile          Should we generate static content with one     -->
@@ -216,7 +235,8 @@
   <!--                       debugging?  [false]                            -->
   <!--                                                                      -->
   <!--                                                                      -->
-  <!--   reloading           Should Jasper check for modified JSPs?  [true] -->
+  <!--   reloading           Should Jasper check for modified JSPs?  [true]
+-->
   <!--                                                                      -->
   <!--   suppressSmap        Should the generation of SMAP info for JSR45   -->
   <!--                       debugging be suppressed?  [false]              -->
@@ -239,7 +259,8 @@
   <!--   the property "-Dbuild.compiler.emacs=true" when starting Jetty     -->
   <!--   to cause Jikes to emit error messages in a format compatible with  -->
   <!--   Jasper.                                                            -->
-  <!--   If you get an error reporting that jikes can't use UTF-8 encoding, -->
+  <!--   If you get an error reporting that jikes can't use UTF-8 encoding,
+-->
   <!--   try setting the init parameter "javaEncoding" to "ISO-8859-1".     -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
   <servlet id="jsp">
@@ -278,7 +299,8 @@
     <url-pattern>*.XSP</url-pattern>
   </servlet-mapping>
   
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <!-- Dynamic Servlet Invoker.                                             -->
   <!-- This servlet invokes anonymous servlets that have not been defined   -->
   <!-- in the web.xml or by other means. The first element of the pathInfo  -->
@@ -321,12 +343,14 @@
 
 
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <!-- Default MIME mappings                                                -->
   <!-- The default MIME mappings are provided by the mime.properties        -->
   <!-- resource in the org.mortbay.jetty.jar file.  Additional or modified  -->
@@ -339,14 +363,16 @@
   </mime-mapping>
   -->
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 
-  <!-- ==================================================================== -->
+  <!-- ====================================================================
+-->
   <locale-encoding-mapping-list>
     <locale-encoding-mapping><locale>ar</locale><encoding>ISO-8859-6</encoding></locale-encoding-mapping>
     <locale-encoding-mapping><locale>be</locale><encoding>ISO-8859-5</encoding></locale-encoding-mapping>
