@@ -47,9 +47,25 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    private static final int WIDTH = 700;
 
    private static final int HEIGHT = 360;
-   
-   private static final String ID = "ideallCustomizeToolbarForm";
-   
+
+   private static final String ID = "ideCustomizeToolbarForm";
+
+   private static final String ID_ADD_BUTTON = "ideCustomizeToolbarFormAddButton";
+
+   private static final String ID_OK_BUTTON = "ideCustomizeToolbarFormOkButton";
+
+   private static final String ID_CANCEL_BUTTON = "ideCustomizeToolbarFormCancelButton";
+
+   private static final String ID_RESTOREDEFAULTS_BUTTON = "ideCustomizeToolbarFormRestoreDefaultsButton";
+
+   private static final String ID_DELIMITER_BUTTON = "ideCustomizeToolbarFormDelimeterButton";
+
+   private static final String ID_DELETE_BUTTON = "ideCustomizeToolbarFormDeleteButton";
+
+   private static final String ID_MOVEUP_BUTTON = "ideCustomizeToolbarFormMoveUpButton";
+
+   private static final String ID_MOVEDOWN_BUTTON = "ideCustomizeToolbarFormMoveDownButton";
+
    private static final String TITLE = "Customize Toolbar";
 
    private static final String BUTTON_OK = "OK";
@@ -155,26 +171,31 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       buttonsLayout.setMembersMargin(15);
 
       addCommandButton = new IButton(BUTTON_ADD);
+      addCommandButton.setID(ID_ADD_BUTTON);
       addCommandButton.setWidth(BUTTONS_WIDTH);
       addCommandButton.setHeight(22);
       addCommandButton.setIcon(Images.Buttons.ADD);
 
       addDelimiterButton = new IButton(BUTTON_DELIMITER);
+      addDelimiterButton.setID(ID_DELIMITER_BUTTON);
       addDelimiterButton.setWidth(BUTTONS_WIDTH);
       addDelimiterButton.setHeight(22);
       addDelimiterButton.setIcon(Images.Buttons.ADD);
 
       deleteCommandButton = new IButton(BUTTON_DELETE);
+      deleteCommandButton.setID(ID_DELETE_BUTTON);
       deleteCommandButton.setWidth(BUTTONS_WIDTH);
       deleteCommandButton.setHeight(22);
       deleteCommandButton.setIcon(Images.Buttons.DELETE);
 
       moveUpButton = new IButton(BUTTON_MOVEUP);
+      moveUpButton.setID(ID_MOVEUP_BUTTON);
       moveUpButton.setWidth(BUTTONS_WIDTH);
       moveUpButton.setHeight(22);
       moveUpButton.setIcon(Images.Buttons.UP);
 
       moveDownButton = new IButton(BUTTON_MOVEDOWN);
+      moveDownButton.setID(ID_MOVEDOWN_BUTTON);
       moveDownButton.setWidth(BUTTONS_WIDTH);
       moveDownButton.setHeight(22);
       moveDownButton.setIcon(Images.Buttons.DOWN);
@@ -205,16 +226,19 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       okButton = new IButton(BUTTON_OK);
+      okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(CONTROL_BUTTONS_WIDTH);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.YES);
 
       cancelButton = new IButton(BUTTON_CANCEL);
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(CONTROL_BUTTONS_WIDTH);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
 
       defaultsButton = new IButton(BUTTON_RESTOREDEFAULTS);
+      defaultsButton.setID(ID_RESTOREDEFAULTS_BUTTON);
       defaultsButton.setWidth(CONTROL_BUTTONS_WIDTH);
       defaultsButton.setHeight(22);
       defaultsButton.setIcon(Images.Buttons.DEFAULTS);
@@ -278,7 +302,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    {
       return moveUpButton;
    }
-   
+
    public ListGridItem<CommandItemEx> getCommandItemListGrid()
    {
       return commandItemListGrid;

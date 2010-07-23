@@ -49,9 +49,12 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    }
 
    public final static String TOOLBAR = "Toolbar";
+   
+   public final static String ID = "ideToolbarItemListGrid";
 
    public ToolbarItemListGrid()
    {
+      setID(ID);
       setCanSort(false);
       setCanGroupBy(false);
       setCanFocus(false);

@@ -47,9 +47,12 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    }
 
    private final static String TITLE = "Command";
+   
+   private final static String ID = "ideCommandItemExListGrid";
 
    public CommandItemExListGrid()
    {
+      setID(ID);
       setCanSort(false);
       setCanGroupBy(false);
       setCanFocus(false);

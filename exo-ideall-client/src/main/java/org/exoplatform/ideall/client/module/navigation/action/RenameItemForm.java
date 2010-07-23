@@ -50,7 +50,15 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public static final int HEIGHT = 160;
    
-   private static final String ID = "ideallRenameItemForm";
+   private static final String ID = "ideRenameItemForm";
+   
+   private static final String ID_DYNAMIC_FORM = "ideRenameItemFormDynamicForm";
+   
+   private static final String ID_RENAME_BUTTON = "ideRenameItemFormRenameButton";
+   
+   private static final String ID_CANCEL_BUTTON = "ideRenameItemFormCancelButton";
+   
+   private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
 
    private VLayout vLayout;
 
@@ -90,6 +98,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private void createFieldForm()
    {
       DynamicForm paramsForm = new DynamicForm();
+      paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(340);
       paramsForm.setLayoutAlign(Alignment.CENTER);
@@ -106,6 +115,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       delimiter.setHeight(5);
 
       itemNameField = new TextField();
+      itemNameField.setName(RENAME_FIELD);
       itemNameField.setShowTitle(false);
       itemNameField.setWidth(340);
       paramsForm.setFields(caption, delimiter, itemNameField);
@@ -122,11 +132,13 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       renameButton = new IButton("Rename");
+      renameButton.setID(ID_RENAME_BUTTON);
       renameButton.setWidth(90);
       renameButton.setHeight(22);
       renameButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
