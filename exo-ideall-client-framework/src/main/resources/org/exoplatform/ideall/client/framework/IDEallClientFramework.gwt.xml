@@ -1,19 +1,19 @@
 <module>
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User' />
-	
-	<!-- Inherit the default GWT style sheet.  You can change       -->
-	<!-- the theme of your GWT application by uncommenting          -->
-	<!-- any one of the following lines.                            -->
-	<inherits name='com.google.gwt.user.Debug' />
-	<inherits name='com.google.gwt.xml.XML' />
-	<inherits name='com.google.gwt.json.JSON' />
-	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <!-- Inherit the core Web Toolkit stuff.                        -->
+   <inherits name='com.google.gwt.user.User' />
 
-	<source path="application" />	
-	<source path="control" />
-	<source path="editor" />
-	<source path="model" />
-	<source path="plugin" />
-	<source path="ui" />
+   <!-- Inherit the default GWT style sheet.  You can change       -->
+   <!-- the theme of your GWT application by uncommenting          -->
+   <!-- any one of the following lines.                            -->
+   <inherits name='com.google.gwt.user.Debug' />
+   <inherits name='com.google.gwt.xml.XML' />
+   <inherits name='com.google.gwt.json.JSON' />
+   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+
+   <source path="application" />
+   <source path="control" />
+   <source path="editor" />
+   <source path="model" />
+   <source path="plugin" />
+   <source path="ui" />
 </module>
