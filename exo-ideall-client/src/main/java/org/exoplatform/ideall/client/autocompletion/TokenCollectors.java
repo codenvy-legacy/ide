@@ -23,7 +23,6 @@ import java.util.HashMap;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.gadget.GoogleGadgetTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
@@ -45,7 +44,6 @@ public final class TokenCollectors
    {
       tokenCollectors.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus));
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
-      tokenCollectors.put(MimeType.GOOGLE_GADGET, new GoogleGadgetTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus));
 

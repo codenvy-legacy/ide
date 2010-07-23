@@ -54,7 +54,7 @@ public class IDE extends VerticalPanel
 
       new IDEallForm(eventBus, context);
       
-      new AutoCompletionManager(eventBus, context);
+      new AutoCompletionManager(eventBus);
       
       Configuration configuration = new Configuration(eventBus, context);
       configuration.loadConfiguration(IDELoader.getInstance());         

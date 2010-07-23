@@ -69,7 +69,11 @@ public class JavaScriptTokenCollector implements TokenCollector
       List<Token> tokens = new ArrayList<Token>();
 
       filteredToken.clear();
-
+      
+    //  printTokens(tokenFromParser);
+      
+      tokenFromParser = getTokenJavaScript(tokenFromParser);
+      
       parseTokenLine(line, cursorPos);
 
       if (beforeToken.endsWith("."))
@@ -86,7 +90,6 @@ public class JavaScriptTokenCollector implements TokenCollector
             defaultTokens = parser.getTokens(tokenArray);
          }
          tokens.addAll(defaultTokens);
-//         printTokens(defaultTokens);
          filterToken(lineNum, tokenFromParser);
       }
       tokens.addAll(filteredToken);
@@ -117,10 +120,7 @@ public class JavaScriptTokenCollector implements TokenCollector
       {
          if (t.getSubTokenList() != null)
          {
-            for (Token sub : t.getSubTokenList())
-            {
-               filteredToken.add(sub);
-            }
+            filteredToken.addAll(t.getSubTokenList());
          }
       }
    }
@@ -276,13 +276,40 @@ public class JavaScriptTokenCollector implements TokenCollector
    {
       for (Token t : token)
       {
+         System.out.println(t.getName() + " " + t.getType());
          if (t.getSubTokenList() != null)
          {
             printTokens(t.getSubTokenList());
          }
-         System.out.println(t.getName() + " " + t.getType());
       }
       System.out.println("+++++++++++++++++++++++++");
    }
+   
+   /**
+    * @param tokenFromParser
+    */
+   private List<Token> getTokenJavaScript(List<Token> tokenFromParser)
+   {
+      List<Token> tokens = new ArrayList<Token>();
 
+      String tagName = "script";
+
+      for (int i = 0; i < tokenFromParser.size(); i++)
+      {
+         Token token = tokenFromParser.get(i);
+         if(token.getName() == null)
+             continue;
+         
+         if (token.getName().equals(tagName))
+         {
+            tokens.addAll(token.getSubTokenList());
+         }
+         else if (!token.getSubTokenList().isEmpty())
+         {
+            tokens.addAll(getTokenJavaScript(token.getSubTokenList()));
+         }
+      }
+
+      return tokens;
+   }
 }

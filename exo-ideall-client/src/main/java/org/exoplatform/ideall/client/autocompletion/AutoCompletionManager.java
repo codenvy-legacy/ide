@@ -31,7 +31,6 @@ import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoComp
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
 import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -48,8 +47,6 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private int cursorOffsetX;
 
    private int cursorOffsetY;
@@ -62,50 +59,48 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    private String beforeToken;
 
-   public AutoCompletionManager(HandlerManager eventBus, ApplicationContext context)
+   public AutoCompletionManager(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
 
-   private List<Token> filterTokens(List<Token> tokens)
+   private List<Token> filterTokenByMimeType(List<Token> tokens, String mimeType)
    {
-
-      List<Token> token = new ArrayList<Token>();
-
+      ArrayList<Token> newTokenList = new ArrayList<Token>();
+      boolean isAdd = false;
       for (int i = 0; i < tokens.size(); i++)
       {
          Token t = tokens.get(i);
-         if (t.getName() != null)
+         if((t.getName() != null) && (t.getMimeType().equals(mimeType)))
          {
-            token.add(t);
-            if (t.getSubTokenList() != null)
-            {
-               List<Token> subTokens = filterTokens(t.getSubTokenList());
-               t.getSubTokenList().clear();
-               t.getSubTokenList().addAll(subTokens);
-            }
-         }         
+            newTokenList.add(t);
+            isAdd = true;
+         }
+         if((t.getSubTokenList() != null) && (!isAdd))
+         {
+            newTokenList.addAll(filterTokenByMimeType(t.getSubTokenList(), mimeType));
+            isAdd = false;
+         }
       }
-      return token;
+      
+      return newTokenList;
    }
-
+   
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       lineContent = event.getLineContent();
-      TokenCollector collector = TokenCollectors.getTokenCollector(eventBus, event.getMimeType());
+      TokenCollector collector = TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)
       {
          collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event
-            .getCursorPositionX(), filterTokens(event.getTokenList()), this);
+            .getCursorPositionX(), filterTokenByMimeType(event.getTokenList(), event.getLineMimeType()), this);
          //         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event.getCursorPositionX(), event.getTokenList(), this);
 
-         System.out.println(event.getMimeType());
       }
    }
 
