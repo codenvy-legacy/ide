@@ -30,7 +30,7 @@
 
          </properties-param>
       </init-params>
-   </component-->
+   </component -->
    
    <component>
     <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
