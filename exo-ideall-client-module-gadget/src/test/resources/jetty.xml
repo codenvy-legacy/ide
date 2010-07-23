@@ -15,22 +15,22 @@
     <!-- =========================================================== -->
     <!-- Server Thread Pool                                          -->
     <!-- =========================================================== -->
-    <Set name="ThreadPool">
+   <Set name="ThreadPool">
 
       <New class="org.mortbay.thread.QueuedThreadPool">
-        <Set name="minThreads">10</Set>
-        <Set name="maxThreads">200</Set>
-        <Set name="lowThreads">20</Set>
-        <Set name="SpawnOrShrinkAt">2</Set>
+         <Set name="minThreads">10</Set>
+         <Set name="maxThreads">200</Set>
+         <Set name="lowThreads">20</Set>
+         <Set name="SpawnOrShrinkAt">2</Set>
       </New>
 
-      <!-- Optional Java 5 bounded threadpool with job queue 
-      <New class="org.mortbay.thread.concurrent.ThreadPool">
-        <Set name="corePoolSize">50</Set>
-        <Set name="maximumPoolSize">50</Set>
-      </New>
+      <!--
+         Optional Java 5 bounded threadpool with job queue <New
+         class="org.mortbay.thread.concurrent.ThreadPool"> <Set
+         name="corePoolSize">50</Set> <Set
+         name="maximumPoolSize">50</Set> </New>
       -->
-    </Set>
+   </Set>
 
 
 
@@ -42,21 +42,25 @@
 
     <!-- Use this connector for many frequently idle connections
          and for threadless continuations.
-    -->    
-    <Call name="addConnector">
+    -->
+   <Call name="addConnector">
       <Arg>
-          <New class="org.mortbay.jetty.nio.SelectChannelConnector">
-            <Set name="host"><SystemProperty name="jetty.host" /></Set>
-            <Set name="port"><SystemProperty name="jetty.port" default="8081"/></Set>
+         <New class="org.mortbay.jetty.nio.SelectChannelConnector">
+            <Set name="host">
+               <SystemProperty name="jetty.host" />
+            </Set>
+            <Set name="port">
+               <SystemProperty name="jetty.port" default="8081" />
+            </Set>
             <Set name="maxIdleTime">30000</Set>
             <Set name="Acceptors">2</Set>
             <Set name="statsOn">false</Set>
             <Set name="confidentialPort">8443</Set>
-	    <Set name="lowResourcesConnections">5000</Set>
-	    <Set name="lowResourcesMaxIdleTime">5000</Set>
-          </New>
+            <Set name="lowResourcesConnections">5000</Set>
+            <Set name="lowResourcesMaxIdleTime">5000</Set>
+         </New>
       </Arg>
-    </Call>
+   </Call>
 
     <!-- Use this connector if NIO is not available. 
     <Call name="addConnector">
@@ -90,23 +94,25 @@
     <!-- =========================================================== -->
     <!-- Set handler Collection Structure                            --> 
     <!-- =========================================================== -->
-    <Set name="handler">
+   <Set name="handler">
       <New id="Handlers" class="org.mortbay.jetty.handler.HandlerCollection">
-        <Set name="handlers">
-         <Array type="org.mortbay.jetty.Handler">
-           <Item>
-             <New id="Contexts" class="org.mortbay.jetty.handler.ContextHandlerCollection"/>
-           </Item>
-           <Item>
-             <New id="DefaultHandler" class="org.mortbay.jetty.handler.DefaultHandler"/>
-           </Item>
-           <Item>
-             <New id="RequestLog" class="org.mortbay.jetty.handler.RequestLogHandler"/>
-           </Item>
-         </Array>
-        </Set>
+         <Set name="handlers">
+            <Array type="org.mortbay.jetty.Handler">
+               <Item>
+                  <New id="Contexts"
+                     class="org.mortbay.jetty.handler.ContextHandlerCollection" />
+               </Item>
+               <Item>
+                  <New id="DefaultHandler" class="org.mortbay.jetty.handler.DefaultHandler" />
+               </Item>
+               <Item>
+                  <New id="RequestLog"
+                     class="org.mortbay.jetty.handler.RequestLogHandler" />
+               </Item>
+            </Array>
+         </Set>
       </New>
-    </Set>
+   </Set>
     
     <!-- =========================================================== -->
     <!-- Configure the context deployer                              -->
@@ -119,15 +125,20 @@
     <!-- in the $JETTY_HOME/contexts directory                       -->
     <!--                                                             -->
     <!-- =========================================================== -->
-    <Call name="addLifeCycle">
+   <Call name="addLifeCycle">
       <Arg>
-        <New class="org.mortbay.jetty.deployer.ContextDeployer">
-          <Set name="contexts"><Ref id="Contexts"/></Set>
-          <Set name="configurationDir"><SystemProperty name="jetty.home" default="."/>/contexts</Set>
-          <Set name="scanInterval">1</Set>
-        </New>
+         <New class="org.mortbay.jetty.deployer.ContextDeployer">
+            <Set name="contexts">
+               <Ref id="Contexts" />
+            </Set>
+            <Set name="configurationDir">
+               <SystemProperty name="jetty.home" default="." />
+               /contexts
+            </Set>
+            <Set name="scanInterval">1</Set>
+         </New>
       </Arg>
-    </Call>
+   </Call>
 
     <!-- =========================================================== -->
     <!-- Configure the webapp deployer.                              -->
@@ -142,18 +153,26 @@
     <!-- Normally only one type of deployer need be used.            -->
     <!--                                                             -->
     <!-- =========================================================== -->
-    <Call name="addLifeCycle">
+   <Call name="addLifeCycle">
       <Arg>
-        <New class="org.mortbay.jetty.deployer.WebAppDeployer">
-          <Set name="contexts"><Ref id="Contexts"/></Set>
-          <Set name="webAppDir"><SystemProperty name="jetty.home" default="."/>/webapps</Set>
-	  <Set name="parentLoaderPriority">false</Set>
-	  <Set name="extract">true</Set>
-	  <Set name="allowDuplicates">false</Set>
-          <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>../../../src/test/resources/webdefault.xml</Set>
-        </New>
+         <New class="org.mortbay.jetty.deployer.WebAppDeployer">
+            <Set name="contexts">
+               <Ref id="Contexts" />
+            </Set>
+            <Set name="webAppDir">
+               <SystemProperty name="jetty.home" default="." />
+               /webapps
+            </Set>
+            <Set name="parentLoaderPriority">false</Set>
+            <Set name="extract">true</Set>
+            <Set name="allowDuplicates">false</Set>
+            <Set name="defaultsDescriptor">
+               <SystemProperty name="jetty.home" default="." />
+               ../../../src/test/resources/webdefault.xml
+            </Set>
+         </New>
       </Arg>
-    </Call>
+   </Call>
 
     <!-- =========================================================== -->
     <!-- Configure Authentication Realms                             -->
@@ -181,26 +200,29 @@
     <!-- contexts configuration (see $(jetty.home)/contexts/test.xml -->
     <!-- for an example).                                            -->
     <!-- =========================================================== -->
-    <Ref id="RequestLog">
+   <Ref id="RequestLog">
       <Set name="requestLog">
-        <New id="RequestLogImpl" class="org.mortbay.jetty.NCSARequestLog">
-          <Set name="filename"><SystemProperty name="jetty.logs" default="./target/logs"/>/jetty_yyyy_mm_dd.request.log</Set>
-          <Set name="filenameDateFormat">yyyy_MM_dd</Set>
-          <Set name="retainDays">90</Set>
-          <Set name="append">true</Set>
-          <Set name="extended">true</Set>
-          <Set name="logCookies">false</Set>
-          <Set name="LogTimeZone">GMT</Set>
-        </New>
+         <New id="RequestLogImpl" class="org.mortbay.jetty.NCSARequestLog">
+            <Set name="filename">
+               <SystemProperty name="jetty.logs" default="./target/logs" />
+               /jetty_yyyy_mm_dd.request.log
+            </Set>
+            <Set name="filenameDateFormat">yyyy_MM_dd</Set>
+            <Set name="retainDays">90</Set>
+            <Set name="append">true</Set>
+            <Set name="extended">true</Set>
+            <Set name="logCookies">false</Set>
+            <Set name="LogTimeZone">GMT</Set>
+         </New>
       </Set>
     </Ref>
 
     <!-- =========================================================== -->
     <!-- extra options                                               -->
     <!-- =========================================================== -->
-    <Set name="stopAtShutdown">true</Set>
-    <Set name="sendServerVersion">true</Set>
-    <Set name="sendDateHeader">true</Set>
-    <Set name="gracefulShutdown">1000</Set>
+   <Set name="stopAtShutdown">true</Set>
+   <Set name="sendServerVersion">true</Set>
+   <Set name="sendDateHeader">true</Set>
+   <Set name="gracefulShutdown">1000</Set>
 
 </Configure>
