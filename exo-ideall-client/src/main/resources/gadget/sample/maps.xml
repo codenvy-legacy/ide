@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-  <ModulePrefs author="LabPixies" author_email="info@labpixies.com" title="__MSG_g_title__" description="__MSG_g_description__" screenshot="http://cdn.labpixies.com/campaigns/maps/images/screenshot.png" thumbnail="http://cdn.labpixies.com/campaigns/maps/images/thumbnail.jpg" height="440" title_url="http://www.labpixies.com">
-    <Locale messages="http://www.labpixies.com/campaigns/maps/i19/all_all.xml"/>
-    <Locale lang="es" messages="http://www.labpixies.com/campaigns/maps/i19/es_all.xml"/>
-    <Locale lang="de" messages="http://www.labpixies.com/campaigns/maps/i19/de_all.xml"/>
-    <Locale lang="fr" messages="http://www.labpixies.com/campaigns/maps/i19/fr_all.xml"/>
-    <Locale lang="it" messages="http://www.labpixies.com/campaigns/maps/i19/it_all.xml"/>
-    <Locale lang="ja" messages="http://www.labpixies.com/campaigns/maps/i19/ja_all.xml"/>
-    <Locale lang="nl" messages="http://www.labpixies.com/campaigns/maps/i19/nl_all.xml"/>
-    <Locale lang="pl" messages="http://www.labpixies.com/campaigns/maps/i19/pl_all.xml"/>
-    <Locale lang="pt-PT" messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml"/>
-    <Locale lang="pt-BR" messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml"/>
-    <Locale lang="zh-CN" messages="http://www.labpixies.com/campaigns/maps/i19/zh_cn_all.xml"/>
-	<Require feature="dynamic-height" />
-	<Require feature="analytics" />
-	<Require feature="setprefs" />
-  </ModulePrefs>
-<UserPref name="last_location" datatype="hidden" default_value="0" />
-  <Content type="html">
+   <ModulePrefs author="LabPixies" author_email="info@labpixies.com"
+      title="__MSG_g_title__" description="__MSG_g_description__"
+      screenshot="http://cdn.labpixies.com/campaigns/maps/images/screenshot.png"
+      thumbnail="http://cdn.labpixies.com/campaigns/maps/images/thumbnail.jpg"
+      height="440" title_url="http://www.labpixies.com">
+      <Locale messages="http://www.labpixies.com/campaigns/maps/i19/all_all.xml" />
+      <Locale lang="es"
+         messages="http://www.labpixies.com/campaigns/maps/i19/es_all.xml" />
+      <Locale lang="de"
+         messages="http://www.labpixies.com/campaigns/maps/i19/de_all.xml" />
+      <Locale lang="fr"
+         messages="http://www.labpixies.com/campaigns/maps/i19/fr_all.xml" />
+      <Locale lang="it"
+         messages="http://www.labpixies.com/campaigns/maps/i19/it_all.xml" />
+      <Locale lang="ja"
+         messages="http://www.labpixies.com/campaigns/maps/i19/ja_all.xml" />
+      <Locale lang="nl"
+         messages="http://www.labpixies.com/campaigns/maps/i19/nl_all.xml" />
+      <Locale lang="pl"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pl_all.xml" />
+      <Locale lang="pt-PT"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml" />
+      <Locale lang="pt-BR"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml" />
+      <Locale lang="zh-CN"
+         messages="http://www.labpixies.com/campaigns/maps/i19/zh_cn_all.xml" />
+      <Require feature="dynamic-height" />
+      <Require feature="analytics" />
+      <Require feature="setprefs" />
+   </ModulePrefs>
+   <UserPref name="last_location" datatype="hidden"
+      default_value="0" />
+   <Content type="html">
 <![CDATA[
 
 <!-- 
@@ -995,5 +1010,5 @@ _IG_RegisterOnloadHandler(init);
 </script>
 
 ]]>
-  </Content>
+   </Content>
 </Module>

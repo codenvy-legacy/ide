@@ -1,30 +1,32 @@
 <module>
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User' />
+   <!-- Inherit the core Web Toolkit stuff.                        -->
+   <inherits name='com.google.gwt.user.User' />
 
-	<inherits name="com.google.gwt.http.HTTP" />
-	<inherits name='com.google.gwt.user.Debug' />
-	<inherits name='com.google.gwt.xml.XML' />
-	<inherits name='com.google.gwt.json.JSON' />
-	<inherits name='com.google.gwt.junit.JUnit' />
-	
-	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <inherits name="com.google.gwt.http.HTTP" />
+   <inherits name='com.google.gwt.user.Debug' />
+   <inherits name='com.google.gwt.xml.XML' />
+   <inherits name='com.google.gwt.json.JSON' />
+   <inherits name='com.google.gwt.junit.JUnit' />
 
-	<inherits name="com.smartgwt.SmartGwt" />
-	<!-- load GWT Commons Libraries -->
-	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
-	<inherits name='org.exoplatform.gwtframework.editor.Editor' />
-	<inherits name='org.exoplatform.gwtframework.ui.UI' />	
-	<inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
-	
-	<inherits name='org.exoplatform.ideall.IDEallGadgetModule' />
-	<inherits name="org.exoplatform.ideall.IDEallVirtualFileSystem"/>
+   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
 
-	<!-- Specify the app entry point class.                         -->
-	<source path="client" excludes="IDEGadget.java" />
-	<!--<source path="template" />
+   <inherits name="com.smartgwt.SmartGwt" />
+   <!-- load GWT Commons Libraries -->
+   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <inherits name='org.exoplatform.gwtframework.editor.Editor' />
+   <inherits name='org.exoplatform.gwtframework.ui.UI' />
+   <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
+
+   <inherits name='org.exoplatform.ideall.IDEallGadgetModule' />
+   <inherits name="org.exoplatform.ideall.IDEallVirtualFileSystem" />
+
+   <!-- Specify the app entry point class.                         -->
+   <source path="client" excludes="IDEGadget.java" />
+   <!--<source path="template" />
 	
-	--><entry-point class='org.exoplatform.ideall.client.IDEGwtTest' />
-	
-	<servlet path="/testwebdav" class="org.exoplatform.ideall.server.TestWebDavVFSServlet" />
+	-->
+   <entry-point class='org.exoplatform.ideall.client.IDEGwtTest' />
+
+   <servlet path="/testwebdav"
+      class="org.exoplatform.ideall.server.TestWebDavVFSServlet" />
 </module>
