@@ -27,6 +27,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tree.Tree;
+import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
@@ -46,6 +47,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    private boolean allowSameNames = false;
    
    private final String ID = "ideItemTreeGrid";
+   
+   private static final String NAME = "name";
 
    public ItemTreeGrid()
    {
@@ -56,12 +59,23 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       tree.setModelType(TreeModelType.CHILDREN);
       tree.setRoot(new TreeNode("root"));      
       setData(tree);
-
+      
       setSelectionType(SelectionStyle.SINGLE);
+      
+      setSeparateFolders(true);
 
       setCanFocus(false);
       setShowConnectors(false);
-      setCanSort(false);      
+      setCanSort(false);
+      
+      TreeGridField nameField = new TreeGridField(NAME);
+      //TODO
+      //This field need for selenium.
+      //We can't select tree node, if click on first column.
+      //If you click on second column - tree item is selected.
+      TreeGridField mockField = new TreeGridField("mock");
+      mockField.setWidth(3);
+      setFields(nameField, mockField);
    }
 
    public ItemTreeGrid(boolean allowSameNames)
@@ -102,6 +116,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          if (getValue().getIcon() != null)
          {
             rootNode.setAttribute("icon", getValue().getIcon());
+            rootNode.setAttribute(NAME, nodeName);
 //            Image i = new Image(IDEImageBundle.INSTANCE.search());
 //            iconPrefix = ImageUtil.getHTML(i);
          }         
@@ -229,6 +244,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
             if (existedNode != null)
             {
                existedNode.setAttribute(getValuePropertyName(), child);
+               existedNode.setAttribute(NAME, child.getName());
                continue;
             }
          }
@@ -243,6 +259,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          if (child.getIcon() != null)
          {
             node.setAttribute("icon", child.getIcon());
+            node.setAttribute(NAME, child.getName());
          }
 
          //tree.add(node, parentNode);
