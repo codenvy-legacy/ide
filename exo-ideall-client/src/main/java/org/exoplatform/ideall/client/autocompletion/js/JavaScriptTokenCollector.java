@@ -293,7 +293,12 @@ public class JavaScriptTokenCollector implements TokenCollector
       List<Token> tokens = new ArrayList<Token>();
 
       String tagName = "script";
-
+      
+      if(!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
+      {
+         return tokenFromParser;
+      }
+      
       for (int i = 0; i < tokenFromParser.size(); i++)
       {
          Token token = tokenFromParser.get(i);
