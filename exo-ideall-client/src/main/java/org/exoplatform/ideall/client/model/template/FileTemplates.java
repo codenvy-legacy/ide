@@ -90,7 +90,7 @@ public class FileTemplates
       + "  @Path(\"helloworld/{name}\")\n" + "  public String hello(@PathParam(\"name\") String name) {\n"
       + "    return \"Hello \" + name\n" + "  }\n" + "}\n";
       
-      templates.put(MimeType.SCRIPT_GROOVY, content);
+      templates.put(MimeType.GROOVY_SERVICE, content);
    }
    
    private static void addEmptyTXT() {

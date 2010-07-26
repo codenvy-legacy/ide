@@ -113,8 +113,8 @@ public class TemplateServiceImpl extends TemplateService
             .getTemplateFor(MimeType.GOOGLE_GADGET), null));
 
       templateList.getTemplates().add(
-         new Template(MimeType.SCRIPT_GROOVY, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
-            .getTemplateFor(MimeType.SCRIPT_GROOVY), null));
+         new Template(MimeType.GROOVY_SERVICE, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
+            .getTemplateFor(MimeType.GROOVY_SERVICE), null));
 
       templateList.getTemplates().add(
          new Template(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates

@@ -167,7 +167,7 @@ public class SearchPresenter
       mimeTypes[4] = MimeType.APPLICATION_JAVASCRIPT;
       mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
       mimeTypes[6] = MimeType.TEXT_XML;
-      mimeTypes[7] = MimeType.SCRIPT_GROOVY;
+      mimeTypes[7] = MimeType.GROOVY_SERVICE;
       mimeTypes[8] = MimeType.APPLICATION_GROOVY;
       mimeTypes[9] = MimeType.GOOGLE_GADGET;
       display.setMimeTypeValues(mimeTypes);
