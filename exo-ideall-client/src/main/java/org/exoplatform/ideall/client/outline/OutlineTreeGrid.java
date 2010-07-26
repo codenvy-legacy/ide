@@ -88,7 +88,6 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                && getValue().getSubTokenList().size() > 0)
       {
          fillTreeItems(rootNode, getValue().getSubTokenList());
-//         tree.openAll();
       }
       else
       {
@@ -167,34 +166,40 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       final String name = token.getName(); 
       final int lineNumber = token.getLineNumber();
       
-      deselectAllRecords();
+      TreeNode selectedNode = null;
       
-      for (ListGridRecord record : getRecords())
-      {
-         if (record.getAttributeAsObject(getValuePropertyName()) instanceof Token)
-         {
-            Token  currentToken =  (Token)record.getAttributeAsObject(getValuePropertyName());
-            if (name.equals(currentToken.getName()) && lineNumber == currentToken.getLineNumber())
-            {
-               selectRecord(record);
-               return;
-            }
-         }
-      }
-   }
-   
-   public void openToken(Token token)
-   {
-      final String name = token.getName(); 
-      final int lineNumber = token.getLineNumber();
-      
+      //find node and open all parents
       for (TreeNode node : tree.getAllNodes())
       {
          Token nodeToken = (Token)node.getAttributeAsObject(getValuePropertyName());
          if (nodeToken.getName().equals(name) && nodeToken.getLineNumber() == lineNumber)
          {
             tree.openFolder(node);
+            TreeNode parent = tree.getParent(node);
+            while (parent != null)
+            {
+               tree.openFolder(parent);
+               parent = tree.getParent(parent);
+            }
+            selectedNode = node;
             break;
+         }
+      }
+      
+      //select opened record
+      if (selectedNode != null)
+      {
+         for (ListGridRecord record : getRecords())
+         {
+            if (record.getAttributeAsObject(getValuePropertyName()) instanceof Token)
+            {
+               Token  currentToken =  (Token)record.getAttributeAsObject(getValuePropertyName());
+               if (name.equals(currentToken.getName()) && lineNumber == currentToken.getLineNumber())
+               {
+                  selectSingleRecord(record);
+                  return;
+               }
+            }
          }
       }
    }

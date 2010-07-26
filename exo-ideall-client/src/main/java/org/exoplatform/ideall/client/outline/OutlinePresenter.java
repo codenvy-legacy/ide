@@ -56,7 +56,7 @@ EditorActivityHandler
 
       void selectToken(Token token);
       
-      void openToken(Token token);
+      boolean isFormVisible();
    }
 
    private HandlerManager eventBus;
@@ -187,8 +187,6 @@ EditorActivityHandler
          {
             if (selectTokenByRow(token.getSubTokenList()))
             {
-               display.openToken(token);
-               selectTokenByRow(token.getSubTokenList());
                return true;
             }
             else
@@ -234,8 +232,6 @@ EditorActivityHandler
             {
                if (selectTokenByRow(next.getSubTokenList()))
                {
-                  display.openToken(next);
-                  selectTokenByRow(next.getSubTokenList());
                   return true;
                }
                else
@@ -250,8 +246,6 @@ EditorActivityHandler
          {
             if (selectTokenByRow(token.getSubTokenList()))
             {
-               display.openToken(token);
-               selectTokenByRow(token.getSubTokenList());
                return true;
             }
             else
@@ -308,6 +302,15 @@ EditorActivityHandler
       
       currentRow = event.getRow();
       
-      selectTokenByRow(tokens);
+      selectOutlineTimer.cancel();
+      selectOutlineTimer.schedule(1000);
    }
+   
+   private Timer selectOutlineTimer = new Timer() {
+      @Override
+      public void run()
+      {
+         selectTokenByRow(tokens);
+      }
+   };
 }

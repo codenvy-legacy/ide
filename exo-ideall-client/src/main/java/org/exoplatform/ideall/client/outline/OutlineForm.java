@@ -86,12 +86,9 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       }
    }
 
-   public void openToken(Token token)
+   public boolean isFormVisible()
    {
-      if (token != null)
-      {
-         treeGrid.openToken(token);
-      }
+      return getTabSet().isVisible();
    }
 
 }
