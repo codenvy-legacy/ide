@@ -42,10 +42,11 @@ public final class TokenCollectors
 
    private TokenCollectors(HandlerManager eventBus)
    {
-      tokenCollectors.put(MimeType.SCRIPT_GROOVY, new GroovyTokenCollector(eventBus));
+      tokenCollectors.put(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus));
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus));
+//      tokenCollectors.put(MimeType.TEXT_XML, new XmlTocenCollector());
 
    }
 
