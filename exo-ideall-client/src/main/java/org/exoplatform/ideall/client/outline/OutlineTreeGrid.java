@@ -31,6 +31,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tree.Tree;
+import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
@@ -60,7 +61,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    
    private static final String CLASS_ICON = Images.Outline.CLASS_ITEM;
    
-   protected static String NAME_ATTRIBUTE;
+   private static final String NAME = "name";
 
    private Tree tree;
 
@@ -81,6 +82,15 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       rootNode = new TreeNode("root");
       tree.setRoot(rootNode);
       setData(tree);
+      
+      TreeGridField nameField = new TreeGridField(NAME);
+      //TODO
+      //This field need for selenium.
+      //We can't select tree node, if click on first column.
+      //If you click on second column - tree item is selected.
+      TreeGridField mockField = new TreeGridField("mock");
+      mockField.setWidth(3);
+      setFields(nameField, mockField);
    }
 
    @Override
@@ -154,6 +164,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                {
                   newNode.setAttribute(ICON, CLASS_ICON);
                }
+               newNode.setAttribute(NAME, child.getName());
                tree.add(newNode, parentNode);
             }
             
