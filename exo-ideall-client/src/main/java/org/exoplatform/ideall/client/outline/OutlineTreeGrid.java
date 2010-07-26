@@ -58,6 +58,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    
    private static final String GROOVY_TAG_ICON = Images.Outline.GROOVY_TAG_ITEM;
    
+   private static final String CLASS_ICON = Images.Outline.CLASS_ITEM;
+   
    protected static String NAME_ATTRIBUTE;
 
    private Tree tree;
@@ -147,6 +149,10 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                else if (child.getType().equals(TokenType.GROOVY_TAG))
                {
                   newNode.setAttribute(ICON, GROOVY_TAG_ICON);
+               }
+               else if (child.getType().equals(TokenType.CLASS))
+               {
+                  newNode.setAttribute(ICON, CLASS_ICON);
                }
                tree.add(newNode, parentNode);
             }

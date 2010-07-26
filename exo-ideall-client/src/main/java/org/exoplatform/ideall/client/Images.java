@@ -182,6 +182,8 @@ public interface Images
       public static final String CDATA_ITEM = imageUrl + "outline/cdata-item.png";
       
       public static final String GROOVY_TAG_ITEM = imageUrl + "outline/groovy-tag.png";
+      
+      public static final String CLASS_ITEM = imageUrl + "outline/class-item.png";
    }
 
    public static final String BLANK = imageUrl + "blank.png";
