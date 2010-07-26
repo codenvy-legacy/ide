@@ -20,6 +20,7 @@
 package org.exoplatform.ideall.client.autocompletion.js;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -46,7 +47,7 @@ public class JavaScriptTokenCollector implements TokenCollector
    
    private HandlerManager eventBus;
 
-   private List<Token> filteredToken = new ArrayList<Token>();
+   private HashMap<String,Token> filteredToken = new HashMap<String,Token>();
 
    private String beforeToken;
 
@@ -92,7 +93,7 @@ public class JavaScriptTokenCollector implements TokenCollector
          tokens.addAll(defaultTokens);
          filterToken(lineNum, tokenFromParser);
       }
-      tokens.addAll(filteredToken);
+      tokens.addAll(filteredToken.values());
 
       tokensCollectedCallback.onTokensCollected(tokens, beforeToken, tokenToComplete, afterToken);
    }
@@ -107,20 +108,24 @@ public class JavaScriptTokenCollector implements TokenCollector
       token = token.substring(0, token.length() - 1);
 
       String tokens[] = token.split("[({)}; ]");
-      Token t = null;
+      Token foundToken = null;
       if (tokens.length != 0)
       {
-         t = findToken(tokens[tokens.length - 1], list);
+         foundToken = findToken(tokens[tokens.length - 1], list);
       }
       else
       {
-         t = findToken(token, list);
+         foundToken = findToken(token, list);
       }
-      if (t != null)
+      if (foundToken != null)
       {
-         if (t.getSubTokenList() != null)
+         if (foundToken.getSubTokenList() != null)
          {
-            filteredToken.addAll(t.getSubTokenList());
+//            filteredToken.addAll(t.getSubTokenList());
+            for( Token t : foundToken.getSubTokenList())
+            {
+               filteredToken.put(t.getName(), t);
+            }
          }
       }
    }
@@ -160,7 +165,8 @@ public class JavaScriptTokenCollector implements TokenCollector
          {
             lastFunction = t;
          }
-         filteredToken.add(t);
+//         filteredToken.add(t);
+         filteredToken.put(t.getName(), t);
       }
 
       if (lastFunction != null && lastFunction.getSubTokenList() != null)
@@ -185,7 +191,8 @@ public class JavaScriptTokenCollector implements TokenCollector
          {
             filterSubToken(currentLine, t.getSubTokenList());
          }
-         filteredToken.add(t);
+//         filteredToken.add(t);
+         filteredToken.put(t.getName(), t);
       }
    }
 
@@ -314,7 +321,7 @@ public class JavaScriptTokenCollector implements TokenCollector
             tokens.addAll(getTokenJavaScript(token.getSubTokenList()));
          }
       }
-
+      
       return tokens;
    }
 }
