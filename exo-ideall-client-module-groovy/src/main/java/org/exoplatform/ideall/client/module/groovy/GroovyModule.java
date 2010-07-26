@@ -48,7 +48,9 @@ public class GroovyModule extends AbstractIDEModule
    public void initializeModule()
    {
       addControl(new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
-         Images.FileType.GROOVY, MimeType.SCRIPT_GROOVY));
+         Images.FileType.GROOVY, MimeType.GROOVY_SERVICE));
+      addControl(new NewItemControl("File/New/New Groovy Script", "Groovy Script", "Create Groovy Script",
+         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY));
 
       addControl(new SetAutoloadCommand(), true, true);
       addControl(new ValidateGroovyCommand(), true, true);

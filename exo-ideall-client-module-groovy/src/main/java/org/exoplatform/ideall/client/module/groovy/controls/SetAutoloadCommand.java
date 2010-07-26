@@ -86,8 +86,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
          return;
       }
 
-      if (!MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
-         && !MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
+      if (!MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()))
       {
          hideAutoload();
          return;

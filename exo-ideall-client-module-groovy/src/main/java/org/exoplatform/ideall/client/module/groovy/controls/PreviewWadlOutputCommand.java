@@ -57,8 +57,7 @@ public class PreviewWadlOutputCommand extends IDEControl implements EditorActive
          return;
       }
 
-      if (MimeType.SCRIPT_GROOVY.equals(event.getFile().getContentType())
-         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()))
       {
          if (event.getFile().isNewFile())
          {
