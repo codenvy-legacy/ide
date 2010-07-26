@@ -40,8 +40,8 @@ public class NodeTypeUtil
 
    static
    {
-      nodeTypes.put(MimeType.SCRIPT_GROOVY, "exo:groovyResourceContainer");
-      nodeTypes.put(MimeType.APPLICATION_GROOVY, "exo:groovyResourceContainer");
+      nodeTypes.put(MimeType.GROOVY_SERVICE, "exo:groovyResourceContainer");
+//      nodeTypes.put(MimeType.APPLICATION_GROOVY, "exo:groovyResourceContainer");
       nodeTypes.put(MimeType.GOOGLE_GADGET, "exo:googleGadget");
    }
 
