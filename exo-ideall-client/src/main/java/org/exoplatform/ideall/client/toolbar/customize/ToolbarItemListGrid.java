@@ -49,7 +49,9 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    }
 
    public final static String TOOLBAR = "Toolbar";
-   
+
+   public final static String COMMAND_ID = "CommandId";
+
    public final static String ID = "ideToolbarItemListGrid";
 
    public ToolbarItemListGrid()
@@ -61,7 +63,10 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       setSelectionType(SelectionStyle.SINGLE);
 
       ListGridField toolBarItemsField = new ListGridField(TOOLBAR, TOOLBAR);
-      setFields(toolBarItemsField);
+      ListGridField idField = new ListGridField(COMMAND_ID, COMMAND_ID);
+      idField.setHidden(true);
+
+      setFields(toolBarItemsField, idField);
    }
 
    public void selectItem(ToolbarItem item)
@@ -95,41 +100,46 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       if (item.getType() == ToolbarItem.Type.COMMAND)
       {
          String title = item.getCommand().getId();
-         if (title.indexOf("/") >= 0) {
+         if (title.indexOf("/") >= 0)
+         {
             title = title.substring(title.lastIndexOf("/") + 1);
          }
-         
-         while (title.indexOf("\\") >= 0) {
+         String id = title;
+         while (title.indexOf("\\") >= 0)
+         {
             title = title.replace("\\", "/");
-         }         
-         
-         if (item.getCommand() instanceof PopupMenuControl) {
+         }
+
+         if (item.getCommand() instanceof PopupMenuControl)
+         {
             title += "&nbsp;[Popup]";
          }
-         
-         if (item.getCommand().getNormalImage() != null) {
+
+         if (item.getCommand().getNormalImage() != null)
+         {
             Image image = new Image(item.getCommand().getNormalImage());
             String imageHTML = ImageUtil.getHTML(image);
-            title =
-               "<span>" + imageHTML + "&nbsp;" + title
-                  + "</span>";            
-         } else {
-            title =
-               "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title
-                  + "</span>";            
+            title = "<span>" + imageHTML + "&nbsp;" + title + "</span>";
          }
-         
+         else
+         {
+            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title + "</span>";
+         }
+
          record.setAttribute(TOOLBAR, title);
+         record.setAttribute(COMMAND_ID, id);
       }
       else if (item.getType() == ToolbarItem.Type.DELIMITER)
       {
          String title = getDivider("Delimiter", Style.TOOLBAR_DELIMITER);
          record.setAttribute(TOOLBAR, title);
+         record.setAttribute(COMMAND_ID, "Delimiter");
       }
       else
       {
          String title = getDivider("Spacer", Style.TOOLBAR_SPACER);
          record.setAttribute(TOOLBAR, title);
+         record.setAttribute(COMMAND_ID, "Spacer");
       }
    }
 

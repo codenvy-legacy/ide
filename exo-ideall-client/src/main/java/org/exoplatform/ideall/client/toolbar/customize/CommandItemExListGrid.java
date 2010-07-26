@@ -49,6 +49,8 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    private final static String TITLE = "Command";
    
    private final static String ID = "ideCommandItemExListGrid";
+   
+   public final static String COMMAND_ID = "CommandId";
 
    public CommandItemExListGrid()
    {
@@ -59,7 +61,11 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       setSelectionType(SelectionStyle.SINGLE);
 
       ListGridField fieldName = new ListGridField(TITLE, TITLE);
-      setFields(fieldName);
+
+      ListGridField idField = new ListGridField(COMMAND_ID, COMMAND_ID);
+      idField.setHidden(true);
+
+      setFields(fieldName, idField);
    }
 
    private String getDivider(String title, String style)
@@ -85,15 +91,17 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
       else
       {
          String commandName = item.getCommand().getId();
+         String commandId = item.getCommand().getId();
          if (commandName.indexOf("/") >= 0)
          {
             commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
          }
-
+         
          while (commandName.indexOf("\\") >= 0)
          {
             commandName = commandName.replace("\\", "/");
          }
+         commandId = commandName;
 
          if (item.getCommand() instanceof PopupMenuControl)
          {
@@ -136,6 +144,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          }
 
          record.setAttribute(TITLE, title);
+         record.setAttribute(COMMAND_ID, commandId);
       }
 
    }
