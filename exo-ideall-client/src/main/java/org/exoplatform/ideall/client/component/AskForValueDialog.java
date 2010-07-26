@@ -48,6 +48,14 @@ public class AskForValueDialog extends Window
    public static final int FORM_MARGINTOP = 15;
 
    public static final int FORM_MARGINSIDE = 25;
+   
+   public static final String ID = "ideAskForValueDialog";
+   
+   public static final String ID_OK_BUTTON = "ideAskForValueDialogOkButton";
+   
+   public static final String ID_CANCEL_BUTTON = "ideAskForValueDialogCancelButton";
+   
+   public static final String VALUE_FIELD = "ideAskForValueDialogValueField";
 
    private ValueCallback valueCallback;
 
@@ -56,7 +64,8 @@ public class AskForValueDialog extends Window
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
       valueCallback = callback;
-
+      setID(ID);
+      
       setShowShadow(true);
       setTitle(title);
       setShowMinimizeButton(false);
@@ -102,6 +111,7 @@ public class AskForValueDialog extends Window
       spacer1.setColSpan(2);
 
       textItem = new TextItem();
+      textItem.setName(VALUE_FIELD);
       textItem.setDefaultValue(defaultValue);
       textItem.setShowTitle(false);
       textItem.setColSpan(2);
@@ -136,11 +146,13 @@ public class AskForValueDialog extends Window
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       IButton okButton = new IButton("OK");
+      okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(90);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.OK);
 
       IButton cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
