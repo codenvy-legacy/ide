@@ -73,21 +73,21 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       for (int i = 0; i < tokens.size(); i++)
       {
          Token t = tokens.get(i);
-         if((t.getName() != null) && (t.getMimeType().equals(mimeType)))
+         if ((t.getName() != null) && (t.getMimeType().equals(mimeType)))
          {
             newTokenList.add(t);
             isAdd = true;
          }
-         if((t.getSubTokenList() != null) && (!isAdd))
+         if ((t.getSubTokenList() != null) && (!isAdd))
          {
             newTokenList.addAll(filterTokenByMimeType(t.getSubTokenList(), mimeType));
             isAdd = false;
          }
       }
-      
+
       return newTokenList;
    }
-   
+
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
       cursorOffsetX = event.getCursorOffsetX();
