@@ -56,6 +56,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    
    private static final String CDATA_ICON = Images.Outline.CDATA_ITEM;
    
+   private static final String GROOVY_TAG_ICON = Images.Outline.GROOVY_TAG_ITEM;
+   
    protected static String NAME_ATTRIBUTE;
 
    private Tree tree;
@@ -143,6 +145,10 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                {
                   newNode.setAttribute(ICON, CDATA_ICON);
                }
+               else if (child.getType().equals(TokenType.GROOVY_TAG))
+               {
+                  newNode.setAttribute(ICON, GROOVY_TAG_ICON);
+               }
                tree.add(newNode, parentNode);
             }
             
@@ -201,7 +207,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT)
          || file.getContentType().equals(MimeType.APPLICATION_XML)
          || file.getContentType().equals(MimeType.TEXT_XML)
-         || file.getContentType().equals(MimeType.TEXT_HTML);
+         || file.getContentType().equals(MimeType.TEXT_HTML)
+         || file.getContentType().equals(MimeType.GROOVY_TEMPLATE);
    }
 
 }

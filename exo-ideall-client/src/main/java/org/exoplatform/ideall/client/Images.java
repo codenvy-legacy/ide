@@ -180,6 +180,8 @@ public interface Images
       public static final String TAG_ITEM = imageUrl + "outline/tag.png";
       
       public static final String CDATA_ITEM = imageUrl + "outline/cdata-item.png";
+      
+      public static final String GROOVY_TAG_ITEM = imageUrl + "outline/groovy-tag.png";
    }
 
    public static final String BLANK = imageUrl + "blank.png";
