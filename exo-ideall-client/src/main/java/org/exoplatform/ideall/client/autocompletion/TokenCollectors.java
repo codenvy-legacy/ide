@@ -26,6 +26,7 @@ import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
 import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.xml.XmlTokenCollector;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,7 +47,7 @@ public final class TokenCollectors
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus));
-//      tokenCollectors.put(MimeType.TEXT_XML, new XmlTocenCollector());
+      tokenCollectors.put(MimeType.TEXT_XML, new XmlTokenCollector());
 
    }
 
