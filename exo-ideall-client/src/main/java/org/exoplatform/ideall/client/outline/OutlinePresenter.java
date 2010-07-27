@@ -19,6 +19,7 @@
 package org.exoplatform.ideall.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
@@ -48,14 +49,14 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-EditorActivityHandler
+   EditorActivityHandler
 {
    interface Display
    {
       TreeGridItem<Token> getBrowserTree();
 
       void selectToken(Token token);
-      
+
       boolean isFormVisible();
    }
 
@@ -66,13 +67,13 @@ EditorActivityHandler
    private Handlers handlers;
 
    private Display display;
-   
+
    private List<Token> tokens = new ArrayList<Token>();
-   
+
    private int currentRow;
-   
+
    private boolean goToLine;
-   
+
    private Token currentToken;
 
    public OutlinePresenter(HandlerManager bus, ApplicationContext applicationContext)
@@ -112,7 +113,7 @@ EditorActivityHandler
             goToLine = true;
          }
       });
-      
+
       currentRow = 0;
       goToLine = true;
    }
@@ -141,15 +142,23 @@ EditorActivityHandler
       {
          return false;
       }
-      
+
       return OutlineTreeGrid.haveOutline(file);
    }
-   
-   private Timer refreshOutlineTimer = new Timer() {
+
+   private Timer refreshOutlineTimer = new Timer()
+   {
       @Override
       public void run()
       {
-         refreshOutline(context.getActiveTextEditor());
+         try
+         {
+            refreshOutline(context.getActiveTextEditor());
+         }
+         catch (Throwable e)
+         {
+            Dialogs.getInstance().showError(e.getMessage());
+         }
       }
    };
 
@@ -167,14 +176,14 @@ EditorActivityHandler
          display.getBrowserTree().setValue(new Token("", null));
       }
    }
-   
+
    private boolean selectTokenByRow(List<Token> tokens)
    {
       if (tokens == null || tokens.size() == 0)
       {
          return false;
       }
-      
+
       //if one token in list
       if (tokens.size() == 1)
       {
@@ -196,13 +205,13 @@ EditorActivityHandler
             }
          }
       }
-      
+
       //if more then one token in list
       for (int i = 0; i < tokens.size() - 1; i++)
       {
          Token token = tokens.get(i);
          Token next = tokens.get(i + 1);
-         
+
          if (currentRow == token.getLineNumber())
          {
             selectToken(token);
@@ -220,9 +229,9 @@ EditorActivityHandler
                return true;
             }
          }
-         
+
          //check is to select last token or may be it has subtokens
-         if (currentRow > next.getLineNumber() && (i+1 == tokens.size() - 1))
+         if (currentRow > next.getLineNumber() && (i + 1 == tokens.size() - 1))
          {
             if (next.getType().equals(TokenType.TAG_BREAK))
             {
@@ -241,7 +250,7 @@ EditorActivityHandler
                }
             }
          }
-         
+
          if (currentRow > token.getLineNumber() && currentRow < next.getLineNumber())
          {
             if (selectTokenByRow(token.getSubTokenList()))
@@ -255,10 +264,10 @@ EditorActivityHandler
             }
          }
       }
-      
+
       return false;
    }
-   
+
    private void selectToken(Token token)
    {
       if (!isCurrentTokenSelected(token))
@@ -267,7 +276,7 @@ EditorActivityHandler
          display.selectToken(token);
       }
    }
-   
+
    /**
     * Check, is token is current and is it selected.
     * 
@@ -280,14 +289,13 @@ EditorActivityHandler
       {
          return false;
       }
-      
+
       if (token == null || token.getName() == null)
       {
          return false;
       }
-      
-      return token.getName().equals(currentToken.getName())
-         && token.getLineNumber() == currentToken.getLineNumber();
+
+      return token.getName().equals(currentToken.getName()) && token.getLineNumber() == currentToken.getLineNumber();
    }
 
    /**
@@ -299,14 +307,15 @@ EditorActivityHandler
       {
          return;
       }
-      
+
       currentRow = event.getRow();
-      
+
       selectOutlineTimer.cancel();
       selectOutlineTimer.schedule(1000);
    }
-   
-   private Timer selectOutlineTimer = new Timer() {
+
+   private Timer selectOutlineTimer = new Timer()
+   {
       @Override
       public void run()
       {
