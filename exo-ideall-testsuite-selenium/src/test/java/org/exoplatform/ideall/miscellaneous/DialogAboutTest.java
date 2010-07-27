@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ideall.miscellaneous;
 
+import static org.junit.Assert.*;
+
 import org.exoplatform.ideall.BaseTest;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,21 +46,11 @@ public class DialogAboutTest extends BaseTest
       assertTrue(selenium.isTextPresent("Revision"));
       assertTrue(selenium.isTextPresent("Build Time"));
       selenium.click("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]");
-      for (int second = 0;; second++)
-      {
-         if (second >= 60)
-            fail("timeout");
-         try
-         {
-            if (!selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"))
-               break;
-         }
-         catch (Exception e)
-         {
-         }
-         Thread.sleep(1000);
-      }
+      
+      Thread.sleep(1000);
+      
 
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
       assertFalse(selenium.isTextPresent("About"));
       assertFalse(selenium.isTextPresent("eXo IDE"));
       assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
