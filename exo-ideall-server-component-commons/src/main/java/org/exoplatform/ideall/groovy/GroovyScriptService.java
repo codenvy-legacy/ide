@@ -56,7 +56,11 @@ public class GroovyScriptService
    @Path("/validate")
    public Response validate(@HeaderParam("location") String location, InputStream inputStream)
    {
-      return groovyScript2RestLoader.validateScript(location, inputStream);
+      try {
+         return groovyScript2RestLoader.validateScript(location, inputStream);
+      } catch (Throwable e) {
+         return Response.status(HTTPStatus.INTERNAL_ERROR).entity(e.getMessage()).build();
+      }
    }
 
    @POST
@@ -64,25 +68,30 @@ public class GroovyScriptService
    public Response load(@Context UriInfo uriInfo, @HeaderParam("location") String location,
       @QueryParam("state") String state)
    {
-      String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
+      try {
+         String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
 
-      if (!location.startsWith(prefix))
-      {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(location + " Not found!").build();
+         if (!location.startsWith(prefix))
+         {
+            return Response.status(HTTPStatus.NOT_FOUND).entity(location + " Not found!").build();
+         }
+
+         location = location.substring(prefix.length());
+
+         String repositoryName = location.substring(0, location.indexOf("/"));
+
+         location = location.substring(location.indexOf("/") + 1);
+
+         String workspaceName = location.substring(0, location.indexOf("/"));
+
+         String path = location.substring(location.indexOf("/") + 1);
+
+         boolean load = Boolean.parseBoolean(state);
+         return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);         
+      } catch (Throwable e) {
+         return Response.status(HTTPStatus.INTERNAL_ERROR).entity(e.getMessage()).build();
       }
-
-      location = location.substring(prefix.length());
-
-      String repositoryName = location.substring(0, location.indexOf("/"));
-
-      location = location.substring(location.indexOf("/") + 1);
-
-      String workspaceName = location.substring(0, location.indexOf("/"));
-
-      String path = location.substring(location.indexOf("/") + 1);
-
-      boolean load = Boolean.parseBoolean(state);
-      return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);
+      
    }
 
 }
