@@ -322,7 +322,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(newHotKey)
             && !hotKeyIdentifier.getControlId().equals(controlId))
          {
-            display.showError("Such hot key already binded to another control");
+            display.showError("Such hot key already bound to another control");
             return false;
          }
       }
