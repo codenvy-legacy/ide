@@ -117,7 +117,19 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
       }
 
       createNewItemControlsGroup();
+
+      System.out.println("-------------------------- to sort");
+      for (Control c : context.getCommands()) {
+         System.out.println("control id > " + c.getId());
+      }
+      
       Collections.sort(context.getCommands(), controlComparator);
+
+      System.out.println("-------------------------- after sort");
+      for (Control c : context.getCommands()) {
+         System.out.println("control id > " + c.getId());
+      }
+      
       fillNewItemPopupControl();      
 
       /*
@@ -139,13 +151,13 @@ public class IDEallPresenter implements InvalidConfigurationRecievedHandler, Con
    private Comparator<Control> controlComparator = new Comparator<Control>() {
       public int compare(Control control1, Control control2)
       {
-         if (!control1.getId().startsWith("File/New/")) {
+         if (!control1.getId().startsWith("File/New/") && !control2.getId().startsWith("File/New/")) {
             return 0;
          }
          
-         if (!control2.getId().startsWith("File/New/")) {
-            return 0;
-         }
+//         if (!control2.getId().startsWith("File/New/")) {
+//            return 0;
+//         }
          
 //         System.out.println("control1 " + control1.getId());
 //         System.out.println("control2 " + control2.getId());
