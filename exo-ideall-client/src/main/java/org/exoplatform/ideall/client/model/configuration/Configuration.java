@@ -87,8 +87,8 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 //         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
 //         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
          
-         configuration.setLoopbackServiceContext("1" + configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext("1" + configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
          
       }
       else
