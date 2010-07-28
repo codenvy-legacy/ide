@@ -23,6 +23,8 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
@@ -32,6 +34,7 @@ import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceived
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -69,6 +72,32 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    }
 
    private File fileToLoad;
+   
+   private void initializeApplication() {
+      new Timer() {
+         @Override
+         public void run()
+         {
+            eventBus.fireEvent(new RegisterEventHandlersEvent());
+            
+            new Timer() {
+               @Override
+               public void run()
+               {
+                  try
+                  {
+                     eventBus.fireEvent(new InitializeApplicationEvent());
+                  }
+                  catch (Throwable e)
+                  {
+                     e.printStackTrace();
+                  }                        
+               }
+               
+            }.schedule(10);
+         }
+      }.schedule(10);      
+   }
 
    protected void preloadNextFile()
    {
@@ -81,8 +110,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
             
-            new ApplicationInitializer(eventBus, context);
-
+            initializeApplication();
             return;
          }
 

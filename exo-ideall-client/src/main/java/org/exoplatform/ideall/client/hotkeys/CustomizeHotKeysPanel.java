@@ -140,7 +140,11 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       addItem(vLayout);
 
-      show();
+      try {
+         show();         
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
 
       presenter = new CustomizeHotKeysPresenter(eventBus, applicationSettings, controls);
       presenter.bindDisplay(this);

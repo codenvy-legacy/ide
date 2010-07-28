@@ -31,7 +31,9 @@ import org.exoplatform.ideall.client.IDELoader;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
@@ -150,26 +152,27 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
          @Override
          public void run()
          {
-            CookieManager.getInstance().getApplicationState(context);
-
+            applicationSettings = new ApplicationSettings();
+            CookieManager.getInstance().getApplicationState(context, applicationSettings);
+            System.out.println("entry point from cookie: " + applicationSettings.getEntryPoint());
+            
+            if (applicationSettings.getEntryPoint() == null)
+            {
+               applicationSettings.setEntryPoint(context.getApplicationConfiguration().getDefaultEntryPoint());
+            }            
+            
             new ControlsFormatter(eventBus).format(controls);
             eventBus.fireEvent(new ControlsUpdatedEvent(controls));
 
             new SettingsServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL(),
                context.getUserInfo().getName());
-            SettingsService.getInstance().getSettings(new ApplicationSettings());
+            SettingsService.getInstance().getSettings(applicationSettings);
          }
       }.schedule(10);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      applicationSettings = event.getApplicationSettings();
-      if (applicationSettings.getEntryPoint() == null)
-      {
-         applicationSettings.setEntryPoint(context.getApplicationConfiguration().getDefaultEntryPoint());
-      }
-
       new Timer()
       {
          @Override
@@ -180,6 +183,17 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
       }.schedule(10);
    }
 
+   private void initializeApplication() {
+      new Timer() {
+         @Override
+         public void run()
+         {
+            eventBus.fireEvent(new RegisterEventHandlersEvent());
+            
+           }
+      }.schedule(10);      
+   }   
+   
    private void initialize()
    {
       eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
@@ -200,7 +214,7 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
       }
       else
       {
-         new ApplicationInitializer(eventBus, context);
+         initializeApplication();
 
          Dialogs
             .getInstance()

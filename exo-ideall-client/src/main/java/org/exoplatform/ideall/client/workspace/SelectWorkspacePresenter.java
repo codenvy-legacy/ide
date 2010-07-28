@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.Utils;
+import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.discovery.Scheme;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
@@ -215,6 +216,10 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
    private void swichEntryPoint()
    {
       display.closeForm();
+  
+      System.out.println("storing entry point: " + selectedEntryPoint.getHref());
+      
+      CookieManager.getInstance().storeEntryPoint(selectedEntryPoint.getHref());
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
 

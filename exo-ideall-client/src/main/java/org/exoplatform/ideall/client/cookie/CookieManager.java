@@ -24,6 +24,7 @@ import java.util.Iterator;
 
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -163,17 +164,19 @@ public class CookieManager
     * Restore Application context from Browser cookies.
     * Restores paths of opened files, active file, selected repository and workspace names.
     */
-   public void getApplicationState(ApplicationContext context)
+   public void getApplicationState(ApplicationContext context, ApplicationSettings applicationSettings)
    {
       String entryPoint = Cookies.getCookie(Cookie.ENTRY_POINT);
-
+      System.out.println("readed entry point: " + entryPoint);
+      applicationSettings.setEntryPoint(entryPoint);
       //context.setEntryPoint(entryPoint);
+      
 
       restoreOpenedFiles(context);
       restoreActiveFile(context);
       //restoreLineNumbers(context);
    }
-
+   
    private void restoreOpenedFiles(ApplicationContext context)
    {
       String openedFilesCookie = Cookies.getCookie(Cookie.OPENED_FILES);

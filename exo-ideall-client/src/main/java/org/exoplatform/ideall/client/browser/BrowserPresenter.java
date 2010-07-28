@@ -31,6 +31,7 @@ import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
@@ -72,7 +73,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler,
-   PanelSelectedHandler
+   PanelSelectedHandler, EntryPointChangedHandler
 {
 
    interface Display
@@ -110,6 +111,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
    
    }
 
@@ -328,6 +330,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       //applicationSettings.setEntryPoint(event.getEntryPoint());
       //context.setEntryPoint(event.getEntryPoint());
       CookieManager.getInstance().storeEntryPoint(event.getEntryPoint());
+      entryPoint = event.getEntryPoint();
       display.getBrowserTree().setValue(null);
       switchWorkspace(event.getEntryPoint());
    }
@@ -406,6 +409,11 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       {
          onItemSelected();
       }
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
    }
 
 }
