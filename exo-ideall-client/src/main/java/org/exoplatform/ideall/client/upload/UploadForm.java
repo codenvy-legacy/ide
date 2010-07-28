@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -57,8 +58,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    
    private static final String ID = "ideallUploadForm";
    
-   private ApplicationContext context;
-
    private FormPanel uploadForm;
 
    private TextField fileNameField;
@@ -80,13 +79,15 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    private boolean openFile;
 
    private VerticalPanel postFieldsPanel;
+   
+   private ApplicationConfiguration applicationConfiguration;
 
-   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile)
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile, ApplicationConfiguration applicationConfiguration)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
       this.openFile = openFile;
-      this.context = context;
+      this.applicationConfiguration = applicationConfiguration;
 
       if (openFile)
       {
@@ -256,11 +257,11 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       if (openFile)
       {
-         uploadForm.setAction(context.getApplicationConfiguration().getLoopbackServiceContext() + "/");
+         uploadForm.setAction(applicationConfiguration.getLoopbackServiceContext() + "/");
       }
       else
       {
-         uploadForm.setAction(context.getApplicationConfiguration().getUploadServiceContext() + "/");
+         uploadForm.setAction(applicationConfiguration.getUploadServiceContext() + "/");
       }
 
       uploadForm.setWidget(postFieldsPanel);

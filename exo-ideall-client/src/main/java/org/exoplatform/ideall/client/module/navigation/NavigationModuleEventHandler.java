@@ -31,6 +31,7 @@ import org.exoplatform.ideall.client.command.SaveFileAsCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
@@ -41,6 +42,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedEven
 import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
@@ -87,7 +90,7 @@ import com.google.gwt.event.shared.HandlerManager;
 public class NavigationModuleEventHandler implements OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler
 {
    private SaveFileCommandThread saveFileCommandHandler;
 
@@ -110,6 +113,8 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
    protected Handlers handlers;
 
    private ApplicationSettings applicationSettings;
+   
+   private ApplicationConfiguration applicationConfiguration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -126,6 +131,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
@@ -158,6 +164,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(GetFileURLEvent.TYPE, this);
 
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)
@@ -175,7 +182,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
          path = path.substring(path.lastIndexOf("/"));
       }
       eventBus.fireEvent(new ClearFocusEvent());
-      new UploadForm(eventBus, selectedItems, path, event.isOpenFile());
+      new UploadForm(eventBus, selectedItems, path, event.isOpenFile(), applicationConfiguration);
    }
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)
@@ -253,6 +260,11 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
+   }
+
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      applicationConfiguration = event.getConfiguration();
    }
 
 }

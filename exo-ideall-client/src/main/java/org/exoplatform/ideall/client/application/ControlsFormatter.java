@@ -83,18 +83,10 @@ public class ControlsFormatter
    {
       public int compare(Control control1, Control control2)
       {
-         if (!control1.getId().startsWith("File/New/"))
+         if (!control1.getId().startsWith("File/New/") && !control2.getId().startsWith("File/New/"))
          {
             return 0;
          }
-
-         if (!control2.getId().startsWith("File/New/"))
-         {
-            return 0;
-         }
-
-         //         System.out.println("control1 " + control1.getId());
-         //         System.out.println("control2 " + control2.getId());
 
          if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateFolderControl)
          {
