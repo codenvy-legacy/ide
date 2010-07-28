@@ -49,7 +49,19 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    private static final int HEIGHT = 270;
    
-   private static final String ID = "ideallSaveAsTemplateForm";
+   private static final String ID = "ideSaveAsTemplateForm";
+   
+   private static final String ID_SAVE_BUTTON = "ideSaveAsTemplateFormSaveButton";
+   
+   private static final String ID_CANCEL_BUTTON = "ideSaveAsTemplateFormCancelButton";
+   
+   private static final String NAME_FIELD = "ideSaveAsTemplateFormNameField";
+   
+   private static final String TYPE_FIELD = "ideSaveAsTemplateFormTypeField";
+   
+   private static final String DESCRIPTION_FIELD = "ideSaveAsTemplateFormDescriptionField";
+   
+   private static final String ID_DYNAMIC_FORM = "ideSaveAsTemplateFormDynamicForm";
    
    private static final int BUTTON_WIDTH = 90;
 
@@ -111,6 +123,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    private DynamicForm createItemsForm()
    {
       DynamicForm form = new DynamicForm();
+      form.setID(ID_DYNAMIC_FORM);
       //form.setCellBorder(1);
 
       form.setLayoutAlign(Alignment.CENTER);
@@ -125,6 +138,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       typeTitle.setColSpan(2);
 
       typeField = new TextField();
+      typeField.setName(TYPE_FIELD);
       typeField.setShowTitle(false);
       typeField.setColSpan(2);
       typeField.setWidth(FIELDS_WIDTH);
@@ -147,6 +161,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       nameTitle.setColSpan(2);
 
       nameField = new TextField();
+      nameField.setName(NAME_FIELD);
       nameField.setShowTitle(false);
       nameField.setColSpan(2);
       nameField.setWidth(FIELDS_WIDTH);
@@ -157,6 +172,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       descriptionTitle.setColSpan(2);
 
       descriptionField = new TextAreaItem();
+      descriptionField.setName(DESCRIPTION_FIELD);
       //descriptionField.setTitle(DESCRIPTION);
       descriptionField.setShowTitle(false);
       //descriptionField.setTitleOrientation(TitleOrientation.TOP);
@@ -177,12 +193,13 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       buttonsLayout.setMembersMargin(10);
 
       saveButton = new IButton(SAVE);
-
+      saveButton.setID(ID_SAVE_BUTTON);
       saveButton.setWidth(BUTTON_WIDTH);
       saveButton.setHeight(BUTTON_HEIGHT);
       saveButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton(CANCEL);
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(BUTTON_WIDTH);
       cancelButton.setHeight(BUTTON_HEIGHT);
       cancelButton.setIcon(Images.Buttons.NO);
