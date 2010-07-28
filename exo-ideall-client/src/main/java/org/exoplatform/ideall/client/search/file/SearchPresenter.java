@@ -72,6 +72,7 @@ public class SearchPresenter
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
+      this.entryPoint = entryPoint;
    }
 
    public void bindDisplay(Display d)
@@ -116,16 +117,6 @@ public class SearchPresenter
       display.getPathItem().setValue(path);
 
       fillMimeTypes();
-
-//      if (context.getSearchContent() != null)
-//      {
-//         display.getSearchContentItem().setValue(context.getSearchContent());
-//      }
-//
-//      if (context.getSearchContentType() != null)
-//      {
-//         display.getMimeTypeItem().setValue(context.getSearchContentType());
-//      }
    }
 
    private void doSearch()

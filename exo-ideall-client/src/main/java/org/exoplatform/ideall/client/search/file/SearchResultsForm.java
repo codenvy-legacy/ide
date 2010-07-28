@@ -34,6 +34,8 @@ import com.google.gwt.event.shared.HandlerManager;
 */
 public class SearchResultsForm extends SimpleTabPanel implements SearchResultPanel, SearchResultsPresenter.Display
 {
+   
+   private final String TREE_ID = "ideSearchResultItemTreeGrid";   
 
    public static final String TITLE = "Search";
 
@@ -50,7 +52,7 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
       super(ID);
       this.eventBus = eventBus;
 
-      searchItemTreeGrid = new ItemTreeGrid<Item>(true);
+      searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
       searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
       searchItemTreeGrid.setShowHeader(false);
       searchItemTreeGrid.setLeaveScrollbarGap(false);

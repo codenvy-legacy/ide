@@ -32,6 +32,8 @@ import com.smartgwt.client.widgets.events.MouseDownHandler;
 
 public class BrowserForm extends SimpleTabPanel implements BrowserPanel, BrowserPresenter.Display
 {
+   
+   private final String TREE_ID = "ideNavigatorItemTreeGrid";
 
    public static final String TITLE = "Workspace";
 
@@ -50,7 +52,7 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
 
       this.context = context;
 
-      treeGrid = new ItemTreeGrid<Item>();
+      treeGrid = new ItemTreeGrid<Item>(TREE_ID);
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);

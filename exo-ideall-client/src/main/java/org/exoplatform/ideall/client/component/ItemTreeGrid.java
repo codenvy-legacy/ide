@@ -46,13 +46,11 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private boolean allowSameNames = false;
    
-   private final String ID = "ideItemTreeGrid";
-   
    private static final String NAME = "name";
 
-   public ItemTreeGrid()
+   public ItemTreeGrid(String id)
    {
-      setID(ID);
+      setID(id);
       setShowRoot(false);
       
       tree = new Tree();
@@ -78,9 +76,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       setFields(nameField, mockField);
    }
 
-   public ItemTreeGrid(boolean allowSameNames)
+   public ItemTreeGrid(String id, boolean allowSameNames)
    {
-      this();
+      this(id);
       this.allowSameNames = allowSameNames;
    }
 
