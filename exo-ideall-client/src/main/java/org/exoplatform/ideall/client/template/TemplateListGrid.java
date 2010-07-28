@@ -34,9 +34,11 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class TemplateListGrid extends ListGrid<Template>
 {
-
+   private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
+   
    public TemplateListGrid()
    {
+      setID(ID);
       ListGridField iconField = new ListGridField("icon", "&nbsp;");
       iconField.setType(ListGridFieldType.IMAGE);
       iconField.setWidth(28);

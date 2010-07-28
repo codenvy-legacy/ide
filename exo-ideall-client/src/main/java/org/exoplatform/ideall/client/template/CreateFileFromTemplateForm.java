@@ -53,7 +53,17 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
    public static final int HEIGHT = 350;
    
-   private static final String ID = "ideallCreateFileFromTemplateForm";
+   private static final String ID = "ideCreateFileFromTemplateForm";
+   
+   private static final String ID_CREATE_BUTTON = "ideCreateFileFromTemplateFormCreateButton";
+   
+   private static final String ID_CANCEL_BUTTON = "ideCreateFileFromTemplateFormCancelButton";
+   
+   private static final String ID_DELETE_BUTTON = "ideCreateFileFromTemplateFormDeleteButton";
+   
+   private static final String ID_DYNAMIC_FORM = "ideCreateFileFromTemplateFormDynamicForm";
+   
+   private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
    
    private CreateFileFromTemplatePresenter presenter;
 
@@ -119,7 +129,9 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       actionsLayout.setWidth100();
 
       DynamicForm form = new DynamicForm();
+      form.setID(ID_DYNAMIC_FORM);
       fileNameField = new TextField("Name","File Name");
+      fileNameField.setName(FILE_NAME_FIELD);
       fileNameField.setWidth(200);
       fileNameField.setWrapTitle(false);
       form.setColWidths("*", "195");
@@ -140,16 +152,19 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       createButton = new IButton("Create");
+      createButton.setID(ID_CREATE_BUTTON);
       createButton.setWidth(75);
       createButton.setHeight(22);
       createButton.setIcon(Images.Buttons.YES);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(75);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
       deleteButton = new IButton("Delete");
+      deleteButton.setID(ID_DELETE_BUTTON);
       deleteButton.setWidth(75);
       deleteButton.setHeight(22);
       deleteButton.setIcon(Images.Buttons.DELETE);
