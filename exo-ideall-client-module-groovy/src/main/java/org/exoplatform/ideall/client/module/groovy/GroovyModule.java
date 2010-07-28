@@ -16,11 +16,12 @@
  */
 package org.exoplatform.ideall.client.module.groovy;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.module.groovy.controls.DeployGroovyCommand;
 import org.exoplatform.ideall.client.module.groovy.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ideall.client.module.groovy.controls.SetAutoloadCommand;
@@ -37,35 +38,35 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class GroovyModule extends AbstractIDEModule
+public class GroovyModule implements IDEModule, InitializeServicesHandler
 {
 
-   public GroovyModule(HandlerManager eventBus, AbstractApplicationContext applicationContext)
+   private HandlerManager eventBus;
+
+   public GroovyModule(HandlerManager eventBus)
    {
-      super(eventBus, applicationContext);
+      this.eventBus = eventBus;
+      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New REST Service", "REST Service",
+         "Create REST Service", Images.FileType.GROOVY, MimeType.GROOVY_SERVICE)));
+
+//      addControl(new NewItemControl("File/New/New Groovy Script", "Groovy Script", "Create Groovy Script",
+//         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY));
+
+      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(eventBus), true, true));
+
+      new GroovyPluginEventHandler(eventBus);
    }
 
-   public void initializeModule()
+   public void onInitializeServices(InitializeServicesEvent event)
    {
-      addControl(new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
-         Images.FileType.GROOVY, MimeType.GROOVY_SERVICE));
-      addControl(new NewItemControl("File/New/New Groovy Script", "Groovy Script", "Create Groovy Script",
-         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY));
-
-      addControl(new SetAutoloadCommand(), true, true);
-      addControl(new ValidateGroovyCommand(), true, true);
-      addControl(new DeployGroovyCommand(), true, true);
-      addControl(new UndeployGroovyCommand(), true, true);
-
-      addControl(new PreviewWadlOutputCommand(), true, true);
-
-      new GroovyPluginEventHandler(eventBus, context);
-   }
-
-   public void initializeServices(Loader loader)
-   {
-      new GroovyServiceImpl(eventBus, context.getApplicationConfiguration().getContext(), loader);
-      new WadlServiceImpl(eventBus, loader);
+      new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new WadlServiceImpl(eventBus, event.getLoader());
    }
 
 }

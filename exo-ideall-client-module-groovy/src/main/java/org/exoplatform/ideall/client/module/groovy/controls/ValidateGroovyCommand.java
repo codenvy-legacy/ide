@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.ValidateGroovyScriptEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -38,9 +40,9 @@ public class ValidateGroovyCommand extends IDEControl implements EditorActiveFil
 
    public static final String ID = "Run/Validate";
 
-   public ValidateGroovyCommand()
+   public ValidateGroovyCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Validate");
       setPrompt("Validate REST Service");
       setIcon(Images.Controls.VALIDATE);

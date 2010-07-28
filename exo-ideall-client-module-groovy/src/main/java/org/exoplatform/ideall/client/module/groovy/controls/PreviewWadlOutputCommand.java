@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.PreviewWadlOutputEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -32,9 +34,9 @@ public class PreviewWadlOutputCommand extends IDEControl implements EditorActive
 {
    private static final String ID = "Run/Launch REST Service";
 
-   public PreviewWadlOutputCommand()
+   public PreviewWadlOutputCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Launch REST Service...");
       setPrompt("Launch REST Service...");
       setIcon(Images.Controls.OUTPUT);

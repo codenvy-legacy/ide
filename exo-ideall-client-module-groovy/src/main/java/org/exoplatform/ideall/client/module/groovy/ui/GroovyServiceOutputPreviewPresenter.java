@@ -31,7 +31,6 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.module.groovy.service.SimpleParameterEntry;
 import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyService;
 
@@ -98,7 +97,7 @@ public class GroovyServiceOutputPreviewPresenter
       void setResponseMediaType(LinkedHashMap<String, String> responseMediaType);
 
       void setResponseMediaTypeFieldValue(String value);
-      
+
       void setPathFieldValue(String value);
    }
 
@@ -107,8 +106,6 @@ public class GroovyServiceOutputPreviewPresenter
    private static final String PATH_REGEX = "[^/]+";
 
    private HandlerManager eventBus;
-
-   private AbstractApplicationContext context;
 
    private Display display;
 
@@ -138,15 +135,12 @@ public class GroovyServiceOutputPreviewPresenter
 
    private String currentPath;
 
-   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, AbstractApplicationContext context,
-      WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, WadlApplication wadlApplication)
    {
       this.eventBus = eventBus;
-      this.context = context;
       this.wadlApplication = wadlApplication;
 
       handlers = new Handlers(eventBus);
-
    }
 
    public void bindDisplay(Display d)
@@ -265,11 +259,10 @@ public class GroovyServiceOutputPreviewPresenter
       {
          currentPath = pathArr[0];
          display.setPathFieldValue(pathArr[0]);
-         onPathFieldChanged(pathArr[0]);         
+         onPathFieldChanged(pathArr[0]);
       }
    }
 
-   
    private void onPathFieldChanged(String path)
    {
       if (path != null && !"".equals(path))
@@ -316,7 +309,7 @@ public class GroovyServiceOutputPreviewPresenter
          setResourceInfo();
       }
    }
-   
+
    private void setResponseMediaType(String requestMediaType)
    {
       display.setResponseMediaTypeFieldValue("");
@@ -438,7 +431,7 @@ public class GroovyServiceOutputPreviewPresenter
          // TODO research
          //String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
          String fullPath = base + methoPath;
-        
+
          display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,

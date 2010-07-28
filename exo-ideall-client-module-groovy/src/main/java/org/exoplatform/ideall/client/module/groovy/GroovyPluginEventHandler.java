@@ -19,7 +19,11 @@ package org.exoplatform.ideall.client.module.groovy;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ideall.client.framework.application.event.ConfigurationReceivedEvent;
+import org.exoplatform.ideall.client.framework.application.event.ConfigurationReceivedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
 import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
 import org.exoplatform.ideall.client.module.groovy.event.DeployGroovyScriptEvent;
@@ -61,23 +65,23 @@ import com.google.gwt.event.shared.HandlerManager;
 public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, DeployGroovyScriptHandler,
    UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
-   WadlServiceOutputReceiveHandler
+   WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, ConfigurationReceivedHandler
 {
 
    private HandlerManager eventBus;
 
-   private AbstractApplicationContext context;
-
    private Handlers handlers;
+   
+   private File activeFile;
+   
+   private ApplicationConfiguration configuration;
 
-   public GroovyPluginEventHandler(HandlerManager eventBus, AbstractApplicationContext context)
+   public GroovyPluginEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       
-      System.out.println("registering handler..............");
-
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ConfigurationReceivedEvent.TYPE, this);
 
       handlers.addHandler(ValidateGroovyScriptEvent.TYPE, this);
       handlers.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
@@ -94,9 +98,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
 
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
-      
-      System.out.println("handlers are registered!!!!!!!");
-      
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -106,7 +108,9 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    {
       System.out.println("GroovyPluginEventHandler.onValidateGroovyScript()");
       
-      GroovyService.getInstance().validate(context.getActiveFile().getName(), context.getActiveFile().getContent());
+      System.out.println("active file: " + activeFile);
+      
+      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getContent());
    }
 
    /**
@@ -114,7 +118,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().deploy(context.getActiveFile().getHref());
+      GroovyService.getInstance().deploy(activeFile.getHref());
    }
 
    /**
@@ -122,7 +126,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(context.getActiveFile().getHref());
+      GroovyService.getInstance().undeploy(activeFile.getHref());
    }
 
    /**
@@ -259,13 +263,12 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onSetAutoload(SetAutoloadEvent event)
    {
-      File file = context.getActiveFile();
-      Property jcrContentProperty = GroovyPropertyUtil.getProperty(file.getProperties(), ItemProperty.JCR_CONTENT);
+      Property jcrContentProperty = GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
       Property autoloadProperty =
          GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
       autoloadProperty.setValue("" + event.isAutoload());
 
-      VirtualFileSystem.getInstance().saveProperties(file);
+      VirtualFileSystem.getInstance().saveProperties(activeFile);
    }
 
    /**
@@ -273,7 +276,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
-      String content = context.getActiveFile().getContent();
+      String content = activeFile.getContent();
       int indStart = content.indexOf("\"");
       int indEnd = content.indexOf("\"", indStart + 1);
       String path = content.substring(indStart + 1, indEnd);
@@ -281,7 +284,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
       {
          path = "/" + path;
       }
-      String url = context.getApplicationConfiguration().getContext() + path;
+      String url = configuration.getContext() + path;
 
       WadlService.getInstance().getWadl(url);
    }
@@ -291,7 +294,22 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
-      new GroovyServiceOutputPreviewForm(eventBus, context, event.getApplication());
+      new GroovyServiceOutputPreviewForm(eventBus, event.getApplication());
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      System.out.println("active file changed: " + event.getFile());
+      if (event.getFile() != null) {
+         System.out.println("href: " + event.getFile().getHref());
+      }
+      
+      activeFile = event.getFile();
+   }
+
+   public void onConfigurationReceived(ConfigurationReceivedEvent event)
+   {
+      configuration = event.getConfiguration();
    }
 
 }

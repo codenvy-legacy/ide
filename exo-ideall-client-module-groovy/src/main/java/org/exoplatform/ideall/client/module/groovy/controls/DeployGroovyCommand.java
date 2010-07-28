@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.groovy.Images;
 import org.exoplatform.ideall.client.module.groovy.event.DeployGroovyScriptEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -38,9 +40,9 @@ public class DeployGroovyCommand extends IDEControl implements EditorActiveFileC
 
    private static final String ID = "Run/Deploy";
 
-   public DeployGroovyCommand()
+   public DeployGroovyCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Deploy");
       setPrompt("Deploy REST Service");
       setIcon(Images.Controls.DEPLOY);

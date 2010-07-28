@@ -30,6 +30,8 @@ import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -50,10 +52,12 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    private static final String TITLE_UNSET = "Unset Autoload";
 
    private static final String PROMPT_UNSET = "Unset REST Service Autoload";
+   
+   private File activeFile;
 
-   public SetAutoloadCommand()
+   public SetAutoloadCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
       setIcon(Images.Controls.SET_AUTOLOAD);
@@ -80,6 +84,8 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      activeFile = event.getFile();
+      
       if (event.getFile() == null)
       {
          hideAutoload();
@@ -162,7 +168,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
          return;
       }
 
-      if (context.getActiveFile() != (File)event.getItem())
+      if (activeFile != (File)event.getItem())
       {
          return;
       }

@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.module.groovy.Images;
 
@@ -53,7 +52,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private static final int WIDTH = 530;
 
    private static final int HEIGHT = 400;
-   
+
    private static final String ID = "ideallGroovyServiceOutputPreviewForm";
 
    private static final String TITLE = "Launch REST Service";
@@ -88,8 +87,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private TabSet parametersTabSet;
 
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, AbstractApplicationContext context,
-      WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
@@ -110,7 +108,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       show();
 
-      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, context, wadlApplication);
+      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, wadlApplication);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -267,7 +265,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton = new IButton("Get URL");
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
-      
+
       showUrlButton.setIcon(Images.Buttons.URL);
 
       sendRequestButton = new IButton("Send");
