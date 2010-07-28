@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ideall.client.search.file;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -91,7 +93,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       return searchButton;
    }
 
-   public SearchForm(HandlerManager eventBus, ApplicationContext context)
+   public SearchForm(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Search");
@@ -112,7 +114,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       
       UIHelper.setAsReadOnly(pathField.getName());
       
-      SearchPresenter advancedSearchPresenter = new SearchPresenter(eventBus, context);
+      SearchPresenter advancedSearchPresenter = new SearchPresenter(eventBus, selectedItems, entryPoint);
       advancedSearchPresenter.bindDisplay(this);
    }
 

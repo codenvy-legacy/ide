@@ -20,7 +20,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -49,7 +49,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 160;
-   
+
    public static final String ID = "ideCreateFolderForm";
    
    public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
@@ -59,7 +59,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
    public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
    
    public final String NAME_FIELD = "ideCreateFolderFormNameField";
-   
+
    private VLayout vLayout;
 
    private TextField folderNameField;
@@ -70,7 +70,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
    private CreateFolderPresenter presenter;
 
-   public CreateFolderForm(HandlerManager eventBus, ApplicationContext context, String href)
+   public CreateFolderForm(HandlerManager eventBus, Item selectedItem, String href)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Create folder");
@@ -80,10 +80,10 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
       createFieldForm();
       createButtons();
-      
+
       show();
 
-      presenter = new CreateFolderPresenter(eventBus, context, href);
+      presenter = new CreateFolderPresenter(eventBus, selectedItem, href);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -121,7 +121,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderPresen
 
       paramsForm.setFields(caption, delimiter, folderNameField);
       paramsForm.focusInItem(folderNameField);
-      
+
       vLayout.addMember(paramsForm);
    }
 

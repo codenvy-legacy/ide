@@ -16,11 +16,14 @@
  */
 package org.exoplatform.ideall.client.toolbar.customize;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -114,7 +117,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    private IButton defaultsButton;
 
-   public CustomizeToolbarForm(HandlerManager eventBus, ApplicationContext context)
+   public CustomizeToolbarForm(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setShowMaximizeButton(true);
@@ -138,7 +141,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
       show();
 
-      presenter = new CustomizeToolbarPresenter(eventBus, context);
+      presenter = new CustomizeToolbarPresenter(eventBus, applicationSettings, controls);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()

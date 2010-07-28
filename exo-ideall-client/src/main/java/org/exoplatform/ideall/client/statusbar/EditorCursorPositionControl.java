@@ -23,10 +23,9 @@ import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.edit.event.GoToLineEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -40,17 +39,9 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
 {
    public static final String ID = "__editor_cursor_position";
 
-   private ApplicationContext context;
-
-   private int row;
-
-   private int column;
-
-   public EditorCursorPositionControl(HandlerManager eventBus, ApplicationContext context)
+   public EditorCursorPositionControl(HandlerManager eventBus)
    {
       super(ID);
-
-      this.context = context;
 
       setVisible(false);
       setEnabled(true);
@@ -68,9 +59,6 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
 
    private void setCursorPosition(int row, int column)
    {
-      this.row = row;
-      this.column = column;
-
       setText("<nobr>" + row + " : " + column + "</nobr>");
    }
 

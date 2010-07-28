@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.module.navigation.control.upload;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -36,9 +38,9 @@ public class UploadFile extends IDEControl
 
    public static final String TITLE = "Upload";
 
-   public UploadFile()
+   public UploadFile(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
 

@@ -16,13 +16,53 @@
  */
 package org.exoplatform.ideall.client.module.preferences;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.ideall.client.IDELoader;
+import org.exoplatform.ideall.client.component.AboutForm;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ideall.client.framework.control.event.ControlsUpdatedHandler;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
+import org.exoplatform.ideall.client.hotkeys.CustomizeHotKeysPanel;
+import org.exoplatform.ideall.client.hotkeys.HotKeyManagerImpl;
+import org.exoplatform.ideall.client.model.discovery.DiscoveryService;
+import org.exoplatform.ideall.client.model.discovery.DiscoveryServiceImpl;
+import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ideall.client.module.preferences.control.CustomizeHotKeysCommand;
 import org.exoplatform.ideall.client.module.preferences.control.CustomizeToolbarCommand;
 import org.exoplatform.ideall.client.module.preferences.control.SelectWorkspaceCommand;
 import org.exoplatform.ideall.client.module.preferences.control.ShowAboutCommand;
+import org.exoplatform.ideall.client.module.preferences.event.CustomizeHotKeysEvent;
+import org.exoplatform.ideall.client.module.preferences.event.CustomizeHotKeysHandler;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
+import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceHandler;
+import org.exoplatform.ideall.client.module.preferences.event.ShowAboutDialogEvent;
+import org.exoplatform.ideall.client.module.preferences.event.ShowAboutDialogHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.toolbar.customize.CustomizeToolbarForm;
+import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
+import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarHandler;
+import org.exoplatform.ideall.client.workspace.SelectWorkspaceForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -32,27 +72,116 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class PreferencesModule extends AbstractIDEModule
+public class PreferencesModule implements IDEModule, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
+   ControlsUpdatedHandler, EntryPointsReceivedHandler, RegisterEventHandlersHandler, EntryPointChangedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, SelectWorkspaceHandler, CustomizeToolbarHandler,
+   CustomizeHotKeysHandler, ShowAboutDialogHandler
 {
 
-   public PreferencesModule(HandlerManager eventBus, ApplicationContext context)
+   private HandlerManager eventBus;
+
+   protected Handlers handlers;
+
+   private ApplicationConfiguration applicationConfiguration;
+
+   private ApplicationSettings applicationSettings;
+
+   private List<Control> controls;
+
+   private String currentEntryPoint;
+
+   private Map<String, File> openedFiles = new HashMap<String, File>();
+
+   public PreferencesModule(HandlerManager eventBus)
    {
-      super(eventBus, context);
-      new PreferencesModuleEventHandler(eventBus, context);
+      this.eventBus = eventBus;
+      handlers = new Handlers(eventBus);
+      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
+
+      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
+
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
+      handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
-   public void initializeModule()
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      addControl(new SelectWorkspaceCommand());
-      addControl(new CustomizeToolbarCommand());
-      addControl(new CustomizeHotKeysCommand());
-      addControl(new ShowAboutCommand());
+      applicationSettings = event.getApplicationSettings();
    }
 
-   public void initializeServices(Loader loader)
+   public void onInitializeServices(InitializeServicesEvent event)
    {
-      // TODO Auto-generated method stub
+      applicationConfiguration = event.getApplicationConfiguration();
+      new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
+      new HotKeyManagerImpl(eventBus, applicationSettings, controls);
+   }
 
+   public void onControlsUpdated(ControlsUpdatedEvent event)
+   {
+      controls = event.getControls();
+   }
+
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
+   {
+      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
+      handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
+      handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
+      handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      currentEntryPoint = event.getEntryPoint();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onSelectWorkspace(SelectWorkspaceEvent event)
+   {
+      DiscoveryService.getInstance().getEntryPoints();
+   }
+
+   public void onEntryPointsReceived(EntryPointsReceivedEvent event)
+   {
+      new SelectWorkspaceForm(eventBus, currentEntryPoint, event.getEntryPointList(), openedFiles);
+   }
+
+   public void onCustomizeToolBar(CustomizeToolbarEvent event)
+   {
+      if (controls == null || applicationSettings == null)
+      {
+         return;
+      }
+
+      new CustomizeToolbarForm(eventBus, applicationSettings, controls);
+   }
+
+   public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
+   {
+      new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
+   }
+
+   public void onShowAboutDialog(ShowAboutDialogEvent event)
+   {
+      new AboutForm(eventBus);
    }
 
 }

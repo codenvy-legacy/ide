@@ -16,13 +16,15 @@
  */
 package org.exoplatform.ideall.client.workspace;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -33,29 +35,27 @@ import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspaceForm extends DialogWindow implements EntryPointListPresenter.Display
+public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspacePresenter.Display
 {
-   
+
    private static final int WIDTH = 500;
 
    private static final int HEIGHT = 200;
-   
+
    private static final String ID = "ideSelectWorkspaceForm";
    
    private final String ID_OK_BUTTON = "ideSelectWorkspaceFormOkButton";
    
    private final String ID_CANCEL_BUTTON = "ideSelectWorkspaceFormCancelButton";
-   
+
    private static final String TITLE = "Workspace";
 
-   private EntryPointListPresenter presenter;
+   private SelectWorkspacePresenter presenter;
 
    private VLayout vLayout;
 
@@ -63,20 +63,17 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
 
    private IButton cancelButton;
 
-   private ApplicationContext context;
-   
    private EntryPointListGrid entryPointListGrid;
-   
-   
-   public SelectWorkspaceForm(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
+
+   public SelectWorkspaceForm(HandlerManager eventBus, String entryPoint, EntryPointList entryPointList,
+      Map<String, File> openedFiles)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      
+
       setTitle(TITLE);
-      
+
       this.eventBus = eventBus;
-      this.context = context;
-      
+
       vLayout = new VLayout();
       vLayout.setMargin(10);
       addItem(vLayout);
@@ -86,22 +83,22 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
       createButtonsForm();
 
       show();
-      
-      presenter = new EntryPointListPresenter(eventBus, context, entryPointList);
-      presenter.bindDisplay(this);      
+
+      presenter = new SelectWorkspacePresenter(eventBus, entryPoint, entryPointList, openedFiles);
+      presenter.bindDisplay(this);
    }
 
    private void createSelectWorkspaceForm()
    {
 
-      entryPointListGrid= new EntryPointListGrid();
+      entryPointListGrid = new EntryPointListGrid();
       vLayout.addMember(entryPointListGrid);
 
       Layout l = new Layout();
       l.setHeight(5);
       vLayout.addMember(l);
    }
-   
+
    private void createButtonsForm()
    {
       DynamicForm buttonsForm = new DynamicForm();
@@ -131,10 +128,10 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
 
       vLayout.addMember(buttonsForm);
    }
-   
+
    public void closeForm()
    {
-      destroy();      
+      destroy();
    }
 
    @Override
@@ -143,15 +140,15 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
       presenter.destroy();
       super.onDestroy();
    }
-   
+
    public void disableOkButton()
    {
-      okButton.disable();      
+      okButton.disable();
    }
 
    public void enableOkButton()
    {
-      okButton.enable();      
+      okButton.enable();
    }
 
    public HasClickHandlers getCancelButton()
@@ -169,4 +166,3 @@ public class SelectWorkspaceForm extends DialogWindow implements EntryPointListP
       return okButton;
    }
 }
-

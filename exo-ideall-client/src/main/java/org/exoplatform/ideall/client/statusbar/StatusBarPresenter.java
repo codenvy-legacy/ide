@@ -1,16 +1,17 @@
 package org.exoplatform.ideall.client.statusbar;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-public class StatusBarPresenter implements ItemsSelectedHandler
+public class StatusBarPresenter implements ItemsSelectedHandler, EntryPointChangedHandler
 {
 
    interface Display
@@ -24,17 +25,17 @@ public class StatusBarPresenter implements ItemsSelectedHandler
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
 
-   public StatusBarPresenter(HandlerManager eventBus, ApplicationContext context)
+   private String entryPoint;
+
+   public StatusBarPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
 
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -51,7 +52,11 @@ public class StatusBarPresenter implements ItemsSelectedHandler
    {
       String statusMessage = null;
 
-      if (event.getSelectedItems().size() == 1)
+      if (entryPoint == null)
+      {
+         statusMessage = "No entry point selected!";
+      }
+      else if (event.getSelectedItems().size() == 1)
       {
          Item item = event.getSelectedItems().get(0);
          statusMessage = item.getHref();
@@ -60,7 +65,7 @@ public class StatusBarPresenter implements ItemsSelectedHandler
             statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
          }
 
-         String prefix = context.getEntryPoint();
+         String prefix = entryPoint;
          if (prefix.endsWith("/"))
          {
             prefix = prefix.substring(0, prefix.length() - 1);
@@ -83,6 +88,11 @@ public class StatusBarPresenter implements ItemsSelectedHandler
       }
 
       display.getPathInfoField().setValue(statusMessage);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
    }
 
 }

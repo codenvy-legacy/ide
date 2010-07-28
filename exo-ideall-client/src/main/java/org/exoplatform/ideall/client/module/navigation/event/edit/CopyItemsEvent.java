@@ -14,32 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.event;
+package org.exoplatform.ideall.client.module.navigation.event.edit;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CutItemsEvent extends GwtEvent<CutItemsHandler>
+public class CopyItemsEvent extends GwtEvent<CopyItemsHandler>
 {
-   public static final GwtEvent.Type<CutItemsHandler> TYPE = new GwtEvent.Type<CutItemsHandler>();
+   public static final GwtEvent.Type<CopyItemsHandler> TYPE = new GwtEvent.Type<CopyItemsHandler>();
 
    @Override
-   protected void dispatch(CutItemsHandler handler)
+   protected void dispatch(CopyItemsHandler handler)
    {
-      handler.onCutItems(this);
+      handler.onCopyItems(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CutItemsHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CopyItemsHandler> getAssociatedType()
    {
       return TYPE;
    }
-
 }
-

@@ -1,7 +1,6 @@
 package org.exoplatform.ideall.client.statusbar;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
@@ -16,7 +15,7 @@ public class StatusBarForm extends Layout implements StatusBarPresenter.Display
 
    private StatusBarPresenter presenter;
 
-   public StatusBarForm(HandlerManager eventBus, ApplicationContext context)
+   public StatusBarForm(HandlerManager eventBus)
    {
       setWidth100();
       setHeight(PANEL_HEIGHT);
@@ -32,7 +31,7 @@ public class StatusBarForm extends Layout implements StatusBarPresenter.Display
       pathInfoField.setWidth100();
       addMember(pathInfoField);
 
-      presenter = new StatusBarPresenter(eventBus, context);
+      presenter = new StatusBarPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 

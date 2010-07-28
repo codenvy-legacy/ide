@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,9 +39,9 @@ public class SelectWorkspaceCommand extends IDEControl
 
    public static final String TITLE = "Select Workspace...";
 
-   public SelectWorkspaceCommand()
+   public SelectWorkspaceCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());

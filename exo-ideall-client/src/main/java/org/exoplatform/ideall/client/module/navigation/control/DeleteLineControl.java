@@ -24,6 +24,8 @@ import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -34,9 +36,9 @@ public class DeleteLineControl extends IDEControl implements EditorActiveFileCha
 
    public static final String ID = "Edit/Delete Current Line";
 
-   public DeleteLineControl()
+   public DeleteLineControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Delete Current Line");
       setPrompt("Delete Current Line");
       setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());

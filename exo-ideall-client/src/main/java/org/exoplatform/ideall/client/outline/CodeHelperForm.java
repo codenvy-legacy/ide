@@ -18,12 +18,16 @@
  */
 package org.exoplatform.ideall.client.outline;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.editor.MinMaxControlButton;
 import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
-import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
+import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
+import org.exoplatform.ideall.client.framework.form.FormClosedHandler;
+import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ideall.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 
@@ -41,7 +45,7 @@ import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
  *
  */
 public class CodeHelperForm extends Layout implements CodeHelperPresenter.Display, 
-CodeHelperPanelRestoredHandler
+CodeHelperPanelRestoredHandler, FormOpenedHandler, FormClosedHandler
 {
    public static String ID = "CodeHelper";
    
@@ -59,20 +63,27 @@ CodeHelperPanelRestoredHandler
    
    protected MinMaxControlButton minMaxControlButton;
    
+   private Handlers handlers;
+   
    public CodeHelperForm(HandlerManager bus, ApplicationContext applicationContext)
    {
       eventBus = bus;
       context = applicationContext;
+      handlers = new Handlers(eventBus);
       
       tabSet = new TabSet();
       createButtons();
       outlineTab = new OutlineForm(eventBus, context);
+      outlineTab.setCanClose(true);
       tabSet.addTab(outlineTab);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
+      
+      handlers.addHandler(FormOpenedEvent.TYPE, this);
+      handlers.addHandler(FormClosedEvent.TYPE, this);
 
       presenter = new CodeHelperPresenter(eventBus, context);
-      presenter.bindDisplay(this);
+      presenter.bindDisplay(this);      
    }
    
    private void createButtons()
@@ -89,11 +100,6 @@ CodeHelperPanelRestoredHandler
       tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
    }
    
-   public void setTabCanClose(boolean canClose)
-   {
-      outlineTab.setCanClose(canClose);
-   }
-
    public void onCodeHelperPanelRestored(CodeHelperPanelRestoredEvent event)
    {
       minMaxControlButton.setMaximize(true);
@@ -105,28 +111,41 @@ CodeHelperPanelRestoredHandler
       {
          event.cancel();
          hide();
-         eventBus.fireEvent(new ShowOutlineEvent(false));
+         //eventBus.fireEvent(new ShowOutlineEvent(false));
       }
    };
    
    @Override
    public void show()
    {
-      if (!context.getOpenedForms().contains(ID)){
-         context.getOpenedForms().add(ID);
-      }
-      
+//      if (!context.getOpenedForms().contains(ID)){
+//         context.getOpenedForms().add(ID);
+//      }
+//      
       super.show();
-      
-      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+      eventBus.fireEvent(new FormOpenedEvent(ID));
+//      
+//      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
    
    @Override
    public void hide()
    {
-      context.getOpenedForms().remove(ID);
+//      context.getOpenedForms().remove(ID);
       super.hide();
-      
-      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+      eventBus.fireEvent(new FormClosedEvent(ID));
+//      
+//      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
+
+   public void onFormOpened(FormOpenedEvent event)
+   {
+      System.out.println("CodeHelperForm.onFormOpened()");
+   }
+
+   public void onFormClosed(FormClosedEvent event)
+   {
+      System.out.println("CodeHelperForm.onFormClosed()");
+   }
+   
 }

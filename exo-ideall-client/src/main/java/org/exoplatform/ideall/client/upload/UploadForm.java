@@ -17,12 +17,15 @@
 
 package org.exoplatform.ideall.client.upload;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -78,7 +81,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    private VerticalPanel postFieldsPanel;
 
-   public UploadForm(HandlerManager eventBus, ApplicationContext context, String path, boolean openFile)
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
@@ -113,7 +116,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
-      presenter = new UploadPresenter(eventBus, context, path, openFile);
+      presenter = new UploadPresenter(eventBus, selectedItems, path, openFile);
       presenter.bindDisplay(this);
    }
 

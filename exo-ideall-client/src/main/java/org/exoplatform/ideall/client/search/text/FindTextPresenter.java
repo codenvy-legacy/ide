@@ -22,15 +22,17 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
+import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.search.Search;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
 import org.exoplatform.ideall.client.search.text.event.FindTextResultHandler;
 
@@ -89,20 +91,21 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
 
    private Handlers handlers;
 
-   private ApplicationContext context;
-
    private final String STRING_NOT_FOUND = "String not found.";
 
    private HashMap<String, FindTextState> filesFindState;
+
+   private File activeFile;
 
    /**
     * @param eventBus
     * @param context
     */
-   public FindTextPresenter(HandlerManager eventBus, ApplicationContext context)
+   public FindTextPresenter(HandlerManager eventBus, File activeFile)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.activeFile = activeFile;
+
       filesFindState = new HashMap<String, FindTextState>();
       handlers = new Handlers(eventBus);
       handlers.addHandler(FindTextResultEvent.TYPE, this);
@@ -208,9 +211,12 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
             timer.schedule(10);
          }
       });
-      
-      context.getOpenedForms().add(FindTextForm.ID);
-      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+
+      eventBus.fireEvent(new FormOpenedEvent(Search.FORM_ID));
+
+      //      context.getOpenedForms().add(FindTextForm.ID);
+      //      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+
       disableAllButtons();
    }
 
@@ -225,14 +231,17 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    public void destroy()
    {
       handlers.removeHandlers();
-      context.getOpenedForms().remove(FindTextForm.ID);
-      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
+
+      eventBus.fireEvent(new FormClosedEvent(Search.FORM_ID));
+
+      //      context.getOpenedForms().remove(FindTextForm.ID);
+      //      eventBus.fireEvent(new OpenedFormsStateChangedEvent());
    }
 
    private void doFind(String findText)
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = context.getActiveFile().getHref();
+      String path = activeFile.getHref();
       eventBus.fireEvent(new EditorFindTextEvent(findText, caseSensitive, path));
    }
 
@@ -243,7 +252,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    private void doReplace(String findText, String replaceText)
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = context.getActiveFile().getHref();
+      String path = activeFile.getHref();
       eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path));
       FindTextState findTextState = new FindTextState(false, "", findText);
       changeState(findTextState);
@@ -253,7 +262,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    private void doFindReplace(String findText, String replaceText)
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = context.getActiveFile().getHref();
+      String path = activeFile.getHref();
       eventBus.fireEvent(new EditorFindReplaceTextEvent(findText, replaceText, caseSensitive, path));
    }
 
@@ -264,7 +273,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    private void doReplaceAll(String findText, String replaceText)
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = context.getActiveFile().getHref();
+      String path = activeFile.getHref();
       eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path, true));
    }
 
@@ -277,7 +286,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
       String findText = display.getFindField().getValue();
       FindTextState findTextState = new FindTextState(event.isFound(), resultString, findText);
       changeState(findTextState);
-      filesFindState.put(context.getActiveFile().getHref(), findTextState);
+      filesFindState.put(activeFile.getHref(), findTextState);
    }
 
    /**
@@ -285,11 +294,14 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null){
+      if (event.getFile() == null)
+      {
          display.closeForm();
          return;
       }
-      
+
+      activeFile = event.getFile();
+
       String path = event.getFile().getHref();
       FindTextState findTextState = filesFindState.get(path);
       if (filesFindState.get(path) == null)

@@ -342,7 +342,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    public void showGadget(GadgetMetadata metadata)
    {
       show();
-      gadgetPreviewPane = new GadgetPreviewPane(eventBus, context, metadata);
+      gadgetPreviewPane = new GadgetPreviewPane(eventBus, context.getApplicationConfiguration(), metadata);
       // if preview already opened
       gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
       if (gadgetPreviewTab == null)

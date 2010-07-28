@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.toolbar.customize.event.CustomizeToolbarEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,9 +39,9 @@ public class CustomizeToolbarCommand extends IDEControl
 
    public static final String TITLE = "Customize Toolbar...";
 
-   public CustomizeToolbarCommand()
+   public CustomizeToolbarCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());

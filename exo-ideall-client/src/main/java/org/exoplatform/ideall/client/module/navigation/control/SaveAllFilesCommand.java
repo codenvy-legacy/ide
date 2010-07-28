@@ -19,16 +19,24 @@
  */
 package org.exoplatform.ideall.client.module.navigation.control;
 
+import java.util.HashMap;
+
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,16 +46,18 @@ import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandle
  */
 
 public class SaveAllFilesCommand extends IDEControl implements EditorFileContentChangedHandler,
-   FileContentSavedHandler, EditorActiveFileChangedHandler
+   FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    public static final String ID = "File/Save All";
 
    public static final String TITLE = "Save All";
+   
+   private HashMap<String, File> openedFiles = new HashMap<String, File>();
 
-   public SaveAllFilesCommand()
+   public SaveAllFilesCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAll(), IDEImageBundle.INSTANCE.saveAllDisabled());
@@ -67,7 +77,7 @@ public class SaveAllFilesCommand extends IDEControl implements EditorFileContent
    private void checkItemEnabling()
    {
       boolean enable = false;
-      for (File file : context.getOpenedFiles().values())
+      for (File file : openedFiles.values())
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
@@ -92,6 +102,16 @@ public class SaveAllFilesCommand extends IDEControl implements EditorFileContent
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       checkItemEnabling();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

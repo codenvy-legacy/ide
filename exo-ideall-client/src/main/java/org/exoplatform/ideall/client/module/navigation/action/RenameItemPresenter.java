@@ -17,12 +17,12 @@
 package org.exoplatform.ideall.client.module.navigation.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
@@ -76,14 +76,19 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    private Handlers handlers;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private String itemBaseHref;
 
-   public RenameItemPresenter(HandlerManager eventBus, ApplicationContext context)
+   private List<Item> selectedItems;
+
+   private HashMap<String, File> openedFiles;
+
+   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.selectedItems = selectedItems;
+      this.openedFiles = openedFiles;
       handlers = new Handlers(eventBus);
    }
 
@@ -91,15 +96,14 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    {
       display = d;
 
-      itemBaseHref = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).get(0) instanceof Folder)
+      itemBaseHref = selectedItems.get(0).getHref();
+      if (selectedItems.get(0) instanceof Folder)
       {
          itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
       }
       itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
 
-      display.getItemNameField().setValue(
-         context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getName());
+      display.getItemNameField().setValue(selectedItems.get(0).getName());
 
       display.getRenameButton().addClickHandler(new ClickHandler()
       {
@@ -141,20 +145,20 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-      final Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      final Item item = selectedItems.get(0);
 
-      final String href = getPathToRename(item);
+      final String destination = getDestination(item);
 
-      if (href.equals(item.getHref()))
+      if (destination.equals(item.getHref()))
       {
          Dialogs.getInstance().showError("Can't rename resource!");
          return;
       }
 
-      VirtualFileSystem.getInstance().move(item, href);
+      VirtualFileSystem.getInstance().move(item, destination);
    }
 
-   private String getPathToRename(Item item)
+   private String getDestination(Item item)
    {
       String href = display.getItemNameField().getValue();
 
@@ -169,11 +173,11 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    private boolean saveNextOpenedFile(String path)
    {
-      for (String key : context.getOpenedFiles().keySet())
+      for (String key : openedFiles.keySet())
       {
          if (key.startsWith(path))
          {
-            File file = context.getOpenedFiles().get(key);
+            File file = openedFiles.get(key);
             if (file.isContentChanged())
             {
                VirtualFileSystem.getInstance().saveContent(file);
@@ -188,7 +192,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    private void updateOpenedFiles(String href, String sourceHref)
    {
       List<String> keys = new ArrayList<String>();
-      for (String key : context.getOpenedFiles().keySet())
+      for (String key : openedFiles.keySet())
       {
          keys.add(key);
       }
@@ -197,12 +201,12 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       {
          if (key.startsWith(sourceHref))
          {
-            File file = context.getOpenedFiles().get(key);
+            File file = openedFiles.get(key);
             String fileHref = file.getHref().replace(sourceHref, href);
             file.setHref(fileHref);
 
-            context.getOpenedFiles().remove(key);
-            context.getOpenedFiles().put(fileHref, file);
+            openedFiles.remove(key);
+            openedFiles.put(fileHref, file);
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
       }
@@ -221,12 +225,12 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       {
          File file = (File)event.getItem();
 
-         if (context.getOpenedFiles().containsKey(event.getSourceHref()))
+         if (openedFiles.containsKey(event.getSourceHref()))
          {
-            File openedFle = context.getOpenedFiles().get(event.getSourceHref());
-            openedFle.setHref(file.getHref());
-            context.getOpenedFiles().remove(event.getSourceHref());
-            context.getOpenedFiles().put(openedFle.getHref(), openedFle);
+            File openedFile = openedFiles.get(event.getSourceHref());
+            openedFile.setHref(file.getHref());
+            openedFiles.remove(event.getSourceHref());
+            openedFiles.put(openedFile.getHref(), openedFile);
 
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
@@ -243,10 +247,10 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      if (event.getItem().getHref().equals(renamedItem.getHref()) && context.getOpenedFiles().get(renamedItem.getHref()) != null)
+      if (event.getItem().getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
       {
-         context.getOpenedFiles().get(renamedItem.getHref()).getProperties().clear();
-         context.getOpenedFiles().get(renamedItem.getHref()).getProperties().addAll(event.getItem().getProperties());
+         openedFiles.get(renamedItem.getHref()).getProperties().clear();
+         openedFiles.get(renamedItem.getHref()).getProperties().addAll(event.getItem().getProperties());
       }
       completeMove();
    }
@@ -268,14 +272,13 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1
-         && saveNextOpenedFile(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref()))
+      if (selectedItems.size() != 1 && saveNextOpenedFile(selectedItems.get(0).getHref()))
       {
          return;
       }
 
-      String href = getPathToRename(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0));
-      VirtualFileSystem.getInstance().move(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0), href);
+      String href = getDestination(selectedItems.get(0));
+      VirtualFileSystem.getInstance().move(selectedItems.get(0), href);
    }
 
 }

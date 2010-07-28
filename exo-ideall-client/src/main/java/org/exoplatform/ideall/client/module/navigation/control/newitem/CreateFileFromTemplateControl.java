@@ -22,6 +22,8 @@ package org.exoplatform.ideall.client.module.navigation.control.newitem;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -34,9 +36,9 @@ public class CreateFileFromTemplateControl extends NewFileCommand
 
    public final static String ID = "File/New/Create File From Template...";
 
-   public CreateFileFromTemplateControl()
+   public CreateFileFromTemplateControl(HandlerManager eventBus)
    {
-      super(ID, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+      super(ID, eventBus, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
       setDelimiterBefore(true);
    }

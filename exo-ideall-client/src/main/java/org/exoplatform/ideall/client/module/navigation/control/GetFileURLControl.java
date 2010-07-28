@@ -21,13 +21,15 @@ package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.module.navigation.event.GetFileURLEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,9 +51,9 @@ public class GetFileURLControl extends IDEControl implements ItemsSelectedHandle
 
    private Item selectedItem;
 
-   public GetFileURLControl()
+   public GetFileURLControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
@@ -85,11 +87,11 @@ public class GetFileURLControl extends IDEControl implements ItemsSelectedHandle
 
    private void updateEnabling()
    {
-//      if (!browserPanelSelected)
-//      {
-//         setEnabled(false);
-//         return;
-//      }
+      //      if (!browserPanelSelected)
+      //      {
+      //         setEnabled(false);
+      //         return;
+      //      }
 
       if (selectedItem == null)
       {

@@ -20,11 +20,13 @@
 package org.exoplatform.ideall.client.module.navigation.control.download;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,9 +42,9 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
 
    private boolean oneItemSelected = true;
 
-   public DownloadZippedFolderCommand()
+   public DownloadZippedFolderCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Download Zipped Folder...");
       setPrompt("Download Zipped Folder...");
       setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());

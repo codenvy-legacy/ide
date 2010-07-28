@@ -14,7 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.workspace.event;
+package org.exoplatform.ideall.client.module.navigation.event.selection;
+
+import java.util.List;
+
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -25,33 +29,41 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class SwitchEntryPointEvent extends GwtEvent<SwitchEntryPointHandler>
+public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
 {
 
-   public static final GwtEvent.Type<SwitchEntryPointHandler> TYPE = new GwtEvent.Type<SwitchEntryPointHandler>();
+   public static final GwtEvent.Type<ItemsSelectedHandler> TYPE = new GwtEvent.Type<ItemsSelectedHandler>();
 
-   private String entryPoint;
+   private List<Item> selectedItems;
 
-   public SwitchEntryPointEvent(String entryPoint)
+   private String panelId;
+
+   public ItemsSelectedEvent(List<Item> selectedItems, String panelId)
    {
-      this.entryPoint = entryPoint;
-   }
-
-   public String getEntryPoint()
-   {
-      return entryPoint;
-   }
-
-   @Override
-   protected void dispatch(SwitchEntryPointHandler handler)
-   {
-      handler.onSwitchEntryPoint(this);
+      this.selectedItems = selectedItems;
+      this.panelId = panelId;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SwitchEntryPointHandler> getAssociatedType()
+   protected void dispatch(ItemsSelectedHandler handler)
+   {
+      handler.onItemsSelected(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemsSelectedHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   public List<Item> getSelectedItems()
+   {
+      return selectedItems;
+   }
+
+   public String getPanelId()
+   {
+      return panelId;
    }
 
 }

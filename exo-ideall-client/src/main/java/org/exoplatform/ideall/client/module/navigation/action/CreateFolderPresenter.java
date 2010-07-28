@@ -17,7 +17,6 @@
 package org.exoplatform.ideall.client.module.navigation.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
@@ -68,14 +67,14 @@ public class CreateFolderPresenter implements FolderCreatedHandler
    private String href;
 
    private Handlers handlers;
+   
+   private Item selectedItem;
 
-   private ApplicationContext context;
-
-   public CreateFolderPresenter(HandlerManager eventBus, ApplicationContext context, String href)
+   public CreateFolderPresenter(HandlerManager eventBus, Item selectedItem, String href)
    {
       this.eventBus = eventBus;
+      this.selectedItem = selectedItem;
       this.href = href;
-      this.context = context;
       handlers = new Handlers(eventBus);
    }
 
@@ -129,14 +128,22 @@ public class CreateFolderPresenter implements FolderCreatedHandler
 
    public void onFolderCreated(FolderCreatedEvent event)
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String folder = item.getHref();
-      if (item instanceof File)
+      //Item item = selectedItem; context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String folder = selectedItem.getHref();
+      if (selectedItem instanceof File)
       {
          folder = folder.substring(0, folder.lastIndexOf("/")+1);
       }
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
       display.closeForm();
    }
+//   
+//   public void onItemsSelected(ItemsSelectedEvent event)
+//   {
+//      if(event.getSelectedItems().size() != 0)
+//      {
+//         selectedItem = event.getSelectedItems().get(0);
+//      }
+//   }   
 
 }

@@ -17,10 +17,12 @@
 package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.navigation.event.CopyItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CopyItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,14 +33,14 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 {
 
    public static final String ID = "Edit/Copy Item(s)";
-   
+
    private Item selectedItem;
 
    private boolean copyReady = false;
-   
-   public CopyItemsCommand()
+
+   public CopyItemsCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Copy Item(s)");
       setPrompt("Copy Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
@@ -61,14 +63,14 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if(event.getSelectedItems().size() != 0)
+      if (event.getSelectedItems().size() != 0)
       {
          selectedItem = event.getSelectedItems().get(0);
          copyReady = isItemsInSameFolder(event.getSelectedItems());
          updateEnabling();
       }
    }
-   
+
    @Override
    protected void updateEnabling()
    {
@@ -83,8 +85,8 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
          setEnabled(false);
          return;
       }
-      
-      if(copyReady)
+
+      if (copyReady)
       {
          setEnabled(true);
       }
@@ -92,7 +94,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       {
          setEnabled(false);
       }
-     
+
    }
 
 }

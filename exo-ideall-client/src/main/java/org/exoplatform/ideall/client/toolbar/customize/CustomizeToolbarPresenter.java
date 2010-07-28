@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
 
@@ -104,7 +104,7 @@ public class CustomizeToolbarPresenter
 
    private Handlers handlers;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private CommandItemEx selectedCommandItem;
 
@@ -112,10 +112,16 @@ public class CustomizeToolbarPresenter
 
    private ArrayList<ToolbarItem> toolbarItems = new ArrayList<ToolbarItem>();
 
-   public CustomizeToolbarPresenter(HandlerManager eventBus, ApplicationContext context)
+   private ApplicationSettings applicationSettings;
+
+   private List<Control> controls;
+
+   public CustomizeToolbarPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
+      List<Control> controls)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.applicationSettings = applicationSettings;
+      this.controls = controls;
       handlers = new Handlers(eventBus);
    }
 
@@ -215,14 +221,14 @@ public class CustomizeToolbarPresenter
       display.disableMoveDownButton();
 
       fillCommandListGrid();
-      fillToolbarListGrid(context.getToolBarItems());
+      fillToolbarListGrid(applicationSettings.getToolbarItems());
    }
 
    private void fillCommandListGrid()
    {
       HashMap<String, List<Control>> groups = new LinkedHashMap<String, List<Control>>();
 
-      for (Control command : context.getCommands())
+      for (Control command : controls)
       {
          if (command instanceof SimpleControl)
          {
@@ -273,7 +279,7 @@ public class CustomizeToolbarPresenter
 
    private Control getCommandById(String id)
    {
-      for (Control command : context.getCommands())
+      for (Control command : controls)
       {
          if (id.equals(command.getId()))
          {
@@ -284,7 +290,7 @@ public class CustomizeToolbarPresenter
       return null;
    }
 
-   private void fillToolbarListGrid(ArrayList<String> items)
+   private void fillToolbarListGrid(List<String> items)
    {
       toolbarItems.clear();
 
@@ -480,26 +486,26 @@ public class CustomizeToolbarPresenter
 
    private void updateToolbar()
    {
-      context.getToolBarItems().clear();
+      applicationSettings.getToolbarItems().clear();
 
       for (ToolbarItem toolbarItem : toolbarItems)
       {
          if (toolbarItem.getType() == Type.COMMAND)
          {
-            context.getToolBarItems().add(toolbarItem.getCommand().getId());
+            applicationSettings.getToolbarItems().add(toolbarItem.getCommand().getId());
          }
          else if (toolbarItem.getType() == Type.SPACER)
          {
-            context.getToolBarItems().add("");
+            applicationSettings.getToolbarItems().add("");
          }
          else
          {
-            context.getToolBarItems().add("---");
+            applicationSettings.getToolbarItems().add("---");
          }
       }
 
-      eventBus.fireEvent(new UpdateToolbarEvent(context.getToolBarItems(), context.getCommands()));
-      SettingsService.getInstance().saveSetting(context);
+      eventBus.fireEvent(new UpdateToolbarEvent(applicationSettings.getToolbarItems(), controls));
+      SettingsService.getInstance().saveSetting(applicationSettings);
    }
 
    private void applyChanges()
@@ -510,7 +516,7 @@ public class CustomizeToolbarPresenter
 
    private void restoreDefaults()
    {
-      fillToolbarListGrid(context.getToolBarDefaultItems());
+      fillToolbarListGrid(applicationSettings.getToolbarItems());
       selectedToolbarItem = null;
       display.disableAddCommandButton();
       display.disableAddDelimiterButton();

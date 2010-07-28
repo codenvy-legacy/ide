@@ -16,11 +16,15 @@
  */
 package org.exoplatform.ideall.client.module.navigation.action;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -49,7 +53,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 160;
-   
+
    private static final String ID = "ideRenameItemForm";
    
    private static final String ID_DYNAMIC_FORM = "ideRenameItemFormDynamicForm";
@@ -70,7 +74,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    private RenameItemPresenter presenter;
 
-   public RenameItemForm(HandlerManager eventBus, ApplicationContext context)
+   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Rename item");
@@ -83,7 +87,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       show();
 
-      presenter = new RenameItemPresenter(eventBus, context);
+      presenter = new RenameItemPresenter(eventBus, selectedItems, openedFiles);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -120,7 +124,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       itemNameField.setWidth(340);
       paramsForm.setFields(caption, delimiter, itemNameField);
       paramsForm.focusInItem(itemNameField);
-      
+
       vLayout.addMember(paramsForm);
    }
 

@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ideall.client.search.file;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -61,12 +62,16 @@ public class SearchPresenter
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
+   
+   private List<Item> selectedItems;
+   
+   private String entryPoint;
 
-   public SearchPresenter(HandlerManager eventBus, ApplicationContext context)
+   public SearchPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.selectedItems = selectedItems;
    }
 
    public void bindDisplay(Display d)
@@ -91,13 +96,13 @@ public class SearchPresenter
       });
 
       String path;
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 0)
+      if (selectedItems.size() == 0)
       {
          path = "/";
       }
       else
       {
-         Item selectedItem = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+         Item selectedItem = selectedItems.get(0);
 
          String href = selectedItem.getHref();
          if (selectedItem instanceof File)
@@ -105,22 +110,22 @@ public class SearchPresenter
             href = href.substring(0, href.lastIndexOf("/") + 1);
          }
 
-         path = href.substring(context.getEntryPoint().length() - 1);
+         path = href.substring(entryPoint.length() - 1);
       }
 
       display.getPathItem().setValue(path);
 
       fillMimeTypes();
 
-      if (context.getSearchContent() != null)
-      {
-         display.getSearchContentItem().setValue(context.getSearchContent());
-      }
-
-      if (context.getSearchContentType() != null)
-      {
-         display.getMimeTypeItem().setValue(context.getSearchContentType());
-      }
+//      if (context.getSearchContent() != null)
+//      {
+//         display.getSearchContentItem().setValue(context.getSearchContent());
+//      }
+//
+//      if (context.getSearchContentType() != null)
+//      {
+//         display.getMimeTypeItem().setValue(context.getSearchContentType());
+//      }
    }
 
    private void doSearch()
@@ -128,20 +133,20 @@ public class SearchPresenter
       String content = display.getSearchContentItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
-      if (content != null)
-      {
-         context.setSearchContent(content);
-      }
+//      if (content != null)
+//      {
+//         context.setSearchContent(content);
+//      }
+//
+//      if (contentType != null)
+//      {
+//         context.setSearchContentType(contentType);
+//      }
 
-      if (contentType != null)
-      {
-         context.setSearchContentType(contentType);
-      }
-
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
 
       String path = item.getHref();
-      path = path.substring(context.getEntryPoint().length());
+      path = path.substring(entryPoint.length());
       if (item instanceof File)
       {
          path = path.substring(0, path.lastIndexOf("/") + 1);
@@ -152,7 +157,7 @@ public class SearchPresenter
          path = "/" + path;
       }
 
-      Folder folder = new Folder(context.getEntryPoint());
+      Folder folder = new Folder(entryPoint);
       VirtualFileSystem.getInstance().search(folder, content, contentType, path);
       display.closeForm();
    }

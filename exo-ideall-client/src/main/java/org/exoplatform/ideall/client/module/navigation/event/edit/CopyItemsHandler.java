@@ -14,13 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.event;
+package org.exoplatform.ideall.client.module.navigation.event.edit;
 
 import com.google.gwt.event.shared.EventHandler;
-
-
-
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,4 +27,3 @@ public interface CopyItemsHandler extends EventHandler
 {
    void onCopyItems(CopyItemsEvent event);
 }
-

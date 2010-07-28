@@ -25,6 +25,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -39,9 +41,9 @@ public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiv
 
    public static final String TITLE = "Save As Template...";
 
-   public SaveFileAsTemplateCommand()
+   public SaveFileAsTemplateCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());

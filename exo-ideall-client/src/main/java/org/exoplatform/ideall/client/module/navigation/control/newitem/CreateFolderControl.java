@@ -21,12 +21,14 @@ package org.exoplatform.ideall.client.module.navigation.control.newitem;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,9 +46,9 @@ public class CreateFolderControl extends IDEControl implements ItemsSelectedHand
 
    public final static String ID = "File/New/Create Folder...";
 
-   public CreateFolderControl()
+   public CreateFolderControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Folder...");
       setPrompt("Create Folder...");
       setDelimiterBefore(true);

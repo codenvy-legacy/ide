@@ -26,8 +26,8 @@ import org.exoplatform.ideall.client.AbstractGwtTest;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
 import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Random;
@@ -110,10 +110,10 @@ public class GwtTestSettingsService extends AbstractGwtTest
             finishTest();
          }
       });
-      eventbus.addHandler(ApplicationContextSavedEvent.TYPE, new ApplicationContextSavedHandler()
+      eventbus.addHandler(ApplicationSettingsSavedEvent.TYPE, new ApplicationSettingsSavedHandler()
       {
 
-         public void onApplicationContextSaved(ApplicationContextSavedEvent event)
+         public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
          {
             assertEquals(2, event.getContext().getHotKeys().size());
             assertEquals(3, event.getContext().getDefaultEditors().size());
@@ -153,10 +153,10 @@ public class GwtTestSettingsService extends AbstractGwtTest
             finishTest();
          }
       });
-      eventbus.addHandler(ApplicationContextSavedEvent.TYPE, new ApplicationContextSavedHandler()
+      eventbus.addHandler(ApplicationSettingsSavedEvent.TYPE, new ApplicationSettingsSavedHandler()
       {
 
-         public void onApplicationContextSaved(ApplicationContextSavedEvent event)
+         public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
          {
             fail("Test URL is right");
             finishTest();

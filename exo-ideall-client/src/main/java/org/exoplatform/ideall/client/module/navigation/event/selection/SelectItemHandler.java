@@ -17,12 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.navigation.control.newitem;
+package org.exoplatform.ideall.client.module.navigation.event.selection;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,26 +28,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NewFileCommandMenuGroup extends IDEControl
+public interface SelectItemHandler extends EventHandler
 {
 
-   public static final String ID = "File/New";
-
-   public static final String TITLE = "New";
-
-   public NewFileCommandMenuGroup(HandlerManager eventBus)
-   {
-      super(ID, eventBus);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+   void onSelectItem(SelectItemEvent event);
 
 }

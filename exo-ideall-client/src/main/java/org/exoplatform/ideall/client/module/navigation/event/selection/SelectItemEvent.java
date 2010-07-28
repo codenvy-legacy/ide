@@ -17,12 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.navigation.control.newitem;
+package org.exoplatform.ideall.client.module.navigation.event.selection;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,26 +28,33 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NewFileCommandMenuGroup extends IDEControl
+public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 {
 
-   public static final String ID = "File/New";
+   public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   public static final String TITLE = "New";
+   private String itemHref;
 
-   public NewFileCommandMenuGroup(HandlerManager eventBus)
+   public SelectItemEvent(String itemHref)
    {
-      super(ID, eventBus);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+      this.itemHref = itemHref;
+   }
+
+   public String getItemHref()
+   {
+      return itemHref;
    }
 
    @Override
-   protected void onRegisterHandlers()
+   protected void dispatch(SelectItemHandler handler)
    {
-      setVisible(true);
-      setEnabled(true);
+      handler.onSelectItem(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

@@ -26,6 +26,8 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.search.Search;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -46,8 +48,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class FindTextForm extends DialogWindow implements FindTextPresenter.Display
 {
-   public static final String ID = "ideallFindReplaceForm";
-   
+
    private static final int WIDTH = 450;
 
    private static final int HEIGHT = 210;
@@ -63,7 +64,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private final int BUTTONS_SPACE = 5;
 
    private final String TITLE = "Find/Replace";
-   
+
    private IButton findButton;
 
    private IButton cancelButton;
@@ -89,9 +90,9 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     * @param width
     * @param height
     */
-   public FindTextForm(HandlerManager eventBus, ApplicationContext context)
+   public FindTextForm(HandlerManager eventBus, File activeFile)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(eventBus, WIDTH, HEIGHT, Search.FORM_ID);
       setTitle(TITLE);
       setIsModal(false);
 
@@ -125,7 +126,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
 
       show();
 
-      presenter = new FindTextPresenter(eventBus, context);
+      presenter = new FindTextPresenter(eventBus, activeFile);
       presenter.bindDisplay(this);
 
       findField.focusInItem();
@@ -280,8 +281,8 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /* *//**
-       * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFromStartField()
-       */
+          * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFromStartField()
+          */
    /*
       public HasValue<Boolean> getFromStartField()
       {

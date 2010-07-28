@@ -17,13 +17,15 @@
 package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedHandler;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
-import org.exoplatform.ideall.client.module.navigation.event.PasteItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,9 +39,9 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    private boolean pastePrepared = false;
 
-   public PasteItemsCommand()
+   public PasteItemsCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Paste Item(s)");
       setPrompt("Paste Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());

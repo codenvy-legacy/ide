@@ -16,10 +16,14 @@
  */
 package org.exoplatform.ideall.client.module.navigation.action;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -48,13 +52,13 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    public static final int WIDTH = 500;
 
    public static final int HEIGHT = 130;
-   
+
    public static final String ID = "ideDeleteItemForm";
    
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
    
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
-   
+
    private HLayout hLayout;
 
    private String prompt;
@@ -65,17 +69,17 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private DeleteItemPresenter presenter;
 
-   public DeleteItemForm(HandlerManager eventBus, ApplicationContext context)
+   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() == 1)
+      if (selectedItems.size() == 1)
       {
-         prompt = "<br>Do you want to delete  <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getName() + "</b> ?";
+         prompt = "<br>Do you want to delete  <b>" + selectedItems.get(0).getName() + "</b> ?";
       }
       else
       {
-         prompt = "<br>Do you want to delete <b>" + context.getSelectedItems(context.getSelectedNavigationPanel()).size() + "</b> items?";
+         prompt = "<br>Do you want to delete <b>" + selectedItems.size() + "</b> items?";
       }
       setTitle("Delete Item(s)");
 
@@ -96,7 +100,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
          }
       });
 
-      presenter = new DeleteItemPresenter(eventBus, context);
+      presenter = new DeleteItemPresenter(eventBus, selectedItems, openedFiles);
       presenter.bindDisplay(this);
    }
 

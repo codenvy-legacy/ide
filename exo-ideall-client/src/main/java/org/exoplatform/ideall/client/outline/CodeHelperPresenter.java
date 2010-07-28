@@ -76,10 +76,11 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 
       if (OutlineTreeGrid.haveOutline(file))
       {
-         if (context.isShowOutline())
-         {
-            display.show();
-         }
+         
+//         if (context.isShowOutline())
+//         {
+//            display.show();
+//         }
       }
       else
       {

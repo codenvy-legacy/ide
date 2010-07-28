@@ -25,6 +25,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -41,9 +43,9 @@ public class ViewItemPropertiesCommand extends IDEControl implements EditorActiv
 
    public static final String PROMPT = "Show Properties";
 
-   public ViewItemPropertiesCommand()
+   public ViewItemPropertiesCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());

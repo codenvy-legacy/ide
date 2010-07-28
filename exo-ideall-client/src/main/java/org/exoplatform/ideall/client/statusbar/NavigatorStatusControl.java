@@ -19,11 +19,13 @@
  */
 package org.exoplatform.ideall.client.statusbar;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 
@@ -36,38 +38,52 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NavigatorStatusControl extends StatusTextControl implements ItemsSelectedHandler
+public class NavigatorStatusControl extends StatusTextControl implements ItemsSelectedHandler, EntryPointChangedHandler
 {
 
    public static final String ID = "__navigator_status";
 
-   private ApplicationContext context;
+   private String entryPoint;
+   
+   private Handlers handlers;
 
-   public NavigatorStatusControl(HandlerManager eventBus, ApplicationContext context)
+   public NavigatorStatusControl(HandlerManager eventBus)
    {
       super(ID);
       setVisible(true);
       setEnabled(true);
       setText("&nbsp;");
-
-      this.context = context;
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      
+      handlers = new Handlers(eventBus);
+      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
+      System.out.println("NavigatorStatusControl.onItemsSelected()");
+      
+      if (entryPoint == null) {
+         System.out.println("entr point is null. returning........");
+         setText("&nbsp;");
+         return;
+      }
+      
       String statusMessage = null;
 
       if (event.getSelectedItems().size() == 1)
       {
          Item item = event.getSelectedItems().get(0);
+         
+         System.out.println("selected item : " + item.getHref());
+         
          statusMessage = item.getHref();
          if (item instanceof File)
          {
             statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
          }
 
-         String prefix = context.getEntryPoint();
+         String prefix = entryPoint;
          if (prefix.endsWith("/"))
          {
             prefix = prefix.substring(0, prefix.length() - 1);
@@ -80,7 +96,7 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
             statusMessage = statusMessage.substring(0, statusMessage.length() - 1);
          }
 
-         if (event.getSelectedItems().get(0).getHref().equals(context.getEntryPoint()))
+         if (event.getSelectedItems().get(0).getHref().equals(entryPoint))
          {
             statusMessage = tuneMessage(statusMessage, Images.FileTypes.WORKSPACE);
             //statusMessage = "<img src=\"" + Images.FileTypes.WORKSPACE + "\" style=\"width:16px; height:16px;\">" + statusMessage;
@@ -119,6 +135,14 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
             + " style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>&nbsp;"
             + originalStatusMessage + "</nobr></td></tr></table>";
       return table;
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
+      
+      System.out.println("entry point changed to: " + entryPoint);
+      
    }
 
 }

@@ -18,14 +18,14 @@ package org.exoplatform.ideall.client.workspace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.discovery.Scheme;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
@@ -50,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointListPresenter implements FileContentSavedHandler
+public class SelectWorkspacePresenter implements FileContentSavedHandler
 {
 
    public interface Display
@@ -71,7 +71,7 @@ public class EntryPointListPresenter implements FileContentSavedHandler
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private Handlers handlers;
 
@@ -82,12 +82,18 @@ public class EntryPointListPresenter implements FileContentSavedHandler
    private EntryPoint selectedEntryPoint;
 
    private boolean isSameEntryPoint = true;
+   
+   private String currentEntryPoint;
+   
+   private Map<String, File> openedFiles;
 
-   public EntryPointListPresenter(HandlerManager eventBus, ApplicationContext context, EntryPointList entryPointList)
+   public SelectWorkspacePresenter(HandlerManager eventBus, String currentEntryPoint, EntryPointList entryPointList, Map<String, File> openedFiles)
    {
-      this.context = context;
       this.eventBus = eventBus;
       this.entryPointList = entryPointList;
+      
+      this.currentEntryPoint = currentEntryPoint;
+      this.openedFiles = openedFiles;
 
       handlers = new Handlers(eventBus);
    }
@@ -95,7 +101,7 @@ public class EntryPointListPresenter implements FileContentSavedHandler
    public void bindDisplay(Display d)
    {
       display = d;
-      handlers.addHandler(FileContentSavedEvent.TYPE, EntryPointListPresenter.this);
+      handlers.addHandler(FileContentSavedEvent.TYPE, SelectWorkspacePresenter.this);
 
       display.disableOkButton();
 
@@ -157,7 +163,10 @@ public class EntryPointListPresenter implements FileContentSavedHandler
          return;
       }
 
-      if (selectedItem.getHref().equals(context.getEntryPoint()))
+      System.out.println("current entry point " + currentEntryPoint);
+      System.out.println("selected entry point " + selectedItem.getHref());
+      
+      if (selectedItem.getHref().equals(currentEntryPoint))
       {
          display.disableOkButton();
          isSameEntryPoint = true;
@@ -175,7 +184,7 @@ public class EntryPointListPresenter implements FileContentSavedHandler
 
    private void changeEntryPoint()
    {
-      if (context.getOpenedFiles().size() != 0)
+      if (openedFiles.size() != 0)
       {
          Dialogs.getInstance().ask("IDEall", "All opened files will be closed.<br>Do you want to continue?",
             new BooleanValueReceivedCallback()
@@ -214,14 +223,14 @@ public class EntryPointListPresenter implements FileContentSavedHandler
 
    private void closeNextFile()
    {
-      if (context.getOpenedFiles().size() == 0)
+      if (openedFiles.size() == 0)
       {
          swichEntryPoint();
          return;
       }
 
-      String href = context.getOpenedFiles().keySet().iterator().next();
-      final File file = context.getOpenedFiles().get(href);
+      String href = openedFiles.keySet().iterator().next();
+      final File file = openedFiles.get(href);
 
       if (file.isContentChanged())
       {

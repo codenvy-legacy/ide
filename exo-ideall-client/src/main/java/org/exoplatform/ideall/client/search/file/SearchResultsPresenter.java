@@ -21,9 +21,9 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -128,8 +128,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
     */
    protected void onBrowserDoubleClicked()
    {
-
-      if (selectedItems == null || context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      if (selectedItems == null || selectedItems.size() != 1)
       {
          return;
       }
@@ -166,10 +165,10 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       {
          selectedItems = display.getSelectedItems();
 
-         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
+//         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
 
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, SearchResultPanel.ID));
       }
 
    };

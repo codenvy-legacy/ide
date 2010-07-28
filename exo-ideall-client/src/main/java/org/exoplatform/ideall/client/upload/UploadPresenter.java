@@ -89,7 +89,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private Display display;
 
@@ -98,11 +98,13 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private String path;
 
    private boolean openLocalFile;
+   
+   private List<Item> selectedItems;
 
-   public UploadPresenter(HandlerManager eventBus, ApplicationContext context, String path, boolean openLocalFile)
+   public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.selectedItems = selectedItems;
       this.path = path;
       this.openLocalFile = openLocalFile;
       fileSelectedHandler = eventBus.addHandler(UploadFileSelectedEvent.TYPE, this);
@@ -186,7 +188,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
 
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
       String href = item.getHref();
       if (item instanceof File)
       {
@@ -406,7 +408,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    {
       display.closeDisplay();
 
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
       String href = item.getHref();
       if (item instanceof File)
       {

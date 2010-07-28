@@ -20,11 +20,13 @@
 package org.exoplatform.ideall.client.module.navigation.control.download;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,9 +42,9 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
 
    private boolean oneItemSelected = true;
 
-   public DownloadFileCommand()
+   public DownloadFileCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Download...");
       setPrompt("Download File...");
       setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());

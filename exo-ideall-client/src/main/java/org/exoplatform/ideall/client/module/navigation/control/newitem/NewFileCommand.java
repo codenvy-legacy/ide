@@ -20,6 +20,8 @@
 package org.exoplatform.ideall.client.module.navigation.control.newitem;
 
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
@@ -27,6 +29,7 @@ import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -36,24 +39,27 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $
  */
 
-public class NewFileCommand extends IDEControl implements PanelSelectedHandler, SwitchEntryPointHandler
+public class NewFileCommand extends IDEControl implements PanelSelectedHandler, SwitchEntryPointHandler,
+   EntryPointChangedHandler
 {
 
    private boolean browserSelected = false;
 
-   public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
+   private String entryPoint;
+
+   public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, String icon, GwtEvent<?> event)
    {
-      super(id);
+      super(id, eventBus);
       setTitle(title);
       setPrompt(prompt);
       setIcon(icon);
       setEvent(event);
    }
 
-   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
+   public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, ImageResource normalIcon,
       ImageResource disabledIcon, GwtEvent<?> event)
    {
-      super(id);
+      super(id, eventBus);
       setTitle(title);
       setPrompt(prompt);
       setImages(normalIcon, disabledIcon);
@@ -65,6 +71,7 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
    {
       addHandler(PanelSelectedEvent.TYPE, this);
       addHandler(SwitchEntryPointEvent.TYPE, this);
+      addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    @Override
@@ -76,7 +83,7 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
 
    private void updateEnabling()
    {
-      if (context.getEntryPoint() == null)
+      if (entryPoint == null)
       {
          setEnabled(false);
          return;
@@ -101,6 +108,11 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
       updateEnabling();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
    }
 
 }

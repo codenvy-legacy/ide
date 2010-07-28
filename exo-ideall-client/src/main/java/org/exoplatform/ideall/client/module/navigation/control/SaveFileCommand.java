@@ -20,11 +20,11 @@
 package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
@@ -33,6 +33,8 @@ import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEve
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedEvent;
 import org.exoplatform.ideall.client.operation.properties.event.FilePropertiesChangedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,9 +51,11 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
 
    public static final String TITLE = "Save";
 
-   public SaveFileCommand()
+   private File activeFile;
+
+   public SaveFileCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);
@@ -74,19 +78,21 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      activeFile = event.getFile();
+
+      if (activeFile == null)
       {
          setEnabled(false);
          return;
       }
 
-      if (event.getFile().isNewFile())
+      if (activeFile.isNewFile())
       {
          setEnabled(false);
       }
       else
       {
-         if (event.getFile().isContentChanged() || event.getFile().isPropertiesChanged())
+         if (activeFile.isContentChanged() || activeFile.isPropertiesChanged())
          {
             setEnabled(true);
          }
@@ -104,7 +110,7 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
          return;
       }
 
-      if ((File)event.getItem() != context.getActiveFile())
+      if ((File)event.getItem() != activeFile)
       {
          return;
       }
@@ -147,7 +153,7 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (event.getFile() != context.getActiveFile())
+      if (event.getFile() != activeFile)
       {
          return;
       }
@@ -160,7 +166,6 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
       {
          setEnabled(false);
       }
-
    }
 
 }

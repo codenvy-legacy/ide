@@ -17,10 +17,12 @@
 package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.navigation.event.CutItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CutItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -36,9 +38,9 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
 
    private Item selectedItem;
 
-   public CutItemsCommand()
+   public CutItemsCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Cut Item(s)");
       setPrompt("Cut Selected Item(s)");
       setDelimiterBefore(true);

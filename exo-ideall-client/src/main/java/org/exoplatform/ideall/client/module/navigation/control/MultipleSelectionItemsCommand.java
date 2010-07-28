@@ -20,31 +20,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ideall.client.browser.BrowserPanel;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends IDEControl implements PanelSelectedHandler
+public abstract class MultipleSelectionItemsCommand extends IDEControl implements PanelSelectedHandler, EntryPointChangedHandler
 {
 
    protected boolean browserSelected = true;
+   
+   private String entryPoint;
 
-   public MultipleSelectionItemsCommand(String id)
+   public MultipleSelectionItemsCommand(String id, HandlerManager eventBus)
    {
-      super(id);
+      super(id, eventBus);
    }
 
    @Override
    protected void onRegisterHandlers()
    {
       addHandler(PanelSelectedEvent.TYPE, this);
+      addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public boolean isItemsInSameFolder(List<Item> items)
@@ -52,7 +59,7 @@ public abstract class MultipleSelectionItemsCommand extends IDEControl implement
       List<String> hrefs = new ArrayList<String>();
       for (Item i : items)
       {
-         if (i.getHref().equals(context.getEntryPoint()))
+         if (i.getHref().equals(entryPoint))
          {
             return false;
          }
@@ -89,4 +96,10 @@ public abstract class MultipleSelectionItemsCommand extends IDEControl implement
       browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
    }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      this.entryPoint = event.getEntryPoint();
+   }
+   
 }

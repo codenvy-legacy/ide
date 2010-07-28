@@ -28,9 +28,9 @@ import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
@@ -82,11 +82,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       context = applicationContext;
 
       handlers = new Handlers(eventBus);
-
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorActivityEvent.TYPE, this);
-
+      
    }
 
    public void bindDisplay(Display d)
@@ -176,7 +175,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          display.getBrowserTree().setValue(new Token("", null));
       }
    }
-
+   
    private boolean selectTokenByRow(List<Token> tokens)
    {
       if (tokens == null || tokens.size() == 0)
@@ -321,5 +320,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          selectTokenByRow(tokens);
       }
-   };
+   };   
+   
 }

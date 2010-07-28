@@ -21,16 +21,19 @@ package org.exoplatform.ideall.client.module.navigation.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RenameItemEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,7 +43,7 @@ import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
  */
 
 public class RenameItemCommand extends IDEControl implements ItemsSelectedHandler, ItemDeletedHandler,
-   PanelSelectedHandler
+   PanelSelectedHandler, EntryPointChangedHandler
 {
 
    private static final String ID = "File/Rename...";
@@ -49,9 +52,11 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
 
    private Item selectedItem;
 
-   public RenameItemCommand()
+   private String entryPoint;
+
+   public RenameItemCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Rename...");
       setPrompt("Rename Item");
       setDelimiterBefore(true);
@@ -66,6 +71,7 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
       addHandler(ItemDeletedEvent.TYPE, this);
 
       addHandler(PanelSelectedEvent.TYPE, this);
+      addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    @Override
@@ -77,13 +83,19 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      ApplicationContext applicationContext = (ApplicationContext)context;
-
-      if (applicationContext.getSelectedItems(applicationContext.getSelectedNavigationPanel()).size() != 1)
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;
       }
+
+      //      ApplicationContext applicationContext = (ApplicationContext)context;
+      //
+      //      if (applicationContext.getSelectedItems(applicationContext.getSelectedNavigationPanel()).size() != 1)
+      //      {
+      //         setEnabled(false);
+      //         return;
+      //      }
 
       selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
@@ -109,7 +121,7 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
          return;
       }
 
-      if (selectedItem.getHref().equals(context.getEntryPoint()))
+      if (selectedItem.getHref().equals(entryPoint))
       {
          setEnabled(false);
       }
@@ -123,6 +135,11 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
    }
 
 }

@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.module.preferences.event.CustomizeHotKeysEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,9 +39,9 @@ public class CustomizeHotKeysCommand extends IDEControl
 
    public static final String TITLE = "Customize Hotkeys...";
 
-   public CustomizeHotKeysCommand()
+   public CustomizeHotKeysCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setEnabled(true);

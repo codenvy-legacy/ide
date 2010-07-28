@@ -16,12 +16,13 @@
  */
 package org.exoplatform.ideall.client.template;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
 import org.exoplatform.ideall.client.model.template.TemplateService;
 import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
@@ -85,16 +86,21 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
 
    private Display display;
 
-   private ApplicationContext context;
-
    private Template selectedTemplate;
 
    private String previousExtension;
+   
+   private List<Item> selectedItems;
+   
+   private List<Template> templateList;
 
-   public CreateFileFromTemplatePresenter(HandlerManager eventBus, ApplicationContext context)
+   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      
+      this.selectedItems = selectedItems;
+      this.templateList = templateList;
+
       handlers = new Handlers(eventBus);
       handlers.addHandler(TemplateDeletedEvent.TYPE, this);
    }
@@ -151,7 +157,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
 
       display.getFileNameField().setValue("Untitled file");
 
-      display.getTemplateListGrid().setValue(context.getTemplateList().getTemplates());
+      display.getTemplateListGrid().setValue(templateList);
 
       display.disableCreateButton();
       
@@ -229,7 +235,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
          return;
       }
 
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
 
       String href = item.getHref();
       if (item instanceof File)
@@ -276,9 +282,10 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
     */
    public void onTemplateListReceived(TemplateListReceivedEvent event)
    {
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
-      context.setTemplateList(event.getTemplateList());
-      display.getTemplateListGrid().setValue(context.getTemplateList().getTemplates());
+      handlers.removeHandler(TemplateListReceivedEvent.TYPE);      
+      templateList.clear();
+      templateList.addAll(event.getTemplateList().getTemplates());
+      display.getTemplateListGrid().setValue(templateList);
       display.selectLastTemplate();
    }
 

@@ -21,13 +21,15 @@ import java.util.List;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -47,9 +49,9 @@ public class OpenLocalFileCommand extends IDEControl implements ItemsSelectedHan
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public OpenLocalFileCommand()
+   public OpenLocalFileCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(PROMPT);
       //setIcon(Images.MainMenu.UPLOAD_FILE);

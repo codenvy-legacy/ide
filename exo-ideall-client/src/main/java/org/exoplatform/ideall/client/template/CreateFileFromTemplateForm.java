@@ -16,13 +16,15 @@
  */
 package org.exoplatform.ideall.client.template;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.template.Template;
+import org.exoplatform.ideall.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -67,7 +69,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
    private TextField fileNameField;
 
-   public CreateFileFromTemplateForm(HandlerManager eventBus, ApplicationContext context)
+   public CreateFileFromTemplateForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 
@@ -91,7 +93,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
       show();
 
-      presenter = new CreateFileFromTemplatePresenter(eventBus, context);
+      presenter = new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
