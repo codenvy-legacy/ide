@@ -51,8 +51,8 @@ public class GroovyModule implements IDEModule, InitializeServicesHandler
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New REST Service", "REST Service",
          "Create REST Service", Images.FileType.GROOVY, MimeType.GROOVY_SERVICE)));
 
-//      addControl(new NewItemControl("File/New/New Groovy Script", "Groovy Script", "Create Groovy Script",
-//         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Script", "Groovy Script",
+         "Create Groovy Script", Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY)));
 
       eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
