@@ -16,14 +16,12 @@
  */
 package org.exoplatform.ideall.client.module.netvibes;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 
 import com.google.gwt.event.shared.HandlerManager;
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,27 +29,17 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class NetvibesModule extends AbstractIDEModule
+public class NetvibesModule implements IDEModule
 {
 
-   public NetvibesModule(HandlerManager eventBus, AbstractApplicationContext context)
+   private HandlerManager eventBus;
+
+   public NetvibesModule(HandlerManager eventBus)
    {
-      super(eventBus, context);
+      this.eventBus = eventBus;
+
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
+         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET)));
    }
 
-   /**
-    * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeModule()
-    */
-   public void initializeModule()
-   {
-      addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget", "Create Netvibes Widget file",Images.UWA_WIGET, MimeType.UWA_WIDGET));
-   }
-
-   /**
-    * @see org.exoplatform.ideall.client.framework.module.IDEModule#initializeServices(org.exoplatform.gwtframework.commons.loader.Loader)
-    */
-   public void initializeServices(Loader loader)
-   {
-      // TODO Auto-generated method stub
-   }
 }
