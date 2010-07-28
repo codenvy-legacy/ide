@@ -20,11 +20,10 @@
 package org.exoplatform.ideall.client.model.settings.marshal;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,14 +32,14 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
  * @version $
  */
 
-public class ApplicationContextMarshaller implements Const, Marshallable
+public class ApplicationSettingsMarshaller implements Const, Marshallable
 {
 
-   private ApplicationContext context;
+   private ApplicationSettings applicationSettings;
 
-   public ApplicationContextMarshaller(ApplicationContext context)
+   public ApplicationSettingsMarshaller(ApplicationSettings applicationSettings)
    {
-      this.context = context;
+      this.applicationSettings = applicationSettings;
    }
 
    public String marshal()
@@ -59,7 +58,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    {
       String xml = "<" + HOT_KEYS + ">";
       
-      Iterator<Entry<String, String>> it = context.getHotKeys().entrySet().iterator();
+      Iterator<Entry<String, String>> it = applicationSettings.getHotKeys().entrySet().iterator();
       while (it.hasNext())
       {
          Entry<String, String> entry = it.next();
@@ -81,7 +80,7 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    private String getToolbar()
    {
       String xml = "<" + TOOLBAR + ">";
-      for (String toolbarItem : context.getToolBarItems())
+      for (String toolbarItem : applicationSettings.getToolbarItems())
       {
          xml += "<" + TOOLBAR_ITEM + ">" + toolbarItem + "</" + TOOLBAR_ITEM + ">";
       }
@@ -93,14 +92,14 @@ public class ApplicationContextMarshaller implements Const, Marshallable
    private String getEditors()
    {
       String xml = "<" + EDITORS + ">";
-      for (String key : context.getDefaultEditors().keySet())
+      for (String key : applicationSettings.getDefaultEditors().keySet())
       {
          xml += "<" + EDITOR + ">";
          xml += "<" + MIME_TYPE + ">";
          xml += key;
          xml += "</" + MIME_TYPE + ">";
          xml += "<" + EDITOR_DESCRIPTION + ">";
-         xml += context.getDefaultEditors().get(key);
+         xml += applicationSettings.getDefaultEditors().get(key);
          xml += "</" + EDITOR_DESCRIPTION + ">";
          xml += "</" + EDITOR + ">";
 

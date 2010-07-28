@@ -20,14 +20,16 @@
 package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ideall.client.module.edit.event.UndoEditingEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,9 +46,9 @@ public class UndoTypingCommand extends IDEControl implements EditorActiveFileCha
 
    public static final String TITLE = "Undo Typing";
 
-   public UndoTypingCommand()
+   public UndoTypingCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);

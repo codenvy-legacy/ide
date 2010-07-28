@@ -17,7 +17,9 @@
 package org.exoplatform.ideall.client.module.development;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ideall.client.module.development.control.ShowPreviewCommand;
@@ -30,23 +32,19 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class DevelopmentModule extends AbstractIDEModule
+public class DevelopmentModule implements IDEModule
 {
+   
+   private HandlerManager eventBus;
 
-   public DevelopmentModule(HandlerManager eventBus, ApplicationContext context)
+   public DevelopmentModule(HandlerManager eventBus)
    {
-      super(eventBus, context);
-      new DevelopmentModuleEventHandler(eventBus, context);
-   }
-
-   public void initializeModule()
-   {
-      addControl(new ShowOutlineControl(), true);
-      addControl(new ShowPreviewCommand(), true, true);
-   }
-
-   public void initializeServices(Loader loader)
-   {
+      this.eventBus = eventBus;
+      
+      eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowPreviewCommand(eventBus), true, true));
+      
+      new DevelopmentModuleEventHandler(eventBus);
    }
 
 }

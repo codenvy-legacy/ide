@@ -16,12 +16,16 @@
  */
 package org.exoplatform.ideall.client.module.navigation;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ideall.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.util.ImageUtil;
 import org.exoplatform.ideall.client.module.navigation.control.CopyItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.control.CutItemsCommand;
 import org.exoplatform.ideall.client.module.navigation.control.DeleteItemCommand;
@@ -45,6 +49,7 @@ import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCo
 import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
+import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -55,72 +60,61 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class NavigationModule extends AbstractIDEModule
+public class NavigationModule implements IDEModule, InitializeServicesHandler
 {
+   
+   private HandlerManager eventBus;
+   
+   private ApplicationContext context;
+   
+   private Handlers handlers;
 
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
-      super(eventBus, context);
+      this.eventBus = eventBus;
+      this.context = context;
+      handlers = new Handlers(eventBus);
+      handlers.addHandler(InitializeServicesEvent.TYPE, this);
+
+      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
+
+      eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, true));
+      eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveAllFilesCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsTemplateCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
+      
       new NavigationModuleEventHandler(eventBus, context);
    }
 
-   public void initializeModule()
+   public void onInitializeServices(InitializeServicesEvent event)
    {
-      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
-      addControl(newFilePopupMenuControl, true);
-      addControl(new NewFileCommandMenuGroup());
-      
-
-      addControl(new CreateFileFromTemplateControl());
-      addControl(new CreateFolderControl());
-      
-      //addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, new CreateNewFileEvent(MimeType.TEXT_XML)));
-      addControl(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML));
-
-      //addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, new CreateNewFileEvent(MimeType.TEXT_HTML)));
-      addControl(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML));
-
-      //addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, new CreateNewFileEvent(MimeType.TEXT_PLAIN)));
-      addControl(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN));
-
-      //addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, new CreateNewFileEvent(MimeType.APPLICATION_JAVASCRIPT)));
-      addControl(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT));
-
-      //addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, new CreateNewFileEvent(MimeType.TEXT_CSS)));
-      addControl(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS));
-      
-      addControl(new NewItemControl("File/New/New Groovy Template file", "Groovy Template file", "Create New Groovy Template File", Images.FileTypes.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE));
-      
-      addControl(new ViewItemPropertiesCommand(), true, true);
-      addControl(new OpenFileWithCommand());
-      
-      addControl(new UploadFileCommand());
-      addControl(new OpenLocalFileCommand());
-      addControl(new DownloadFileCommand());
-      addControl(new DownloadZippedFolderCommand());
-      addControl(new SaveFileCommand(), true);
-      addControl(new SaveFileAsCommand(), true);
-      addControl(new SaveAllFilesCommand());
-      addControl(new SaveFileAsTemplateCommand());
-
-      addControl(new CutItemsCommand(), true);
-      addControl(new CopyItemsCommand(), true);
-      addControl(new PasteItemsCommand(), true);
-
-      addControl(new RenameItemCommand());
-      addControl(new DeleteItemCommand(), true);
-      addControl(new SearchFilesCommand(), true);
-      addControl(new RefreshBrowserControl(), true);
-      addControl(new GoToFolderControl());
-      addControl(new GetFileURLControl());
-      
-      NavigatorStatusControl navigatorStatusControl = new NavigatorStatusControl(eventBus, (ApplicationContext)context);
-      addControl(navigatorStatusControl);
-      context.getStatusBarItems().add(navigatorStatusControl.getId());
+      new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), context
+         .getApplicationConfiguration().getContext());
    }
 
-   public void initializeServices(Loader loader)
-   {
-   }
-   
 }

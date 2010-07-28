@@ -26,6 +26,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.module.edit.event.FormatFileEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -40,9 +42,9 @@ public class FormatSourceCommand extends IDEControl implements EditorActiveFileC
 
    private static final String TITLE = "Format";
 
-   public FormatSourceCommand()
+   public FormatSourceCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());

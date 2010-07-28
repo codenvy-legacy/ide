@@ -18,17 +18,26 @@
  */
 package org.exoplatform.ideall.client.module.development.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ideall.client.IDEImageBundle;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
 import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
-import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent;
-import org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
+import org.exoplatform.ideall.client.framework.form.FormClosedHandler;
+import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ideall.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.outline.CodeHelperForm;
 import org.exoplatform.ideall.client.outline.OutlineTreeGrid;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Cookies;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -36,7 +45,7 @@ import org.exoplatform.ideall.client.outline.OutlineTreeGrid;
  *
  */
 public class ShowOutlineControl extends IDEControl implements EditorActiveFileChangedHandler,
-   OpenedFormsStateChangedHandler, BrowserCookiesUpdatedHandler
+   BrowserCookiesUpdatedHandler, FormOpenedHandler, FormClosedHandler
 {
 
    public static final String ID = "View/Show \\ Hide Outline";
@@ -47,9 +56,15 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
 
    public static final String PROMPT_HIDE = "Hide Outline";
 
-   public ShowOutlineControl()
+   private static final String COOKIE_OUTLINE = "outline";
+
+   private boolean showOutLine = "true".equals(Cookies.getCookie(COOKIE_OUTLINE));
+   
+   private boolean outLineFormOpened = false;
+
+   public ShowOutlineControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
       setEvent(new ShowOutlineEvent(true));
@@ -62,8 +77,9 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(OpenedFormsStateChangedEvent.TYPE, this);
       addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
+      addHandler(FormOpenedEvent.TYPE, this);
+      addHandler(FormClosedEvent.TYPE, this);
    }
 
    /**
@@ -82,31 +98,11 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    }
 
    /**
-    * @see org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedHandler#onOpenedFormsStateChanged(org.exoplatform.ideall.client.form.event.OpenedFormsStateChangedEvent)
-    */
-   public void onOpenedFormsStateChanged(OpenedFormsStateChangedEvent event)
-   {
-      boolean isOpened = context.getOpenedForms().contains(CodeHelperForm.ID);
-
-      setSelected(isOpened);
-
-      if (isOpened)
-      {
-         setEvent(new ShowOutlineEvent(false));
-      }
-      else
-      {
-         setEvent(new ShowOutlineEvent(true));
-      }
-
-   }
-
-   /**
     * Update the control state - change prompt and event parameter.
     */
    private void update()
    {
-      if (context.isShowOutline())
+      if (showOutLine)
       {
          setPrompt(PROMPT_HIDE);
          setEvent(new ShowOutlineEvent(false));
@@ -124,6 +120,35 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
    {
       update();
+   }
+   
+   private void updateControlEnabling() {
+      setSelected(outLineFormOpened);
+
+      if (outLineFormOpened)
+      {
+         setEvent(new ShowOutlineEvent(false));
+      }
+      else
+      {
+         setEvent(new ShowOutlineEvent(true));
+      }               
+   }
+
+   public void onFormOpened(FormOpenedEvent event)
+   {
+      if (CodeHelperForm.ID.equals(event.getFormId())) {
+         outLineFormOpened = true;
+         updateControlEnabling();
+      }
+   }
+
+   public void onFormClosed(FormClosedEvent event)
+   {
+      if (CodeHelperForm.ID.equals(event.getFormId())) {
+         outLineFormOpened = false;
+         updateControlEnabling();
+      }
    }
 
 }

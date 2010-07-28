@@ -16,9 +16,8 @@
  */
 package org.exoplatform.ideall.client.module.edit;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.edit.control.FormatSourceCommand;
 import org.exoplatform.ideall.client.module.edit.control.GoToLineControl;
@@ -36,37 +35,26 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class FileEditModule extends AbstractIDEModule
+public class FileEditModule implements IDEModule
 {
+   
+   private HandlerManager eventBus;
 
-   /**
-    * @param eventBus
-    * @param context
-    */
-   public FileEditModule(HandlerManager eventBus, ApplicationContext context)
+   public FileEditModule(HandlerManager eventBus)
    {
-      super(eventBus, context);
-      new FileEditModuleEventHandler(eventBus, context);
-   }
-
-   public void initializeModule()
-   {
-      addControl(new UndoTypingCommand(), true);
-      addControl(new RedoTypingCommand(), true);
-      addControl(new FormatSourceCommand(), true);
-
-      addControl(new FindTextCommand(), true);
-      addControl(new ShowLineNumbersCommand());
-      addControl(new DeleteLineControl());
-
-      addControl(new GoToLineControl());
-
-      addControl(new EditorCursorPositionControl(eventBus, (ApplicationContext)context));
-      context.getStatusBarItems().add(EditorCursorPositionControl.ID);
-   }
-
-   public void initializeServices(Loader loader)
-   {
+      this.eventBus = eventBus;
+      
+      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(eventBus), true));
+      
+      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteLineControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(eventBus)));
+      
+      new FileEditModuleEventHandler(eventBus);
    }
 
 }

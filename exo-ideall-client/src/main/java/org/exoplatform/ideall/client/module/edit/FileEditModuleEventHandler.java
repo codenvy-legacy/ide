@@ -20,16 +20,21 @@ package org.exoplatform.ideall.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
-import org.exoplatform.ideall.client.event.edit.GoToLineHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ideall.client.module.edit.action.GoToLineForm;
 import org.exoplatform.ideall.client.module.edit.event.FindTextEvent;
 import org.exoplatform.ideall.client.module.edit.event.FindTextHandler;
+import org.exoplatform.ideall.client.module.edit.event.GoToLineEvent;
+import org.exoplatform.ideall.client.module.edit.event.GoToLineHandler;
 import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ideall.client.module.navigation.action.GoToLineForm;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.search.text.FindTextForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -39,22 +44,24 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class FileEditModuleEventHandler implements RegisterEventHandlersHandler, ShowLineNumbersHandler,
-   FindTextHandler, GoToLineHandler
+public class FileEditModuleEventHandler implements RegisterEventHandlersHandler, FindTextHandler, GoToLineHandler,
+   ShowLineNumbersHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   private Handlers handlers;
 
-   protected Handlers handlers;
+   private ApplicationSettings applicationSettings;
 
-   public FileEditModuleEventHandler(HandlerManager eventBus, ApplicationContext context)
+   private File activeFile;
+
+   public FileEditModuleEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
@@ -71,8 +78,8 @@ public class FileEditModuleEventHandler implements RegisterEventHandlersHandler,
     */
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-      context.setShowLineNumbers(event.isShowLineNumber());
-      CookieManager.getInstance().storeLineNumbers(context);
+      applicationSettings.setShowLineNumbers(event.isShowLineNumber());
+      CookieManager.setShowLineNumbers(event.isShowLineNumber());
    }
 
    /**
@@ -80,15 +87,25 @@ public class FileEditModuleEventHandler implements RegisterEventHandlersHandler,
     */
    public void onFindText(FindTextEvent event)
    {
-      new FindTextForm(eventBus, context);
+      new FindTextForm(eventBus, activeFile);
    }
 
    public void onGoToLine(GoToLineEvent event)
    {
-      if (context.getActiveFile() != null)
+      if (activeFile != null)
       {
-         new GoToLineForm(eventBus, context);
+         new GoToLineForm(eventBus, activeFile);
       }
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      this.activeFile = event.getFile();
    }
 
 }

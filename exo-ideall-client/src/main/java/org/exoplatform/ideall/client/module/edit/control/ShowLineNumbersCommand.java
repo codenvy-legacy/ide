@@ -28,6 +28,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -47,9 +49,11 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    private File activeFile;
 
-   public ShowLineNumbersCommand()
+   private boolean showLineNumbers = true;
+
+   public ShowLineNumbersCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE_HIDE);
       setPrompt(TITLE_HIDE);
       setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
@@ -70,13 +74,14 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    private void updateState()
    {
-      if (context.isShowLineNumbers())
+      if (showLineNumbers)
       {
          // hide
          setTitle(TITLE_HIDE);
          setPrompt(TITLE_HIDE);
          setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(false));
+         showLineNumbers = false;
       }
       else
       {
@@ -85,6 +90,7 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
          setPrompt(TITLE_SHOW);
          setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(true));
+         showLineNumbers = true;
       }
 
       // verify and show

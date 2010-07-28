@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ideall.client.module.navigation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.command.CreateFileCommandThread;
 import org.exoplatform.ideall.client.command.GoToFolderCommandThread;
 import org.exoplatform.ideall.client.command.OpenFileCommandThread;
 import org.exoplatform.ideall.client.command.PasteItemsCommandThread;
@@ -28,16 +31,23 @@ import org.exoplatform.ideall.client.command.SaveFileAsCommandThread;
 import org.exoplatform.ideall.client.command.SaveFileCommandThread;
 import org.exoplatform.ideall.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ideall.client.module.navigation.action.CreateFolderForm;
 import org.exoplatform.ideall.client.module.navigation.action.DeleteItemForm;
 import org.exoplatform.ideall.client.module.navigation.action.GetItemURLForm;
 import org.exoplatform.ideall.client.module.navigation.action.RenameItemForm;
-import org.exoplatform.ideall.client.module.navigation.event.CopyItemsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.CopyItemsHandler;
-import org.exoplatform.ideall.client.module.navigation.event.CutItemsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.CutItemsHandler;
 import org.exoplatform.ideall.client.module.navigation.event.DeleteItemEvent;
 import org.exoplatform.ideall.client.module.navigation.event.DeleteItemHandler;
 import org.exoplatform.ideall.client.module.navigation.event.GetFileURLEvent;
@@ -50,10 +60,17 @@ import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateEvent
 import org.exoplatform.ideall.client.module.navigation.event.SaveAsTemplateHandler;
 import org.exoplatform.ideall.client.module.navigation.event.SearchFileEvent;
 import org.exoplatform.ideall.client.module.navigation.event.SearchFileHandler;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CopyItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CopyItemsHandler;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CutItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.CutItemsHandler;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderEvent;
 import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFolderHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ideall.client.module.navigation.event.upload.UploadFileHandler;
+import org.exoplatform.ideall.client.module.navigation.handler.CreateFileCommandThread;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 import org.exoplatform.ideall.client.search.file.SearchForm;
@@ -68,7 +85,9 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class NavigationModuleEventHandler implements OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,  GetFileURLHandler
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
+   GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler
 {
    private SaveFileCommandThread saveFileCommandHandler;
 
@@ -90,20 +109,41 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
 
    protected Handlers handlers;
 
+   private ApplicationSettings applicationSettings;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
+   private HashMap<String, File> openedFiles = new HashMap<String, File>();
+   
+   private String entryPoint;
+
    public NavigationModuleEventHandler(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
 
       handlers = new Handlers(eventBus);
-
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
       saveFileCommandHandler = new SaveFileCommandThread(eventBus, context);
       saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus, context);
       saveAllFilesCommandHandler = new SaveAllFilesCommandThread(eventBus, context);
       goToFolderCommandHandler = new GoToFolderCommandThread(eventBus, context);
-      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);
+      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);      
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+   }
+
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
+   {
+      System.out.println("NavigationModuleEventHandler.onRegisterEventHandlers()");      
 
       handlers.addHandler(OpenFileWithEvent.TYPE, this);
       handlers.addHandler(UploadFileEvent.TYPE, this);
@@ -117,16 +157,17 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(SearchFileEvent.TYPE, this);
       handlers.addHandler(GetFileURLEvent.TYPE, this);
 
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)
    {
-      new OpenFileWithForm(eventBus, context);
+      new OpenFileWithForm(eventBus, context.getActiveFile(), context.getOpenedFiles(), applicationSettings);
    }
 
    public void onUploadFile(UploadFileEvent event)
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
 
       String path = item.getHref();
       if (item instanceof File)
@@ -134,7 +175,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
          path = path.substring(path.lastIndexOf("/"));
       }
       eventBus.fireEvent(new ClearFocusEvent());
-      new UploadForm(eventBus, context, path, event.isOpenFile());
+      new UploadForm(eventBus, selectedItems, path, event.isOpenFile());
    }
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)
@@ -145,7 +186,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
 
    public void onCreateFolder(CreateFolderEvent event)
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      Item item = selectedItems.get(0);
 
       String href = item.getHref();
       if (item instanceof File)
@@ -153,14 +194,14 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
 
-      new CreateFolderForm(eventBus, context, href);
+      new CreateFolderForm(eventBus, selectedItems.get(0), href);
    }
 
    public void onCopyItems(CopyItemsEvent event)
    {
       context.getItemsToCopy().clear();
       context.getItemsToCut().clear();
-      context.getItemsToCopy().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
+      context.getItemsToCopy().addAll(selectedItems);
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
@@ -169,28 +210,49 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       context.getItemsToCut().clear();
       context.getItemsToCopy().clear();
 
-      context.getItemsToCut().addAll(context.getSelectedItems(context.getSelectedNavigationPanel()));
+      context.getItemsToCut().addAll(selectedItems);
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
    public void onRenameItem(RenameItemEvent event)
    {
-      new RenameItemForm(eventBus, context);
+      new RenameItemForm(eventBus, selectedItems, openedFiles);
    }
 
    public void onDeleteItem(DeleteItemEvent event)
    {
-      new DeleteItemForm(eventBus, context);
+      new DeleteItemForm(eventBus, selectedItems, openedFiles);
    }
 
    public void onSearchFile(SearchFileEvent event)
    {
-      new SearchForm(eventBus, context);
+      new SearchForm(eventBus, selectedItems, entryPoint);
    }
-   
+
    public void onGetFileURL(GetFileURLEvent event)
    {
-      String url = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getHref();
+      String url = selectedItems.get(0).getHref();
       new GetItemURLForm(eventBus, url);
    }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
+   }
+
 }

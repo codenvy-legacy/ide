@@ -20,7 +20,11 @@ package org.exoplatform.ideall.client.module.development;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ideall.client.module.development.event.ShowOutlineHandler;
 
@@ -31,21 +35,28 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class DevelopmentModuleEventHandler implements ShowOutlineHandler
+public class DevelopmentModuleEventHandler implements RegisterEventHandlersHandler, ShowOutlineHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   private Handlers handlers;
+   
+   private ApplicationSettings applicationSettings;
 
-   protected Handlers handlers;
-
-   public DevelopmentModuleEventHandler(HandlerManager eventBus, ApplicationContext context)
+   public DevelopmentModuleEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
       handlers = new Handlers(eventBus);
-      
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+   }
+
+   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
+   {
       handlers.addHandler(ShowOutlineEvent.TYPE, this);
    }
 
@@ -54,8 +65,8 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler
     */
    public void onShowOutline(ShowOutlineEvent event)
    {
-      context.setShowOutline(event.isShow());
-      CookieManager.getInstance().storeOutline(context);
+      applicationSettings.setShowOutline(event.isShow());
+      CookieManager.setShowOutline(event.isShow());
    }
 
 }

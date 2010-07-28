@@ -19,10 +19,12 @@
 package org.exoplatform.ideall.client.module.edit.control;
 
 import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.edit.GoToLineEvent;
 import org.exoplatform.ideall.client.framework.control.IDEControl;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.module.edit.event.GoToLineEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -34,9 +36,9 @@ public class GoToLineControl extends IDEControl implements EditorActiveFileChang
 
    public static final String ID = "View/Go to Line...";
 
-   public GoToLineControl()
+   public GoToLineControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle("Go to Line...");
       setPrompt("Go to Line");
       setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());

@@ -19,15 +19,14 @@
  */
 package org.exoplatform.ideall.client.model.settings.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -40,19 +39,16 @@ import com.google.gwt.xml.client.XMLParser;
  * @version $
  */
 
-public class ApplicationContextUnmarshaller implements Const, Unmarshallable
+public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
 {
 
-   private HandlerManager eventBus;
+   private ApplicationSettings applicationSettings;
 
-   private ApplicationContext context;
-   
-   public final static String ERROR_MESSAGE = "Can't parse user settings!";
+   public final static String ERROR_MESSAGE = "Can't parse application settings!";
 
-   public ApplicationContextUnmarshaller(HandlerManager eventBus, ApplicationContext context)
+   public ApplicationSettingsUnmarshaller(ApplicationSettings applicationSettings)
    {
-      this.context = context;
-      this.eventBus = eventBus;
+      this.applicationSettings = applicationSettings;
    }
 
    private Node getChildNode(Node node, String name)
@@ -95,26 +91,16 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
       for (int i = 0; i < editors.getChildNodes().getLength(); i++)
       {
          Node editorItemNode = editors.getChildNodes().item(i);
-         
+
          String itemKey = getChildNode(editorItemNode, MIME_TYPE).getChildNodes().item(0).getNodeValue();
          String itemValue = getChildNode(editorItemNode, EDITOR_DESCRIPTION).getChildNodes().item(0).getNodeValue();
-         
+
          editorsMap.put(itemKey, itemValue);
       }
-      context.getDefaultEditors().clear();
-      context.getDefaultEditors().putAll(editorsMap);
-   }
 
-//   private void parseLineNumbers(Node configurationNode)
-//   {
-//      if (getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().getLength() == 0)
-//      {
-//         return;
-//      }
-//
-//      String lineNumbers = getChildNode(configurationNode, LINE_NUMBERS).getChildNodes().item(0).getNodeValue();
-//      context.setShowLineNumbers(Boolean.parseBoolean(lineNumbers));
-//   }
+      applicationSettings.getDefaultEditors().clear();
+      applicationSettings.getDefaultEditors().putAll(editorsMap);
+   }
 
    private void parseToolbar(Node configurationNode)
    {
@@ -134,28 +120,28 @@ public class ApplicationContextUnmarshaller implements Const, Unmarshallable
          toolbarItems.add(item);
       }
 
-      context.getToolBarItems().clear();
-      context.getToolBarItems().addAll(toolbarItems);
+      applicationSettings.getToolbarItems().clear();
+      applicationSettings.getToolbarItems().addAll(toolbarItems);
    }
-   
+
    private void parseHotKeys(Node configurationNode)
    {
       Node hotKeys = getChildNode(configurationNode, HOT_KEYS);
-      
+
       Map<String, String> hotKeysMap = new HashMap<String, String>();
-      
+
       for (int i = 0; i < hotKeys.getChildNodes().getLength(); i++)
       {
          Node hotKeyItemNode = hotKeys.getChildNodes().item(i);
-         
+
          String itemKey = getChildNode(hotKeyItemNode, SHORTCUT).getChildNodes().item(0).getNodeValue();
          String itemValue = getChildNode(hotKeyItemNode, CONTROL_ID).getChildNodes().item(0).getNodeValue();
-         
+
          hotKeysMap.put(itemKey, itemValue);
       }
-      
-      context.getHotKeys().clear();
-      context.getHotKeys().putAll(hotKeysMap);
+
+      applicationSettings.getHotKeys().clear();
+      applicationSettings.getHotKeys().putAll(hotKeysMap);
    }
 
 }
