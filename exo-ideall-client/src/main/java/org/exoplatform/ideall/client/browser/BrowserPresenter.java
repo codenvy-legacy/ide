@@ -301,17 +301,13 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       
       selectedItems.clear();
       selectedItems.add(rootFolder);
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(rootFolder);
 
       display.getBrowserTree().setValue(rootFolder);
 
-      System.out.println("-------------------- switching entry point.......");
       eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
       this.entryPoint = entryPoint;
 
       try {
-         System.out.println("firing items selcted event!!!!!!!!!");
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));         
       } catch (Throwable e) {
          e.printStackTrace();

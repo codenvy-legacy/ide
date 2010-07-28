@@ -40,8 +40,8 @@ public class TemplateMarshaller implements Marshallable, Const
    }
 
    public static native String javaScriptEncodeURIComponent(String text) /*-{
-        return encodeURIComponent(text);
-     }-*/;
+         return encodeURIComponent(text);
+      }-*/;
 
    public String marshal()
    {
@@ -54,7 +54,6 @@ public class TemplateMarshaller implements Marshallable, Const
       xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(template.getContent()) + "</" + CONTENT + ">";
 
       xml += "</" + TEMPLATE + ">";
-      System.out.println(javaScriptEncodeURIComponent(template.getDescription()));
       return xml;
    }
 

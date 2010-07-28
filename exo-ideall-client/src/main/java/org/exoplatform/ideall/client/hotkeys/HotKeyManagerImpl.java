@@ -173,8 +173,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       controls.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L
       controls.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
 
-      System.out.println("hot keys " + applicationSettings.getHotKeys());
-      
       applicationSettings.getHotKeys().clear();
       applicationSettings.getHotKeys().putAll(controls);
    }

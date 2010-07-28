@@ -93,41 +93,22 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       return newTokenList;
    }
 
-   private void printTokens(List<Token> token)
-   {
-      for (Token t : token)
-      {
-         System.out.println(t.getName() + " " + t.getType());
-         if (t.getSubTokenList() != null)
-         {
-            printTokens(t.getSubTokenList());
-         }
-      }
-      System.out.println("+++++++++++++++++++++++++");
-   }
-
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-      //      lineContent = event.getLineContent();
-      System.out.println("AutoCompletionManager.onEditorAutoCompleteCalled()");
-      System.out.println(event.getLineMimeType());
-      // printTokens(event.getTokenList());
+
       TokenCollector collector = TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)
       {
          collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event
             .getCursorPositionX(), filterTokenByMimeType(event.getTokenList(), event.getLineMimeType()), this);
-         //         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event.getCursorPositionX(), event.getTokenList(), this);
-
       }
    }
 
    public void onTokensCollected(List<Token> tokens, String beforeToken, String tokenToComplete, String afterToken)
    {
-      System.out.println("AutoCompletionManager.onTokensCollected()");
       this.beforeToken = beforeToken;
       this.afterToken = afterToken;
 
@@ -187,7 +168,6 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
             if (token.getCode() != null && !"".equals(token.getCode()))
             {
                tokenToPaste = beforeToken + token.getCode() + afterToken;
-               System.out.println(tokenToPaste);
                if (token.getCode().contains("/"))
                   newCursorPos = (beforeToken + token.getCode()).indexOf("/", beforeToken.length());
                else
@@ -196,7 +176,6 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
             else
             {
                tokenToPaste = beforeToken + "<" + token.getName() + ">" + "</" + token.getName() + ">" + afterToken;
-               System.out.println(tokenToPaste);
                newCursorPos = (beforeToken + "<" + token.getName() + ">" + "</" + token.getName() + ">").indexOf("/", beforeToken.length());
             }
             break;

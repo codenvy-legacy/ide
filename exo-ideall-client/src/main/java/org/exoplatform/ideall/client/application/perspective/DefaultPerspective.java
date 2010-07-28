@@ -534,11 +534,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          codeHelperForm.hide();
       }
       
-      System.out.println("DefaultPerspective.onShowOutline()");
-      System.out.println("is show: " + event.isShow());
-      
-      //codeHelperForm.showCodeHelper(event.isShow());
-      
       if (event.isShow())
       {
          horizontalSplitLayout2.setResizeBarSize(RESIZE_BAR_SIZE);

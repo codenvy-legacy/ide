@@ -61,10 +61,7 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      System.out.println("NavigatorStatusControl.onItemsSelected()");
-      
       if (entryPoint == null) {
-         System.out.println("entr point is null. returning........");
          setText("&nbsp;");
          return;
       }
@@ -74,8 +71,6 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
       if (event.getSelectedItems().size() == 1)
       {
          Item item = event.getSelectedItems().get(0);
-         
-         System.out.println("selected item : " + item.getHref());
          
          statusMessage = item.getHref();
          if (item instanceof File)
@@ -140,9 +135,6 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
-      
-      System.out.println("entry point changed to: " + entryPoint);
-      
    }
 
 }

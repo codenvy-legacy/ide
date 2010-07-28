@@ -59,7 +59,6 @@ public class ShowPreviewCommand extends IDEControl implements EditorActiveFileCh
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("ShowPreviewCommand.onEditorActiveFileChanged()");
       if (event.getFile() == null)
       {
          setVisible(false);

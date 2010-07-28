@@ -163,9 +163,6 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
          return;
       }
 
-      System.out.println("current entry point " + currentEntryPoint);
-      System.out.println("selected entry point " + selectedItem.getHref());
-      
       if (selectedItem.getHref().equals(currentEntryPoint))
       {
          display.disableOkButton();

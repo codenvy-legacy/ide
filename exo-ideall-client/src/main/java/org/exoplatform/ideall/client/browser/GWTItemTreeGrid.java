@@ -59,7 +59,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
    public GWTItemTreeGrid()
    {
       setOverflow(Overflow.HIDDEN);
-      System.out.println("GWTItemTreeGrid.GWTItemTreeGrid()");
 
       tree.setAllowMultiSelect(true);
       
@@ -71,8 +70,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
    private ResizedHandler resizedHandler = new ResizedHandler() {
       public void onResized(ResizedEvent event)
       {
-         System.out.println("resized to width: " + getWidth() + " height: " + getHeight());
-         
          tree.setWidth(getWidth() + "px");
          tree.setHeight(getHeight() + "px");
 
@@ -114,13 +111,8 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    public void setValue(Item value)
    {
-
       try
       {
-
-         System.out.println("GWTItemTreeGrid.setValue()");
-         System.out.println("value " + value);
-
          if (value == null)
          {
             tree.setRoot(null);
@@ -129,30 +121,18 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
          if (tree.getRoot() == null)
          {
-            System.out.println("init root!");
             this.value = value;
-
-            System.out.println("value > " + value);
-
             TreeNode rootNode = new TreeNode(value.getName(), value.getIcon(), value);
-            //TreeNode rootNode = new TreeNode(value.getName(), value);
             tree.setRoot(rootNode);
 
          }
          else
          {
-            System.out.println("adding subtree");
-
-            System.out.println("value href > " + value.getHref());
-
             TreeRecord parentRecord = getRecord(tree.getRootRecord(), value.getHref());
-            //System.out.println("using parent record > " + parentRecord);
             if (parentRecord == null)
             {
                return;
             }
-
-            System.out.println("parent record node > " + parentRecord.getNode());
 
             parentRecord.getNode().getChildren().clear();
 
@@ -190,10 +170,8 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
          return parent;
       }
 
-      System.out.println("checking children...");
       for (TreeRecord child : parent.getChildren())
       {
-         //System.out.println("chlid > " + child);
          TreeRecord r = getRecord(child, href);
          if (r != null)
          {
@@ -204,28 +182,26 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       return null;
    }
 
-   private TreeNode getParentNode(TreeNode node, String href)
-   {
-      Item entry = (Item)node.getEntry();
-      if (entry.getHref().equals(href))
-      {
-         System.out.println("equals. returning... " + entry.getHref());
-         return node;
-      }
-      else
-      {
-         System.out.println("not equals..........");
-         return null;
-      }
-   }
+//   private TreeNode getParentNode(TreeNode node, String href)
+//   {
+//      Item entry = (Item)node.getEntry();
+//      if (entry.getHref().equals(href))
+//      {
+//         return node;
+//      }
+//      else
+//      {
+//         return null;
+//      }
+//   }
 
-   public void setValue(Item arg0, boolean fireEvent)
+   public void setValue(Item value, boolean fireEvent)
    {
+      setValue(value);
    }
 
    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Item> arg0)
    {
-      System.out.println("GWTItemTreeGrid.addValueChangeHandler()");
       return null;
    }
 
@@ -247,13 +223,11 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    public HandlerRegistration addClickHandler(ClickHandler arg0)
    {
-      System.out.println("GWTItemTreeGrid.addClickHandler()");
       return null;
    }
 
    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler arg0)
    {
-      System.out.println("GWTItemTreeGrid.addDoubleClickHandler()");
       return null;
    }
 
@@ -264,17 +238,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    private void onItemClicked()
    {
-      System.out.println("GWTItemTreeGrid.onItemClicked()");
-
-      //      if (getSelectedRecord() == null) {
-      //         return;
-      //      }
-      //      
-      //      Item selectedItem = (Item)getSelectedRecord().getNode().getEntry();
-      //      for (SelectionHandler<Item> selectionHandler : selectionHandlers) {
-      //         selectionHandler.onSelection(new SelectionEventImpl(selectedItem));
-      //      }
-
    }
 
    private class OpenHandlerRegistration implements HandlerRegistration
@@ -341,8 +304,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       {
          super.onClick(treerecord);
 
-         System.out.println("item selected");
-
          Item item = (Item)treerecord.getNode().getEntry();
 
          for (SelectionHandler<Item> h : selectionHandlers)
@@ -370,8 +331,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    public List<Item> getSelectedItems()
    {
-      System.out.println("GWTItemTreeGrid.getSelectedItems()");
-
       List<Item> selectedItems = new ArrayList<Item>();
 
       for (TreeRecord record : tree.getSelectedRecords())

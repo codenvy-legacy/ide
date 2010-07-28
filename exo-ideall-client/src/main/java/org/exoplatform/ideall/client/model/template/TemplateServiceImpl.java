@@ -79,7 +79,6 @@ public class TemplateServiceImpl extends TemplateService
    public void deleteTemplate(Template template)
    {
       String url = restContext + CONTEXT + "/" + template.getNodeName();
-      System.out.println("TemplateServiceImpl.deleteTemplate()"+url);
       String errorMessage = "Registry service is not deployed.<br>Template not found.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
       TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());

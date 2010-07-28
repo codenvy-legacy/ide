@@ -197,7 +197,6 @@ public class HotKeyHelper
             return entry.getKey();
          }
       }
-      System.out.println("No such value in keycodes map");
       return null;
    }
    

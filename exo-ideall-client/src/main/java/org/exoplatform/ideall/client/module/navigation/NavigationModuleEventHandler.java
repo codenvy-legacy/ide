@@ -149,8 +149,6 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      System.out.println("NavigationModuleEventHandler.onRegisterEventHandlers()");      
-
       handlers.addHandler(OpenFileWithEvent.TYPE, this);
       handlers.addHandler(UploadFileEvent.TYPE, this);
       handlers.addHandler(SaveAsTemplateEvent.TYPE, this);

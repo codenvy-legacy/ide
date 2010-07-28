@@ -50,7 +50,6 @@ public class XmlTokenCollector implements TokenCollector
    public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback tokensCollectedCallback)
    {
-      System.out.println("XmlTokenCollector.getTokens()");
       List<Token> token = new ArrayList<Token>();
       filteredToken.clear();
 
@@ -73,22 +72,6 @@ public class XmlTokenCollector implements TokenCollector
          //         token.addAll(filteredToken.values());
          beforeToken += tokenToComplete;
          tokenToComplete = "";
-         //         tokenToComplete = "";
-         //         if(noCoreAttributes.contains(tag))
-         //         {
-         //            //TODO Add only no attributes;
-         //            Token t = findTokenByName(tag);
-         //            fillAttributes(t,token);
-         //         }
-         //         else
-         //         {
-         //           fillCoreAttributes(token);
-         //           Token t = findTokenByName(tag);
-         //           fillAttributes(t,token);
-         //         }
-         //         if(!noBaseEvents.contains(tag))
-         //           token.addAll(getBaseEvent());
-         // token.addAll(getTokensByType(TokenType.ATTRIBUTE));
       }
       else
       {
@@ -98,7 +81,7 @@ public class XmlTokenCollector implements TokenCollector
             + tokenToComplete + "></" + tokenToComplete + ">", null));
          token.addAll(filteredToken.values());
       }
-      System.out.println("tokensCollectedCallback.onTokensCollected");
+
       tokensCollectedCallback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
    }
 
