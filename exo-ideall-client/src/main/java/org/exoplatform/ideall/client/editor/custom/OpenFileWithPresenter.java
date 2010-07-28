@@ -17,6 +17,7 @@
 package org.exoplatform.ideall.client.editor.custom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -27,10 +28,10 @@ import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedHandler;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
@@ -50,7 +51,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithPresenter implements FileContentReceivedHandler, ApplicationContextSavedHandler
+public class OpenFileWithPresenter implements FileContentReceivedHandler, ApplicationSettingsSavedHandler
 {
 
    public interface Display
@@ -72,7 +73,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private Display display;
 
@@ -80,11 +81,19 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private Editor selectedEditor;
 
-   public OpenFileWithPresenter(HandlerManager eventBus, ApplicationContext context)
+   private File selectedFile;
+
+   private HashMap<String, File> openedFiles;
+
+   private ApplicationSettings applicationSettings;
+
+   public OpenFileWithPresenter(HandlerManager eventBus, File selectedFile, HashMap<String, File> openedFiles,
+      ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
+      this.selectedFile = selectedFile;
+      this.openedFiles = openedFiles;
+      this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
    }
 
@@ -96,7 +105,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    public void bindDisplay(Display d)
    {
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      handlers.addHandler(ApplicationContextSavedEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
 
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -141,13 +150,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       });
 
       fillEditorListGrid();
-
    }
 
    private void fillEditorListGrid()
    {
-
-      String mimeType = ((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)).getContentType();
+      String mimeType = selectedFile.getContentType();
 
       try
       {
@@ -157,11 +164,9 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
          Editor defaultEditor = null;
 
-         if (context.getDefaultEditors().get(mimeType) != null)
+         if (applicationSettings.getDefaultEditors().get(mimeType) != null)
          {
-
-            String defaultEdotorDecription = context.getDefaultEditors().get(mimeType);
-
+            String defaultEdotorDecription = applicationSettings.getDefaultEditors().get(mimeType);
             for (Editor e : editorsItems)
             {
                if (e.getDescription().equals(defaultEdotorDecription))
@@ -169,7 +174,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
                   defaultEditor = e;
                }
             }
-
          }
          else
          {
@@ -201,31 +205,23 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
-         context.setSelectedEditorDescription(selectedEditor.getDescription());
-         eventBus.fireEvent(new OpenFileEvent((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(
-            0)));
+         eventBus.fireEvent(new OpenFileEvent(selectedFile, selectedEditor.getDescription()));
          display.closeForm();
       }
       else
       {
-         String mimeType =
-            ((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)).getContentType();
-
-         context.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
-
-         SettingsService.getInstance().saveSetting(context);
+         String mimeType = selectedFile.getContentType();
+         applicationSettings.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
+         SettingsService.getInstance().saveSetting(applicationSettings);
       }
    }
 
-   private void showDialog()
+   private void showAskReopenDialog()
    {
-      Dialogs.getInstance().ask(
-         "Info",
-         "Do you want to reopen file <b>"
-            + context.getSelectedItems(context.getSelectedNavigationPanel()).get(0).getName()
-            + "</b> in selected editor?", new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("Info",
+         "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
+         new BooleanValueReceivedCallback()
          {
-
             public void execute(Boolean value)
             {
                if (value == null)
@@ -242,17 +238,14 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
                   display.closeForm();
                }
             }
-
          });
    }
 
    private void tryOpenFile()
    {
-      File file = (File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-
-      if (context.getOpenedFiles().get(file.getHref()) != null)
+      if (openedFiles.get(selectedFile.getHref()) != null)
       {
-         showDialog();
+         showAskReopenDialog();
          return;
       }
 
@@ -264,10 +257,9 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       display.closeForm();
    }
 
-   public void onApplicationContextSaved(ApplicationContextSavedEvent event)
+   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      eventBus
-         .fireEvent(new OpenFileEvent((File)context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)));
+      eventBus.fireEvent(new OpenFileEvent(selectedFile));
       display.closeForm();
    }
 

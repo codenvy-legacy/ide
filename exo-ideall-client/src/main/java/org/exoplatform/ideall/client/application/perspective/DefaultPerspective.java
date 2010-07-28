@@ -98,7 +98,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
     * 
     * Use 1 instead of 0, because smartgwt exception occurs
     */
-   private static final int OUTLINE_RESIZE_BAR_SIZE = 1;
+   private static final int OUTLINE_RESIZE_BAR_SIZE = 5;
 
    private HandlerManager eventBus;
 
@@ -147,12 +147,14 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private boolean codeHelperPanelMaximized;
    
    private int codeHelperPanelWidth;
+   
+   //private ApplicationSettings applicationSettings;
 
    public DefaultPerspective(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
-      this.handlers = new Handlers(eventBus);
+      handlers = new Handlers(eventBus);
       buildPerspective();
 
       eventBus.addHandler(MaximizeEditorPanelEvent.TYPE, this);
@@ -493,7 +495,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       codeHelperPanelWidth = codeHelperForm.getWidth();
       codeHelperForm.setWidth100();
-      codeHelperForm.setTabCanClose(false);
 
       statusBar.hide();
 
@@ -520,8 +521,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       
       statusBar.show();
       
-      codeHelperForm.setTabCanClose(true);
-
       codeHelperPanelMaximized = false;
 
       eventBus.fireEvent(new CodeHelperPanelRestoredEvent());
@@ -534,6 +533,9 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       } else {
          codeHelperForm.hide();
       }
+      
+      System.out.println("DefaultPerspective.onShowOutline()");
+      System.out.println("is show: " + event.isShow());
       
       //codeHelperForm.showCodeHelper(event.isShow());
       

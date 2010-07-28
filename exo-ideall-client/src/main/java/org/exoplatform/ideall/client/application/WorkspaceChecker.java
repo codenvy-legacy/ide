@@ -45,13 +45,16 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   private String entryPoint;
 
    private Handlers handlers;
+   
+   private ApplicationContext context;
 
-   public WorkspaceChecker(HandlerManager eventBus, ApplicationContext context)
+   public WorkspaceChecker(HandlerManager eventBus, String entryPoint, ApplicationContext context)
    {
       this.eventBus = eventBus;
+      this.entryPoint = entryPoint;
       this.context = context;
       handlers = new Handlers(eventBus);
 
@@ -59,7 +62,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-      Folder rootFolder = new Folder(context.getEntryPoint());
+      Folder rootFolder = new Folder(entryPoint);
       VirtualFileSystem.getInstance().getProperties(rootFolder);
    }
 
@@ -73,15 +76,15 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
       
-      Dialogs.getInstance().showError("Entry point <b>" + context.getEntryPoint() + "</b> not found!");
+      Dialogs.getInstance().showError("Entry point <b>" + entryPoint + "</b> not found!");
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-
-      context.setEntryPoint(event.getItem().getHref());
+      
+      //context.setEntryPoint(event.getItem().getHref());
 
       new ApplicationStateLoader(eventBus, context).loadState();
    }

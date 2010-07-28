@@ -25,13 +25,16 @@ import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
 import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredHandler;
 import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -53,7 +56,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version @version $Id: $
  */
 
-public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler
+public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler, ApplicationSettingsReceivedHandler
 {
    private final String ID = "ideEditorFormTabSet";
    
@@ -69,13 +72,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    private MinMaxControlButton minMaxControlButton;
 
-   private ApplicationContext context;
+   private ApplicationSettings applicationSettings;
 
    public EditorForm(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
       handlers = new Handlers(eventBus);
 
       tabSet = new TabSet();
@@ -101,6 +102,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       tabSet.addCloseClickHandler(closeClickHandler);
 
       handlers.addHandler(EditorPanelRestoredEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    @Override
@@ -169,7 +171,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
-      List<String> hotKeyList = new ArrayList<String>(context.getHotKeys().keySet());
+      List<String> hotKeyList = new ArrayList<String>(applicationSettings.getHotKeys().keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
@@ -411,4 +413,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          getEditor(path).replaceFoundedText(findText, replace, caseSensitive);
       }
    }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+   }
+   
 }

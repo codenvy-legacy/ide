@@ -20,13 +20,17 @@
 package org.exoplatform.ideall.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileEvent;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileHandler;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
 import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
 
@@ -41,27 +45,31 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version $
  */
 
-public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileHandler,
-   DownloadZippedFolderHandler
+public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileHandler, DownloadZippedFolderHandler,
+   ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
    private String CONTEXT_DOWNLOAD = "/services/downloadcontent";
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private Handlers handlers;
 
    private HTMLPane htmlPane;
 
-   public DownloadForm(HandlerManager eventBus, ApplicationContext context)
+   private Item selectedItem;
+
+   private ApplicationConfiguration applicationConfiguration;
+
+   public DownloadForm(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
 
       handlers = new Handlers(eventBus);
       eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
 
       htmlPane = new HTMLPane();
       htmlPane.setWidth(1);
@@ -73,26 +81,27 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
    {
       handlers.addHandler(DownloadFileEvent.TYPE, this);
       handlers.addHandler(DownloadZippedFolderEvent.TYPE, this);
+      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    private void downloadResource()
    {
-      Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String fileName = item.getHref();
-      
-      if(fileName.endsWith("/"))
+      //Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+      String fileName = selectedItem.getHref();
+
+      if (fileName.endsWith("/"))
       {
          fileName = fileName.substring(0, fileName.length() - 1);
       }
       fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      
-      if (!(item instanceof File))
+
+      if (!(selectedItem instanceof File))
       {
          fileName += ".zip";
       }
 
-      String path = item.getHref();
-      String url = context.getApplicationConfiguration().getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
+      String path = selectedItem.getHref();
+      String url = applicationConfiguration.getRegistryURL() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
@@ -107,6 +116,23 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
    public void onDownloadZippedFolder(DownloadZippedFolderEvent event)
    {
       downloadResource();
+   }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() == 0)
+      {
+         selectedItem = null;
+      }
+      else
+      {
+         selectedItem = event.getSelectedItems().get(0);
+      }
+   }
+
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      applicationConfiguration = event.getConfiguration();
    }
 
 }

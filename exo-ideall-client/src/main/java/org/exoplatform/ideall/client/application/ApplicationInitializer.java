@@ -47,7 +47,7 @@ public class ApplicationInitializer
          e.printStackTrace();
       }
 
-      context.setInitialized(true);
+      //context.setInitialized(true);
 
       new Timer()
       {

@@ -36,23 +36,12 @@ import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ideall.client.Utils;
 import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
-import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileHandler;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler;
-import org.exoplatform.ideall.client.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextHandler;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorFindTextHandler;
-import org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler;
-import org.exoplatform.ideall.client.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ideall.client.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ideall.client.editor.event.EditorReplaceTextHandler;
-import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
-import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateHandler;
 import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
@@ -65,9 +54,23 @@ import org.exoplatform.ideall.client.framework.application.event.RegisterEventHa
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorChangeActiveFileHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusHandler;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ideall.client.module.edit.event.FormatFileEvent;
 import org.exoplatform.ideall.client.module.edit.event.FormatFileHandler;
 import org.exoplatform.ideall.client.module.edit.event.RedoEditingEvent;
@@ -96,7 +99,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    RedoEditingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
    EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
-   EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusOnActiveFileHandler, RefreshHotKeysHandler
+   EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
+   ApplicationSettingsReceivedHandler
 {
 
    public interface Display
@@ -159,12 +163,15 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    private ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
 
    private boolean closeFileAfterSaving = false;
+   
+   private ApplicationSettings applicationSettings;
 
    public EditorPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
 
@@ -197,7 +204,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          {
             Editor editor = EditorUtil.getEditor(file.getContentType(), context);
             context.getOpenedEditors().put(file.getHref(), editor.getDescription());
-            display.openTab(file, context.isShowLineNumbers(), editor, false);
+            display.openTab(file, applicationSettings.isShowLineNumbers(), editor, false);
          }
          catch (EditorNotFoundException e)
          {
@@ -229,7 +236,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
 
-      handlers.addHandler(EditorSetFocusOnActiveFileEvent.TYPE, this);
+      handlers.addHandler(EditorSetFocusEvent.TYPE, this);
 
    }
 
@@ -505,7 +512,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       context.setActiveFile(file);
       context.setActiveTextEditor(display.getEditor(file.getHref()));
 
-      display.openTab(file, context.isShowLineNumbers(), event.getEditor(), true);
+      display.openTab(file, applicationSettings.isShowLineNumbers(), event.getEditor(), true);
 
       display.selectTab(file.getHref());
 
@@ -517,7 +524,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       if (closeFileAfterSaving)
       {
          File file = event.getFile();
-         if (event.getSourceHref() != null){
+         if (event.getSourceHref() != null)
+         {
             file.setHref(event.getSourceHref());
          }
          closeFile(file);
@@ -597,21 +605,26 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileHandler#onEditorSetFocuOnActiveFile(org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent)
+    * @see org.exoplatform.ideall.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ideall.client.editor.event.EditorSetFocusEvent)
     */
-   public void onEditorSetFocuOnActiveFile(EditorSetFocusOnActiveFileEvent event)
+   public void onEditorSetFocus(EditorSetFocusEvent event)
    {
       display.setEditorFocus(context.getActiveFile().getHref());
    }
 
    public void onRefreshHotKeys(RefreshHotKeysEvent event)
    {
-      List<String> hotKeyList = new ArrayList<String>(context.getHotKeys().keySet());
+      List<String> hotKeyList = new ArrayList<String>(applicationSettings.getHotKeys().keySet());
       Iterator<String> it = context.getOpenedFiles().keySet().iterator();
       while (it.hasNext())
       {
          String file = it.next();
          display.getEditor(file).setHotKeyList(hotKeyList);
       }
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 }

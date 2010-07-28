@@ -30,7 +30,12 @@ import org.exoplatform.gwtframework.ui.client.component.autocomplete.Autocomplet
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
 import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
 import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
-import org.exoplatform.ideall.client.editor.event.EditorSetFocusOnActiveFileEvent;
+import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
+import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
+import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -223,7 +228,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
     */
    public void onAutocompleteCancel()
    {
-      eventBus.fireEvent(new EditorSetFocusOnActiveFileEvent());
+      eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
 }

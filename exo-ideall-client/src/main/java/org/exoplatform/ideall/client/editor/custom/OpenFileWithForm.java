@@ -1,10 +1,13 @@
 package org.exoplatform.ideall.client.editor.custom;
 
+import java.util.HashMap;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ideall.client.Images;
 import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -21,9 +24,9 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private static final int WIDTH = 400;
 
    private static final int HEIGHT = 250;
-   
+
    private static final String ID = "ideallOpenFileWithForm";
-   
+
    private static final String TITLE = "Open File With";
 
    private EditorsListGrid editorsListGrid;
@@ -36,7 +39,8 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
    private OpenFileWithPresenter presenter;
 
-   public OpenFileWithForm(HandlerManager eventBus, ApplicationContext context)
+   public OpenFileWithForm(HandlerManager eventBus, File selectedFile, HashMap<String, File> openedFiles,
+      ApplicationSettings applicationSettings)
    {
 
       super(eventBus, WIDTH, HEIGHT, ID);
@@ -46,10 +50,10 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       createChecBoxField();
 
       createButtonsForm();
-      
+
       show();
 
-      presenter = new OpenFileWithPresenter(eventBus, context);
+      presenter = new OpenFileWithPresenter(eventBus, selectedFile, openedFiles, applicationSettings);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -76,18 +80,18 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
       DynamicForm form = new DynamicForm();
       form.setHeight(30);
-     
+
       //form.setMargin(5);
       form.setLayoutAlign(Alignment.LEFT);
-      
+
       useAsDef = new CheckboxItem("Default", "&nbsp;Use as default editor");
-      
+
       useAsDef.setAlign(Alignment.LEFT);
       //useAsDef.setShowTitle(false);
       useAsDef.setColSpan(2);
       //useAsDef.setHeight(40);
       form.setItems(useAsDef);
-      
+
       form.setAutoWidth();
 
       addItem(form);
@@ -96,7 +100,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private void createButtonsForm()
    {
       DynamicForm buttonsForm = new DynamicForm();
-      
+
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
       buttonsForm.setMargin(5);
@@ -126,7 +130,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
       destroy();
    }
-   
+
    @Override
    public void destroy()
    {
@@ -153,7 +157,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
       return openButton;
    }
-   
+
    public void enableOpenButton()
    {
       openButton.enable();

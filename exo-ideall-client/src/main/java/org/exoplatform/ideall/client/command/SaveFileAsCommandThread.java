@@ -19,6 +19,9 @@
  */
 package org.exoplatform.ideall.client.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -29,6 +32,8 @@ import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -50,7 +55,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler
+   ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler
 {
 
    private ApplicationContext context;
@@ -63,12 +68,15 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private boolean saveOnly;
 
+   private List<Item> selectedItems = new ArrayList<Item>();
+
    public SaveFileAsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
       this.context = context;
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -109,8 +117,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
                return;
             }
 
-            String pathToSave =
-               getFilePath(context.getSelectedItems(context.getSelectedNavigationPanel()).get(0)) + value;
+            String pathToSave = getFilePath(selectedItems.get(0)) + value;
             File newFile = new File(pathToSave);
             newFile.setContent(file.getContent());
             newFile.setContentType(file.getContentType());
@@ -184,4 +191,10 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       Folder folder = new Folder(hrefFolder);
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
    }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+
 }

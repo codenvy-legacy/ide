@@ -45,9 +45,9 @@ public class CookieManager
       static final String OPENED_FILES = "opened-files";
 
       static final String ACTIVE_FILE = "active-file";
-      
+
       static final String LINE_NUMBERS = "line-numbers";
-      
+
       static final String OUTLINE = "outline";
 
       static final String ENTRY_POINT = "entry-point";
@@ -57,26 +57,28 @@ public class CookieManager
    private static final String OPENED_FILES_DELIMITER = "#";
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-       return decodeURIComponent(text);
-    }-*/;
+         return decodeURIComponent(text);
+      }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-       return encodeURIComponent(text);
-    }-*/;
+         return encodeURIComponent(text);
+      }-*/;
 
    private static CookieManager instance;
-   
+
    private HandlerManager eventBus;
-   
-   public static CookieManager getInstance() {
+
+   public static CookieManager getInstance()
+   {
       return instance;
    }
-   
-   public CookieManager(HandlerManager eventBus) {
+
+   public CookieManager(HandlerManager eventBus)
+   {
       instance = this;
       this.eventBus = eventBus;
    }
-   
+
    /**
     * Storing Application context to browser cookies.
     * Stores opened files, active file.
@@ -87,7 +89,7 @@ public class CookieManager
    {
       storeOpenedFiles(context.getOpenedFiles());
       storeActiveFile(context.getActiveFile());
-      
+
       eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
    }
 
@@ -135,7 +137,7 @@ public class CookieManager
       {
          String fileHref = javaScriptEncodeURIComponent(file.getHref());
          Cookies.setCookie(Cookie.ACTIVE_FILE, fileHref);
-      }      
+      }
    }
 
    /**
@@ -153,7 +155,7 @@ public class CookieManager
       {
          Cookies.setCookie(Cookie.ENTRY_POINT, entryPoint);
       }
-      
+
       eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
    }
 
@@ -165,12 +167,11 @@ public class CookieManager
    {
       String entryPoint = Cookies.getCookie(Cookie.ENTRY_POINT);
 
-      context.setEntryPoint(entryPoint);
+      //context.setEntryPoint(entryPoint);
 
       restoreOpenedFiles(context);
       restoreActiveFile(context);
-      restoreLineNumbers(context);
-      restoreOutline(context);
+      //restoreLineNumbers(context);
    }
 
    private void restoreOpenedFiles(ApplicationContext context)
@@ -207,38 +208,35 @@ public class CookieManager
       File file = context.getPreloadFiles().get(activeFilePath);
       context.setActiveFile(file);
    }
-   
-   public void storeLineNumbers(ApplicationContext context) {      
-      Cookies.setCookie(Cookie.LINE_NUMBERS, "" + context.isShowLineNumbers());
-      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
+
+   public static void setShowOutline(boolean showOutline)
+   {
+      Cookies.setCookie(Cookie.OUTLINE, "" + showOutline);
    }
-   
-   /**
-    * @param context
-    */
-   public void storeOutline(ApplicationContext context) {      
-      Cookies.setCookie(Cookie.OUTLINE, "" + context.isShowOutline());
-      eventBus.fireEvent(new BrowserCookiesUpdatedEvent());
-   }
-   
-   private void restoreLineNumbers(ApplicationContext context) {
-      String cookie = Cookies.getCookie(Cookie.LINE_NUMBERS);
-      if (cookie == null) {
-         return;
-      }
-      
-      boolean lineNumbers = Boolean.parseBoolean(cookie);
-      context.setShowLineNumbers(lineNumbers);
-   }
-   
-   private void restoreOutline(ApplicationContext context) {
+
+   public static boolean isShowOutline(ApplicationContext context)
+   {
       String cookie = Cookies.getCookie(Cookie.OUTLINE);
-      if (cookie == null) {
-         return;
+      if (cookie == null)
+      {
+         return true;
       }
-      
-      boolean outline = Boolean.parseBoolean(cookie);
-      context.setShowOutline(outline);
+
+      return "true".equals(cookie);
+   }
+   
+   public static void setShowLineNumbers(boolean showLineNumbers) {
+      Cookies.setCookie(Cookie.LINE_NUMBERS, "" + showLineNumbers);
+   }
+   
+   public static boolean isShowLineNumbers() {
+      String cookie = Cookies.getCookie(Cookie.LINE_NUMBERS);
+      if (cookie == null)
+      {
+         return true;
+      }
+
+      return "true".equals(cookie);      
    }
 
 }

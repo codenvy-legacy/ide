@@ -27,12 +27,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.browser.event.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.browser.event.SelectItemEvent;
-import org.exoplatform.ideall.client.browser.event.SelectItemHandler;
 import org.exoplatform.ideall.client.cookie.CookieManager;
 import org.exoplatform.ideall.client.event.file.OpenFileEvent;
 import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
+import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
@@ -40,6 +38,9 @@ import org.exoplatform.ideall.client.framework.application.event.RegisterEventHa
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.SelectItemHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -98,7 +99,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
-
+   
+   private String entryPoint;
+   
    public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
@@ -107,6 +110,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
+   
    }
 
    public void destroy()
@@ -160,9 +164,10 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       public void run()
       {
          selectedItems = display.getSelectedItems();
-         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
+         
+         //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+         //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
       }
    };
 
@@ -171,7 +176,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    protected void onBrowserDoubleClicked()
    {
-      if (context.getSelectedItems(context.getSelectedNavigationPanel()).size() != 1)
+      if (selectedItems.size() != 1)
       {
          return;
       }
@@ -214,7 +219,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       } else {
          foldersToRefresh = new ArrayList<Folder>();
          
-         Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+         Item item = selectedItems.get(0);
          if (item instanceof File)
          {
             String href = item.getHref();
@@ -280,33 +285,43 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       if (foldersToRefresh.size() > 0 )
       {
          refreshNextFolder();
-      }
+      }   
    }
-   
-   
-   
+
    /**
     * Switching active workspace
     */
-   private void switchWorkspace()
+   private void switchWorkspace(String entryPoint)
    {
-      Folder rootFolder = new Folder(context.getEntryPoint());
+      Folder rootFolder = new Folder(entryPoint);
       rootFolder.setIcon(Images.FileTypes.WORKSPACE);
 
       selectedItems.clear();
       selectedItems.add(rootFolder);
-      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-      context.getSelectedItems(context.getSelectedNavigationPanel()).add(rootFolder);
+      
+      selectedItems.clear();
+      selectedItems.add(rootFolder);
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+//      context.getSelectedItems(context.getSelectedNavigationPanel()).add(rootFolder);
 
       display.getBrowserTree().setValue(rootFolder);
 
-      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems));
+      System.out.println("-------------------- switching entry point.......");
+      eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
+      this.entryPoint = entryPoint;
+
+      try {
+         System.out.println("firing items selcted event!!!!!!!!!");
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));         
+      } catch (Throwable e) {
+         e.printStackTrace();
+      }
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);      
       VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
-
+   
    /**
     * Switching active workspace by Switch Workspace Event
     * 
@@ -314,10 +329,11 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
-      context.setEntryPoint(event.getHref());
-      CookieManager.getInstance().storeEntryPoint(context.getEntryPoint());
+      //applicationSettings.setEntryPoint(event.getEntryPoint());
+      //context.setEntryPoint(event.getEntryPoint());
+      CookieManager.getInstance().storeEntryPoint(event.getEntryPoint());
       display.getBrowserTree().setValue(null);
-      switchWorkspace();
+      switchWorkspace(event.getEntryPoint());
    }
 
    /**
@@ -361,13 +377,14 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
-      if (context.getEntryPoint() == null) {
-         eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+      
+      if (entryPoint == null) {
          return;
       }
 
-      switchWorkspace();
-      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+      switchWorkspace(entryPoint);
+      
       new Timer() {
          @Override
          public void run()

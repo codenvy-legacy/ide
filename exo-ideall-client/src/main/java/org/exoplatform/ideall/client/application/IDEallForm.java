@@ -54,7 +54,7 @@ public class IDEallForm extends Layout implements IDEallPresenter.Display
       setOverflow(Overflow.HIDDEN);
 
       new ClearFocusForm(eventBus);
-      new DownloadForm(eventBus, context);
+      new DownloadForm(eventBus);
 
       draw();
       Window.addResizeHandler(new ResizeHandler()

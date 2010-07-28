@@ -27,9 +27,11 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.navigation.event.PasteItemsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.PasteItemsHandler;
 import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsHandler;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.Folder;
 import org.exoplatform.ideall.client.module.vfs.api.Item;
@@ -51,7 +53,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler
+   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler
 {
    private HandlerManager eventBus;
 
@@ -64,6 +66,8 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private String folderToPaste;
 
    private int numItemToCut;
+   
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -73,6 +77,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
       eventBus.addHandler(PasteItemsEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onPasteItems(PasteItemsEvent event)
@@ -102,14 +107,13 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private String getPathToPaste()
    {
-      String selectedNavigationPanel = context.getSelectedNavigationPanel();
-      if (context.getSelectedItems(selectedNavigationPanel).get(0) instanceof File)
+      if (selectedItems.get(0) instanceof File)
       {
-         String path = ((File)context.getSelectedItems(selectedNavigationPanel).get(0)).getHref();
+         String path = ((File)selectedItems.get(0)).getHref();
          return path.substring(0, path.lastIndexOf("/") + 1);
       }
 
-      return context.getSelectedItems(selectedNavigationPanel).get(0).getHref();
+      return selectedItems.get(0).getHref();
    }
 
    private String getPahtFromPaste(Item item)
@@ -336,6 +340,11 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
             break;
          }
       }
+   }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
    }
 
 }
