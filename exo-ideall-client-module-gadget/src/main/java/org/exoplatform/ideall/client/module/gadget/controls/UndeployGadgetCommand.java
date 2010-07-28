@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.gadget.Images;
 import org.exoplatform.ideall.client.module.gadget.event.UndeployGadgetEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 
 /**
  * Created by The eXo Platform SAS.
@@ -36,9 +38,9 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
 
    private static final String TITLE = "UnDeploy Gadget from GateIn";
 
-   public UndeployGadgetCommand()
+   public UndeployGadgetCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
 //      setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(), GadgetPluginImageBundle.INSTANCE

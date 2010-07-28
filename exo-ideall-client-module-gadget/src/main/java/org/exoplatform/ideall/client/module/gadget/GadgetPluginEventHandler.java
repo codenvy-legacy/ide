@@ -20,7 +20,8 @@ package org.exoplatform.ideall.client.module.gadget;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
 import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
 import org.exoplatform.ideall.client.module.gadget.event.DeployGadgetEvent;
@@ -32,6 +33,7 @@ import org.exoplatform.ideall.client.module.gadget.service.event.GadgetDeployRes
 import org.exoplatform.ideall.client.module.gadget.service.event.GadgetDeployResultHandler;
 import org.exoplatform.ideall.client.module.gadget.service.event.GadgetUndeployResultEvent;
 import org.exoplatform.ideall.client.module.gadget.service.event.GadgetUndeployResultHandler;
+import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -41,22 +43,22 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   GadgetDeployResultHandler, GadgetUndeployResultHandler
+   GadgetDeployResultHandler, GadgetUndeployResultHandler, EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
 
-   private AbstractApplicationContext context;
-
    private Handlers handlers;
 
-   public GadgetPluginEventHandler(HandlerManager eventBus, AbstractApplicationContext context)
+   private File activeFile;
+
+   public GadgetPluginEventHandler(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
 
       handlers = new Handlers(eventBus);
 
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(DeployGadgetEvent.TYPE, this);
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
       handlers.addHandler(GadgetDeployResultEvent.TYPE, this);
@@ -68,7 +70,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      GadgetService.getInstance().deployGadget(context.getActiveFile().getHref());
+      GadgetService.getInstance().deployGadget(activeFile.getHref());
    }
 
    /**
@@ -76,7 +78,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      GadgetService.getInstance().undeployGadget(context.getActiveFile().getHref());
+      GadgetService.getInstance().undeployGadget(activeFile.getHref());
    }
 
    /**
@@ -131,6 +133,11 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
          message += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
       }
       eventBus.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      this.activeFile = event.getFile();
    }
 
 }

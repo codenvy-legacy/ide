@@ -23,6 +23,8 @@ import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChan
 import org.exoplatform.ideall.client.module.gadget.Images;
 import org.exoplatform.ideall.client.module.gadget.event.DeployGadgetEvent;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -35,9 +37,9 @@ public class DeployGadgetCommand extends IDEControl implements EditorActiveFileC
 
    private static final String TITLE = "Deploy Gadget to GateIn";
 
-   public DeployGadgetCommand()
+   public DeployGadgetCommand(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);

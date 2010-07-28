@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ideall.client.module.gadget.ui;
 
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.ui.TabPanel;
 import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
 
@@ -41,20 +41,21 @@ public class GadgetPreviewPane extends TabPanel
 
    private GadgetMetadata metadata;
 
-   private AbstractApplicationContext context;
    /**
     * 
     */
    public static final String ID = "gadgetpreview";
+   
+   private ApplicationConfiguration configuration;
 
    /**
     * @param eventBus
     * @param gadgetMetadata
     */
-   public GadgetPreviewPane(HandlerManager eventBus, AbstractApplicationContext context, GadgetMetadata gadgetMetadata)
+   public GadgetPreviewPane(HandlerManager eventBus, ApplicationConfiguration configuration, GadgetMetadata gadgetMetadata)
    {
       super(eventBus, true);
-      this.context = context;
+      this.configuration = configuration;
       metadata = gadgetMetadata;
       //      meta = parseMetadata(gadgetMetadata);
    }
@@ -102,7 +103,7 @@ public class GadgetPreviewPane extends TabPanel
       String url = metadata.getIframeUrl();
       url = url.replace("?container=", "?container=default");
       url = url.replace("&view=", "&view=canvas");
-      url = context.getApplicationConfiguration().getGadgetServer() + "ifr" + url; // Configuration.getInstance().getGadgetServer() + "ifr" + url;
+      url = configuration.getGadgetServer() + "ifr" + url; // Configuration.getInstance().getGadgetServer() + "ifr" + url;
       Frame frame = new Frame(url + "&nocache=1");
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
