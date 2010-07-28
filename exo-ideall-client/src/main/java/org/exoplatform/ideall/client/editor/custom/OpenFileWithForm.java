@@ -26,6 +26,12 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private static final int HEIGHT = 250;
 
    private static final String ID = "ideallOpenFileWithForm";
+   
+   private static final String EDITORS_LISTGRID_ID = "ideOpenFileWithListGrid";
+   
+   private static final String OPEN_BUTTON_ID = "ideOpenFileWithOkButton";
+   
+   private static final String CANCEL_BUTTON_ID = "ideOpenFileWithCancelButton";
 
    private static final String TITLE = "Open File With";
 
@@ -70,6 +76,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private void createEditorListGrid()
    {
       editorsListGrid = new EditorsListGrid();
+      editorsListGrid.setID(EDITORS_LISTGRID_ID);
       editorsListGrid.setHeight(135);
       editorsListGrid.setMargin(10);
       addItem(editorsListGrid);
@@ -106,12 +113,14 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       buttonsForm.setMargin(5);
 
       openButton = new IButton("Open");
+      openButton.setID(OPEN_BUTTON_ID);
       openButton.setWidth(90);
       openButton.setHeight(22);
       openButton.setIcon(Images.Buttons.OK);
       openButton.disable();
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(CANCEL_BUTTON_ID);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);

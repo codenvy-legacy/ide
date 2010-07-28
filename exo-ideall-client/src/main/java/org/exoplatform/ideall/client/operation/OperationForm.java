@@ -56,6 +56,8 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class OperationForm extends Layout implements OperationPresenter.Display, OperationPanelRestoredHandler
 {
+   
+   private final String ID = "ideOperationFormTabSet";
 
    private HandlerManager eventBus;
 
@@ -94,6 +96,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       setHeight(INITIAL_HEIGHT);
 
       tabSet = new TabSet();
+      tabSet.setID(ID);
       createButtons();
       addMember(tabSet);
 

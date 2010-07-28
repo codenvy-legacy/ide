@@ -38,11 +38,14 @@ import com.smartgwt.client.widgets.layout.Layout;
 
 public class PropertyEditor extends Layout
 {
+   
+   private final String ID = "ideDynamicPropertiesForm";
 
    public PropertyEditor(File file)
    {
       DynamicForm propertiesForm = getPropertiesForm(file.getProperties());
 
+      propertiesForm.setID(ID);
       propertiesForm.setPadding(10);
       propertiesForm.setTitleWidth(200);
       propertiesForm.setLayoutAlign(VerticalAlignment.TOP);
@@ -112,6 +115,7 @@ public class PropertyEditor extends Layout
    protected StaticTextItem getStaticTextItem(String name, String value)
    {
       StaticTextItem staticTextItem = new StaticTextItem();
+      staticTextItem.setName("idePropertiesText" + name.replaceAll(" ", ""));
       staticTextItem.setWrapTitle(false);
       staticTextItem.setTitle("<b>" + name + "</b>");
       staticTextItem.setValue(value);
