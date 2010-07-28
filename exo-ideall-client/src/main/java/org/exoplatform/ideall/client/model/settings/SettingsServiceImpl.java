@@ -26,12 +26,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextSavedEvent;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextMarshaller;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextUnmarshaller;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ideall.client.model.settings.marshal.ApplicationSettingsMarshaller;
+import org.exoplatform.ideall.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -52,51 +51,42 @@ public class SettingsServiceImpl extends SettingsService
    private Loader loader;
 
    private String registryServiceURL;
+   
+   private String userName;
 
-   public SettingsServiceImpl(HandlerManager eventBus, Loader loader, String registryServiceURL)
+   public SettingsServiceImpl(HandlerManager eventBus, Loader loader, String registryServiceURL, String userName)
    {
       this.eventBus = eventBus;
       this.loader = loader;
       this.registryServiceURL = registryServiceURL;
+      this.userName = userName;
    }
 
-   private String getURL(ApplicationContext context)
+   private String getURL()
    {
-      String url =
-         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + context.getUserInfo().getName() + "/"
-            + Configuration.APPLICATION_NAME;
+      String url = registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/" + Configuration.APPLICATION_NAME;
       return url;
    }
 
    @Override
-   public void getSettings(ApplicationContext context)
+   public void getSettings(ApplicationSettings applicationSettings)
    {
-      String url = getURL(context) + "/?nocache=" + Random.nextInt();
-      getSettings(context, url);
-   }
+      String url = getURL() + "/?nocache=" + Random.nextInt();
 
-   @Override
-   public void saveSetting(ApplicationContext context)
-   {
-      String url = getURL(context) + "/?createIfNotExist=true";
-      saveSettings(context, url);
-   }
-
-   @Override
-   protected void getSettings(ApplicationContext context, String url)
-   {
-      ApplicationContextReceivedEvent event = new ApplicationContextReceivedEvent(context);
-      ApplicationContextUnmarshaller unmarshaller = new ApplicationContextUnmarshaller(eventBus, context);
+      ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+      ApplicationSettingsUnmarshaller unmarshaller = new ApplicationSettingsUnmarshaller(applicationSettings);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    @Override
-   protected void saveSettings(ApplicationContext context, String url)
+   public void saveSetting(ApplicationSettings applicationSettings)
    {
-      ApplicationContextMarshaller marshaller = new ApplicationContextMarshaller(context);
-      ApplicationContextSavedEvent event = new ApplicationContextSavedEvent(context);
+      String url = getURL() + "/?createIfNotExist=true";
+      
+      ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
+      ApplicationSettingsSavedEvent event = new ApplicationSettingsSavedEvent(applicationSettings);
 
       String errorMessage = "Registry service is not deployed.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);

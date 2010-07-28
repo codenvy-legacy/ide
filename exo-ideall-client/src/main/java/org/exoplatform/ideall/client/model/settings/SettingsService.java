@@ -19,8 +19,6 @@
  */
 package org.exoplatform.ideall.client.model.settings;
 
-import org.exoplatform.ideall.client.model.ApplicationContext;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -42,13 +40,9 @@ public abstract class SettingsService
    {
       instance = this;
    }
-   
-   public abstract void getSettings(ApplicationContext context);
 
-   public abstract void saveSetting(ApplicationContext context);
-   
-   protected abstract void getSettings(ApplicationContext context, String url);
-   
-   protected abstract void saveSettings(ApplicationContext context, String url);
-   
+   public abstract void getSettings(ApplicationSettings applicationSettings);
+
+   public abstract void saveSetting(ApplicationSettings applicationSettings);
+
 }

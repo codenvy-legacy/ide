@@ -20,8 +20,6 @@ import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -29,25 +27,38 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 {
-   
+
    public static GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
- 
+
    private File file;
-   
+
+   private String editor;
+
    public OpenFileEvent(File file)
    {
       this.file = file;
    }
-   
+
+   public OpenFileEvent(File file, String editor)
+   {
+      this.file = file;
+      this.editor = editor;
+   }
+
    public File getFile()
    {
       return file;
    }
-   
+
+   public String getEditor()
+   {
+      return editor;
+   }
+
    @Override
    protected void dispatch(OpenFileHandler hendler)
    {
-      hendler.onOpenFile(this);      
+      hendler.onOpenFile(this);
    }
 
    @Override
@@ -55,6 +66,5 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       return TYPE;
    }
-   
-}
 
+}

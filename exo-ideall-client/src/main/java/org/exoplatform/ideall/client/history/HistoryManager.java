@@ -24,13 +24,13 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ideall.client.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ideall.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
@@ -100,7 +100,6 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
       }
 
       File file = context.getOpenedFiles().get(path);
-
       if (file == null)
       {
          loadFileAndSwitch(path);
@@ -115,7 +114,6 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
          context.setActiveFile(file);
          eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
       }
-
    }
 
    private void loadFileAndSwitch(String path)

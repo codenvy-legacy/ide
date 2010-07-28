@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.model.settings.SettingsService;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -95,18 +95,23 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
    private Handlers handlers;
 
-   private ApplicationContext context;
+   //private ApplicationContext context;
 
    private Display display;
 
    private List<HotKeyItem> hotKeys = new ArrayList<HotKeyItem>();
 
    private HotKeyItem selectedItem;
+   
+   private ApplicationSettings applicationSettings;
+   
+   private List<Control> controls;
 
-   public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationContext context)
+   public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.applicationSettings = applicationSettings;
+      this.controls = controls;
 
       handlers = new Handlers(eventBus);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
@@ -176,7 +181,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
    private void fillHotKeyList()
    {
-      for (Control command : context.getCommands())
+      for (Control command : controls)
       {
          if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null)
          {
@@ -199,7 +204,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          }
       }
 
-      Iterator<Entry<String, String>> it = context.getReservedHotkeys().entrySet().iterator();
+      Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
       while (it.hasNext())
       {
          Entry<String, String> entry = it.next();
@@ -219,7 +224,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    private String findHotKey(String controlId)
    {
-      Map<String, String> hotKeysMap = context.getHotKeys();
+      Map<String, String> hotKeysMap = applicationSettings.getHotKeys();
 
       Iterator<Entry<String, String>> it = hotKeysMap.entrySet().iterator();
       while (it.hasNext())
@@ -335,7 +340,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    private void saveHotKeys()
    {
-      context.getHotKeys().clear();
+      applicationSettings.getHotKeys().clear();
       for (HotKeyItem hotKeyItem : hotKeys)
       {
          if (!hotKeyItem.getGroup().equals(EDITOR_GROUP))
@@ -345,7 +350,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             if (hotKey != null && hotKey.length() > 0)
             {
                String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
-               context.getHotKeys().put(keyCode, hotKeyItem.getControlId());
+               applicationSettings.getHotKeys().put(keyCode, hotKeyItem.getControlId());
             }
          }
       }
@@ -353,7 +358,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       eventBus.fireEvent(new RefreshHotKeysEvent());
 
-      SettingsService.getInstance().saveSetting(context);
+      SettingsService.getInstance().saveSetting(applicationSettings);
    }
 
    /**
@@ -406,7 +411,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       display.getHotKeyField().setValue(stringHotKey);
 
-      if (context.getReservedHotkeys().containsKey(controlKey + "+" + keyCode))
+      if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
       {
          display.showError("This hot key is used by Code or WYSIWYG Editors");
          display.disableBindButton();

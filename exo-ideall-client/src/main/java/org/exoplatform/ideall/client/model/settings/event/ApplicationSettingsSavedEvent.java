@@ -19,7 +19,9 @@
  */
 package org.exoplatform.ideall.client.model.settings.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +30,34 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ApplicationContextReceivedHandler extends EventHandler
+public class ApplicationSettingsSavedEvent extends GwtEvent<ApplicationSettingsSavedHandler>
 {
 
-   void onApplicationContextReceived(ApplicationContextReceivedEvent event);
+   public static final GwtEvent.Type<ApplicationSettingsSavedHandler> TYPE =
+      new GwtEvent.Type<ApplicationSettingsSavedHandler>();
+
+   private ApplicationSettings applicationSettings;
+
+   public ApplicationSettingsSavedEvent(ApplicationSettings applicationSettings)
+   {
+      this.applicationSettings = applicationSettings;
+   }
+
+   @Override
+   protected void dispatch(ApplicationSettingsSavedHandler handler)
+   {
+      handler.onApplicationSettingsSaved(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsSavedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   public ApplicationSettings getApplicationSettings()
+   {
+      return applicationSettings;
+   }
 
 }

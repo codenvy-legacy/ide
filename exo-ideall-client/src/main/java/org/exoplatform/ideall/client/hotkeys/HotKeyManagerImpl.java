@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ideall.client.hotkeys;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -29,7 +31,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ideall.client.module.edit.control.GoToLineControl;
 import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
@@ -71,18 +73,21 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
+//   private ApplicationContext context;
 
    private Map<String, String> controls = new HashMap<String, String>();
 
-   private Map<String, String> reservedHotkeys = new HashMap<String, String>();
-
    private Handlers handlers;
+   
+   private ApplicationSettings applicationSettings;
+   
+   private List<Control> registeredControls = new ArrayList<Control>();
 
-   public HotKeyManagerImpl(HandlerManager eventBus, ApplicationContext applicationContext)
+   public HotKeyManagerImpl(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> registeredControls)
    {
       this.eventBus = eventBus;
-      context = applicationContext;
+      this.applicationSettings = applicationSettings;
+      this.registeredControls = registeredControls;
 
       final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
       Window.addWindowClosingHandler(closeListener);
@@ -121,7 +126,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
       String hotKey = controlKey + "+" + String.valueOf(keyCode);
 
-      if (!context.getHotKeys().containsKey(hotKey))
+      if (!applicationSettings.getHotKeys().containsKey(hotKey))
          return;
 
       callEventByHotKey(hotKey);
@@ -168,22 +173,10 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       controls.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L
       controls.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
 
-      context.setHotKeys(controls);
-
-      reservedHotkeys.put("Ctrl+32", "Autocomplete"); //Ctrl+Space
-      reservedHotkeys.put("Ctrl+66", "Bold"); //Ctrl+B
-      reservedHotkeys.put("Ctrl+73", "Italic"); //Ctrl+I
-      reservedHotkeys.put("Ctrl+85", "Undeline"); //Ctrl+U
-      reservedHotkeys.put("Ctrl+67", "Copy"); //Ctrl+C
-      reservedHotkeys.put("Ctrl+86", "Paste"); //Ctrl+V
-      reservedHotkeys.put("Ctrl+88", "Cut"); //Ctrl+X
-      reservedHotkeys.put("Ctrl+90", "Undo"); //Ctrl+Z
-      reservedHotkeys.put("Ctrl+89", "Redo"); //Ctrl+Y
-      reservedHotkeys.put("Ctrl+65", "Select All"); //Ctrl+A
-      reservedHotkeys.put("Ctrl+36", "Go to the start"); //Ctrl+Home
-      reservedHotkeys.put("Ctrl+35", "Go to the end"); //Ctrl+End
-
-      context.setReservedHotkeys(reservedHotkeys);
+      System.out.println("hot keys " + applicationSettings.getHotKeys());
+      
+      applicationSettings.getHotKeys().clear();
+      applicationSettings.getHotKeys().putAll(controls);
    }
 
    public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
@@ -196,10 +189,10 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
     */
    private void callEventByHotKey(String hotKey)
    {
-      for (Control command : context.getCommands())
+      for (Control command : registeredControls)
       {
          if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null
-            && command.getId().equals(context.getHotKeys().get(hotKey))
+            && command.getId().equals(applicationSettings.getHotKeys().get(hotKey))
             && (command.isEnabled() || ((SimpleControl)command).isIgnoreDisable()))
          {
             eventBus.fireEvent(((SimpleControl)command).getEvent());
@@ -213,16 +206,16 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       /*
        * Clear old values
        */
-      for (Control control : context.getCommands())
+      for (Control control : registeredControls)
       {
          control.setHotKey(null);
       }
 
-      Iterator<String> keyIter = context.getHotKeys().keySet().iterator();
+      Iterator<String> keyIter = applicationSettings.getHotKeys().keySet().iterator();
       while (keyIter.hasNext())
       {
          String key = keyIter.next();
-         String controlId = context.getHotKeys().get(key);
+         String controlId = applicationSettings.getHotKeys().get(key);
 
          Control control = getControl(controlId);
          if (control != null)
@@ -235,7 +228,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private Control getControl(String controlId)
    {
-      for (Control control : context.getCommands())
+      for (Control control : registeredControls)
       {
          if (control.getId().equals(controlId))
          {

@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ideall.client.model.configuration;
 
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -31,7 +33,20 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ConfigurationReceivedSuccessfullyEvent extends GwtEvent<ConfigurationReceivedSuccessfullyHandler>
 {
 
-   public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE = new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
+   public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE =
+      new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
+
+   private ApplicationConfiguration configuration;
+
+   public ConfigurationReceivedSuccessfullyEvent(ApplicationConfiguration configuration)
+   {
+      this.configuration = configuration;
+   }
+
+   public ApplicationConfiguration getConfiguration()
+   {
+      return configuration;
+   }
 
    @Override
    protected void dispatch(ConfigurationReceivedSuccessfullyHandler handler)

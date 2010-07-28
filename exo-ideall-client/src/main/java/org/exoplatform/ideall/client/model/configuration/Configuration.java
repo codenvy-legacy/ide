@@ -17,11 +17,12 @@
 
 package org.exoplatform.ideall.client.model.configuration;
 
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ideall.client.framework.model.configuration.ApplicationConfiguration;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -78,22 +79,21 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
    {
       JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
-
+      
       ApplicationConfiguration configuration = applicationContext.getApplicationConfiguration();
       
       if (jsonConfiguration.containsKey(CONTEXT))
       {
          configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
-//         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-//         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
-         
          configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
          configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
          
+//         configuration.setLoopbackServiceContext("1" + configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+//         configuration.setUploadServiceContext("1" + configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
       }
       else
       {
-         sendErrorMessage(CONTEXT);
+         showErrorMessage(CONTEXT);
          return;
       }
 
@@ -101,7 +101,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          configuration.setPublicContext(jsonConfiguration.get(Configuration.PUBLIC_CONTEXT).isString().stringValue());
       else
       {
-         sendErrorMessage(PUBLIC_CONTEXT);
+         showErrorMessage(PUBLIC_CONTEXT);
          return;
       }
 
@@ -119,12 +119,12 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
             + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
       else
       {
-         sendErrorMessage(GADGET_SERVER);
+         showErrorMessage(GADGET_SERVER);
          return;
       }
 
       loaded = true;
-      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent());
+      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationContext.getApplicationConfiguration()));
    }
 
    public boolean isLoaded()
@@ -132,14 +132,14 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       return loaded;
    }
 
-   private void sendErrorMessage(String message)
+   private void showErrorMessage(String message)
    {
       String m = "Invalid configuration missing : " + message + " item";
-      eventBus.fireEvent(new InvalidConfigurationRecievedEvent(m));
+      Dialogs.getInstance().showError("Invalid configuration", m);
    }
 
    private static native String getRegistryURL() /*-{
-         return $wnd.registryURL;
-      }-*/;
+      return $wnd.registryURL;
+   }-*/;
 
 }

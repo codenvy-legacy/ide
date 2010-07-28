@@ -20,10 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
+import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ideall.client.framework.module.IDEModule;
 import org.exoplatform.ideall.client.model.conversation.UserInfo;
 import org.exoplatform.ideall.client.model.template.TemplateList;
@@ -37,7 +36,7 @@ import org.exoplatform.ideall.client.module.vfs.api.Item;
  * @version @version $Id: $
  */
 
-public class ApplicationContext extends AbstractApplicationContext
+public class ApplicationContext
 {
 
    /**
@@ -46,11 +45,6 @@ public class ApplicationContext extends AbstractApplicationContext
    private UserInfo userInfo;
 
    private String selectedNavigationPanel;
-
-   /**
-    * Selected items in all navigation panels
-    */
-   private HashMap<String, List<Item>> selectedItems = new HashMap<String, List<Item>>();
 
    /**
     * Current active text editor.
@@ -77,22 +71,44 @@ public class ApplicationContext extends AbstractApplicationContext
 
    private String searchContentType;
 
-   private Map<String, String> hotKeys = new HashMap<String, String>();
-
-   private Map<String, String> reservedHotkeys = new HashMap<String, String>();
-
-//   /**
-//    * Registered components
-//    */
-//   private ArrayList<AbstractApplicationComponent> components = new ArrayList<AbstractApplicationComponent>();
-
    private List<IDEModule> modules = new ArrayList<IDEModule>();
+
+   /**
+    * Opened files in editor
+    */
+   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
+
+   /**
+    * Uses for storing default state of toolbar
+    */
+   //TODO
+   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
+
+   /*
+    * Store status bar control id's here
+    */
+
+   private List<String> statusBarItems = new ArrayList<String>();
+
+   public ArrayList<String> getToolBarDefaultItems()
+   {
+      return toolBarDefaultItems;
+   }
+
+   public List<String> getStatusBarItems()
+   {
+      return statusBarItems;
+   }
+
+   public ApplicationContext()
+   {
+      //toolBarItems.add("");
+   }
 
    public List<IDEModule> getModules()
    {
       return modules;
    }
-
 
    /**
     * Uses for storing the current state of defaults editors
@@ -121,8 +137,6 @@ public class ApplicationContext extends AbstractApplicationContext
    }
 
    private String selectedEditorDescription;
-
-   private boolean initialized;
 
    public UserInfo getUserInfo()
    {
@@ -158,21 +172,6 @@ public class ApplicationContext extends AbstractApplicationContext
    public LinkedHashMap<String, String> getOpenedEditors()
    {
       return openedEditors;
-   }
-
-   /**
-    * @return the selectedItems
-    */
-   public List<Item> getSelectedItems(String navigationPanelName)
-   {
-      List<Item> items = selectedItems.get(navigationPanelName);
-      if (items == null)
-      {
-         items = new ArrayList<Item>();
-         selectedItems.put(navigationPanelName, items);
-      }
-
-      return items;
    }
 
    public String getSelectedNavigationPanel()
@@ -217,11 +216,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.testGroovyScriptURL = testGroovyScriptURL;
    }
 
-//   public ArrayList<AbstractApplicationComponent> getComponents()
-//   {
-//      return components;
-//   }
-
    public String getSearchContent()
    {
       return searchContent;
@@ -252,16 +246,6 @@ public class ApplicationContext extends AbstractApplicationContext
       this.searchContentType = searchContentType;
    }
 
-   public boolean isInitialized()
-   {
-      return initialized;
-   }
-
-   public void setInitialized(boolean initialized)
-   {
-      this.initialized = initialized;
-   }
-
    /**
     * 
     * @return Defaults editors
@@ -281,25 +265,45 @@ public class ApplicationContext extends AbstractApplicationContext
       this.selectedEditorDescription = selectedEditor;
    }
 
-
-   public Map<String, String> getHotKeys()
+   /**
+    * @return the openedFiles
+    */
+   public HashMap<String, File> getOpenedFiles()
    {
-      return hotKeys;
+      return openedFiles;
    }
 
-   public void setHotKeys(Map<String, String> hotKeys)
+   /**
+    * Current active file in editor.
+    */
+   private File activeFile;
+
+   /**
+    * @return the activeFile
+    */
+   public File getActiveFile()
    {
-      this.hotKeys = hotKeys;
+      return activeFile;
    }
 
-   public void setReservedHotkeys(Map<String, String> hotKeys)
+   /**
+    * @param activeFile
+    */
+   public void setActiveFile(File activeFile)
    {
-      this.reservedHotkeys = hotKeys;
+      this.activeFile = activeFile;
    }
 
-   public Map<String, String> getReservedHotkeys()
+   private ApplicationConfiguration applicationConfiguration;
+
+   public ApplicationConfiguration getApplicationConfiguration()
    {
-      return reservedHotkeys;
+      return applicationConfiguration;
+   }
+
+   public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration)
+   {
+      this.applicationConfiguration = applicationConfiguration;
    }
 
 }

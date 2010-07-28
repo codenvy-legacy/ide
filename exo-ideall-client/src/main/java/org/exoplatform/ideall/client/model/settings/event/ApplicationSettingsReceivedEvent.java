@@ -20,7 +20,7 @@
 package org.exoplatform.ideall.client.model.settings.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -31,36 +31,36 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ApplicationContextReceivedEvent extends ServerExceptionEvent<ApplicationContextReceivedHandler>
+public class ApplicationSettingsReceivedEvent extends ServerExceptionEvent<ApplicationSettingsReceivedHandler>
 {
 
-   public static final GwtEvent.Type<ApplicationContextReceivedHandler> TYPE =
-      new GwtEvent.Type<ApplicationContextReceivedHandler>();
+   public static final GwtEvent.Type<ApplicationSettingsReceivedHandler> TYPE =
+      new GwtEvent.Type<ApplicationSettingsReceivedHandler>();
 
-   private ApplicationContext context;
+   private ApplicationSettings applicationSettings;
 
    private Throwable exception;
 
-   public ApplicationContextReceivedEvent(ApplicationContext context)
+   public ApplicationSettingsReceivedEvent(ApplicationSettings applicationSettings)
    {
-      this.context = context;
+      this.applicationSettings = applicationSettings;
    }
 
    @Override
-   protected void dispatch(ApplicationContextReceivedHandler handler)
+   protected void dispatch(ApplicationSettingsReceivedHandler handler)
    {
-      handler.onApplicationContextReceived(this);
+      handler.onApplicationSettingsReceived(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationContextReceivedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
-   public ApplicationContext getContext()
+   public ApplicationSettings getApplicationSettings()
    {
-      return context;
+      return applicationSettings;
    }
 
    @Override
