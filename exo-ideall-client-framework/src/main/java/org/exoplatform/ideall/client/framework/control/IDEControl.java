@@ -25,11 +25,9 @@ import org.exoplatform.ideall.client.framework.application.event.InitializeAppli
 import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
 
 /**
@@ -39,41 +37,21 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @version $
  */
 
-public class IDEControl extends SimpleControl implements RegisterEventHandlersHandler, InitializeApplicationHandler
+public abstract class IDEControl extends SimpleControl implements RegisterEventHandlersHandler, InitializeApplicationHandler
 {
 
    protected HandlerManager eventBus;
 
-   protected AbstractApplicationContext context;
-
    protected Handlers handlers;
 
-   private HandlerRegistration registerEventHandlersHandler;
-
-   private HandlerRegistration initializeApplicationHandler;
-
-   protected IDEControl(String id)
+   protected IDEControl(String id, HandlerManager eventBus)
    {
       super(id);
-   }
 
-   public final void initialize(HandlerManager eventBus, AbstractApplicationContext context)
-   {
       this.eventBus = eventBus;
-      this.context = context;
-
       handlers = new Handlers(eventBus);
-
-      registerEventHandlersHandler = eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
-      initializeApplicationHandler = eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
-      onInitializeCommand();
-   }
-
-   /**
-    * Override this method to complete handling of initialization
-    */
-   protected void onInitializeCommand()
-   {
+      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    /**
@@ -94,7 +72,7 @@ public class IDEControl extends SimpleControl implements RegisterEventHandlersHa
     */
    public final void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      registerEventHandlersHandler.removeHandler();
+      handlers.removeHandler(RegisterEventHandlersEvent.TYPE);
       onRegisterHandlers();
    }
 
@@ -107,7 +85,7 @@ public class IDEControl extends SimpleControl implements RegisterEventHandlersHa
 
    public final void onInitializeApplication(InitializeApplicationEvent event)
    {
-      initializeApplicationHandler.removeHandler();
+      handlers.removeHandler(InitializeApplicationEvent.TYPE);
       onInitializeApplication();
    }
 

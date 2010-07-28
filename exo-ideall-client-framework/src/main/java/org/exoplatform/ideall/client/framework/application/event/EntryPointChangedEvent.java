@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.framework.module;
+package org.exoplatform.ideall.client.framework.application.event;
 
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -23,13 +24,33 @@ package org.exoplatform.ideall.client.framework.module;
  * @version $Id: $
  */
 
-public interface IDEModule
+public class EntryPointChangedEvent extends GwtEvent<EntryPointChangedHandler>
 {
-   
-//   List<Control> getControls();
-//   
-//   List<String> getToolbarItems();
-//   
-//   List<String> getStatusbarItems();
+
+   public static final GwtEvent.Type<EntryPointChangedHandler> TYPE = new GwtEvent.Type<EntryPointChangedHandler>();
+
+   private String entryPoint;
+
+   public EntryPointChangedEvent(String entryPoint)
+   {
+      this.entryPoint = entryPoint;
+   }
+
+   public String getEntryPoint()
+   {
+      return entryPoint;
+   }
+
+   @Override
+   protected void dispatch(EntryPointChangedHandler handler)
+   {
+      handler.onEntryPointChanged(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EntryPointChangedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

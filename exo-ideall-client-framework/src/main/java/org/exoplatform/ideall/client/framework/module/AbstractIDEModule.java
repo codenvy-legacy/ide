@@ -16,9 +16,11 @@
  */
 package org.exoplatform.ideall.client.framework.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.ideall.client.framework.model.AbstractApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -28,64 +30,81 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public abstract class AbstractIDEModule implements IDEModule
+public class AbstractIDEModule implements IDEModule
 {
 
    protected HandlerManager eventBus;
 
-   protected AbstractApplicationContext context;
-
    protected Handlers handlers;
+  
+   private List<Control> controls = new ArrayList<Control>();
 
-   public AbstractIDEModule(HandlerManager eventBus, AbstractApplicationContext context)
+   private List<String> toolbarItems = new ArrayList<String>();
+   
+   public AbstractIDEModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
+      toolbarItems.add("");
    }
 
-   protected void addControl(Control control)
-   {
-      context.getCommands().add(control);
-   }
-
-   protected void addControl(Control control, boolean dockOnToolbar)
-   {
-      addControl(control, dockOnToolbar, false);
-   }
-
-   protected void addControl(Control control, boolean dockOnToolbar, boolean rightDocking)
-   {
-      context.getCommands().add(control);
-      if (!dockOnToolbar)
-      {
-         return;
-      }
-
-      if (rightDocking)
-      {
-         context.getToolBarItems().add(control.getId());
-      }
-      else
-      {
-         int position = 0;
-         for (String curId : context.getToolBarItems())
-         {
-            if ("".equals(curId))
-            {
-               break;
-            }
-            position++;
-         }
-
-         if (control.hasDelimiterBefore())
-         {
-            context.getToolBarItems().add(position, "---");
-            position++;
-         }
-
-         context.getToolBarItems().add(position, control.getId());
-      }
-   }
+//   protected void addControl(Control control)
+//   {
+//      controls.add(control);
+//   }
+//
+//   protected void addControl(Control control, boolean dockOnToolbar)
+//   {
+//      addControl(control, dockOnToolbar, false);
+//   }
+//
+//   protected void addControl(Control control, boolean dockOnToolbar, boolean rightDocking)
+//   {
+//      controls.add(control);
+//      if (!dockOnToolbar)
+//      {
+//         return;
+//      }
+//
+//      if (rightDocking)
+//      {
+//         toolbarItems.add(control.getId());
+//      }
+//      else
+//      {
+//         int position = 0;
+//         for (String curId : toolbarItems)
+//         {
+//            if ("".equals(curId))
+//            {
+//               break;
+//            }
+//            position++;
+//         }
+//
+//         if (control.hasDelimiterBefore())
+//         {
+//            toolbarItems.add(position, "---");
+//            position++;
+//         }
+//
+//         toolbarItems.add(position, control.getId());
+//      }
+//   }
+//
+//   public List<Control> getControls()
+//   {
+//      return null;
+//   }
+//
+//   public List<String> getStatusbarItems()
+//   {
+//      return null;
+//   }
+//
+//   public List<String> getToolbarItems()
+//   {
+//      return null;
+//   }
 
 }

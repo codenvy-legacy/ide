@@ -14,60 +14,63 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-
 package org.exoplatform.ideall.client.framework.editor.event;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS        .
- * @version $Id: $
+ * Created by The eXo Platform SAS .
  * 
- * Fired when changed active file in editor 
- * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version @version $Id: $
  */
-public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>
+
+public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
 {
 
-   public static GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
-      new GwtEvent.Type<EditorActiveFileChangedHandler>();
+   public static GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
    private File file;
+   
+   private boolean forceClosing = false;
 
-   private TextEditor editor;
-
-   public EditorActiveFileChangedEvent(File file, TextEditor editor)
+   public EditorCloseFileEvent(File file)
    {
       this.file = file;
-      this.editor = editor;
    }
 
-   @Override
-   protected void dispatch(EditorActiveFileChangedHandler handler)
+   public EditorCloseFileEvent(File file, boolean forceClosing)
    {
-      handler.onEditorActiveFileChanged(this);
-   }
+      this.file = file;
+      this.forceClosing = forceClosing;
+   }   
 
-   @Override
-   public GwtEvent.Type<EditorActiveFileChangedHandler> getAssociatedType()
+   public boolean isForceClosing()
    {
-      return TYPE;
+      return forceClosing;
    }
 
+   /**
+    * Return file will be closed
+    * @return
+    */
    public File getFile()
    {
       return file;
    }
 
-   /**
-    * @return the editor
-    */
-   public TextEditor getEditor()
+   @Override
+   protected void dispatch(EditorCloseFileHandler handler)
    {
-      return editor;
+      handler.onEditorCloseFile(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorCloseFileHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.framework.module;
+package org.exoplatform.ideall.client.framework.form;
 
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -23,13 +24,33 @@ package org.exoplatform.ideall.client.framework.module;
  * @version $Id: $
  */
 
-public interface IDEModule
+public class FormOpenedEvent extends GwtEvent<FormOpenedHandler>
 {
-   
-//   List<Control> getControls();
-//   
-//   List<String> getToolbarItems();
-//   
-//   List<String> getStatusbarItems();
+
+   public static final GwtEvent.Type<FormOpenedHandler> TYPE = new GwtEvent.Type<FormOpenedHandler>();
+
+   private String formId;
+
+   public FormOpenedEvent(String formId)
+   {
+      this.formId = formId;
+   }
+
+   public String getFormId()
+   {
+      return formId;
+   }
+
+   @Override
+   protected void dispatch(FormOpenedHandler handler)
+   {
+      handler.onFormOpened(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<FormOpenedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

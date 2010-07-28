@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,47 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-
 package org.exoplatform.ideall.client.framework.editor.event;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
+import java.util.HashMap;
+
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
- * 
- * Fired when changed active file in editor 
- * 
  */
-public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>
+
+public class EditorFileOpenedEvent extends GwtEvent<EditorFileOpenedHandler>
 {
 
-   public static GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
-      new GwtEvent.Type<EditorActiveFileChangedHandler>();
+   public static final GwtEvent.Type<EditorFileOpenedHandler> TYPE = new GwtEvent.Type<EditorFileOpenedHandler>();
 
    private File file;
 
-   private TextEditor editor;
+   private HashMap<String, File> openedFiles;
 
-   public EditorActiveFileChangedEvent(File file, TextEditor editor)
+   public EditorFileOpenedEvent(File file, HashMap<String, File> openedFiles)
    {
       this.file = file;
-      this.editor = editor;
-   }
-
-   @Override
-   protected void dispatch(EditorActiveFileChangedHandler handler)
-   {
-      handler.onEditorActiveFileChanged(this);
-   }
-
-   @Override
-   public GwtEvent.Type<EditorActiveFileChangedHandler> getAssociatedType()
-   {
-      return TYPE;
+      this.openedFiles = openedFiles;
    }
 
    public File getFile()
@@ -62,12 +48,21 @@ public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChang
       return file;
    }
 
-   /**
-    * @return the editor
-    */
-   public TextEditor getEditor()
+   public HashMap<String, File> getOpenedFiles()
    {
-      return editor;
+      return openedFiles;
+   }
+
+   @Override
+   protected void dispatch(EditorFileOpenedHandler handler)
+   {
+      handler.onEditorFileOpened(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorFileOpenedHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
 }

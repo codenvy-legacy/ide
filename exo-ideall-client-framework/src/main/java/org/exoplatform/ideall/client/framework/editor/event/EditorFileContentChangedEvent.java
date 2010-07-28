@@ -17,57 +17,64 @@
 
 package org.exoplatform.ideall.client.framework.editor.event;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ideall.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Changed by The eXo Platform SAS        .
  * @version $Id: $
- * 
- * Fired when changed active file in editor 
- * 
  */
-public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>
+
+public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler>
 {
 
-   public static GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
-      new GwtEvent.Type<EditorActiveFileChangedHandler>();
+   public static GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
 
    private File file;
 
-   private TextEditor editor;
+   private boolean hasUndoChanges;
 
-   public EditorActiveFileChangedEvent(File file, TextEditor editor)
+   private boolean hasRedoChanges;
+
+   /**
+    * @param changed item 
+    */
+   public EditorFileContentChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
    {
       this.file = file;
-      this.editor = editor;
+      this.hasUndoChanges = hasUndoChanges;
+      this.hasRedoChanges = hasRedoChanges;
    }
 
    @Override
-   protected void dispatch(EditorActiveFileChangedHandler handler)
+   protected void dispatch(EditorFileContentChangedHandler handler)
    {
-      handler.onEditorActiveFileChanged(this);
+      handler.onEditorFileContentChanged(this);
    }
 
    @Override
-   public GwtEvent.Type<EditorActiveFileChangedHandler> getAssociatedType()
+   public GwtEvent.Type<EditorFileContentChangedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @return changed item
+    */
    public File getFile()
    {
       return file;
    }
 
-   /**
-    * @return the editor
-    */
-   public TextEditor getEditor()
+   public boolean hasUndoChanges()
    {
-      return editor;
+      return hasUndoChanges;
+   }
+
+   public boolean hasRedoChanges()
+   {
+      return hasRedoChanges;
    }
 
 }
