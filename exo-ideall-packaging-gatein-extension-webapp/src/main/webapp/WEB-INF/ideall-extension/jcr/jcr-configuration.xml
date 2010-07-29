@@ -62,7 +62,7 @@
             <value-param>
                <name>conf-path</name>
                <description>JCR configuration file</description>
-               <value>war:/ideall-extension/jcr/repository-configuration.xml</value>
+               <value>war:/ide-extension/jcr/repository-configuration.xml</value>
             </value-param>
          </init-params>
       </component-plugin>
