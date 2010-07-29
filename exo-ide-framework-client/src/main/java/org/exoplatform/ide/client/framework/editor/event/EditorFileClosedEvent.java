@@ -18,7 +18,7 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import java.util.HashMap;
 
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

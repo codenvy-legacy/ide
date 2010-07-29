@@ -22,8 +22,8 @@
          <artifactId>exo.gwtframework.ui</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ideall</groupId>
-         <artifactId>exo-ideall-client-module-vfs</artifactId>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs-webdav-client</artifactId>
          <version>${project.version}</version>
       </dependency>
       <dependency>
