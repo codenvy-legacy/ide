@@ -8,8 +8,8 @@
       <artifactId>ideall.parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ideall</groupId>
-   <artifactId>exo-ideall-server-component-gadget</artifactId>
+   <groupId>org.exoplatform.ide</groupId>
+   <artifactId>exo-ide-module-gadget-server</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: GateIn Gadget Register</name>
    <dependencies>

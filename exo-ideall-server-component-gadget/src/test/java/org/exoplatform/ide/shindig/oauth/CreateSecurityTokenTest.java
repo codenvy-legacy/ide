@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.shindig.oauth;
+package org.exoplatform.ide.shindig.oauth;
 
 import java.io.IOException;
 
 import org.apache.shindig.common.crypto.BlobCrypterException;
-import org.exoplatform.ideall.AbstractResourceTest;
-import org.exoplatform.ideall.shindig.oauth.SecurityTokenGenerator;
-import org.exoplatform.ideall.shindig.oauth.TokenRequest;
-import org.exoplatform.ideall.shindig.oauth.TokenResponse;
+import org.exoplatform.ide.AbstractResourceTest;
+import org.exoplatform.ide.shindig.oauth.SecurityTokenGenerator;
+import org.exoplatform.ide.shindig.oauth.TokenRequest;
+import org.exoplatform.ide.shindig.oauth.TokenResponse;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

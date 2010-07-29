@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.service.gatein;
+package org.exoplatform.ide.service.gatein;
 
 /**
  * Created by The eXo Platform SAS .
