@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.json.client.JSONObject;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -29,6 +31,39 @@ import java.util.Map;
 
 public class ApplicationSettings
 {
+   
+   public enum Store
+   {
+      
+      COOKIES, REGISTRY
+      
+   }
+   
+   private HashMap<String, Store> storedIn = new HashMap<String, Store>();
+   
+   private HashMap<String, Object> values = new HashMap<String, Object>();
+   
+   public void setValue(String key, Object value) {
+      values.put(key, value);
+   }
+   
+   public Object getValue(String key) {
+      return values.get(key);
+   }
+   
+   public Store getStoredIn(String key) {
+      if (storedIn.get(key) == null) {
+         return Store.REGISTRY;
+      }
+      
+      return storedIn.get(key);
+   }
+   
+   public void setStoredIn(String key, Store store) {
+      storedIn.put(key, store);
+   }
+   
+   
 
    private List<String> toolbarItems = new ArrayList<String>();
 
@@ -41,10 +76,14 @@ public class ApplicationSettings
    private boolean showOutline = true;
 
    private String entryPoint;
-
+   
+   
+   private JSONObject settings;
+   
+   
    public ApplicationSettings()
    {
-      toolbarItems.add("");
+      toolbarItems.add("");      
    }
 
    public List<String> getToolbarItems()

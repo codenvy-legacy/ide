@@ -155,12 +155,12 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
             applicationSettings = new ApplicationSettings();
             CookieManager.getInstance().getApplicationState(context, applicationSettings);
             System.out.println("entry point from cookie: " + applicationSettings.getEntryPoint());
-            
+
             if (applicationSettings.getEntryPoint() == null)
             {
                applicationSettings.setEntryPoint(context.getApplicationConfiguration().getDefaultEntryPoint());
-            }            
-            
+            }
+
             new ControlsFormatter(eventBus).format(controls);
             eventBus.fireEvent(new ControlsUpdatedEvent(controls));
 
@@ -183,17 +183,36 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
       }.schedule(10);
    }
 
-   private void initializeApplication() {
-      new Timer() {
+   private void initializeApplication()
+   {
+      new Timer()
+      {
          @Override
          public void run()
          {
             eventBus.fireEvent(new RegisterEventHandlersEvent());
-            
-           }
-      }.schedule(10);      
-   }   
-   
+
+            new Timer()
+            {
+               @Override
+               public void run()
+               {
+                  try
+                  {
+                     eventBus.fireEvent(new InitializeApplicationEvent());
+                  }
+                  catch (Throwable e)
+                  {
+                     e.printStackTrace();
+                  }
+               }
+
+            }.schedule(10);
+
+         }
+      }.schedule(10);
+   }
+
    private void initialize()
    {
       eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
