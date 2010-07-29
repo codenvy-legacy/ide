@@ -7,7 +7,7 @@
     <version>8</version>
   </parent>
   <groupId>org.exoplatform.ide</groupId>
-  <artifactId>ide.parent</artifactId>
+  <artifactId>exo-ide-parent</artifactId>
   <version>1.0-Beta03-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo IDE :: Parent</name>
@@ -385,19 +385,22 @@
     </pluginManagement>
   </build>
   <modules>
-  <!-- 
-    <module>exo-ideall-server-component-commons</module>
-    <module>exo-ide-module-gadget-server</module>
-    <module>exo-ideall-server-component-netvibes</module>
-    <module>exo-ideall-testframework</module>
-    <module>exo-ideall-client-module-vfs</module>
-    <module>exo-ideall-client-framework</module>
-    <module>exo-ideall-client-module-groovy</module>
-    <module>exo-ideall-client-module-gadget</module>
-    <module>exo-ideall-client-module-netvibes</module>
-    <module>exo-ideall-client</module>
-    <module>exo-ideall-packaging-gatein-extension-config</module>
-    <module>exo-ideall-packaging-gatein-extension-webapp</module>
-     -->
+  
+  	<module>exo-ide-server</module>
+  	<module>exo-ide-testframework</module>
+  	<module>exo-ide-vfs-webdav-client</module>
+  	<module>exo-ide-framework-client</module>
+  	
+  	<module>exo-ide-module-netvibes-server</module>
+  	<module>exo-ide-module-netvibes-client</module>
+
+  	<module>exo-ide-module-gadget-server</module>
+  	<module>exo-ide-module-gadget-client</module>
+  	
+  	<module>exo-ide-module-groovy-server</module>
+  	<module>exo-ide-module-groovy-client</module>
+  	
+  	<module>exo-ideall-client</module>
+  
   </modules>
 </project>
