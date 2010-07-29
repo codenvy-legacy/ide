@@ -43,16 +43,16 @@ import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOu
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.application.event.ConfigurationReceivedEvent;
-import org.exoplatform.ideall.client.framework.application.event.ConfigurationReceivedHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
-import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.application.event.ConfigurationReceivedEvent;
+import org.exoplatform.ide.client.framework.application.event.ConfigurationReceivedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -102,7 +102,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptHandler#onValidateGroovyScript(org.exoplatform.ideall.plugin.groovy.event.ValidateGroovyScriptEvent)
+    * @see org.exoplatform.ide.plugin.groovy.event.ValidateGroovyScriptHandler#onValidateGroovyScript(org.exoplatform.ide.plugin.groovy.event.ValidateGroovyScriptEvent)
     */
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
@@ -114,7 +114,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptHandler#onDeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.DeployGroovyScriptEvent)
+    * @see org.exoplatform.ide.plugin.groovy.event.DeployGroovyScriptHandler#onDeployGroovyScript(org.exoplatform.ide.plugin.groovy.event.DeployGroovyScriptEvent)
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
@@ -122,7 +122,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptHandler#onUndeployGroovyScript(org.exoplatform.ideall.plugin.groovy.event.UndeployGroovyScriptEvent)
+    * @see org.exoplatform.ide.plugin.groovy.event.UndeployGroovyScriptHandler#onUndeployGroovyScript(org.exoplatform.ide.plugin.groovy.event.UndeployGroovyScriptEvent)
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
@@ -130,7 +130,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ideall.groovy.event.GroovyValidateResultReceivedEvent)
+    * @see org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedEvent)
     */
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
    {
@@ -161,7 +161,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedHandler#onGroovyDeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyDeployResultReceivedEvent)
+    * @see org.exoplatform.ide.groovy.event.GroovyDeployResultReceivedHandler#onGroovyDeployResultReceived(org.exoplatform.ide.groovy.event.GroovyDeployResultReceivedEvent)
     */
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
    {
@@ -193,7 +193,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ideall.groovy.event.GroovyUndeployResultReceivedEvent)
+    * @see org.exoplatform.ide.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ide.groovy.event.GroovyUndeployResultReceivedEvent)
     */
    public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
    {
@@ -223,7 +223,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedHandler#onRestServiceOutputReceived(org.exoplatform.ideall.groovy.event.RestServiceOutputReceivedEvent)
+    * @see org.exoplatform.ide.groovy.event.RestServiceOutputReceivedHandler#onRestServiceOutputReceived(org.exoplatform.ide.groovy.event.RestServiceOutputReceivedEvent)
     */
    public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
    {
@@ -259,7 +259,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.plugin.groovy.event.SetAutoloadHandler#onSetAutoload(org.exoplatform.ideall.plugin.groovy.event.SetAutoloadEvent)
+    * @see org.exoplatform.ide.plugin.groovy.event.SetAutoloadHandler#onSetAutoload(org.exoplatform.ide.plugin.groovy.event.SetAutoloadEvent)
     */
    public void onSetAutoload(SetAutoloadEvent event)
    {
@@ -272,7 +272,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ideall.plugin.groovy.event.PreviewWadlOutputEvent)
+    * @see org.exoplatform.ide.plugin.groovy.event.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ide.plugin.groovy.event.PreviewWadlOutputEvent)
     */
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
@@ -290,7 +290,7 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
    }
 
    /**
-    * @see org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ideall.groovy.model.wadl.event.WadlServiceOutputReceivedEvent)
+    * @see org.exoplatform.ide.groovy.model.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ide.groovy.model.wadl.event.WadlServiceOutputReceivedEvent)
     */
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {

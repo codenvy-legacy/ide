@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.module.groovy.ui;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.module.groovy.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,7 +50,7 @@ public class GetRestServiceURLForm extends DialogWindow
 
    private static final String TITLE = "REST Service URL";
    
-   private static final String ID = "ideallGetRestServiceURLForm";
+   private static final String ID = "ideGetRestServiceURLForm";
 
    private TextField URLField;
 

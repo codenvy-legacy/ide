@@ -24,11 +24,11 @@ import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.controls.ValidateGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.wadl.WadlServiceImpl;
-import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.module.IDEModule;
 
 import com.google.gwt.event.shared.HandlerManager;
 

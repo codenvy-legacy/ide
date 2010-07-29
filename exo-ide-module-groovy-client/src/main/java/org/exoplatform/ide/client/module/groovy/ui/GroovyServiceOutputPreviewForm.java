@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
 import org.exoplatform.ide.client.module.groovy.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -53,7 +53,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private static final int HEIGHT = 400;
 
-   private static final String ID = "ideallGroovyServiceOutputPreviewForm";
+   private static final String ID = "ideGroovyServiceOutputPreviewForm";
 
    private static final String TITLE = "Launch REST Service";
 
@@ -425,7 +425,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    }
 
    /**
-    * @see org.exoplatform.ideall.client.groovy.GroovyServiceOutputPreviewPresenter.Display#setPathFieldValue(java.lang.String)
+    * @see org.exoplatform.ide.client.groovy.GroovyServiceOutputPreviewPresenter.Display#setPathFieldValue(java.lang.String)
     */
    public void setPathFieldValue(String value)
    {

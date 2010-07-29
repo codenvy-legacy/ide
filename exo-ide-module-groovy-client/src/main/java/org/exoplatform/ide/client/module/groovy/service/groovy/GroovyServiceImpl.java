@@ -75,7 +75,7 @@ public class GroovyServiceImpl extends GroovyService
    }
    
    /**
-    * @see org.exoplatform.ideall.client.model.groovy.GroovyService#deploy(java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.client.model.groovy.GroovyService#deploy(java.lang.String, java.lang.String)
     */
    @Override
    public void deploy(String href, String url)
@@ -96,7 +96,7 @@ public class GroovyServiceImpl extends GroovyService
    }
    
    /**
-    * @see org.exoplatform.ideall.client.model.groovy.GroovyService#undeploy(java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.client.model.groovy.GroovyService#undeploy(java.lang.String, java.lang.String)
     */
    @Override
    protected void undeploy(String href, String url)

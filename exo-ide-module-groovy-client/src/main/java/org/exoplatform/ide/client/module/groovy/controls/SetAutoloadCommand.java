@@ -23,12 +23,12 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -68,7 +68,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    /**
     * Initializing handlers
     * 
-    * @see org.exoplatform.ideall.client.IDEControl.component.IDECommand#onRegisterHandlers()
+    * @see org.exoplatform.ide.client.IDEControl.component.IDECommand#onRegisterHandlers()
     */
    @Override
    protected void onRegisterHandlers()
@@ -80,7 +80,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    /**
     * Handling event Editor active file changed
     * 
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -159,7 +159,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    /**
     * Handling item properties saved event
     * 
-    * @see org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ideall.client.model.vfs.api.event.ItemPropertiesSavedEvent)
+    * @see org.exoplatform.ide.client.model.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.model.vfs.api.event.ItemPropertiesSavedEvent)
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {

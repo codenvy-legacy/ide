@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ide.server;
 
-import org.exoplatform.ideall.testframework.server.AbstractTestServlet;
+import org.exoplatform.ide.testframework.server.AbstractTestServlet;
 
 /**
  * Created by The eXo Platform SAS .

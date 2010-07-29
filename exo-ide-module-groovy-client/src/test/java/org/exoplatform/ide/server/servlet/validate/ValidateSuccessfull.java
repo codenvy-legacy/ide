@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.groovy.ServletMapping;
-import org.exoplatform.ideall.testframework.server.CanHandleRequest;
-import org.exoplatform.ideall.testframework.server.MockRequestHandler;
+import org.exoplatform.ide.testframework.server.CanHandleRequest;
+import org.exoplatform.ide.testframework.server.MockRequestHandler;
 
 /**
  * Created by The eXo Platform SAS .

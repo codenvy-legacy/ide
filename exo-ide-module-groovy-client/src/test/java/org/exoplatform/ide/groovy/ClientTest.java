@@ -36,7 +36,7 @@ public abstract class ClientTest extends GWTTestCase
    @Override
    public String getModuleName()
    {
-      return "org.exoplatform.ideall.IDEallGroovyModule";
+      return "org.exoplatform.ide.ideGroovyModule";
    }
    
    protected void sleepTest() {
