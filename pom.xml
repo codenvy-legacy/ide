@@ -6,8 +6,8 @@
     <artifactId>exo.parent</artifactId>
     <version>8</version>
   </parent>
-  <groupId>org.exoplatform.ideall</groupId>
-  <artifactId>ideall.parent</artifactId>
+  <groupId>org.exoplatform.ide</groupId>
+  <artifactId>ide.parent</artifactId>
   <version>1.0-Beta03-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo IDE :: Parent</name>
@@ -379,6 +379,7 @@
     </pluginManagement>
   </build>
   <modules>
+  <!-- 
     <module>exo-ideall-server-component-commons</module>
     <module>exo-ideall-server-component-gadget</module>
     <module>exo-ideall-server-component-netvibes</module>
@@ -391,5 +392,6 @@
     <module>exo-ideall-client</module>
     <module>exo-ideall-packaging-gatein-extension-config</module>
     <module>exo-ideall-packaging-gatein-extension-webapp</module>
+     -->
   </modules>
 </project>
