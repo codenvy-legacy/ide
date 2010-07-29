@@ -4,12 +4,12 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>ideall.parent</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>ide.parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ideall</groupId>
-   <artifactId>exo-ideall-testframework</artifactId>
+   <groupId>org.exoplatform.ide</groupId>
+   <artifactId>exo-ide-testframework</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Test Framework</name>
    <dependencies>
