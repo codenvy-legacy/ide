@@ -4,14 +4,14 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>ideall.parent</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-module-gadget-client</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Module :: Gadget :: Client</name>
+   <name>eXo IDE :: Module : Gadget : Client</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
