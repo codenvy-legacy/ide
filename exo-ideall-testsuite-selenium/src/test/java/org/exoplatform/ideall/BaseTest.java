@@ -45,6 +45,12 @@ public abstract class BaseTest
       selenium.windowMaximize();
    }
 
+   
+   protected void closeTab(String index)
+   {
+      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
+   }
+   
    @AfterClass
    public static void stopSelenium()
    {

@@ -52,33 +52,33 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       selenium.keyUp("//body[@class='editbox']/", "\\13");
       selenium.typeKeys("//body[@class='editbox']/", "</test>");
       Thread.sleep(1000);
-      saveAsFile("Тестовый Файл.xml");
+      saveAsFile("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       Thread.sleep(1000);
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=Тестовый Файл.xml||index=0]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml||index=0]"));
       
-      showAndCheckProperties("54", "text/xml", "Тестовый Файл.xml");
+      showAndCheckProperties("54", "text/xml", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       
       closeTab("0");
       
       Thread.sleep(500);
       selenium.open("/rest/private/jcr/repository/dev-monit/");
       selenium.waitForPageToLoad("10000");
-      assertTrue(selenium.isElementPresent("link=Тестовый Файл.xml"));
-      selenium.click("link=Тестовый Файл.xml");
+      assertTrue(selenium.isElementPresent("link=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml"));
+      selenium.click("link=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("//test"));
       Thread.sleep(5000);
       selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("10000");
       Thread.sleep(5000);
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовый Файл.xml]/col[0]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[0]"));
       
-      openFileWithCodeEditor("Тестовый Файл.xml");
+      openFileWithCodeEditor("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"));
       
-      showAndCheckProperties("54", "text/xml", "Тестовый Файл.xml");
+      showAndCheckProperties("54", "text/xml", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       Thread.sleep(1000);
       selenium.keyDown("//body[@class='editbox']/", "\\35");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
@@ -89,25 +89,25 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       }
       selenium.typeKeys("//body[@class='editbox']/", "<settings/>");
       
-      saveAsFile("Новий тестовий файл.xml");
+      saveAsFile("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       Thread.sleep(1000);
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=Новий тестовий файл.xml]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]"));
       
-      showAndCheckProperties("51", "text/xml", "Новий тестовий файл.xml");
+      showAndCheckProperties("51", "text/xml", "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
       
       closeTab("0");
       
       Thread.sleep(500);
 //      selenium.open("/rest/private/jcr/repository/dev-monit/");
 //      selenium.waitForPageToLoad("10000");
-//      assertTrue(selenium.isElementPresent("link=Тестовый Файл.xml"));
-//      assertTrue(selenium.isElementPresent("link=Новий тестовий файл.xml"));
-//      selenium.click("link=Тестовый Файл.xml");
+//      assertTrue(selenium.isElementPresent("link=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml"));
+//      assertTrue(selenium.isElementPresent("link=пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml"));
+//      selenium.click("link=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
 //      Thread.sleep(1000);
 //      assertTrue(selenium.isElementPresent("//test"));
 //      Thread.sleep(500);
 //      selenium.open("/rest/private/jcr/repository/dev-monit/");
-//      selenium.click("link=Новий тестовий файл.xml");
+//      selenium.click("link=пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml");
 //      Thread.sleep(1000);
 //      assertTrue(selenium.isElementPresent("//settings"));
 //      Thread.sleep(1000);
@@ -115,12 +115,12 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
 //      selenium.waitForPageToLoad("20000");
 //      Thread.sleep(10000);
       
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовый Файл.xml]/col[0]"));
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Новий тестовий файл.xml]/col[0]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[0]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[0]"));
       
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовый Файл.xml]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[1]");
       selenium.controlKeyDown();
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Новий тестовий файл.xml]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[1]");
       selenium.controlKeyUp();
       
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
@@ -129,10 +129,6 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
    }
    
-   private void closeTab(String index)
-   {
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
-   }
    
    private void saveAsFile(String name) throws Exception
    {
@@ -171,7 +167,7 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
    
    private void openFileWithCodeEditor(String fileName) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовый Файл.xml]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.xml]/col[1]");
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
