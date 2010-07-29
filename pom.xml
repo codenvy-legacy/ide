@@ -152,7 +152,7 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo-ideall-server-component-gadget</artifactId>
+        <artifactId>eexo-ide-module-gadget-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -387,7 +387,7 @@
   <modules>
   <!-- 
     <module>exo-ideall-server-component-commons</module>
-    <module>exo-ideall-server-component-gadget</module>
+    <module>exo-ide-module-gadget-server</module>
     <module>exo-ideall-server-component-netvibes</module>
     <module>exo-ideall-testframework</module>
     <module>exo-ideall-client-module-vfs</module>
