@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+                 "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+   <display-name>ide-extension</display-name>
+
+   <filter>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
+   </filter>
+
+   <filter>
+      <filter-name>SetCurrentIdentityFilter</filter-name>
+      <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+   </filter>
+
+   <filter>
+      <filter-name>RestEncodingFilter</filter-name>
+      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
+      <init-param>
+         <param-name>REQUEST_ENCODING</param-name>
+         <param-value>UTF-8</param-value>
+      </init-param>
+   </filter>
+
+
+   <filter-mapping>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </filter-mapping>
+
+   <filter-mapping>
+      <filter-name>SetCurrentIdentityFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+
+   <filter-mapping>
+      <filter-name>RestEncodingFilter</filter-name>
+      <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+
+   <!-- END WEBDAV -->
+
+
+
+   <!--
+      ==================================================================
+   -->
+   <!--
+		LISTENER
+	-->
+   <!--
+      ==================================================================
+   -->
+   <listener>
+      <listener-class>org.exoplatform.container.web.PortalContainerConfigOwner</listener-class>
+   </listener>
+   <!--
+      ==================================================================
+   -->
+   <!--
+		SERVLET
+	-->
+   <!--
+      ==================================================================
+   -->
+   <servlet>
+      <servlet-name>GateInServlet</servlet-name>
+      <servlet-class>org.gatein.wci.api.GateInServlet</servlet-class>
+      <load-on-startup>0</load-on-startup>
+   </servlet>
+
+   <!-- WEBDAV -->
+   <servlet>
+      <servlet-name>RestServer</servlet-name>
+      <description>eXo - Platform REST Server</description>
+      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
+      <load-on-startup>4</load-on-startup>
+   </servlet>
+
+   <!-- END WEBDAV -->
+
+   <!--
+      =================================================================
+   -->
+   <servlet-mapping>
+      <servlet-name>GateInServlet</servlet-name>
+      <url-pattern>/gateinservlet</url-pattern>
+   </servlet-mapping>
+
+
+   <!-- WEBDAV -->
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
+
+   <security-constraint>
+      <web-resource-collection>
+         <web-resource-name>user authentication</web-resource-name>
+         <url-pattern>/private/*</url-pattern>
+         <http-method>POST</http-method>
+         <http-method>GET</http-method>
+      </web-resource-collection>
+      <auth-constraint>
+         <role-name>users</role-name>
+      </auth-constraint>
+      <user-data-constraint>
+         <transport-guarantee>NONE</transport-guarantee>
+      </user-data-constraint>
+   </security-constraint>
+   <security-constraint>
+      <web-resource-collection>
+         <web-resource-name>admin authentication</web-resource-name>
+         <url-pattern>/admin/*</url-pattern>
+         <http-method>POST</http-method>
+         <http-method>GET</http-method>
+      </web-resource-collection>
+      <auth-constraint>
+         <role-name>admin</role-name>
+      </auth-constraint>
+      <user-data-constraint>
+         <transport-guarantee>NONE</transport-guarantee>
+      </user-data-constraint>
+   </security-constraint>
+   <login-config>
+      <auth-method>FORM</auth-method>
+      <realm-name>exo-domain</realm-name>
+      <form-login-config>
+         <form-login-page>/login/jsp/login.jsp</form-login-page>
+         <form-error-page>/login/jsp/login.jsp</form-error-page>
+      </form-login-config>
+   </login-config>
+   <security-role>
+      <description>a simple user role</description>
+      <role-name>users</role-name>
+   </security-role>
+   <security-role>
+      <description>the admin role</description>
+      <role-name>admin</role-name>
+   </security-role>
+   <!-- END WEBDAV -->
+
+</web-app>
