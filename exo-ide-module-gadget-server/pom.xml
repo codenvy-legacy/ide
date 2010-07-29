@@ -4,14 +4,14 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>ideall.parent</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ideall</groupId>
-   <artifactId>exo-ideall-server-component-gadget</artifactId>
+   <artifactId>exo-ide-module-gadget-server</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: GateIn Gadget Register</name>
+   <name>eXo IDE :: Module : Gadget : Server</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.portal</groupId>
