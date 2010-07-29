@@ -3,7 +3,7 @@
                  "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 
-   <display-name>ideall-extension</display-name>
+   <display-name>ide-extension</display-name>
 
    <filter>
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
