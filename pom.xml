@@ -135,10 +135,16 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.exoplatform.ideall</groupId>
-        <artifactId>exo-ideall-server-component-commons</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-server</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-module-groovy-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
       <dependency>
         <groupId>org.exoplatform.ideall</groupId>
         <artifactId>exo-ideall-server-component-netvibes</artifactId>
