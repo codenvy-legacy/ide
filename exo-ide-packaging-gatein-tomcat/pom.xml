@@ -17,11 +17,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.exoplatform.ideall</groupId>
-    <artifactId>ideall.parent</artifactId>
+    <groupId>org.exoplatform.ide</groupId>
+    <artifactId>ide.parent</artifactId>
     <version>1.0-Beta03-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-ideall-packaging-gatein-tomcat</artifactId>
+  <artifactId>exo-ide-packaging-gatein-tomcat</artifactId>
   <packaging>pom</packaging>
   <name>eXo IDE :: Based on GateIn Portal Assemblies</name>
   <properties>
@@ -77,44 +77,50 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-server-component-commons</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-server</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-client</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-client</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-packaging-gatein-extension-webapp</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-packaging-gatein-extension-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-packaging-gatein-extension-config</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-packaging-gatein-extension-config</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-server-component-commons</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-server</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-server-component-gadget</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-module-groovy-server</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ideall</groupId>
-      <artifactId>exo-ideall-server-component-netvibes</artifactId>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-module-netvibes-server</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-module-gadget-server</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
@@ -190,7 +196,7 @@
             </goals>
             <configuration>
               <includeTypes>jar</includeTypes>
-              <includeArtifactIds>exo.core.component.script.groovy,exo-ideall-server-component-commons,exo-ideall-packaging-gatein-extension-config,exo-ideall-server-component-gadget,exo-ideall-server-component-netvibes,commons-compress</includeArtifactIds>
+              <includeArtifactIds>exo.core.component.script.groovy,exo-ide-server,exo-ide-packaging-gatein-extension-config,exo-ide-module-gadget-server,exo-ide-module-netvibes-server,exo-ide-module-groovy-server,commons-compress</includeArtifactIds>
               <stripVersion>false</stripVersion>
               <outputDirectory>${project.build.directory}/packager-conf/jar</outputDirectory>
             </configuration>
@@ -203,7 +209,7 @@
             </goals>
             <configuration>
               <includeTypes>war</includeTypes>
-              <includeArtifactIds>exo-ideall-packaging-gatein-extension-webapp,exo-ideall-client,exo.gwtframework.smartgwt,exo.portal.starter.war</includeArtifactIds>
+              <includeArtifactIds>exo-ide-packaging-gatein-extension-webapp,exo-ide-client,exo.gwtframework.smartgwt,exo.portal.starter.war</includeArtifactIds>
               <stripVersion>false</stripVersion>
               <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
             </configuration>
@@ -218,15 +224,16 @@
             <phase>install</phase>
             <configuration>
               <tasks>
-                <copy file="${project.build.directory}/packager-conf/war/exo-ideall-packaging-gatein-extension-webapp-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/ideall-extension.war"/>
-                <copy file="${project.build.directory}/packager-conf/war/exo-ideall-client-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/IDEall.war"/>
+                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-gatein-extension-webapp-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/ide-extension.war"/>
+                <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/IDE.war"/>
                 <copy file="${project.build.directory}/packager-conf/war/exo.gwtframework.smartgwt-${org.exoplatform.gwtframework.version}.war" tofile="${project.build.directory}/tomcat/webapps/SmartGWT.war"/>
                 <copy file="${project.build.directory}/packager-conf/jar/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar"/>
-                <copy file="${project.build.directory}/packager-conf/jar/exo-ideall-packaging-gatein-extension-config-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ideall-packaging-gatein-extension-config-${project.version}.jar"/>
-                <copy file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-commons-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-commons-${project.version}.jar"/>
-                <copy file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-gadget-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-gadget-${project.version}.jar"/>
-                <copy file="${project.build.directory}/packager-conf/jar/exo-ideall-server-component-netvibes-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ideall-server-component-netvibes-${project.version}.jar"/>
+                <copy file="${project.build.directory}/packager-conf/jar/exo-ide-packaging-gatein-extension-config-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-packaging-gatein-extension-config-${project.version}.jar"/>
+                <copy file="${project.build.directory}/packager-conf/jar/exo-ide-server-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-server-${project.version}.jar"/>
+                <copy file="${project.build.directory}/packager-conf/jar/exo-ide-module-gadget-server-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-module-gadget-server-${project.version}.jar"/>
+                <copy file="${project.build.directory}/packager-conf/jar/exo-ide-module-netvibes-server-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-module-netvibes-server-${project.version}.jar"/>
                 <copy file="${project.build.directory}/packager-conf/jar/commons-compress-${apache.commons-compress.version}.jar" tofile="${project.build.directory}/tomcat/lib/commons-compress-${apache.commons-compress.version}.jar"/>
+                <copy file="${project.build.directory}/packager-conf/jar/exo-ide-module-groovy-server-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-module-groovy-server-${project.version}.jar"/>
                 <unwar src="${project.build.directory}/packager-conf/war/exo.portal.starter.war-${org.exoplatform.gatein.version}.war" dest="${project.build.directory}/tomcat/webapps/starter.war"/>
               </tasks>
             </configuration>
