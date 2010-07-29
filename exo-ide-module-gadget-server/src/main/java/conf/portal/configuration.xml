@@ -18,11 +18,11 @@
    -->
 
    <component>
-      <type>org.exoplatform.ideall.service.gatein.RestGadgetRegistryService</type>
+      <type>org.exoplatform.ide.service.gatein.RestGadgetRegistryService</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
       <init-params>
          <value-param>
             <name>keyFile</name>
