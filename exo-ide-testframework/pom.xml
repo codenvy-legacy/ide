@@ -5,7 +5,7 @@
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
-      <artifactId>ide.parent</artifactId>
+      <artifactId>exo-ide-parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
@@ -78,8 +78,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ideall</groupId>
-         <artifactId>exo-ideall-server-component-commons</artifactId>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
          <scope>test</scope>
       </dependency>
       <dependency>
