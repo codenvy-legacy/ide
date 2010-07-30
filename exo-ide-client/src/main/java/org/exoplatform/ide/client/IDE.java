@@ -6,7 +6,10 @@ import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.FileEditModule;
+import org.exoplatform.ide.client.module.gadget.GadgetModule;
+import org.exoplatform.ide.client.module.groovy.GroovyModule;
 import org.exoplatform.ide.client.module.navigation.NavigationModule;
+import org.exoplatform.ide.client.module.netvibes.NetvibesModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -43,9 +46,9 @@ public class IDE extends VerticalPanel
       context.getModules().add(new DevelopmentModule(eventBus));
       context.getModules().add(new PreferencesModule(eventBus));
 
-//      context.getModules().add(new GadgetModule(eventBus));
-//      context.getModules().add(new GroovyModule(eventBus));
-//      context.getModules().add(new NetvibesModule(eventBus));
+      context.getModules().add(new GadgetModule(eventBus));
+      context.getModules().add(new GroovyModule(eventBus));
+      context.getModules().add(new NetvibesModule(eventBus));
    }
 
 }

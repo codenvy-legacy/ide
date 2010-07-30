@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
-   <display-name>IDEall</display-name>
+   <display-name>IDE</display-name>
    <listener>
       <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
       </listener-class>
@@ -8,8 +8,7 @@
    <servlet>
       <servlet-name>RestServer</servlet-name>
       <description>eXo - Platform REST Server</description>
-      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet
-      </servlet-class>
+      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
       <load-on-startup>4</load-on-startup>
    </servlet>
 
@@ -204,8 +203,7 @@
 
    <servlet-mapping>
       <servlet-name>RestServer</servlet-name>
-      <url-pattern>/org.exoplatform.ideall.IDEApplication/rest/*
-      </url-pattern>
+      <url-pattern>/org.exoplatform.ide.IDEApplication/rest/*</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>

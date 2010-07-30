@@ -101,7 +101,7 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
       }
 
       String path = selectedItem.getHref();
-      String url = applicationConfiguration.getRegistryURL() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
+      String url = applicationConfiguration.getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
