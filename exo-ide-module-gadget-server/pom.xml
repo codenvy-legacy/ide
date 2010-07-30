@@ -8,7 +8,7 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ideall</groupId>
+   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-module-gadget-server</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Module : Gadget : Server</name>
