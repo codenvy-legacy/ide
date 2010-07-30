@@ -1,7 +1,7 @@
 package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
-import org.exoplatform.ide.client.application.IDEallForm;
+import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
@@ -36,7 +36,7 @@ public class IDE extends VerticalPanel
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
-      new IDEallForm(eventBus, context);
+      new IDEForm(eventBus, context);
 
       /*
        * MODULES INITIALIZATION

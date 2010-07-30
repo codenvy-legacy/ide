@@ -108,4 +108,5 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
 
       return xml;
    }
+
 }

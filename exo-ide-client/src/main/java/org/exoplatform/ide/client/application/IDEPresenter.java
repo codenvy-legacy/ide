@@ -40,7 +40,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class IDEallPresenter implements ExceptionThrownHandler, RegisterControlHandler
+public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHandler
 {
 
    public interface Display
@@ -68,7 +68,7 @@ public class IDEallPresenter implements ExceptionThrownHandler, RegisterControlH
 
    private List<String> statusBarItems = new ArrayList<String>();
 
-   public IDEallPresenter(HandlerManager eventBus, ApplicationContext context)
+   public IDEPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;

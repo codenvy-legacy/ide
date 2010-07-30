@@ -35,16 +35,16 @@ import com.smartgwt.client.widgets.layout.Layout;
  * @version @version $Id: $
  */
 
-public class IDEallForm extends Layout implements IDEallPresenter.Display
+public class IDEForm extends Layout implements IDEPresenter.Display
 {
 
-   private IDEallPresenter presenter;
+   private IDEPresenter presenter;
 
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
-   public IDEallForm(final HandlerManager eventBus, ApplicationContext context)
+   public IDEForm(final HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
@@ -65,7 +65,7 @@ public class IDEallForm extends Layout implements IDEallPresenter.Display
          }
       });
 
-      presenter = new IDEallPresenter(eventBus, context);
+      presenter = new IDEPresenter(eventBus, context);
       presenter.bindDisplay(this);
    }
 

@@ -167,14 +167,10 @@ public class CookieManager
    public void getApplicationState(ApplicationContext context, ApplicationSettings applicationSettings)
    {
       String entryPoint = Cookies.getCookie(Cookie.ENTRY_POINT);
-      System.out.println("readed entry point: " + entryPoint);
       applicationSettings.setEntryPoint(entryPoint);
-      //context.setEntryPoint(entryPoint);
-      
 
       restoreOpenedFiles(context);
       restoreActiveFile(context);
-      //restoreLineNumbers(context);
    }
    
    private void restoreOpenedFiles(ApplicationContext context)

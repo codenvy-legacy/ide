@@ -40,7 +40,10 @@ public class ApplicationSettings
    }
    
    private HashMap<String, Store> storedIn = new HashMap<String, Store>();
-   
+
+   /*
+    * Values can be only next types: String, Integer, Boolean, Map, List
+    */
    private HashMap<String, Object> values = new HashMap<String, Object>();
    
    public void setValue(String key, Object value) {
@@ -62,7 +65,6 @@ public class ApplicationSettings
    public void setStoredIn(String key, Store store) {
       storedIn.put(key, store);
    }
-   
    
 
    private List<String> toolbarItems = new ArrayList<String>();

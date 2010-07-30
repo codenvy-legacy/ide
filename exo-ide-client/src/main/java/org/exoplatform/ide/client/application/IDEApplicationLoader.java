@@ -154,7 +154,6 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
          {
             applicationSettings = new ApplicationSettings();
             CookieManager.getInstance().getApplicationState(context, applicationSettings);
-            System.out.println("entry point from cookie: " + applicationSettings.getEntryPoint());
 
             if (applicationSettings.getEntryPoint() == null)
             {

@@ -216,9 +216,6 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
    private void swichEntryPoint()
    {
       display.closeForm();
-  
-      System.out.println("storing entry point: " + selectedEntryPoint.getHref());
-      
       CookieManager.getInstance().storeEntryPoint(selectedEntryPoint.getHref());
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
