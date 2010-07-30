@@ -77,11 +77,16 @@
          <version>${org.exoplatform.jcr.version}</version>
          <scope>test</scope>
       </dependency>
+
+<!-- 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
+         <version>${project.version}</version>
          <scope>test</scope>
       </dependency>
+       -->
+
       <dependency>
          <groupId>hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
