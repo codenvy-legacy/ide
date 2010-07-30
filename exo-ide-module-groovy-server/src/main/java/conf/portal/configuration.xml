@@ -5,7 +5,7 @@
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <component>
-    <type>org.exoplatform.ide.groovy.service.GroovyScriptServiceApplication</type>
+    <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
   </component>
 
 </configuration>
