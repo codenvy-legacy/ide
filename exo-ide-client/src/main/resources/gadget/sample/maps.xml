@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+   <ModulePrefs author="LabPixies" author_email="info@labpixies.com"
+      title="__MSG_g_title__" description="__MSG_g_description__"
+      screenshot="http://cdn.labpixies.com/campaigns/maps/images/screenshot.png"
+      thumbnail="http://cdn.labpixies.com/campaigns/maps/images/thumbnail.jpg"
+      height="440" title_url="http://www.labpixies.com">
+      <Locale messages="http://www.labpixies.com/campaigns/maps/i19/all_all.xml" />
+      <Locale lang="es"
+         messages="http://www.labpixies.com/campaigns/maps/i19/es_all.xml" />
+      <Locale lang="de"
+         messages="http://www.labpixies.com/campaigns/maps/i19/de_all.xml" />
+      <Locale lang="fr"
+         messages="http://www.labpixies.com/campaigns/maps/i19/fr_all.xml" />
+      <Locale lang="it"
+         messages="http://www.labpixies.com/campaigns/maps/i19/it_all.xml" />
+      <Locale lang="ja"
+         messages="http://www.labpixies.com/campaigns/maps/i19/ja_all.xml" />
+      <Locale lang="nl"
+         messages="http://www.labpixies.com/campaigns/maps/i19/nl_all.xml" />
+      <Locale lang="pl"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pl_all.xml" />
+      <Locale lang="pt-PT"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml" />
+      <Locale lang="pt-BR"
+         messages="http://www.labpixies.com/campaigns/maps/i19/pt_all.xml" />
+      <Locale lang="zh-CN"
+         messages="http://www.labpixies.com/campaigns/maps/i19/zh_cn_all.xml" />
+      <Require feature="dynamic-height" />
+      <Require feature="analytics" />
+      <Require feature="setprefs" />
+   </ModulePrefs>
+   <UserPref name="last_location" datatype="hidden"
+      default_value="0" />
+   <Content type="html">
+<![CDATA[
+
+<!-- 
+ Google Maps Gadget
+ Design & Code: LabPixies
+ All subsequent code and resources used are proprietary of LabPixies unless directly stated otherwise.
+ Copyright (C) 2008 LabPixies.    
+ www.labpixies.com
+ 
+ This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 2.5 License.
+ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/2.5/ or
+ send a letter to Creative Commons, 543 Howard Street, 5th Floor, San Francisco, California, 94105, USA.
+ -->
+
+ <title>Google Maps</title>
+ 
+<style type="text/css">
+* {
+    padding:0px;
+    margin:0px;
+}
+
+#menu {
+    margin-bottom:10px;
+}
+
+br.clear {
+/*    height:5px;
+    line-height:5px;*/
+    clear:both;
+}
+
+#header ,#l_header, #r_header{
+    height:8px;
+}
+
+#footer, #l_footer, #r_footer {
+    height:7px;
+}
+
+#search_outer {
+    margin-top:8px;
+}
+
+#hl_search, #hr_search {
+    height:23px;
+}
+
+#bl_search, #br_search, #b_search {
+    height:7px;
+    font-size:1px;
+}
+
+#search {
+    padding-left:10px;
+    padding-right:10px;
+}
+
+#content {
+    padding-left:8px;
+    padding-right:8px;
+}
+
+#map_canvas {
+    border:1px solid #8f8f8f;
+}
+
+#results {
+    font-family:arial;
+    font-size:11px;
+    padding-left:12px;
+    padding-top:4px;
+}
+
+.btn_left {
+
+}
+
+.btn_left, .btn_right {
+    height:23px;
+    width:12px;
+    float:left;
+}
+
+.btn_mid {
+/*    padding-top:4px;*/
+    height:21px;
+    line-height:21px;
+    padding-bottom:1px;
+
+    font-family:arial;
+    font-size:10px;
+    font-weight:bold;
+    color:#01245d;
+    float:left;
+}
+
+#tabs {
+    padding-left:5px;
+}
+
+.inactive_left {
+ 
+}
+
+.inactive_right {
+ 
+}
+
+.inactive_left, .inactive_right {
+    height:18px;
+    width:12px;
+    float:left;
+    cursor:pointer;
+}
+
+.inactive_mid {
+    float:left;
+    font-family:arial;
+    font-size:10px;
+    font-weight:bold;
+    color:#888888;
+    background:#e8e8e8;
+    padding-top:2px;
+    
+    height:16px;
+    line-height:16px;
+    cursor:pointer;
+}
+
+#business_div {
+    font-size:10px;
+}
+
+#directions_div {
+    font-size:10px;
+}
+
+.example {
+    font-family:arial;
+    font-size:10px;
+    color: #808080;
+    margin-left:2px;
+}
+
+input.searchbox {
+    border:1px solid #8f8f8f;
+    width:70% !important;
+    width:65%;
+    float:left;
+}
+
+input.searchbtn {
+    margin-left:30px;
+}
+
+
+td { /*for google directions*/
+    font-size:11px;
+}
+
+.result_item {
+    margin-top:4px;
+}
+
+.bulletin {
+    width:15px;
+    height:14px;
+    float:left;
+    font-weight:bold;
+    text-align:center;
+    margin-right:10px;
+
+    cursor:pointer;
+}
+
+.result_item {
+
+ 
+}
+
+.result_item a, .result_item a:visited {
+    color:#01245d;
+    margin-right:5px;
+}
+
+.search_left {
+    width:9px;
+    height:18px;
+    float:left;
+}
+
+.search_right {
+    width:9px;
+    height:18px;
+    float:left;
+}
+
+.search_mid {
+    font-family:arial;
+    font-size:10px;
+    font-weight:bold;
+    color:#5d5d5d;
+    float:left;
+    /*padding-top:3px;*/
+
+    height:19px;
+    line-height:19px;
+}
+
+.search_button {
+    float:left;
+    clear:right;
+    margin-left:8px;
+    cursor:pointer;
+}
+
+#results_nav {
+    font-size:10px;
+    float:right;
+    display:none;
+}
+
+#results_nav a, #results_nav a:visited {
+    color:#01245d;
+
+}
+
+</style>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAZnZdzRcDBizyBEPH4MDuLxTZqGWfQErE9pT-IucjscazSdFnjBR0pJPAuGajKG2-0RpnSxJBm6BilQ&hl=__MSG_igLocale__"
+            type="text/javascript"></script>
+<script type="text/javascript" src="http://www.google.com/uds/api?file=uds.js&v=1.0"></script>
+<!-- asah@google.com told us to do so -->
+
+<!-- PUT THIS TAG IN THE head SECTION -->
+<script type="text/javascript" src="http://partner.googleadservices.com/gampad/google_service.js">
+</script>
+<script type="text/javascript">
+  GS_googleAddAdSenseService("ca-pub-8123415297019784");
+  GS_googleEnableAllServices();
+</script>
+<script type="text/javascript">
+  GA_googleAddSlot("ca-pub-8123415297019784", "google_maps_txt");
+</script>
+<script type="text/javascript">
+  GA_googleFetchAds();
+</script>
+<!-- END OF TAG FOR head SECTION -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var _gadgetID=79;
+
+var IMAGES_BASE = 'http://cdn.labpixies.com/campaigns/maps/images/';
+var map; //map object
+var geocoder; //geocoder object
+var localsearch; //localsearch object
+var results; //results array, each item is of type {element,point,marker}
+var page; //int - current results page
+var total_pages; //int - total pages
+
+var $lp = jQuery.noConflict();
+function init() {
+//global gadget initialization
+    document.getElementById('header').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'top_border.gif')+') repeat-x';
+    document.getElementById('l_header').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'topleft.gif')+') top left no-repeat';
+    document.getElementById('r_header').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'topright.gif')+') top right no-repeat';
+    document.getElementById('left_border').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'l_border.gif')+') top left repeat-y';
+    document.getElementById('right_border').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'r_border.gif')+') top right repeat-y';
+
+    document.getElementById('footer').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'bottom_border.gif')+') repeat-x';
+    document.getElementById('r_footer').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'bottom_right_corner.gif')+') top right no-repeat';
+    document.getElementById('l_footer').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'bottom_left_corner.gif')+') top left no-repeat';
+
+
+    document.getElementById('hl_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/topleft.gif')+') top left no-repeat';
+    document.getElementById('hr_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/topright.gif')+') top right no-repeat';
+    document.getElementById('bl_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/bottomleft.gif')+') top left no-repeat';
+    document.getElementById('br_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/bottomright.gif')+') top right no-repeat';
+    document.getElementById('h_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/top.gif')+') repeat-x';
+    document.getElementById('b_search').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/bottom.gif')+') repeat-x';
+
+    document.getElementById('left_search_border').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/left.gif')+') top left repeat-y';
+    document.getElementById('right_search_border').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_frame/right.gif')+') top right repeat-y';
+
+    document.getElementById('location_form').onsubmit = locationLookup;
+    document.getElementById('business_form').onsubmit = businessLookup;
+    document.getElementById('directions_form').onsubmit = directionsLookup;
+
+    document.getElementById('location_search_left').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_left.gif')+') no-repeat';
+    document.getElementById('location_search_right').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_right.gif')+') no-repeat';
+    document.getElementById('location_search_mid').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_middle.gif')+') repeat-x';
+
+    document.getElementById('business_search_left').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_left.gif')+') no-repeat';
+    document.getElementById('business_search_right').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_right.gif')+') no-repeat';
+    document.getElementById('business_search_mid').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_middle.gif')+') repeat-x';
+
+    document.getElementById('directions_search_left').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_left.gif')+') no-repeat';
+    document.getElementById('directions_search_right').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_right.gif')+') no-repeat';
+    document.getElementById('directions_search_mid').style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'search_button_middle.gif')+') repeat-x';
+
+    tabInit();
+    init_map();
+    page = 0;
+}
+
+var g_prefs;
+
+function init_map() {
+    map = new GMap2( document.getElementById('map_canvas') );
+    g_prefs = new _IG_Prefs();
+
+    map.originalSetCenter = map.setCenter;
+    map.setCenter = function( latlng, zoom ) {
+	this.originalSetCenter( latlng, zoom );
+	g_prefs.set('last_location', latlng.y+','+latlng.x);
+    }
+    var last_location = g_prefs.getString('last_location');
+
+    if( last_location == '0' ) {
+	map.setCenter( new GLatLng(37.4419, -122.1419), 13);	
+    }
+    else {
+	var loc = last_location.split(',');
+	map.setCenter( new GLatLng( loc[0], loc[1] ), 13);
+    }
+
+    map.addControl( new GMapTypeControl() );
+    map.addControl( new GSmallMapControl() );
+    geocoder = new GClientGeocoder();
+}
+
+//the following code handles required definitions for use of lettered markers
+var baseIcon = new GIcon();
+baseIcon.shadow = "http://www.google.com/mapfiles/shadow50.png";
+baseIcon.iconSize = new GSize(20, 34);
+baseIcon.shadowSize = new GSize(37, 34);
+baseIcon.iconAnchor = new GPoint(9, 34);
+baseIcon.infoWindowAnchor = new GPoint(9, 2);
+baseIcon.infoShadowAnchor = new GPoint(18, 25);
+
+function letterMarker( point, letter ) {
+//creates a marker bearing `letter` at `point`.
+//returns the marker object
+
+    var icon = new GIcon(baseIcon);
+    icon.image = _IG_GetImageUrl( 'http://www.google.com/mapfiles/marker'+letter+'.png' ) + '&bla=.png' ;
+    
+    return new GMarker(point, icon);
+}
+
+function locationCallback( response ) {
+//called when the geocoding request is complete
+
+    var mark_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    map.clearOverlays();
+    results = [];
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('results_nav').style.display = 'none';
+
+    if( !response || response.Status.code != 200 ) {
+	document.getElementById('results').innerHTML = '<i>__MSG_location_no_results__</i>';
+	
+    }
+    else {
+	var len = ( response.Placemark.length > 5 ) ? 5 : response.Placemark.length; 
+
+	for( var i=0; i<response.Placemark.length; i++ ) {
+	    var place = response.Placemark[i];
+	    var point = new GLatLng( place.Point.coordinates[1], place.Point.coordinates[0] );
+	    var marker = new letterMarker( point, mark_letters.charAt(i) );
+	    
+	    if( i==0 ) map.setCenter( point, 13 );
+	    map.addOverlay( marker );
+	    
+	    //resultItem is a div that holds bulletin and resultLink
+	    //bulletin is the orangebox with the letter on it
+	    //resultLink is the <a> object
+	    
+	    resultItem = document.createElement('div');
+	    bulletin = document.createElement('div');
+	    bulletin.className = 'bulletin';
+	    bulletin.style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'letter_background.gif')+') no-repeat';
+	    bulletin.innerHTML = mark_letters.charAt(i);
+	    resultLink = document.createElement('a');
+	    resultLink.href = "javascript:void(0);"
+	    resultLink.innerHTML = response.Placemark[i].address;
+
+	    resultItem.appendChild(bulletin);
+	    resultItem.appendChild(resultLink);
+	    resultItem.className = 'result_item';
+	    resultItem.onclick = resultClickHandler;
+
+	    if( i >= len ) resultItem.style.display = 'none'; //only display first 5 items
+
+	    document.getElementById('results').appendChild(resultItem);
+
+	    marker.bindInfoWindowHtml('<div style="font-size:12px"><p>'+response.Placemark[i].address+'</p></div>' );
+
+	    results[i] = { element:resultItem, point:point, marker:marker }; 	//add the result to the global results array
+
+	}
+
+	if( len != response.Placemark.length ) {
+	    document.getElementById('results_nav').style.display = 'block';
+	    document.getElementById('results_clear').style.display = 'block';
+	    total_pages = Math.floor((response.Placemark.length-1) / 5 + 1);
+	}
+    }
+
+    _IG_AdjustIFrameHeight();
+}
+
+function locationLookup( ) {
+//called when the location form is submitted
+    reportInteraction("location");
+	address = document.getElementById('location_address').value;
+    if( !address ) return false;
+
+    if( geocoder ) geocoder.getLocations( address, locationCallback );
+
+    document.getElementById('directions_to').value = address; //paste the address to the directions 'to' field
+    document.getElementById('business_where').value = address; //paste the address to the business 'where' field
+
+    return false;
+}
+
+function businessCallback( ) {
+//called when the localsearch query is done
+    var mark_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    map.clearOverlays();
+    results = [];
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('results_nav').style.display = 'none';
+
+    if( localsearch.results.length == 0 ) {
+	document.getElementById('results').innerHTML = '<i>__MSG_business_no_results__</i>';
+	
+    }
+    else {
+	var len = ( localsearch.results.length > 5 ) ? 5 : localsearch.results.length; 
+
+	for( var i=0; i<localsearch.results.length; i++ ) {
+
+	    var point = new GLatLng( localsearch.results[i].lat , localsearch.results[i].lng );
+
+    	    var marker = new letterMarker( point, mark_letters.charAt(i) );
+
+	    if( i==0 ) map.setCenter( point, 13 );
+	    map.addOverlay( marker );
+	    
+	    resultItem = document.createElement('div');
+	    bulletin = document.createElement('div');
+	    bulletin.className = 'bulletin';
+	    bulletin.style.background = 'transparent url('+_IG_GetImageUrl(IMAGES_BASE + 'letter_background.gif')+') no-repeat';
+	    bulletin.innerHTML = mark_letters.charAt(i);
+	    resultLink = document.createElement('a');
+	    resultLink.href = "javascript:void(0);"
+	    resultLink.innerHTML = localsearch.results[i].titleNoFormatting;
+	    
+
+	    resultItem.appendChild(bulletin);
+	    resultItem.appendChild(resultLink);
+	    resultItem.innerHTML += localsearch.results[i].streetAddress;
+
+	    resultItem.className = 'result_item';
+	    resultItem.onclick = resultClickHandler;
+
+	    if( i >= len ) resultItem.style.display = 'none';
+
+	    document.getElementById('results').appendChild(resultItem);
+
+	    lresult = localsearch.results[i];
+	    var phone = '';
+
+	    if( lresult.phoneNumbers ) {
+		for( var k=0; k<lresult.phoneNumbers.length; k++ ) { //try to find the phone number marked as 'main'
+		    if( lresult.phoneNumbers[k].type == 'main' ) {
+			phone = lresult.phoneNumbers[k].number;
+		    }
+		}
+		if( !phone ) phone = lresult.phoneNumbers[0].number; //if not found, use the first one
+	    }
+	    //create the popup balloon dom element
+	    balloon = document.createElement('div');
+	    balloon.style.fontSize = '12px';
+
+	    titleLink = document.createElement('a');
+	    titleLink.innerHTML = lresult.titleNoFormatting;
+	    titleLink.href = lresult.url;
+	    titleLink.target = '_top';
+	    
+	    p = document.createElement('p'); //p is a temporary holder for a <p> element, it is reset every line
+	    p.appendChild(titleLink);
+
+	    balloon.appendChild(p);
+
+	    p = document.createElement('p');
+	    p.innerHTML = lresult.streetAddress;
+	    
+	    balloon.appendChild(p);
+	    
+	    p = document.createElement('p');
+	    p.innerHTML = lresult.city+', '+lresult.region;
+
+	    balloon.appendChild(p);
+
+	    p = document.createElement('p');
+	    p.innerHTML = phone;
+	    
+	    balloon.appendChild(p);
+
+	    //create links for the directions 'to','from'
+	    directions_from_a = document.createElement('a');
+	    directions_from_a.innerHTML = '__MSG_from_here__';
+	    directions_from_a.href = '#';
+	    directions_from_a.onclick = 
+		function() {
+		    this.onclick_inner( this.onclick_inner );
+		    return false;
+		};
+	    directions_from_a.onclick_inner = function ( self ) {
+		simulateTab(2);
+		document.getElementById('directions_from').value = self.address;
+		document.getElementById('directions_to').value = '';
+	    }
+	    directions_from_a.onclick_inner.address = lresult.streetAddress + ', ' + lresult.city;
+
+	    directions_to_a = document.createElement('a');
+	    directions_to_a.innerHTML = '__MSG_to_here__';
+	    directions_to_a.href = '#';
+	    directions_to_a.onclick = 
+		function() {
+		    this.onclick_inner( this.onclick_inner );
+		    return false;
+		};
+	    directions_to_a.onclick_inner = function ( self ) {
+		simulateTab(2);
+		document.getElementById('directions_to').value = self.address;
+		document.getElementById('directions_from').value = '';
+	    }
+	    directions_to_a.onclick_inner.address = lresult.streetAddress + ', ' + lresult.city;
+
+	    p = document.createElement('p');
+	    p.innerHTML = '__MSG_get_directions__: ';
+	    p.appendChild(directions_from_a);
+	    p.appendChild(document.createTextNode(' - '));
+	    p.appendChild(directions_to_a);	    
+
+	    balloon.appendChild(p);
+
+	    marker.bindInfoWindowHtml( balloon );
+
+	    results[i] = { element:resultItem, point:point, marker:marker };
+	}
+
+	if( len != localsearch.results.length ) {
+	    document.getElementById('results_nav').style.display = 'block';
+	    document.getElementById('results_clear').style.display = 'block';
+	    total_pages = Math.floor((localsearch.results.length-1) / 5 + 1);
+	}
+    }
+
+    _IG_AdjustIFrameHeight();
+}
+
+function businessLookup ( ) {
+//called when the business form is submitted
+    reportInteraction("business");
+	query = document.getElementById('business_what').value+' '+document.getElementById('business_where').value;
+    if( !query ) return false;
+
+    if( !localsearch ) {
+	localsearch = new GlocalSearch();
+    }
+    localsearch.setResultSetSize( GSearch.LARGE_RESULTSET );
+    localsearch.setCenterPoint(map);
+    localsearch.setSearchCompleteCallback(null, businessCallback );
+    localsearch.execute( query );
+
+    return false;
+}
+
+function resultClickHandler( ) {
+//event handler for result clicks
+    for( var i=0; i< results.length; i++ ) {
+	if( results[i].element == this ) {
+	    map.setCenter( results[i].point );
+	    return;
+	}
+    }
+
+}
+
+var geocoded_from;
+var geocoded_to;
+var other_done = false; //this flag is set when the first callback is done
+
+function directionsFromCallback( response ) {
+    if( typeof(response.Placemark) != 'object' ) {
+	document.getElementById('results').innerHTML = '<i>__MSG_directions_no_results__</i>';	
+	_IG_AdjustIFrameHeight();
+	return;
+    }
+
+    geocoded_from = response.Placemark[0].address;
+    if( ! other_done ) {
+	other_done = true;
+    }
+    else {
+	getDirections();
+    }
+}
+
+function directionsToCallback( response ) {
+    if( typeof(response.Placemark) != 'object' ) {
+	document.getElementById('results').innerHTML = '<i>__MSG_directions_no_results__</i>';	
+	_IG_AdjustIFrameHeight();
+	return;
+    }
+
+    geocoded_to = response.Placemark[0].address;
+    if( ! other_done ) {
+	other_done = true;
+    }
+    else {
+	getDirections();
+    }
+}
+
+function getDirections( ) {
+//this function is called when both 'to' and 'from' gecoding requests are complete
+    map.clearOverlays();
+    document.getElementById('results').innerHTML = '';
+
+    document.getElementById('results_nav').style.display = 'none';
+
+    directions_holder = document.createElement('div');
+    document.getElementById('results').appendChild(directions_holder);
+
+    directions = new GDirections( map, directions_holder );
+    directions.load( geocoded_from + ' to ' + geocoded_to );
+    
+    GEvent.addListener(directions, "addoverlay",
+		      function() { 
+			  _IG_AdjustIFrameHeight();
+		      }
+		      );
+    GEvent.addListener(directions, "load",
+		      function() {
+			  _IG_AdjustIFrameHeight();
+		      }
+		      );
+    GEvent.addListener(directions, "error",
+		       function() {
+			   document.getElementById('results').innerHTML = '<i>__MSG_directions_no_results__</i>';
+			   _IG_AdjustIFrameHeight();
+		       });
+}
+
+function directionsLookup( ) {
+	reportInteraction("direction");
+    other_done = false;
+    from = document.getElementById('directions_from').value;
+    to = document.getElementById('directions_to').value;
+    
+    if( !from || !to ) {
+	return false;
+    }
+
+    geocoder.getLocations( from , directionsFromCallback );
+    geocoder.getLocations( to, directionsToCallback );
+
+
+    return false;
+}
+
+function nextPage() {
+    page = page + 1;
+    
+    for( var i = (page - 1) * 5; i < page * 5; i++ ) {
+	results[i].element.style.display = 'none';
+    }
+    for( var i = page * 5; i < (page + 1) * 5 && i < results.length; i++ ) {
+	results[i].element.style.display = 'block';
+    }
+    
+    if( page == total_pages - 1) {
+	document.getElementById('more_link').style.display = 'none';
+	document.getElementById('more_dummy').style.display = 'inline';
+    }
+
+    document.getElementById('back_link').style.display = 'inline';
+    document.getElementById('back_dummy').style.display = 'none';
+
+    _IG_AdjustIFrameHeight();
+}
+
+function prevPage() {
+        
+    for( var i = (page - 1) * 5; i < page * 5; i++ ) {
+	results[i].element.style.display = 'block';
+    }
+    for( var i = page * 5; i < (page + 1) * 5 && i < results.length; i++ ) {
+	results[i].element.style.display = 'none';
+    }
+
+    page = page - 1;
+
+    if( page == 0 ) {
+	document.getElementById('back_link').style.display = 'none';
+	document.getElementById('back_dummy').style.display = 'inline';
+    }
+
+    document.getElementById('more_link').style.display = 'inline';
+    document.getElementById('more_dummy').style.display = 'none';
+
+    _IG_AdjustIFrameHeight();
+}
+
+//following functions are event handlers for the tabs
+function onLocation() {
+    document.getElementById('directions_div').style.display = 'none';
+    document.getElementById('location_div').style.display = 'block';
+    document.getElementById('business_div').style.display = 'none';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('results_nav').style.display = 'none';
+    document.getElementById('results_clear').style.display = 'none';
+
+    _IG_AdjustIFrameHeight();
+}
+
+function onBusiness() {
+    document.getElementById('directions_div').style.display = 'none';
+    document.getElementById('business_div').style.display = 'block';
+    document.getElementById('location_div').style.display = 'none';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('results_nav').style.display = 'none';
+    document.getElementById('results_clear').style.display = 'none';
+
+    _IG_AdjustIFrameHeight();
+}
+
+function onDirections() {
+    document.getElementById('location_div').style.display = 'none';
+    document.getElementById('business_div').style.display = 'none';
+    document.getElementById('directions_div').style.display = 'block';
+
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('results_nav').style.display = 'none';
+    document.getElementById('results_clear').style.display = 'none';
+
+    _IG_AdjustIFrameHeight();
+}
+
+//the following array configures the tabs. each item is of type {title: str, action: func }.
+//title is the text displayed
+//action is the click event handler
+var tab_config = [ {title:'__MSG_location__', action:onLocation}, {title:'__MSG_business__', action:onBusiness}, {title:'__MSG_directions__', action:onDirections} ];
+
+var tab_elements = []; //contains objects of type {left:domEle
+var tab_active = 0; //id of the active tab in tab_elements array
+
+//urls for cached images
+var tab_img_btn_left;
+var tab_img_btn_right;
+var tab_img_btn_mid;
+var tab_img_inactive_left;
+var tab_img_inactive_right;
+
+function simulateTab( id ) { //called to simulate a tab being selected by the user
+    tab_elements[id].left.onclick();
+}
+
+function tabHandler() {
+    var id;
+    for(var i=0; i < tab_elements.length; i++) {
+	if( this == tab_elements[i].left || this == tab_elements[i].mid || this == tab_elements[i].right ) {
+	    id = i;
+	    break;
+	}
+    }
+
+    tab_elements[tab_active].left.className = 'inactive_left';
+    tab_elements[tab_active].left.style.background = 'transparent url('+tab_img_inactive_left+') top left no-repeat';
+    tab_elements[tab_active].right.className = 'inactive_right';
+    tab_elements[tab_active].right.style.background = 'transparent url('+tab_img_inactive_right+') top right no-repeat';
+    tab_elements[tab_active].mid.className = 'inactive_mid';
+    tab_elements[tab_active].mid.style.background = '#e8e8e8';
+
+    tab_active = id;
+    tab_elements[tab_active].left.className = 'btn_left';
+    tab_elements[tab_active].mid.className = 'btn_mid';
+    tab_elements[tab_active].right.className = 'btn_right';
+    tab_elements[tab_active].left.style.background = 'transparent url('+tab_img_btn_left+') top left no-repeat';
+    tab_elements[tab_active].right.style.background = 'transparent url('+tab_img_btn_right+') top right no-repeat';
+    tab_elements[tab_active].mid.style.background = 'transparent url('+tab_img_btn_mid+') repeat-x';
+    
+    tab_config[tab_active].action();
+}
+
+function tabInit() {
+    tab_img_btn_left = _IG_GetImageUrl(IMAGES_BASE + 'btn_left.gif');
+    tab_img_btn_right = _IG_GetImageUrl(IMAGES_BASE + 'btn_right.gif');
+    tab_img_btn_mid = _IG_GetImageUrl(IMAGES_BASE + 'btn_bg.gif');
+    tab_img_inactive_left = _IG_GetImageUrl(IMAGES_BASE + 'inactive_left_3.gif');
+    tab_img_inactive_right = _IG_GetImageUrl(IMAGES_BASE + 'inactive_right_3.gif');
+
+    var tabs_target = document.getElementById('tabs');
+
+    for(var i=0; i < tab_config.length; i++ ) {
+	tab_elements[i] = {};
+	tab_elements[i].left = document.createElement('div');
+	tab_elements[i].left.className = 'inactive_left';
+	tab_elements[i].left.style.background = 'transparent url('+tab_img_inactive_left+') top left no-repeat';
+	tab_elements[i].left.onclick = tabHandler;
+	tab_elements[i].right = document.createElement('div');
+	tab_elements[i].right.className = 'inactive_right';
+	tab_elements[i].right.style.background = 'transparent url('+tab_img_inactive_right+') top right no-repeat';
+	tab_elements[i].right.onclick = tabHandler;
+	tab_elements[i].mid = document.createElement('span');
+	tab_elements[i].mid.className = 'inactive_mid';
+	tab_elements[i].mid.onclick = tabHandler;
+	tab_elements[i].mid.innerHTML = tab_config[i].title;
+
+	tabs_target.appendChild(tab_elements[i].left);
+	tabs_target.appendChild(tab_elements[i].mid);
+	tabs_target.appendChild(tab_elements[i].right);
+    }
+
+    tab_elements[0].left.className = 'btn_left';
+    tab_elements[0].left.style.background = 'transparent url('+tab_img_btn_left+') top left no-repeat';
+    tab_elements[0].right.className = 'btn_right';
+    tab_elements[0].right.style.background = 'transparent url('+tab_img_btn_right+') top right no-repeat';
+    tab_elements[0].mid.className = 'btn_mid';
+    tab_elements[0].mid.style.background = 'transparent url('+tab_img_btn_mid+') repeat-x';
+    tab_config[0].action();
+}
+
+_IG_RegisterOnloadHandler(init);
+
+</script>
+<div id="menu"></div>
+<div id="main">
+<div id="header">
+	<div id="l_header">
+		<div id="r_header">
+			<div></div> <!-- this fixes some odd IE issue -->
+		</div>
+	</div>
+</div>
+<div id="left_border">
+<div id="right_border">
+<div id="content">
+	<div id="map_canvas" style="height:300px">
+
+		<div></div>
+	</div>
+	<div id="search_outer">
+		<div id="h_search"><div id="hl_search"><div id="hr_search">
+			<div id="tabs"></div>
+
+		</div></div></div>
+		<div id="left_search_border">
+		<div id="right_search_border">
+		<div id="search">
+			<div id="location_div">
+				<form id="location_form" action="#">
+				<div class="example">__MSG_location_example__</div>
+
+					<input class="searchbox" type="text" id="location_address" />
+
+				<div class="search_button" onclick="locationLookup()">
+					<div id="location_search_left" class="search_left"></div>
+					<span id="location_search_mid" class="search_mid">__MSG_search__</span>
+					<div id="location_search_right" class="search_right"></div>
+				</div>
+				<br class="clear" />
+				<input type="submit" style="display:none;line-height:0px;width:0px;height:0px;border:none"/> 
+				</form>
+			</div>	
+			<div id="business_div" style="display:none">
+				<form id="business_form" action="#">
+				<div style="margin-bottom:1px">__MSG_what__<span class="example">__MSG_what_example__</span></div>
+				<input style="margin-bottom:4px" class="searchbox" type="text" id="business_what" />
+				<div style="margin-bottom:1px; clear:left;">__MSG_where__<span class="example">__MSG_where_example__</span></div>
+				<input class="searchbox" type="text" id="business_where" />
+
+				<div class="search_button" onclick="businessLookup()">
+					<div id="business_search_left" class="search_left"></div>
+					<span id="business_search_mid" class="search_mid">__MSG_search__</span>
+					<div id="business_search_right" class="search_right"></div>
+				</div>
+				<br class="clear" />
+				 <input type="submit" style="display:none;line-height:0px;width:0px;height:0px;border:none"/> 
+				</form>
+			</div>
+			<div id="directions_div" style="display:none">
+				<form id="directions_form" action="#">
+					<div>
+						<div style="margin-bottom:1px;" >__MSG_start__<span class="example">__MSG_directions_start_example__</span></div>
+						<input style="margin-bottom:4px;" class="searchbox" type="text" id="directions_from" />
+					</div>
+					<div>
+						<div style="margin-bottom:1px; clear:left">__MSG_end__<span class="example">__MSG_directions_end_example__</span></div>
+						<input class="searchbox" type="text" id="directions_to" />				
+					</div>
+					<div class="search_button" onclick="directionsLookup()">
+						<div id="directions_search_left" class="search_left"></div>
+						<span id="directions_search_mid" class="search_mid">__MSG_search__</span>
+						<div id="directions_search_right" class="search_right"></div>
+					</div>
+					<br class="clear" />
+				 <input type="submit" style="display:none;line-height:0px;width:0px;height:0px;border:none"/> 
+				</form>					
+			</div>
+		</div>
+		</div>
+		</div>
+		<div id="b_search"><div id="bl_search"><div id="br_search"></div></div></div>
+	</div>
+	<div id="results">
+
+	</div>
+	<div id="results_nav">
+		<a id="back_link" href="#" onclick="prevPage(); return false;" style="display:none">&lt; Back</a>
+		<span id="back_dummy">&lt; Back</span>
+		<span> | </span>
+		<a id="more_link" href="#" onclick="nextPage(); return false;">More &gt;</a>
+		<span id="more_dummy" style="display:none;">More &gt;</span>
+
+	</div>
+	<br id="results_clear" class="clear" style="display:none;" />
+</div>
+</div>
+</div>
+<div id="footer">
+	<div id="l_footer"><div id="r_footer"><div></div></div></div>
+</div>
+</div>
+
+
+<div style="margin-top:5px; text-align:center;" align="center">
+	<!-- PUT THIS TAG IN DESIRED LOCATION OF SLOT google_maps_txt -->
+	<script type="text/javascript">
+	  GA_googleFillSlot("google_maps_txt");
+	</script>
+	<!-- END OF TAG FOR SLOT google_maps_txt -->
+</div>
+
+<!-- LP footer -->
+<div>
+	<script type="text/javascript">
+    var mMENU = _IG_GetCachedUrl("http://cdn.labpixies.com/infra/js/lp_footer.js");
+    document.write('<scr'+'ipt type="text/javascript" src="'+mMENU+'"></scr'+'ipt>');
+  </script>
+</div>
+<iframe width="1" height="1" style="width:1px; height:1px; overflow:hidden; position:absolute; visibility:hidden;" src="http://static.labpixies.com/campaigns/maps/analytics.html"></iframe>
+
+
+<script type="text/javascript">
+
+	var pageTracker = _gat._getTracker("UA-345375-1");
+	pageTracker._initData();		
+			
+	function reportInteraction(tp) {
+		pageTracker._trackEvent("maps","Search",tp);
+	}
+
+	_IG_Analytics("UA-345375-1", "/maps");
+</script>
+
+]]>
+   </Content>
+</Module>

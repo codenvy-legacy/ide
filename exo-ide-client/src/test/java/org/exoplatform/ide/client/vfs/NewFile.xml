@@ -1,0 +1,285 @@
+<?xml version="1.0" ?>
+<D:multistatus xmlns:D="DAV:"
+   xmlns:b="urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/">
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:displayname></D:displayname>
+            <D:resourcetype>
+               <D:collection />
+            </D:resourcetype>
+            <jcr:mixinTypes xmlns:jcr="http://www.jcp.org/jcr/1.0">exo:owneable
+            </jcr:mixinTypes>
+            <exo:permissions xmlns:exo="http://www.exoplatform.com/jcr/exo/1.0">any read
+            </exo:permissions>
+            <exo:owner xmlns:exo="http://www.exoplatform.com/jcr/exo/1.0">__system</exo:owner>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/gadget1.xml
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <jcr:isCheckedOut xmlns:jcr="http://www.jcp.org/jcr/1.0">false
+            </jcr:isCheckedOut>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:displayname>gadget1.xml</D:displayname>
+            <D:getcontentlength>210</D:getcontentlength>
+            <D:resourcetype />
+            <D:checked-in />
+            <D:getlastmodified b:dt="dateTime.rfc1123">Thu, 18 Mar 2010
+               21:30:12 GMT</D:getlastmodified>
+            <D:getcontenttype>application/x-google-gadget
+            </D:getcontenttype>
+            <D:creationdate b:dt="dateTime.tz">2010-03-17T15:12:04Z
+            </D:creationdate>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">exo:googleGadget
+            </jcr:nodeType>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Untitled
+         file.txt</D:href>
+      <D:propstat>
+         <D:prop>
+            <D:displayname>Untitled file.txt</D:displayname>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Wed, 17 Mar 2010
+               15:19:10 GMT</D:getlastmodified>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:resource
+            </jcr:nodeType>
+            <D:getcontentlength>0</D:getcontentlength>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:getcontenttype>text/plain</D:getcontenttype>
+            <D:resourcetype />
+            <D:creationdate b:dt="dateTime.tz">2010-03-17T15:19:10Z
+            </D:creationdate>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Untitled
+         file 1.groovy</D:href>
+      <D:propstat>
+         <D:prop>
+            <jcr:isCheckedOut xmlns:jcr="http://www.jcp.org/jcr/1.0">false
+            </jcr:isCheckedOut>
+            <D:resourcetype />
+            <D:getcontenttype>script/groovy</D:getcontenttype>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <exo:autoload xmlns:exo="http://www.exoplatform.com/jcr/exo/1.0">false</exo:autoload>
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:displayname>Untitled file 1.groovy</D:displayname>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Tue, 23 Mar 2010
+               22:12:20 GMT</D:getlastmodified>
+            <D:creationdate b:dt="dateTime.tz">2010-03-17T15:57:17Z
+            </D:creationdate>
+            <D:getcontentlength>506</D:getcontentlength>
+            <D:checked-in />
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">exo:groovyResourceContainer
+            </jcr:nodeType>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Untitled
+         file.html</D:href>
+      <D:propstat>
+         <D:prop>
+            <jcr:isCheckedOut xmlns:jcr="http://www.jcp.org/jcr/1.0">false
+            </jcr:isCheckedOut>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:getcontentlength>738</D:getcontentlength>
+            <D:resourcetype />
+            <D:checked-in />
+            <D:displayname>Untitled file.html</D:displayname>
+            <D:getcontenttype>text/html</D:getcontenttype>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Tue, 23 Mar 2010
+               22:08:47 GMT</D:getlastmodified>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:resource
+            </jcr:nodeType>
+            <D:creationdate b:dt="dateTime.tz">2010-03-17T16:16:43Z
+            </D:creationdate>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/test/
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:displayname>test</D:displayname>
+            <D:creationdate b:dt="dateTime.tz">2010-03-17T19:25:01Z
+            </D:creationdate>
+            <D:resourcetype>
+               <D:collection />
+            </D:resourcetype>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Vetal/
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:creationdate b:dt="dateTime.tz">2010-03-18T16:09:11Z
+            </D:creationdate>
+            <D:displayname>Vetal</D:displayname>
+            <D:resourcetype>
+               <D:collection />
+            </D:resourcetype>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/ndp2/
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:resourcetype>
+               <D:collection />
+            </D:resourcetype>
+            <D:creationdate b:dt="dateTime.tz">2010-03-18T18:32:14Z
+            </D:creationdate>
+            <D:displayname>ndp2</D:displayname>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Untitled
+         file.js</D:href>
+      <D:propstat>
+         <D:prop>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Fri, 19 Mar 2010
+               07:36:40 GMT</D:getlastmodified>
+            <D:getcontenttype>application/javascript
+				</D:getcontenttype>
+            <D:creationdate b:dt="dateTime.tz">2010-03-19T07:36:40Z
+            </D:creationdate>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:resource
+            </jcr:nodeType>
+            <D:getcontentlength>9</D:getcontentlength>
+            <D:resourcetype />
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:displayname>Untitled file.js</D:displayname>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/Untitled
+         file.xml</D:href>
+      <D:propstat>
+         <D:prop>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:resourcetype />
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+            <D:getcontenttype>application/x-google-gadget
+            </D:getcontenttype>
+            <D:displayname>Untitled file.xml</D:displayname>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Fri, 19 Mar 2010
+               18:42:38 GMT</D:getlastmodified>
+            <D:checked-in />
+            <D:creationdate b:dt="dateTime.tz">2010-03-19T18:40:24Z
+            </D:creationdate>
+            <jcr:isCheckedOut xmlns:jcr="http://www.jcp.org/jcr/1.0">false
+            </jcr:isCheckedOut>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">exo:googleGadget
+            </jcr:nodeType>
+            <D:getcontentlength>201</D:getcontentlength>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/my.xml
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:displayname>my.xml</D:displayname>
+            <D:resourcetype />
+            <D:getcontenttype>text/xml</D:getcontenttype>
+            <D:creationdate b:dt="dateTime.tz">2010-03-23T22:15:50Z
+            </D:creationdate>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Tue, 23 Mar 2010
+               22:15:50 GMT</D:getlastmodified>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <D:getcontentlength>39</D:getcontentlength>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:resource
+            </jcr:nodeType>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+   <D:response>
+      <D:href>
+         http://gwt.demo.exoplatform.org/rest/private/jcr/repository/dev-monit/RHDSetup.log
+      </D:href>
+      <D:propstat>
+         <D:prop>
+            <D:creationdate b:dt="dateTime.tz">2010-03-24T10:04:37Z
+            </D:creationdate>
+            <jcr:nodeType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:resource
+            </jcr:nodeType>
+            <D:getcontenttype>application/x-javascript
+            </D:getcontenttype>
+            <D:resourcetype />
+            <D:displayname>RHDSetup.log</D:displayname>
+            <D:getlastmodified b:dt="dateTime.rfc1123">Wed, 24 Mar 2010
+               10:04:37 GMT</D:getlastmodified>
+            <D:getcontentlength>513</D:getcontentlength>
+            <jcr:primaryType xmlns:jcr="http://www.jcp.org/jcr/1.0">nt:file
+            </jcr:primaryType>
+            <jcr:content xmlns:jcr="http://www.jcp.org/jcr/1.0">
+               <jcr:encoding xmlns:jcr="http://www.jcp.org/jcr/1.0">UTF-8</jcr:encoding>
+            </jcr:content>
+         </D:prop>
+         <D:status>HTTP/1.1 200 OK</D:status>
+      </D:propstat>
+   </D:response>
+</D:multistatus>

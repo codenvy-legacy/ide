@@ -1,0 +1,4 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+java -cp "$APPDIR/src/main/java:$APPDIR/src/main/resources:$APPDIR/bin:/home/vetal/eXo/gwt/gwt-linux-1.7.0/gwt-user.jar:/home/vetal/eXo/gwt/gwt-linux-1.7.0/gwt-dev-linux.jar" com.google.gwt.i18n.tools.I18NSync -out $APPDIR/src/main/java org.exoplatform.gadgets.devtool.client.BuildNumber -createMessages ;
+

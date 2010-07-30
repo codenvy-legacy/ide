@@ -1,0 +1,264 @@
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+   xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+   <!-- metadata nodetypes -->
+   <nodeType name="exo:metadata" isMixin="true"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <propertyDefinitions>
+         <propertyDefinition name="exo:internalUse"
+            requiredType="Boolean" autoCreated="true" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+            <defaultValues>
+               <defaultValue>false</defaultValue>
+            </defaultValues>
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <!-- Dublin Core Metadata Elemet Set, Version 1.1  -->
+   <nodeType name="dc:elementSet" isMixin="true"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>exo:metadata</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="dc:title"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:creator"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:subject"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:description"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:publisher"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:contributor"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:date"
+            requiredType="Date" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:resourceType"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:format"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:identifier"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:source"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:language"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:relation"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:coverage"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="dc:rights"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="true">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <!-- audit nodetypes -->
+
+   <nodeType name="exo:auditable" isMixin="true"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>mix:referenceable</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exo:auditHistory"
+            requiredType="String" autoCreated="false" mandatory="true"
+            onParentVersion="COPY" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <nodeType name="exo:auditRecord" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exo:user"
+            requiredType="String" autoCreated="true" mandatory="true"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:created"
+            requiredType="Date" autoCreated="true" mandatory="true"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:propertyName"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:eventType"
+            requiredType="Long" autoCreated="true" mandatory="true"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:auditVersion"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:auditVersionName"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <nodeType name="exo:auditHistory" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:base</supertype>
+         <supertype>mix:referenceable</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exo:targetNode"
+            requiredType="Reference" autoCreated="true" mandatory="true"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exo:lastRecord"
+            requiredType="String" autoCreated="true" mandatory="true"
+            onParentVersion="IGNORE" protected="true" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+      <childNodeDefinitions>
+         <childNodeDefinition name="*"
+            defaultPrimaryType="exo:auditRecord" autoCreated="false"
+            mandatory="false" onParentVersion="IGNORE" protected="true"
+            sameNameSiblings="false">
+            <requiredPrimaryTypes>
+               <requiredPrimaryType>exo:auditRecord</requiredPrimaryType>
+            </requiredPrimaryTypes>
+         </childNodeDefinition>
+      </childNodeDefinitions>
+   </nodeType>
+
+   <nodeType name="exo:auditStorage" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:base</supertype>
+      </supertypes>
+      <childNodeDefinitions>
+         <childNodeDefinition name="*"
+            defaultPrimaryType="exo:auditHistory" autoCreated="false"
+            mandatory="false" onParentVersion="VERSION" protected="false"
+            sameNameSiblings="false">
+            <requiredPrimaryTypes>
+               <requiredPrimaryType>exo:auditHistory</requiredPrimaryType>
+            </requiredPrimaryTypes>
+         </childNodeDefinition>
+      </childNodeDefinitions>
+   </nodeType>
+
+   <nodeType name="nt:resource" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="jcr:data">
+      <supertypes>
+         <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="jcr:filename"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="jcr:encoding"
+            requiredType="String" autoCreated="false" mandatory="false"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="jcr:mimeType"
+            requiredType="String" autoCreated="false" mandatory="true"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="jcr:data"
+            requiredType="Binary" autoCreated="false" mandatory="true"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="jcr:lastModified"
+            requiredType="Date" autoCreated="false" mandatory="true"
+            onParentVersion="IGNORE" protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <nodeType name="exo:groovyResourceContainer" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:resource</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exo:autoload"
+            requiredType="Boolean" autoCreated="true" mandatory="true"
+            onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints />
+            <defaultValues>
+               <defaultValue>false</defaultValue>
+            </defaultValues>
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
+
+   <nodeType name="exo:googleGadget" isMixin="false"
+      hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:resource</supertype>
+      </supertypes>
+   </nodeType>
+
+</nodeTypes>

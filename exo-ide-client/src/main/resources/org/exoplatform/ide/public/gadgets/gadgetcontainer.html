@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+  <link href="gadgets.css" type="text/css" rel="stylesheet">
+  <script src="rpc.js" type="text/javascript"></script>
+  <!-- script src="/gadgets/js/rpc.js" type="text/javascript"></script--> 
+  <script src="cookies.js" type="text/javascript"></script>
+  <script src="util.js" type="text/javascript"></script>
+  <script src="gadgets.js" type="text/javascript"></script>
+  <script src="cookiebaseduserprefstore.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+   
+  function render(gadgetID) {
+	  var gadget_ids = new Array();
+	  gadget_ids[0]=gadgetID;
+	  gadgets.container.layoutManager.setGadgetChromeIds(gadget_ids);
+	  gadgets.container.renderGadgets();
+	};
+
+	
+
+	
+</script>
+
+</head>
+<body onload="render('preview-gadget');">
+ 
+
+<div id="preview-gadget" class="gadgets-gadget-chrome" name="gadgets"> 
+<script type="text/javascript">
+  var val = window.location.href.split("#");
+  var decodeVal = decodeURIComponent(val[1]);
+
+  var m = eval('(' + decodeVal + ')');
+  
+  
+  gadgets.container.setView(m.view);
+  var st = encodeURIComponent(m.secureToken);
+  var enurl = encodeURI(m.specUrl);
+  var gadget = gadgets.container.createGadget({specUrl:enurl ,height: m.height,width: m.width, secureToken: st, view:m.view});
+	gadget.setServerBase(m.server);
+	gadgets.container.addGadget(gadget);
+</script>
+</div>
+</body>
+</html>
