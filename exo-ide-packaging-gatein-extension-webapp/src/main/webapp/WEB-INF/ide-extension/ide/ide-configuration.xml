@@ -41,11 +41,11 @@
   </component>
   
   <component>
-    <type>org.exoplatform.ideall.conversationstate.RestConversationState</type>
+    <type>org.exoplatform.ide.conversationstate.RestConversationState</type>
   </component>
   
   <component>
-    <type>org.exoplatform.ideall.service.gatein.RestGadgetRegistryService</type>
+    <type>org.exoplatform.ide.service.gatein.RestGadgetRegistryService</type>
   </component>
 
 	
