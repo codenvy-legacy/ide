@@ -43,7 +43,7 @@
    <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
 
    <!-- Specify the app entry point class. -->
-   <entry-point class='org.exoplatform.ideall.client.IDEApplication' />
+   <entry-point class='org.exoplatform.ide.client.IDEApplication' />
    <source path="client" excludes="IDEGadget.java" />
 
    <!-- Load CodeMirror editor files. -->
