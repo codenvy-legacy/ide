@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.operation.folder;
+package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ideall.BaseTest;
+import org.exoplatform.ide.BaseTest;
 import org.junit.Test;
 
 /**
@@ -246,28 +246,28 @@ public class FolderOperationsTest extends BaseTest
       selenium
          .type(
             "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
-            "Тестовая папка");
+            "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
       assertEquals(
-         "Тестовая папка",
+         "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ",
          selenium
             .getValue("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element"));
       selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
       Thread.sleep(1000);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
       assertTrue(selenium
-         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовая папка]/col[fieldName=nodeTitle||0]"));
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ]/col[fieldName=nodeTitle||0]"));
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
       selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      assertTrue(selenium.isTextPresent("exact:Do you want to delete Тестовая папка ?"));
+      assertTrue(selenium.isTextPresent("exact:Do you want to delete пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ?"));
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(1000);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertFalse(selenium
-         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Текстовая папка]/col[fieldName=nodeTitle||0]"));
+         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ]/col[fieldName=nodeTitle||0]"));
    }
 
    @Test
