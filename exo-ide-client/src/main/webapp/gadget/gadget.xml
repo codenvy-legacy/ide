@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <gadgets>
-   <gadget name="eXoIDE">
+   <gadget name="IDE">
       <path>/org.exoplatform.ide.IDEGadget/org.exoplatform.ide.client.IDEGadget.gadget.xml
       </path>
    </gadget>
