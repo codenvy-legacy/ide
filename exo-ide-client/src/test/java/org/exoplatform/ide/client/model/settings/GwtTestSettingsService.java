@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.settings;
+package org.exoplatform.ide.client.model.settings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +22,12 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationContextReceivedHandler;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.event.ApplicationContextReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationContextReceivedHandler;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Random;

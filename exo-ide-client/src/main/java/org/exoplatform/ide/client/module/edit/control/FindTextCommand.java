@@ -16,21 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.edit.control;
+package org.exoplatform.ide.client.module.edit.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
-import org.exoplatform.ideall.client.framework.form.FormClosedHandler;
-import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ideall.client.framework.form.FormOpenedHandler;
-import org.exoplatform.ideall.client.module.edit.event.FindTextEvent;
-import org.exoplatform.ideall.client.search.Search;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.form.FormClosedEvent;
+import org.exoplatform.ide.client.framework.form.FormClosedHandler;
+import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
+import org.exoplatform.ide.client.module.edit.event.FindTextEvent;
+import org.exoplatform.ide.client.search.Search;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -63,7 +63,7 @@ public class FindTextCommand extends IDEControl implements EditorActiveFileChang
    }
 
    /**
-    * @see org.exoplatform.ideall.client.application.component.IDECommand#onRegisterHandlers()
+    * @see org.exoplatform.ide.client.application.component.IDECommand#onRegisterHandlers()
     */
    @Override
    protected void onRegisterHandlers()
@@ -74,7 +74,7 @@ public class FindTextCommand extends IDEControl implements EditorActiveFileChang
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

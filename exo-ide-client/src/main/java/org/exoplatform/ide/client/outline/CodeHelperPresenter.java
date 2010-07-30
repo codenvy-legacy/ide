@@ -16,14 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.outline;
+package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.command;
+package org.exoplatform.ide.client.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,25 +25,25 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.component.AskForValueDialog;
-import org.exoplatform.ideall.client.component.ValueCallback;
-import org.exoplatform.ideall.client.event.file.FileSavedEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.component.AskForValueDialog;
+import org.exoplatform.ide.client.component.ValueCallback;
+import org.exoplatform.ide.client.event.file.FileSavedEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -83,7 +83,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     * Add handlers
     * Open Save As Dialog
     * 
-    * @see org.exoplatform.ideall.client.module.navigation.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent)
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {

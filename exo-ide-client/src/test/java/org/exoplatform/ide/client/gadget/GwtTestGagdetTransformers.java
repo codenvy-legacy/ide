@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.gadget;
+package org.exoplatform.ide.client.gadget;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.TestResponse;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ideall.client.module.gadget.service.TokenRequest;
-import org.exoplatform.ideall.client.module.gadget.service.TokenResponse;
-import org.exoplatform.ideall.client.module.gadget.service.marshal.GadgetMetadataUnmarshaler;
-import org.exoplatform.ideall.client.module.gadget.service.marshal.TokenRequestMarshaler;
-import org.exoplatform.ideall.client.module.gadget.service.marshal.TokenResponseUnmarshal;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.TestResponse;
+import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
+import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
+import org.exoplatform.ide.client.module.gadget.service.TokenResponse;
+import org.exoplatform.ide.client.module.gadget.service.marshal.GadgetMetadataUnmarshaler;
+import org.exoplatform.ide.client.module.gadget.service.marshal.TokenRequestMarshaler;
+import org.exoplatform.ide.client.module.gadget.service.marshal.TokenResponseUnmarshal;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONParser;

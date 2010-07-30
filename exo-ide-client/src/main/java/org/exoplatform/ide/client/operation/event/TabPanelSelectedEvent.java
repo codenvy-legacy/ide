@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.operation.event;
+package org.exoplatform.ide.client.operation.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 

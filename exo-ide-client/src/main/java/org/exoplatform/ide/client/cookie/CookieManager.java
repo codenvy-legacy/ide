@@ -17,15 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.cookie;
+package org.exoplatform.ide.client.cookie;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Cookies;

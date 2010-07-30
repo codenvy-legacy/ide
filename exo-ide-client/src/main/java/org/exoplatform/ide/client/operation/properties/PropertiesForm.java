@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation.properties;
+package org.exoplatform.ide.client.operation.properties;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.ImageUtil;
-import org.exoplatform.ideall.client.framework.ui.TabPanel;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.operation.properties.propertyeditor.PropertyEditor;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.operation.properties.propertyeditor.PropertyEditor;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;

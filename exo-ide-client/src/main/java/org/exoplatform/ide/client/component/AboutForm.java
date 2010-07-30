@@ -15,13 +15,13 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.component;
+package org.exoplatform.ide.client.component;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
-import org.exoplatform.ideall.client.BuildNumber;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.BuildNumber;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

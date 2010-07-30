@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client;
+package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 

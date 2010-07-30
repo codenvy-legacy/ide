@@ -15,15 +15,15 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.model.configuration;
+package org.exoplatform.ide.client.model.configuration;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;

@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.control;
+package org.exoplatform.ide.client.module.navigation.control;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedEvent;
-import org.exoplatform.ideall.client.event.edit.ItemsToPasteSelectedHandler;
-import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
-import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteHandler;
-import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
+import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedHandler;
+import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
+import org.exoplatform.ide.client.event.edit.PasteItemsCompleteHandler;
+import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

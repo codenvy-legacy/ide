@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.action;
+package org.exoplatform.ide.client.module.navigation.action;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,15 +24,15 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.SelectItemEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

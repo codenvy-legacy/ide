@@ -17,17 +17,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.statusbar;
+package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 

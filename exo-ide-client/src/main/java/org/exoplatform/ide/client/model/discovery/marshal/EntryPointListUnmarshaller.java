@@ -17,11 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.discovery.marshal;
+package org.exoplatform.ide.client.model.discovery.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 
 import com.google.gwt.http.client.Response;
 

@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.navigation;
+package org.exoplatform.ide.client.navigation;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.BrowserForm;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.panel.TabContainer;
-import org.exoplatform.ideall.client.search.file.SearchResultPanel;
-import org.exoplatform.ideall.client.search.file.SearchResultsForm;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.browser.BrowserForm;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.panel.TabContainer;
+import org.exoplatform.ide.client.search.file.SearchResultPanel;
+import org.exoplatform.ide.client.search.file.SearchResultsForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;

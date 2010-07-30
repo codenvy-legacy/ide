@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.action;
+package org.exoplatform.ide.client.module.navigation.action;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;

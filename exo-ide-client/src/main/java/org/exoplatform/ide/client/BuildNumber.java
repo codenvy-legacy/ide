@@ -1,4 +1,4 @@
-package org.exoplatform.ideall.client;
+package org.exoplatform.ide.client;
 
 /**
  * Interface to represent the messages contained in resource bundle:

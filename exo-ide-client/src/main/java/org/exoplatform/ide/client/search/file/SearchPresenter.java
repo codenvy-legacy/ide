@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.file;
+package org.exoplatform.ide.client.search.file;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

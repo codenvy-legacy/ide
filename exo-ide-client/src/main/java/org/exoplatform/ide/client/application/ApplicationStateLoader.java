@@ -17,21 +17,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

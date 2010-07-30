@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.model.groovy;
+package org.exoplatform.ide.client.model.groovy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,24 +27,24 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.module.groovy.service.SimpleParameterEntry;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyService;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyServiceImpl;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedEvent;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedHandler;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.RestServiceOutputReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.module.groovy.service.SimpleParameterEntry;
+import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
+import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;

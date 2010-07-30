@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.edit;
+package org.exoplatform.ide.client.module.edit;
 
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
-import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
-import org.exoplatform.ideall.client.module.edit.control.FormatSourceCommand;
-import org.exoplatform.ideall.client.module.edit.control.GoToLineControl;
-import org.exoplatform.ideall.client.module.edit.control.RedoTypingCommand;
-import org.exoplatform.ideall.client.module.edit.control.ShowLineNumbersCommand;
-import org.exoplatform.ideall.client.module.edit.control.UndoTypingCommand;
-import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
-import org.exoplatform.ideall.client.statusbar.EditorCursorPositionControl;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
+import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
+import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.module.edit.control.RedoTypingCommand;
+import org.exoplatform.ide.client.module.edit.control.ShowLineNumbersCommand;
+import org.exoplatform.ide.client.module.edit.control.UndoTypingCommand;
+import org.exoplatform.ide.client.module.navigation.control.DeleteLineControl;
+import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 

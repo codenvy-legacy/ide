@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.navigation.control;
+package org.exoplatform.ide.client.module.navigation.control;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -59,7 +59,7 @@ public class DeleteLineControl extends IDEControl implements EditorActiveFileCha
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

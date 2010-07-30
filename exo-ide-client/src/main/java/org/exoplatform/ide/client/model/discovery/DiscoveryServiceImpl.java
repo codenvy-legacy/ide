@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.discovery;
+package org.exoplatform.ide.client.model.discovery;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointListUnmarshaller;
+import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;

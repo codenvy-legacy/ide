@@ -17,16 +17,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.navigation.control.newitem;
+package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
-import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
+import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;

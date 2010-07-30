@@ -17,22 +17,22 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.download;
+package org.exoplatform.ide.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileEvent;
-import org.exoplatform.ideall.client.module.navigation.event.download.DownloadFileHandler;
-import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderEvent;
-import org.exoplatform.ideall.client.module.navigation.event.download.DownloadZippedFolderHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileEvent;
+import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileHandler;
+import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;

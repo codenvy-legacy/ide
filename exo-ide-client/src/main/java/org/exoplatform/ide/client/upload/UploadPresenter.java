@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.upload;
+package org.exoplatform.ide.client.upload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +22,18 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
-import org.exoplatform.ideall.client.IDELoader;
-import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
-import org.exoplatform.ideall.client.upload.event.UploadFileSelectedHandler;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;

@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.editor;
+package org.exoplatform.ide.client.editor;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 
 

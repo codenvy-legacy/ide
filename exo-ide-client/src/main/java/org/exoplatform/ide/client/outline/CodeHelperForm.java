@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.outline;
+package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.editor.MinMaxControlButton;
-import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.perspective.CodeHelperPanelRestoredHandler;
-import org.exoplatform.ideall.client.event.perspective.MaximizeCodeHelperPanelEvent;
-import org.exoplatform.ideall.client.event.perspective.RestoreCodeHelperPanelEvent;
-import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
-import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.editor.MinMaxControlButton;
+import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
+import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredHandler;
+import org.exoplatform.ide.client.event.perspective.MaximizeCodeHelperPanelEvent;
+import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
+import org.exoplatform.ide.client.framework.form.FormClosedEvent;
+import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

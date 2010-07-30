@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -223,7 +223,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.SaveAsTemplatePresenter.Display#getDescriptionField()
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#getDescriptionField()
     */
    public HasValue<String> getDescriptionField()
    {
@@ -231,7 +231,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.SaveAsTemplatePresenter.Display#getNameField()
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#getNameField()
     */
    public HasValue<String> getNameField()
    {
@@ -239,7 +239,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.SaveAsTemplatePresenter.Display#getSaveButton()
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#getSaveButton()
     */
    public HasClickHandlers getSaveButton()
    {
@@ -247,7 +247,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.SaveAsTemplatePresenter.Display#getTypeField()
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#getTypeField()
     */
    public HasValue<String> getTypeField()
    {

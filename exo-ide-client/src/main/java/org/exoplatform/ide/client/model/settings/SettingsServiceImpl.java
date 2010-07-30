@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings;
+package org.exoplatform.ide.client.model.settings;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
@@ -26,11 +26,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationSettingsMarshaller;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
+import org.exoplatform.ide.client.model.configuration.Configuration;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
+import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;

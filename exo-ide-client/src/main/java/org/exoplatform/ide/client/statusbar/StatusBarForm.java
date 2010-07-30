@@ -1,4 +1,4 @@
-package org.exoplatform.ideall.client.statusbar;
+package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
 

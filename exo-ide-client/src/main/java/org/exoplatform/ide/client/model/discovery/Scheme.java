@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.discovery;
+package org.exoplatform.ide.client.model.discovery;
 
 /**
  * Created by The eXo Platform SAS .

@@ -14,30 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation;
+package org.exoplatform.ide.client.operation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
-import org.exoplatform.ideall.client.framework.output.event.OutputHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.development.event.PreviewFileEvent;
-import org.exoplatform.ideall.client.module.development.event.PreviewFileHandler;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetService;
-import org.exoplatform.ideall.client.module.gadget.service.TokenRequest;
-import org.exoplatform.ideall.client.module.gadget.service.TokenResponse;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
-import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesEvent;
-import org.exoplatform.ideall.client.operation.properties.event.ShowPropertiesHandler;
+import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
+import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
+import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
+import org.exoplatform.ide.client.module.gadget.service.GadgetService;
+import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
+import org.exoplatform.ide.client.module.gadget.service.TokenResponse;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedEvent;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
+import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
+import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
+import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;

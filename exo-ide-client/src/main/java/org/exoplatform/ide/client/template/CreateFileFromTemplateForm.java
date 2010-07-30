@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -225,7 +225,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#getDeleteButton()
+    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#getDeleteButton()
     */
    public HasClickHandlers getDeleteButton()
    {
@@ -233,7 +233,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#setEnabledDeleteButton(boolean)
+    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#setEnabledDeleteButton(boolean)
     */
    public void setDeleteButtonDisabled(boolean value)
    {
@@ -241,7 +241,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    }
 
    /**
-    * @see org.exoplatform.ideall.client.template.CreateFileFromTemplatePresenter.Display#selectLastTemplate()
+    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#selectLastTemplate()
     */
    public void selectLastTemplate()
    {

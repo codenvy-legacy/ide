@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.editor;
+package org.exoplatform.ide.client.editor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,55 +34,55 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
-import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextHandler;
-import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFindTextHandler;
-import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ideall.client.editor.event.EditorReplaceTextHandler;
-import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
-import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateHandler;
-import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent;
-import org.exoplatform.ideall.client.event.edit.DeleteCurrentLineHandler;
-import org.exoplatform.ideall.client.event.file.FileSavedEvent;
-import org.exoplatform.ideall.client.event.file.FileSavedHandler;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorChangeActiveFileEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorChangeActiveFileHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusHandler;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ideall.client.module.edit.event.FormatFileEvent;
-import org.exoplatform.ideall.client.module.edit.event.FormatFileHandler;
-import org.exoplatform.ideall.client.module.edit.event.RedoEditingEvent;
-import org.exoplatform.ideall.client.module.edit.event.RedoEditingHandler;
-import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ideall.client.module.edit.event.UndoEditingEvent;
-import org.exoplatform.ideall.client.module.edit.event.UndoEditingHandler;
-import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.SaveFileEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler;
+import org.exoplatform.ide.client.editor.event.EditorFindTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorFindTextHandler;
+import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler;
+import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
+import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler;
+import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
+import org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler;
+import org.exoplatform.ide.client.event.file.FileSavedEvent;
+import org.exoplatform.ide.client.event.file.FileSavedHandler;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
+import org.exoplatform.ide.client.module.edit.event.FormatFileHandler;
+import org.exoplatform.ide.client.module.edit.event.RedoEditingEvent;
+import org.exoplatform.ide.client.module.edit.event.RedoEditingHandler;
+import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
+import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
+import org.exoplatform.ide.client.module.edit.event.UndoEditingEvent;
+import org.exoplatform.ide.client.module.edit.event.UndoEditingHandler;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.search.text.event.FindTextResultEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -554,7 +554,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.event.edit.DeleteCurrentLineHandler#onDeleteCurrentLine(org.exoplatform.ideall.client.event.edit.DeleteCurrentLineEvent)
+    * @see org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler#onDeleteCurrentLine(org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent)
     */
    public void onDeleteCurrentLine(DeleteCurrentLineEvent event)
    {
@@ -562,7 +562,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorGoToLineHandler#onEditorGoToLine(org.exoplatform.ideall.client.editor.event.EditorGoToLineEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorGoToLineHandler#onEditorGoToLine(org.exoplatform.ide.client.editor.event.EditorGoToLineEvent)
     */
    public void onEditorGoToLine(EditorGoToLineEvent event)
    {
@@ -570,7 +570,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ideall.client.editor.event.EditorFindTextEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
     */
    public void onEditorFindText(EditorFindTextEvent event)
    {
@@ -579,7 +579,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent)
     */
    public void onEditorReplaceText(EditorReplaceTextEvent event)
    {
@@ -594,7 +594,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextHandler#onEditorFindReplaceText(org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler#onEditorFindReplaceText(org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent)
     */
    public void onEditorFindReplaceText(EditorFindReplaceTextEvent event)
    {
@@ -604,7 +604,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ideall.client.editor.event.EditorSetFocusEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event.EditorSetFocusEvent)
     */
    public void onEditorSetFocus(EditorSetFocusEvent event)
    {

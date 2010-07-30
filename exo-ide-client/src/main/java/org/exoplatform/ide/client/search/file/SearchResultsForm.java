@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.search.file;
+package org.exoplatform.ide.client.search.file;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.component.ItemTreeGrid;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.component.ItemTreeGrid;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
 

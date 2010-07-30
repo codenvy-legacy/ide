@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation.output;
+package org.exoplatform.ide.client.operation.output;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.ImageUtil;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
-import org.exoplatform.ideall.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.TabPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

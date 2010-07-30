@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation.output;
+package org.exoplatform.ide.client.operation.output;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.framework.output.event.OutputEvent;
-import org.exoplatform.ideall.client.framework.output.event.OutputHandler;
-import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.control;
+package org.exoplatform.ide.client.module.navigation.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

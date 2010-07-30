@@ -17,14 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.autocompletion.groovy;
+package org.exoplatform.ide.client.autocompletion.groovy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
+import org.exoplatform.ide.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ide.client.autocompletion.api.TokensCollectedCallback;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,7 +46,7 @@ public class GroovyTokenCollector implements TokenCollector
    }
 
    /**
-    * @see org.exoplatform.ideall.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
+    * @see org.exoplatform.ide.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
     */
    public void getTokens(String prefix, String lineMimeType, int currentLine, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
    {

@@ -17,14 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.edit.control;
+package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.edit.event.FormatFileEvent;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

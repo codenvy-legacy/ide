@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,12 +22,12 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFolderControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

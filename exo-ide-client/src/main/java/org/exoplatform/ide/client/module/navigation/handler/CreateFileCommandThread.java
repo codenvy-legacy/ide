@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.handler;
+package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,27 +23,27 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ideall.client.editor.EditorUtil;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.template.FileTemplates;
-import org.exoplatform.ideall.client.model.template.TemplateService;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
-import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileEvent;
-import org.exoplatform.ideall.client.module.navigation.event.newitem.CreateNewFileHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ideall.client.template.CreateFileFromTemplateForm;
+import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.template.FileTemplates;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -133,7 +133,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    }
 
    /**
-    * @see org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent)
+    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
     */
    public void onTemplateListReceived(TemplateListReceivedEvent event)
    {

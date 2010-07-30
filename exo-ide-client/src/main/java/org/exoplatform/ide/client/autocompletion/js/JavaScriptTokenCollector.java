@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.autocompletion.js;
+package org.exoplatform.ide.client.autocompletion.js;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.ideall.client.autocompletion.JSONTokenParser;
-import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
+import org.exoplatform.ide.client.autocompletion.JSONTokenParser;
+import org.exoplatform.ide.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ide.client.autocompletion.api.TokensCollectedCallback;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;

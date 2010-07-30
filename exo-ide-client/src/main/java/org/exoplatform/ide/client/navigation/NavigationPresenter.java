@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.navigation;
+package org.exoplatform.ide.client.navigation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.event.SearchResultReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.SearchResultReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

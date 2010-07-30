@@ -17,8 +17,8 @@
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
 
-   <inherits name='org.exoplatform.ideall.IDEallGadgetModule' />
-   <inherits name="org.exoplatform.ideall.IDEallVirtualFileSystem" />
+   <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
+   <inherits name="org.exoplatform.ide.client.module.IDEVirtualFileSystem" />
 
    <!-- Specify the app entry point class.                         -->
    <source path="client" excludes="IDEGadget.java" />

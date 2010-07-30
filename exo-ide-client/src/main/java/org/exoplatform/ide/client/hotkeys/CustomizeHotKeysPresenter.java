@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.hotkeys;
+package org.exoplatform.ide.client.hotkeys;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,9 +28,9 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -384,7 +384,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    /**
     * When hot key pressed, display this hot key in input field.
     * 
-    * @see org.exoplatform.ideall.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String, java.lang.String)
     */
    public void onHotKeyPressed(String controlKey, String keyCode)
    {

@@ -17,10 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings.event;
+package org.exoplatform.ide.client.model.settings.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.GwtEvent;
 

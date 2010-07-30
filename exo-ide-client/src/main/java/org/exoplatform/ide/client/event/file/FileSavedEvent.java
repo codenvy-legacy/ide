@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.event.file;
+package org.exoplatform.ide.client.event.file;
 
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

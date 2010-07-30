@@ -15,18 +15,18 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.upload;
+package org.exoplatform.ide.client.upload;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;

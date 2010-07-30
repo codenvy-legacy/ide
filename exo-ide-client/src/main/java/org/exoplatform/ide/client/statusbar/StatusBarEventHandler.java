@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.statusbar;
+package org.exoplatform.ide.client.statusbar;
 
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
-import org.exoplatform.ideall.client.application.perspective.DefaultPerspective;
-import org.exoplatform.ideall.client.download.DownloadForm;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.application.perspective.DefaultPerspective;
+import org.exoplatform.ide.client.download.DownloadForm;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;

@@ -17,10 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
-import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.framework.ui.event.ClearFocusHandler;
+import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ide.client.framework.ui.event.ClearFocusHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;

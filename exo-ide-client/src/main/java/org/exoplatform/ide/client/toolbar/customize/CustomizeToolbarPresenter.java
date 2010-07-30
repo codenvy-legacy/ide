@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar.customize;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +28,9 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.toolbar.customize.ToolbarItem.Type;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

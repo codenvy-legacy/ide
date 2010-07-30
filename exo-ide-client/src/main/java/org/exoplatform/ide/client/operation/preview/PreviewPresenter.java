@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.operation.preview;
+package org.exoplatform.ide.client.operation.preview;
 
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.events.ContentLoadedEvent;

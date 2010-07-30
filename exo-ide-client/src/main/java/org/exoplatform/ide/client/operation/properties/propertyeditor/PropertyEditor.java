@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.operation.properties.propertyeditor;
+package org.exoplatform.ide.client.operation.properties.propertyeditor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +25,9 @@ import java.util.Comparator;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.property.ItemProperty;
-import org.exoplatform.ideall.client.module.vfs.property.PropertyTitle;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.module.vfs.property.PropertyTitle;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;

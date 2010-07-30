@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.autocompletion;
+package org.exoplatform.ide.client.autocompletion;
 
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.xml.XmlTokenCollector;
+import org.exoplatform.ide.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ide.client.autocompletion.css.CssTokenCollector;
+import org.exoplatform.ide.client.autocompletion.groovy.GroovyTokenCollector;
+import org.exoplatform.ide.client.autocompletion.html.HtmlTokenCollector;
+import org.exoplatform.ide.client.autocompletion.js.JavaScriptTokenCollector;
+import org.exoplatform.ide.client.autocompletion.xml.XmlTokenCollector;
 
 import com.google.gwt.event.shared.HandlerManager;
 

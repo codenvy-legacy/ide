@@ -17,19 +17,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.editor;
+package org.exoplatform.ide.client.editor;
 
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.Layout;

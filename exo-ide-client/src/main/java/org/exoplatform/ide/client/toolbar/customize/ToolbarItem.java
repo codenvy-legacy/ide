@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar.customize;
 
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 

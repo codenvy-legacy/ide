@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.editor.custom;
+package org.exoplatform.ide.client.editor.custom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,14 +27,14 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

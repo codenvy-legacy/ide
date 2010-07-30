@@ -1,16 +1,13 @@
-package org.exoplatform.ideall.client;
+package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
-import org.exoplatform.ideall.client.application.IDEallForm;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.development.DevelopmentModule;
-import org.exoplatform.ideall.client.module.edit.FileEditModule;
-import org.exoplatform.ideall.client.module.gadget.GadgetModule;
-import org.exoplatform.ideall.client.module.groovy.GroovyModule;
-import org.exoplatform.ideall.client.module.navigation.NavigationModule;
-import org.exoplatform.ideall.client.module.netvibes.NetvibesModule;
-import org.exoplatform.ideall.client.module.preferences.PreferencesModule;
+import org.exoplatform.ide.client.application.IDEallForm;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.development.DevelopmentModule;
+import org.exoplatform.ide.client.module.edit.FileEditModule;
+import org.exoplatform.ide.client.module.navigation.NavigationModule;
+import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,9 +43,9 @@ public class IDE extends VerticalPanel
       context.getModules().add(new DevelopmentModule(eventBus));
       context.getModules().add(new PreferencesModule(eventBus));
 
-      context.getModules().add(new GadgetModule(eventBus));
-      context.getModules().add(new GroovyModule(eventBus));
-      context.getModules().add(new NetvibesModule(eventBus));
+//      context.getModules().add(new GadgetModule(eventBus));
+//      context.getModules().add(new GroovyModule(eventBus));
+//      context.getModules().add(new NetvibesModule(eventBus));
    }
 
 }

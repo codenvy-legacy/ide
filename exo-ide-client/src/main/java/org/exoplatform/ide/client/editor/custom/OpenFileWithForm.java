@@ -1,13 +1,13 @@
-package org.exoplatform.ideall.client.editor.custom;
+package org.exoplatform.ide.client.editor.custom;
 
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.upload;
+package org.exoplatform.ide.client.upload;
 
-import org.exoplatform.ideall.client.upload.event.UploadFileSelectedEvent;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
 
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.shared.HandlerManager;

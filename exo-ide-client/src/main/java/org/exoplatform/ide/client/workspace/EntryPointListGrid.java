@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.workspace;
+package org.exoplatform.ide.client.workspace;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;

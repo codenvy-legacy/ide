@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.operation.output;
+package org.exoplatform.ide.client.operation.output;
 
-import org.exoplatform.ideall.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Label;

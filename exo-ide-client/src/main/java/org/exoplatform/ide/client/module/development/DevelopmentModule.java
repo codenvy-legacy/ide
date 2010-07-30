@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.development;
+package org.exoplatform.ide.client.module.development;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ideall.client.framework.module.AbstractIDEModule;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.development.control.ShowOutlineControl;
-import org.exoplatform.ideall.client.module.development.control.ShowPreviewCommand;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.module.AbstractIDEModule;
+import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.development.control.ShowOutlineControl;
+import org.exoplatform.ide.client.module.development.control.ShowPreviewCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 

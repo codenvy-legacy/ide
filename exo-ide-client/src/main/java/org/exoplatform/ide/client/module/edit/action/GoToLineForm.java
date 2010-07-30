@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.edit.action;
+package org.exoplatform.ide.client.module.edit.action;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -158,7 +158,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#closeForm()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#closeForm()
     */
 
    public void closeForm()
@@ -167,7 +167,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getCancelButton()
     */
    public HasClickHandlers getCancelButton()
    {
@@ -175,7 +175,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getGoButton()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getGoButton()
     */
    public HasClickHandlers getGoButton()
    {
@@ -183,7 +183,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getLineNumberField()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getLineNumberField()
     */
    public com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField()
    {
@@ -191,7 +191,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
    
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
     */
    public void setCaptionLabel(String caption)
    {
@@ -199,7 +199,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#getLineNumberValue()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getLineNumberValue()
     */
    public HasValue<String> getLineNumberValue()
    {
@@ -207,7 +207,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.action.GoToLinePresenter.Display#removeFocusFromLineNumber()
+    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#removeFocusFromLineNumber()
     */
    public void removeFocusFromLineNumber()
    {

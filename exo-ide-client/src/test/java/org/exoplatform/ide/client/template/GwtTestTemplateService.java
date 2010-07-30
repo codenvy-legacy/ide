@@ -16,22 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.model.template.TemplateService;
-import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateDeletedHandler;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.junit.client.GWTTestCase;

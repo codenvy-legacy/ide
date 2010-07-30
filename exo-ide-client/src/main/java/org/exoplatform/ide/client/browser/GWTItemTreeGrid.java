@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.browser;
+package org.exoplatform.ide.client.browser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.tree.GWTTree;
 import org.exoplatform.gwtframework.ui.client.component.tree.TreeRecord;
 import org.exoplatform.gwtframework.ui.client.component.tree.bean.TreeNode;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;

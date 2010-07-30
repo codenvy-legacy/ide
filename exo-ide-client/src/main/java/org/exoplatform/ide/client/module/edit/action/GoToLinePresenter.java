@@ -16,14 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.edit.action;
+package org.exoplatform.ide.client.module.edit.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ideall.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -125,7 +125,7 @@ public class GoToLinePresenter
      }
 
      // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-     if (this.@org.exoplatform.ideall.client.module.edit.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+     if (this.@org.exoplatform.ide.client.module.edit.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
      {          
        return content.split("\n").length;
      }

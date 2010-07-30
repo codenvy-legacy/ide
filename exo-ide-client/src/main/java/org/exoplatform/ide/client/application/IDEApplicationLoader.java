@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import java.util.List;
 
@@ -26,32 +26,32 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ideall.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ideall.client.IDELoader;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.control.event.ControlsUpdatedEvent;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.configuration.Configuration;
-import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ideall.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ideall.client.model.conversation.ConversationService;
-import org.exoplatform.ideall.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
-import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHandler;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.SettingsService;
-import org.exoplatform.ideall.client.model.settings.SettingsServiceImpl;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetServiceImpl;
-import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
+import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.configuration.Configuration;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.model.conversation.ConversationService;
+import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
+import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
+import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -103,7 +103,7 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
    /**
     * Called in case the valid configuration of the application is received
     * 
-    * @see org.exoplatform.ideall.client.model.configuration.ApplicationConfigurationReceivedHandler#onApplicationConfigurationReceived(org.exoplatform.ideall.client.model.configuration.ApplicationConfigurationReceivedEvent)
+    * @see org.exoplatform.ide.client.model.configuration.ApplicationConfigurationReceivedHandler#onApplicationConfigurationReceived(org.exoplatform.ide.client.model.configuration.ApplicationConfigurationReceivedEvent)
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
@@ -141,7 +141,7 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
    /**
     * Called when user information ( name, ect ) is received
     * 
-    * @see org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent)
+    * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
     */
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {

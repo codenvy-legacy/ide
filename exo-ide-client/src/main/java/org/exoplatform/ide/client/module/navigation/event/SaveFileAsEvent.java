@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.navigation.event;
+package org.exoplatform.ide.client.module.navigation.event;
 
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.model.discovery;
+package org.exoplatform.ide.client.model.discovery;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ideall.client.model.discovery.event.EntryPointsReceivedHandler;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;

@@ -17,15 +17,15 @@
 // * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 // *
 // */
-//package org.exoplatform.ideall.client.vfs;
+//package org.exoplatform.ide.client.vfs;
 //
 //import java.util.Collection;
 //
 //import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 //import org.exoplatform.gwtframework.commons.xml.QName;
-//import org.exoplatform.ideall.client.AbstractGwtTest;
-//import org.exoplatform.ideall.client.model.vfs.api.Folder;
-//import org.exoplatform.ideall.client.model.vfs.webdav.marshal.FolderContentUnmarshaller;
+//import org.exoplatform.ide.client.AbstractGwtTest;
+//import org.exoplatform.ide.client.model.vfs.api.Folder;
+//import org.exoplatform.ide.client.model.vfs.webdav.marshal.FolderContentUnmarshaller;
 //
 ///**
 // * Created by The eXo Platform SAS .

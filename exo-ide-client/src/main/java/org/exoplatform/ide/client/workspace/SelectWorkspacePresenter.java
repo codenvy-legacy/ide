@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.workspace;
+package org.exoplatform.ide.client.workspace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +24,18 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ideall.client.Utils;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.model.discovery.Scheme;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
-import org.exoplatform.ideall.client.module.navigation.event.SaveFileAsEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.model.discovery.Scheme;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

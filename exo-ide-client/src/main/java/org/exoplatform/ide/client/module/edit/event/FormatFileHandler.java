@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.module.edit.event;
+package org.exoplatform.ide.client.module.edit.event;
 
 import com.google.gwt.event.shared.EventHandler;
 

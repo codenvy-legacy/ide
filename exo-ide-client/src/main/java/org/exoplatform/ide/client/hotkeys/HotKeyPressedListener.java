@@ -1,4 +1,4 @@
-package org.exoplatform.ideall.client.hotkeys;
+package org.exoplatform.ide.client.hotkeys;
 
 public interface HotKeyPressedListener
 {

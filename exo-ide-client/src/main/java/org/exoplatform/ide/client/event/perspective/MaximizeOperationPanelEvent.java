@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.event.perspective;
+package org.exoplatform.ide.client.event.perspective;
 
 import com.google.gwt.event.shared.GwtEvent;
 

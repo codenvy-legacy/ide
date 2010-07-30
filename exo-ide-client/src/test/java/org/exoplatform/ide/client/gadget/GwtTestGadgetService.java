@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.gadget;
+package org.exoplatform.ide.client.gadget;
 
 import java.util.HashMap;
 
@@ -25,23 +25,23 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetService;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetServiceImpl;
-import org.exoplatform.ideall.client.module.gadget.service.TokenRequest;
-import org.exoplatform.ideall.client.module.gadget.service.TokenResponse;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetDeployResultEvent;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetDeployResultHandler;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetUndeployResultEvent;
-import org.exoplatform.ideall.client.module.gadget.service.event.GadgetUndeployResultHandler;
-import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ideall.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.module.gadget.service.GadgetService;
+import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
+import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
+import org.exoplatform.ide.client.module.gadget.service.TokenResponse;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetDeployResultEvent;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetDeployResultHandler;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResultEvent;
+import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResultHandler;
+import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
+import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;

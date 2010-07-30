@@ -16,14 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.outline;
+package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import java.util.List;
 

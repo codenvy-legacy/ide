@@ -17,21 +17,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.navigation.control;
+package org.exoplatform.ide.client.module.navigation.control;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.browser.BrowserPanel;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.module.navigation.event.RenameItemEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.module.navigation.event.RenameItemEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

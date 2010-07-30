@@ -17,11 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.module.preferences.control;
+package org.exoplatform.ide.client.module.preferences.control;
 
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.module.preferences.event.SelectWorkspaceEvent;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

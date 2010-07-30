@@ -17,21 +17,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.command;
+package org.exoplatform.ide.client.command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.event.file.FileSavedEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.navigation.event.SaveAllFilesEvent;
-import org.exoplatform.ideall.client.module.navigation.event.SaveAllFilesHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.event.file.FileSavedEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.command;
+package org.exoplatform.ide.client.command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -22,17 +22,17 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ideall.client.editor.EditorUtil;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.event.file.OpenFileHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.event.file.OpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

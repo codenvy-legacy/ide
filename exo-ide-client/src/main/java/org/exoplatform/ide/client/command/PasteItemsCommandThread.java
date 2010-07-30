@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.command;
+package org.exoplatform.ide.client.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,26 +24,26 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ideall.client.editor.event.EditorUpdateFileStateEvent;
-import org.exoplatform.ideall.client.event.edit.PasteItemsCompleteEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsEvent;
-import org.exoplatform.ideall.client.module.navigation.event.edit.PasteItemsHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.CopyCompleteEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.CopyCompleteHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.MoveCompleteHandler;
+import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
+import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.CopyCompleteEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.CopyCompleteHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

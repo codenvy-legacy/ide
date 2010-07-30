@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.template;
+package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -22,11 +22,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ideall.client.model.template.marshal.TemplateListUnmarshaller;
-import org.exoplatform.ideall.client.model.template.marshal.TemplateMarshaller;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
+import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;

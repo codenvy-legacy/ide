@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.action;
+package org.exoplatform.ide.client.module.navigation.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FolderCreatedHandler;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

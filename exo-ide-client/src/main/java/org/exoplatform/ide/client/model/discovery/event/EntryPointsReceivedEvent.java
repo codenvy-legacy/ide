@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.discovery.event;
+package org.exoplatform.ide.client.model.discovery.event;
 
-import org.exoplatform.ideall.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.shared.GwtEvent;
 

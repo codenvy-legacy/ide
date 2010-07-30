@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.browser;
+package org.exoplatform.ide.client.browser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,33 +26,33 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ideall.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeApplicationHandler;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ideall.client.module.navigation.event.RefreshBrowserHandler;
-import org.exoplatform.ideall.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.SelectItemEvent;
-import org.exoplatform.ideall.client.module.navigation.event.selection.SelectItemHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Folder;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ChildrenReceivedHandler;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
-import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent;
-import org.exoplatform.ideall.client.workspace.event.SwitchEntryPointHandler;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserHandler;
+import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -323,7 +323,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    /**
     * Switching active workspace by Switch Workspace Event
     * 
-    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ideall.client.workspace.event.SwitchEntryPointEvent)
+    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent)
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
@@ -358,7 +358,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    /**
    * Registering handlers
    * 
-   * @see org.exoplatform.ideall.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ideall.client.application.event.RegisterEventHandlersEvent)
+   * @see org.exoplatform.ide.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ide.client.application.event.RegisterEventHandlersEvent)
    */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
@@ -372,7 +372,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    /**
     * Initializing application
     * 
-    * @see org.exoplatform.ideall.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ideall.client.application.event.InitializeApplicationEvent)
+    * @see org.exoplatform.ide.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ide.client.application.event.InitializeApplicationEvent)
     */
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
@@ -396,7 +396,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    /**
     * Select chosen item in browser.
     * 
-    * @see org.exoplatform.ideall.client.browser.event.SelectItemHandler#onSelectItem(org.exoplatform.ideall.client.browser.event.SelectItemEvent)
+    * @see org.exoplatform.ide.client.browser.event.SelectItemHandler#onSelectItem(org.exoplatform.ide.client.browser.event.SelectItemEvent)
     */
    public void onSelectItem(SelectItemEvent event)
    {

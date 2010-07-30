@@ -16,26 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.edit;
+package org.exoplatform.ide.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.cookie.CookieManager;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ideall.client.framework.application.event.RegisterEventHandlersHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ideall.client.module.edit.action.GoToLineForm;
-import org.exoplatform.ideall.client.module.edit.event.FindTextEvent;
-import org.exoplatform.ideall.client.module.edit.event.FindTextHandler;
-import org.exoplatform.ideall.client.module.edit.event.GoToLineEvent;
-import org.exoplatform.ideall.client.module.edit.event.GoToLineHandler;
-import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersEvent;
-import org.exoplatform.ideall.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.search.text.FindTextForm;
+import org.exoplatform.ide.client.cookie.CookieManager;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
+import org.exoplatform.ide.client.module.edit.event.FindTextEvent;
+import org.exoplatform.ide.client.module.edit.event.FindTextHandler;
+import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
+import org.exoplatform.ide.client.module.edit.event.GoToLineHandler;
+import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
+import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.search.text.FindTextForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -74,7 +74,7 @@ public class FileEditModuleEventHandler implements RegisterEventHandlersHandler,
    }
 
    /**
-    * @see org.exoplatform.ideall.client.event.edit.ShowLineNumbersHandler#onShowLineNumbers(org.exoplatform.ideall.client.event.edit.ShowLineNumbersEvent)
+    * @see org.exoplatform.ide.client.event.edit.ShowLineNumbersHandler#onShowLineNumbers(org.exoplatform.ide.client.event.edit.ShowLineNumbersEvent)
     */
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
@@ -83,7 +83,7 @@ public class FileEditModuleEventHandler implements RegisterEventHandlersHandler,
    }
 
    /**
-    * @see org.exoplatform.ideall.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ideall.client.event.edit.FindTextEvent)
+    * @see org.exoplatform.ide.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ide.client.event.edit.FindTextEvent)
     */
    public void onFindText(FindTextEvent event)
    {

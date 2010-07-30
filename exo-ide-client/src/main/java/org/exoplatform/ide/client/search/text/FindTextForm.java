@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.text;
+package org.exoplatform.ide.client.search.text;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.search.Search;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.search.Search;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -231,7 +231,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#closeForm()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#closeForm()
     */
    public void closeForm()
    {
@@ -249,7 +249,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getCancelButton()
     */
    public HasClickHandlers getCancelButton()
    {
@@ -257,7 +257,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getCaseSensitiveField()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getCaseSensitiveField()
     */
    public HasValue<Boolean> getCaseSensitiveField()
    {
@@ -265,7 +265,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFindButton()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getFindButton()
     */
    public HasClickHandlers getFindButton()
    {
@@ -273,7 +273,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFindField()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getFindField()
     */
    public TextFieldItem getFindField()
    {
@@ -281,7 +281,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /* *//**
-          * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getFromStartField()
+          * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getFromStartField()
           */
    /*
       public HasValue<Boolean> getFromStartField()
@@ -290,7 +290,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       }
    */
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getReplaceAllButton()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getReplaceAllButton()
     */
    public HasClickHandlers getReplaceAllButton()
    {
@@ -298,7 +298,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getReplaceButton()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getReplaceButton()
     */
    public HasClickHandlers getReplaceButton()
    {
@@ -306,7 +306,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getReplaceField()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getReplaceField()
     */
    public TextFieldItem getReplaceField()
    {
@@ -314,7 +314,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#enableFindButton(boolean)
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#enableFindButton(boolean)
     */
    public void enableFindButton(boolean isEnable)
    {
@@ -322,7 +322,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getReplaceFindButton()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getReplaceFindButton()
     */
    public HasClickHandlers getReplaceFindButton()
    {
@@ -330,7 +330,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#enableReplaceFindButton(boolean)
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#enableReplaceFindButton(boolean)
     */
    public void enableReplaceFindButton(boolean isEnable)
    {
@@ -338,7 +338,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#enableReplaceAllButton(boolean)
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#enableReplaceAllButton(boolean)
     */
    public void enableReplaceAllButton(boolean isEnable)
    {
@@ -346,7 +346,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#enableReplaceButton(boolean)
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#enableReplaceButton(boolean)
     */
    public void enableReplaceButton(boolean isEnable)
    {
@@ -354,7 +354,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.FindTextPresenter.Display#getResultLabel()
+    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getResultLabel()
     */
    public HasValue<String> getResultLabel()
    {

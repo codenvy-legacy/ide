@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.template.event;
+package org.exoplatform.ide.client.model.template.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.ideall.client.model.template.TemplateList;
+import org.exoplatform.ide.client.model.template.TemplateList;
 
 import com.google.gwt.event.shared.GwtEvent;
 

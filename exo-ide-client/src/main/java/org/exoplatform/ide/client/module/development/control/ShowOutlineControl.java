@@ -16,25 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.module.development.control;
+package org.exoplatform.ide.client.module.development.control;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.IDEImageBundle;
-import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent;
-import org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler;
-import org.exoplatform.ideall.client.framework.control.IDEControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
-import org.exoplatform.ideall.client.framework.form.FormClosedHandler;
-import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ideall.client.framework.form.FormOpenedHandler;
-import org.exoplatform.ideall.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ideall.client.outline.CodeHelperForm;
-import org.exoplatform.ideall.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent;
+import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.form.FormClosedEvent;
+import org.exoplatform.ide.client.framework.form.FormClosedHandler;
+import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
+import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
+import org.exoplatform.ide.client.outline.CodeHelperForm;
+import org.exoplatform.ide.client.outline.OutlineTreeGrid;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Cookies;
@@ -83,7 +83,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -115,7 +115,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    }
 
    /**
-    * @see org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedHandler#onBrowserCookiesUpdated(org.exoplatform.ideall.client.cookie.event.BrowserCookiesUpdatedEvent)
+    * @see org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedHandler#onBrowserCookiesUpdated(org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent)
     */
    public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
    {

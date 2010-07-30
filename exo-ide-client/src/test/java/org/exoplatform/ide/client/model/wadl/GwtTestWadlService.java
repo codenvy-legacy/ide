@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.model.wadl;
+package org.exoplatform.ide.client.model.wadl;
 
 import java.util.HashMap;
 
@@ -27,21 +27,21 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyService;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.GroovyServiceImpl;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ideall.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
-import org.exoplatform.ideall.client.module.groovy.service.wadl.WadlService;
-import org.exoplatform.ideall.client.module.groovy.service.wadl.WadlServiceImpl;
-import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ideall.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
+import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.wadl.WadlService;
+import org.exoplatform.ide.client.module.groovy.service.wadl.WadlServiceImpl;
+import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler;
+import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;

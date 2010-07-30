@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.settings;
+package org.exoplatform.ide.client.model.settings;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ideall.client.AbstractGwtTest;
-import org.exoplatform.ideall.client.TestResponse;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextMarshaller;
-import org.exoplatform.ideall.client.model.settings.marshal.ApplicationContextUnmarshaller;
+import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.TestResponse;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.marshal.ApplicationContextMarshaller;
+import org.exoplatform.ide.client.model.settings.marshal.ApplicationContextUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Header;

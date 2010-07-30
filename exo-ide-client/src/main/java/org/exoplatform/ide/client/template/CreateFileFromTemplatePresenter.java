@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import java.util.List;
 
@@ -22,18 +22,18 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ideall.client.event.file.OpenFileEvent;
-import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.model.template.TemplateService;
-import org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateDeletedHandler;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ideall.client.model.util.IDEMimeTypes;
-import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -259,7 +259,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
    }
 
    /**
-    * @see org.exoplatform.ideall.client.model.template.event.TemplateDeletedHandler#onTemplateDeleted(org.exoplatform.ideall.client.model.template.event.TemplateDeletedEvent)
+    * @see org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler#onTemplateDeleted(org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent)
     */
    public void onTemplateDeleted(TemplateDeletedEvent event)
    {
@@ -278,7 +278,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
    }
 
    /**
-    * @see org.exoplatform.ideall.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ideall.client.model.template.event.TemplateListReceivedEvent)
+    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
     */
    public void onTemplateListReceived(TemplateListReceivedEvent event)
    {

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.file;
+package org.exoplatform.ide.client.search.file;
 
 import java.util.List;
 
@@ -24,9 +24,9 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.ui.DialogWindow;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -192,7 +192,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getPathItem()
+    * @see org.exoplatform.ide.client.search.file.SearchPresenter.Display#getPathItem()
     */
    public HasValue<String> getPathItem()
    {
@@ -200,7 +200,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getSearchContentItem()
+    * @see org.exoplatform.ide.client.search.file.SearchPresenter.Display#getSearchContentItem()
     */
    public HasValue<String> getSearchContentItem()
    {
@@ -208,7 +208,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#getMimeTypeItem()
+    * @see org.exoplatform.ide.client.search.file.SearchPresenter.Display#getMimeTypeItem()
     */
    public HasValue<String> getMimeTypeItem()
    {
@@ -216,7 +216,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.file.SearchPresenter.Display#setMimeTypeValues(java.lang.String[])
+    * @see org.exoplatform.ide.client.search.file.SearchPresenter.Display#setMimeTypeValues(java.lang.String[])
     */
    public void setMimeTypeValues(String[] mimeTypes)
    {

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.settings.marshal;
+package org.exoplatform.ide.client.model.settings.marshal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;

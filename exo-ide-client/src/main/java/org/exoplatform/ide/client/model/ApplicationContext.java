@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model;
+package org.exoplatform.ide.client.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +22,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
-import org.exoplatform.ideall.client.model.conversation.UserInfo;
-import org.exoplatform.ideall.client.model.template.TemplateList;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.model.conversation.UserInfo;
+import org.exoplatform.ide.client.model.template.TemplateList;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

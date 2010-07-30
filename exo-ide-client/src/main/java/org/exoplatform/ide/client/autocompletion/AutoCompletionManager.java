@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.autocompletion;
+package org.exoplatform.ide.client.autocompletion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +28,14 @@ import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
-import org.exoplatform.ideall.client.autocompletion.api.TokenCollector;
-import org.exoplatform.ideall.client.autocompletion.api.TokensCollectedCallback;
-import org.exoplatform.ideall.client.autocompletion.css.CssTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.groovy.GroovyTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.html.HtmlTokenCollector;
-import org.exoplatform.ideall.client.autocompletion.js.JavaScriptTokenCollector;
-import org.exoplatform.ideall.client.framework.editor.event.EditorSetFocusEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
+import org.exoplatform.ide.client.autocompletion.api.TokenCollector;
+import org.exoplatform.ide.client.autocompletion.api.TokensCollectedCallback;
+import org.exoplatform.ide.client.autocompletion.css.CssTokenCollector;
+import org.exoplatform.ide.client.autocompletion.groovy.GroovyTokenCollector;
+import org.exoplatform.ide.client.autocompletion.html.HtmlTokenCollector;
+import org.exoplatform.ide.client.autocompletion.js.JavaScriptTokenCollector;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 

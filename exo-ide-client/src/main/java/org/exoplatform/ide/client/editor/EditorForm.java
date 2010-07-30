@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.editor;
+package org.exoplatform.ide.client.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +25,17 @@ import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.perspective.EditorPanelRestoredHandler;
-import org.exoplatform.ideall.client.event.perspective.MaximizeEditorPanelEvent;
-import org.exoplatform.ideall.client.event.perspective.RestoreEditorPanelEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ideall.client.model.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.event.perspective.EditorPanelRestoredEvent;
+import org.exoplatform.ide.client.event.perspective.EditorPanelRestoredHandler;
+import org.exoplatform.ide.client.event.perspective.MaximizeEditorPanelEvent;
+import org.exoplatform.ide.client.event.perspective.RestoreEditorPanelEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -341,7 +341,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#deleteCurrentLune()
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#deleteCurrentLune()
     */
    public void deleteCurrentLune(String path)
    {
@@ -353,7 +353,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#goToLine(java.lang.String, int)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#goToLine(java.lang.String, int)
     */
    public void goToLine(String path, int lineNuber)
    {
@@ -366,7 +366,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#getEditor(java.lang.String)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#getEditor(java.lang.String)
     */
    public TextEditor getEditor(String path)
    {
@@ -379,7 +379,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#findText(java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#findText(java.lang.String, java.lang.String)
     */
    public boolean findText(String findText, boolean isCaseSensitive, String path)
    {
@@ -387,7 +387,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#findReplaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#findReplaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
     */
    public boolean findReplaceText(String findText, String replace, boolean caseSensitive, String path)
    {
@@ -396,7 +396,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#replaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#replaceText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
     */
    public void replaceText(String findText, String replace, boolean caseSensitive, String path)
    {
@@ -404,7 +404,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.EditorPresenter.Display#replaceAllText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#replaceAllText(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
     */
    public void replaceAllText(String findText, String replace, boolean caseSensitive, String path)
    {

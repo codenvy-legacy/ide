@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation.properties;
+package org.exoplatform.ide.client.operation.properties;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

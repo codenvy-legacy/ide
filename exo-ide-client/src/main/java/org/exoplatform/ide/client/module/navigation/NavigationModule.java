@@ -14,43 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation;
+package org.exoplatform.ide.client.module.navigation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
-import org.exoplatform.ideall.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ideall.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ideall.client.framework.control.NewItemControl;
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ideall.client.framework.module.IDEModule;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.util.ImageUtil;
-import org.exoplatform.ideall.client.module.navigation.control.CopyItemsCommand;
-import org.exoplatform.ideall.client.module.navigation.control.CutItemsCommand;
-import org.exoplatform.ideall.client.module.navigation.control.DeleteItemCommand;
-import org.exoplatform.ideall.client.module.navigation.control.GetFileURLControl;
-import org.exoplatform.ideall.client.module.navigation.control.GoToFolderControl;
-import org.exoplatform.ideall.client.module.navigation.control.OpenFileWithCommand;
-import org.exoplatform.ideall.client.module.navigation.control.PasteItemsCommand;
-import org.exoplatform.ideall.client.module.navigation.control.RefreshBrowserControl;
-import org.exoplatform.ideall.client.module.navigation.control.RenameItemCommand;
-import org.exoplatform.ideall.client.module.navigation.control.SaveAllFilesCommand;
-import org.exoplatform.ideall.client.module.navigation.control.SaveFileAsCommand;
-import org.exoplatform.ideall.client.module.navigation.control.SaveFileAsTemplateCommand;
-import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.SearchFilesCommand;
-import org.exoplatform.ideall.client.module.navigation.control.ViewItemPropertiesCommand;
-import org.exoplatform.ideall.client.module.navigation.control.download.DownloadFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.download.DownloadZippedFolderCommand;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFolderControl;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.NewFilePopupMenuControl;
-import org.exoplatform.ideall.client.module.navigation.control.upload.OpenLocalFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.upload.UploadFileCommand;
-import org.exoplatform.ideall.client.module.vfs.webdav.WebDavVirtualFileSystem;
-import org.exoplatform.ideall.client.statusbar.NavigatorStatusControl;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.module.navigation.control.CopyItemsCommand;
+import org.exoplatform.ide.client.module.navigation.control.CutItemsCommand;
+import org.exoplatform.ide.client.module.navigation.control.DeleteItemCommand;
+import org.exoplatform.ide.client.module.navigation.control.GetFileURLControl;
+import org.exoplatform.ide.client.module.navigation.control.GoToFolderControl;
+import org.exoplatform.ide.client.module.navigation.control.OpenFileWithCommand;
+import org.exoplatform.ide.client.module.navigation.control.PasteItemsCommand;
+import org.exoplatform.ide.client.module.navigation.control.RefreshBrowserControl;
+import org.exoplatform.ide.client.module.navigation.control.RenameItemCommand;
+import org.exoplatform.ide.client.module.navigation.control.SaveAllFilesCommand;
+import org.exoplatform.ide.client.module.navigation.control.SaveFileAsCommand;
+import org.exoplatform.ide.client.module.navigation.control.SaveFileAsTemplateCommand;
+import org.exoplatform.ide.client.module.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.SearchFilesCommand;
+import org.exoplatform.ide.client.module.navigation.control.ViewItemPropertiesCommand;
+import org.exoplatform.ide.client.module.navigation.control.download.DownloadFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.download.DownloadZippedFolderCommand;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
+import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
+import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
+import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 

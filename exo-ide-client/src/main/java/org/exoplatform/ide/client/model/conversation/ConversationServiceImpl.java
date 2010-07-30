@@ -17,13 +17,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.conversation;
+package org.exoplatform.ide.client.model.conversation;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ideall.client.model.conversation.event.UserInfoReceivedEvent;
-import org.exoplatform.ideall.client.model.conversation.marshal.UserInfoUnmarshaller;
+import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;

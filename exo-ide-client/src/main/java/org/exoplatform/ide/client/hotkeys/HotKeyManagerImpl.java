@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.hotkeys;
+package org.exoplatform.ide.client.hotkeys;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,14 +29,14 @@ import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ideall.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
-import org.exoplatform.ideall.client.module.edit.control.FindTextCommand;
-import org.exoplatform.ideall.client.module.edit.control.GoToLineControl;
-import org.exoplatform.ideall.client.module.navigation.control.DeleteLineControl;
-import org.exoplatform.ideall.client.module.navigation.control.SaveFileCommand;
-import org.exoplatform.ideall.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
+import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.module.navigation.control.DeleteLineControl;
+import org.exoplatform.ide.client.module.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -62,8 +62,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
       private native void init() /*-{
                  $doc.onkeydown = function(evt) { 
-                       var hotKeyNamager = @org.exoplatform.ideall.client.hotkeys.HotKeyManager::getInstance()();
-                       hotKeyNamager.@org.exoplatform.ideall.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
+                       var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
+                       hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
                  } 
                        
            }-*/;

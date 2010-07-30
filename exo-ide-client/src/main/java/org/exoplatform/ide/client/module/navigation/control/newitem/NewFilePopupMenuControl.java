@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.module.navigation.control.newitem;
+package org.exoplatform.ide.client.module.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
-import org.exoplatform.ideall.client.IDEImageBundle;
+import org.exoplatform.ide.client.IDEImageBundle;
 
 /**
  * Created by The eXo Platform SAS.

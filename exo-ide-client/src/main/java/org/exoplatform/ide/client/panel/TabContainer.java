@@ -17,15 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.panel;
+package org.exoplatform.ide.client.panel;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.ImageUtil;
-import org.exoplatform.ideall.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ideall.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ideall.client.panel.event.SelectPanelEvent;
-import org.exoplatform.ideall.client.panel.event.SelectPanelHandler;
+import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
+import org.exoplatform.ide.client.panel.event.SelectPanelHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;

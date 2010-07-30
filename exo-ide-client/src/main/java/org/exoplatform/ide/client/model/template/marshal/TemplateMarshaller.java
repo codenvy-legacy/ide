@@ -17,10 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.model.template.marshal;
+package org.exoplatform.ide.client.model.template.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ideall.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.Template;
 
 /**
  * Created by The eXo Platform SAS .

@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ideall.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ideall.client.module.vfs.api.File;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -104,7 +104,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
    }
 
    /**
-    * @see org.exoplatform.ideall.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ideall.client.model.template.event.TemplateCreatedEvent)
+    * @see org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent)
     */
    public void onTemplateCreated(TemplateCreatedEvent event)
    {

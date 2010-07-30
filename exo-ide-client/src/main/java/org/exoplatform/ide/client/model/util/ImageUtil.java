@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.model.util;
+package org.exoplatform.ide.client.model.util;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ide.client.Images;
 
 import java.util.HashMap;
 import java.util.Map;

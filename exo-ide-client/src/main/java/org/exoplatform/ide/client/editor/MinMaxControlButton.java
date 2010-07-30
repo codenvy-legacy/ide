@@ -17,10 +17,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ideall.client.editor;
+package org.exoplatform.ide.client.editor;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
-import org.exoplatform.ideall.client.Images;
+import org.exoplatform.ide.client.Images;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;

@@ -15,14 +15,14 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ideall.client.browser;
+package org.exoplatform.ide.client.browser;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.vfs.api.Item;
-import org.exoplatform.ideall.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;

@@ -16,25 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.search.text;
+package org.exoplatform.ide.client.search.text;
 
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ideall.client.editor.event.EditorFindReplaceTextEvent;
-import org.exoplatform.ideall.client.editor.event.EditorFindTextEvent;
-import org.exoplatform.ideall.client.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorCloseFileHandler;
-import org.exoplatform.ideall.client.framework.form.FormClosedEvent;
-import org.exoplatform.ideall.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.search.Search;
-import org.exoplatform.ideall.client.search.text.event.FindTextResultEvent;
-import org.exoplatform.ideall.client.search.text.event.FindTextResultHandler;
+import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorFindTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.form.FormClosedEvent;
+import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.search.Search;
+import org.exoplatform.ide.client.search.text.event.FindTextResultEvent;
+import org.exoplatform.ide.client.search.text.event.FindTextResultHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -278,7 +278,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    }
 
    /**
-    * @see org.exoplatform.ideall.client.search.text.event.FindTextResultHandler#onFindTextResult(org.exoplatform.ideall.client.search.text.event.FindTextResultEvent)
+    * @see org.exoplatform.ide.client.search.text.event.FindTextResultHandler#onFindTextResult(org.exoplatform.ide.client.search.text.event.FindTextResultEvent)
     */
    public void onFindTextResult(FindTextResultEvent event)
    {
@@ -290,7 +290,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -322,7 +322,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorCloseFileHandler#onEditorCloseFile(org.exoplatform.ideall.client.editor.event.EditorCloseFileEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorCloseFileHandler#onEditorCloseFile(org.exoplatform.ide.client.editor.event.EditorCloseFileEvent)
     */
    public void onEditorCloseFile(EditorCloseFileEvent event)
    {

@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.operation;
+package org.exoplatform.ide.client.operation;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ideall.client.editor.MinMaxControlButton;
-import org.exoplatform.ideall.client.event.perspective.MaximizeOperationPanelEvent;
-import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredEvent;
-import org.exoplatform.ideall.client.event.perspective.OperationPanelRestoredHandler;
-import org.exoplatform.ideall.client.event.perspective.RestoreOperationPanelEvent;
-import org.exoplatform.ideall.client.framework.ui.TabPanel;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ideall.client.module.gadget.ui.GadgetPreviewPane;
-import org.exoplatform.ideall.client.module.vfs.api.File;
-import org.exoplatform.ideall.client.operation.output.OutputForm;
-import org.exoplatform.ideall.client.operation.preview.PreviewForm;
-import org.exoplatform.ideall.client.operation.properties.PropertiesForm;
+import org.exoplatform.ide.client.editor.MinMaxControlButton;
+import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
+import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
+import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
+import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
+import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
+import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.operation.output.OutputForm;
+import org.exoplatform.ide.client.operation.preview.PreviewForm;
+import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;

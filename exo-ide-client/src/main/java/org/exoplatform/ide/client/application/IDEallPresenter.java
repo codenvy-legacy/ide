@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.application;
+package org.exoplatform.ide.client.application;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,12 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ideall.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ideall.client.framework.control.event.RegisterControlHandler;
-import org.exoplatform.ideall.client.framework.ui.event.ClearFocusEvent;
-import org.exoplatform.ideall.client.model.ApplicationContext;
-import org.exoplatform.ideall.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
+import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.HandlerManager;
 

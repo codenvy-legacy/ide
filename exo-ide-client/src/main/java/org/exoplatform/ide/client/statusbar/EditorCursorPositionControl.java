@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ideall.client.statusbar;
+package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ideall.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ideall.client.module.edit.event.GoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,7 +80,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
    }
 
    /**
-    * @see org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ideall.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

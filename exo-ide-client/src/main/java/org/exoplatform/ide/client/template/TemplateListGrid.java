@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ideall.client.template;
+package org.exoplatform.ide.client.template;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ideall.client.model.template.Template;
-import org.exoplatform.ideall.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.util.ImageUtil;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
