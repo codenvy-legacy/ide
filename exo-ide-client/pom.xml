@@ -242,14 +242,17 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-netvibes-server</artifactId>
+               <version>${project.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-groovy-server</artifactId>
+               <version>${project.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-gadget-server</artifactId>
+               <version>${project.version}</version>
                <exclusions>
                   <exclusion>
                      <groupId>pull-parser</groupId>
