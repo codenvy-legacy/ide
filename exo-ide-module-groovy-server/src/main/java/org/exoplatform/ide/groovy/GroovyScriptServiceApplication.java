@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.groovy.service;
+package org.exoplatform.ide.groovy;
 
 import java.util.HashSet;
 import java.util.Set;
