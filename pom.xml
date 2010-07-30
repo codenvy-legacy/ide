@@ -400,7 +400,7 @@
   	<module>exo-ide-module-groovy-server</module>
   	<module>exo-ide-module-groovy-client</module>
   	
-  	<module>exo-ideall-client</module>
+  	<module>exo-ide-client</module>
   
   </modules>
 </project>
