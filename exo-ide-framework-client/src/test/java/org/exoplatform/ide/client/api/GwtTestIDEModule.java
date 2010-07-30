@@ -38,7 +38,6 @@ public class GwtTestIDEModule extends GWTTestCase
     */
    public void testIDEallModule()
    {
-      System.out.println("GwtTestWebDavFileSystem.testIDEallModule()");
    }
 
 }
