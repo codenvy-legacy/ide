@@ -64,6 +64,12 @@ public abstract class BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
    
+   protected void assertElementPresentInWorkspaceTree(String name) throws Exception
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
+         + name + "]/col[0]"));
+   }
+   
    protected void deleteSelectedFileOrFolder() throws Exception
    {
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
@@ -72,6 +78,43 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
    }
    
+   /**
+    * Creates folder with name folderName.
+    * 
+    * Folder, that will be parent for folderName must be selected before.
+    * 
+    * Clicks on New button on toolbar, then click on Folder menu from list.
+    * 
+    * @param folderName folder name
+    */
+   protected void createFolder(String folderName)
+   {
+      selenium.mouseDownAt("//div[@title='New']//img", "");
+      selenium.mouseUpAt("//div[@title='New']//img", "");
+      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
+      selenium
+         .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
+      selenium
+         .type(
+            "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
+            "");
+      selenium
+         .typeKeys(
+            "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
+            folderName);
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
+   }
+   
+   /**
+    * Calls Save As command by clicking Save As... icon on toolbar.
+    * 
+    * Checks is dialog appears, and do all elements are present in window.
+    * 
+    * Enters name to text field and click Ok button
+    * 
+    * @param name file name
+    * @throws Exception
+    */
    protected void saveAsFile(String name) throws Exception
    {
       selenium.mouseDownAt("//div[@title='Save As...']//img", "");
@@ -102,5 +145,34 @@ public abstract class BaseTest
    {
       selenium.mouseDownAt("//div[@title='Save']//img", "");
       selenium.mouseUpAt("//div[@title='Save']//img", "");
+   }
+   
+   /**
+    * Clicks on New button on toolbar and then clicks on 
+    * menuName from list
+    * @param menuName
+    */
+   protected void openNewFileFromToolbar(String menuName)
+   {
+      selenium.mouseDownAt("//div[@title='New']//img", "");
+      selenium.mouseUpAt("//div[@title='New']//img", "");
+      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
+         + menuName + "\")]", "");
+   }
+   
+   /**
+    * Opens folder in Workspace tree (if folder is closed)
+    * or closes folder (if it is opened)
+    * 
+    * Clicks on open sign of folder.
+    * 
+    * If folderName doesn't present in Workspace tree, test fails.
+    * 
+    * @param folderName
+    */
+   protected void openOrCloseFolder(String folderName)
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
+         + folderName + "]/col[0]/open");
    }
 }

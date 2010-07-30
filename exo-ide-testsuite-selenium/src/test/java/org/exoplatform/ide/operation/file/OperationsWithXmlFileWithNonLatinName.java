@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -35,6 +36,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
    private static final String FILE_NAME = "ׂוסעמגûיװאיכ.xml";
       
    //IDE-49
+   @Ignore
    @Test
    public void delete() throws Exception
    {
@@ -62,6 +64,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
    }
    
    //IDE-48
+   @Ignore
    @Test
    public void openAndSave() throws Exception
    {
