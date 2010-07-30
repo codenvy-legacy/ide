@@ -44,7 +44,7 @@
 
 
    <component>
-      <type>org.exoplatform.ideall.discovery.RepositoryDiscoveryService
+      <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService
 		</type>
    </component>
 
@@ -102,7 +102,7 @@
 
 
    <component>
-      <type>org.exoplatform.ideall.shindig.oauth.RestSecurityTokenGenerator
+      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator
 		</type>
       <init-params>
          <value-param>

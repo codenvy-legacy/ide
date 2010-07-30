@@ -268,7 +268,7 @@
    <filter-mapping>
       <filter-name>ThreadLocalSessionProviderInitializedFilter
       </filter-name>
-      <url-pattern>/org.exoplatform.ideall.IDEApplication/*
+      <url-pattern>/org.exoplatform.ide.IDEApplication/*
       </url-pattern>
    </filter-mapping>
 
