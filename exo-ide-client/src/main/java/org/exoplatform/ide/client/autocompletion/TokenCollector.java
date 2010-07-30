@@ -17,16 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.autocompletion.groovy;
+package org.exoplatform.ide.client.autocompletion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.ide.client.autocompletion.api.TokenCollector;
-import org.exoplatform.ide.client.autocompletion.api.TokensCollectedCallback;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,23 +30,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GroovyTokenCollector implements TokenCollector
+public interface TokenCollector
 {
 
-   private HandlerManager eventBus;
-
-   public GroovyTokenCollector(HandlerManager eventBus)
-   {
-      this.eventBus = eventBus;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.autocompletion.TokenCollector#getTokens(java.lang.String, java.util.List)
-    */
-   public void getTokens(String prefix, String lineMimeType, int currentLine, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
-   {
-      List<Token> tokens = new ArrayList<Token>();
-      tokensCollectedCallback.onTokensCollected(tokens, null, null, null);
-   }
-
+   void getTokens(String line, String lineMimeType, int lineNum, int cursorPos,  List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback);
+   
 }
