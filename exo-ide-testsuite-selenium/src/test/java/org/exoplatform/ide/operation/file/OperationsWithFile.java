@@ -79,26 +79,113 @@ public class OperationsWithFile extends BaseTest
       
       checkFileOnWebDav();
       
-      Thread.sleep(1000);
+      Thread.sleep(5000);
       
-      changeFilecontent();
+      changeFileContent();
+      
+      Thread.sleep(1000);
       
       saveCurrentFile();
       
+      Thread.sleep(1000);
+      
+      closeTab("0");
+      
+      Thread.sleep(1000);
+      
       selenium.refresh();
       
-      selenium.waitForPageToLoad("20000");
+      selenium.waitForPageToLoad("30000");
+      
+      Thread.sleep(5000);
       
       //open Test folder
       openOrCloseFolder(FOLDER_NAME);
       
-      Thread.sleep(1000);
+      Thread.sleep(5000);
       
       assertElementPresentInWorkspaceTree(FILE_NAME);
+      
+      selectItemInWorkspaceTree(FILE_NAME);
+      
+      Thread.sleep(1000);
+      
+      openFileWithCodeEditor(FILE_NAME);
+      
+      Thread.sleep(3000);
+      
+      changeOpenedFileContent();
+      
+//      saveCurrentFile();
+      Thread.sleep(1000);
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save']"));
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save']", "");
+      Thread.sleep(1000);
+      
+      closeTab("0");
+      Thread.sleep(500);
+      
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      Thread.sleep(1000);
+      
+      deleteSelectedFileOrFolder();
+      
+      Thread.sleep(5000);
    }
    
-   private void changeFilecontent() throws Exception
+   private void changeOpenedFileContent() throws Exception
    {
+      
+      final String previousContent = "<?xml version='1.0' encoding='UTF-8'?>\n"
+         +"<test>\n"
+         +"  <settings>param</settings>\n"
+         +"  <bean>\n"
+         +"    <name>MineBean</name>\n"
+         +"  </bean>\n"
+         +"</test>";
+      
+      
+      
+      //change file content
+      
+      String text = selenium.getText("//body[@class='editbox']/");
+      assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
+      
+      assertTrue(text.equals(previousContent));
+      
+      //at the end of line
+      selenium.keyDown("//body[@class='editbox']/", "\\35");
+      //enter
+      selenium.keyDown("//body[@class='editbox']/", "\\13");
+      selenium.keyUp("//body[@class='editbox']/", "\\13");
+      
+      //before tag test
+      selenium.keyPress("//body[@class='editbox']/", "\\46");
+      
+      //at the end of line
+      selenium.keyDown("//body[@class='editbox']/", "\\35");
+      
+      //enter
+      selenium.keyDown("//body[@class='editbox']/", "\\13");
+      selenium.keyUp("//body[@class='editbox']/", "\\13");
+      
+      Thread.sleep(100);
+      selenium.typeKeys("//body[@class='editbox']/", "<root>");
+      selenium.typeKeys("//body[@class='editbox']/", "admin");
+      selenium.typeKeys("//body[@class='editbox']/", "</root>");
+   }
+   
+   private void changeFileContent() throws Exception
+   {
+      String text = selenium.getText("//body[@class='editbox']/");
+      assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
+     
+      selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");
+      selenium.mouseUpAt("//body[@class='editbox']//span[2]", "");
+      
       //change file content
       selenium.keyDown("//body[@class='editbox']/", "\\35");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
@@ -111,9 +198,9 @@ public class OperationsWithFile extends BaseTest
       selenium.typeKeys("//body[@class='editbox']/", "<test>");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
       selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "<war>");
+      selenium.typeKeys("//body[@class='editbox']/", "<settings>");
       selenium.typeKeys("//body[@class='editbox']/", "param");
-      selenium.typeKeys("//body[@class='editbox']/", "</war>");
+      selenium.typeKeys("//body[@class='editbox']/", "</settings>");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
       selenium.keyUp("//body[@class='editbox']/", "\\13");
       selenium.typeKeys("//body[@class='editbox']/", "<bean>");
@@ -128,14 +215,16 @@ public class OperationsWithFile extends BaseTest
       selenium.keyDown("//body[@class='editbox']/", "\\13");
       selenium.keyUp("//body[@class='editbox']/", "\\13");
       selenium.typeKeys("//body[@class='editbox']/", "</test>");
-      Thread.sleep(1000);
    }
    
    private void checkFileOnWebDav() throws Exception
    {
-      selenium.openWindow("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/", "WEBDAV Browser");
-      selenium.waitForPopUp("WEBDAV Browser", "10000");
-      selenium.selectPopUp("WEBDAV Browser");
+//      selenium.openWindow("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/", "WEBDAV Browser");
+//      selenium.waitForPopUp("WEBDAV Browser", "10000");
+//      selenium.selectPopUp("WEBDAV Browser");
+      selenium.open("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/");
+      
+      selenium.waitForPageToLoad("10000");
       
       assertTrue(selenium.isElementPresent("link=" + FOLDER_NAME));
       
@@ -145,8 +234,13 @@ public class OperationsWithFile extends BaseTest
       
       assertTrue(selenium.isElementPresent("link=" + FILE_NAME));
       
-      selenium.getEval("selenium.browserbot.getCurrentWindow().close()");
-      selenium.selectWindow("IDEall");
+      selenium.goBack();
+      selenium.waitForPageToLoad("10000");
+      selenium.goBack();
+      selenium.waitForPageToLoad("30000");
+      
+//      selenium.getEval("selenium.browserbot.getCurrentWindow().close()");
+//      selenium.selectWindow("IDEall");
    }
      
 
