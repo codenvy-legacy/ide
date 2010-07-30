@@ -106,10 +106,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
     */
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      System.out.println("GroovyPluginEventHandler.onValidateGroovyScript()");
-      
-      System.out.println("active file: " + activeFile);
-      
       GroovyService.getInstance().validate(activeFile.getName(), activeFile.getContent());
    }
 
@@ -299,11 +295,6 @@ public class GroovyPluginEventHandler implements ValidateGroovyScriptHandler, De
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("active file changed: " + event.getFile());
-      if (event.getFile() != null) {
-         System.out.println("href: " + event.getFile().getHref());
-      }
-      
       activeFile = event.getFile();
    }
 
