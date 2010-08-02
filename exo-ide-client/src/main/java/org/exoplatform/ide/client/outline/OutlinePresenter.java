@@ -139,6 +139,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       if (editor == null || file == null || file.getContentType() == null)
       {
+         refreshOutlineTimer.cancel();
+         selectOutlineTimer.cancel();
          return false;
       }
 
