@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -34,9 +35,16 @@ public class OperationsWithFile extends BaseTest
    
    private final static String FOLDER_NAME = "Test";
    
+   private final static String FOLDER_NAME_2 = "Test 2";
+   
    private final static String FILE_NAME = "RepoFile.xml";
    
+   private final static String SAVED_FILE_XML = "Saved File.xml";
+   
+   private final static String SAVED_FILE_GROOVY = "Saved File.groovy";
+   
    //IDE-13:Saving previously edited file.
+   //@Ignore
    @Test
    public void savePreviouslyEditedFile() throws Exception
    {
@@ -77,10 +85,12 @@ public class OperationsWithFile extends BaseTest
       
       Thread.sleep(1000);
       
+      //go to server window and check file
       checkFileOnWebDav();
       
       Thread.sleep(5000);
       
+      //type something in file
       changeFileContent();
       
       Thread.sleep(1000);
@@ -93,6 +103,7 @@ public class OperationsWithFile extends BaseTest
       
       Thread.sleep(1000);
       
+      //check file content after refresh
       selenium.refresh();
       
       selenium.waitForPageToLoad("30000");
@@ -133,6 +144,152 @@ public class OperationsWithFile extends BaseTest
       
       deleteSelectedFileOrFolder();
       
+      Thread.sleep(5000);
+   }
+   
+   //TODO:
+   //when you will be able to find iframe by id
+   //changed this test
+   //IDE-54:Save All Files
+   @Test
+   public void saveAllFiles() throws Exception
+   {
+      createFolder(FOLDER_NAME);
+      Thread.sleep(1000);
+      
+      selectItemInWorkspaceTree("dev-monit");
+      createFolder(FOLDER_NAME_2);
+      Thread.sleep(1000);
+      
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      Thread.sleep(500);
+      
+      openNewFileFromToolbar("XML File");
+      Thread.sleep(1000);
+      
+      //open menu File
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      
+      //check is Save All disabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[contains(text(), 'Save All')]"));
+      
+      //save file as
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Save As')]", "");
+      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
+         + "item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
+         + "item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", SAVED_FILE_XML);
+      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
+      
+      Thread.sleep(2000);
+      
+      closeTab("0");
+      Thread.sleep(1000);
+      
+      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      Thread.sleep(500);
+      
+      openNewFileFromToolbar("Groovy Script");
+      Thread.sleep(1000);
+      
+      //open menu File
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      
+      //check is Save All disabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[contains(text(), 'Save All')]"));
+      
+      //save file as
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Save As')]", "");
+      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
+         + "item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
+         + "item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", SAVED_FILE_GROOVY);
+      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
+      Thread.sleep(2000);
+      
+      closeTab("0");
+      Thread.sleep(1000);
+      
+      openFileWithCodeEditor(SAVED_FILE_XML);
+      Thread.sleep(1000);
+      //at the end of line
+      selenium.keyDown("//body[@class='editbox']/", "\\35");
+      //enter
+      selenium.keyDown("//body[@class='editbox']/", "\\13");
+      selenium.keyUp("//body[@class='editbox']/", "\\13");
+      
+      Thread.sleep(100);
+      selenium.typeKeys("//body[@class='editbox']/", "<root>");
+      selenium.typeKeys("//body[@class='editbox']/", "admin");
+      selenium.typeKeys("//body[@class='editbox']/", "</root>");
+      Thread.sleep(1000);
+      
+      //create html file from template
+      selenium.mouseDownAt("//div[@title='New']//img", "");
+      selenium.mouseUpAt("//div[@title='New']//img", "");
+      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
+         + "From Template" + "\")]", "");
+      Thread.sleep(1000);
+      selenium.click("scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormListGrid\"]/body/row[1]/col[1]");
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
+      Thread.sleep(1000);
+      
+      //create text file from template
+      selenium.mouseDownAt("//div[@title='New']//img", "");
+      selenium.mouseUpAt("//div[@title='New']//img", "");
+      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
+         + "From Template" + "\")]", "");
+      Thread.sleep(1000);
+      selenium.click("scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormListGrid\"]/body/row[2]/col[1]");
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
+      Thread.sleep(1000);
+      
+      //open menu File
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      
+      //check is Save All enabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Save All')]"));
+      
+      //click Save All
+      selenium.mouseDownAt(
+         "//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Save All')]", "");
+      Thread.sleep(2000);
+      
+      //is file opened
+      assertTrue(selenium.isTextPresent("Untitled file.html *"));
+      assertTrue(selenium.isTextPresent("Untitled file.txt *"));
+      assertFalse(selenium.isTextPresent(SAVED_FILE_XML + " *"));
+      assertTrue(selenium.isTextPresent(SAVED_FILE_XML));
+      
+      //Close Saved file.xml
+      closeTab("0");
+      
+      //close Untitled file.txt
+      closeTab("1");
+      Thread.sleep(500);
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      Thread.sleep(1000);
+      
+      //close Untitled file.html
+      closeTab("0");
+      Thread.sleep(500);
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      Thread.sleep(1000);
+      
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      deleteSelectedFileOrFolder();
+      Thread.sleep(1000);
+      
+      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      deleteSelectedFileOrFolder();
       Thread.sleep(5000);
    }
    
@@ -180,9 +337,9 @@ public class OperationsWithFile extends BaseTest
    
    private void changeFileContent() throws Exception
    {
-      String text = selenium.getText("//body[@class='editbox']/");
-      assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
-     
+//      String text = selenium.getText("//body[@class='editbox']/");
+//      assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
+//     
       selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");
       selenium.mouseUpAt("//body[@class='editbox']//span[2]", "");
       
@@ -190,10 +347,6 @@ public class OperationsWithFile extends BaseTest
       selenium.keyDown("//body[@class='editbox']/", "\\35");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
       selenium.keyUp("//body[@class='editbox']/", "\\13");
-//      for (int i = 0; i < 44; i++)
-//      {
-//         selenium.keyPress("//body[@class='editbox']/", "\\46");
-//      }
       Thread.sleep(100);
       selenium.typeKeys("//body[@class='editbox']/", "<test>");
       selenium.keyDown("//body[@class='editbox']/", "\\13");
