@@ -37,7 +37,7 @@ public class FolderOperationsTest extends BaseTest
    /*private void selectWorkspace() throws Exception
    {
       selenium.deleteAllVisibleCookies();
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
+      selenium.open("/org.exoplatform.ide.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("10000");
       Assert.assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
       Assert.assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));

@@ -42,7 +42,7 @@ public abstract class BaseTest
    {
       selenium = new DefaultSelenium("localhost", 4444, "*firefox", "http://127.0.0.1:8888/");
       selenium.start();
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
+      selenium.open("/org.exoplatform.ide.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("30000");
       selenium.windowMaximize();
    }

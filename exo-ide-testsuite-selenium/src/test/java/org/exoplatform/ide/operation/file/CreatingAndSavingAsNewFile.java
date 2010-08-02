@@ -120,7 +120,7 @@ public class CreatingAndSavingAsNewFile extends BaseTest
    
    private void deleteTestFolder() throws InterruptedException
    {
-      selenium.open("/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
+      selenium.open("/org.exoplatform.ide.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("10000");
       
       selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Test]/col[1]");
