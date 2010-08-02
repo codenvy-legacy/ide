@@ -59,6 +59,40 @@ public abstract class BaseTest
       selenium.stop();
    }
    
+   /**
+    * Select main frame of IDE.
+    * 
+    * This method used, after typing text in editor.
+    * To type text you must select editor iframe. After typing,
+    * to return to them main frame, use selectMainFrame()
+    * 
+    */
+   protected void selectMainFrame()
+   {
+      selenium.selectFrame("relative=top");
+   }
+   
+   /**
+    * @param tabIndex begins from 0
+    */
+   protected void selectEditor(int tabIndex)
+   {
+      String divIndex = String.valueOf(tabIndex + 2);
+      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe");
+   }
+   
+   /**
+    * 
+    * @param tabIndex begins from 0
+    * @param text
+    */
+   protected void typeTextIntoEditor(int tabIndex, String text)
+   {
+      selectEditor(tabIndex);
+      selenium.typeKeys("//body", text);
+      selectMainFrame();
+   }
+   
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
