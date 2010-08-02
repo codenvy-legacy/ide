@@ -37,9 +37,7 @@ public class AutoCompletionXMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
-      selenium.mouseDownAt("//div[@title='New']//img", "");
-      selenium.mouseUpAt("//div[@title='New']//img", "");
-      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"XML\")]", "");
+      openNewFileFromToolbar("XML File");
       Thread.sleep(1000);
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
