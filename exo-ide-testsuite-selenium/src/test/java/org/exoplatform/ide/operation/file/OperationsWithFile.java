@@ -151,6 +151,7 @@ public class OperationsWithFile extends BaseTest
    //when you will be able to find iframe by id
    //changed this test
    //IDE-54:Save All Files
+   //@Ignore
    @Test
    public void saveAllFiles() throws Exception
    {
@@ -201,7 +202,7 @@ public class OperationsWithFile extends BaseTest
       
       //check is Save All disabled
       assertTrue(selenium.isElementPresent(
-         "//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[contains(text(), 'Save All')]"));
+         "//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='Save All...']"));
       
       //save file as
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Save As')]", "");
@@ -291,6 +292,144 @@ public class OperationsWithFile extends BaseTest
       selectItemInWorkspaceTree(FOLDER_NAME_2);
       deleteSelectedFileOrFolder();
       Thread.sleep(5000);
+   }
+   
+   @Test
+   public void displayingWarningMessage() throws Exception
+   {
+      openNewFileFromToolbar("XML File");
+      Thread.sleep(1000);
+      
+      closeTab("0");
+      Thread.sleep(500);
+      
+      //check is warning dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      
+      //click No button
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      Thread.sleep(1000);
+      
+      assertFalse(selenium.isTextPresent("Untitled file.xml"));
+      
+      openNewFileFromToolbar("XML File");
+      Thread.sleep(5000);
+      
+      //check is file opened
+      assertTrue(selenium.isTextPresent("Untitled file.xml *"));
+      
+      closeTab("0");
+      Thread.sleep(500);
+      
+      //check is warning dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      //click Yes button
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      //check is Save As dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
+      //save file with default name
+      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
+      Thread.sleep(1000);
+      
+      //check is file appeard in workspace tree
+      assertElementPresentInWorkspaceTree("Untitled file.xml");
+      
+      //check is file closed
+      assertFalse(selenium.isTextPresent("Untitled file.xml *"));
+      
+      selectItemInWorkspaceTree("Untitled file.xml");
+      Thread.sleep(500);
+      
+      openFileWithCodeEditor("Untitled file.xml");
+      
+      changeFileContent();
+      
+      openNewFileFromToolbar("JavaScript File");
+      Thread.sleep(1000);
+      
+      openFileWithCodeEditor("Untitled file.xml");
+      
+      //check file opened
+      assertTrue(selenium.isTextPresent("Untitled file.xml *"));
+      
+      //check file content
+      final String previousContent = "<?xml version='1.0' encoding='UTF-8'?>\n"
+         +"<test>\n"
+         +"  <settings>param</settings>\n"
+         +"  <bean>\n"
+         +"    <name>MineBean</name>\n"
+         +"  </bean>\n"
+         +"</test>";
+      
+      
+      selectEditor(0);
+      String text = selenium.getText("//body[@class='editbox']/");
+      assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
+      
+      assertTrue(text.equals(previousContent));
+      selectMainFrame();
+      
+      //check Save button enabled
+      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='true']"));
+      
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      
+      //check is Save enabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleField']/nobr[text()='Save']"));
+      
+      //save file
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save']", "");
+      Thread.sleep(1000);
+      
+      closeTab("0");
+      Thread.sleep(500);
+      
+      openFileWithCodeEditor("Untitled file.xml");
+      
+      //check file opened and title doesn't mark with *
+      assertFalse(selenium.isTextPresent("Untitled file.xml *"));
+      
+      assertTrue(selenium.isTextPresent("Untitled file.xml"));
+      
+      selectEditor(1);
+      String savedText = selenium.getText("//body[@class='editbox']/");
+      assertTrue(savedText.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
+      
+      assertTrue(savedText.equals(previousContent));
+      selectMainFrame();
+      
+      closeTab("1");
+      
+      //close untitled JavaScript file
+      closeTab("0");
+      Thread.sleep(500);
+      
+      //check is warning dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      
+      //click No button
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      Thread.sleep(1000);
+      
+      //delete Untitled file.xml
+      selectItemInWorkspaceTree("Untitled file.xml");
+      Thread.sleep(500);
+      
+      deleteSelectedFileOrFolder();
+      Thread.sleep(1000);
    }
    
    private void changeOpenedFileContent() throws Exception

@@ -95,12 +95,12 @@ public abstract class BaseTest
    
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
    
    protected void assertElementPresentInWorkspaceTree(String name) throws Exception
    {
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" 
          + name + "]/col[0]"));
    }
    
@@ -166,7 +166,7 @@ public abstract class BaseTest
    
    protected void openFileWithCodeEditor(String fileName) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(500);
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       Thread.sleep(1000);
@@ -186,10 +186,11 @@ public abstract class BaseTest
     * menuName from list
     * @param menuName
     */
-   protected void openNewFileFromToolbar(String menuName)
+   protected void openNewFileFromToolbar(String menuName) throws Exception
    {
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
+      Thread.sleep(500);
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
          + menuName + "\")]", "");
    }
@@ -206,7 +207,7 @@ public abstract class BaseTest
     */
    protected void openOrCloseFolder(String folderName)
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" 
          + folderName + "]/col[0]/open");
    }
 }
