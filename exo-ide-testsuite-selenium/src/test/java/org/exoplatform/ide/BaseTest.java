@@ -28,7 +28,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   ${date} ${time}
  *
@@ -47,6 +47,14 @@ public abstract class BaseTest
       selenium.windowMaximize();
    }
 
+   /**
+    * Performs click on toolbar button
+    * @param buttonTitle toolbar button title
+    */
+   public void clickOnToolbarButton(String buttonTitle) {
+      selenium.mouseDownAt("//div[@title='" + buttonTitle + "']//img", "");
+      selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");      
+   }
    
    protected void closeTab(String index)
    {
@@ -128,6 +136,18 @@ public abstract class BaseTest
       selectMainFrame();
    }
    
+   /**
+    * Get text from tab number "tabIndex" from editor
+    * @param tabIndex begins from 0
+    */
+   protected String getTextFromCodeEditor(int tabIndex)
+   {
+      selectEditor(tabIndex);
+      String text = selenium.getText("//body[@class='editbox']");
+      selectMainFrame();
+      return text;
+   }   
+   
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
@@ -141,8 +161,7 @@ public abstract class BaseTest
    
    protected void deleteSelectedFileOrFolder() throws Exception
    {
-      selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
-      selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
+      clickOnToolbarButton("Delete Item(s)...");
       Thread.sleep(1000);
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
    }
@@ -158,8 +177,7 @@ public abstract class BaseTest
     */
    protected void createFolder(String folderName)
    {
-      selenium.mouseDownAt("//div[@title='New']//img", "");
-      selenium.mouseUpAt("//div[@title='New']//img", "");
+      clickOnToolbarButton("New");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
@@ -186,9 +204,8 @@ public abstract class BaseTest
     */
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
-      selenium.mouseDownAt("//div[@title='Save As...']//img", "");
-      selenium.mouseUpAt("//div[@title='Save As...']//img", "");
-      
+      clickOnToolbarButton("Save As...");
+            
       checkSaveAsDialogAndSave(name);
    }
    
@@ -228,8 +245,7 @@ public abstract class BaseTest
    
    protected void saveCurrentFile()
    {
-      selenium.mouseDownAt("//div[@title='Save']//img", "");
-      selenium.mouseUpAt("//div[@title='Save']//img", "");
+      clickOnToolbarButton("Save");
    }
    
    /**
@@ -239,8 +255,7 @@ public abstract class BaseTest
     */
    protected void openNewFileFromToolbar(String menuName) throws Exception
    {
-      selenium.mouseDownAt("//div[@title='New']//img", "");
-      selenium.mouseUpAt("//div[@title='New']//img", "");
+      clickOnToolbarButton("New");
       Thread.sleep(500);
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
          + menuName + "\")]", "");
