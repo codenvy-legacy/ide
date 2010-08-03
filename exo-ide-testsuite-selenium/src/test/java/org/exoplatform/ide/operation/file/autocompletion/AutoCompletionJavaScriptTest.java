@@ -32,7 +32,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 {
 
    @Test
-   public void testPlainJS() throws InterruptedException
+   public void testPlainJS() throws InterruptedException, Exception
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
@@ -57,7 +57,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    }
 
    @Test
-   public void testGoogleGadget() throws InterruptedException
+   public void testGoogleGadget() throws InterruptedException, Exception
    {
 //      selenium.refresh();
 //      selenium.waitForPageToLoad("30000");
@@ -95,7 +95,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    }
 
    @Test
-   public void testHTML() throws InterruptedException
+   public void testHTML() throws InterruptedException, Exception
    {
 //      selenium.refresh();
 //      selenium.waitForPageToLoad("30000");
@@ -165,7 +165,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    }
 
    @Test
-   public void testGroovyTemplate() throws InterruptedException
+   public void testGroovyTemplate() throws InterruptedException, Exception
    {
 //      selenium.refresh();
 //      selenium.waitForPageToLoad("30000");
