@@ -83,10 +83,10 @@ public class NavigationModule implements IDEModule, InitializeServicesHandler
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML file", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT file", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script file", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS file", "CSS file", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML File", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT File", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script File", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
       eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand(eventBus)));
