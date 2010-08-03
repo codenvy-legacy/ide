@@ -119,12 +119,12 @@ public abstract class BaseTest
    /**
     * 
     * @param tabIndex begins from 0
-    * @param text
+    * @param text (can be used '\n' as line break)
     */
    protected void typeTextIntoEditor(int tabIndex, String text)
    {
       selectEditor(tabIndex);
-      selenium.typeKeys("//body", text);
+      typeText(text);
       selectMainFrame();
    }
    
