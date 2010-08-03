@@ -380,6 +380,7 @@ public class OperationsWithFile extends BaseTest
       //check Save button enabled
       assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='true']"));
       
+      //open menu File
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       Thread.sleep(1000);
       

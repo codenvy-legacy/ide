@@ -60,6 +60,41 @@ public abstract class BaseTest
    }
    
    /**
+    * Types text to selected frame to body tag, which has attribute
+    * class='editbox'.
+    * 
+    * Use keyPressNative for typing such symbols: 'y', '.'
+    * 
+    * Replace '\n' (Enter) symbol with keyDown and keyUp functions
+    * 
+    * @param text text to type
+    */
+   protected void typeText(String text)
+   {
+      for (int i = 0; i < text.length(); i++)
+      {
+         char symbol = text.charAt(i);
+         if (symbol == 'y')
+         {
+            selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+         }
+         else if (symbol =='\n')
+         {
+            selenium.keyDown("//body[@class='editbox']/", "\\13");
+            selenium.keyUp("//body[@class='editbox']/", "\\13");
+         }
+         else if (symbol == '.')
+         {
+            selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
+         }
+         else
+         {
+            selenium.typeKeys("//body[@class='editbox']/", String.valueOf(symbol));
+         }
+      }
+   }
+   
+   /**
     * Select main frame of IDE.
     * 
     * This method used, after typing text in editor.
