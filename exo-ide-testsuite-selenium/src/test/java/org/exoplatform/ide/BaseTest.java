@@ -184,19 +184,35 @@ public abstract class BaseTest
     * @param name file name
     * @throws Exception
     */
-   protected void saveAsFile(String name) throws Exception
+   protected void saveAsUsingToolbarButton(String name) throws Exception
    {
       selenium.mouseDownAt("//div[@title='Save As...']//img", "");
       selenium.mouseUpAt("//div[@title='Save As...']//img", "");
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
-      assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
-      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", name);
-      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
+      
+      checkSaveAsDialogAndSave(name);
+   }
+   
+   /**
+    * Call Save As command using top menu File.
+    * 
+    * @param name file name to save
+    * @throws Exception
+    */
+   protected void saveAsByTopMenu(String name) throws Exception
+   {
+      //open menu File
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      
+      //check is Save As enabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']"));
+      
+      //click Save As
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']", "");
+      Thread.sleep(1000);
+      
+      checkSaveAsDialogAndSave(name);
    }
    
    protected void openFileWithCodeEditor(String fileName) throws Exception
@@ -244,5 +260,26 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" 
          + folderName + "]/col[0]/open");
+   }
+   
+   /**
+    * Check is dialog window Save as file appeared
+    * and do all elements present.
+    * 
+    * Enter name to text field and click Ok button
+    * 
+    * @param name file name
+    */
+   private void checkSaveAsDialogAndSave(String name)
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
+      assertTrue(selenium.isTextPresent("Save file as"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
+      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
+      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", name);
+      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
    }
 }

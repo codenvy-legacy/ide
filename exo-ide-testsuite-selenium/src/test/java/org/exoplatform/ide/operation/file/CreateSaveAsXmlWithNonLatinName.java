@@ -54,7 +54,7 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       selenium.keyUp("//body[@class='editbox']/", "\\13");
       selenium.typeKeys("//body[@class='editbox']/", "</test>");
       Thread.sleep(1000);
-      saveAsFile("Тестовый Файл.xml");
+      saveAsUsingToolbarButton("Тестовый Файл.xml");
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=Тестовый Файл.xml||index=0]"));
       
@@ -90,7 +90,7 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       Thread.sleep(1000);
       
       //save as file
-      saveAsFile("Новий тестовий файл.xml");
+      saveAsUsingToolbarButton("Новий тестовий файл.xml");
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=Новий тестовий файл.xml]"));
       

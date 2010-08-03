@@ -50,7 +50,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
       
       Thread.sleep(1000);
       
-      saveAsFile(FILE_NAME);
+      saveAsUsingToolbarButton(FILE_NAME);
       
       Thread.sleep(1000);
       closeTab("0");
@@ -72,7 +72,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
 
       Thread.sleep(1000);
 
-      saveAsFile(FILE_NAME);
+      saveAsUsingToolbarButton(FILE_NAME);
 
       Thread.sleep(1000);
       

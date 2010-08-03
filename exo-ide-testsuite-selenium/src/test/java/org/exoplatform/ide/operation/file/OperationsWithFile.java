@@ -60,7 +60,7 @@ public class OperationsWithFile extends BaseTest
       //is file opened
       assertTrue(selenium.isTextPresent("Untitled file.xml *"));
       
-      saveAsFile(FILE_NAME);
+      saveAsUsingToolbarButton(FILE_NAME);
       
       Thread.sleep(1000);
       

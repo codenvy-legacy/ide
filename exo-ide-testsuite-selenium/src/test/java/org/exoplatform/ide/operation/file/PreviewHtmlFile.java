@@ -92,13 +92,13 @@ public class PreviewHtmlFile extends BaseTest
          +"</body>\n"
          +"</html>";
       
-      Thread.sleep(5000);
+      Thread.sleep(1000);
       
       openNewFileFromToolbar("HTML File");
       Thread.sleep(1000);
       
       //delete default content
-      deletePreviousContent(75);
+      deletePreviousContentByDeleteButton(75);
       Thread.sleep(100);
       
       typeText(text1);
@@ -116,20 +116,56 @@ public class PreviewHtmlFile extends BaseTest
       assertTrue(selenium.isElementPresent(
          "//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='Show Preview']"));
       
-      deletePreviousContent(500);
+      deletePreviousContentByBackspaceButton(500);
+      
       Thread.sleep(500);
       
       typeText(text2);
       
-      Thread.sleep(7000);
+      saveAsByTopMenu("Test.html");
+      
+      Thread.sleep(1000);
+      
+      //check is Show Preview button enabled
+      assertTrue(selenium.isElementPresent("//div[@title='Show Preview']/div[@elementenabled='true']"));
+      
+      //open menu Run
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Run']", "");
+      Thread.sleep(1000);
+      
+      //check is Show Preview enabled
+      assertTrue(selenium.isElementPresent(
+         "//td[@class='exo-popupMenuTitleField']/nobr[text()='Show Preview']"));
+      
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Show Preview']", "");
+      Thread.sleep(3000);
+      
+      //is Preview Tab present
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
+      
+      selenium.selectFrame("//iframe[@src='http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/Test.html']");
+      
+      assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
+      
+      assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      
+      selectMainFrame();
       
    }
    
-   private void deletePreviousContent(int numberOfSymbols)
+   private void deletePreviousContentByDeleteButton(int numberOfSymbols)
    {
       for (int i = 0; i < numberOfSymbols; i++)
       {
          selenium.keyPress("//body[@class='editbox']/", "\\46");
+      }
+   }
+   
+   private void deletePreviousContentByBackspaceButton(int numberOfSymbols)
+   {
+      for (int i = 0; i < numberOfSymbols; i++)
+      {
+         selenium.keyPress("//body[@class='editbox']/", "\\8");
       }
    }
 
