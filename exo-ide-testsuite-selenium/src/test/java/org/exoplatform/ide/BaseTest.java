@@ -327,18 +327,6 @@ public abstract class BaseTest
    }
    
    /**
-    * Clicks on New button on toolbar and then clicks on 
-    * menuName from list
-    * @param menuName
-    */
-   protected void openNewFileFromToolbar(String menuName) throws Exception
-   {
-      clickOnToolbarButton("New");
-      selenium
-         .mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" + menuName + "\")]", "");
-   }
-
-   /**
     * Opens folder in Workspace tree (if folder is closed)
     * or closes folder (if it is opened)
     * 
