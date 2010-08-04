@@ -48,14 +48,20 @@ public abstract class BaseTest
    }
 
    /**
-    * Performs click on toolbar button
+    * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void clickOnToolbarButton(String buttonTitle) {
+   public void clickOnToolbarButton(String buttonTitle) throws Exception {
       selenium.mouseDownAt("//div[@title='" + buttonTitle + "']//img", "");
-      selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");      
+      selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");
+      Thread.sleep(1000);
    }
    
+   /**
+    * Closes the editor tab by index.
+    * 
+    * @param index tab index
+    */
    protected void closeTab(String index)
    {
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
@@ -105,7 +111,7 @@ public abstract class BaseTest
    /**
     * Select main frame of IDE.
     * 
-    * This method used, after typing text in editor.
+    * This method is used, after typing text in editor.
     * To type text you must select editor iframe. After typing,
     * to return to them main frame, use selectMainFrame()
     * 
@@ -148,6 +154,12 @@ public abstract class BaseTest
       return text;
    }   
    
+   /**
+    * Select the item in the workspace navigation tree. 
+    * 
+    * @param name item name
+    * @throws Exception
+    */
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
@@ -159,11 +171,16 @@ public abstract class BaseTest
          + name + "]/col[0]"));
    }
    
+   /**
+    * Delete selected item in navigation tree.
+    * 
+    * @throws Exception
+    */
    protected void deleteSelectedFileOrFolder() throws Exception
    {
       clickOnToolbarButton("Delete Item(s)...");
-      Thread.sleep(1000);
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
+      //TODO check deletion form
    }
    
    /**
@@ -175,9 +192,10 @@ public abstract class BaseTest
     * 
     * @param folderName folder name
     */
-   protected void createFolder(String folderName)
+   protected void createFolder(String folderName) throws Exception
    {
       clickOnToolbarButton("New");
+      //TODO check creation form
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
@@ -205,7 +223,6 @@ public abstract class BaseTest
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
       clickOnToolbarButton("Save As...");
-            
       checkSaveAsDialogAndSave(name);
    }
    
@@ -234,6 +251,7 @@ public abstract class BaseTest
    
    protected void openFileWithCodeEditor(String fileName) throws Exception
    {
+     //TODO add check form
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(500);
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
@@ -243,7 +261,7 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
    }
    
-   protected void saveCurrentFile()
+   protected void saveCurrentFile() throws Exception
    {
       clickOnToolbarButton("Save");
    }
@@ -256,7 +274,6 @@ public abstract class BaseTest
    protected void openNewFileFromToolbar(String menuName) throws Exception
    {
       clickOnToolbarButton("New");
-      Thread.sleep(500);
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
          + menuName + "\")]", "");
    }
