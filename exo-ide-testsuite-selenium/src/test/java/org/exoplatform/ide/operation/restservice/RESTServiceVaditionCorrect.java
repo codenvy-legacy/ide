@@ -28,7 +28,7 @@ import org.junit.Test;
  * @version $Id: $
  *
  */
-public class RESTServiceVaditionCurrect extends BaseTest
+public class RESTServiceVaditionCorrect extends BaseTest
 {
    @Test
    public void testValidaton() throws Exception
