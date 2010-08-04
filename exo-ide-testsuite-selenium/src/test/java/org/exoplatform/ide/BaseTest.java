@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.AfterClass;
@@ -51,12 +52,13 @@ public abstract class BaseTest
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void clickOnToolbarButton(String buttonTitle) throws Exception {
+   public void clickOnToolbarButton(String buttonTitle) throws Exception
+   {
       selenium.mouseDownAt("//div[@title='" + buttonTitle + "']//img", "");
       selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");
       Thread.sleep(1000);
    }
-   
+
    /**
     * Closes the editor tab by index.
     * 
@@ -66,13 +68,13 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
    }
-   
+
    @AfterClass
    public static void stopSelenium()
    {
       selenium.stop();
    }
-   
+
    /**
     * Types text to selected frame to body tag, which has attribute
     * class='editbox'.
@@ -92,7 +94,7 @@ public abstract class BaseTest
          {
             selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
          }
-         else if (symbol =='\n')
+         else if (symbol == '\n')
          {
             selenium.keyDown("//body[@class='editbox']/", "\\13");
             selenium.keyUp("//body[@class='editbox']/", "\\13");
@@ -107,7 +109,7 @@ public abstract class BaseTest
          }
       }
    }
-   
+
    /**
     * Select main frame of IDE.
     * 
@@ -120,7 +122,7 @@ public abstract class BaseTest
    {
       selenium.selectFrame("relative=top");
    }
-   
+
    /**
     * @param tabIndex begins from 0
     */
@@ -129,7 +131,7 @@ public abstract class BaseTest
       String divIndex = String.valueOf(tabIndex + 2);
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe");
    }
-   
+
    /**
     * 
     * @param tabIndex begins from 0
@@ -141,7 +143,7 @@ public abstract class BaseTest
       typeText(text);
       selectMainFrame();
    }
-   
+
    /**
     * Get text from tab number "tabIndex" from editor
     * @param tabIndex begins from 0
@@ -152,8 +154,8 @@ public abstract class BaseTest
       String text = selenium.getText("//body[@class='editbox']");
       selectMainFrame();
       return text;
-   }   
-   
+   }
+
    /**
     * Select the item in the workspace navigation tree. 
     * 
@@ -164,13 +166,29 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
-   
+
+   /**
+    * Check navigation workspace tree contains pointed item.
+    * 
+    * @param name name of item in the navigation tree
+    * @throws Exception
+    */
    protected void assertElementPresentInWorkspaceTree(String name) throws Exception
    {
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" 
-         + name + "]/col[0]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
    }
    
+   /**
+    * Check navigation workspace tree doesn't contain pointed item.
+    * 
+    * @param name name of item in the navigation tree
+    * @throws Exception
+    */
+   protected void assertElementNotPresentInWorkspaceTree(String name) throws Exception
+   {
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=\""+name+"\"]/col[0]"));
+   }
+
    /**
     * Delete selected item in navigation tree.
     * 
@@ -182,7 +200,7 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
       //TODO check deletion form
    }
-   
+
    /**
     * Creates folder with name folderName.
     * 
@@ -195,8 +213,15 @@ public abstract class BaseTest
    protected void createFolder(String folderName) throws Exception
    {
       clickOnToolbarButton("New");
-      //TODO check creation form
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
+
+      //Check creation form elements
+      assertTrue(selenium.isTextPresent("Name of new folder:"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
+
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
       selenium
@@ -208,8 +233,13 @@ public abstract class BaseTest
             "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element",
             folderName);
       selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
+
+      Thread.sleep(1000);
+     //Check creation form is not shown
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
+      assertElementPresentInWorkspaceTree(folderName);
    }
-   
+
    /**
     * Calls Save As command by clicking Save As... icon on toolbar.
     * 
@@ -225,7 +255,7 @@ public abstract class BaseTest
       clickOnToolbarButton("Save As...");
       checkSaveAsDialogAndSave(name);
    }
-   
+
    /**
     * Call Save As command using top menu File.
     * 
@@ -237,21 +267,20 @@ public abstract class BaseTest
       //open menu File
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       Thread.sleep(1000);
-      
+
       //check is Save As enabled
-      assertTrue(selenium.isElementPresent(
-         "//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']"));
-      
+      assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']"));
+
       //click Save As
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']", "");
       Thread.sleep(1000);
-      
+
       checkSaveAsDialogAndSave(name);
    }
-   
+
    protected void openFileWithCodeEditor(String fileName) throws Exception
    {
-     //TODO add check form
+      //TODO add check form
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(500);
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
@@ -260,12 +289,12 @@ public abstract class BaseTest
       selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
    }
-   
+
    protected void saveCurrentFile() throws Exception
    {
       clickOnToolbarButton("Save");
    }
-   
+
    /**
     * Clicks on New button on toolbar and then clicks on 
     * menuName from list
@@ -274,10 +303,10 @@ public abstract class BaseTest
    protected void openNewFileFromToolbar(String menuName) throws Exception
    {
       clickOnToolbarButton("New");
-      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" 
-         + menuName + "\")]", "");
+      selenium
+         .mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" + menuName + "\")]", "");
    }
-   
+
    /**
     * Opens folder in Workspace tree (if folder is closed)
     * or closes folder (if it is opened)
@@ -290,10 +319,10 @@ public abstract class BaseTest
     */
    protected void openOrCloseFolder(String folderName)
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" 
-         + folderName + "]/col[0]/open");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
+         + "]/col[0]/open");
    }
-   
+
    /**
     * Check is dialog window Save as file appeared
     * and do all elements present.
@@ -306,12 +335,20 @@ public abstract class BaseTest
    {
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
       assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
-      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element", name);
+      selenium
+         .click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element");
+      selenium
+         .type(
+            "scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element",
+            "");
+      selenium
+         .type(
+            "scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element",
+            name);
       selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
    }
 }
