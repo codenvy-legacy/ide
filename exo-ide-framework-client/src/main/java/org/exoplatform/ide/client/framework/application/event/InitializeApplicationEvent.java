@@ -19,6 +19,10 @@
  */
 package org.exoplatform.ide.client.framework.application.event;
 
+import java.util.Map;
+
+import org.exoplatform.ide.client.module.vfs.api.File;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -31,7 +35,28 @@ import com.google.gwt.event.shared.GwtEvent;
 public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler>
 {
 
-   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE = new GwtEvent.Type<InitializeApplicationHandler>();
+   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE =
+      new GwtEvent.Type<InitializeApplicationHandler>();
+
+   private Map<String, File> openedFiles;
+
+   private String activeFile;
+
+   public InitializeApplicationEvent(Map<String, File> openedFiles, String activeFile)
+   {
+      this.openedFiles = openedFiles;
+      this.activeFile = activeFile;
+   }
+
+   public Map<String, File> getOpenedFiles()
+   {
+      return openedFiles;
+   }
+
+   public String getActiveFile()
+   {
+      return activeFile;
+   }
 
    @Override
    protected void dispatch(InitializeApplicationHandler handler)

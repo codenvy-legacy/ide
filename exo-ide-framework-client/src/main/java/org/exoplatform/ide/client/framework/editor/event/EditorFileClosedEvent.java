@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.ide.client.module.vfs.api.File;
 
@@ -35,9 +35,9 @@ public class EditorFileClosedEvent extends GwtEvent<EditorFileClosedHandler>
 
    private File file;
 
-   private HashMap<String, File> openedFiles;
+   private Map<String, File> openedFiles;
 
-   public EditorFileClosedEvent(File file, HashMap<String, File> openedFiles)
+   public EditorFileClosedEvent(File file, Map<String, File> openedFiles)
    {
       this.file = file;
       this.openedFiles = openedFiles;
@@ -48,7 +48,7 @@ public class EditorFileClosedEvent extends GwtEvent<EditorFileClosedHandler>
       return file;
    }
 
-   public HashMap<String, File> getOpenedFiles()
+   public Map<String, File> getOpenedFiles()
    {
       return openedFiles;
    }
