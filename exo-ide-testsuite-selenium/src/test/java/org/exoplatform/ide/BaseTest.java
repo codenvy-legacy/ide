@@ -314,6 +314,22 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
    }
 
+   protected void openFileWithCkEditorAndSetAsDefault(String fileName) throws Exception
+   {
+      //TODO add check form
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      Thread.sleep(500);
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
+      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[1]/col[0]");
+      //click on checkbox Use as default editor
+      selenium.click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]//textbox");
+      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+      Thread.sleep(2000);
+      //TODO add check that editor opened
+   }
+
    protected void saveCurrentFile() throws Exception
    {
       clickOnToolbarButton("Save");
@@ -432,6 +448,19 @@ public abstract class BaseTest
          + topMenuName + "']", "");
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" 
          + commandName + "']", "");
+   }
+   
+   /**
+    * Check is file in tabIndex tab opened with CK editor.
+    * 
+    * @param tabIndex index of tab
+    * @throws Exception
+    */
+   protected void checkCkEditorOpened(int tabIndex) throws Exception
+   {
+      String divIndex = String.valueOf(tabIndex + 2);
+      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" 
+         + divIndex + "]//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
    }
 
    /**

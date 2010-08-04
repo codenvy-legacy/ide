@@ -111,13 +111,11 @@ public class EditFiles extends BaseTest
       closeUnsavedFileAndDoNotSave("0");
       Thread.sleep(1000);
       
-      //TODO:
-      //reopen files
-      //“Test Text File.txt”, “Test Gadget File.xml”. 
-      //Reopen “Test Html File.html” with another editor and set this editor as default.
       openFileWithCodeEditor(textFile);
       openFileWithCodeEditor(gadgetFile);
-      openFileWithCodeEditor(htmlFile);
+      openFileWithCkEditorAndSetAsDefault(htmlFile);
+      
+      checkCkEditorOpened(2);
       
       
       //Open “Server” window with selected at the step 2 workspace URL 
@@ -134,6 +132,8 @@ public class EditFiles extends BaseTest
       selenium.waitForPageToLoad("30000");
       Thread.sleep(5000);
       
+      checkCkEditorOpened(1);
+      
       checkOpenedFilesHistory();
       
       closeTab("0");
@@ -148,7 +148,7 @@ public class EditFiles extends BaseTest
       //select another workspace
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Select Workspace')]", "");
-      Thread.sleep(2000);
+      Thread.sleep(5000);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       assertTrue(selenium.isTextPresent("Workspace"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
