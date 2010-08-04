@@ -25,7 +25,9 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
@@ -83,7 +85,8 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-
+      applicationSettings.setValue("entry-point", event.getItem().getHref(), Store.COOKIES);
+      eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
       new ApplicationStateLoader(eventBus, applicationSettings);
    }
 

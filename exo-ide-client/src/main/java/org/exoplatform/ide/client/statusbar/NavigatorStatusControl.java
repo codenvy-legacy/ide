@@ -84,14 +84,22 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
             prefix = prefix.substring(0, prefix.length() - 1);
          }
 
+         System.out.println("prefix1: " + prefix);
+         
          prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
+         
+         System.out.println("prefix2: " + prefix);
+         
          statusMessage = statusMessage.substring(prefix.length());
+         
+         System.out.println("status message: " + statusMessage);
+         
          if (statusMessage.endsWith("/"))
          {
             statusMessage = statusMessage.substring(0, statusMessage.length() - 1);
          }
 
-         if (event.getSelectedItems().get(0).getHref().equals(entryPoint))
+         if (item.getHref().equals(entryPoint))
          {
             statusMessage = tuneMessage(statusMessage, Images.FileTypes.WORKSPACE);
             //statusMessage = "<img src=\"" + Images.FileTypes.WORKSPACE + "\" style=\"width:16px; height:16px;\">" + statusMessage;

@@ -11,7 +11,7 @@ var proxyServiceContext = "/rest/private/proxy";
 var appConfig = {
 	"context" : "/rest/private",
 	"publicContext" : "/rest",
-	//"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+	"entryPoint" : "/rest/private/jcr/repository/dev-monit",
 	
 	//"gadgetServer" : "/gadgets/", /*under GWT Shell*/
 	"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/

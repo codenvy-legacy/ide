@@ -165,8 +165,16 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+      
+      System.out.println("entry point: " + applicationSettings.getValue("entry-point"));
+      
       if (applicationSettings.getValue("entry-point") == null)
       {
+         String defaultEntryPoint = context.getApplicationConfiguration().getDefaultEntryPoint();
+         if (!defaultEntryPoint.endsWith("/")) {
+            defaultEntryPoint += "/";
+         }
+         
          applicationSettings.setValue("entry-point", context.getApplicationConfiguration().getDefaultEntryPoint(),
             Store.COOKIES);
       }
