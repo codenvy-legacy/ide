@@ -300,18 +300,7 @@ public class OperationsWithFile extends BaseTest
       openNewFileFromToolbar("XML File");
       Thread.sleep(1000);
       
-      closeTab("0");
-      Thread.sleep(500);
-      
-      //check is warning dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      
-      //click No button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-      Thread.sleep(1000);
+      closeUnsavedFileAndDoNotSave("0");
       
       assertFalse(selenium.isTextPresent("Untitled file.xml"));
       
