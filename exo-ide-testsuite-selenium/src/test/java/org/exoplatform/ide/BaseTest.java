@@ -68,6 +68,18 @@ public abstract class BaseTest
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
       Thread.sleep(1000);
    }
+   
+   /**
+    * Returns the title of the tab with the pointed index.
+    * 
+    * @param index tab index
+    * @return {@link String} tab's title
+    * @throws Exception
+    */
+   protected String getTabTitle(int index) throws Exception
+   {
+      return selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/title");
+   }
 
    @AfterClass
    public static void stopSelenium()
