@@ -53,9 +53,6 @@ public class RESTServiceCreate extends BaseTest
       
      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/"));
      
-//     selenium.mouseDownAt("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Properties]","");
-//     selenium.mouseUpAt("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Properties]", "");
-     
      
      assertEquals("false", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
      assertEquals("exo:groovyResourceContainer", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||value=exo%3AgroovyResourceContainer||index=2||Class=StaticTextItem]/textbox"));
@@ -87,12 +84,12 @@ public class RESTServiceCreate extends BaseTest
      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
      
      selectItemInWorkspaceTree(FIRST_NAME);
-     Thread.sleep(1000);
+     Thread.sleep(500);
      deleteSelectedFileOrFolder();
-     Thread.sleep(1000);
+     Thread.sleep(500);
      
      selectItemInWorkspaceTree(SECOND_NAME);
-     Thread.sleep(1000);
+     Thread.sleep(500);
      deleteSelectedFileOrFolder();
      
    }
