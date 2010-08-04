@@ -268,13 +268,19 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          activeFile = openedFiles.get(event.getActiveFile());
       }
+      
+      Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+      if (defaultEditors == null) {
+         defaultEditors = new LinkedHashMap<String, String>();
+      }
 
       for (File file : openedFiles.values())
       {
          ignoreContentChangedList.add(file.getHref());
          try
-         {
-            Editor editor = EditorUtil.getEditor(file.getContentType(), context);
+         {            
+            String editorDescription = defaultEditors.get(file.getContentType());            
+            Editor editor = EditorUtil.getEditor(file.getContentType(), editorDescription);
             openedEditors.put(file.getHref(), editor.getDescription());
 
             boolean lineNumbers = true;

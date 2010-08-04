@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -57,7 +59,20 @@ public class ApplicationSettings
    {
       return values.get(key);
    }
-
+   
+   public String getStringValue(String key) {
+      return (String)values.get(key);
+   }
+   
+   public Integer getIntValue(String key) {
+      if (values.get(key) == null) {
+         return 0;
+      }
+      
+      return new Integer((String)values.get(key));
+   }
+   
+   
    public Store getStoredIn(String key)
    {
       if (storedIn.get(key) == null)

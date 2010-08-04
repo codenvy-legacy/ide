@@ -21,7 +21,6 @@ import java.util.List;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 /**
  * Created by The eXo Platform SAS.
@@ -58,23 +57,6 @@ public class EditorUtil
       }
 
       return editor;
-   }
-
-   public static Editor getEditor(String mimeType, ApplicationContext context) throws EditorNotFoundException
-   {
-
-      String defaultEditorDescription;
-      if (context.getSelectedEditorDescription() != null)
-      {
-         defaultEditorDescription = context.getSelectedEditorDescription();
-         context.setSelectedEditorDescription(null);
-      }
-      else
-      {
-         defaultEditorDescription = context.getDefaultEditors().get(mimeType);
-      }
-
-      return getEditor(mimeType, defaultEditorDescription);
    }
 
 }

@@ -37,7 +37,7 @@ import com.google.gwt.user.client.Window.Location;
 public class Configuration implements ApplicationConfigurationReceivedHandler
 {
 
-   public final static String APPLICATION_NAME = "IDEall";
+   public final static String APPLICATION_NAME = "IDE";
 
    private static final String CONFIG_NODENAME = "configuration";
 

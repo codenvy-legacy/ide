@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplates;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
@@ -59,7 +63,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -70,6 +74,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    private List<Item> selectedItems = new ArrayList<Item>();
    
    private Map<String, File> openedFiles = new HashMap<String, File>();
+   
+   private ApplicationSettings applicationSettings;
 
    public CreateFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -125,9 +131,15 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       newFile.setContent(content);
       newFile.setContentChanged(true);
 
+      Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+      if (defaultEditors == null) {
+         defaultEditors = new LinkedHashMap<String, String>();
+      }
+      
       try
       {
-         Editor editor = EditorUtil.getEditor(event.getMimeType(), context);
+         String defaultEditorDescription = defaultEditors.get(event.getMimeType());
+         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
          eventBus.fireEvent(new EditorOpenFileEvent(newFile, editor));
       }
       catch (EditorNotFoundException e)
@@ -160,6 +172,11 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 
 }

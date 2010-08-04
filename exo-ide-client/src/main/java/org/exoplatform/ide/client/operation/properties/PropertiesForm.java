@@ -60,6 +60,8 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
 
    public void refreshProperties(File file)
    {
+      clear();
+      
       if (content != null)
       {
          content.removeFromParent();
