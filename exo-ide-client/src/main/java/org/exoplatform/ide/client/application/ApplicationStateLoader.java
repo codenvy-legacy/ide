@@ -30,8 +30,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;

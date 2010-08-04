@@ -225,7 +225,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       editorForm.setMinWidth(MIN_FORM_WIDTH);
       verticalSplitLayout.addMember(editorForm);
 
-      operationForm = new OperationForm(eventBus, context);
+      operationForm = new OperationForm(eventBus);
       operationForm.setHeight(180);
       operationForm.setMinHeight(MIN_OPERATION_HEIGHT);
       operationForm.setMinWidth(MIN_FORM_WIDTH);

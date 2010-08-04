@@ -19,7 +19,6 @@ package org.exoplatform.ide.client.operation.preview;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -37,17 +36,14 @@ public class PreviewForm extends TabPanel
 
    private static String TAB_ID = "Preview";
 
-   private ApplicationContext context;
-
    private HTMLPane htmlPane;
 
    /**
     * @param eventBus
     */
-   public PreviewForm(HandlerManager eventBus, ApplicationContext context)
+   public PreviewForm(HandlerManager eventBus)
    {
       super(eventBus, true);
-      this.context = context;
    }
 
    /**

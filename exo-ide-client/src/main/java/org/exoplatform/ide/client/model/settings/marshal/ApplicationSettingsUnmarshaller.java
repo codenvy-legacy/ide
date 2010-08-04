@@ -115,6 +115,8 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       }
       catch (Exception exc)
       {
+         //new Exception().printStackTrace();
+         exc.printStackTrace();
          throw new UnmarshallerException(ERROR_MESSAGE);
       }
    }
@@ -182,6 +184,8 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       String name = node.getNodeName();
       name = name.substring(0, name.length() - "_list".length());
 
+      System.out.println(">>>>>>>> name >>>>>>> " + name);
+      
       if (!node.hasChildNodes())
       {
          applicationSettings.setValue(name, new ArrayList<String>(), Store.REGISTRY);
@@ -193,7 +197,11 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
          for (int i = 0; i < node.getChildNodes().getLength(); i++)
          {
             Node itemNode = node.getChildNodes().item(i);
-            String value = itemNode.getChildNodes().item(0).getNodeValue();
+            
+            System.out.println("item node: " + itemNode);
+            System.out.println("has child nodes: " + itemNode.getChildNodes());
+            
+            String value = !itemNode.hasChildNodes() ? "" : itemNode.getChildNodes().item(0).getNodeValue();
             value = javaScriptDecodeURIComponent(value);
             items.add(value);
          }

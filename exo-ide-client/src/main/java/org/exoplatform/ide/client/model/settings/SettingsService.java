@@ -162,7 +162,7 @@ public class SettingsService implements SaveApplicationSettingsHandler
          String key = keyIter.next();
          Store storing = applicationSettings.getStoredIn(key);
 
-         if (storing == null || storing == Store.REGISTRY)
+         if (storing == null || storing == Store.REGISTRY || storing == Store.NONE)
          {
             // Setting stores to registry. Skip it
             continue;

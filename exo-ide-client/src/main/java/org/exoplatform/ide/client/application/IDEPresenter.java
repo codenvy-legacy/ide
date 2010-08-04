@@ -58,7 +58,7 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
 
    private List<Control> controls = new ArrayList<Control>();
 
-   private List<String> toolbarItems = new ArrayList<String>();
+   private List<String> toolbarDefaultItems = new ArrayList<String>();
 
    private List<String> statusBarItems = new ArrayList<String>();
 
@@ -67,7 +67,7 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
       this.eventBus = eventBus;
       this.context = context;
 
-      toolbarItems.add("");
+      toolbarDefaultItems.add("");
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -78,7 +78,7 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
    {
       display = d;
       display.showDefaultPerspective();
-      new IDEConfigurationLoader(eventBus, context, controls, toolbarItems, statusBarItems);
+      new IDEConfigurationLoader(eventBus, context, controls, toolbarDefaultItems, statusBarItems);
    }
 
    public void onError(ExceptionThrownEvent event)
@@ -106,12 +106,12 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
 
       if (rightDocking)
       {
-         toolbarItems.add(control.getId());
+         toolbarDefaultItems.add(control.getId());
       }
       else
       {
          int position = 0;
-         for (String curId : toolbarItems)
+         for (String curId : toolbarDefaultItems)
          {
             if ("".equals(curId))
             {
@@ -122,11 +122,11 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
 
          if (control.hasDelimiterBefore())
          {
-            toolbarItems.add(position, "---");
+            toolbarDefaultItems.add(position, "---");
             position++;
          }
 
-         toolbarItems.add(position, control.getId());
+         toolbarDefaultItems.add(position, control.getId());
       }
    }
 

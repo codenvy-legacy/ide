@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.application;
+package org.exoplatform.ide.client.component;
 
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusHandler;

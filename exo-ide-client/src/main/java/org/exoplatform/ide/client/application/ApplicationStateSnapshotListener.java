@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -45,7 +47,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -63,6 +65,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -120,6 +123,11 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
 
       applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
    }
 
 }

@@ -16,12 +16,8 @@
  */
 package org.exoplatform.ide.client.model.settings;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
 
 /**
  * Created by The eXo Platform SAS.
@@ -34,7 +30,7 @@ public class ApplicationSettings
 
    public enum Store {
 
-      COOKIES, REGISTRY
+      COOKIES, REGISTRY, NONE
 
    }
 
@@ -82,53 +78,5 @@ public class ApplicationSettings
 
       return storedIn.get(key);
    }
-
-//   public void setStoredIn(String key, Store store)
-//   {
-//      storedIn.put(key, store);
-//   }
-
-   private List<String> toolbarItems = new ArrayList<String>();
-
-//   private HashMap<String, String> defaultEditors = new HashMap<String, String>();
-
-   //   private boolean showLineNumbers = true;
-
-//   private String entryPoint;
-
-   public ApplicationSettings()
-   {
-      toolbarItems.add("");
-   }
-
-   public List<String> getToolbarItems()
-   {
-      return toolbarItems;
-   }
-
-//   public HashMap<String, String> getDefaultEditors()
-//   {
-//      return defaultEditors;
-//   }
-
-   //   public boolean isShowLineNumbers()
-   //   {
-   //      return showLineNumbers;
-   //   }
-   //
-   //   public void setShowLineNumbers(boolean showLineNumbers)
-   //   {
-   //      this.showLineNumbers = showLineNumbers;
-   //   }
-
-//   public String getEntryPoint()
-//   {
-//      return entryPoint;
-//   }
-
-//   public void setEntryPoint(String entryPoint)
-//   {
-//      this.entryPoint = entryPoint;
-//   }
 
 }

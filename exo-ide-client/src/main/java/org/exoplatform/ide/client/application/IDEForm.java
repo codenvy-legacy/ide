@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
 import org.exoplatform.ide.client.application.perspective.DefaultPerspective;
+import org.exoplatform.ide.client.component.ClearFocusForm;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.model.ApplicationContext;
 

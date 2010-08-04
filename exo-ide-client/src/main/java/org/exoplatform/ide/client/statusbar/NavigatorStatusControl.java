@@ -44,7 +44,7 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
    public static final String ID = "__navigator_status";
 
    private String entryPoint;
-   
+
    private Handlers handlers;
 
    public NavigatorStatusControl(HandlerManager eventBus)
@@ -53,7 +53,7 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
       setVisible(true);
       setEnabled(true);
       setText("&nbsp;");
-      
+
       handlers = new Handlers(eventBus);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
@@ -61,17 +61,18 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (entryPoint == null) {
+      if (entryPoint == null)
+      {
          setText("&nbsp;");
          return;
       }
-      
+
       String statusMessage = null;
 
       if (event.getSelectedItems().size() == 1)
       {
          Item item = event.getSelectedItems().get(0);
-         
+
          statusMessage = item.getHref();
          if (item instanceof File)
          {
@@ -84,16 +85,8 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
             prefix = prefix.substring(0, prefix.length() - 1);
          }
 
-         System.out.println("prefix1: " + prefix);
-         
          prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
-         
-         System.out.println("prefix2: " + prefix);
-         
          statusMessage = statusMessage.substring(prefix.length());
-         
-         System.out.println("status message: " + statusMessage);
-         
          if (statusMessage.endsWith("/"))
          {
             statusMessage = statusMessage.substring(0, statusMessage.length() - 1);

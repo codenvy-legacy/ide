@@ -20,11 +20,13 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
@@ -50,7 +52,8 @@ import com.google.gwt.http.client.URL;
  */
 
 public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
-   PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler
+   PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler,
+   ConfigurationReceivedSuccessfullyHandler
 {
 
    public interface Display
@@ -68,7 +71,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
       void changeActiveFile(File file);
 
-      void showGadget(GadgetMetadata metadata);
+      void showGadget(GadgetMetadata metadata, ApplicationConfiguration applicationConfiguration);
 
       void closeGadgetPreviewTab();
 
@@ -78,18 +81,17 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
-   
+
    private File activeFile;
 
-   public OperationPresenter(HandlerManager eventBus, ApplicationContext context)
+   private ApplicationConfiguration applicationConfiguration;
+
+   public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    public void destroy()
@@ -119,7 +121,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      
+
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
 
@@ -182,9 +184,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       String domain = null;
 
       String href = activeFile.getHref();
-      href =
-         href.replace(context.getApplicationConfiguration().getContext(), context.getApplicationConfiguration()
-            .getPublicContext());
+      href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest);
@@ -198,7 +198,12 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    public void onMetadataRecieved(GadgetMetadaRecievedEvent event)
    {
-      display.showGadget(event.getMetadata());
+      display.showGadget(event.getMetadata(), applicationConfiguration);
+   }
+
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      applicationConfiguration = event.getConfiguration();
    }
 
 }

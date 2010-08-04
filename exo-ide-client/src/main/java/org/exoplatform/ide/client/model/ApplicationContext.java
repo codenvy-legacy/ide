@@ -76,11 +76,11 @@ public class ApplicationContext
    //    */
    //   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
 
-   /**
-    * Uses for storing default state of toolbar
-    */
-   //TODO
-   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
+   //   /**
+   //    * Uses for storing default state of toolbar
+   //    */
+   //   //TODO
+   //   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
 
    /*
     * Store status bar control id's here
@@ -88,10 +88,10 @@ public class ApplicationContext
 
    private List<String> statusBarItems = new ArrayList<String>();
 
-   public ArrayList<String> getToolBarDefaultItems()
-   {
-      return toolBarDefaultItems;
-   }
+   //   public ArrayList<String> getToolBarDefaultItems()
+   //   {
+   //      return toolBarDefaultItems;
+   //   }
 
    public List<String> getStatusBarItems()
    {
@@ -108,11 +108,6 @@ public class ApplicationContext
       return modules;
    }
 
-   /**
-    * Uses for storing the current state of defaults editors
-    */
-   //TODO
-   private HashMap<String, String> defaultEditors = new HashMap<String, String>();
 
    /**
     * Uses for storing items to need copy
@@ -239,14 +234,6 @@ public class ApplicationContext
       this.searchContentType = searchContentType;
    }
 
-   /**
-    * 
-    * @return Defaults editors
-    */
-   public HashMap<String, String> getDefaultEditors()
-   {
-      return defaultEditors;
-   }
 
    public String getSelectedEditorDescription()
    {
@@ -256,47 +243,6 @@ public class ApplicationContext
    public void setSelectedEditorDescription(String selectedEditor)
    {
       this.selectedEditorDescription = selectedEditor;
-   }
-
-   //   /**
-   //    * @return the openedFiles
-   //    */
-   //   public HashMap<String, File> getOpenedFiles()
-   //   {
-   //      return openedFiles;
-   //   }
-
-   //   /**
-   //    * Current active file in editor.
-   //    */
-   //   private File activeFile;
-
-   //   /**
-   //    * @return the activeFile
-   //    */
-   //   public File getActiveFile()
-   //   {
-   //      return activeFile;
-   //   }
-   //
-   //   /**
-   //    * @param activeFile
-   //    */
-   //   public void setActiveFile(File activeFile)
-   //   {
-   //      this.activeFile = activeFile;
-   //   }
-
-   private ApplicationConfiguration applicationConfiguration;
-
-   public ApplicationConfiguration getApplicationConfiguration()
-   {
-      return applicationConfiguration;
-   }
-
-   public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration)
-   {
-      this.applicationConfiguration = applicationConfiguration;
    }
 
 }

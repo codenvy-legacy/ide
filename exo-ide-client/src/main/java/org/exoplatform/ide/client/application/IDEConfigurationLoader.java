@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ide.client.application;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,17 +80,17 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
    private List<Control> controls;
 
-   private List<String> toolbarItems;
+   private List<String> toolbarDefaultItems;
 
    private List<String> statusBarItems;
 
    public IDEConfigurationLoader(HandlerManager eventBus, ApplicationContext context, List<Control> controls,
-      List<String> toolbarItems, List<String> statusBarItems)
+      List<String> toolbarDefaultItems, List<String> statusBarItems)
    {
       this.eventBus = eventBus;
       this.context = context;
       this.controls = controls;
-      this.toolbarItems = toolbarItems;
+      this.toolbarDefaultItems = toolbarDefaultItems;
       this.statusBarItems = statusBarItems;
 
       handlers = new Handlers(eventBus);
@@ -97,8 +98,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      Configuration configuration = new Configuration(eventBus, context);
-      configuration.loadConfiguration(IDELoader.getInstance());
+      new Configuration(eventBus, IDELoader.getInstance());
    }
 
    /**
@@ -112,16 +112,13 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       {
          applicationConfiguration = event.getConfiguration();
 
-         new ConversationServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration()
-            .getContext());
+         new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
 
-         new TemplateServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration()
-            .getRegistryURL()
-            + "/" + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION_NAME);
+         new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
+            + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION_NAME);
 
-         new GadgetServiceImpl(eventBus, IDELoader.getInstance(), context.getApplicationConfiguration().getContext(),
-            context.getApplicationConfiguration().getGadgetServer(), context.getApplicationConfiguration()
-               .getPublicContext());
+         new GadgetServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext(),
+            applicationConfiguration.getGadgetServer(), applicationConfiguration.getPublicContext());
 
          new Timer()
          {
@@ -165,18 +162,32 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-      
+
       System.out.println("entry point: " + applicationSettings.getValue("entry-point"));
-      
+
+      /*
+       * verify entry point
+       */
       if (applicationSettings.getValue("entry-point") == null)
       {
-         String defaultEntryPoint = context.getApplicationConfiguration().getDefaultEntryPoint();
-         if (!defaultEntryPoint.endsWith("/")) {
+         String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
+         if (!defaultEntryPoint.endsWith("/"))
+         {
             defaultEntryPoint += "/";
          }
-         
-         applicationSettings.setValue("entry-point", context.getApplicationConfiguration().getDefaultEntryPoint(),
-            Store.COOKIES);
+
+         applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
+      }
+      
+      /*
+       * verify toolbar items
+       */
+      
+      applicationSettings.setValue("toolbar-default-items", toolbarDefaultItems, Store.NONE);
+      if (applicationSettings.getValue("toolbar-items") == null) {
+         List<String> toolbarItems = new ArrayList<String>();
+         toolbarItems.addAll(toolbarDefaultItems);
+         applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
       }
 
       new Timer()
@@ -242,7 +253,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
-      eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
+      eventBus.fireEvent(new UpdateToolbarEvent(toolbarDefaultItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
 
       if (applicationSettings.getValue("entry-point") != null)

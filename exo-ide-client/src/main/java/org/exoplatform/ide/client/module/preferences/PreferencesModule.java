@@ -25,8 +25,6 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.component.AboutForm;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
@@ -46,7 +44,6 @@ import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeHotKeysCommand;
@@ -74,9 +71,9 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PreferencesModule implements IDEModule, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
-   ControlsUpdatedHandler, EntryPointsReceivedHandler, RegisterEventHandlersHandler, EntryPointChangedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, SelectWorkspaceHandler, CustomizeToolbarHandler,
-   CustomizeHotKeysHandler, ShowAboutDialogHandler
+   ControlsUpdatedHandler, EntryPointsReceivedHandler, RegisterEventHandlersHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler,
+   ShowAboutDialogHandler
 {
 
    private HandlerManager eventBus;
@@ -88,8 +85,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    private ApplicationSettings applicationSettings;
 
    private List<Control> controls;
-
-   private String currentEntryPoint;
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
@@ -107,7 +102,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
 
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
       handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -138,13 +132,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
       handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
       handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
-   }
-
-   public void onEntryPointChanged(EntryPointChangedEvent event)
-   {
-      currentEntryPoint = event.getEntryPoint();
-      applicationSettings.setValue("entry-point", currentEntryPoint, Store.COOKIES);
-      //      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigu
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
@@ -56,22 +55,14 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    private boolean loaded = false;
 
    private HandlerManager eventBus;
+   
+   private ApplicationConfiguration configuration;
 
-   private ApplicationContext applicationContext;
-
-   public Configuration(HandlerManager eventBus, ApplicationContext applicationContext)
+   public Configuration(HandlerManager eventBus, Loader loader)
    {
-      this.eventBus = eventBus;
-      this.applicationContext = applicationContext;
-      
-      eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);      
-      
-      ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(getRegistryURL());
-      applicationContext.setApplicationConfiguration(applicationConfiguration);      
-   }
-
-   public void loadConfiguration(Loader loader)
-   {
+      this.eventBus = eventBus;      
+      eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
+      configuration = new ApplicationConfiguration(getRegistryURL());
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
       applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
    }
@@ -80,16 +71,11 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    {
       JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
       
-      ApplicationConfiguration configuration = applicationContext.getApplicationConfiguration();
-      
       if (jsonConfiguration.containsKey(CONTEXT))
       {
          configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
          configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
-         
-//         configuration.setLoopbackServiceContext("1" + configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-//         configuration.setUploadServiceContext("1" + configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);         
       }
       else
       {
@@ -124,7 +110,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       }
 
       loaded = true;
-      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationContext.getApplicationConfiguration()));
+      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(configuration));
    }
 
    public boolean isLoaded()

@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
@@ -120,6 +121,9 @@ public class CustomizeToolbarPresenter
    public CustomizeToolbarPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
       List<Control> controls)
    {
+      
+      System.out.println("registered controls: " + controls.size());
+      
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       this.controls = controls;
@@ -222,7 +226,15 @@ public class CustomizeToolbarPresenter
       display.disableMoveDownButton();
 
       fillCommandListGrid();
-      fillToolbarListGrid(applicationSettings.getToolbarItems());
+      
+      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
+      if (toolbarItems == null) {
+         toolbarItems = new ArrayList<String>();
+         toolbarItems.add("");
+         applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
+      }
+      
+      fillToolbarListGrid(toolbarItems);
    }
 
    private void fillCommandListGrid()
@@ -487,25 +499,29 @@ public class CustomizeToolbarPresenter
 
    private void updateToolbar()
    {
-      applicationSettings.getToolbarItems().clear();
-
+      List<String> items = (List<String>)applicationSettings.getValue("toolbar-items");
+      
+      toolbarItems.clear();
+      
       for (ToolbarItem toolbarItem : toolbarItems)
       {
          if (toolbarItem.getType() == Type.COMMAND)
          {
-            applicationSettings.getToolbarItems().add(toolbarItem.getCommand().getId());
+            items.add(toolbarItem.getCommand().getId());
          }
          else if (toolbarItem.getType() == Type.SPACER)
          {
-            applicationSettings.getToolbarItems().add("");
+            items.add("");
          }
          else
          {
-            applicationSettings.getToolbarItems().add("---");
+            items.add("---");
          }
       }
+      
+      System.out.println("toolbar items > " + items.size());
 
-      eventBus.fireEvent(new UpdateToolbarEvent(applicationSettings.getToolbarItems(), controls));
+      eventBus.fireEvent(new UpdateToolbarEvent(items, controls));
       //SettingsService.getInstance().saveSetting(applicationSettings);
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
@@ -518,7 +534,13 @@ public class CustomizeToolbarPresenter
 
    private void restoreDefaults()
    {
-      fillToolbarListGrid(applicationSettings.getToolbarItems());
+      List<String> toolbarDefaultItems = (List<String>)applicationSettings.getValue("toolbar-default-items");
+      if (toolbarDefaultItems == null) {
+         toolbarDefaultItems = new ArrayList<String>();
+         toolbarDefaultItems.add("");
+      }
+      
+      fillToolbarListGrid(toolbarDefaultItems);
       selectedToolbarItem = null;
       display.disableAddCommandButton();
       display.disableAddDelimiterButton();

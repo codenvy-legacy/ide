@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
 import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
@@ -63,8 +64,6 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    private Handlers handlers;
 
-   private ApplicationContext context;
-
    private static final int INITIAL_HEIGHT = 200;
 
    private OperationPresenter presenter;
@@ -87,10 +86,9 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    protected MinMaxControlButton minMaxControlButton;
 
-   public OperationForm(HandlerManager eventBus, ApplicationContext context)
+   public OperationForm(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
 
       setHeight(INITIAL_HEIGHT);
@@ -102,7 +100,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
       propertiesForm = new PropertiesForm(eventBus);
       outputForm = new OutputForm(eventBus);
-      previewForm = new PreviewForm(eventBus, context);
+      previewForm = new PreviewForm(eventBus);
 
       addTab(outputForm, false);
 
@@ -117,7 +115,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
          }
       });
 
-      presenter = new OperationPresenter(eventBus, context);
+      presenter = new OperationPresenter(eventBus);
       presenter.bindDisplay(this);
 
       tabSet.addTabSelectedHandler(tabSelectedHandler);
@@ -342,10 +340,10 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    protected Tab gadgetPreviewTab;
 
-   public void showGadget(GadgetMetadata metadata)
+   public void showGadget(GadgetMetadata metadata, ApplicationConfiguration applicationConfiguration)
    {
       show();
-      gadgetPreviewPane = new GadgetPreviewPane(eventBus, context.getApplicationConfiguration(), metadata);
+      gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
       // if preview already opened
       gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
       if (gadgetPreviewTab == null)
