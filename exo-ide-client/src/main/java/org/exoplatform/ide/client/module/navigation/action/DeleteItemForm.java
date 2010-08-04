@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ide.client.Images;
@@ -69,7 +69,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private DeleteItemPresenter presenter;
 
-   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
+   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 

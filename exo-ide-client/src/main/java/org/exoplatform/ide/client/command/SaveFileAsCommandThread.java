@@ -28,7 +28,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler;
@@ -55,10 +56,9 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler
+   ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler,
+   EditorActiveFileChangedHandler
 {
-
-   private ApplicationContext context;
 
    private Handlers handlers;
 
@@ -70,13 +70,15 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public SaveFileAsCommandThread(HandlerManager eventBus, ApplicationContext context)
+   private File activeFile;
+
+   public SaveFileAsCommandThread(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -94,7 +96,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
-      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
+      File file = event.getFile() != null ? event.getFile() : activeFile;
       onSaveAsFile(file);
    }
 
@@ -195,6 +197,11 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }

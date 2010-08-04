@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.model.settings.event;
 
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -38,9 +39,12 @@ public class ApplicationSettingsSavedEvent extends GwtEvent<ApplicationSettingsS
 
    private ApplicationSettings applicationSettings;
 
-   public ApplicationSettingsSavedEvent(ApplicationSettings applicationSettings)
+   private SaveType saveType;
+
+   public ApplicationSettingsSavedEvent(ApplicationSettings applicationSettings, SaveType saveType)
    {
       this.applicationSettings = applicationSettings;
+      this.saveType = saveType;
    }
 
    @Override
@@ -58,6 +62,11 @@ public class ApplicationSettingsSavedEvent extends GwtEvent<ApplicationSettingsS
    public ApplicationSettings getApplicationSettings()
    {
       return applicationSettings;
+   }
+
+   public SaveType getSaveType()
+   {
+      return saveType;
    }
 
 }

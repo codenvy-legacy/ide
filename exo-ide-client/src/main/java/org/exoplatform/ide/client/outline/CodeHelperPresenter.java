@@ -19,10 +19,8 @@
 package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -45,17 +43,13 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
 
    private Display display;
 
-   public CodeHelperPresenter(HandlerManager bus, ApplicationContext applicationContext)
+   public CodeHelperPresenter(HandlerManager bus)
    {
       eventBus = bus;
-      context = applicationContext;
-
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -77,10 +71,12 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
       if (OutlineTreeGrid.haveOutline(file))
       {
          
+         
 //         if (context.isShowOutline())
 //         {
 //            display.show();
 //         }
+         
       }
       else
       {

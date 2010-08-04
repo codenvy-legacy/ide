@@ -19,10 +19,10 @@
 package org.exoplatform.ide.client.module.development;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
@@ -64,9 +64,10 @@ public class DevelopmentModuleEventHandler implements RegisterEventHandlersHandl
     * @see org.exoplatform.ide.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ide.client.outline.event.ShowOutlineEvent)
     */
    public void onShowOutline(ShowOutlineEvent event)
-   {
-      applicationSettings.setShowOutline(event.isShow());
-      CookieManager.setShowOutline(event.isShow());
+   { 
+      applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+//      applicationSettings.setStoredIn("outline", Store.COOKIES);
+      //CookieManager.setShowOutline(event.isShow());
    }
 
 }

@@ -19,7 +19,6 @@ package org.exoplatform.ide.client.operation.properties;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.operation.properties.propertyeditor.PropertyEditor;
 
@@ -43,12 +42,12 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
 
    private PropertiesPresenter presenter;
 
-   public PropertiesForm(HandlerManager eventBus, ApplicationContext context)
+   public PropertiesForm(HandlerManager eventBus)
    {
       super(eventBus, false);
       this.eventBus = eventBus;
 
-      presenter = new PropertiesPresenter(eventBus, context);
+      presenter = new PropertiesPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
@@ -67,6 +66,9 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
          content.destroy();
       }
 
+      System.out.println("file : " + file);
+      System.out.println("file properties: " + file.getProperties());
+      
       if (file.getProperties().size() == 0)
       {
          content = new Label("There are no properties for this file.");

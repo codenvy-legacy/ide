@@ -29,7 +29,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -505,7 +506,8 @@ public class CustomizeToolbarPresenter
       }
 
       eventBus.fireEvent(new UpdateToolbarEvent(applicationSettings.getToolbarItems(), controls));
-      SettingsService.getInstance().saveSetting(applicationSettings);
+      //SettingsService.getInstance().saveSetting(applicationSettings);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
    private void applyChanges()

@@ -23,7 +23,8 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileHandler;
@@ -46,26 +47,27 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileCommandThread implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
-   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler
+   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler, EditorActiveFileChangedHandler
 {
-
-   private ApplicationContext context;
 
    private Handlers handlers;
 
    private HandlerManager eventBus;
 
-   public SaveFileCommandThread(HandlerManager eventBus, ApplicationContext context)
+   private File activeFile;
+
+   public SaveFileCommandThread(HandlerManager eventBus)
    {
-      this.context = context;
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
+
       eventBus.addHandler(SaveFileEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onSaveFile(SaveFileEvent event)
    {
-      File file = event.getFile() != null ? event.getFile() : context.getActiveFile();
+      File file = event.getFile() != null ? event.getFile() : activeFile;
 
       if (file.isNewFile())
       {
@@ -119,6 +121,11 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }

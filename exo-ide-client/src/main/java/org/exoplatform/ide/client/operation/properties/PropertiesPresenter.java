@@ -17,7 +17,8 @@
 package org.exoplatform.ide.client.operation.properties;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
@@ -34,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler
+public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler, EditorActiveFileChangedHandler
 {
 
    public interface Display
@@ -46,17 +47,17 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Display display;
 
    private Handlers handlers;
+   
+   private File activeFile;
 
-   public PropertiesPresenter(HandlerManager eventBus, ApplicationContext context)
+   public PropertiesPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -71,34 +72,29 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       handlers.removeHandlers();
    }
 
-   private void refreshProperties(Item item)
+   private void refreshProperties()
    {
-      if (!(item instanceof File))
-      {
+      if (activeFile == null) {
          return;
       }
-
-      if (context.getActiveFile() == null)
-      {
-         return;
-      }
-
-      File file = (File)item;
-
-      if (context.getActiveFile().getHref().equals(file.getHref()))
-      {
-         display.refreshProperties(file);
-      }
+      
+      display.refreshProperties(activeFile);
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      refreshProperties(event.getItem());
+      refreshProperties();
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      refreshProperties(event.getItem());
+      refreshProperties();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+      refreshProperties();
    }
 
 }

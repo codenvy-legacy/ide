@@ -17,7 +17,9 @@
 package org.exoplatform.ide.client.command;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -26,6 +28,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
@@ -53,7 +59,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler
+   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
    private HandlerManager eventBus;
 
@@ -68,6 +74,8 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private int numItemToCut;
    
    private List<Item> selectedItems = new ArrayList<Item>();
+   
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -78,6 +86,8 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       eventBus.addHandler(PasteItemsEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onPasteItems(PasteItemsEvent event)
@@ -189,9 +199,9 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       if (item instanceof File)
       {
          File file = (File)item;
-         if (context.getOpenedFiles().get(file.getHref()) != null)
+         if (openedFiles.get(file.getHref()) != null)
          {
-            final File openedFile = context.getOpenedFiles().get(file.getHref());
+            final File openedFile = openedFiles.get(file.getHref());
             if (openedFile.isContentChanged())
             {
                Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
@@ -266,7 +276,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private void updateOpenedFiles(String href, String sourceHref)
    {
       List<String> keys = new ArrayList<String>();
-      for (String key : context.getOpenedFiles().keySet())
+      for (String key : openedFiles.keySet())
       {
          keys.add(key);
       }
@@ -275,12 +285,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       {
          if (key.startsWith(sourceHref))
          {
-            File file = context.getOpenedFiles().get(key);
+            File file = openedFiles.get(key);
             String fileHref = file.getHref().replace(sourceHref, href);
             file.setHref(fileHref);
 
-            context.getOpenedFiles().remove(key);
-            context.getOpenedFiles().put(fileHref, file);
+            openedFiles.remove(key);
+            openedFiles.put(fileHref, file);
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
       }
@@ -293,12 +303,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       {
          File file = (File)event.getItem();
 
-         if (context.getOpenedFiles().containsKey(event.getSourceHref()))
+         if (openedFiles.containsKey(event.getSourceHref()))
          {
-            File openedFle = context.getOpenedFiles().get(event.getSourceHref());
+            File openedFle = openedFiles.get(event.getSourceHref());
             openedFle.setHref(file.getHref());
-            context.getOpenedFiles().remove(event.getSourceHref());
-            context.getOpenedFiles().put(openedFle.getHref(), openedFle);
+            openedFiles.remove(event.getSourceHref());
+            openedFiles.put(openedFle.getHref(), openedFle);
 
             eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
          }
@@ -345,6 +355,16 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

@@ -84,7 +84,7 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
    {
       display = d;
       display.showDefaultPerspective();
-      new IDEApplicationLoader(eventBus, context, controls, toolbarItems, statusBarItems);
+      new IDEConfigurationLoader(eventBus, context, controls, toolbarItems, statusBarItems);
    }
 
    public void onError(ExceptionThrownEvent event)

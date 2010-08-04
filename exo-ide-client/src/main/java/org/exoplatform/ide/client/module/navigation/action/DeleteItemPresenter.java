@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.navigation.action;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -72,9 +73,9 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private Item lastDeletedItem;
 
-   private HashMap<String, File> openedFiles;
+   private Map<String, File> openedFiles;
 
-   public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
+   public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;

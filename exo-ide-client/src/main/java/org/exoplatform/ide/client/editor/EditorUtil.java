@@ -77,8 +77,6 @@ public class EditorUtil
       }
 
       return getEditor(mimeType, defaultEditorDescription);
-      
    }
    
 }
-

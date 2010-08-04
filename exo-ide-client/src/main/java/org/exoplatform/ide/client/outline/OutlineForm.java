@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -40,16 +39,13 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private OutlinePresenter presenter;
 
    private OutlineTreeGrid<Token> treeGrid;
 
-   public OutlineForm(HandlerManager bus, ApplicationContext applicationContext)
+   public OutlineForm(HandlerManager bus)
    {
       eventBus = bus;
-      context = applicationContext;
 
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
       String imageHTML = ImageUtil.getHTML(tabIcon);
@@ -68,7 +64,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       treeGrid.setWidth100();
       setPane(treeGrid);
 
-      presenter = new OutlinePresenter(eventBus, context);
+      presenter = new OutlinePresenter(eventBus);
       presenter.bindDisplay(this);
 
    }

@@ -33,17 +33,37 @@ public interface Const
 
 //   public static final String LINE_NUMBERS = "line-numbers";
 
+   
+   
+   
+   
+   
+   
    public static final String TOOLBAR = "toolbar";
 
    public static final String TOOLBAR_ITEM = "toolbar-item";
+   
+
+   
+   
+   
+   
+   
+   public static final String MIME_TYPE = "mimetype";
    
    public static final String EDITORS = "editors";
    
    public static final String EDITOR = "editor";
    
-   public static final String MIME_TYPE = "mimetype";
-   
    public static final String EDITOR_DESCRIPTION = "editordescription";
+   
+
+   
+   
+   
+   
+   
+   
    
    public static final String HOT_KEYS = "hot-keys";
    

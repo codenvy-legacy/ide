@@ -19,10 +19,17 @@
  */
 package org.exoplatform.ide.client.command;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
@@ -43,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveAllFilesHandler
+   ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private ApplicationContext context;
@@ -51,6 +58,8 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    private Handlers handlers;
    
    private HandlerManager eventBus;
+   
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public SaveAllFilesCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -58,6 +67,8 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onSaveAllFiles(SaveAllFilesEvent event)
@@ -71,7 +82,7 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
 
    protected void saveNextUnsavedFile()
    {
-      for (File file : context.getOpenedFiles().values())
+      for (File file : openedFiles.values())
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
@@ -105,6 +116,16 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

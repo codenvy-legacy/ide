@@ -25,7 +25,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
@@ -48,14 +48,14 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    private String entryPoint;
 
    private Handlers handlers;
-   
-   private ApplicationContext context;
 
-   public WorkspaceChecker(HandlerManager eventBus, String entryPoint, ApplicationContext context)
+   private ApplicationSettings applicationSettings;
+
+   public WorkspaceChecker(HandlerManager eventBus, String entryPoint, ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
       this.entryPoint = entryPoint;
-      this.context = context;
+      this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
 
       ExceptionThrownEventHandlerInitializer.clear();
@@ -69,13 +69,13 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    public void onError(ExceptionThrownEvent event)
    {
       event.getError().printStackTrace();
-      
+
       ServerException e = (ServerException)event.getError();
-      
+
       handlers.removeHandlers();
-      
+
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      
+
       Dialogs.getInstance().showError("Entry point <b>" + entryPoint + "</b> not found!");
    }
 
@@ -83,8 +83,8 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       handlers.removeHandlers();
       ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-      
-      new ApplicationStateLoader(eventBus, context).loadState();
+
+      new ApplicationStateLoader(eventBus, applicationSettings);
    }
 
 }

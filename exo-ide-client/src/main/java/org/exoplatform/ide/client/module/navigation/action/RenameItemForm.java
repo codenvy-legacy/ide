@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
@@ -74,7 +74,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    private RenameItemPresenter presenter;
 
-   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
+   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Rename item");

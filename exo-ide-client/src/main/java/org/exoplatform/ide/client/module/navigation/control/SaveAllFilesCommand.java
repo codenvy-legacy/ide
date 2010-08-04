@@ -19,7 +19,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -53,7 +54,7 @@ public class SaveAllFilesCommand extends IDEControl implements EditorFileContent
 
    public static final String TITLE = "Save All";
    
-   private HashMap<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    public SaveAllFilesCommand(HandlerManager eventBus)
    {

@@ -26,11 +26,13 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
@@ -46,12 +48,10 @@ import com.google.gwt.user.client.Timer;
  */
 
 public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenReceivedHandler, ExceptionThrownHandler,
-   EntryPointChangedHandler
+   EntryPointChangedHandler, EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
-
-   private ApplicationContext context;
 
    private Handlers handlers;
 
@@ -61,14 +61,16 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
 
    private String entryPoint;
 
-   public GoToFolderCommandThread(HandlerManager eventBus, ApplicationContext context)
+   private File activeFile;
+
+   public GoToFolderCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(GoToFolderEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -77,12 +79,12 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
-      if (context.getActiveFile() == null)
+      if (activeFile == null)
       {
          return;
       }
 
-      String workingPath = context.getActiveFile().getHref();
+      String workingPath = activeFile.getHref();
 
       String entryPoint = this.entryPoint.substring(0, this.entryPoint.lastIndexOf("/"));
       entryPoint = entryPoint.substring(0, entryPoint.lastIndexOf("/"));
@@ -133,7 +135,7 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
             {
                // try to select file.........
                handlers.removeHandlers();
-               eventBus.fireEvent(new SelectItemEvent(context.getActiveFile().getHref()));
+               eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
             }
          }
       }.schedule(10);
@@ -151,6 +153,11 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }

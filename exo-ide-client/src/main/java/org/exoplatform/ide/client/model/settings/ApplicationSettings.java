@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.json.client.JSONObject;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -31,14 +29,13 @@ import com.google.gwt.json.client.JSONObject;
 
 public class ApplicationSettings
 {
-   
-   public enum Store
-   {
-      
+
+   public enum Store {
+
       COOKIES, REGISTRY
-      
+
    }
-   
+
    private HashMap<String, Store> storedIn = new HashMap<String, Store>();
 
    /*
@@ -46,46 +43,47 @@ public class ApplicationSettings
     */
    private HashMap<String, Object> values = new HashMap<String, Object>();
    
-   public void setValue(String key, Object value) {
+   public Map<String, Object> getValues() {
+      return values;
+   }
+
+   public void setValue(String key, Object value, Store store)
+   {
       values.put(key, value);
-   }
-   
-   public Object getValue(String key) {
-      return values.get(key);
-   }
-   
-   public Store getStoredIn(String key) {
-      if (storedIn.get(key) == null) {
-         return Store.REGISTRY;
-      }
-      
-      return storedIn.get(key);
-   }
-   
-   public void setStoredIn(String key, Store store) {
       storedIn.put(key, store);
    }
-   
+
+   public Object getValue(String key)
+   {
+      return values.get(key);
+   }
+
+   public Store getStoredIn(String key)
+   {
+      if (storedIn.get(key) == null)
+      {
+         return Store.REGISTRY;
+      }
+
+      return storedIn.get(key);
+   }
+
+//   public void setStoredIn(String key, Store store)
+//   {
+//      storedIn.put(key, store);
+//   }
 
    private List<String> toolbarItems = new ArrayList<String>();
 
-   private HashMap<String, String> defaultEditors = new HashMap<String, String>();
+//   private HashMap<String, String> defaultEditors = new HashMap<String, String>();
 
-   private Map<String, String> hotKeys = new HashMap<String, String>();
+   //   private boolean showLineNumbers = true;
 
-   private boolean showLineNumbers = true;
+//   private String entryPoint;
 
-   private boolean showOutline = true;
-
-   private String entryPoint;
-   
-   
-   private JSONObject settings;
-   
-   
    public ApplicationSettings()
    {
-      toolbarItems.add("");      
+      toolbarItems.add("");
    }
 
    public List<String> getToolbarItems()
@@ -93,44 +91,29 @@ public class ApplicationSettings
       return toolbarItems;
    }
 
-   public HashMap<String, String> getDefaultEditors()
-   {
-      return defaultEditors;
-   }
+//   public HashMap<String, String> getDefaultEditors()
+//   {
+//      return defaultEditors;
+//   }
 
-   public Map<String, String> getHotKeys()
-   {
-      return hotKeys;
-   }
+   //   public boolean isShowLineNumbers()
+   //   {
+   //      return showLineNumbers;
+   //   }
+   //
+   //   public void setShowLineNumbers(boolean showLineNumbers)
+   //   {
+   //      this.showLineNumbers = showLineNumbers;
+   //   }
 
-   public boolean isShowLineNumbers()
-   {
-      return showLineNumbers;
-   }
+//   public String getEntryPoint()
+//   {
+//      return entryPoint;
+//   }
 
-   public void setShowLineNumbers(boolean showLineNumbers)
-   {
-      this.showLineNumbers = showLineNumbers;
-   }
-
-   public boolean isShowOutline()
-   {
-      return showOutline;
-   }
-
-   public void setShowOutline(boolean showOutline)
-   {
-      this.showOutline = showOutline;
-   }
-
-   public String getEntryPoint()
-   {
-      return entryPoint;
-   }
-
-   public void setEntryPoint(String entryPoint)
-   {
-      this.entryPoint = entryPoint;
-   }
+//   public void setEntryPoint(String entryPoint)
+//   {
+//      this.entryPoint = entryPoint;
+//   }
 
 }

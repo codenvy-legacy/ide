@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
@@ -56,10 +57,11 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version @version $Id: $
  */
 
-public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler, ApplicationSettingsReceivedHandler
+public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler,
+   ApplicationSettingsReceivedHandler
 {
    private final String ID = "ideEditorFormTabSet";
-   
+
    private HandlerManager eventBus;
 
    private Handlers handlers;
@@ -154,6 +156,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    };
 
+   @SuppressWarnings("unchecked")
    public void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent)
    {
       EditorTab tab = getEditorTab(file.getHref());
@@ -171,7 +174,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
-      List<String> hotKeyList = new ArrayList<String>(applicationSettings.getHotKeys().keySet());
+      List<String> hotKeyList = new ArrayList<String>(((Map<String, String>)applicationSettings.getValue("hotkeys")).keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
@@ -418,5 +421,5 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       applicationSettings = event.getApplicationSettings();
    }
-   
+
 }

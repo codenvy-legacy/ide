@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.client.module.development.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent;
-import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -32,12 +26,15 @@ import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormClosedHandler;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Cookies;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,7 +42,7 @@ import com.google.gwt.user.client.Cookies;
  *
  */
 public class ShowOutlineControl extends IDEControl implements EditorActiveFileChangedHandler,
-   BrowserCookiesUpdatedHandler, FormOpenedHandler, FormClosedHandler
+   ApplicationSettingsSavedHandler, FormOpenedHandler, FormClosedHandler, ApplicationSettingsReceivedHandler
 {
 
    public static final String ID = "View/Show \\ Hide Outline";
@@ -58,8 +55,8 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
 
    private static final String COOKIE_OUTLINE = "outline";
 
-   private boolean showOutLine = "true".equals(Cookies.getCookie(COOKIE_OUTLINE));
-   
+   private boolean showOutLine = false;
+
    private boolean outLineFormOpened = false;
 
    public ShowOutlineControl(HandlerManager eventBus)
@@ -77,7 +74,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
+      addHandler(ApplicationSettingsSavedEvent.TYPE, this);
       addHandler(FormOpenedEvent.TYPE, this);
       addHandler(FormClosedEvent.TYPE, this);
    }
@@ -114,14 +111,6 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedHandler#onBrowserCookiesUpdated(org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent)
-    */
-   public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
-   {
-      update();
-   }
-   
    private void updateControlEnabling() {
       setSelected(outLineFormOpened);
 
@@ -149,6 +138,15 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
          outLineFormOpened = false;
          updateControlEnabling();
       }
+   }
+
+   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
+   {
+      update();
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
    }
 
 }

@@ -25,11 +25,16 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
@@ -51,7 +56,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements FileContentSavedHandler
+public class SelectWorkspacePresenter implements FileContentSavedHandler, ApplicationSettingsSavedHandler
 {
 
    public interface Display
@@ -83,17 +88,20 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
    private EntryPoint selectedEntryPoint;
 
    private boolean isSameEntryPoint = true;
-   
-   private String currentEntryPoint;
-   
+
+   //private String currentEntryPoint;
+
+   private ApplicationSettings applicationSettings;
+
    private Map<String, File> openedFiles;
 
-   public SelectWorkspacePresenter(HandlerManager eventBus, String currentEntryPoint, EntryPointList entryPointList, Map<String, File> openedFiles)
+   public SelectWorkspacePresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
+      EntryPointList entryPointList, Map<String, File> openedFiles)
    {
       this.eventBus = eventBus;
       this.entryPointList = entryPointList;
-      
-      this.currentEntryPoint = currentEntryPoint;
+
+      this.applicationSettings = applicationSettings;
       this.openedFiles = openedFiles;
 
       handlers = new Handlers(eventBus);
@@ -164,6 +172,8 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
          return;
       }
 
+      String currentEntryPoint = (String)applicationSettings.getValue("entry-point");
+
       if (selectedItem.getHref().equals(currentEntryPoint))
       {
          display.disableOkButton();
@@ -211,13 +221,6 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
       {
          swichEntryPoint();
       }
-   }
-
-   private void swichEntryPoint()
-   {
-      display.closeForm();
-      CookieManager.getInstance().storeEntryPoint(selectedEntryPoint.getHref());
-      eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
 
    private void closeNextFile()
@@ -275,6 +278,22 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler
    {
       eventBus.fireEvent(new EditorCloseFileEvent(event.getFile(), true));
       closeNextFile();
+   }
+
+   private void swichEntryPoint()
+   {
+      applicationSettings.setValue("entry-point", selectedEntryPoint.getHref(), Store.COOKIES);
+//      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
+      
+      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+   }
+
+   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
+   {
+      handlers.removeHandler(ApplicationSettingsSavedEvent.TYPE);      
+      display.closeForm();
+      eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
 
 }

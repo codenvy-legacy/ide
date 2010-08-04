@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ide.client.hotkeys.event;
 
+import java.util.Map;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -32,6 +34,18 @@ public class RefreshHotKeysEvent extends GwtEvent<RefreshHotKeysHandler>
 {
 
    public static final GwtEvent.Type<RefreshHotKeysHandler> TYPE = new GwtEvent.Type<RefreshHotKeysHandler>();
+
+   private Map<String, String> hotKeys;
+
+   public RefreshHotKeysEvent(Map<String, String> hotKeys)
+   {
+      this.hotKeys = hotKeys;
+   }
+
+   public Map<String, String> getHotKeys()
+   {
+      return hotKeys;
+   }
 
    @Override
    protected void dispatch(RefreshHotKeysHandler handler)

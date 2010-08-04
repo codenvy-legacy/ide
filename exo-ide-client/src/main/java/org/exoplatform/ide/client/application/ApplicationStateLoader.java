@@ -19,13 +19,19 @@
  */
 package org.exoplatform.ide.client.application;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -49,26 +55,29 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
+   
+   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   
+   private ApplicationSettings applicationSettings;
+   
+   private List<String> filesToLoad;
 
-   public ApplicationStateLoader(HandlerManager eventBus, ApplicationContext context)
+   public ApplicationStateLoader(HandlerManager eventBus, ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
-      this.context = context;
+      this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
-   }
-
-   public void loadState()
-   {
+      
       ExceptionThrownEventHandlerInitializer.clear();
 
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
-      preloadNextFile();
+      filesToLoad = (List<String>)applicationSettings.getValue("opened-files");
+      
+      preloadNextFile();      
    }
 
    private File fileToLoad;
@@ -86,7 +95,8 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
                {
                   try
                   {
-                     eventBus.fireEvent(new InitializeApplicationEvent());
+                     String activeFile = (String)applicationSettings.getValue("active-file");
+                     eventBus.fireEvent(new InitializeApplicationEvent(openedFiles, activeFile));
                   }
                   catch (Throwable e)
                   {
@@ -103,7 +113,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    {
       try
       {
-         if (context.getPreloadFiles().size() == 0)
+         if (filesToLoad.size() == 0)
          {
             fileToLoad = null;
             handlers.removeHandlers();
@@ -114,8 +124,12 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
             return;
          }
 
-         fileToLoad = context.getPreloadFiles().values().iterator().next();
-         context.getPreloadFiles().remove(fileToLoad.getHref());
+         String href = filesToLoad.get(0);
+         
+         System.out.println("href > " + href);
+         
+         fileToLoad = new File(href);
+         filesToLoad.remove(0);
          VirtualFileSystem.getInstance().getProperties(fileToLoad);
       }
       catch (Exception exc)
@@ -127,19 +141,19 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       fileToLoad.setNewFile(false);
-      fileToLoad.setContentChanged(false);
+      fileToLoad.setContentChanged(false);      
       VirtualFileSystem.getInstance().getContent(fileToLoad);
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
-      context.getOpenedFiles().put(fileToLoad.getHref(), fileToLoad);
+      openedFiles.put(fileToLoad.getHref(), fileToLoad);
       preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      context.getOpenedFiles().remove(fileToLoad.getHref());
+      openedFiles.remove(fileToLoad.getHref());
       preloadNextFile();
    }
 

@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeHotKeysCommand;
@@ -64,6 +65,7 @@ import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;
 import org.exoplatform.ide.client.workspace.SelectWorkspaceForm;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -114,6 +116,8 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
+      System.out.println("application settings received...................");
+      System.out.println(">> " + event.getApplicationSettings());
       applicationSettings = event.getApplicationSettings();
    }
 
@@ -121,7 +125,10 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    {
       applicationConfiguration = event.getApplicationConfiguration();
       new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
-      new HotKeyManagerImpl(eventBus, applicationSettings, controls);
+      
+      System.out.println(">>>>>>>>>>>>>>>> application settings: " + applicationSettings);
+      
+      new HotKeyManagerImpl(eventBus, controls, applicationSettings);
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)
@@ -142,6 +149,8 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       currentEntryPoint = event.getEntryPoint();
+      applicationSettings.setValue("entry-point", currentEntryPoint, Store.COOKIES);
+//      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -161,7 +170,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    public void onEntryPointsReceived(EntryPointsReceivedEvent event)
    {
-      new SelectWorkspaceForm(eventBus, currentEntryPoint, event.getEntryPointList(), openedFiles);
+      new SelectWorkspaceForm(eventBus, applicationSettings, event.getEntryPointList(), openedFiles);
    }
 
    public void onCustomizeToolBar(CustomizeToolbarEvent event)

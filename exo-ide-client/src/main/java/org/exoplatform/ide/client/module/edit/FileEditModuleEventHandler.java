@@ -19,14 +19,16 @@
 package org.exoplatform.ide.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
 import org.exoplatform.ide.client.module.edit.event.FindTextEvent;
 import org.exoplatform.ide.client.module.edit.event.FindTextHandler;
@@ -78,8 +80,11 @@ public class FileEditModuleEventHandler implements RegisterEventHandlersHandler,
     */
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-      applicationSettings.setShowLineNumbers(event.isShowLineNumber());
-      CookieManager.setShowLineNumbers(event.isShowLineNumber());
+      applicationSettings.setValue("line-numbers", new Boolean(event.isShowLineNumber()), Store.COOKIES);
+//      applicationSettings.setStoredIn("line-numbers", Store.COOKIES);
+      //applicationSettings.setShowLineNumbers(event.isShowLineNumber());
+      //CookieManager.setShowLineNumbers(event.isShowLineNumber());
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
    }
 
    /**

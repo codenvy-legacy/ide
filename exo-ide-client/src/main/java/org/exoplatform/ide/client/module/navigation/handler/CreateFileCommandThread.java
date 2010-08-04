@@ -17,7 +17,9 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -26,6 +28,10 @@ import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.template.FileTemplates;
@@ -53,7 +59,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler
+   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
    private HandlerManager eventBus;
 
@@ -62,6 +68,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    private ApplicationContext context;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+   
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public CreateFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -71,6 +79,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
@@ -101,7 +111,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
       String fileName = "Untitled file." + extension;
       int index = 1;
-      while (context.getOpenedFiles().get(href + fileName) != null)
+      while (openedFiles.get(href + fileName) != null)
       {
          fileName = "Untitled file " + index + "." + extension;
          index++;
@@ -140,6 +150,16 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       handlers.removeHandler(TemplateListReceivedEvent.TYPE);
       context.setTemplateList(event.getTemplateList());
       new CreateFileFromTemplateForm(eventBus, selectedItems, context.getTemplateList().getTemplates());
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

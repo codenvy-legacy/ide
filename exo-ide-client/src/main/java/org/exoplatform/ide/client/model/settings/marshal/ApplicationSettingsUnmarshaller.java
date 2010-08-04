@@ -20,16 +20,19 @@
 package org.exoplatform.ide.client.model.settings.marshal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 /**
@@ -65,6 +68,10 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       return null;
    }
 
+   private static native String javaScriptDecodeURIComponent(String text) /*-{
+        return decodeURIComponent(text);
+     }-*/;
+
    public void unmarshal(Response response) throws UnmarshallerException
    {
       try
@@ -73,10 +80,38 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
 
          Node configurationNode = dom.getElementsByTagName(SETTINGS).item(0);
 
-         //parseLineNumbers(configurationNode);
-         parseToolbar(configurationNode);
-         parseEditors(configurationNode);
-         parseHotKeys(configurationNode);
+         NodeList nodes = configurationNode.getChildNodes();
+         for (int i = 0; i < nodes.getLength(); i++)
+         {
+            Node node = nodes.item(i);
+
+            String nodeName = node.getNodeName();
+            if (nodeName.endsWith("_str"))
+            {
+               parseStringValue(node);
+            }
+            else if (nodeName.endsWith("_int"))
+            {
+               parseIntegerValue(node);
+            }
+            else if (nodeName.endsWith("_bool"))
+            {
+               parseBooleanValue(node);
+            }
+            else if (nodeName.endsWith("_list"))
+            {
+               parseListValue(node);
+            }
+            else if (nodeName.endsWith("_map"))
+            {
+               parseMapValue(node);
+            }
+            else
+            {
+               new Exception("Can't parse node value").printStackTrace();
+            }
+
+         }
       }
       catch (Exception exc)
       {
@@ -84,64 +119,119 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       }
    }
 
-   private void parseEditors(Node configurationNode)
+   private void parseStringValue(Node node)
    {
-      Node editors = getChildNode(configurationNode, EDITORS);
-      HashMap<String, String> editorsMap = new HashMap<String, String>();
-      for (int i = 0; i < editors.getChildNodes().getLength(); i++)
+      String name = node.getNodeName();
+      name = name.substring(0, name.length() - "_str".length());
+
+      if (!node.hasChildNodes())
       {
-         Node editorItemNode = editors.getChildNodes().item(i);
-
-         String itemKey = getChildNode(editorItemNode, MIME_TYPE).getChildNodes().item(0).getNodeValue();
-         String itemValue = getChildNode(editorItemNode, EDITOR_DESCRIPTION).getChildNodes().item(0).getNodeValue();
-
-         editorsMap.put(itemKey, itemValue);
+         applicationSettings.setValue(name, "", Store.REGISTRY);
       }
-
-      applicationSettings.getDefaultEditors().clear();
-      applicationSettings.getDefaultEditors().putAll(editorsMap);
+      else
+      {
+         Node valueNode = node.getChildNodes().item(0);
+         String value = valueNode.getNodeValue();
+         value = javaScriptDecodeURIComponent(value);
+         applicationSettings.setValue(name, value, Store.REGISTRY);
+      }
    }
 
-   private void parseToolbar(Node configurationNode)
+   private void parseIntegerValue(Node node)
    {
-      Node toolbar = getChildNode(configurationNode, TOOLBAR);
+      String name = node.getNodeName();
+      name = name.substring(0, name.length() - "_int".length());
 
-      ArrayList<String> toolbarItems = new ArrayList<String>();
-
-      for (int i = 0; i < toolbar.getChildNodes().getLength(); i++)
+      if (!node.hasChildNodes())
       {
-         Node toolbarItemNode = toolbar.getChildNodes().item(i);
+         applicationSettings.setValue(name, new Integer(0), Store.REGISTRY);
+      }
+      else
+      {
+         Node valueNode = node.getChildNodes().item(0);
+         String value = valueNode.getNodeValue();
+         value = javaScriptDecodeURIComponent(value);
 
-         String item = "";
-         if (toolbarItemNode.getChildNodes().getLength() != 0)
+         Integer intValue = new Integer(value);
+         applicationSettings.setValue(name, intValue, Store.REGISTRY);
+      }
+   }
+
+   private void parseBooleanValue(Node node)
+   {
+      String name = node.getNodeName();
+      name = name.substring(0, name.length() - "_bool".length());
+
+      if (!node.hasChildNodes())
+      {
+         applicationSettings.setValue(name, Boolean.FALSE, Store.REGISTRY);
+      }
+      else
+      {
+         Node valueNode = node.getChildNodes().item(0);
+         String value = valueNode.getNodeValue();
+         value = javaScriptDecodeURIComponent(value);
+
+         Boolean booleanValue = new Boolean(value);
+         applicationSettings.setValue(name, booleanValue, Store.REGISTRY);
+      }
+   }
+
+   private void parseListValue(Node node)
+   {
+      String name = node.getNodeName();
+      name = name.substring(0, name.length() - "_list".length());
+
+      if (!node.hasChildNodes())
+      {
+         applicationSettings.setValue(name, new ArrayList<String>(), Store.REGISTRY);
+      }
+      else
+      {
+         List<String> items = new ArrayList<String>();
+
+         for (int i = 0; i < node.getChildNodes().getLength(); i++)
          {
-            item = toolbarItemNode.getChildNodes().item(0).getNodeValue();
+            Node itemNode = node.getChildNodes().item(i);
+            String value = itemNode.getChildNodes().item(0).getNodeValue();
+            value = javaScriptDecodeURIComponent(value);
+            items.add(value);
          }
-         toolbarItems.add(item);
-      }
 
-      applicationSettings.getToolbarItems().clear();
-      applicationSettings.getToolbarItems().addAll(toolbarItems);
+         applicationSettings.setValue(name, items, Store.REGISTRY);
+      }
    }
 
-   private void parseHotKeys(Node configurationNode)
+   private void parseMapValue(Node node)
    {
-      Node hotKeys = getChildNode(configurationNode, HOT_KEYS);
+      String name = node.getNodeName();
+      name = name.substring(0, name.length() - "_map".length());
 
-      Map<String, String> hotKeysMap = new HashMap<String, String>();
-
-      for (int i = 0; i < hotKeys.getChildNodes().getLength(); i++)
+      if (!node.hasChildNodes())
       {
-         Node hotKeyItemNode = hotKeys.getChildNodes().item(i);
+         applicationSettings.setValue(name, new LinkedHashMap<String, String>(), Store.REGISTRY);
+      }
+      else
+      {
+         Map<String, String> map = new LinkedHashMap<String, String>();
 
-         String itemKey = getChildNode(hotKeyItemNode, SHORTCUT).getChildNodes().item(0).getNodeValue();
-         String itemValue = getChildNode(hotKeyItemNode, CONTROL_ID).getChildNodes().item(0).getNodeValue();
+         for (int i = 0; i < node.getChildNodes().getLength(); i++)
+         {
+            Node itemNode = node.getChildNodes().item(i);
 
-         hotKeysMap.put(itemKey, itemValue);
+            Node keyNode = getChildNode(itemNode, "key");
+            Node valueNode = getChildNode(itemNode, "value");
+
+            String key = keyNode.getChildNodes().item(0).getNodeValue();
+            key = javaScriptDecodeURIComponent(key);
+            String value = valueNode.getChildNodes().item(0).getNodeValue();
+            value = javaScriptDecodeURIComponent(value);
+            map.put(key, value);
+         }
+
+         applicationSettings.setValue(name, map, Store.REGISTRY);
       }
 
-      applicationSettings.getHotKeys().clear();
-      applicationSettings.getHotKeys().putAll(hotKeysMap);
    }
 
 }

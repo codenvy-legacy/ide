@@ -1,6 +1,6 @@
 package org.exoplatform.ide.client.editor.custom;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
@@ -45,7 +45,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
    private OpenFileWithPresenter presenter;
 
-   public OpenFileWithForm(HandlerManager eventBus, File selectedFile, HashMap<String, File> openedFiles,
+   public OpenFileWithForm(HandlerManager eventBus, File selectedFile, Map<String, File> openedFiles,
       ApplicationSettings applicationSettings)
    {
 

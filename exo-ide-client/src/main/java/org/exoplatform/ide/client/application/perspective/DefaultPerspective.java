@@ -248,7 +248,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
          }
       });
       
-      codeHelperForm = new CodeHelperForm(eventBus, context);
+      codeHelperForm = new CodeHelperForm(eventBus);
       codeHelperForm.setMinWidth(MIN_CODE_HELPER_WIDTH);
       codeHelperForm.setWidth("30%");
       //codeHelperForm.showCodeHelper(false);

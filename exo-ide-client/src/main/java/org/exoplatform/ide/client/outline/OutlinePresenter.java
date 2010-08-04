@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -31,11 +34,7 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -62,8 +61,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
 
    private Display display;
@@ -75,11 +72,14 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private boolean goToLine;
 
    private Token currentToken;
+   
+   private File activeFile;
+   
+   private TextEditor activeTextEditor;
 
-   public OutlinePresenter(HandlerManager bus, ApplicationContext applicationContext)
+   public OutlinePresenter(HandlerManager bus)
    {
       eventBus = bus;
-      context = applicationContext;
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
@@ -106,7 +106,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             if (goToLine)
             {
                int line = event.getSelectedItem().getLineNumber();
-               int maxLineNumber = context.getActiveFile().getContent().split("\n").length;
+               int maxLineNumber = activeFile.getContent().split("\n").length;
                eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
             }
             goToLine = true;
@@ -128,7 +128,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      if (isShowOutline(context.getActiveTextEditor(), context.getActiveFile()))
+      if (isShowOutline(activeTextEditor, activeFile))
       {
          refreshOutlineTimer.cancel();
          refreshOutlineTimer.schedule(2000);
@@ -154,7 +154,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          try
          {
-            refreshOutline(context.getActiveTextEditor());
+            refreshOutline(activeTextEditor);
          }
          catch (Throwable e)
          {
@@ -165,6 +165,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      activeFile = event.getFile();
+      activeTextEditor = event.getEditor();
+      
       File file = event.getFile();
       TextEditor editor = event.getEditor();
       if (isShowOutline(editor, file))

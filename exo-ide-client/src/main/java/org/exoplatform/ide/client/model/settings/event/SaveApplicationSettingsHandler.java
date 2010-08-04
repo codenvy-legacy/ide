@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,20 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.model.settings.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
+ * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $Id: $
  */
 
-public interface RedoEditingHandler extends EventHandler
+public interface SaveApplicationSettingsHandler extends EventHandler
 {
-
-   void onRedoEditing(RedoEditingEvent event);
+   
+   void onSaveApplicationSettings(SaveApplicationSettingsEvent event);
 
 }

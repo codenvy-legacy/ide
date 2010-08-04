@@ -48,6 +48,8 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    private ApplicationContext context;
 
    private Handlers handlers;
+   
+   private String selectedEditor;
 
    public OpenFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -60,8 +62,11 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    }
 
    public void onOpenFile(OpenFileEvent event)
-   {
+   {      
+      System.out.println("selected editor: " + event.getEditor());
+      
       File file = event.getFile();
+      selectedEditor = event.getEditor();
 
       //      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
       //      {
@@ -74,6 +79,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          open(file);
          return;
       }
+      
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
@@ -89,7 +95,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    {
       try
       {
-         Editor editor = EditorUtil.getEditor(file.getContentType(), context);
+         Editor editor = EditorUtil.getEditor(file.getContentType(), selectedEditor);
          eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
       }
       catch (EditorNotFoundException e)

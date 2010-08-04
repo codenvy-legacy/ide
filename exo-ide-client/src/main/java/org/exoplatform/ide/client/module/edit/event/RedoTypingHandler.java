@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.module.edit.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,21 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class RedoEditingEvent extends GwtEvent<RedoEditingHandler>
+public interface RedoTypingHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<RedoEditingHandler> TYPE = new GwtEvent.Type<RedoEditingHandler>();
-
-   @Override
-   protected void dispatch(RedoEditingHandler handler)
-   {
-      handler.onRedoEditing(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RedoEditingHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onRedoTyping(RedoTypingEvent event);
 
 }

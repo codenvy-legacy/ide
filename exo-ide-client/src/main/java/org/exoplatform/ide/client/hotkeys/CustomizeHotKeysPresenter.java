@@ -30,7 +30,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -222,9 +223,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     * @param controlId id of control
     * @return hotKey for control or empty string
     */
+   @SuppressWarnings("unchecked")
    private String findHotKey(String controlId)
    {
-      Map<String, String> hotKeysMap = applicationSettings.getHotKeys();
+      System.out.println("application settings: " + applicationSettings);
+      Map<String, String> hotKeysMap = (Map<String, String>)applicationSettings.getValue("hotkeys");
+      System.out.println("hotKeysMap > " + hotKeysMap);
 
       Iterator<Entry<String, String>> it = hotKeysMap.entrySet().iterator();
       while (it.hasNext())
@@ -340,7 +344,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    private void saveHotKeys()
    {
-      applicationSettings.getHotKeys().clear();
+      Map<String, String> keys = (Map<String, String>)applicationSettings.getValue("hotkeys");
+      keys.clear();
+      
       for (HotKeyItem hotKeyItem : hotKeys)
       {
          if (!hotKeyItem.getGroup().equals(EDITOR_GROUP))
@@ -350,15 +356,15 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             if (hotKey != null && hotKey.length() > 0)
             {
                String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
-               applicationSettings.getHotKeys().put(keyCode, hotKeyItem.getControlId());
+               keys.put(keyCode, hotKeyItem.getControlId());
             }
          }
       }
-      display.closeForm();
-
-      eventBus.fireEvent(new RefreshHotKeysEvent());
-
-      SettingsService.getInstance().saveSetting(applicationSettings);
+      
+      display.closeForm();      
+      
+      eventBus.fireEvent(new RefreshHotKeysEvent(keys));      
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
    /**

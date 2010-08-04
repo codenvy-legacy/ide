@@ -61,21 +61,20 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
    private Handlers handlers;
 
-   public CodeHelperForm(HandlerManager bus, ApplicationContext applicationContext)
+   public CodeHelperForm(HandlerManager bus)
    {
       eventBus = bus;
-      context = applicationContext;
       handlers = new Handlers(eventBus);
 
       tabSet = new TabSet();
       createButtons();
-      outlineTab = new OutlineForm(eventBus, context);
+      outlineTab = new OutlineForm(eventBus);
       outlineTab.setCanClose(true);
       tabSet.addTab(outlineTab);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
 
-      presenter = new CodeHelperPresenter(eventBus, context);
+      presenter = new CodeHelperPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 

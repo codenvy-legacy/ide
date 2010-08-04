@@ -100,7 +100,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       createButtons();
       addMember(tabSet);
 
-      propertiesForm = new PropertiesForm(eventBus, context);
+      propertiesForm = new PropertiesForm(eventBus);
       outputForm = new OutputForm(eventBus);
       previewForm = new PreviewForm(eventBus, context);
 
@@ -193,11 +193,11 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    public void changeActiveFile(File file)
    {
 //      TODO
-      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
-      if (propertiesTab != null)
-      {
-         propertiesForm.refreshProperties(file);
-      }
+//      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
+//      if (propertiesTab != null)
+//      {
+//         propertiesForm.refreshProperties(file);
+//      }
 
       Tab previewTab = tabSet.getTab(previewForm.getId());
       if (previewTab != null)

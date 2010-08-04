@@ -17,8 +17,8 @@
 package org.exoplatform.ide.client.module.navigation.action;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -82,9 +82,9 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    private List<Item> selectedItems;
 
-   private HashMap<String, File> openedFiles;
+   private Map<String, File> openedFiles;
 
-   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, HashMap<String, File> openedFiles)
+   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;

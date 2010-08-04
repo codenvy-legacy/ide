@@ -20,7 +20,9 @@ package org.exoplatform.ide.client.module.navigation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.command.GoToFolderCommandThread;
@@ -36,6 +38,8 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedE
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -90,7 +94,8 @@ import com.google.gwt.event.shared.HandlerManager;
 public class NavigationModuleEventHandler implements OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
+   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler
 {
    private SaveFileCommandThread saveFileCommandHandler;
 
@@ -113,14 +118,16 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
    protected Handlers handlers;
 
    private ApplicationSettings applicationSettings;
-   
+
    private ApplicationConfiguration applicationConfiguration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private HashMap<String, File> openedFiles = new HashMap<String, File>();
-   
+   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+
    private String entryPoint;
+
+   private File activeFile;
 
    public NavigationModuleEventHandler(HandlerManager eventBus, ApplicationContext context)
    {
@@ -132,14 +139,15 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
       openFileCommandThread = new OpenFileCommandThread(eventBus, context);
-      saveFileCommandHandler = new SaveFileCommandThread(eventBus, context);
-      saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus, context);
+      saveFileCommandHandler = new SaveFileCommandThread(eventBus);
+      saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus);
       saveAllFilesCommandHandler = new SaveAllFilesCommandThread(eventBus, context);
-      goToFolderCommandHandler = new GoToFolderCommandThread(eventBus, context);
-      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);      
+      goToFolderCommandHandler = new GoToFolderCommandThread(eventBus);
+      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -167,7 +175,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
 
    public void onOpenFileWith(OpenFileWithEvent event)
    {
-      new OpenFileWithForm(eventBus, context.getActiveFile(), context.getOpenedFiles(), applicationSettings);
+      new OpenFileWithForm(eventBus, (File)selectedItems.get(0), openedFiles, applicationSettings);
    }
 
    public void onUploadFile(UploadFileEvent event)
@@ -185,8 +193,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
 
    public void onSaveAsTemplate(SaveAsTemplateEvent event)
    {
-      File file = context.getActiveFile();
-      new SaveAsTemplateForm(eventBus, file);
+      new SaveAsTemplateForm(eventBus, activeFile);
    }
 
    public void onCreateFolder(CreateFolderEvent event)
@@ -263,6 +270,11 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       applicationConfiguration = event.getConfiguration();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }

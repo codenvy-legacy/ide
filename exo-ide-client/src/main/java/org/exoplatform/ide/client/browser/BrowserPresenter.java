@@ -329,7 +329,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    {
       //applicationSettings.setEntryPoint(event.getEntryPoint());
       //context.setEntryPoint(event.getEntryPoint());
-      CookieManager.getInstance().storeEntryPoint(event.getEntryPoint());
+      //CookieManager.getInstance().storeEntryPoint(event.getEntryPoint());
       entryPoint = event.getEntryPoint();
       display.getBrowserTree().setValue(null);
       switchWorkspace(event.getEntryPoint());

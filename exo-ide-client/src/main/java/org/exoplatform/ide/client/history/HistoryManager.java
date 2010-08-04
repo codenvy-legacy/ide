@@ -63,6 +63,8 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
    private String pathToLoad;
 
    private Handlers handlers;
+   
+   private File activeFile;
 
    public HistoryManager(HandlerManager eventBus, ApplicationContext context)
    {
@@ -81,6 +83,8 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      activeFile = event.getFile();
+      
       String path = event.getFile() != null ? event.getFile().getHref() : "";
       if (path.equals(currentHistoryToken))
       {
@@ -93,27 +97,29 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 
    public void onValueChange(ValueChangeEvent<String> value)
    {
-      String path = value.getValue();
-      if ("".equals(path))
-      {
-         return;
-      }
-
-      File file = context.getOpenedFiles().get(path);
-      if (file == null)
-      {
-         loadFileAndSwitch(path);
-      }
-      else
-      {
-         if (file == context.getActiveFile())
-         {
-            return;
-         }
-
-         context.setActiveFile(file);
-         eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
-      }
+      // TODO recheck this method
+      
+//      String path = value.getValue();
+//      if ("".equals(path))
+//      {
+//         return;
+//      }
+//
+//      File file = context.getOpenedFiles().get(path);
+//      if (file == null)
+//      {
+//         loadFileAndSwitch(path);
+//      }
+//      else
+//      {
+//         if (file == context.getActiveFile())
+//         {
+//            return;
+//         }
+//
+//         context.setActiveFile(file);
+//         eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
+//      }
    }
 
    private void loadFileAndSwitch(String path)

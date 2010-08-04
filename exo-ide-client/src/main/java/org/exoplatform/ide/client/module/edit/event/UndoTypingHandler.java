@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.module.edit.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,21 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version @version $Id: $
  */
 
-public class UndoEditingEvent extends GwtEvent<UndoEditingHandler>
+public interface UndoTypingHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<UndoEditingHandler> TYPE = new GwtEvent.Type<UndoEditingHandler>();
-
-   @Override
-   protected void dispatch(UndoEditingHandler handler)
-   {
-      handler.onUndoEditing(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UndoEditingHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onUndoTypig(UndoTypingEvent event);
 
 }

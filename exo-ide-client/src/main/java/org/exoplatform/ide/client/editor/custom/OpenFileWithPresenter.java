@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.editor.custom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -29,9 +30,11 @@ import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.event.file.OpenFileEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
@@ -73,8 +76,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private HandlerManager eventBus;
 
-   //private ApplicationContext context;
-
    private Display display;
 
    private Handlers handlers;
@@ -83,11 +84,11 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private File selectedFile;
 
-   private HashMap<String, File> openedFiles;
+   private Map<String, File> openedFiles;
 
    private ApplicationSettings applicationSettings;
 
-   public OpenFileWithPresenter(HandlerManager eventBus, File selectedFile, HashMap<String, File> openedFiles,
+   public OpenFileWithPresenter(HandlerManager eventBus, File selectedFile, Map<String, File> openedFiles,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
@@ -152,6 +153,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       fillEditorListGrid();
    }
 
+   @SuppressWarnings("unchecked")
    private void fillEditorListGrid()
    {
       String mimeType = selectedFile.getContentType();
@@ -163,10 +165,15 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          List<EditorInfo> editorInfoItems = new ArrayList<EditorInfo>();
 
          Editor defaultEditor = null;
+         
+         Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+         if (defaultEditors == null) {
+            defaultEditors = new HashMap<String, String>();
+         }
 
-         if (applicationSettings.getDefaultEditors().get(mimeType) != null)
+         if (defaultEditors.get(mimeType) != null)
          {
-            String defaultEdotorDecription = applicationSettings.getDefaultEditors().get(mimeType);
+            String defaultEdotorDecription = defaultEditors.get(mimeType);
             for (Editor e : editorsItems)
             {
                if (e.getDescription().equals(defaultEdotorDecription))
@@ -205,14 +212,27 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
+         
+         System.out.println("selectedFile " + selectedFile);
+         System.out.println("selectedEditor.getDescription() " + selectedEditor.getDescription());
+         
          eventBus.fireEvent(new OpenFileEvent(selectedFile, selectedEditor.getDescription()));
          display.closeForm();
       }
       else
       {
          String mimeType = selectedFile.getContentType();
-         applicationSettings.getDefaultEditors().put(mimeType, selectedEditor.getDescription());
-         SettingsService.getInstance().saveSetting(applicationSettings);
+         
+         Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+         if (defaultEditors == null) {
+            defaultEditors = new HashMap<String, String>();
+            applicationSettings.setValue("default-editors", defaultEditors, Store.REGISTRY);
+         }
+         
+         defaultEditors.put(mimeType, selectedEditor.getDescription());         
+         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
+         
+         //SettingsService.getInstance().saveSetting(applicationSettings);
       }
    }
 
@@ -259,8 +279,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      eventBus.fireEvent(new OpenFileEvent(selectedFile));
       display.closeForm();
+      eventBus.fireEvent(new OpenFileEvent(selectedFile));
    }
 
 }

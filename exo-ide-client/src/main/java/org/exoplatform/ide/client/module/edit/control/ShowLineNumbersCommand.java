@@ -20,11 +20,11 @@
 package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedEvent;
-import org.exoplatform.ide.client.cookie.event.BrowserCookiesUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
@@ -38,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFileChangedHandler,
-   BrowserCookiesUpdatedHandler
+   ApplicationSettingsSavedHandler
 {
 
    private static final String ID = "Edit/Show \\ Hide Line Numbers";
@@ -63,7 +63,8 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
    protected void onRegisterHandlers()
    {
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
+      //addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
+      addHandler(ApplicationSettingsSavedEvent.TYPE, this);
    }
 
    @Override
@@ -81,7 +82,6 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
          setPrompt(TITLE_HIDE);
          setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(false));
-         showLineNumbers = false;
       }
       else
       {
@@ -90,7 +90,6 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
          setPrompt(TITLE_SHOW);
          setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());
          setEvent(new ShowLineNumbersEvent(true));
-         showLineNumbers = true;
       }
 
       // verify and show
@@ -112,9 +111,17 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
       updateState();
    }
 
-   public void onBrowserCookiesUpdated(BrowserCookiesUpdatedEvent event)
+   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      updateState();
+      System.out.println("ShowLineNumbersCommand.onApplicationSettingsSaved(!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)");
+      
+      if (event.getApplicationSettings().getValue("line-numbers") != null) {
+         showLineNumbers = (Boolean)event.getApplicationSettings().getValue("line-numbers");
+      } else {
+         showLineNumbers = true;
+      }
+      
+      updateState();      
    }
 
 }

@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.model.conversation.UserInfo;
@@ -49,11 +48,10 @@ public class ApplicationContext
    /**
     * Current active text editor.
     */
-   private TextEditor activeTextEditor;
-
+   //   private TextEditor activeTextEditor;
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
 
-   private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
+   //   private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
 
    /**
     * List of available templates
@@ -73,10 +71,10 @@ public class ApplicationContext
 
    private List<IDEModule> modules = new ArrayList<IDEModule>();
 
-   /**
-    * Opened files in editor
-    */
-   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
+   //   /**
+   //    * Opened files in editor
+   //    */
+   //   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    /**
     * Uses for storing default state of toolbar
@@ -148,30 +146,25 @@ public class ApplicationContext
       this.userInfo = userInfo;
    }
 
-   /**
-    * @return the activeTextEditor
-    */
-   public TextEditor getActiveTextEditor()
-   {
-      return activeTextEditor;
-   }
-
-   /**
-    * @param activeTextEditor the activeTextEditor to set
-    */
-   public void setActiveTextEditor(TextEditor activeTextEditor)
-   {
-      this.activeTextEditor = activeTextEditor;
-   }
+   //   /**
+   //    * @return the activeTextEditor
+   //    */
+   //   public TextEditor getActiveTextEditor()
+   //   {
+   //      return activeTextEditor;
+   //   }
+   //
+   //   /**
+   //    * @param activeTextEditor the activeTextEditor to set
+   //    */
+   //   public void setActiveTextEditor(TextEditor activeTextEditor)
+   //   {
+   //      this.activeTextEditor = activeTextEditor;
+   //   }
 
    public LinkedHashMap<String, File> getPreloadFiles()
    {
       return preloadFiles;
-   }
-
-   public LinkedHashMap<String, String> getOpenedEditors()
-   {
-      return openedEditors;
    }
 
    public String getSelectedNavigationPanel()
@@ -265,34 +258,34 @@ public class ApplicationContext
       this.selectedEditorDescription = selectedEditor;
    }
 
-   /**
-    * @return the openedFiles
-    */
-   public HashMap<String, File> getOpenedFiles()
-   {
-      return openedFiles;
-   }
+   //   /**
+   //    * @return the openedFiles
+   //    */
+   //   public HashMap<String, File> getOpenedFiles()
+   //   {
+   //      return openedFiles;
+   //   }
 
-   /**
-    * Current active file in editor.
-    */
-   private File activeFile;
+   //   /**
+   //    * Current active file in editor.
+   //    */
+   //   private File activeFile;
 
-   /**
-    * @return the activeFile
-    */
-   public File getActiveFile()
-   {
-      return activeFile;
-   }
-
-   /**
-    * @param activeFile
-    */
-   public void setActiveFile(File activeFile)
-   {
-      this.activeFile = activeFile;
-   }
+   //   /**
+   //    * @return the activeFile
+   //    */
+   //   public File getActiveFile()
+   //   {
+   //      return activeFile;
+   //   }
+   //
+   //   /**
+   //    * @param activeFile
+   //    */
+   //   public void setActiveFile(File activeFile)
+   //   {
+   //      this.activeFile = activeFile;
+   //   }
 
    private ApplicationConfiguration applicationConfiguration;
 

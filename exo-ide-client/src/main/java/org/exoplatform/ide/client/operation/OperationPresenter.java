@@ -81,6 +81,8 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    private ApplicationContext context;
 
    private Handlers handlers;
+   
+   private File activeFile;
 
    public OperationPresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -111,11 +113,13 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    public void onShowProperties(ShowPropertiesEvent event)
    {
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      display.showProperties(context.getActiveFile());
+      display.showProperties(activeFile);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      activeFile = event.getFile();
+      
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
 
@@ -140,8 +144,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       display.closePreviewTab();
       display.closeGadgetPreviewTab();
 
-      File file = context.getActiveFile();
-      if (file.isNewFile())
+      if (activeFile.isNewFile())
       {
          Dialogs.getInstance().showInfo("You should save the file!");
          return;
@@ -149,17 +152,17 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
-      if (MimeType.GOOGLE_GADGET.equals(file.getContentType()))
+      if (MimeType.GOOGLE_GADGET.equals(activeFile.getContentType()))
       {
          previewGadget();
       }
-      else if (MimeType.UWA_WIDGET.equals(file.getContentType()))
+      else if (MimeType.UWA_WIDGET.equals(activeFile.getContentType()))
       {
-         previewUWAWidget(file);
+         previewUWAWidget(activeFile);
       }
       else
       {
-         display.showPreview(file.getHref());
+         display.showPreview(activeFile.getHref());
       }
    }
 
@@ -178,7 +181,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       String container = "default";
       String domain = null;
 
-      String href = context.getActiveFile().getHref();
+      String href = activeFile.getHref();
       href =
          href.replace(context.getApplicationConfiguration().getContext(), context.getApplicationConfiguration()
             .getPublicContext());

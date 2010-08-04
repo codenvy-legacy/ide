@@ -16,7 +16,9 @@
  */
 package org.exoplatform.ide.client.application;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -28,14 +30,12 @@ import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateSt
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.cookie.CookieManager;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
-import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.configuration.Configuration;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -46,12 +46,13 @@ import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -62,7 +63,7 @@ import com.google.gwt.user.client.Timer;
  * @version $Id: $
  */
 
-public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHandler, UserInfoReceivedHandler,
+public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfullyHandler, UserInfoReceivedHandler,
    ApplicationSettingsReceivedHandler
 {
 
@@ -82,7 +83,7 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
 
    private List<String> statusBarItems;
 
-   public IDEApplicationLoader(HandlerManager eventBus, ApplicationContext context, List<Control> controls,
+   public IDEConfigurationLoader(HandlerManager eventBus, ApplicationContext context, List<Control> controls,
       List<String> toolbarItems, List<String> statusBarItems)
    {
       this.eventBus = eventBus;
@@ -143,7 +144,7 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
     * 
     * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
     */
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   public void onUserInfoReceived(final UserInfoReceivedEvent event)
    {
       context.setUserInfo(event.getUserInfo());
 
@@ -152,32 +153,39 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
          @Override
          public void run()
          {
-            applicationSettings = new ApplicationSettings();
-            CookieManager.getInstance().getApplicationState(context, applicationSettings);
-
-            if (applicationSettings.getEntryPoint() == null)
-            {
-               applicationSettings.setEntryPoint(context.getApplicationConfiguration().getDefaultEntryPoint());
-            }
+//            applicationSettings = new ApplicationSettings();
+            //CookieManager.getInstance().getApplicationState(context, applicationSettings);
 
             new ControlsFormatter(eventBus).format(controls);
             eventBus.fireEvent(new ControlsUpdatedEvent(controls));
 
-            new SettingsServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL(),
-               context.getUserInfo().getName());
-            SettingsService.getInstance().getSettings(applicationSettings);
+            new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), event.getUserInfo().getName(), IDELoader.getInstance());
+            
+//            new SettingsServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL(),
+//               context.getUserInfo().getName());
+//            SettingsService.getInstance().getSettings(applicationSettings);
          }
       }.schedule(10);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
+      applicationSettings = event.getApplicationSettings();
+      
+      System.out.println("ENTRY POINT: " + applicationSettings.getValue("entry-point"));
+      
+      if (applicationSettings.getValue("entry-point") == null)
+      {
+         applicationSettings.setValue("entry-point", context.getApplicationConfiguration().getDefaultEntryPoint(), Store.COOKIES);
+//         applicationSettings.setStoredIn("entry-point", Store.COOKIES);
+      }
+
       new Timer()
       {
          @Override
          public void run()
          {
-            initialize();
+            initServices();
          }
       }.schedule(10);
    }
@@ -198,7 +206,8 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
                {
                   try
                   {
-                     eventBus.fireEvent(new InitializeApplicationEvent());
+                     Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+                     eventBus.fireEvent(new InitializeApplicationEvent(openedFiles, null));
                   }
                   catch (Throwable e)
                   {
@@ -211,11 +220,23 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
          }
       }.schedule(10);
    }
-
-   private void initialize()
-   {
+   
+   private void initServices() {
       eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
 
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            initialize();
+         }
+      }.schedule(10);      
+   }
+
+   @SuppressWarnings("unchecked")
+   private void initialize()
+   {
       /*
        * Updating top menu
        */
@@ -223,12 +244,12 @@ public class IDEApplicationLoader implements ConfigurationReceivedSuccessfullyHa
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
       eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
-      eventBus.fireEvent(new RefreshHotKeysEvent());
-
-      if (applicationSettings.getEntryPoint() != null)
+      
+      if (applicationSettings.getValue("entry-point") != null)
       {
-         eventBus.fireEvent(new EntryPointChangedEvent(applicationSettings.getEntryPoint()));
-         new WorkspaceChecker(eventBus, applicationSettings.getEntryPoint(), context);
+         String entryPoint = (String)applicationSettings.getValue("entry-point");         
+         eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
+         new WorkspaceChecker(eventBus, entryPoint, applicationSettings);
       }
       else
       {
