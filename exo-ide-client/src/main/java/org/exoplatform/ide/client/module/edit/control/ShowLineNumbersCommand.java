@@ -113,8 +113,6 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      System.out.println("ShowLineNumbersCommand.onApplicationSettingsSaved(!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)");
-      
       if (event.getApplicationSettings().getValue("line-numbers") != null) {
          showLineNumbers = (Boolean)event.getApplicationSettings().getValue("line-numbers");
       } else {

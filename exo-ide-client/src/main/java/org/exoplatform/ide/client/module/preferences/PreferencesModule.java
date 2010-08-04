@@ -65,7 +65,6 @@ import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;
 import org.exoplatform.ide.client.workspace.SelectWorkspaceForm;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -116,8 +115,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      System.out.println("application settings received...................");
-      System.out.println(">> " + event.getApplicationSettings());
       applicationSettings = event.getApplicationSettings();
    }
 
@@ -125,9 +122,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    {
       applicationConfiguration = event.getApplicationConfiguration();
       new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
-      
-      System.out.println(">>>>>>>>>>>>>>>> application settings: " + applicationSettings);
-      
       new HotKeyManagerImpl(eventBus, controls, applicationSettings);
    }
 
@@ -150,7 +144,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    {
       currentEntryPoint = event.getEntryPoint();
       applicationSettings.setValue("entry-point", currentEntryPoint, Store.COOKIES);
-//      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
+      //      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

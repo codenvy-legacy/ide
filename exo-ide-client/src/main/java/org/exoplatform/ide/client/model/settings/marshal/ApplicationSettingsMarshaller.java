@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,8 +45,8 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
    }
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-     return encodeURIComponent(text);
-   }-*/;
+       return encodeURIComponent(text);
+     }-*/;
 
    public String marshal()
    {
@@ -57,9 +58,10 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       {
          String key = keyIter.next();
 
-         //         if (applicationSettings.getStoredIn(key) != Store.REGISTRY) {
-         //            continue;
-         //         }
+         if (applicationSettings.getStoredIn(key) != Store.REGISTRY)
+         {
+            continue;
+         }
 
          Object value = valueMap.get(key);
 
@@ -85,67 +87,44 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
          }
       }
 
-      //xml += getLineNumbers();
-      //      xml += getToolbar();
-      //      xml += getEditors();
-      //xml += getHotKeys();
       xml += "</" + SETTINGS + ">";
-
-      System.out.println("XML > " + xml);
-
       return xml;
    }
 
+   @SuppressWarnings("unchecked")
    private String getStringNode(String key, Object value)
    {
-      System.out.println("ApplicationSettingsMarshaller.getStringNode()");
-
       String xmlNodeName = key + "_str";
-
-      @SuppressWarnings("unused")
-      String xml = "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
-
-      return xml;
+      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
    }
 
+   @SuppressWarnings("unchecked")
    private String getIntegerNode(String key, Object value)
    {
-      System.out.println("ApplicationSettingsMarshaller.getIntegerNode()");
-      
       String xmlNodeName = key + "_int";
-
-      @SuppressWarnings("unused")
-      String xml = "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";      
-
-      return xml;
+      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
    }
 
+   @SuppressWarnings("unchecked")
    private String getBooleanNode(String key, Object value)
    {
-      System.out.println("ApplicationSettingsMarshaller.getBooleanNode()");
-      
       String xmlNodeName = key + "_bool";
-
-      @SuppressWarnings("unused")
-      String xml = "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";            
-
-      return xml;
+      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
    }
 
    @SuppressWarnings("unchecked")
    private String getListNode(String key, Object value)
    {
-      System.out.println("ApplicationSettingsMarshaller.getListNode()");
-      
       String xmlNodeName = key + "_list";
       String xml = "<" + xmlNodeName + ">";
-      
+
       List<String> values = (List<String>)value;
-      for (String v : values) {
+      for (String v : values)
+      {
          String subXML = "<item>" + javaScriptEncodeURIComponent(v) + "</item>";
          xml += subXML;
       }
-      
+
       xml += "</" + xmlNodeName + ">";
 
       return xml;
@@ -154,86 +133,28 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
    @SuppressWarnings("unchecked")
    private String getMapNode(String key, Object value)
    {
-
-      System.out.println("ApplicationSettingsMarshaller.getMapNode()");
-      
       String xmlNodeName = key + "_map";
       String xml = "<" + xmlNodeName + ">";
-      
+
       Map<String, String> values = (Map<String, String>)value;
       Iterator<String> keyIter = values.keySet().iterator();
-      while (keyIter.hasNext()) {
+      while (keyIter.hasNext())
+      {
          String k = keyIter.next();
          String v = values.get(k);
-         
+
          String subXML = "<item>";
-         
+
          subXML += "<key>" + javaScriptEncodeURIComponent(k) + "</key>";
          subXML += "<value>" + javaScriptEncodeURIComponent(v) + "</value>";
-         
+
          subXML += "</item>";
-         
+
          xml += subXML;
       }
-      
-      xml += "</" + xmlNodeName + ">";
 
+      xml += "</" + xmlNodeName + ">";
       return xml;
    }
-
-   //   private String getHotKeys()
-   //   {
-   //      String xml = "<" + HOT_KEYS + ">";
-   //      
-   //      Iterator<Entry<String, String>> it = applicationSettings.getHotKeys().entrySet().iterator();
-   //      while (it.hasNext())
-   //      {
-   //         Entry<String, String> entry = it.next();
-   //         xml += "<" + HOT_KEY + ">";
-   //         xml += "<" + SHORTCUT +">" + entry.getKey() + "</" + SHORTCUT + ">";
-   //         xml += "<" + CONTROL_ID + ">" + entry.getValue() + "</" + CONTROL_ID + ">";
-   //         xml += "</" + HOT_KEY + ">";
-   //      }
-   //      xml += "</" + HOT_KEYS + ">";
-   //      return xml;
-   //   }
-
-   //   private String getLineNumbers()
-   //   {
-   //      String xml = "<" + LINE_NUMBERS + ">" + context.isShowLineNumbers() + "</" + LINE_NUMBERS + ">";
-   //      return xml;
-   //   }
-
-//   private String getToolbar()
-//   {
-//      String xml = "<" + TOOLBAR + ">";
-//      for (String toolbarItem : applicationSettings.getToolbarItems())
-//      {
-//         xml += "<" + TOOLBAR_ITEM + ">" + toolbarItem + "</" + TOOLBAR_ITEM + ">";
-//      }
-//      xml += "</" + TOOLBAR + ">";
-//
-//      return xml;
-//   }
-
-   //   private String getEditors()
-   //   {
-   //      String xml = "<" + EDITORS + ">";
-   //      for (String key : applicationSettings.getDefaultEditors().keySet())
-   //      {
-   //         xml += "<" + EDITOR + ">";
-   //         xml += "<" + MIME_TYPE + ">";
-   //         xml += key;
-   //         xml += "</" + MIME_TYPE + ">";
-   //         xml += "<" + EDITOR_DESCRIPTION + ">";
-   //         xml += applicationSettings.getDefaultEditors().get(key);
-   //         xml += "</" + EDITOR_DESCRIPTION + ">";
-   //         xml += "</" + EDITOR + ">";
-   //
-   //      }
-   //      xml += "</" + EDITORS + ">";
-   //
-   //      return xml;
-   //   }
 
 }

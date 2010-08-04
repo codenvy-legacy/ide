@@ -43,7 +43,7 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
    public void onError(ExceptionThrownEvent event)
    {
       Throwable error = event.getError();
-
+      
       if (error instanceof ServerException)
       {
          ServerException serverException = (ServerException)error;

@@ -23,8 +23,6 @@ import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.model.ApplicationContext;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -32,7 +30,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 */
 public class EditorUtil
 {
-   
+
    public static Editor getEditor(String mimeType, String defaultEditorDescription) throws EditorNotFoundException
    {
       Editor editor = null;
@@ -61,10 +59,10 @@ public class EditorUtil
 
       return editor;
    }
-   
+
    public static Editor getEditor(String mimeType, ApplicationContext context) throws EditorNotFoundException
    {
-      
+
       String defaultEditorDescription;
       if (context.getSelectedEditorDescription() != null)
       {
@@ -78,5 +76,5 @@ public class EditorUtil
 
       return getEditor(mimeType, defaultEditorDescription);
    }
-   
+
 }

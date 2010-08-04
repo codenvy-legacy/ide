@@ -126,8 +126,6 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
          String href = filesToLoad.get(0);
          
-         System.out.println("href > " + href);
-         
          fileToLoad = new File(href);
          filesToLoad.remove(0);
          VirtualFileSystem.getInstance().getProperties(fileToLoad);

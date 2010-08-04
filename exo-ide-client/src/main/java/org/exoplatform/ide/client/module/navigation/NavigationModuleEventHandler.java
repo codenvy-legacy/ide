@@ -142,7 +142,7 @@ public class NavigationModuleEventHandler implements OpenFileWithHandler, Upload
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       createFileCommandThread = new CreateFileCommandThread(eventBus, context);
-      openFileCommandThread = new OpenFileCommandThread(eventBus, context);
+      openFileCommandThread = new OpenFileCommandThread(eventBus);
       saveFileCommandHandler = new SaveFileCommandThread(eventBus);
       saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus);
       saveAllFilesCommandHandler = new SaveAllFilesCommandThread(eventBus, context);

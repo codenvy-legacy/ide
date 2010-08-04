@@ -60,22 +60,20 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private static final class WindowCloseHandlerImpl implements ClosingHandler
    {
       public native void onWindowClosing(ClosingEvent event) /*-{
-                $doc.onkeydown = null; 
-          }-*/;
+          $doc.onkeydown = null; 
+       }-*/;
 
       private native void init() /*-{
-                $doc.onkeydown = function(evt) { 
-                      var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
-                      hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
-                }                        
-          }-*/;
+       $doc.onkeydown = function(evt) { 
+             var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
+             hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
+       }                        
+       }-*/;
    }
 
    private HotKeyPressedListener hotKeyPressedListener;
 
    private HandlerManager eventBus;
-
-   //   private ApplicationContext context;
 
    private Map<String, String> controls = new HashMap<String, String>();
 
@@ -87,14 +85,13 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private List<Control> registeredControls = new ArrayList<Control>();
 
+   @SuppressWarnings("unchecked")
    public HotKeyManagerImpl(HandlerManager eventBus, List<Control> registeredControls,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
       this.registeredControls = registeredControls;
       this.applicationSettings = applicationSettings;
-
-      System.out.println("HotKeyManagerImpl.onApplicationSettingsReceived()");
 
       hotKeys = (Map<String, String>)applicationSettings.getValue("hotkeys");
       if (hotKeys == null)
@@ -260,18 +257,5 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
       return null;
    }
-
-   //   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   //   {      
-   //      System.out.println("HotKeyManagerImpl.onApplicationSettingsReceived()");
-   //      
-   //      hotKeys = (Map<String, String>)event.getApplicationSettings().getValue("hotkeys");
-   //      if (hotKeys == null) {
-   //         hotKeys = new LinkedHashMap<String, String>();
-   //         event.getApplicationSettings().setValue("hotkeys", hotKeys);
-   //      }
-   //      
-   //      initDefaultHotKeys();
-   //   }
 
 }

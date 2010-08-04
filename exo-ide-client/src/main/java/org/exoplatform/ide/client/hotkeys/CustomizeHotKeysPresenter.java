@@ -226,10 +226,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    @SuppressWarnings("unchecked")
    private String findHotKey(String controlId)
    {
-      System.out.println("application settings: " + applicationSettings);
       Map<String, String> hotKeysMap = (Map<String, String>)applicationSettings.getValue("hotkeys");
-      System.out.println("hotKeysMap > " + hotKeysMap);
-
       Iterator<Entry<String, String>> it = hotKeysMap.entrySet().iterator();
       while (it.hasNext())
       {

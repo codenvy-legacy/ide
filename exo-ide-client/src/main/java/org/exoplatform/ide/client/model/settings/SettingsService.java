@@ -277,7 +277,6 @@ public class SettingsService implements SaveApplicationSettingsHandler
             continue;
          }
          list.add(v);
-         System.out.println("<<< " + v + " >>>");
       }
 
       applicationSettings.setValue(n, list, Store.COOKIES);

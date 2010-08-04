@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.client.command;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -27,6 +30,10 @@ import org.exoplatform.ide.client.event.file.OpenFileEvent;
 import org.exoplatform.ide.client.event.file.OpenFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -41,30 +48,29 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler, ItemPropertiesReceivedHandler
+public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
+   ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Handlers handlers;
-   
+
    private String selectedEditor;
 
-   public OpenFileCommandThread(HandlerManager eventBus, ApplicationContext context)
+   private ApplicationSettings applicationSettings;
+
+   public OpenFileCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
 
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(OpenFileEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onOpenFile(OpenFileEvent event)
-   {      
-      System.out.println("selected editor: " + event.getEditor());
-      
+   {
       File file = event.getFile();
       selectedEditor = event.getEditor();
 
@@ -79,7 +85,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          open(file);
          return;
       }
-      
+
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
@@ -91,10 +97,20 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       VirtualFileSystem.getInstance().getProperties(event.getFile());
    }
 
+   @SuppressWarnings("unchecked")
    private void open(File file)
    {
       try
       {
+         if (selectedEditor == null)
+         {
+            Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+            if (defaultEditors != null)
+            {
+               selectedEditor = defaultEditors.get(file.getContentType());
+            }
+         }
+
          Editor editor = EditorUtil.getEditor(file.getContentType(), selectedEditor);
          eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
       }
@@ -112,7 +128,12 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
-      open((File)event.getItem());    
+      open((File)event.getItem());
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 
 }

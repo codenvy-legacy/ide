@@ -212,10 +212,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
-         
-         System.out.println("selectedFile " + selectedFile);
-         System.out.println("selectedEditor.getDescription() " + selectedEditor.getDescription());
-         
          eventBus.fireEvent(new OpenFileEvent(selectedFile, selectedEditor.getDescription()));
          display.closeForm();
       }
@@ -231,8 +227,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          
          defaultEditors.put(mimeType, selectedEditor.getDescription());         
          eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
-         
-         //SettingsService.getInstance().saveSetting(applicationSettings);
       }
    }
 

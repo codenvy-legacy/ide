@@ -68,26 +68,22 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-      System.out.println("LISTENER > application settings received");
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-      System.out.println("LISTENER > file opened");
       storeOpenedFiles();
    }
 
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-      System.out.println("LISTENER > file closed");
       storeOpenedFiles();
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("LISTENER > active file changed");
       storeOpenedFiles();
       storeActiveFile(event.getFile());
    }

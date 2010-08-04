@@ -66,9 +66,6 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
          content.destroy();
       }
 
-      System.out.println("file : " + file);
-      System.out.println("file properties: " + file.getProperties());
-      
       if (file.getProperties().size() == 0)
       {
          content = new Label("There are no properties for this file.");

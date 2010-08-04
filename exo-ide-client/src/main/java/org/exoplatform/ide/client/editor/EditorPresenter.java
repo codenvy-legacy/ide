@@ -263,9 +263,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       this.openedFiles = event.getOpenedFiles();
 
-      System.out.println("event.getActiveFile(): " + event.getActiveFile());
       final File fileToSetAsActive = event.getActiveFile() == null ? null : openedFiles.get(event.getActiveFile());
-
       if (event.getActiveFile() != null)
       {
          activeFile = openedFiles.get(event.getActiveFile());
@@ -561,9 +559,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       File file = event.getFile();
       
-      System.out.println("try to open > " + file.getHref());
-      System.out.println("by editor > " + event.getEditor().getDescription());
-
       if (openedFiles.get(file.getHref()) != null
          && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
       {
@@ -582,8 +577,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
       }
 
-      display.openTab(file, lineNumbers, event.getEditor(), true);
-      display.selectTab(file.getHref());
+      try {
+         display.openTab(file, lineNumbers, event.getEditor(), true);
+         display.selectTab(file.getHref());         
+      } catch (Throwable e) {
+         e.printStackTrace();
+      }
 
       eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
    }

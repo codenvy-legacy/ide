@@ -153,17 +153,11 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
          @Override
          public void run()
          {
-//            applicationSettings = new ApplicationSettings();
-            //CookieManager.getInstance().getApplicationState(context, applicationSettings);
-
             new ControlsFormatter(eventBus).format(controls);
             eventBus.fireEvent(new ControlsUpdatedEvent(controls));
 
-            new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), event.getUserInfo().getName(), IDELoader.getInstance());
-            
-//            new SettingsServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL(),
-//               context.getUserInfo().getName());
-//            SettingsService.getInstance().getSettings(applicationSettings);
+            new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), event.getUserInfo().getName(),
+               IDELoader.getInstance());
          }
       }.schedule(10);
    }
@@ -171,13 +165,10 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-      
-      System.out.println("ENTRY POINT: " + applicationSettings.getValue("entry-point"));
-      
       if (applicationSettings.getValue("entry-point") == null)
       {
-         applicationSettings.setValue("entry-point", context.getApplicationConfiguration().getDefaultEntryPoint(), Store.COOKIES);
-//         applicationSettings.setStoredIn("entry-point", Store.COOKIES);
+         applicationSettings.setValue("entry-point", context.getApplicationConfiguration().getDefaultEntryPoint(),
+            Store.COOKIES);
       }
 
       new Timer()
@@ -220,8 +211,9 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
          }
       }.schedule(10);
    }
-   
-   private void initServices() {
+
+   private void initServices()
+   {
       eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
 
       new Timer()
@@ -231,7 +223,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
          {
             initialize();
          }
-      }.schedule(10);      
+      }.schedule(10);
    }
 
    @SuppressWarnings("unchecked")
@@ -244,10 +236,10 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
       eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
-      
+
       if (applicationSettings.getValue("entry-point") != null)
       {
-         String entryPoint = (String)applicationSettings.getValue("entry-point");         
+         String entryPoint = (String)applicationSettings.getValue("entry-point");
          eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
          new WorkspaceChecker(eventBus, entryPoint, applicationSettings);
       }
