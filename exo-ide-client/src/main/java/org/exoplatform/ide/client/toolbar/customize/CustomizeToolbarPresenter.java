@@ -499,9 +499,8 @@ public class CustomizeToolbarPresenter
 
    private void updateToolbar()
    {
-      List<String> items = (List<String>)applicationSettings.getValue("toolbar-items");
-      
-      toolbarItems.clear();
+      List<String> items = (List<String>)applicationSettings.getValue("toolbar-items");      
+      items.clear();
       
       for (ToolbarItem toolbarItem : toolbarItems)
       {

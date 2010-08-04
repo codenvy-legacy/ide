@@ -163,8 +163,6 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
    {
       applicationSettings = event.getApplicationSettings();
 
-      System.out.println("entry point: " + applicationSettings.getValue("entry-point"));
-
       /*
        * verify entry point
        */

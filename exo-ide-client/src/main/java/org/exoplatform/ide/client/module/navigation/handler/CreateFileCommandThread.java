@@ -87,6 +87,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
