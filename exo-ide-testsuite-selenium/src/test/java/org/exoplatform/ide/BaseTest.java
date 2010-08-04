@@ -198,7 +198,7 @@ public abstract class BaseTest
     */
    protected void assertElementNotPresentInWorkspaceTree(String name) throws Exception
    {
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=\""+name+"\"]/col[0]"));
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
    }
 
    /**
@@ -206,7 +206,7 @@ public abstract class BaseTest
     * 
     * @throws Exception
     */
-   protected void deleteSelectedFileOrFolder() throws Exception
+   protected void deleteSelectedItem() throws Exception
    {
       clickOnToolbarButton("Delete Item(s)...");
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
@@ -325,7 +325,7 @@ public abstract class BaseTest
     * @param name button name
     * @param enabled boolean value
     */
-   protected void checkToolbarButton(String name, boolean enabled)
+   protected void checkToolbarButtonState(String name, boolean enabled)
    {
       if (enabled)
       {
@@ -351,6 +351,14 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
          + "]/col[0]/open");
+   }
+   
+   /**
+    * 
+    */
+   protected void openCloseRootWorkspace()
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[0]/open");
    }
    
    /**
@@ -383,7 +391,7 @@ public abstract class BaseTest
     * @param commandName command name
     * @param enabled boolean value
     */
-   protected void checkCommandInMenuEnabled(String topMenuName, String commandName, boolean enabled)
+   protected void checkMenuCommandState(String topMenuName, String commandName, boolean enabled)
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" 
          + topMenuName + "']", "");
@@ -406,7 +414,7 @@ public abstract class BaseTest
     * @param topMenuName name of menu
     * @param commandName command name
     */
-   protected void openCommandFromTopMenu(String topMenuName, String commandName)
+   protected void selectTopMenuCommand(String topMenuName, String commandName)
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" 
          + topMenuName + "']", "");
