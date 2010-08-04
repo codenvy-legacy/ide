@@ -24,12 +24,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -57,10 +55,6 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
    private Display display;
 
    private ApplicationContext context;
-
-   private ApplicationSettings applicationSettings;
-
-   private ApplicationConfiguration applicationConfiguration;
 
    private List<Control> controls = new ArrayList<Control>();
 
