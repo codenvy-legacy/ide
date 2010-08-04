@@ -21,7 +21,6 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -142,7 +141,7 @@ public class OperationsWithFile extends BaseTest
       
       Thread.sleep(1000);
       
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       
       Thread.sleep(5000);
    }
@@ -286,11 +285,11 @@ public class OperationsWithFile extends BaseTest
       Thread.sleep(1000);
       
       selectItemInWorkspaceTree(FOLDER_NAME);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(1000);
       
       selectItemInWorkspaceTree(FOLDER_NAME_2);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(5000);
    }
    
@@ -418,7 +417,7 @@ public class OperationsWithFile extends BaseTest
       selectItemInWorkspaceTree("Untitled file.xml");
       Thread.sleep(500);
       
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(1000);
    }
    

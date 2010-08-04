@@ -123,7 +123,7 @@ public class EditFiles extends BaseTest
       //Open “Server” window with selected at the step 2 workspace URL 
       //and remove folder “Test Folder to Delete”.
       selectItemInWorkspaceTree(testFolderToDelete);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(1000);
       
       selenium.open("http://www.google.com.ua/");
@@ -141,7 +141,7 @@ public class EditFiles extends BaseTest
       
       //delete test folder
       selectItemInWorkspaceTree(testFolder);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(3000);
       
       //return init configuration
@@ -178,13 +178,13 @@ public class EditFiles extends BaseTest
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
       Thread.sleep(1000);
       
-      checkCommandInMenuEnabled("Run", "Show Preview", true);
-      checkCommandInMenuEnabled("Run", "Deploy Gadget to GateIn", true);
-      checkCommandInMenuEnabled("Run", "UnDeploy Gadget from GateIn", true);
-      checkCommandInMenuEnabled("Edit", "Hide Line Numbers", true);
-      checkCommandInMenuEnabled("Edit", "Format", true);
-      checkCommandInMenuEnabled("Edit", "Undo Typing", false);
-      checkCommandInMenuEnabled("Edit", "Redo Typing", false);
+      checkMenuCommandState("Run", "Show Preview", true);
+      checkMenuCommandState("Run", "Deploy Gadget to GateIn", true);
+      checkMenuCommandState("Run", "UnDeploy Gadget from GateIn", true);
+      checkMenuCommandState("Edit", "Hide Line Numbers", true);
+      checkMenuCommandState("Edit", "Format", true);
+      checkMenuCommandState("Edit", "Undo Typing", false);
+      checkMenuCommandState("Edit", "Redo Typing", false);
       Thread.sleep(500);
    }
 
