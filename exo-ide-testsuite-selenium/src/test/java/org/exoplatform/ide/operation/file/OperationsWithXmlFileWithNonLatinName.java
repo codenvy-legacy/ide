@@ -57,7 +57,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
       
       Thread.sleep(1000);
       selectItemInWorkspaceTree(FILE_NAME);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(2000);
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
          + FILE_NAME + "]/col[1]"));
@@ -131,7 +131,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
       
       selectItemInWorkspaceTree(FILE_NAME);
       Thread.sleep(500);
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       Thread.sleep(1000);
       
       //is file deleted
