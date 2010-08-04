@@ -1,0 +1,19 @@
+This document represents the eXo _IDE_ \- a powerful Web application which provides rich environment for developing different kind of content, scripts and services. eXo IDE has modular architecture and can be built and delivered as either standalone web application or Google gadget plugged to a portal environment. This way it can be simple deployed to eXo Platform. Following information suppose eXo _IDE&nbsp;_ gadget deployed in GateIn portal.
+
+h3. How to access
+
+After successful deploy and starting the link *"IDE"* to the page with gadget can be seen in the _Navigation Bar_ at the header of portal:
+
+!IDE.png!
+*Picture 1. eXo IDE gadget in portal*
+
+
+{info} More info about _eXo IDE_ deploying can be found at [Developer's Manual for Building and Deploying eXo IDE Gadget Under GateIn|http://wiki-int.exoplatform.org/display/exoproducts/Developer%27s+Manual+for+Building+and+Deploying+eXo+IDE+Gadget+Under+GateIn].
+{info}
+
+h3. Requirements
+
+_IDE gadget_ requires *GateIn 3.0* or later.
+
+Supported Web browsers: _Mozilla Firefox_ ver.3.0 or later, _Internet Explorer_ ver.7.0 or later, _Safari_ ver.3.2 or later, _Google Chrome_ ver. 5.0 or later.
+

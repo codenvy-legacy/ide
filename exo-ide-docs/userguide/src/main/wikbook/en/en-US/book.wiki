@@ -1,0 +1,48 @@
+h1. Introduction
+{include:document="IDE/Introduction.wiki" /} 
+
+h1. Enable IDE
+{include:document="IDE/Enable IDE.wiki" /}
+
+h1. Basic Operations
+
+When you access to the _IDE_ you will get the window like this:
+
+!main.png!
+*Picture 2. eXo IDE interface with main parts*
+
+
+_IDE_ gadget operates with so called Virtual File System which provide known folders / files model. At a given time an IDE user can operate with some one representation of VFS, which represents as a _Workspace_. Current Workspace is displayed in _Workspace Panel_, in the left of screen as a tree of folders and files. _Outline Panel_ for quick access to variables and functions (only for _JavaScript_ and _Gadget_ files), and _Content Panel_, which consists of two horizontal panels:
+* _Top panel_ represents files in several file tabs with content;
+* _Bottom panel_ may contain several tabs with list of file properties, REST Service and Google Gadget output messages, HTML or Gadget files preview. To view this tabs you, please, use special buttons at the right part of _Toolbar_ or *View* or *Run* _top menu_ commands.
+
+These panels are divided by _Horizontal Resize Bar_. Also _Workspace_ _Panel_ and _Content Panel_ are divided by _Vertical Resize Bar_.
+
+You can maximize or minimize one of the file tabs or action tabs from bottom part of _Content Panel_ or _Outline Panel_ by clicking on special button at the top right corner of panel.
+
+Basic operations include browsing, creating, editing, coping, renaming, uploading, downloading, moving, deleting the files and folders.
+
+{include:document="IDE/Browse Files and Folders.wiki" /}
+{include:document="IDE/Operations with Folder.wiki" /}
+{include:document="IDE/Operations with File.wiki" /}
+
+h1. Preview Files
+{include:document="IDE/Preview HTML File.wiki" /}
+
+h1. Search Files
+{include:document="IDE/Search Files.wiki" /}
+
+h1. REST Service Operations
+{include:document="IDE/REST Service Operations.wiki" /}
+
+h1. Google Gadget Operations
+{include:document="IDE/Google Gadget Operations.wiki" /}
+
+h1. Miscellaneous and Tips
+{include:document="IDE/Miscellaneous.wiki" /}
+
+h1. Links
+
+h1. Administration and Configuration
+
+TODO Please refer to the Portal Administration and IDE Administration.
