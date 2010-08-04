@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ide.client.application;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,9 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       filesToLoad = (List<String>)applicationSettings.getValue("opened-files");
+      if (filesToLoad == null) {
+         filesToLoad = new ArrayList<String>();
+      }
       
       preloadNextFile();      
    }
