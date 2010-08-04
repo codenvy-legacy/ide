@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -29,7 +28,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *	
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   ${date} ${time}
  *
@@ -58,15 +57,16 @@ public abstract class BaseTest
       selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");
       Thread.sleep(1000);
    }
-
+   
    /**
-    * Closes the editor tab by index.
+    * Close tab by it's index.
     * 
-    * @param index tab index
+    * @param index numeration starts with 0 index
     */
-   protected void closeTab(String index)
+   protected void closeTab(String index) throws Exception
    {
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
+      Thread.sleep(1000);
    }
 
    @AfterClass
@@ -155,7 +155,7 @@ public abstract class BaseTest
       selectMainFrame();
       return text;
    }
-
+   
    /**
     * Select the item in the workspace navigation tree. 
     * 
@@ -166,6 +166,7 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
+
 
    /**
     * Check navigation workspace tree contains pointed item.
@@ -294,7 +295,37 @@ public abstract class BaseTest
    {
       clickOnToolbarButton("Save");
    }
+   
+   /**
+    * Clicks on New button on toolbar and then clicks on 
+    * menuName from list
+    * @param menuName
+    */
+   protected void openNewFileFromToolbar(String menuName) throws Exception
+   {
+      clickOnToolbarButton("New");
+      selenium
+         .mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" + menuName + "\")]", "");
+   }
 
+   /**
+    * Check is button present on toolbar and is it enabled or disabled.
+    * 
+    * @param name button name
+    * @param enabled boolean value
+    */
+   protected void checkToolbarButton(String name, boolean enabled)
+   {
+      if (enabled)
+      {
+         assertTrue(selenium.isElementPresent("//div[@title='" + name + "']/div[@elementenabled='true']"));
+      }
+      else
+      {
+         assertTrue(selenium.isElementPresent("//div[@title='" + name + "']/div[@elementenabled='false']"));
+      }
+   }
+   
    /**
     * Clicks on New button on toolbar and then clicks on 
     * menuName from list
@@ -321,6 +352,67 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
          + "]/col[0]/open");
+   }
+   
+   /**
+    * Close unsaved file withous saving it.
+    * 
+    * Close tab with tabIndex. Check is warning dialog appears.
+    * Click No button]
+    * 
+    * @param tabIndex index of tab to close
+    * @throws Exception
+    */
+   protected void closeUnsavedFileAndDoNotSave(String tabIndex) throws Exception
+   {
+      closeTab(tabIndex);
+      
+      //check is warning dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      
+      //click No button
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      Thread.sleep(1000);
+   }
+   
+   /**
+    * Check is command in top menu enabled or disabled.
+    * 
+    * @param topMenuName mane of menu
+    * @param commandName command name
+    * @param enabled boolean value
+    */
+   protected void checkCommandInMenuEnabled(String topMenuName, String commandName, boolean enabled)
+   {
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" 
+         + topMenuName + "']", "");
+      if (enabled)
+      {
+      assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" 
+         + commandName + "']"));
+      }
+      else
+      {
+         assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='" 
+            + commandName + "']"));
+      }
+      selenium.mouseDown("//div[@class='exo-lockLayer']/");
+   }
+   
+   /**
+    * Open command from top menu.
+    * 
+    * @param topMenuName name of menu
+    * @param commandName command name
+    */
+   protected void openCommandFromTopMenu(String topMenuName, String commandName)
+   {
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" 
+         + topMenuName + "']", "");
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" 
+         + commandName + "']", "");
    }
 
    /**
