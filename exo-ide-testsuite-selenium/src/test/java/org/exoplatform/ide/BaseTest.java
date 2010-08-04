@@ -166,6 +166,17 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
+   
+   /**
+    * Select the root workspace item in workspace tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   protected void selectRootOfWorkspaceTree() throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
+   }
 
 
    /**
