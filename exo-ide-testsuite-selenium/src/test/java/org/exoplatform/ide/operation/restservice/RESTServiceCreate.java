@@ -85,12 +85,12 @@ public class RESTServiceCreate extends BaseTest
      
      selectItemInWorkspaceTree(FIRST_NAME);
      Thread.sleep(500);
-     deleteSelectedFileOrFolder();
+     deleteSelectedItem();
      Thread.sleep(500);
      
      selectItemInWorkspaceTree(SECOND_NAME);
      Thread.sleep(500);
-     deleteSelectedFileOrFolder();
+     deleteSelectedItem();
      
    }
 }

@@ -42,22 +42,22 @@ public class RESTServiceProperty extends BaseTest
       openNewFileFromToolbar("REST Service");
       Thread.sleep(1000);
       
-      checkCommandInMenuEnabled("View", "Properties", false);
-      checkCommandInMenuEnabled("Run", "Set Autoload", false);
-      checkCommandInMenuEnabled("Run", "Validate", true);
-      checkCommandInMenuEnabled("Run", "Deploy", false);
-      checkCommandInMenuEnabled("Run", "Undeploy", false);
-      checkCommandInMenuEnabled("Run", "Launch REST Service...", false);
+      checkMenuCommandState("View", "Properties", false);
+      checkMenuCommandState("Run", "Set Autoload", false);
+      checkMenuCommandState("Run", "Validate", true);
+      checkMenuCommandState("Run", "Deploy", false);
+      checkMenuCommandState("Run", "Undeploy", false);
+      checkMenuCommandState("Run", "Launch REST Service...", false);
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(1000);
       
-      checkCommandInMenuEnabled("View", "Properties", true);
-      checkCommandInMenuEnabled("Run", "Set Autoload", true);
-      checkCommandInMenuEnabled("Run", "Validate", true);
-      checkCommandInMenuEnabled("Run", "Deploy", true);
-      checkCommandInMenuEnabled("Run", "Undeploy", true);
-      checkCommandInMenuEnabled("Run", "Launch REST Service...", true);
+      checkMenuCommandState("View", "Properties", true);
+      checkMenuCommandState("Run", "Set Autoload", true);
+      checkMenuCommandState("Run", "Validate", true);
+      checkMenuCommandState("Run", "Deploy", true);
+      checkMenuCommandState("Run", "Undeploy", true);
+      checkMenuCommandState("Run", "Launch REST Service...", true);
       
       selenium.mouseDownAt("//div[@title='Show Properties']//img", "");
       selenium.mouseUpAt("//div[@title='Show Properties']//img", "");
@@ -73,7 +73,7 @@ public class RESTServiceProperty extends BaseTest
       
       selectItemInWorkspaceTree(FILE_NAME);
       
-      deleteSelectedFileOrFolder();
+      deleteSelectedItem();
       
    }
    
