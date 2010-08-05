@@ -8,10 +8,10 @@
       <artifactId>exo-ide-docs</artifactId>
       <version>1.0-Beta03-SNAPSHOT</version>
    </parent>
-   <artifactId>exo-ide-adminguide</artifactId>
+   <artifactId>exo-ide-admin-guide</artifactId>
    <packaging>jar</packaging>
 
-   <name>eXo IDE administrator guide</name>
+   <name>eXo IDE administrator's guide</name>
 
    <dependencies>
       <dependency>
