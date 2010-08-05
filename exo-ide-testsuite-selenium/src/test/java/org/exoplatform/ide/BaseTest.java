@@ -121,6 +121,21 @@ public abstract class BaseTest
          }
       }
    }
+   
+   /**
+    * Delete pointed number of lines in editor.s
+    * 
+    * @param count number of lines to delete
+    */
+   protected void deleteLinesInEditor(int count)
+   {
+      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      for (int i = 0; i < count; i++)
+      {
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_D);
+      }
+      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+   }
 
    /**
     * Select main frame of IDE.
