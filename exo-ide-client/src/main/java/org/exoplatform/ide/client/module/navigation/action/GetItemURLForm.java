@@ -48,7 +48,13 @@ public class GetItemURLForm extends DialogWindow
 
    private static final int HEIGHT = 160;
    
-   public static final String ID = "ideallGetItemURLForm";
+   public static final String ID = "ideGetItemURLForm";
+   
+   public static final String URL_FIELD = "ideGetItemURLFormURLField";
+   
+   public static final String ID_DYNAMIC_FORM = "ideGetItemURLFormDynamicForm";
+   
+   public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
    
    private static final String TITLE = "Item URL";
 
@@ -59,7 +65,7 @@ public class GetItemURLForm extends DialogWindow
    public GetItemURLForm(HandlerManager eventBus, String url)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-
+      
       setTitle(TITLE);
 
       createFieldForm(url);
@@ -91,6 +97,7 @@ public class GetItemURLForm extends DialogWindow
    private void createFieldForm(String url)
    {
       DynamicForm paramsForm = new DynamicForm();
+      paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(450);
       paramsForm.setLayoutAlign(Alignment.CENTER);
@@ -107,6 +114,7 @@ public class GetItemURLForm extends DialogWindow
       delimiter.setHeight(5);
 
       itemURLField = new TextField();
+      itemURLField.setName(URL_FIELD);
       itemURLField.setShowTitle(false);
       itemURLField.setWidth(450);
       
@@ -128,6 +136,7 @@ public class GetItemURLForm extends DialogWindow
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       okButton = new IButton("OK");
+      okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(90);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.OK);
