@@ -137,7 +137,7 @@ public class EditFiles extends BaseTest
       checkOpenedFilesHistory();
       
       closeTab("0");
-      closeTab("0");
+      closeUnsavedFileAndDoNotSave("0");
       
       //delete test folder
       selectItemInWorkspaceTree(testFolder);
@@ -169,6 +169,7 @@ public class EditFiles extends BaseTest
     */
    private void checkOpenedFilesHistory() throws Exception
    {
+      Thread.sleep(3000);
       //check that files are opened and in wright order.
       //check that tab with html file is selected
       assertTrue(selenium.isElementPresent("//div[@class='tabBar']/div/div[3]//td[@class='tabTitle']/span[contains(text(),'Test Gadget File.xml')]"));
