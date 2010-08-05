@@ -324,7 +324,8 @@ public abstract class BaseTest
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
       selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[1]/col[0]");
       //click on checkbox Use as default editor
-      selenium.click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]//textbox");
+      selenium.click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
+      Thread.sleep(1000);
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
       Thread.sleep(2000);
       //TODO add check that editor opened
