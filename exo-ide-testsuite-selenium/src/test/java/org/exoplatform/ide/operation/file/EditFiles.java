@@ -139,6 +139,14 @@ public class EditFiles extends BaseTest
       closeTab("0");
       closeUnsavedFileAndDoNotSave("0");
       
+      //open folder to select html file
+      openOrCloseFolder(testFolder);
+      //return init configuration
+      //make code mirror as default editor for html files
+      returnCodeEditorAsDefault(htmlFile);
+      
+      closeTab("0");
+      
       //delete test folder
       selectItemInWorkspaceTree(testFolder);
       deleteSelectedItem();
@@ -187,6 +195,32 @@ public class EditFiles extends BaseTest
       checkMenuCommandState("Edit", "Undo Typing", false);
       checkMenuCommandState("Edit", "Redo Typing", false);
       Thread.sleep(500);
+   }
+   
+   /**
+    * Open file with code editor and set this editor as default.
+    * 
+    * Used for returning initial settings for IDE.
+    * 
+    * @param fileName
+    * @throws Exception
+    */
+   private void returnCodeEditorAsDefault(String fileName) throws Exception
+   {
+      //TODO add check form
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      Thread.sleep(500);
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
+      //select editor
+      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
+      //click on checkbox Use as default editor
+      selenium.click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
+      Thread.sleep(1000);
+      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+      Thread.sleep(2000);
+      //TODO add check that editor opened
    }
 
 }
