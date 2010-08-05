@@ -20,12 +20,12 @@
 package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.module.groovy.Images;
-import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
-import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.groovy.Images;
+import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
+import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
@@ -52,7 +52,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    private static final String TITLE_UNSET = "Unset Autoload";
 
    private static final String PROMPT_UNSET = "Unset REST Service Autoload";
-   
+
    private File activeFile;
 
    public SetAutoloadCommand(HandlerManager eventBus)
@@ -85,7 +85,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      
+
       if (event.getFile() == null)
       {
          hideAutoload();
@@ -118,7 +118,13 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
       enableAutoload();
 
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
-      if (autoloadPropertyValue == null || Boolean.parseBoolean(autoloadPropertyValue) != true)
+      boolean isSetAutoload = false;
+      if (autoloadPropertyValue != null)
+      {
+         isSetAutoload = Boolean.parseBoolean(autoloadPropertyValue);
+      }
+
+      if (!isSetAutoload)
       {
          // is set autoload
          setTitle(TITLE_SET);

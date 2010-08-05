@@ -63,9 +63,7 @@ public class GroovyPropertyUtil
                {
                   return child.getValue();
                }
-
             }
-
          }
       }
 
