@@ -111,8 +111,8 @@ public class EditFiles extends BaseTest
       closeUnsavedFileAndDoNotSave("0");
       Thread.sleep(1000);
       
-      openFileWithCodeEditor(textFile);
-      openFileWithCodeEditor(gadgetFile);
+      openFileFromNavigationTreeWithCodeEditor(textFile);
+      openFileFromNavigationTreeWithCodeEditor(gadgetFile);
       openFileWithCkEditorAndSetAsDefault(htmlFile);
       
       checkCkEditorOpened(2);

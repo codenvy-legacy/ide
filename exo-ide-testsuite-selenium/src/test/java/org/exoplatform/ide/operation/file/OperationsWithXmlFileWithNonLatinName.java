@@ -79,7 +79,7 @@ public class OperationsWithXmlFileWithNonLatinName extends BaseTest
       closeTab("0");
       Thread.sleep(1000);
       
-      openFileWithCodeEditor(FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
       Thread.sleep(1000);
       

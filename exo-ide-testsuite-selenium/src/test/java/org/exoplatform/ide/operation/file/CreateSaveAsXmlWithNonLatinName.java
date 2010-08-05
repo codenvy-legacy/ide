@@ -70,7 +70,7 @@ public class CreateSaveAsXmlWithNonLatinName extends BaseTest
       
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=Тестовый Файл.xml]/col[0]"));
       
-      openFileWithCodeEditor("Тестовый Файл.xml");
+      openFileFromNavigationTreeWithCodeEditor("Тестовый Файл.xml");
       
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"));

@@ -30,6 +30,11 @@ import org.junit.Test;
  */
 public class ExploringWorkspacePanelTest extends BaseTest
 {
+   /**
+    *  IDE-2 Exploring "Workspace" panel
+    * 
+    * @throws Exception
+    */
    @Test
    public void testExplodeCollapseFolder() throws Exception
    {

@@ -180,6 +180,17 @@ public abstract class BaseTest
    }
    
    /**
+    * Select the item in the search results tree. 
+    * 
+    * @param name item's name
+    * @throws Exception
+    */
+   protected void selectItemInSearchResultsTree(String name) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
+   }
+   
+   /**
     * Select the root workspace item in workspace tree.
     * 
     * @param name
@@ -201,6 +212,19 @@ public abstract class BaseTest
    {
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
    }
+   
+   /**
+    * Check item is shown in search results tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   protected void assertElementPresentSearchResultsTree(String name) throws Exception
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
+   }
+   
+   
    
    /**
     * Check navigation workspace tree doesn't contain pointed item.
@@ -302,7 +326,7 @@ public abstract class BaseTest
       checkSaveAsDialogAndSave(name);
    }
 
-   protected void openFileWithCodeEditor(String fileName) throws Exception
+   protected void openFileFromNavigationTreeWithCodeEditor(String fileName) throws Exception
    {
       //TODO add check form
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
@@ -313,8 +337,20 @@ public abstract class BaseTest
       selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
    }
+   
+   protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
+   {
+      //TODO add check form
+      selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      Thread.sleep(500);
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      Thread.sleep(1000);
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
+      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
+      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+   }
 
-   protected void openFileWithCkEditorAndSetAsDefault(String fileName) throws Exception
+	protected void openFileWithCkEditorAndSetAsDefault(String fileName) throws Exception
    {
       //TODO add check form
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");

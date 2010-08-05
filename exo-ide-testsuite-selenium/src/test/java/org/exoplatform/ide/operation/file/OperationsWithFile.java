@@ -120,7 +120,7 @@ public class OperationsWithFile extends BaseTest
       
       Thread.sleep(1000);
       
-      openFileWithCodeEditor(FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
       Thread.sleep(3000);
       
@@ -216,7 +216,7 @@ public class OperationsWithFile extends BaseTest
       closeTab("0");
       Thread.sleep(1000);
       
-      openFileWithCodeEditor(SAVED_FILE_XML);
+      openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_XML);
       Thread.sleep(1000);
       //at the end of line
       selenium.keyDown("//body[@class='editbox']/", "\\35");
@@ -336,14 +336,14 @@ public class OperationsWithFile extends BaseTest
       selectItemInWorkspaceTree("Untitled file.xml");
       Thread.sleep(500);
       
-      openFileWithCodeEditor("Untitled file.xml");
+      openFileFromNavigationTreeWithCodeEditor("Untitled file.xml");
       
       changeFileContent();
       
       openNewFileFromToolbar("JavaScript File");
       Thread.sleep(1000);
       
-      openFileWithCodeEditor("Untitled file.xml");
+      openFileFromNavigationTreeWithCodeEditor("Untitled file.xml");
       
       //check file opened
       assertTrue(selenium.isTextPresent("Untitled file.xml *"));
@@ -383,7 +383,7 @@ public class OperationsWithFile extends BaseTest
       closeTab("0");
       Thread.sleep(500);
       
-      openFileWithCodeEditor("Untitled file.xml");
+      openFileFromNavigationTreeWithCodeEditor("Untitled file.xml");
       
       //check file opened and title doesn't mark with *
       assertFalse(selenium.isTextPresent("Untitled file.xml *"));
