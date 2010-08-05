@@ -21,7 +21,7 @@
   </properties>
   
   <modules>
-    <module>userguide</module>
-    <!-- module>adminguide </module -->
+    <module>user</module>
+    <module>adminguide </module>
   </modules>
 </project>
