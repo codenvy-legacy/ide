@@ -29,25 +29,52 @@ public interface MenuCommands
    public interface New
    {
       public static final String XML_FILE = "XML File";
+
       public static final String HTML_FILE = "HTML File";
+
       public static final String TEXT_FILE = "Text File";
+
       public static final String JAVASCRIPT_FILE = "JavaScript File";
+
       public static final String CSS_FILE = "CSS File";
+
       public static final String GOOGLE_GADGET_FILE = "Google Gadget";
+
       public static final String REST_SERVICE_FILE = "REST Service";
+
       public static final String GROOVY_SCRIPT_FILE = "Groovy Script";
+
       public static final String GROOVY_TEMPLATE_FILE = "Groovy Template";
+
       public static final String NETVIBES_WIDGET_FILE = "Netvibes Widget";
+
       public static final String FROM_TEMPLATE = "From Template...";
+
       public static final String FOLDER = "Folder...";
+   }
+
+   public interface Run
+   {
+      public static final String UNDEPLOY_REST_SERVICE = "Undeploy REST Service";
+
+      public static final String SET_AUTOLOAD = "Set REST Service Autoload";
+
+      public static final String UNSET_AUTOLOAD = "Unset REST Service Autoload";
    }
 
    public interface View
    {
       public static final String VIEW = "View";
-      
+
       public static final String GO_TO_FOLDER = "Go to Folder";
-      
+
       public static final String GET_URL = "Get URL...";
+
+      public static final String SHOW_PROPERTIES = "Show Properties";
+   }
+
+   public interface File
+   {
+      public static final String REFRESH = "Refresh Selected Folder";
    }
 }
