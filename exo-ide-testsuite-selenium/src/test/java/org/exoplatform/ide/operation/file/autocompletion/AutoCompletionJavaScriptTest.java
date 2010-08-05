@@ -34,8 +34,6 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testPlainJS() throws InterruptedException, Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("JavaScript File");
       Thread.sleep(1000);

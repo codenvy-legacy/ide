@@ -36,8 +36,6 @@ public class RESTServiceProperty extends BaseTest
    @Test
    public void testProperty() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("REST Service");
       Thread.sleep(1000);

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -35,8 +34,8 @@ public class RESTServiceVaditionWrong extends BaseTest
    @Test
    public void testValidaton() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+//      selenium.refresh();
+//      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("REST Service");
       Thread.sleep(1000);

@@ -34,8 +34,6 @@ public class AutoCompletionCSSTest extends BaseTest
    @Test
    public void testPlainCSS() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("CSS File");
       Thread.sleep(1000);

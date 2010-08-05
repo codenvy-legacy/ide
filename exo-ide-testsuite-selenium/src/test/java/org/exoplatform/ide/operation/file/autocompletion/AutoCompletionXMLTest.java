@@ -34,8 +34,6 @@ public class AutoCompletionXMLTest extends BaseTest
    @Test
    public void openForm() throws Throwable
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("XML File");
       Thread.sleep(1000);

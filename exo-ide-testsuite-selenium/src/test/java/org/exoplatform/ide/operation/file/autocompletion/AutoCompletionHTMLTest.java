@@ -34,8 +34,6 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("HTML File");
       Thread.sleep(1000);

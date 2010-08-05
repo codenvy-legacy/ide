@@ -33,8 +33,6 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    @Test
    public void testDuplication() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       openNewFileFromToolbar("JavaScript File");
       Thread.sleep(1000);
