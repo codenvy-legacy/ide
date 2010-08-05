@@ -1,6 +1,7 @@
-eXo _IDE_ gadget provides original approach to operate with _REST Service_ \- ability to *validate*, *deploy/undeploy* and *launch* this applications which compatible with JSR-311 specification without restating portal, or installing additional programs. Actually, eXo _IDE_ works as client side of GateIn with plugin [org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoaderPlugin|http://wiki-int.exoplatform.org/display/exoproducts/Use+groovy+scripts+as+REST+services]. Due to this application you can validate REST Service before saving, deploy, launch or undeploy service which saved in JCR. Feedback from server is automatic displayed in the _Output Tab_:
+eXo _IDE_ gadget provides original approach to operate with _REST Service_ \- ability to *validate*, *deploy/undeploy* and *launch* this applications which compatible with JSR-311 specification without restating portal, or installing additional programs. Actually, eXo _IDE_ works as client side of GateIn with plugin [org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoaderPlugin|#JCR.RESTServicesOnGroovy]. Due to this application you can validate REST Service before saving, deploy, launch or undeploy service which saved in JCR. Feedback from server is automatic displayed in the _Output Tab_:
 
 !ide-groovy_script_operations.PNG!
+
 *Picture 22. REST Service operations*
 
 All _REST Service_ commands are placed at the right part of toolbar and in the special menu item *"Run"*.
@@ -15,7 +16,7 @@ You can verify of content of _REST Service_ content by using special validation 
 
 Otherwise, in the _Output Tab_ will be displayed error message like this:
 
-{code}
+{screen}
 [ERROR] rennes.groovyvalidation failed. Error (400: Bad Request)
 Unexpected error. Error occurs when parse stream, compiler error:
 startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
@@ -23,7 +24,7 @@ startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
 @ line 8, column 1.rennes.groovy: 11: unable to resolve class Path , unable to find class for annotation
 @ line 11, column 3.
 3 errors
-{code}
+{screen}
 
 h2. Deploy/Undeploy REST Service
 
@@ -37,7 +38,7 @@ After that the deploy request will be sent to the server, and if there are no er
 "{color:#007700}\[INFO\]{color} {color:#007700}{*}rennes.groovy{*}{color} {color:#007700}deployed successfully{color}"
 will be displayed in the _Output Tab_. Otherwise, in the _Output Tab_ will be displayed error message, e.g.:
 
-{code}
+{screen}
 [ERROR] rennes.groovy deploy failed. Error (400: Bad Request)
 Unexpected error. Error occurs when parse stream, compiler error:
 startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
@@ -47,7 +48,7 @@ find class for annotation
 find class for annotation
 @ line 11, column 3.
 3 errors
-{code}
+{screen}
 
 Calling the *"Undeploy"* operation is similar to the *"Deploy"* \- you should:
 
@@ -59,12 +60,12 @@ If everything Ok, then you will get message like that:
 
 You can deploy as many REST Services as you want, and double deploying is possible. But you can't undeploy non-deployed earlier service - in this case you will get error feedback from the server like this:
 
-{code}
+{screen}
 [ERROR] /repository/collaboration/rennes.groovy
 undeploy failed. Error (400: Bad Request)
 Can't unbind script rennes.groovy, not bound or has wrong mapping to the
 resource class
-{code}
+{screen}
 
 h2. Using Autoload Property
 
@@ -93,7 +94,7 @@ After this gadget will verify if path is correct and send described request to t
 
 See example of launching at the picture *"REST Service operations"* above.
 
-Table. *{_}Reproducing service annotations in the "Launch REST Service" dialog._*
+Table. *Reproducing service annotations in the "Launch REST Service" dialog.*
 
 | *REST Service Annotation* | *Element of "Launch REST Service" dialog* |
 | _@Path_ | *"Path"* field |
@@ -117,7 +118,7 @@ h2. Review of the response headers from REST Service (since 1.0 beta2)
 
 Since 1.0 beta 2 you can also review headers, status code and status text in the _Output Panel_ after sending request. The message will be like this:
 
-{code}
+{screen}
 [OUTPUT] - -Status - - - - - - - -
 200 OK
 - -Headers- - - - - - - -
@@ -126,14 +127,14 @@ Transfer-Encoding : chunked
 Server : Jetty(6.1.x)
 - -Text - - - - - - - - -
 Hello steve
-{code}
+{screen}
 
 
 h2. Examples of using the REST Service
 
 h3. Example1: REST service with complex media types output preview
 
-#Create, save and deploy REST service with next content:
+# Create, save and deploy REST service with next content:
 
 {code}
 // simple groovy script
@@ -226,7 +227,8 @@ public class TestService {
 
 Then eXo _IDE_ will create request to the service and send it. Response will be added into the _Output Tab_:
 
-{noformat}[OUTPUT] - -Status - - - - - - - -
+{screen}
+[OUTPUT] - -Status - - - - - - - -
 200 OK
 - -Headers- - - - - - - -
 Server : Apache-Coyote/1.1
@@ -235,6 +237,6 @@ Transfer-Encoding : chunked
 Date : Mon, 05 Jul 2010 09:06:55 GMT
 - -Text - - - - - - - - -
 PathParam 1:value1; Test Query Parameter 1: value2; Test-Header1: value3; Body: example
-{noformat}
+{screen}
 
 

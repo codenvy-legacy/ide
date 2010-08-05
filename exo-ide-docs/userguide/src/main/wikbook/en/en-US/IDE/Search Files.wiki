@@ -1,4 +1,4 @@
-eXo _IDE_ proposes file search on file content and mime-type. Taking into account that file search in repository is based on _[Lucene|http://wiki.exoplatform.org/xwiki/bin/view/JCR/Fulltext+Search]_ and depends on _Mime type_ of files. To found out some file(s) you could:
+eXo _IDE_ proposes file search on file content and mime-type. Taking into account that file search in repository is based on [Lucene|#JCR.FulltextSearchAndSettings] and depends on _Mime type_ of files. To found out some file(s) you could:
 
 # Select target folder or root folder in the _Workspace Panel_.
 # Click on *"Search..."* button or call *"File->Search..."* top menu command to open *"Search"* dialog.

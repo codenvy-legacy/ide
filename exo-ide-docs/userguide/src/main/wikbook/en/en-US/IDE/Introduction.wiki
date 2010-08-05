@@ -9,12 +9,9 @@ After successful deploy and starting the link *"IDE"* to the page with gadget ca
 *Picture 1. eXo IDE gadget in portal*
 
 
-{info} More info about _eXo IDE_ deploying can be found at [Developer's Manual for Building and Deploying eXo IDE Gadget Under GateIn|http://wiki-int.exoplatform.org/display/exoproducts/Developer%27s+Manual+for+Building+and+Deploying+eXo+IDE+Gadget+Under+GateIn].
-{info}
-
 h2. Requirements
 
-_IDE gadget_ requires *GateIn 3.0* or later.
+_IDE gadget_ requires *GateIn 3.0* or higher.
 
 Supported Web browsers: _Mozilla Firefox_ ver.3.0 or later, _Internet Explorer_ ver.7.0 or later, _Safari_ ver.3.2 or later, _Google Chrome_ ver. 5.0 or later.
 

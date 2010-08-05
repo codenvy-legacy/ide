@@ -66,4 +66,3 @@ h3. Non-changable hotkeys which work within the editors
 * Ctrl+End - Go to the end of document
   
 
-TODO [Developer's Reference|http://wiki-int.exoplatform.org/display/exoproducts/Developer%27s+Reference+of+IDEall+Gadget]
