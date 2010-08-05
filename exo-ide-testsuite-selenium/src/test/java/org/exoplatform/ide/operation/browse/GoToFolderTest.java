@@ -46,7 +46,7 @@ public class GoToFolderTest extends BaseTest
    public void testGoToFolder() throws Exception
    {
       Thread.sleep(1000);
-
+      checkMenuCommandState("View", "Go to Folder", false);
       //Create first folder with xml file in it and close file.
       createFolder(folder1Name);
       openNewFileFromToolbar("XML File");
@@ -58,6 +58,7 @@ public class GoToFolderTest extends BaseTest
       selectRootOfWorkspaceTree();
       createFolder(folder2Name);
       openNewFileFromToolbar("XML File");
+      checkMenuCommandState("View", "Go to Folder", true);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(2000);
       closeTab("0");
@@ -98,6 +99,8 @@ public class GoToFolderTest extends BaseTest
       //Close opened tabs
       closeTab("0");
       closeTab("0");
+      Thread.sleep(1000);
+      checkMenuCommandState("View", "Go to Folder", false);
    }
 
    @Test
@@ -136,6 +139,7 @@ public class GoToFolderTest extends BaseTest
       openFileFromSearchResultsWithCodeEditor(file2Name);
       //Go to folder with second file
       Thread.sleep(1000);
+      checkMenuCommandState("View", "Go to Folder", true);
       selectTopMenuCommand("View", "Go to Folder");
       Thread.sleep(1000);
       //TODO check selected
@@ -147,7 +151,10 @@ public class GoToFolderTest extends BaseTest
       //Clear results
       selectItemInWorkspaceTree(folder1Name);
       deleteSelectedItem();
+      Thread.sleep(1000);
       selectItemInWorkspaceTree(folder2Name);
       deleteSelectedItem();
+      Thread.sleep(1000);
+      checkMenuCommandState("View", "Go to Folder", false);
    }
 }
