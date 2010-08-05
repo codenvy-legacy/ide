@@ -1,0 +1,33 @@
+h2. Create Folder
+
+To create folder, please, find and select target folder and click popup *"New"* button in the toolbar and select *"Folder..."* or select *"File->New->Folder..."* top menu command, type new folder's name in the *"Create Folder"* dialog and click on *"Create"* button.
+
+If _Workspace Panel_ has selected file, then folder will be created in target folder of this file, if folder is selcted - new folder will be it's child.
+
+In case there is no selected item in the _Workspace Panel_, then the folder will be created in the root folder.
+
+If there is multiply selection, then create folder command will be disabled.
+
+h2. Delete Folder
+
+To delete some folder(s), please, select folder item(s) in _Workspace Panel,_ click on *"Delete"* button at the toolbar or call the *"File->Delete..."* top menu command and then confirm deletion in the *"Delete Item(s)"* dialog.
+
+Opened in _Content Panel_ files will be closed after removing the folder, which contains them.
+{note}It is impossible to remove workspace root folder. So, the *"Delete Item(s)"* button will be disabled if the root item is selected in _Workspace Panel_.{note}
+
+h2. Rename Folder
+
+To rename folder, please, select its item in _Workspace Panel_ and click *"File->Rename..."* top menu command. Rename dialog will appear, where you can change current name of the folder on new one in the input field *"Rename item to:"*. Then, click on *"Rename"* button to rename the folder.
+
+If there are some opened and unsaved files from renaming folder or sub folder in the _Content Panel_, you will be able to save this files after folder had been renamed.
+
+If there is existed folder with the same name in the target folder, you will get an error message.
+
+{note}Don't forget to undeploy all deployed earlier _REST Services_ within the moving folder or sub folder before the folder would be renamed\!{note}
+
+h2. Download Zipped Folder
+
+If you want to download some folder from _JCR Repository_, you could use special command: *"Download Zipped Folder...*". Simply select target folder and call *"File->Download Zipped Folder..."* top menu command. After that zip-archive with folder content will be prepared on the server and server will sent this file to the client. So, the browser will propose to save archive on local computer.
+
+{note}The archive uses *UTF-8* encoding in entry names. Be sure that your zip extractor support UTF-8 in file names. Windows *Explorer* doesn't support it, you may use 7zip to unzip archive. In Linux *unzip*(6.0 and older) command also doesn't support UTF-8 (depends on distributive), if you use KDE 4 as DE you may configure Dolphin to use archive as folder(in Dolphin go to Settings \-> Configure Dolphin.. \-> Navigation and set "Open archive as folder" checkbox).{note}
+

@@ -1,0 +1,3 @@
+To preview html file stored in JCR you don't need to open additional browser window. With eXo _IDE_ all you need is to click on *"Show Preview"* toolbar button or call the *"Run->Show Preview"* top menu command after opening html file in _Content Panel_. After this html-content will be opened as Web-page in IFRAME of _Preview Tab_.
+
+{note} It is impossible to view just created and non-saved files {note}
