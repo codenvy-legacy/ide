@@ -617,6 +617,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
             openedFiles.put(savedFile.getHref(), savedFile);
             display.relocateFile(currentOpenedFile, savedFile);
          }
+         
          updateTabTitle(savedFile.getHref());
       }
    }

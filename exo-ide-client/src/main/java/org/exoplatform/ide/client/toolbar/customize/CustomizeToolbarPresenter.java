@@ -30,6 +30,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
@@ -48,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class CustomizeToolbarPresenter
+public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandler
 {
 
    public interface Display
@@ -121,9 +123,6 @@ public class CustomizeToolbarPresenter
    public CustomizeToolbarPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
       List<Control> controls)
    {
-      
-      System.out.println("registered controls: " + controls.size());
-      
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       this.controls = controls;
@@ -191,7 +190,7 @@ public class CustomizeToolbarPresenter
       {
          public void onClick(ClickEvent event)
          {
-            applyChanges();
+            updateToolbar();
          }
       });
 
@@ -226,14 +225,15 @@ public class CustomizeToolbarPresenter
       display.disableMoveDownButton();
 
       fillCommandListGrid();
-      
+
       List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
-      if (toolbarItems == null) {
+      if (toolbarItems == null)
+      {
          toolbarItems = new ArrayList<String>();
          toolbarItems.add("");
          applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
       }
-      
+
       fillToolbarListGrid(toolbarItems);
    }
 
@@ -497,48 +497,43 @@ public class CustomizeToolbarPresenter
       display.toolbarItemsListGridSelectItem(selectedToolbarItem);
    }
 
+   private List<String> itemsToUpdate;
+
    private void updateToolbar()
    {
-      List<String> items = (List<String>)applicationSettings.getValue("toolbar-items");      
-      items.clear();
-      
+      itemsToUpdate = (List<String>)applicationSettings.getValue("toolbar-items");
+      itemsToUpdate.clear();
+
       for (ToolbarItem toolbarItem : toolbarItems)
       {
          if (toolbarItem.getType() == Type.COMMAND)
          {
-            items.add(toolbarItem.getCommand().getId());
+            itemsToUpdate.add(toolbarItem.getCommand().getId());
          }
          else if (toolbarItem.getType() == Type.SPACER)
          {
-            items.add("");
+            itemsToUpdate.add("");
          }
          else
          {
-            items.add("---");
+            itemsToUpdate.add("---");
          }
       }
-      
-      System.out.println("toolbar items > " + items.size());
-
-      eventBus.fireEvent(new UpdateToolbarEvent(items, controls));
       //SettingsService.getInstance().saveSetting(applicationSettings);
+      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
-   }
-
-   private void applyChanges()
-   {
-      updateToolbar();
-      display.closeForm();
    }
 
    private void restoreDefaults()
    {
       List<String> toolbarDefaultItems = (List<String>)applicationSettings.getValue("toolbar-default-items");
-      if (toolbarDefaultItems == null) {
+      if (toolbarDefaultItems == null)
+      {
          toolbarDefaultItems = new ArrayList<String>();
          toolbarDefaultItems.add("");
       }
-      
+
       fillToolbarListGrid(toolbarDefaultItems);
       selectedToolbarItem = null;
       display.disableAddCommandButton();
@@ -546,6 +541,12 @@ public class CustomizeToolbarPresenter
       display.disableDeleteCommandButton();
       display.disableMoveUpButton();
       display.disableMoveDownButton();
+   }
+
+   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
+   {
+      eventBus.fireEvent(new UpdateToolbarEvent(itemsToUpdate, controls));
+      display.closeForm();
    }
 
 }

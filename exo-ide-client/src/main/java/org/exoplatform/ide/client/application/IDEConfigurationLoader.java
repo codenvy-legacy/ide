@@ -251,7 +251,14 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
-      eventBus.fireEvent(new UpdateToolbarEvent(toolbarDefaultItems, controls));
+      
+      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
+      if (toolbarItems == null) {
+         toolbarItems = new ArrayList<String>();
+         toolbarItems.addAll(toolbarDefaultItems);
+      }
+      
+      eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
 
       if (applicationSettings.getValue("entry-point") != null)

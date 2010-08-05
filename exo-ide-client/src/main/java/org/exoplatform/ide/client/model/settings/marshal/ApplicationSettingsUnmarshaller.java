@@ -184,8 +184,6 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       String name = node.getNodeName();
       name = name.substring(0, name.length() - "_list".length());
 
-      System.out.println(">>>>>>>> name >>>>>>> " + name);
-      
       if (!node.hasChildNodes())
       {
          applicationSettings.setValue(name, new ArrayList<String>(), Store.REGISTRY);
@@ -196,11 +194,7 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
 
          for (int i = 0; i < node.getChildNodes().getLength(); i++)
          {
-            Node itemNode = node.getChildNodes().item(i);
-            
-            System.out.println("item node: " + itemNode);
-            System.out.println("has child nodes: " + itemNode.getChildNodes());
-            
+            Node itemNode = node.getChildNodes().item(i);            
             String value = !itemNode.hasChildNodes() ? "" : itemNode.getChildNodes().item(0).getNodeValue();
             value = javaScriptDecodeURIComponent(value);
             items.add(value);

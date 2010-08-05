@@ -125,11 +125,8 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
             newFile.setContentType(file.getContentType());
             newFile.setJcrContentNodeType(file.getJcrContentNodeType());
             newFile.setNewFile(true);
-            newFile.setContentChanged(false);
+            newFile.setContentChanged(true);
 
-            //newFile.getProperties().addAll(file.getProperties());
-            //newFile.setPropertiesChanged(true);
-                        
             if (file.isNewFile())
             {
             }
@@ -158,31 +155,24 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      System.out.println("saveOnly : " + saveOnly);
-      
-      if (saveOnly)
-      {
-         handlers.removeHandlers();
-         return;
-      }
-      
-      
-
       if (event.getFile().isPropertiesChanged())
       {
-         VirtualFileSystem.getInstance().getProperties(event.getFile());
+         VirtualFileSystem.getInstance().saveProperties(event.getFile());
       }
       else
       {
-         VirtualFileSystem.getInstance().saveProperties(event.getFile());
+         VirtualFileSystem.getInstance().getProperties(event.getFile());         
       }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       handlers.removeHandlers();
+      
       eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
       refreshBrowser(event.getItem().getHref());
+      
+      handlers.removeHandlers();      
    }
 
    public void onError(ExceptionThrownEvent event)
