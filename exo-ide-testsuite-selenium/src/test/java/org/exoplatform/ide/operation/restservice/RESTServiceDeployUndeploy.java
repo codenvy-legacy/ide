@@ -50,17 +50,29 @@ public class RESTServiceDeployUndeploy extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
       runToolbarButton(MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(500);
+      Thread.sleep(1500);
       
       assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
       
-      assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" deployed successfully.", selenium.getText("//font[@color='#007700']"));
+      assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
       
       runToolbarButton(MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      Thread.sleep(1000);
       
-      assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" undeployed successfully.", selenium.getText("//font[@color='#007700']"));
+      assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
+
+      runTopMenuCommand("Run", "Undeploy");
+      Thread.sleep(1000);
       
+      String mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
+      assertTrue(mess.contains("[ERROR] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" undeploy failed. Error (400: Bad Request)"));
+      assertTrue(mess.contains("Can't unbind script Example.groovy, not bound or has wrong mapping to the resource class"));
       
+      closeTab("0");
+      
+      selectItemInWorkspaceTree(FILE_NAME);
+      
+      deleteSelectedItem();
    }
    
 }
