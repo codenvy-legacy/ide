@@ -36,11 +36,13 @@ import com.thoughtworks.selenium.Selenium;
 public abstract class BaseTest
 {
    protected static Selenium selenium;
+   
+   protected static final String BASE_URL = "http://127.0.0.1:8888/";
 
    @BeforeClass
    public static void startSelenium()
    {
-      selenium = new DefaultSelenium("localhost", 4444, "*firefox", "http://127.0.0.1:8888/");
+      selenium = new DefaultSelenium("localhost", 4444, "*firefox", BASE_URL);
       selenium.start();
       selenium.open("/org.exoplatform.ide.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997");
       selenium.waitForPageToLoad("30000");
@@ -239,8 +241,6 @@ public abstract class BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
    }
    
-   
-   
    /**
     * Check navigation workspace tree doesn't contain pointed item.
     * 
@@ -252,6 +252,17 @@ public abstract class BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="+name+"]/col[0]"));
    }
 
+   /**
+    * Get name of item in workspace tree by it's index.
+    * 
+    * @param index
+    * @return {@link String} name
+    */
+   protected String getItemNameFromWorkspaceTree(int index)
+   {
+      return selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row["+index+"]/col[0]");
+   }
+   
    /**
     * Delete selected item in navigation tree.
     * 

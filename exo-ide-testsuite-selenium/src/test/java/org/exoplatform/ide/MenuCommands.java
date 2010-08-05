@@ -47,5 +47,7 @@ public interface MenuCommands
       public static final String VIEW = "View";
       
       public static final String GO_TO_FOLDER = "Go to Folder";
+      
+      public static final String GET_URL = "Get URL...";
    }
 }
