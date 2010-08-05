@@ -102,7 +102,7 @@ public class FolderOperationsTest extends BaseTest
       selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
       createFolder("FolderToDelete");
-      clickOnToolbarButton("Delete Item(s)...");
+      runToolbarButton("Delete Item(s)...");
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
@@ -197,7 +197,7 @@ public class FolderOperationsTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + textFileName
          + "]/col[1]"));
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      clickOnToolbarButton("Refresh Selected Folder");
+      runToolbarButton("Refresh Selected Folder");
       Thread.sleep(2000);
       assertElementPresentInWorkspaceTree(textFileName);
       clearCreationTestResult(textFileName);
@@ -274,7 +274,7 @@ public class FolderOperationsTest extends BaseTest
    private void clearCreationTestResult(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-      clickOnToolbarButton("Delete Item(s)...");
+      runToolbarButton("Delete Item(s)...");
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       assertElementNotPresentInWorkspaceTree(name);
    }

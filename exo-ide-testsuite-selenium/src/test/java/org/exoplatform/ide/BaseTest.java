@@ -53,7 +53,7 @@ public abstract class BaseTest
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void clickOnToolbarButton(String buttonTitle) throws Exception
+   public void runToolbarButton(String buttonTitle) throws Exception
    {
       selenium.mouseDownAt("//div[@title='" + buttonTitle + "']//img", "");
       selenium.mouseUpAt("//div[@title='" + buttonTitle + "']//img", "");
@@ -270,7 +270,7 @@ public abstract class BaseTest
     */
    protected void deleteSelectedItem() throws Exception
    {
-      clickOnToolbarButton("Delete Item(s)...");
+      runToolbarButton("Delete Item(s)...");
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
       //TODO check deletion form
    }
@@ -286,7 +286,7 @@ public abstract class BaseTest
     */
    protected void createFolder(String folderName) throws Exception
    {
-      clickOnToolbarButton("New");
+      runToolbarButton("New");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
 
       //Check creation form elements
@@ -326,7 +326,7 @@ public abstract class BaseTest
     */
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
-      clickOnToolbarButton("Save As...");
+      runToolbarButton("Save As...");
       checkSaveAsDialogAndSave(name);
    }
 
@@ -395,7 +395,7 @@ public abstract class BaseTest
 
    protected void saveCurrentFile() throws Exception
    {
-      clickOnToolbarButton("Save");
+      runToolbarButton("Save");
    }
    
    /**
@@ -405,7 +405,7 @@ public abstract class BaseTest
     */
    protected void openNewFileFromToolbar(String menuName) throws Exception
    {
-      clickOnToolbarButton("New");
+      runToolbarButton("New");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()='"
          + menuName + "']", "");
    }
@@ -505,7 +505,7 @@ public abstract class BaseTest
     * @param topMenuName name of menu
     * @param commandName command name
     */
-   protected void selectTopMenuCommand(String topMenuName, String commandName)
+   protected void runTopMenuCommand(String topMenuName, String commandName)
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" 
          + topMenuName + "']", "");

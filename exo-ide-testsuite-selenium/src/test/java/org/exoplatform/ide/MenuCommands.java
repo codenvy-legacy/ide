@@ -57,6 +57,8 @@ public interface MenuCommands
    {
       public static final String UNDEPLOY_REST_SERVICE = "Undeploy REST Service";
 
+      public static final String DEPLOY_REST_SERVICE = "Deploy REST Service";
+      
       public static final String SET_AUTOLOAD = "Set REST Service Autoload";
 
       public static final String UNSET_AUTOLOAD = "Unset REST Service Autoload";

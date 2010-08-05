@@ -90,7 +90,7 @@ public class CodeOutlineTest extends BaseTest
 
       Thread.sleep(500);
       
-      clickOnToolbarButton("Show Outline");
+      runToolbarButton("Show Outline");
       
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"isc_TabSet_2\"]/tab[ID=isc_OutlineForm_0]/"));
       

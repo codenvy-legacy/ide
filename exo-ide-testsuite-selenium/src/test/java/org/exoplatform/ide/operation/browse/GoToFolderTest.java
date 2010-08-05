@@ -78,7 +78,7 @@ public class GoToFolderTest extends BaseTest
       selectItemInWorkspaceTree(file2Name);
 
       //Go to folder with first file
-      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
 
       //Check file is shown in tree
@@ -86,13 +86,13 @@ public class GoToFolderTest extends BaseTest
       assertElementPresentInWorkspaceTree(file1Name);
 
       selectRootOfWorkspaceTree();
-      clickOnToolbarButton("Refresh Selected Folder");
+      runToolbarButton("Refresh Selected Folder");
 
       openOrCloseFolder(folder2Name);
       openFileFromNavigationTreeWithCodeEditor(file2Name);
       Thread.sleep(1000);
       //Go to folder with first file
-      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
       //TODO check selected state
       assertElementPresentInWorkspaceTree(file2Name);
@@ -115,7 +115,7 @@ public class GoToFolderTest extends BaseTest
       assertElementNotPresentInWorkspaceTree(folder1Name);
       assertElementNotPresentInWorkspaceTree(folder2Name);
 
-      clickOnToolbarButton("Search...");
+      runToolbarButton("Search...");
       Thread.sleep(1000);
       
       //Check search form appears
@@ -141,7 +141,7 @@ public class GoToFolderTest extends BaseTest
       //Go to folder with second file
       Thread.sleep(1000);
       checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
-      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
       //TODO check selected
       assertElementPresentInWorkspaceTree(file2Name);
