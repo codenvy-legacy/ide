@@ -70,7 +70,7 @@ public class GeItemUrlTest extends BaseTest
 
       //Refresh root item
       selectRootOfWorkspaceTree();
-      clickOnToolbarButton("Refresh Selected Folder");
+      runToolbarButton("Refresh Selected Folder");
 
       String workspaceName = getItemNameFromWorkspaceTree(0);
 
@@ -122,7 +122,7 @@ public class GeItemUrlTest extends BaseTest
    public void testGetFileUrlWithSearch() throws Exception
    {
       selectRootOfWorkspaceTree();
-      clickOnToolbarButton("Search...");
+      runToolbarButton("Search...");
       Thread.sleep(1000);
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));

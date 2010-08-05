@@ -554,4 +554,47 @@ public abstract class BaseTest
             name);
       selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
    }
+   
+   /**
+    * Get the URL of selected item.
+    * 
+    * @return {@link String} URL
+    * @throws Exception
+    */
+   protected String getItemUrl() throws Exception
+   {
+      //Click get URL 
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
+      Thread.sleep(1000);
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element"));
+
+      String url =
+         selenium
+            .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
+
+      //Close form
+      selenium.click("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]");
+      Thread.sleep(1000);
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]"));
+      return url;
+   }
+
+   /**
+    * Select "Workspace" tab in navigation panel
+    */
+   protected void selectWorkspaceTab()
+   {
+      selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=BrowserPanel]");
+   }
+   
+   /**
+    * Select "Search Result" tab in navigation panel
+    */
+   protected void selectSearchResultTab()
+   {
+      selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]");
+   }
 }
