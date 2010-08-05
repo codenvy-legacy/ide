@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.Const;
 import org.exoplatform.ide.client.module.groovy.service.SimpleParameterEntry;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
@@ -98,7 +99,7 @@ public class GwtTestGroovyService extends AbstractGwtTest
       super.gwtSetUp();
       eventbus = new HandlerManager(null);
       vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/ideall");
-      groovyService = new GroovyServiceImpl(eventbus, new EmptyLoader());
+      groovyService = new GroovyServiceImpl(eventbus, Const.REST_SERVICE_CONTEXT, new EmptyLoader());
       initUrls();
       initFile();
    }
@@ -148,7 +149,7 @@ public class GwtTestGroovyService extends AbstractGwtTest
          {
             assertNotNull(event.getFile());
             assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.validate(event.getFile().getHref(), groovyFileContent, TEST_URL_VALIDATE);
+            groovyService.validate(event.getFile().getHref(), groovyFileContent);
          }
       });
       

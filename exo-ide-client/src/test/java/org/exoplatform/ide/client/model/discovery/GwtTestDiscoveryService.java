@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.Const;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
@@ -54,7 +55,7 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
    {
       super.gwtSetUp();
       eventbus = new HandlerManager(null);
-      discovertyService = new DiscoveryServiceImpl(eventbus, new EmptyLoader());
+      discovertyService = new DiscoveryServiceImpl(eventbus, new EmptyLoader(), Const.REST_SERVICE_CONTEXT);
       TEST_URL = "http://" + Window.Location.getHost()
             + "/ideall/rest/private/services/discovery/entrypoints";
       TEST_URL_WRONG = "http://" + Window.Location.getHost()

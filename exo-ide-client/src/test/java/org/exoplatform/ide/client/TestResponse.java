@@ -45,7 +45,7 @@ public class TestResponse extends Response
     * Status code.
     */
    private int statusCode;
-   
+
    /**
     * Headers.
     */
@@ -73,8 +73,7 @@ public class TestResponse extends Response
     * @param statusText
     * @param text
     */
-   public TestResponse(Header[] headers, int statusCode, String statusText,
-      String text)
+   public TestResponse(Header[] headers, int statusCode, String statusText, String text)
    {
       super();
       this.headers = headers;
@@ -91,10 +90,10 @@ public class TestResponse extends Response
    {
       if (header == null)
          throw new NullPointerException();
-      
-      if (header.isEmpty())
+
+      if (!"".equals(header))
          throw new IllegalArgumentException();
-      
+
       for (Header h : headers)
       {
          if (header.equals(h.getName()))
