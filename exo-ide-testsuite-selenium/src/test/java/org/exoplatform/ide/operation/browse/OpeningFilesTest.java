@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.browse;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
 
 /**
@@ -48,14 +49,14 @@ public class OpeningFilesTest extends BaseTest
       Thread.sleep(1000);
       createFolder(folderName);
 
-      openNewFileFromToolbar("Text File");
+      openNewFileFromToolbar(MenuCommands.New.TEXT_FILE);
       Thread.sleep(2000);
       typeText(file1Content);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(1000);
       closeTab("0");
 
-      openNewFileFromToolbar("HTML File");
+      openNewFileFromToolbar(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(1000);
       closeTab("0");

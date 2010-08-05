@@ -42,4 +42,10 @@ public interface MenuCommands
       public static final String FOLDER = "Folder...";
    }
 
+   public interface View
+   {
+      public static final String VIEW = "View";
+      
+      public static final String GO_TO_FOLDER = "Go to Folder";
+   }
 }

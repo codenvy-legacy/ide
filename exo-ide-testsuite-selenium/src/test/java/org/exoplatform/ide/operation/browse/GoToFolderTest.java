@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.browse;
 import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
 
 /**
@@ -46,10 +47,10 @@ public class GoToFolderTest extends BaseTest
    public void testGoToFolder() throws Exception
    {
       Thread.sleep(1000);
-      checkMenuCommandState("View", "Go to Folder", false);
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
       //Create first folder with xml file in it and close file.
       createFolder(folder1Name);
-      openNewFileFromToolbar("XML File");
+      openNewFileFromToolbar(MenuCommands.New.XML_FILE);
       saveAsByTopMenu(file1Name);
       Thread.sleep(2000);
       closeTab("0");
@@ -57,8 +58,8 @@ public class GoToFolderTest extends BaseTest
       //Create second folder with xml file in it and close file.
       selectRootOfWorkspaceTree();
       createFolder(folder2Name);
-      openNewFileFromToolbar("XML File");
-      checkMenuCommandState("View", "Go to Folder", true);
+      openNewFileFromToolbar(MenuCommands.New.XML_FILE);
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(2000);
       closeTab("0");
@@ -77,7 +78,7 @@ public class GoToFolderTest extends BaseTest
       selectItemInWorkspaceTree(file2Name);
 
       //Go to folder with first file
-      selectTopMenuCommand("View", "Go to Folder");
+      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
 
       //Check file is shown in tree
@@ -91,7 +92,7 @@ public class GoToFolderTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(file2Name);
       Thread.sleep(1000);
       //Go to folder with first file
-      selectTopMenuCommand("View", "Go to Folder");
+      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
       //TODO check selected state
       assertElementPresentInWorkspaceTree(file2Name);
@@ -100,7 +101,7 @@ public class GoToFolderTest extends BaseTest
       closeTab("0");
       closeTab("0");
       Thread.sleep(1000);
-      checkMenuCommandState("View", "Go to Folder", false);
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }
 
    @Test
@@ -139,8 +140,8 @@ public class GoToFolderTest extends BaseTest
       openFileFromSearchResultsWithCodeEditor(file2Name);
       //Go to folder with second file
       Thread.sleep(1000);
-      checkMenuCommandState("View", "Go to Folder", true);
-      selectTopMenuCommand("View", "Go to Folder");
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
+      selectTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(1000);
       //TODO check selected
       assertElementPresentInWorkspaceTree(file2Name);
@@ -155,6 +156,6 @@ public class GoToFolderTest extends BaseTest
       selectItemInWorkspaceTree(folder2Name);
       deleteSelectedItem();
       Thread.sleep(1000);
-      checkMenuCommandState("View", "Go to Folder", false);
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }
 }
