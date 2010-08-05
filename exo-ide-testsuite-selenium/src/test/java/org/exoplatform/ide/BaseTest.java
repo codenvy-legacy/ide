@@ -380,8 +380,8 @@ public abstract class BaseTest
    protected void openNewFileFromToolbar(String menuName) throws Exception
    {
       clickOnToolbarButton("New");
-      selenium
-         .mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"" + menuName + "\")]", "");
+      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()='"
+         + menuName + "']", "");
    }
 
    /**

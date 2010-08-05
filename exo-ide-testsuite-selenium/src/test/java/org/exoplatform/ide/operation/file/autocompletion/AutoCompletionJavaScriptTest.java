@@ -37,7 +37,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(1000);
-      openNewFileFromToolbar("JavaScript");
+      openNewFileFromToolbar("JavaScript File");
       Thread.sleep(1000);
 
       javaScriptTeastVar();
