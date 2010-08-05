@@ -41,6 +41,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class OutputForm extends TabPanel implements OutputPresenter.Display
 {
 
+   private final String ID = "ideOutputForm"; 
+   
    private OutputPresenter presenter;
 
    private VLayout outputLayout;
@@ -59,6 +61,7 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
       outputLayout.setHeight100();
       outputLayout.setOverflow(Overflow.SCROLL);
       outputLayout.setCanFocus(false);
+      outputLayout.setID(ID);
       addMember(outputLayout);
 
       clearOutputButton = new ImgButton();
