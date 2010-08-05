@@ -32,6 +32,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -46,8 +48,20 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private static final int WIDTH = 450;
 
    private static final int HEIGHT = 190;
+
+   private static final String ID = "ideSearchForm";
+
+   private static final String ID_SEARCH_BUTTON = "ideSearchFormSearchButton";
+
+   private static final String ID_CANCEL_BUTTON = "ideSearchFormCancelButton";
+
+   private static final String CONTENT_FIELD = "ideSearchFormContentField";
+
+   private static final String MIME_TYPE_FIELD = "ideSearchFormMimeTypeField";
+
+   private static final String PATH_FIELD = "ideSearchFormPathField";
    
-   private static final String ID = "ideallSearchForm";
+   private static final String ID_DYNAMIC_FORM = "ideSearchFormDynamicForm";
 
    private final int BUTTON_WIDTH = 90;
 
@@ -68,6 +82,8 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private IButton cancelButton;
 
    private ComboBoxField mimeTypesField;
+
+   private SearchPresenter advancedSearchPresenter;
 
    /**
     * {@inheritDoc}
@@ -111,16 +127,25 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       addItem(mainLayout);
 
       show();
-      
+
       UIHelper.setAsReadOnly(pathField.getName());
-      
-      SearchPresenter advancedSearchPresenter = new SearchPresenter(eventBus, selectedItems, entryPoint);
+
+      addCloseClickHandler(new CloseClickHandler()
+      {
+         public void onCloseClick(CloseClientEvent event)
+         {
+            destroy();
+         }
+      });
+
+      advancedSearchPresenter = new SearchPresenter(eventBus, selectedItems, entryPoint);
       advancedSearchPresenter.bindDisplay(this);
    }
 
    private DynamicForm createSearchForm()
    {
       DynamicForm paramForm = new DynamicForm();
+      paramForm.setID(ID_DYNAMIC_FORM);
       paramForm.setLayoutAlign(Alignment.CENTER);
       paramForm.setWidth100();
       paramForm.setPadding(5);
@@ -129,20 +154,21 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       paramForm.setCellSpacing(5);
       paramForm.setLayoutAlign(Alignment.CENTER);
 
-      pathField = createValueField("Path");
+      pathField = createValueField("Path", PATH_FIELD);
 
-      contentField = createValueField("Containing text");
+      contentField = createValueField("Containing text", CONTENT_FIELD);
 
-      mimeTypesField = createSelectField("Mime type");
+      mimeTypesField = createSelectField("Mime type", MIME_TYPE_FIELD);
 
       paramForm.setItems(pathField, contentField, mimeTypesField);
 
       return paramForm;
    }
 
-   private TextField createValueField(String title)
+   private TextField createValueField(String title, String id)
    {
       TextField textField = new TextField();
+      textField.setName(id);
       textField.setTitle("<NOBR>" + title + "</NOBR>");
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
@@ -150,9 +176,10 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       return textField;
    }
 
-   private ComboBoxField createSelectField(String title)
+   private ComboBoxField createSelectField(String title, String id)
    {
       ComboBoxField comboboxField = new ComboBoxField();
+      comboboxField.setName(id);
       comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
@@ -168,8 +195,8 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       buttonsLayout.setAutoWidth();
       buttonsLayout.setMembersMargin(10);
 
-      searchButton = createButton("Search", Images.Buttons.SEARCH);
-      cancelButton = createButton("Cancel", Images.Buttons.CANCEL);
+      searchButton = createButton("Search", Images.Buttons.SEARCH, ID_SEARCH_BUTTON);
+      cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
 
       buttonsLayout.addMember(searchButton);
       buttonsLayout.addMember(cancelButton);
@@ -177,9 +204,10 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       return buttonsLayout;
    }
 
-   private IButton createButton(String title, String icon)
+   private IButton createButton(String title, String icon, String id)
    {
       IButton button = new IButton(title);
+      button.setID(id);
       button.setIcon(icon);
       button.setWidth(BUTTON_WIDTH);
       button.setHeight(BUTTON_HEIGHT);
