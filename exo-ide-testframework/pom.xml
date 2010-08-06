@@ -15,7 +15,7 @@
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo.gwtframework.commons</artifactId>
+         <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>

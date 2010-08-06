@@ -106,22 +106,22 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.gwt</groupId>
-        <artifactId>exo.gwtframework.commons</artifactId>
+        <artifactId>exo-gwtframework-commons</artifactId>
         <version>${org.exoplatform.gwtframework.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.gwt</groupId>
-        <artifactId>exo.gwtframework.ui</artifactId>
+        <artifactId>exo-gwtframework-ui</artifactId>
         <version>${org.exoplatform.gwtframework.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.gwt</groupId>
-        <artifactId>exo.gwtframework.editor</artifactId>
+        <artifactId>exo-gwtframework-editor</artifactId>
         <version>${org.exoplatform.gwtframework.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.gwt</groupId>
-        <artifactId>exo.gwtframework.smartgwt</artifactId>
+        <artifactId>exo-gwtframework-smartgwt</artifactId>
         <version>${org.exoplatform.gwtframework.version}</version>
       </dependency>
       <dependency>
