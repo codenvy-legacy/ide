@@ -23,7 +23,6 @@
    <inherits name='com.smartgwt.tools.SmartGwtTools' />
 
    <!--  Inherit the SmartGWT Toolkit library configuration. -->
-   <script src="applicationInitializer.js" />
    <inherits name="com.smartgwt.SmartGwt" />
    <!--
       <script src="init_smartgwt_for_gadget.js" /> <inherits

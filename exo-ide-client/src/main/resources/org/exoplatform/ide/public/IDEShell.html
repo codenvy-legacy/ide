@@ -20,19 +20,10 @@
 <!-- be added before this line.                -->
 <!--                                           -->
 <script type="text/javascript" language="javascript">
-var isomorphicDir = "sc/";
-var registryURL = "/IDE-application/rest/private/registry/repository";
-var proxyServiceContext = "/IDE-application/rest/private/proxy";
-var appConfig = {
-  "context" : "/IDE-application/rest/private",
-  "publicContext" : "/IDE-application/rest",
-  "entryPoint" : "/IDE-application/rest/private/jcr/repository/dev-monit",
-  "gadgetServer" : "/IDE-application/gadgets/"
-}
-</script>
+var isomorphicDir = "sc/";</script>
 
 <script type="text/javascript" language="javascript"
-	src="org.exoplatform.ide.IDEApplication.nocache.js"></script>
+	src="org.exoplatform.ide.IDEShell.nocache.js"></script>
 </head>
 
 <!--                                           -->
@@ -41,7 +32,14 @@ var appConfig = {
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
+
+<!-- OPTIONAL: include this if you want history support -->
+
+ <!-- <iframe src="preload.html" id="pre" tabIndex='-2'
+	style="position: absolute; width: 0; height: 0; border: 0"></iframe> --> 
+
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
 	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+
 </body>
 </html>
