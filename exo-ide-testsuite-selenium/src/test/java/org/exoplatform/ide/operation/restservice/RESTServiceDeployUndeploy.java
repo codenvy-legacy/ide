@@ -49,19 +49,19 @@ public class RESTServiceDeployUndeploy extends BaseTest
             
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
-      runToolbarButton(MenuCommands.Run.DEPLOY_REST_SERVICE);
+      runTopMenuCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(1500);
       
       assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
       
       assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
       
-      runToolbarButton(MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      runTopMenuCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(1000);
       
       assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/"+FILE_NAME+" undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
 
-      runTopMenuCommand("Run", "Undeploy");
+      runTopMenuCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(1000);
       
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");

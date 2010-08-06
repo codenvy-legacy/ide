@@ -55,13 +55,18 @@ public interface MenuCommands
 
    public interface Run
    {
-      public static final String UNDEPLOY_REST_SERVICE = "Undeploy REST Service";
 
-      public static final String DEPLOY_REST_SERVICE = "Deploy REST Service";
-      
-      public static final String SET_AUTOLOAD = "Set REST Service Autoload";
+      public static final String RUN = "Run";
 
-      public static final String UNSET_AUTOLOAD = "Unset REST Service Autoload";
+      public static final String UNDEPLOY_REST_SERVICE = "Undeploy";
+
+      public static final String DEPLOY_REST_SERVICE = "Deploy";
+
+      public static final String SET_AUTOLOAD = "Set Autoload";
+
+      public static final String UNSET_AUTOLOAD = "Unset Autoload";
+
+      public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
    }
 
    public interface View
@@ -72,11 +77,14 @@ public interface MenuCommands
 
       public static final String GET_URL = "Get URL...";
 
-      public static final String SHOW_PROPERTIES = "Show Properties";
+      public static final String SHOW_PROPERTIES = "Properties";
+
    }
 
    public interface File
    {
-      public static final String REFRESH = "Refresh Selected Folder";
+      public static final String FILE = "File";
+
+      public static final String REFRESH = "Refresh";
    }
 }

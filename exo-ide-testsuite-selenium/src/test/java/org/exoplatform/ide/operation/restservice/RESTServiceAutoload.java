@@ -49,18 +49,18 @@ public class RESTServiceAutoload extends BaseTest
             
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
-      runToolbarButton(MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      runTopMenuCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       
       String mess = selenium.getText("//font[@color='#880000']");
       
       assertTrue(mess.contains("[ERROR] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/test.groovy undeploy failed. Error (400: Bad Request)"));
       assertTrue(mess.contains("Can't unbind script test.groovy, not bound or has wrong mapping to the resource class"));
       
-      runToolbarButton(MenuCommands.Run.SET_AUTOLOAD);
+      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
       
-      checkToolbarButtonState(MenuCommands.Run.UNSET_AUTOLOAD, true);
+      checkToolbarButtonState(MenuCommands.Run.SET_AUTOLOAD, true);
       
-      runToolbarButton(MenuCommands.View.SHOW_PROPERTIES);
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("true", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
       
@@ -73,12 +73,12 @@ public class RESTServiceAutoload extends BaseTest
       
       selectRootOfWorkspaceTree();
       
-      runToolbarButton(MenuCommands.File.REFRESH);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(1000);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME);
       
-      runToolbarButton(MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
      
       assertEquals("[INFO] http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/test.groovy undeployed successfully.", selenium.getText("//font[@color='#007700']"));
       

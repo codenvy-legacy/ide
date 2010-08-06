@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -51,7 +50,7 @@ public class RESTServiceDeployWrong extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(1000);
 
-      runToolbarButton(MenuCommands.Run.DEPLOY_REST_SERVICE);
+      runTopMenuCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(1500);
 
       assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
