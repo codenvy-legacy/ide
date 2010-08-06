@@ -6,7 +6,7 @@ import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
-import org.exoplatform.ide.client.module.edit.FileEditModule;
+import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.gadget.GadgetModule;
 import org.exoplatform.ide.client.module.groovy.GroovyModule;
 import org.exoplatform.ide.client.module.navigation.NavigationModule;
@@ -47,7 +47,7 @@ public class IDE extends VerticalPanel
        * MODULES INITIALIZATION
        */
       context.getModules().add(new NavigationModule(eventBus, context));
-      context.getModules().add(new FileEditModule(eventBus));
+      context.getModules().add(new TextEditModule(eventBus));
       context.getModules().add(new DevelopmentModule(eventBus));
       context.getModules().add(new PreferencesModule(eventBus));
 

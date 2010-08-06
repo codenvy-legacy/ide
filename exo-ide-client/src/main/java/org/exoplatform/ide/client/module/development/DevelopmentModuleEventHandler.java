@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.development;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
@@ -35,12 +33,12 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class DevelopmentModuleEventHandler implements RegisterEventHandlersHandler, ShowOutlineHandler, ApplicationSettingsReceivedHandler
+public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
    private Handlers handlers;
-   
+
    private ApplicationSettings applicationSettings;
 
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
@@ -48,6 +46,7 @@ public class DevelopmentModuleEventHandler implements RegisterEventHandlersHandl
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(ShowOutlineEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -55,19 +54,12 @@ public class DevelopmentModuleEventHandler implements RegisterEventHandlersHandl
       applicationSettings = event.getApplicationSettings();
    }
 
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.addHandler(ShowOutlineEvent.TYPE, this);
-   }
-
    /**
     * @see org.exoplatform.ide.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ide.client.outline.event.ShowOutlineEvent)
     */
    public void onShowOutline(ShowOutlineEvent event)
-   { 
+   {
       applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-//      applicationSettings.setStoredIn("outline", Store.COOKIES);
-      //CookieManager.setShowOutline(event.isShow());
    }
 
 }

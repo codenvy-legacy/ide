@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredHandler;
 import org.exoplatform.ide.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
+import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;

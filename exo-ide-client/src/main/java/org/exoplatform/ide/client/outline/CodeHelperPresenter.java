@@ -21,6 +21,9 @@ package org.exoplatform.ide.client.outline;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -31,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class CodeHelperPresenter implements EditorActiveFileChangedHandler
+public class CodeHelperPresenter implements EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
    interface Display
    {
@@ -47,11 +50,14 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 
    private Display display;
 
+   private ApplicationSettings applicationSettings;
+
    public CodeHelperPresenter(HandlerManager bus)
    {
       eventBus = bus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -70,18 +76,26 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler
 
       if (OutlineTreeGrid.haveOutline(file))
       {
-         
-         
-//         if (context.isShowOutline())
-//         {
-//            display.show();
-//         }
-         
+         boolean show =
+            applicationSettings.getValue("outline") == null ? false : (Boolean)applicationSettings.getValue("outline");
+         if (show)
+         {
+            display.show();
+         }
+         else
+         {
+            display.hide();
+         }
       }
       else
       {
          display.hide();
       }
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 
 }
