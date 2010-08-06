@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.client.AbstractGwtTest;
+import org.exoplatform.ide.client.Const;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
@@ -96,7 +97,7 @@ public class GwtTestWadlService extends AbstractGwtTest
       super.gwtSetUp();
       eventbus = new HandlerManager(null);
       vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/ideall");
-      groovyService = new GroovyServiceImpl(eventbus, new EmptyLoader());
+      groovyService = new GroovyServiceImpl(eventbus, Const.REST_SERVICE_CONTEXT, new EmptyLoader());
       wadlService = new WadlServiceImpl(eventbus, new EmptyLoader());
       initUrls();
       initFile();
@@ -320,8 +321,8 @@ public class GwtTestWadlService extends AbstractGwtTest
    private void initFile()
    {
       file = new File(TEST_URL_CREATE + "newFile.groovy");
-      file.setContentType(MimeType.SCRIPT_GROOVY);
-      file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(MimeType.SCRIPT_GROOVY));
+      file.setContentType(MimeType.GROOVY_SERVICE);
+      file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(MimeType.GROOVY_SERVICE));
       file.setNewFile(true);
       file.setContent(groovyFileContent);
       file.setContentChanged(true);
