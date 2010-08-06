@@ -597,4 +597,35 @@ public abstract class BaseTest
    {
       selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]");
    }
+   
+   /**
+    * Performs search by pointed params.
+    * 
+    * @param checkPath path to check
+    * @param text text to search
+    * @param mimeType mime type to search
+    * @throws Exception 
+    */
+   protected void performSearch(String checkPath, String text, String mimeType) throws Exception
+   {
+      runToolbarButton("Search...");
+      Thread.sleep(1000);
+      
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
+      //Check form inputs
+      assertEquals(checkPath, selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
+      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
+      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
+      //Type content to input
+      selenium.click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element");
+      selenium.type("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element", text);
+      //Type mime type
+      selenium.click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element");
+      selenium.type("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element", mimeType);
+      //Click "Search" button
+      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
+      Thread.sleep(1000);
+   }
 }
