@@ -1,4 +1,275 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
    <display-name>IDE</display-name>
+   <listener>
+      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
+      </listener-class>
+   </listener>
+   <servlet>
+      <servlet-name>RestServer</servlet-name>
+      <description>eXo - Platform REST Server</description>
+      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
+      <load-on-startup>4</load-on-startup>
+   </servlet>
+
+   <context-param>
+      <param-name>guice-modules</param-name>
+      <param-value>
+         org.apache.shindig.common.PropertiesModule:
+         org.apache.shindig.gadgets.DefaultGuiceModule:
+         org.apache.shindig.gadgets.servlet.AuthenticationModule:
+         org.exoplatform.portal.gadget.core.ExoOAuthModule:
+         org.apache.shindig.common.cache.ehcache.EhCacheModule:
+         org.exoplatform.portal.gadget.core.ExoModule
+    </param-value>
+   </context-param>
+
+
+   <listener>
+      <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener
+      </listener-class>
+   </listener>
+
+   <!-- Render a Gadget -->
+   <servlet>
+      <servlet-name>xml-to-html</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
+      </servlet-class>
+   </servlet>
+
+   <!-- Proxy -->
+   <servlet>
+      <servlet-name>proxy</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.ProxyServlet
+    </servlet-class>
+   </servlet>
+
+   <!-- makeRequest -->
+   <servlet>
+      <servlet-name>makeRequest</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.MakeRequestServlet
+      </servlet-class>
+   </servlet>
+
+   <!-- Concat -->
+   <servlet>
+      <servlet-name>concat</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.ConcatProxyServlet
+      </servlet-class>
+   </servlet>
+
+   <!-- OAuth callback -->
+   <servlet>
+      <servlet-name>oauthCallback</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
+      </servlet-class>
+   </servlet>
+
+   <!-- Metadata RPC -->
+   <servlet>
+      <servlet-name>metadata</servlet-name>
+      <servlet-class>
+         org.apache.shindig.gadgets.servlet.RpcServlet
+    </servlet-class>
+   </servlet>
+
+   <!-- javascript serving -->
+   <servlet>
+      <servlet-name>js</servlet-name>
+      <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet
+      </servlet-class>
+   </servlet>
+
+   <!-- Serve social REST api -->
+   <servlet>
+      <servlet-name>socialRestapiServlet</servlet-name>
+      <servlet-class>
+         org.apache.shindig.protocol.DataServiceServlet
+    </servlet-class>
+      <init-param>
+         <param-name>handlers</param-name>
+         <param-value>org.apache.shindig.social.handlers</param-value>
+      </init-param>
+   </servlet>
+
+   <!-- Serve social RPC api -->
+   <servlet>
+      <servlet-name>socialJsonRpcServlet</servlet-name>
+      <servlet-class>
+         org.apache.shindig.protocol.JsonRpcServlet
+    </servlet-class>
+      <init-param>
+         <param-name>handlers</param-name>
+         <param-value>org.apache.shindig.social.handlers</param-value>
+      </init-param>
+   </servlet>
+
+   <!-- Serve gadgets RPC api -->
+   <servlet>
+      <servlet-name>gadgetsJsonRpcServlet</servlet-name>
+      <servlet-class>
+         org.apache.shindig.protocol.JsonRpcServlet
+    </servlet-class>
+      <init-param>
+         <param-name>handlers</param-name>
+         <param-value>org.apache.shindig.gadgets.handlers</param-value>
+      </init-param>
+   </servlet>
+
+   <servlet>
+      <servlet-name>gadgetsRestapiServlet</servlet-name>
+      <servlet-class>
+         org.apache.shindig.protocol.DataServiceServlet
+    </servlet-class>
+      <init-param>
+         <param-name>handlers</param-name>
+         <param-value>org.apache.shindig.gadgets.handlers</param-value>
+      </init-param>
+   </servlet>
+
+   <!-- Serve sample OAuth apis -->
+   <servlet>
+      <servlet-name>sampleOAuth</servlet-name>
+      <servlet-class>
+         org.apache.shindig.social.sample.oauth.SampleOAuthServlet
+      </servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>js</servlet-name>
+      <url-pattern>/gadgets/js/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>proxy</servlet-name>
+      <url-pattern>/gadgets/proxy/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>makeRequest</servlet-name>
+      <url-pattern>/gadgets/makeRequest</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>gadgetsJsonRpcServlet</servlet-name>
+      <url-pattern>/gadgets/api/rpc/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>gadgetsRestapiServlet</servlet-name>
+      <url-pattern>/gadgets/api/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>concat</servlet-name>
+      <url-pattern>/gadgets/concat</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>oauthCallback</servlet-name>
+      <url-pattern>/gadgets/oauthcallback</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>xml-to-html</servlet-name>
+      <url-pattern>/gadgets/ifr</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>metadata</servlet-name>
+      <url-pattern>/gadgets/metadata</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>socialRestapiServlet</servlet-name>
+      <url-pattern>/social/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>socialJsonRpcServlet</servlet-name>
+      <url-pattern>/social/rpc/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>sampleOAuth</servlet-name>
+      <url-pattern>/oauth/*</url-pattern>
+   </servlet-mapping>
+
+
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/org.exoplatform.ide.IDEApplication/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/portal/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
+
+   <filter>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter
+      </filter-name>
+      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter
+      </filter-class>
+   </filter>
+
+   <filter>
+      <filter-name>SetCurrentIdentityFilter</filter-name>
+      <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter
+      </filter-class>
+   </filter>
+   <filter>
+      <filter-name>AnonymousUserContextRedirectionFilter</filter-name>
+      <filter-class>org.exoplatform.ws.frameworks.servlet.AnonymousUserContextRedirectionFilter
+      </filter-class>
+      <init-param>
+         <param-name>context-name</param-name>
+         <param-value>/rest/private</param-value>
+      </init-param>
+   </filter>
+
+   <filter>
+      <filter-name>RestEncodingFilter</filter-name>
+      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter
+      </filter-class>
+      <init-param>
+         <param-name>REQUEST_ENCODING</param-name>
+         <param-value>UTF-8</param-value>
+      </init-param>
+   </filter>
+
+
+   <filter-mapping>
+      <filter-name>SetCurrentIdentityFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter
+      </filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+
+
+   <filter-mapping>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter
+      </filter-name>
+      <url-pattern>/org.exoplatform.ide.IDEApplication/*
+      </url-pattern>
+   </filter-mapping>
+
 </web-app>
