@@ -87,6 +87,7 @@
       <artifactId>exo-ide-client</artifactId>
       <version>${project.version}</version>
       <type>war</type>
+      <classifier>gadget</classifier>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ide</groupId>
@@ -225,7 +226,7 @@
             <configuration>
               <tasks>
                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-gatein-extension-webapp-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/ide-extension.war"/>
-                <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}.war" tofile="${project.build.directory}/tomcat/webapps/IDE.war"/>
+                <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-gadget.war" tofile="${project.build.directory}/tomcat/webapps/IDE.war"/>
                 <copy file="${project.build.directory}/packager-conf/war/exo-gwtframework-smartgwt-${org.exoplatform.gwtframework.version}.war" tofile="${project.build.directory}/tomcat/webapps/SmartGWT.war"/>
                 <copy file="${project.build.directory}/packager-conf/jar/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo.core.component.script.groovy-${org.exoplatform.core.version}.jar"/>
                 <copy file="${project.build.directory}/packager-conf/jar/exo-ide-packaging-gatein-extension-config-${project.version}.jar" tofile="${project.build.directory}/tomcat/lib/exo-ide-packaging-gatein-extension-config-${project.version}.jar"/>
