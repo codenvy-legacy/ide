@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
    <parent>
@@ -28,7 +27,7 @@
 
    <build>
       <plugins>
-         <!-- copy images to wikbook src -->
+		 <!-- copy images to wikbook src -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
@@ -52,7 +51,10 @@
             </executions>
          </plugin>
 
-         <!-- The wikbook maven plugin generates the docbook document from the wiki source -->
+		 <!--
+			The wikbook maven plugin generates the docbook document from the
+			wiki source
+		 -->
          <plugin>
             <groupId>org.wikbook</groupId>
             <artifactId>wikbook.maven</artifactId>
@@ -78,7 +80,7 @@
             </configuration>
          </plugin>
 
-         <!-- Unpacks the docbook style resources for the docbkx plugin -->
+		 <!-- Unpacks the docbook style resources for the docbkx plugin -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
@@ -100,7 +102,7 @@
             </executions>
          </plugin>
 
-         <!-- Dockbx plugin that generates content -->
+		 <!-- Dockbx plugin that generates content -->
          <plugin>
             <groupId>com.agilejava.docbkx</groupId>
             <artifactId>docbkx-maven-plugin</artifactId>
@@ -137,20 +139,20 @@
                <targetDirectory>${wikbook.target}/output</targetDirectory>
                <includes>index.xml</includes>
 
-               <!-- Highlight source code -->
+		 	   <!-- Highlight source code -->
                <highlightSource>1</highlightSource>
 
-               <!-- We need to support xinclude -->
+			   <!-- We need to support xinclude -->
                <xincludeSupported>true</xincludeSupported>
 
-               <!--
-                 |  See http://www.sagehill.net/docbookxsl/AnnotateListing.html
-                 |  Callouts on imported text
-                -->
+				<!--
+				| See http://www.sagehill.net/docbookxsl/AnnotateListing.html |
+				Callouts on imported text
+				-->
                <useExtensions>1</useExtensions>
                <calloutsExtension>1</calloutsExtension>
 
-               <!-- Copy any docbook XML -->
+			   <!-- Copy any docbook XML -->
                <preProcess>
                   <copy todir="${wikbook.target}/src">
                      <fileset dir="${wikbook.source}/en/en-US">
@@ -162,7 +164,7 @@
                   </copy>
                </preProcess>
 
-               <!-- Copy the image for HTML-->
+			   <!-- Copy the image for HTML-->
                <postProcess>
                   <copy todir="${wikbook.target}/output/images">
                      <fileset dir="${wikbook.source}/images">
@@ -188,6 +190,29 @@
                   <scope>runtime</scope>
                </dependency>
             </dependencies>
+         </plugin>
+         
+         <!-- Attach the doc to the pom in maven repo -->
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>attach-artifacts</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>attach-artifact</goal>
+                  </goals>
+                  <configuration>
+                     <artifacts>
+                        <artifact>
+                           <file>target/wikbook/output/index.pdf</file>
+                           <type>pdf</type>
+                        </artifact>
+                     </artifacts>
+                  </configuration>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
    </build>

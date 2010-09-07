@@ -84,7 +84,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null)
+      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().canCreateTokenList())
       {
          setVisible(false);
          return;
@@ -92,14 +92,17 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
 
       boolean visible = OutlineTreeGrid.haveOutline(event.getFile());
       setVisible(visible);
+      if (visible)
+      {
+         update();
+      }
    }
 
-   /**
-    * Update the control state - change prompt and event parameter.
-    */
    private void update()
    {
-      if (showOutLine)
+      setSelected(outLineFormOpened);
+
+      if (outLineFormOpened)
       {
          setPrompt(PROMPT_HIDE);
          setEvent(new ShowOutlineEvent(false));
@@ -111,37 +114,34 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
       }
    }
 
-   private void updateControlEnabling() {
-      setSelected(outLineFormOpened);
-
-      if (outLineFormOpened)
-      {
-         setEvent(new ShowOutlineEvent(false));
-      }
-      else
-      {
-         setEvent(new ShowOutlineEvent(true));
-      }               
-   }
-
    public void onFormOpened(FormOpenedEvent event)
    {
-      if (CodeHelperForm.ID.equals(event.getFormId())) {
+      if (CodeHelperForm.ID.equals(event.getFormId()))
+      {
          outLineFormOpened = true;
-         updateControlEnabling();
+         update();
       }
    }
 
    public void onFormClosed(FormClosedEvent event)
    {
-      if (CodeHelperForm.ID.equals(event.getFormId())) {
+      if (CodeHelperForm.ID.equals(event.getFormId()))
+      {
          outLineFormOpened = false;
-         updateControlEnabling();
+         update();
       }
    }
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
+      if (event.getApplicationSettings().getValue(COOKIE_OUTLINE) != null)
+      {
+         showOutLine = (Boolean)event.getApplicationSettings().getValue(COOKIE_OUTLINE);
+      }
+      else
+      {
+         showOutLine = true;
+      }
       update();
    }
 

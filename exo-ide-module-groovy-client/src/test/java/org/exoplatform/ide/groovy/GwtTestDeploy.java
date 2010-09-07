@@ -46,7 +46,7 @@ public class GwtTestDeploy extends ClientTest
 
    public void testDeploySuccessfull()
    {
-      System.out.println("GwtTestDeploy.testDeploySuccessfull()");
+//      System.out.println("GwtTestDeploy.testDeploySuccessfull()");
 
       String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_SUCCESSFULL);
 
@@ -86,7 +86,7 @@ public class GwtTestDeploy extends ClientTest
 
    public void testDeployFailure()
    {
-      System.out.println("GwtTestDeploy.testDeployFailure()");
+//      System.out.println("GwtTestDeploy.testDeployFailure()");
 
       String serviceContext = ServletMapping.getURLFor(ServletMapping.DEPLOY_FAILURE);
 

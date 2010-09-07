@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -34,9 +35,9 @@ public class AutoCompletionXMLTest extends BaseTest
    @Test
    public void openForm() throws Throwable
    {
-      Thread.sleep(1000);
-      openNewFileFromToolbar("XML File");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
+      createFileFromToolbar("XML File");
+      Thread.sleep(TestConstants.SLEEP);
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
      
@@ -68,7 +69,7 @@ public class AutoCompletionXMLTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
       selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
       selenium.controlKeyUp();
-      Thread.sleep(500);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "ro");

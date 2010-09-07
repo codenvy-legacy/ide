@@ -96,7 +96,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          public void onSelection(SelectionEvent<Token> event)
          {
-            if (currentToken != null && event.getSelectedItem().getName().equals(currentToken.getName()))
+            if (currentToken != null && event.getSelectedItem().getName().equals(currentToken.getName())
+                     && event.getSelectedItem().getLineNumber() == currentToken.getLineNumber())
             {
                return;
             }

@@ -34,14 +34,11 @@ import com.google.gwt.json.client.JSONObject;
 public class GadgetMetadataUnmarshaler implements Unmarshallable
 {
 
-   private HandlerManager eventBus;
-
    private GadgetMetadata metadata;
 
    public GadgetMetadataUnmarshaler(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
    {
       this.metadata = gadgetMetadata;
-      this.eventBus = eventBus;
    }
 
    public void unmarshal(Response response) throws UnmarshallerException

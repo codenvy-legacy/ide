@@ -71,7 +71,7 @@ public class GoToLinePresenter
 
    private HandlerRegistration keyUpHandler;
 
-   private Browser currentBrowser = BrowserResolver.currentBrowser;
+   private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
    
    private File activeFile;
 

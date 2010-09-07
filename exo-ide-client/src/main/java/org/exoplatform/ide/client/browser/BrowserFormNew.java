@@ -33,21 +33,13 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
 
    public static final String TITLE = "Workspace";
 
-   private HandlerManager eventBus;
-
    private GWTItemTreeGrid treeGrid;
-
-   private ApplicationContext context;
 
    private BrowserPresenter presenter;
 
    public BrowserFormNew(HandlerManager eventBus, ApplicationContext context)
    {
       super(ID);
-      this.eventBus = eventBus;
-
-      this.context = context;
-
       treeGrid = new GWTItemTreeGrid();
       treeGrid.setEmptyMessage("Root folder not found!");
       addMember(treeGrid);

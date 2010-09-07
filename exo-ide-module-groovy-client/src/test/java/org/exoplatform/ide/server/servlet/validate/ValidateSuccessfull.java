@@ -41,9 +41,12 @@ public class ValidateSuccessfull implements MockRequestHandler
 
    public void handleRequest(String path, HttpServletRequest request, HttpServletResponse response)
    {
-      if (request.getMethod().equals(HTTPMethod.POST)) {
+      if (request.getMethod().equals(HTTPMethod.POST))
+      {
          response.setStatus(HTTPStatus.OK);
-      } else {
+      }
+      else
+      {
          response.setStatus(HTTPStatus.INTERNAL_ERROR);
       }
    }

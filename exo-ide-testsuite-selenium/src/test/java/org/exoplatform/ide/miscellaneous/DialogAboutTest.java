@@ -22,6 +22,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -32,30 +34,43 @@ import org.junit.Test;
  */
 public class DialogAboutTest extends BaseTest
 {
+   private static final String VERSION = "1.0-Beta03-SNAPSHOT";
+   
+   private static final String COMPANY = "2009-2010 eXo Platform SAS (c)";
+   
+   private static final String PRODUCT_NAME = "eXo IDE";
+   
+   private static final String REVISION_NUMBER = "";
+   
+   private static final String BUILD_TIME = "";
+   
    @Test
    public void testDialogAbout() throws Exception
    {
-      Thread.sleep(1000);
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Help']", "");
-      Thread.sleep(1000);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'About')]", "");
+      //TODO: you can change information in About window
+      //as you see fit
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
+      Thread.sleep(TestConstants.SLEEP);
+      //check About form
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]"));
-      assertTrue(selenium.isTextPresent("eXo IDE"));
-      assertTrue(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      assertTrue(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
+      assertTrue(selenium.isTextPresent(PRODUCT_NAME));
+//      assertTrue(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      assertTrue(selenium.isTextPresent(COMPANY));
       assertTrue(selenium.isTextPresent("Revision"));
       assertTrue(selenium.isTextPresent("Build Time"));
+      
+      //click Ok button
       selenium.click("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]");
+      Thread.sleep(TestConstants.SLEEP);
       
-      Thread.sleep(1000);
-      
-
+      //check About form dissapeared
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
       assertFalse(selenium.isTextPresent("About"));
-      assertFalse(selenium.isTextPresent("eXo IDE"));
-      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      assertFalse(selenium.isTextPresent("2009-2010 eXo Platform SAS (c)"));
+      assertFalse(selenium.isTextPresent(PRODUCT_NAME));
+//      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      assertFalse(selenium.isTextPresent(COMPANY));
       assertFalse(selenium.isTextPresent("Revision"));
       assertFalse(selenium.isTextPresent("Build Time"));
    }

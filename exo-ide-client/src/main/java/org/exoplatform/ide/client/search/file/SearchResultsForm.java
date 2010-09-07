@@ -34,24 +34,20 @@ import com.google.gwt.event.shared.HandlerManager;
 */
 public class SearchResultsForm extends SimpleTabPanel implements SearchResultPanel, SearchResultsPresenter.Display
 {
-   
-   private final String TREE_ID = "ideSearchResultItemTreeGrid";   
+
+   private final String TREE_ID = "ideSearchResultItemTreeGrid";
 
    public static final String TITLE = "Search";
-
-   private HandlerManager eventBus;
 
    private ItemTreeGrid<Item> searchItemTreeGrid;
 
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
-   
+
    private SearchResultsPresenter presenter;
 
    public SearchResultsForm(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
       super(ID);
-      this.eventBus = eventBus;
-
       searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
       searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
       searchItemTreeGrid.setShowHeader(false);
@@ -62,9 +58,9 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
       addChild(searchItemTreeGrid);
 
       presenter = new SearchResultsPresenter(eventBus, context, searchResult);
-      presenter.bindDsplay(this);      
+      presenter.bindDsplay(this);
    }
-   
+
    @Override
    public void destroy()
    {
@@ -81,13 +77,14 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
    {
       return searchItemTreeGrid.getSelectedItems();
    }
-   
+
    public void selectItem(String href)
    {
       searchItemTreeGrid.selectItem(href);
    }
-   
-   public void deselectAllItems() {
+
+   public void deselectAllItems()
+   {
       searchItemTreeGrid.deselectAllRecords();
    }
 

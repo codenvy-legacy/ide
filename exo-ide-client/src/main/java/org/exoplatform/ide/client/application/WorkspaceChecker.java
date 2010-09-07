@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
@@ -72,7 +71,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       event.getError().printStackTrace();
 
-      ServerException e = (ServerException)event.getError();
+//      ServerException e = (ServerException)event.getError();
 
       handlers.removeHandlers();
 

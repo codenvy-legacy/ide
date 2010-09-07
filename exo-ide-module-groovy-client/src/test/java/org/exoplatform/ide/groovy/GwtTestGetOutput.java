@@ -46,7 +46,7 @@ public class GwtTestGetOutput extends ClientTest
 
    public void testGetOutputSuccessfull()
    {
-      System.out.println("GwtTestGwtOutput.testGetOutputSuccessfull()");
+//      System.out.println("GwtTestGwtOutput.testGetOutputSuccessfull()");
 
       String serviceContext = "";
 
@@ -88,7 +88,7 @@ public class GwtTestGetOutput extends ClientTest
 
    public void testGetOutputCustomStatus()
    {
-      System.out.println("GwtTestGwtOutput.testGetOutputFailure()");
+//      System.out.println("GwtTestGwtOutput.testGetOutputFailure()");
 
       String serviceContext = "";
 

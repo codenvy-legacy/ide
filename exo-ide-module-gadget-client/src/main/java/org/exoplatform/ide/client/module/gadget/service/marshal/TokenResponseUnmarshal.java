@@ -32,14 +32,11 @@ import com.google.gwt.json.client.JSONParser;
 */
 public class TokenResponseUnmarshal implements Unmarshallable
 {
-   private HandlerManager eventBus;
-
    private TokenResponse tokenResponse;
 
    public TokenResponseUnmarshal(HandlerManager eventBus, TokenResponse tokenResponse)
    {
       this.tokenResponse = tokenResponse;
-      this.eventBus = eventBus;
    }
 
    /**

@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class DeployGadgetEvent extends GwtEvent<DeployGadgetHadndler>
 {
 
-   public static Type<DeployGadgetHadndler> TYPE = new Type<DeployGadgetHadndler>();
+   public static final Type<DeployGadgetHadndler> TYPE = new Type<DeployGadgetHadndler>();
 
    @Override
    protected void dispatch(DeployGadgetHadndler hadndler)

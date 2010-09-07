@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -41,15 +38,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends IDEControl implements EditorActiveFileChangedHandler, FormOpenedHandler, FormClosedHandler
+public class FindTextCommand extends IDEControl implements EditorActiveFileChangedHandler, FormOpenedHandler,
+   FormClosedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
 
    private static final String TITLE = "Find/Replace...";
-   
-   private List<String> openedForms = new ArrayList<String>();
-   
+
    private boolean findTextFormOpened = false;
 
    public FindTextCommand(HandlerManager eventBus)
@@ -78,24 +74,27 @@ public class FindTextCommand extends IDEControl implements EditorActiveFileChang
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null)
+      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().canFindAndReplace())
       {
          setVisible(false);
          setEnabled(false);
          return;
-      } else {
+      }
+      else
+      {
          setVisible(true);
       }
-      
+
       boolean canFindReplace = event.getEditor().canFindAndReplace();
       //boolean isOpened = openedForms.contains(FindTextForm.ID); 
       boolean enableSearch = canFindReplace && !findTextFormOpened;
       setEnabled(enableSearch);
    }
-   
+
    public void onFormOpened(FormOpenedEvent event)
    {
-      if (Search.FORM_ID.equals(event.getFormId())) {
+      if (Search.FORM_ID.equals(event.getFormId()))
+      {
          findTextFormOpened = true;
          setEnabled(false);
       }
@@ -103,10 +102,11 @@ public class FindTextCommand extends IDEControl implements EditorActiveFileChang
 
    public void onFormClosed(FormClosedEvent event)
    {
-      if (Search.FORM_ID.equals(event.getFormId())) {
+      if (Search.FORM_ID.equals(event.getFormId()))
+      {
          findTextFormOpened = false;
          setEnabled(true);
       }
    }
-   
+
 }

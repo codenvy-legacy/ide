@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class GoToLineEvent extends GwtEvent<GoToLineHandler>
 {
 
-   public static GwtEvent.Type<GoToLineHandler> TYPE = new GwtEvent.Type<GoToLineHandler>();
+   public static final GwtEvent.Type<GoToLineHandler> TYPE = new GwtEvent.Type<GoToLineHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)

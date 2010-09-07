@@ -34,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
 public class GoToLineControl extends IDEControl implements EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "View/Go to Line...";
+   public static final String ID = "Edit/Go to Line...";
 
    public GoToLineControl(HandlerManager eventBus)
    {

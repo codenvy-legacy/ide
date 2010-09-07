@@ -44,8 +44,6 @@ import com.google.gwt.http.client.Response;
 public class SearchResultUnmarshaller implements Unmarshallable
 {
 
-   private HandlerManager eventBus;
-
    private Folder folder;
    
    private String context;
@@ -55,7 +53,6 @@ public class SearchResultUnmarshaller implements Unmarshallable
    public SearchResultUnmarshaller(String restContext,HandlerManager eventBus, Folder folder,Map<String, String> images)
    {
       this.folder = folder;
-      this.eventBus = eventBus;
       this.context = restContext;
       this.images = images;
    }
@@ -102,8 +99,8 @@ public class SearchResultUnmarshaller implements Unmarshallable
    }
 
    public static native String javaScriptDecodeURI(String url) /*-{
-        return decodeURI(url);
-     }-*/;
+      return decodeURI(url);
+   }-*/;
 
    private void addResource(Folder folder, Resource resource, String context)
    {
@@ -164,7 +161,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
     * @return result of javaScript function <code>unescape(url)</code>
     */
    public static native String unescape(String text) /*-{
-       return unescape(text);
-     }-*/;
+     return unescape(text);
+   }-*/;
 
 }

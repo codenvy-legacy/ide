@@ -56,8 +56,6 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private Handlers handlers;
@@ -66,7 +64,6 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
 
    public SaveAsTemplatePresenter(HandlerManager eventBus, File file)
    {
-      this.eventBus = eventBus;
       this.file = file;
       handlers = new Handlers(eventBus);
    }
@@ -127,7 +124,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
          description = display.getDescriptionField().getValue();
       }
 
-      Template template = new Template(file.getContentType(), name, description, file.getContent(),null);
+      Template template = new Template(file.getContentType(), name, description, file.getContent(), null);
       TemplateServiceImpl.getInstance().createTemplate(template);
    }
 

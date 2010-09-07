@@ -24,10 +24,9 @@ import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredHandler;
 import org.exoplatform.ide.client.event.perspective.MaximizeCodeHelperPanelEvent;
 import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -44,11 +43,11 @@ import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
  */
 public class CodeHelperForm extends Layout implements CodeHelperPresenter.Display, CodeHelperPanelRestoredHandler
 {
-   public static String ID = "CodeHelper";
+   public static final String ID = "CodeHelper";
+
+   private static final String TAB_SET_ID = "ideCodeHelperTabSet";
 
    private HandlerManager eventBus;
-
-   private ApplicationContext context;
 
    private CodeHelperPresenter presenter;
 
@@ -60,14 +59,13 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
    protected MinMaxControlButton minMaxControlButton;
 
-   private Handlers handlers;
-
    public CodeHelperForm(HandlerManager bus)
    {
       eventBus = bus;
-      handlers = new Handlers(eventBus);
+      new Handlers(eventBus);
 
       tabSet = new TabSet();
+      tabSet.setID(TAB_SET_ID);
       createButtons();
       outlineTab = new OutlineForm(eventBus);
       outlineTab.setCanClose(true);
@@ -103,7 +101,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
       {
          event.cancel();
          hide();
-         //eventBus.fireEvent(new ShowOutlineEvent(false));
+         eventBus.fireEvent(new ShowOutlineEvent(false));
       }
    };
 

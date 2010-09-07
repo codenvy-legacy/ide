@@ -28,8 +28,8 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 public interface Images
 {
    
-   public static final String imageUrl = UIHelper.getGadgetImagesURL();
+   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
    
-   public static final String UWA_WIGET =  imageUrl + "module/netvibes/uwa-widget.png";
+   public static final String UWA_WIGET =  IMAGE_URL + "module/netvibes/uwa-widget.png";
    
 }

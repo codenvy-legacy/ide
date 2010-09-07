@@ -1,16 +1,15 @@
-eXo _IDE_ proposes file search on file content and mime-type. Taking into account that file search in repository is based on [Lucene|#JCR.FulltextSearchAndSettings] and depends on _Mime type_ of files. To found out some file(s) you could:
-
+eXo IDE proposes search by file content and MIME type. Taking into consideration that file search in repository is based on _[Lucene|http://wiki.exoplatform.org/xwiki/bin/view/JCR/Fulltext+Search]_ and depends on _MIME type_ of files. To find some file(s) do as follows:
 # Select target folder or root folder in the _Workspace Panel_.
-# Click on *"Search..."* button or call *"File->Search..."* top menu command to open *"Search"* dialog.
-# Set search request parameters: containing text in the *"Contaning text"* field and mime-type in the *"Mime type"* field. If those fields are empty, then gadget will display all files in the search results.
+# Click on *"Search..."* button or select *"File->Search..."* from top menu to open *"Search"* dialog.
+# Set search request parameters: containing text in the *"Containing text"* field and MIME type in the *"MIME type"* field. If those fields are empty, then gadget will display all files in the search results.
 # Press the *"Search"* button.
 
-Then search results will be displayed in tree view in _Search Panel_ at the left column of gadget:
+Then the search results will be displayed in _Search Panel_ on the left of the gadget:
 
 !ide-search.PNG!
-*Picture 24. Search files*
 
-Within _Search Panel_ you will able only _open_ found file, _edit_, _save_ it as is or as template, _perform type specific operations_ like deploy for services, and _go to parent folder_ in _Workspace Panel_.
+*Picture 22. Search files*
 
-If you have maximized _Editor Panel_, _Properties, Output_ or _Outline Panel_, when you receive search results, default perspective will be restored to show _Search Tab_.
+Within _Search Panel_ you are only able to open found file(s), edit, save or save as template, perform specific type of operations like deploy for services, and go to parent folder in _Workspace Panel_.
 
+If you have maximized _Editor Panel_, _Properties, Output_ or _Outline Panel_, default perspective will be restored to show the _Search Tab_  when you receive search results,

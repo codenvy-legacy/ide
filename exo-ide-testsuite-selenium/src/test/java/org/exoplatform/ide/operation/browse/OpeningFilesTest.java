@@ -22,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -46,39 +48,39 @@ public class OpeningFilesTest extends BaseTest
    @Test
    public void testDeleteFileAndOpenFromOneFolder() throws Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       createFolder(folderName);
 
-      openNewFileFromToolbar(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(2000);
-      typeText(file1Content);
+      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
 
-      openNewFileFromToolbar(MenuCommands.New.HTML_FILE);
+      createFileFromToolbar(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
       assertElementPresentInWorkspaceTree(file2Name);
 
       // Delete one file  
       selectItemInWorkspaceTree(file2Name);
-      deleteSelectedItem();
-      Thread.sleep(1000);
+      deleteSelectedItems();
+      Thread.sleep(TestConstants.SLEEP);
       assertElementNotPresentInWorkspaceTree(file2Name);
 
       //Open another file from the same folder
-      openFileFromNavigationTreeWithCodeEditor(file1Name);
-      Thread.sleep(1000);
+      openFileFromNavigationTreeWithCodeEditor(file1Name, false);
+      Thread.sleep(TestConstants.SLEEP);
       //Check text of opened file
       String text = getTextFromCodeEditor(0);
       assertEquals(file1Content, text);
       
       //Delete folder with file
       selectItemInWorkspaceTree(folderName);
-      deleteSelectedItem();
-      Thread.sleep(1000);
+      deleteSelectedItems();
+      Thread.sleep(TestConstants.SLEEP);
       
       //Check items not present in navigation tree
       assertElementNotPresentInWorkspaceTree(folderName);

@@ -51,8 +51,12 @@ public class GetRestServiceURLForm extends DialogWindow
    private static final String TITLE = "REST Service URL";
    
    private static final String ID = "ideGetRestServiceURLForm";
+   
+   private static final String ID_OK = "ideGetRestServiceURLFormOkButton";
+   
+   private static final String NAME_URL = "ideGetItemURLFormURLField";
 
-   private TextField URLField;
+   private TextField urlField;
 
    private IButton okButton;
 
@@ -74,7 +78,7 @@ public class GetRestServiceURLForm extends DialogWindow
          @Override
          public void run()
          {
-            URLField.selectValue();
+            urlField.selectValue();
          }
 
       }.schedule(500);
@@ -106,18 +110,19 @@ public class GetRestServiceURLForm extends DialogWindow
       delimiter.setColSpan(2);
       delimiter.setHeight(5);
 
-      URLField = new TextField();
-      URLField.setShowTitle(false);
-      URLField.setWidth(450);
+      urlField = new TextField();
+      urlField.setShowTitle(false);
+      urlField.setWidth(450);
       
-      URLField.setSelectOnFocus(true);
+      urlField.setSelectOnFocus(true);
+      urlField.setName(NAME_URL);
 
-      paramsForm.setFields(caption, delimiter, URLField);
-      paramsForm.focusInItem(URLField);
+      paramsForm.setFields(caption, delimiter, urlField);
+      paramsForm.focusInItem(urlField);
       
       addItem(paramsForm);
 
-      URLField.setValue(url);
+      urlField.setValue(url);
    }
 
    private void createButtons()
@@ -131,6 +136,7 @@ public class GetRestServiceURLForm extends DialogWindow
       okButton.setWidth(90);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.OK);
+      okButton.setID(ID_OK);
 
       ToolbarItem tbi = new ToolbarItem();
 

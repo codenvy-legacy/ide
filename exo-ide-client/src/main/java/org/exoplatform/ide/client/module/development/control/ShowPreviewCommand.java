@@ -38,9 +38,9 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ShowPreviewCommand extends IDEControl implements EditorActiveFileChangedHandler
 {
 
-   public static String ID = "Run/Show Preview";
+   public static final String ID = "Run/Show Preview";
 
-   public static String TITLE = "Show Preview";
+   public static final String TITLE = "Show Preview";
 
    public ShowPreviewCommand(HandlerManager eventBus)
    {

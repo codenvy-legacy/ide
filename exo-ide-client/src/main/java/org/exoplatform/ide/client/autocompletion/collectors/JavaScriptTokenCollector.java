@@ -45,8 +45,6 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    private static List<Token> defaultTokens;
    
-   private HandlerManager eventBus;
-
    private HashMap<String,Token> filteredToken = new HashMap<String,Token>();
 
    private String beforeToken;
@@ -57,7 +55,6 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    public JavaScriptTokenCollector(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
    }
    
    private native JavaScriptObject getTokens() /*-{
@@ -107,7 +104,7 @@ public class JavaScriptTokenCollector implements TokenCollector
       filteredToken.clear();
       token = token.substring(0, token.length() - 1);
 
-      String tokens[] = token.split("[({)}; ]");
+      String[] tokens = token.split("[({)}; ]");
       Token foundToken = null;
       if (tokens.length != 0)
       {
@@ -122,7 +119,7 @@ public class JavaScriptTokenCollector implements TokenCollector
          if (foundToken.getSubTokenList() != null)
          {
 //            filteredToken.addAll(t.getSubTokenList());
-            for( Token t : foundToken.getSubTokenList())
+            for (Token t : foundToken.getSubTokenList())
             {
                filteredToken.put(t.getName(), t);
             }
@@ -272,6 +269,9 @@ public class JavaScriptTokenCollector implements TokenCollector
                beforeToken = tokenLine.substring(0, i + 1);
                tokenToComplete = tokenLine.substring(i + 1);
                return;
+            
+            default:
+               break;
          }
          beforeToken = "";
          tokenToComplete = tokenLine;
@@ -279,18 +279,18 @@ public class JavaScriptTokenCollector implements TokenCollector
 
    }
 
-   private void printTokens(List<Token> token)
-   {
-      for (Token t : token)
-      {
-         System.out.println(t.getName() + " " + t.getType());
-         if (t.getSubTokenList() != null)
-         {
-            printTokens(t.getSubTokenList());
-         }
-      }
-      System.out.println("+++++++++++++++++++++++++");
-   }
+//   private void printTokens(List<Token> token)
+//   {
+//      for (Token t : token)
+//      {
+//         System.out.println(t.getName() + " " + t.getType());
+//         if (t.getSubTokenList() != null)
+//         {
+//            printTokens(t.getSubTokenList());
+//         }
+//      }
+//      System.out.println("+++++++++++++++++++++++++");
+//   }
    
    /**
     * @param tokenFromParser
@@ -301,7 +301,7 @@ public class JavaScriptTokenCollector implements TokenCollector
 
       String tagName = "script";
       
-      if(!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
+      if (!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
       {
          return tokenFromParser;
       }
@@ -309,7 +309,7 @@ public class JavaScriptTokenCollector implements TokenCollector
       for (int i = 0; i < tokenFromParser.size(); i++)
       {
          Token token = tokenFromParser.get(i);
-         if(token.getName() == null)
+         if (token.getName() == null)
              continue;
          
          if (token.getName().equals(tagName))

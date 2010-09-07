@@ -31,18 +31,19 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class FindTextResultEvent extends GwtEvent<FindTextResultHandler>
 {
-   
+
    public static final GwtEvent.Type<FindTextResultHandler> TYPE = new GwtEvent.Type<FindTextResultHandler>();
-   
+
    private boolean found;
-   
+
    /**
     * @param found
     */
-   public FindTextResultEvent(boolean found){
+   public FindTextResultEvent(boolean found)
+   {
       this.found = found;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

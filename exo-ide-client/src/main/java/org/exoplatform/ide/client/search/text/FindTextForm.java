@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.search.Search;
 
@@ -62,7 +61,27 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private final int FIELD_HEIGHT = 20;
 
    private final int BUTTONS_SPACE = 5;
-
+   
+   private final String REPLACE_FIELD = "ideFindReplaceTextFormReplaceField";
+   
+   private final String FIND_FIELD = "ideFindReplaceTextFormFindField";
+   
+   private final String ID_FIND_RESULT = "ideFindReplaceTextFormFindResult";
+   
+   private final String  CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
+   
+   private final String ID_DYNAMIC_FORM = "ideFindReplaceTextFormDynamicForm";
+   
+   private final String ID_FIND_BUTTON = "ideFindReplaceTextFormFindButton";
+   
+   private final String ID_REPLACE_FIND_BUTTON = "ideFindReplaceTextFormReplaceFindButton";
+   
+   private final String ID_REPLACE_BUTTON = "ideFindReplaceTextFormReplaceButton";
+   
+   private final String ID_REPLACE_ALL_BUTTON = "ideFindReplaceTextFormReplaceAllButton";
+   
+   private final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
+   
    private final String TITLE = "Find/Replace";
 
    private IButton findButton;
@@ -135,6 +154,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private Label createFindResultLabel()
    {
       findResultLabel = new Label();
+      findResultLabel.setID(ID_FIND_RESULT);
       findResultLabel.setHeight(BUTTON_HEIGHT);
       findResultLabel.setWidth100();
       findResultLabel.setValue("");
@@ -148,12 +168,12 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     */
    protected VLayout createButtonsLayout()
    {
-      findButton = createButton("Find", "");
-      cancelButton = createButton("Cancel", Images.Buttons.CANCEL);
+      findButton = createButton("Find", "", ID_FIND_BUTTON);
+      cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
       cancelButton.setLayoutAlign(Alignment.RIGHT);
-      replaceButton = createButton("Replace", "");
-      replaceFindButton = createButton("Replace/Find", "");
-      replaceAllButton = createButton("Replace All", "");
+      replaceButton = createButton("Replace", "", ID_REPLACE_BUTTON);
+      replaceFindButton = createButton("Replace/Find", "", ID_REPLACE_FIND_BUTTON);
+      replaceAllButton = createButton("Replace All", "", ID_REPLACE_ALL_BUTTON);
 
       VLayout buttonsLayout = new VLayout();
       buttonsLayout.setAutoWidth();
@@ -181,22 +201,24 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private DynamicForm createFindForm()
    {
       DynamicForm form = new DynamicForm();
+      form.setID(ID_DYNAMIC_FORM);
       form.setWrapItemTitles(true);
       //form.setTitleWidth("100%");
 
-      findField = createTextField("Find");
-      replaceField = createTextField("Replace with");
+      findField = createTextField("Find", FIND_FIELD);
+      replaceField = createTextField("Replace with", REPLACE_FIELD);
 
-      caseSensitiveField = createCheckBoxItem("Case sensitive");
+      caseSensitiveField = createCheckBoxItem("Case sensitive", CASE_SENSITIVE_FIELD);
       // fromStartField = createCheckBoxItem("From start");
 
       form.setFields(findField, replaceField, caseSensitiveField);
       return form;
    }
 
-   private TextField createTextField(String title)
+   private TextField createTextField(String title, String id)
    {
       TextField textField = new TextField();
+      textField.setName(id);
       textField.setWidth(FIELD_WIDTH);
       textField.setHeight(FIELD_HEIGHT);
       textField.setTitle(title);
@@ -205,9 +227,10 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       return textField;
    }
 
-   private CheckboxItem createCheckBoxItem(String title)
+   private CheckboxItem createCheckBoxItem(String title, String id)
    {
       CheckboxItem checkboxItem = new CheckboxItem();
+      checkboxItem.setName(id);
       checkboxItem.setTitle(title);
       checkboxItem.setTitleAlign(Alignment.LEFT);
       return checkboxItem;
@@ -220,9 +243,10 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     * @param icon
     * @return {@link IButton}
     */
-   private IButton createButton(String title, String icon)
+   private IButton createButton(String title, String icon, String id)
    {
       IButton button = new IButton();
+      button.setID(id);
       button.setTitle(title);
       button.setIcon(icon);
       button.setWidth(BUTTON_WIDTH);

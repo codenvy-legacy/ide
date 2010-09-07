@@ -1,0 +1,18 @@
+eXo IDE configuration file *"ide/exo-ide-client/src/main/resources/org/exoplatform/ide/public/applicationInitializer.js"* must be the following:
+{code:language=javascript}
+var registryURL = "/rest/private/registry/repository";
+var proxyServiceContext = "/rest/private/proxy";
+var appConfig = {
+	"context" : "/rest/private",
+	"publicContext" : "/rest",
+	"entryPoint" : "/rest/private/jcr/repository/dev-monit",
+	"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
+}
+{code}
+
+where:
+
+* *context* - private context of REST service;
+* *publicContext* - public REST service context;
+* *entryPoint* - URL of the workspace root folder;
+* *gadgetServer* - context of the gadget server.

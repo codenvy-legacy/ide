@@ -164,8 +164,9 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       new CustomizeToolbarForm(eventBus, applicationSettings, controls);
    }
 
+   @SuppressWarnings("unchecked")
    public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
-   {
+   {      
       new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
    }
 

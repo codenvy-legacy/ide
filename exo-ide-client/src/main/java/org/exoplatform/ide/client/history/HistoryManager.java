@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.framework.application.event.RegisterEventHandl
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
@@ -56,24 +55,19 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private String currentHistoryToken;
 
    private String pathToLoad;
 
    private Handlers handlers;
-   
-   private File activeFile;
 
    public HistoryManager(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
 
-      eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
-      eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      this.eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
+      this.eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
@@ -82,9 +76,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      
+   {     
       String path = event.getFile() != null ? event.getFile().getHref() : "";
       if (path.equals(currentHistoryToken))
       {
@@ -122,17 +114,17 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
 //      }
    }
 
-   private void loadFileAndSwitch(String path)
-   {
-      pathToLoad = path;
-
-      ExceptionThrownEventHandlerInitializer.clear();
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
-      File file = new File(path);
-      VirtualFileSystem.getInstance().getProperties(file);
-   }
+//   private void loadFileAndSwitch(String path)
+//   {
+//      pathToLoad = path;
+//
+//      ExceptionThrownEventHandlerInitializer.clear();
+//      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+//      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+//
+//      File file = new File(path);
+//      VirtualFileSystem.getInstance().getProperties(file);
+//   }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {

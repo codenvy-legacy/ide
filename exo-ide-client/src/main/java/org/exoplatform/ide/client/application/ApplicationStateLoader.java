@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -55,43 +56,49 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    private HandlerManager eventBus;
 
    private Handlers handlers;
-   
+
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
-   
+
    private ApplicationSettings applicationSettings;
-   
+
    private List<String> filesToLoad;
 
+   @SuppressWarnings("unchecked")
    public ApplicationStateLoader(HandlerManager eventBus, ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
-      
+
       ExceptionThrownEventHandlerInitializer.clear();
 
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
-      filesToLoad = (List<String>)applicationSettings.getValue("opened-files");
-      if (filesToLoad == null) {
+      filesToLoad = (List<String>)applicationSettings.getValue("opened-files");      
+      if (filesToLoad == null)
+      {
          filesToLoad = new ArrayList<String>();
+         applicationSettings.setValue("opened-files", filesToLoad, Store.REGISTRY);
       }
-      
-      preloadNextFile();      
+
+      preloadNextFile();
    }
 
    private File fileToLoad;
-   
-   private void initializeApplication() {
-      new Timer() {
+
+   private void initializeApplication()
+   {
+      new Timer()
+      {
          @Override
          public void run()
          {
             eventBus.fireEvent(new RegisterEventHandlersEvent());
-            
-            new Timer() {
+
+            new Timer()
+            {
                @Override
                public void run()
                {
@@ -103,12 +110,12 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
                   catch (Throwable e)
                   {
                      e.printStackTrace();
-                  }                        
+                  }
                }
-               
+
             }.schedule(10);
          }
-      }.schedule(10);      
+      }.schedule(10);
    }
 
    protected void preloadNextFile()
@@ -121,7 +128,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
             handlers.removeHandlers();
 
             ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-            
+
             initializeApplication();
             return;
          }
@@ -141,7 +148,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       fileToLoad.setNewFile(false);
-      fileToLoad.setContentChanged(false);      
+      fileToLoad.setContentChanged(false);
       VirtualFileSystem.getInstance().getContent(fileToLoad);
    }
 

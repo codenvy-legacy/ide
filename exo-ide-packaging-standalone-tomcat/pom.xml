@@ -1,93 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+   <!--
 
-        Copyright (C) 2009 eXo Platform SAS. This is free software; you can
-        redistribute it and/or modify it under the terms of the GNU Lesser
-        General Public License as published by the Free Software Foundation;
-        either version 2.1 of the License, or (at your option) any later
-        version. This software is distributed in the hope that it will be
-        useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-        Lesser General Public License for more details. You should have
-        received a copy of the GNU Lesser General Public License along with
-        this software; if not, write to the Free Software Foundation, Inc., 51
-        Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
-        site: http://www.fsf.org.
-    -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.exoplatform.ide</groupId>
-    <artifactId>exo-ide-parent</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
-  <packaging>pom</packaging>
-  <name>eXo IDE :: Assemblies Tomcat with Standalone Application</name>
-  <dependencies>
-  <dependency>
+      Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+      Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This
+      software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+      FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser
+      General Public License along with this software; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+      02110-1301 USA, or see the FSF site: http://www.fsf.org.
+   -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
       <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-client</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-      <classifier>application</classifier>
-    </dependency>
-    </dependencies>
-  <build>
-    <plugins>
-     
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-           <execution>
-            <id>copy-dependencies-war</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeTypes>war</includeTypes>
-              <stripVersion>false</stripVersion>
-              <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-     <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-cleare-tomcat</id>
-            <phase>process-resources</phase>
-            <configuration>
-              <tasks>
-                 <copy todir="${project.build.directory}/tomcat-ide">
-                   <fileset dir="${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/"/>
-                 </copy>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-           <execution>
-            <id>copy-war</id>
-            <phase>install</phase>
-            <configuration>
-              <tasks>
-                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war"/>
-                 <copy todir="${project.build.directory}/tomcat-ide">
-                   <fileset dir="${basedir}/src/main/resources/" />
-                 </copy>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          </executions>
-          </plugin>
-          </plugins>
-          </build>
+      <artifactId>exo-ide-parent</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+   </parent>
+   <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
+   <packaging>pom</packaging>
+   <name>eXo IDE :: Assemblies Tomcat with Standalone Application</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-client</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+         <classifier>application</classifier>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-dependencies-war</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <includeTypes>war</includeTypes>
+                     <stripVersion>false</stripVersion>
+                     <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-cleare-tomcat</id>
+                  <phase>process-resources</phase>
+                  <configuration>
+                     <tasks>
+                        <copy todir="${project.build.directory}/tomcat-ide">
+                           <fileset dir="${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/" />
+                        </copy>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>copy-war</id>
+                  <phase>install</phase>
+                  <configuration>
+                     <tasks>
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" />
+                        <copy todir="${project.build.directory}/tomcat-ide">
+                           <fileset dir="${basedir}/src/main/resources/" />
+                        </copy>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
 </project>

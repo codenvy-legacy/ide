@@ -10,6 +10,9 @@ h1. Services configuration
 h1. Browsers compatibility
 {include:document="IDE/Browsers.wiki" /}
 
+h1. Launch eXo IDE
+{include:document="IDE/Launch.wiki" /}
+
 h1. Miscellaneous and Tips
 {include:document="IDE/Misc.wiki" /}
 

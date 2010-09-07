@@ -1,0 +1,9 @@
+Supported Browsers: 
+ 
+* Mozilla Firefox 3.0+ 
+
+* Internet Explorer 7.0+
+ 
+* Safari 3.2+ 
+
+* Google Chrome 5.0+

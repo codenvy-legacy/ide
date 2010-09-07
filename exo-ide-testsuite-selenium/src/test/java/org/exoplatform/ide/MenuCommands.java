@@ -28,6 +28,8 @@ public interface MenuCommands
 {
    public interface New
    {
+      public static final String NEW = "New";
+
       public static final String XML_FILE = "XML File";
 
       public static final String HTML_FILE = "HTML File";
@@ -45,8 +47,6 @@ public interface MenuCommands
       public static final String GROOVY_SCRIPT_FILE = "Groovy Script";
 
       public static final String GROOVY_TEMPLATE_FILE = "Groovy Template";
-
-      public static final String NETVIBES_WIDGET_FILE = "Netvibes Widget";
 
       public static final String FROM_TEMPLATE = "From Template...";
 
@@ -67,6 +67,14 @@ public interface MenuCommands
       public static final String UNSET_AUTOLOAD = "Unset Autoload";
 
       public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
+      
+      public static final String SHOW_PREVIEW = "Show Preview";
+      
+      public static final String VALIDATE = "Validate";
+      
+      public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
+      
+      public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
    }
 
    public interface View
@@ -85,6 +93,86 @@ public interface MenuCommands
    {
       public static final String FILE = "File";
 
+      public static final String OPEN_WITH = "Open With...";
+
+      public static final String UPLOAD = "Upload...";
+
+      public static final String OPEN_LOCAL_FILE = "Open Local File...";
+
+      public static final String DOWNLOAD = "Download...";
+
+      public static final String DOWNLOAD_ZIPPED_FOLDER = "Download Zipped Folder...";
+
+      public static final String SAVE = "Save";
+
+      public static final String SAVE_AS = "Save As...";
+
+      public static final String SAVE_ALL = "Save All";
+
+      public static final String SAVE_AS_TEMPLATE = "Save As Template...";
+
+      public static final String DELETE = "Delete...";
+
+      public static final String RENAME = "Rename...";
+
+      public static final String SEARCH = "Search...";
+
       public static final String REFRESH = "Refresh";
+      
+      public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
+   }
+
+   public interface Edit
+   {
+      public static final String EDIT_MENU = "Edit";
+      
+      public static final String UNDO_TYPING = "Undo Typing";
+
+      public static final String REDO_TYPING = "Redo Typing";
+      
+      public static final String CUT_TOOLBAR = "Cut Selected Item(s)";
+      
+      public static final String COPY_TOOLBAR = "Copy Selected Item(s)";
+      
+      public static final String PASTE_TOOLBAR = "Paste Selected Item(s)";
+      
+      public static final String CUT_MENU = "Cut Item(s)";
+      
+      public static final String COPY_MENU = "Copy Item(s)";
+      
+      public static final String PASTE_MENU = "Paste Item(s)";
+      
+      public static final String HIDE_LINE_NUMBERS = "Hide Line Numbers";
+      
+      public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
+      
+      public static final String FORMAT = "Format";
+      
+      public static final String GO_TO_LINE = "Go to Line...";
+      
+      public static final String DELETE_CURRENT_LINE = "Delete Current Line";
+   }
+
+   public interface CodeEditors
+   {
+      public static final String CODE_MIRROR = "Code Editor";
+
+      public static final String CK_EDITOR = "WYSWYG Editor";
+   }
+   
+   public interface Help
+   {
+      public static final String HELP = "Help";
+      
+      public static final String ABOUT = "About...";
+   }
+   
+   public interface Window
+   {
+      public static final String WINDOW = "Window";
+      
+      public static final String SELECT_WORKSPACE = "Select Workspace...";
+      
+      public static final String CUSTOMIZE_HOTKEYS = "Customize Hotkeys...";
    }
 }

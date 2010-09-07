@@ -50,9 +50,9 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       TreeGridItem<Item> getSearchResultTree();
 
       List<Item> getSelectedItems();
-      
+
       void selectItem(String href);
-      
+
       void deselectAllItems();
 
    }
@@ -104,7 +104,9 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       {
          display.getSearchResultTree().setValue(searchresult);
          display.selectItem(searchresult.getHref());
-      } else {
+      }
+      else
+      {
          display.getSearchResultTree().setValue(searchresult);
          display.deselectAllItems();
       }
@@ -115,10 +117,11 @@ public class SearchResultsPresenter implements PanelSelectedHandler
 
    public void destroy()
    {
-      if (updateSelectionTimer != null) {
+      if (updateSelectionTimer != null)
+      {
          updateSelectionTimer.cancel();
       }
-      
+
       updateSelectionTimer = null;
       handlers.removeHandlers();
    }
@@ -165,8 +168,8 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       {
          selectedItems = display.getSelectedItems();
 
-//         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-//         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
+         //         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
+         //         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
 
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, SearchResultPanel.ID));
       }

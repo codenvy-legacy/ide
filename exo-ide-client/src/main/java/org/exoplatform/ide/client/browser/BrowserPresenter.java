@@ -99,9 +99,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private String entryPoint;
-   
+
    public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
@@ -111,7 +111,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-   
+
    }
 
    public void destroy()
@@ -134,7 +134,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          public void onSelection(SelectionEvent<Item> event)
-         {            
+         {
             onItemSelected();
          }
       });
@@ -165,7 +165,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       public void run()
       {
          selectedItems = display.getSelectedItems();
-         
+
          //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
@@ -183,14 +183,14 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
 
       Item item = selectedItems.get(0);
-            
+
       if (item instanceof File)
       {
          context.setSelectedEditorDescription(null);
          eventBus.fireEvent(new OpenFileEvent((File)item));
       }
    }
-   
+
    /**
     * Handling of folder opened event from browser
     * 
@@ -210,16 +210,19 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       {
          itemToSelect = event.getItemToSelect().getHref();
       }
-      else 
+      else
       {
          itemToSelect = null;
-      }      
-      
-      if (event.getFolders() != null) {
+      }
+
+      if (event.getFolders() != null)
+      {
          foldersToRefresh = event.getFolders();
-      } else {
+      }
+      else
+      {
          foldersToRefresh = new ArrayList<Folder>();
-         
+
          Item item = selectedItems.get(0);
          if (item instanceof File)
          {
@@ -233,10 +236,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
             foldersToRefresh.add((Folder)item);
          }
       }
-      
+
       refreshNextFolder();
    }
-
 
    private void refreshNextFolder()
    {
@@ -247,7 +249,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
+
       VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0));
    }
 
@@ -269,24 +271,24 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.removeHandler(ChildrenReceivedEvent.TYPE);
       handlers.removeHandler(ExceptionThrownEvent.TYPE);
       foldersToRefresh.remove(event.getFolder());
-      
+
       Collections.sort(event.getFolder().getChildren(), comparator);
-      
+
       display.getBrowserTree().setValue(event.getFolder());
-      
+
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
-            
+
       if (itemToSelect != null)
       {
          display.selectItem(itemToSelect);
          itemToSelect = null;
       }
-      
-      if (foldersToRefresh.size() > 0 )
+
+      if (foldersToRefresh.size() > 0)
       {
          refreshNextFolder();
-      }   
+      }
    }
 
    /**
@@ -299,7 +301,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       selectedItems.clear();
       selectedItems.add(rootFolder);
-      
+
       selectedItems.clear();
       selectedItems.add(rootFolder);
 
@@ -308,17 +310,20 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
       this.entryPoint = entryPoint;
 
-      try {
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));         
-      } catch (Throwable e) {
+      try
+      {
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
+      }
+      catch (Throwable e)
+      {
          e.printStackTrace();
       }
 
       handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);      
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       VirtualFileSystem.getInstance().getChildren(rootFolder);
    }
-   
+
    /**
     * Switching active workspace by Switch Workspace Event
     * 
@@ -353,7 +358,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
    };
 
-
    /**
    * Registering handlers
    * 
@@ -376,14 +380,16 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-      
-      if (entryPoint == null) {
+
+      if (entryPoint == null)
+      {
          return;
       }
 
       switchWorkspace(entryPoint);
-      
-      new Timer() {
+
+      new Timer()
+      {
          @Override
          public void run()
          {

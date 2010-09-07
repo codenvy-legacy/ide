@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ide.client.command;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -29,9 +28,7 @@ import org.exoplatform.ide.client.editor.EditorUtil;
 import org.exoplatform.ide.client.event.file.OpenFileEvent;
 import org.exoplatform.ide.client.event.file.OpenFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;

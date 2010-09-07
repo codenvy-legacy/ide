@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ShowPropertiesEvent extends GwtEvent<ShowPropertiesHandler>
 {
-   public static GwtEvent.Type<ShowPropertiesHandler> TYPE = new GwtEvent.Type<ShowPropertiesHandler>();
+   public static final GwtEvent.Type<ShowPropertiesHandler> TYPE = new GwtEvent.Type<ShowPropertiesHandler>();
 
    @Override
    protected void dispatch(ShowPropertiesHandler handler)

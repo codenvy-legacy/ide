@@ -27,10 +27,11 @@ import org.exoplatform.ide.client.IDEImageBundle;
 
 public class NewFilePopupMenuControl extends PopupMenuControl
 {
-   
+
    public static final String ID = "File/New *";
-   
-   public NewFilePopupMenuControl() {
+
+   public NewFilePopupMenuControl()
+   {
       super(ID);
       setPrompt("New");
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());

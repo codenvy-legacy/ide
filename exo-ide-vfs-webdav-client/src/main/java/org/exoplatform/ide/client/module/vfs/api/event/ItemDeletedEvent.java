@@ -29,12 +29,12 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ItemDeletedEvent extends GwtEvent<ItemDeletedHandler>
 {
 
-   public static GwtEvent.Type<ItemDeletedHandler> TYPE = new GwtEvent.Type<ItemDeletedHandler>();
+   public static final GwtEvent.Type<ItemDeletedHandler> TYPE = new GwtEvent.Type<ItemDeletedHandler>();
 
    private Item item;
 
    /**
-    * @param deleted item 
+    * @param item - deleted item
     */
    public ItemDeletedEvent(Item item)
    {

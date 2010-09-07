@@ -63,7 +63,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -72,9 +73,9 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    private ApplicationContext context;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
-   
+
    private ApplicationSettings applicationSettings;
 
    public CreateFileCommandThread(HandlerManager eventBus, ApplicationContext context)
@@ -102,6 +103,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       selectedItems = event.getSelectedItems();
    }
 
+   @SuppressWarnings("unchecked")
    public void onCreateNewFile(CreateNewFileEvent event)
    {
       Item item = selectedItems.get(0);
@@ -132,11 +134,12 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       newFile.setContent(content);
       newFile.setContentChanged(true);
 
-      Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
-      if (defaultEditors == null) {
+      Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+      if (defaultEditors == null)
+      {
          defaultEditors = new LinkedHashMap<String, String>();
       }
-      
+
       try
       {
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());

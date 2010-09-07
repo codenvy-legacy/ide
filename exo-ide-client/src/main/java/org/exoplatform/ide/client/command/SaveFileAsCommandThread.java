@@ -66,8 +66,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private String sourceHref;
 
-   private boolean saveOnly;
-
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private File activeFile;
@@ -76,9 +74,9 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      eventBus.addHandler(SaveFileAsEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      this.eventBus.addHandler(SaveFileAsEvent.TYPE, this);
+      this.eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      this.eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -89,7 +87,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {
-      this.saveOnly = event.isSaveOnly();
+      event.isSaveOnly();
 
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
@@ -107,7 +105,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     */
    private void onSaveAsFile(final File file)
    {
-      String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
+      final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
       new AskForValueDialog("Save file as", "Enter new file name:", newFileName, 400, new ValueCallback()
       {
@@ -127,10 +125,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
             newFile.setNewFile(true);
             newFile.setContentChanged(true);
 
-            if (file.isNewFile())
-            {
-            }
-            else
+            if (! file.isNewFile())
             {
                newFile.getProperties().addAll(file.getProperties());
                newFile.setPropertiesChanged(true);
@@ -167,12 +162,11 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      handlers.removeHandlers();
-      
-      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
-      refreshBrowser(event.getItem().getHref());
-      
-      handlers.removeHandlers();      
+//      handlers.removeHandlers();
+//      
+//      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
+//      refreshBrowser(event.getItem().getHref());
+      VirtualFileSystem.getInstance().getProperties(event.getItem());
    }
 
    public void onError(ExceptionThrownEvent event)

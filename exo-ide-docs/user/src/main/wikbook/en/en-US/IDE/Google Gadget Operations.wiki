@@ -1,48 +1,52 @@
-Google Gadget file - it is the xml-file with special mime type "application/x-google-gadget". With eXo _IDE_ you can _create_ such file, _edit with Code or WYSIWYG Editor_, _preview_ in _Preview Tab_ of eXo _IDE_, _deploy/undeploy_ it on the server through shindig-library, _add deployed gadget_ to the some page on portal.
+Google Gadget file is the XML-file with special MIME type "application/x-google-gadget". With eXo IDE you can create such file, edit with Code or WYSIWYG Editor, preview\_ in _Preview Tab_ of eXo IDE, deploy/undeploy it on the server through shindig-library, add deployed gadget to some page in portal.
 
-h2. Create Google Gadget
+h1. Create Google Gadget
 
-There are three ways to create Google Gadget within the eXo _IDE_:
+There are three ways to create Google Gadget within the eXo IDE:
+# Click on *"New->Google Gadget"* _Toolbar_ button or use *"File->New->Google Gadget"* top menu command.
+# Open existed gadget from local system by selecting *"File->Open Local File"* from top menu.
+# Upload existed gadget directly to JCR by selecting *"File->Upload"* from top menu.
 
-# Click on *"New->Googel Gadget"* toolbar button or use *"File->New->Google Gadget"* top menu command.
-# Open existed gadget from local system by using *"File->Open Local File"* topmenu command.
-# Upload existed gadget directly to JCR by using *"File->Upload"* top menu command.
-
-In 2 and 3 cases, please, don't forget select mime type _"application/x-google-gadget"_.
+In 2^nd^ and 3^rd^ case, don't forget to select MIME type _"application/x-google-gadget"_.
 
 !ide-gadget_operations.png!
+
 *Picture 25. Google Gadget Operations*
 
-h2. Deploy/UnDeploy gadget to GateIn
+h1. Deploy/Undeploy gadget in portal
 
-To deploy some Google Gadget to GateIn, please:
-
+To deploy some Google Gadget to portal, do as follows:
 # Save file before deploying.
-# Open file in the _Content Panel_
-# Click on *"Deploy Gadget to GateIn"* button of toolbar or call *"Run->Deploy Gadget to GateIn"* top menu command.
+# Open file in the _Content Panel_.
+# Click on *"Deploy Gadget to Portal"* button of _Toolbar_ or select *"Run->Deploy Gadget to Portal"* from top menu.
 
-After that the deploy request will be sent to the server, and if there are no errors - the message like next will be displayed in the _Output Tab_:
-{noformat}
-[INFO] /rest/private/ide/gadget/deploy?gadgetURL=http%3A%2F%2F192.168.0.130%3A8080%2Frest%2Fprivate%2Fjcr%2Frepository%2Fdev-monit%2FTest+Gadget+File.xml&privateContext=%2Frest%2Fprivate&publicContext=%2Frest deployed successfully
-{noformat}
+After that the deploy request will be sent to the server, and if there are no errors - the message like the following will be displayed in the _Output Tab_:
 
-It means, that gadget had deployed into the GateIn with title set in the gadget's '<ModulePrefs title="Hello World\!" />', e.g.:
+{screen}
+\[INFO\]/rest/private/ide/gadget/deploy?gadgetURL=http%3A%2F%2F192.168.0.130%3A8080%2Frest%2Fprivate%2
+Fjcr%2Frepository%2Fdev-monit%2FTest+Gadget+File.xml&privateContext=%2Frest%2Fprivate&publicContext=
+%2Frest deployed successfully.
+ {screen}
+
+It means that gadget was deployed to the portal with title set in the gadget's '<ModulePrefs title="Hello World\!" />', e.g.:
 
 !ide-deploy_gadget.png!
+
 *Picture 26. Deploy Gadget*
 
-Otherwise, in the _Output Tab_ will be displayed error message.
+Otherwise, error message will be displayed in the _Output Tab_.
 
-Calling the *"UnDeploy"* operation is similar to the *"Deploy"* \- you should:
+Calling the *"Undeploy"* operation is similar to the *"Deploy"* - you have to:
+# Find deployed earlier service in the _Workspace_ and open this one in the _Content Panel_.
+# Click on *"Undeploy Gadget from Portal"* button of _Toolbar_ or call *"Run->Undeploy"* top menu command, and verify if there is no error message in the _Output Tab_.
 
-# Find out deployed earlier service in the _Workspace_ and open this one in the _Content Panel_.
-# Click on *"Undeploy Gadget from GateIn"* button of toolbar or call *"Run->Undeploy"* top menu command, and verify if there is no error message in the _Output Tab_.
+If everything is fine, then you will get message like that:
+{screen}
+\[INFO\]/rest/private/ide/gadget/undeploy?gadgetURL=http%3A%2F%2F192.168.0.130%3A8080%2Frest%2Fprivate
+%2Fjcr%2Frepository%2Fdev-monit%2FTest+Gadget+File.xml&privateContext=%2Frest%2Fprivate&publicContext=
+%2Frest undeployed successfully.
+ {screen}
 
-If everything Ok, then you will get message like that:
-{noformat}
-[INFO] /rest/private/ide/gadget/undeploy?gadgetURL=http%3A%2F%2F192.168.0.130%3A8080%2Frest%2Fprivate%2Fjcr%2Frepository%2Fdev-monit%2FTest+Gadget+File.xml&privateContext=%2Frest%2Fprivate&publicContext=%2Frest undeployed successfully.
-{noformat}
+h1. Preview gadget
 
-h2. Preview gadget
-
-To preview gadget you should open saved earlier gadget file and click on *"Show Preview"* button of toolbar or call *"Run->Show Preview"* top menu command. Then gadget will be opened in the _Gadget Container_ of _Preview Tab_, as it is figured out at the picture *"Google Gadget Operations"* above.
+To preview gadget you may open saved earlier gadget file and click on *"Show Preview"* button on _Toolbar_ or select *"Run->Show Preview"* top menu command. Then gadget will be opened in the _Gadget Container_ of _Preview Tab_, as it is figured at the picture *"Google Gadget Operations"* above.

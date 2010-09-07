@@ -27,32 +27,32 @@ public class TokenRequest
    /**
     * 
     */
-   public static String GADGET_URL = "gadgetURL";
+   public static final String GADGET_URL = "gadgetURL";
 
    /**
     * 
     */
-   public static String OWNER = "owner";
+   public static final String OWNER = "owner";
 
    /**
     * 
     */
-   public static String VIEWER = "viewer";
+   public static final String VIEWER = "viewer";
 
    /**
     * 
     */
-   public static String MODULE_ID = "moduleId";
+   public static final String MODULE_ID = "moduleId";
 
    /**
     * 
     */
-   public static String CONTAINER = "container";
+   public static final String CONTAINER = "container";
 
    /**
     * 
     */
-   public static String DOMAIN = "domain";
+   public static final String DOMAIN = "domain";
 
    /**
     * 
@@ -207,7 +207,8 @@ public class TokenRequest
    
    
    @Override
-   public String toString() {
+   public String toString() 
+   {
       String json = "{\"" + GADGET_URL + "\":\"" + gadgetURL
       + "\",\""+ OWNER + "\":\"" + owner
       + "\",\""+ VIEWER + "\":\"" + viewer

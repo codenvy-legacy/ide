@@ -36,6 +36,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class OutlineForm extends Tab implements OutlinePresenter.Display
 {
+   private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
    private HandlerManager eventBus;
 
@@ -52,7 +53,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
       setTitle("<span>" + imageHTML + "&nbsp;" + "Outline" + "</span>");
       setCanClose(true);
 
-      treeGrid = new OutlineTreeGrid<Token>();
+      treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);

@@ -38,11 +38,13 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
  * @version $
  */
 
+@SuppressWarnings("serial")
 public abstract class AbstractTestServlet extends HttpServlet
 {
 
    private HashMap<String, MockRequestHandler> handlers = new HashMap<String, MockRequestHandler>();
 
+   @SuppressWarnings("unchecked")
    public AbstractTestServlet()
    {
       List<String> classes = new ClassScanner().getClasses();

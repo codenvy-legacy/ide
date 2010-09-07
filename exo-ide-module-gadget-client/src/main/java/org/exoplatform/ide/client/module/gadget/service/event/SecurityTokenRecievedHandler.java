@@ -31,6 +31,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface SecurityTokenRecievedHandler extends EventHandler
 {
 
-  void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent);
+   void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent);
 
 }

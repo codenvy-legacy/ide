@@ -190,7 +190,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    {
       if (context.getItemsToCut().size() == 0)
       {
-         cutComplited();
+         cutCompleted();
          return;
       }
 
@@ -238,7 +238,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       VirtualFileSystem.getInstance().move(item, destination);
    }
 
-   private void cutComplited()
+   private void cutCompleted()
    {
       handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
@@ -275,6 +275,10 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void updateOpenedFiles(String href, String sourceHref)
    {
+      if(!href.endsWith("/"))
+      {
+         href += "/";
+      }
       List<String> keys = new ArrayList<String>();
       for (String key : openedFiles.keySet())
       {

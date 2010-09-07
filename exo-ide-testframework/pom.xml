@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -77,16 +75,6 @@
          <version>${org.exoplatform.jcr.version}</version>
          <scope>test</scope>
       </dependency>
-
-<!-- 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
-         <version>${project.version}</version>
-         <scope>test</scope>
-      </dependency>
-       -->
-
       <dependency>
          <groupId>hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
@@ -123,11 +111,6 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-   <!--
-      dependency> <groupId>emma</groupId> <artifactId>emma</artifactId>
-      <version>2.0.5312-patched</version> <scope>test</scope>
-      </dependency
-   -->
    <build>
       <resources>
          <resource>
@@ -168,8 +151,7 @@
                            <tasks>
                               <echo>copy tomcat resources</echo>
                               <copy todir="${basedir}/tomcat/">
-                                 <fileset
-                                    dir="${basedir}/src/test/resources/tomcat-res" />
+                                 <fileset dir="${basedir}/src/test/resources/tomcat-res" />
                               </copy>
                            </tasks>
                         </configuration>
@@ -189,7 +171,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>1.3-SNAPSHOT</version>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ideall.testframework.IDEallTestFramework</module>
                      <logLevel>SPAM</logLevel>
@@ -198,11 +180,6 @@
                      <manualMode>${manualMode}</manualMode>
                      <productionMode>${productionMode}</productionMode>
                   </configuration>
-                  <!--
-                     extraJvmArgs>-Xms1G -Xmx1G -Xss1024k
-                     -Dcatalina.base=${project.build.directory}/tomcat
-                     -Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs
-                  -->
                   <executions>
                      <execution>
                         <goals>

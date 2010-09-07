@@ -79,13 +79,13 @@ public class SimpleParameterEntryListGrid extends ListGrid<SimpleParameterEntry>
 
    public void onEditComplete(EditCompleteEvent event)
    {
-      
+
       editCompleteHandler.removeHandler();
       if (event.getOldRecord() == null)
       {
          String name = event.getNewValues().get("name") == null ? "" : "" + event.getNewValues().get("name");
          String value = event.getNewValues().get("value") == null ? "" : "" + event.getNewValues().get("value");
-         
+
          SimpleParameterEntry newListItem = new SimpleParameterEntry(name, value);
 
          checkIfAlredyExist(newListItem);
@@ -108,20 +108,20 @@ public class SimpleParameterEntryListGrid extends ListGrid<SimpleParameterEntry>
       editCompleteHandler = addEditCompleteHandler(this);
    }
 
-   private void checkIfAlredyExist(SimpleParameterEntry newentry)
+   private void checkIfAlredyExist(SimpleParameterEntry newEntry)
    {
-    SimpleParameterEntry entry;
-    for (int i = 0; i < items.size(); i++)
-    {
-       entry = items.get(i);  
-       if (entry.getName().equals(newentry.getName()))
-       {
-          entry.setValue(newentry.getValue());
-          items.set(i, entry);
-          return;
-       }
-    }
-    items.add(newentry);
+      SimpleParameterEntry entry;
+      for (int i = 0; i < items.size(); i++)
+      {
+         entry = items.get(i);
+         if (entry.getName().equals(newEntry.getName()))
+         {
+            entry.setValue(newEntry.getValue());
+            items.set(i, entry);
+            return;
+         }
+      }
+      items.add(newEntry);
    }
-   
+
 }

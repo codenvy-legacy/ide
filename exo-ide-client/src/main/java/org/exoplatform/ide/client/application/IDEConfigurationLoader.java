@@ -176,13 +176,14 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
          applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
       }
-      
+
       /*
        * verify toolbar items
        */
-      
+
       applicationSettings.setValue("toolbar-default-items", toolbarDefaultItems, Store.NONE);
-      if (applicationSettings.getValue("toolbar-items") == null) {
+      if (applicationSettings.getValue("toolbar-items") == null)
+      {
          List<String> toolbarItems = new ArrayList<String>();
          toolbarItems.addAll(toolbarDefaultItems);
          applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
@@ -251,13 +252,14 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
        */
       eventBus.fireEvent(new UpdateMainMenuEvent(controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
-      
+
       List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
-      if (toolbarItems == null) {
+      if (toolbarItems == null)
+      {
          toolbarItems = new ArrayList<String>();
          toolbarItems.addAll(toolbarDefaultItems);
       }
-      
+
       eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
 

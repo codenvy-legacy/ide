@@ -19,43 +19,39 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHeight
 {
    private DynamicHeightFeature dynamicHeightFeature;
-   
-      
+
    @Override
    protected void init(UserPreferences preferences)
    {
       final IDE ide = new IDE();
       RootPanel.get().add(ide);
-      if (BrowserResolver.currentBrowser == Browser.CHROME)
+      if (BrowserResolver.CURRENT_BROWSER == Browser.CHROME)
       {
          Utils.expandGadgetHeight();
       }
       else
       {
          Integer h = getFixHeight();
-         if (h!= null)
-         { 
+         if (h != null)
+         {
             ide.setHeight(h + "px");
             dynamicHeightFeature.adjustHeight();
          }
       }
-      
-      
-   }
-   
-   public void initializeFeature(DynamicHeightFeature feature)
-   {
-    this.dynamicHeightFeature = feature;
+
    }
 
-   
+   public void initializeFeature(DynamicHeightFeature feature)
+   {
+      this.dynamicHeightFeature = feature;
+   }
+
    //Fix gadget height work only in Gatein
    //get height of parent element in the DOM.  
    private static native String expandGadgetHeight() /*-{
-     var y = $wnd.parent.document.getElementById("UIGadgetPortlet").parentNode;
-     return y.style.height;
-  }-*/;
-     
+       var y = $wnd.parent.document.getElementById("UIGadgetPortlet").parentNode;
+       return y.style.height;
+    }-*/;
 
    private Integer getFixHeight()
    {
@@ -63,19 +59,13 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
       Integer newHeight;
       if (height.contains("px"))
       {
-        newHeight = Integer.parseInt(height.replace("px", "")) - 30;
-        return newHeight;
+         newHeight = Integer.parseInt(height.replace("px", "")) - 30;
+         return newHeight;
       }
-      else 
+      else
       {
          return null;
       }
    }
-   
-   
+
 }
-
-
-
-
-

@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class SearchResultReceivedEvent extends GwtEvent<SearchResultReceivedHandler>
 {
 
-   public static GwtEvent.Type<SearchResultReceivedHandler> TYPE = new Type<SearchResultReceivedHandler>();
+   public static final GwtEvent.Type<SearchResultReceivedHandler> TYPE = new Type<SearchResultReceivedHandler>();
 
    private Folder folder;
 

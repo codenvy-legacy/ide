@@ -34,7 +34,7 @@ import com.smartgwt.client.widgets.HTMLPane;
 public class PreviewForm extends TabPanel
 {
 
-   private static String TAB_ID = "Preview";
+   private static final String TAB_ID = "Preview";
 
    private HTMLPane htmlPane;
 
@@ -94,7 +94,7 @@ public class PreviewForm extends TabPanel
    @Override
    public String getId()
    {
-      return "Preview";
+      return TAB_ID;
    }
 
 }

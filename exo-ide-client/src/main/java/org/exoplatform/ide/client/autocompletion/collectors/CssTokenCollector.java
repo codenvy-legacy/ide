@@ -40,10 +40,6 @@ public class CssTokenCollector implements TokenCollector
 
    private static List<Token> cssProperty;
 
-   private HandlerManager eventBus;
-
-   private TokensCollectedCallback tokensCollectedCallback;
-
    private String afterToken;
 
    private String tokenToComplete;
@@ -52,7 +48,6 @@ public class CssTokenCollector implements TokenCollector
 
    public CssTokenCollector(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
    }
 
    /**

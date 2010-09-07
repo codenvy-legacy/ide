@@ -35,15 +35,12 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler
 {
-   private HandlerManager eventBus;
-
    private Handlers handlers;
 
    private ApplicationSettings applicationSettings;
 
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(ShowOutlineEvent.TYPE, this);

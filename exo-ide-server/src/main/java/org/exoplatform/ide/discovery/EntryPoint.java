@@ -33,7 +33,8 @@ public class EntryPoint
 
    private String href;
    
-   public EntryPoint(String scheme, String href) {
+   public EntryPoint(String scheme, String href)
+   {
       this.scheme = scheme;
       this.href = href;
    }

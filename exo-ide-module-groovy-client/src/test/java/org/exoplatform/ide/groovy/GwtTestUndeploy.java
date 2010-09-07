@@ -39,78 +39,93 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class GwtTestUndeploy extends ClientTest
 {
-   
-   public void testUndeploySuccessfull() {
-      System.out.println("GwtTestUndeploy.testUndeploySuccessfull()");
-      
+
+   public void testUndeploySuccessfull()
+   {
+//      System.out.println("GwtTestUndeploy.testUndeploySuccessfull()");
+
       String serviceContext = ServletMapping.getURLFor(ServletMapping.UNDEPLOY_SUCCESSFULL);
-      
+
       String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
-      
+
       HandlerManager eventBus = new HandlerManager(null);
-      
+
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
-      
-      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler() {
+
+      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler()
+      {
          public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
          {
-            if (event.getException() == null) {
+            if (event.getException() == null)
+            {
                finishTest();
-            } else {
+            }
+            else
+            {
                fail();
             }
          }
       });
-      
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler() {
+
+      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      {
          public void onError(ExceptionThrownEvent event)
          {
             fail();
          }
       });
-      
+
       service.undeploy(fileHref);
-      
-      sleepTest();      
+
+      sleepTest();
    }
-   
-   public void testUndeployFailure() {
-      System.out.println("GwtTestUndeploy.testUndeployFailure()");
-      
+
+   public void testUndeployFailure()
+   {
+//      System.out.println("GwtTestUndeploy.testUndeployFailure()");
+
       String serviceContext = ServletMapping.getURLFor(ServletMapping.UNDEPLOY_FAILURE);
-      
+
       String fileHref = "http://host:port/rest/jcr/dev-monit/myfile.groovy";
-      
+
       HandlerManager eventBus = new HandlerManager(null);
-      
+
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
-      
-      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler() {
+
+      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, new GroovyUndeployResultReceivedHandler()
+      {
          public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
          {
-            if (event.getException() == null) {
+            if (event.getException() == null)
+            {
                fail();
-            } else {
+            }
+            else
+            {
                ServerException e = (ServerException)event.getException();
-               if (e.getHTTPStatus() != HTTPStatus.CONFLICT) {
+               if (e.getHTTPStatus() != HTTPStatus.CONFLICT)
+               {
                   fail();
-               } else {
+               }
+               else
+               {
                   finishTest();
                }
             }
          }
       });
-      
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler() {
+
+      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      {
          public void onError(ExceptionThrownEvent event)
          {
             fail();
          }
       });
-      
+
       service.undeploy(fileHref);
-      
-      sleepTest();      
+
+      sleepTest();
    }
 
 }

@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -33,27 +35,31 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    @Test
    public void testDuplication() throws Exception
    {
-      Thread.sleep(1000);
-      openNewFileFromToolbar("JavaScript File");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
+      createFileFromToolbar("JavaScript File");
+      Thread.sleep(TestConstants.SLEEP);
 
-      typeText("var a;\n \n function a() {\n}");
-      
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "var a;\n \n function a() {\n}");
+      Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.SLEEP);
       
       openAutoCompleteForm();
+      Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'VARIABLE')]"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(500);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(500);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       
       openAutoCompleteForm();
+      Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
@@ -71,7 +77,8 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
       selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
       selenium.controlKeyUp();
-      Thread.sleep(1500);
+      Thread.sleep(TestConstants.SLEEP);
+      assertTrue(selenium.isElementPresent("//input[@class='exo-autocomplete-edit']"));
       selenium.focus("//input[@class='exo-autocomplete-edit']");
    }
 }

@@ -30,8 +30,9 @@ package org.exoplatform.ide.testframework.test;
 public class GwtTestSimpleFramework extends ClientTest
 {
    
-   public void testFakeService() {
-      System.out.println("GwtTestSimpleFramework.enclosing_method()");
+   public void testFakeService() 
+   {
+//      System.out.println("GwtTestSimpleFramework.enclosing_method()");
    }
 
 }

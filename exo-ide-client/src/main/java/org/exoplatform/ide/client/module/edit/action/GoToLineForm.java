@@ -49,7 +49,17 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    private static final int HEIGHT = 160;
    
-   private static final String ID = "ideallGoToLineForm";
+   private static final String ID = "ideGoToLineForm";
+   
+   private static final String ID_DYNAMIC_FORM = "ideGoToLineFormDynamicForm";
+   
+   private static final String ID_GO_BUTTON = "ideGoToLineFormGoButton";
+   
+   private static final String ID_CANCEL_BUTTON = "ideGoToLineFormCancelButton";
+   
+   private static final String LINE_NUMBER_FIELD = "ideGoToLineFormLineNumberField";
+   
+   private static final String RANGE_LABEL = "ideGoToLineFormLinesRangeField";
    
    private GoToLinePresenter presenter;
    
@@ -103,6 +113,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    private void createFieldForm()
    {
       paramsForm = new DynamicForm();
+      paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(340);
       paramsForm.setLayoutAlign(Alignment.CENTER);
@@ -110,6 +121,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       paramsForm.setAutoFocus(true);
 
       caption = new StaticTextItem();
+      caption.setName(RANGE_LABEL);
       //caption.setDefaultValue(labelCaption);
       caption.setShowTitle(false);
       caption.setColSpan(2);
@@ -119,6 +131,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       delimiter.setHeight(5);
 
       lineNumberField = new TextField();
+      lineNumberField.setName(LINE_NUMBER_FIELD);
       lineNumberField.setShowTitle(false);
       lineNumberField.setWidth(340);
       lineNumberField.setMask("#######");
@@ -137,11 +150,13 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       goButton = new IButton("Go");
+      goButton.setID(ID_GO_BUTTON);
       goButton.setWidth(90);
       goButton.setHeight(22);
       goButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);

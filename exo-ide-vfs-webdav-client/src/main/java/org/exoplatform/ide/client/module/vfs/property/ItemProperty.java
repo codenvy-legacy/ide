@@ -46,34 +46,34 @@ public class ItemProperty
     * WebDAV properties
     */
 
-   public static QName DISPLAYNAME = new QName("displayname", Namespace.DAV);
+   public static final QName DISPLAYNAME = new QName("displayname", Namespace.DAV);
 
-   public static QName CREATIONDATE = new QName("creationdate", Namespace.DAV);
+   public static final QName CREATIONDATE = new QName("creationdate", Namespace.DAV);
 
-   public static QName GETCONTENTTYPE = new QName("getcontenttype", Namespace.DAV);
+   public static final QName GETCONTENTTYPE = new QName("getcontenttype", Namespace.DAV);
 
-   public static QName GETLASTMODIFIED = new QName("getlastmodified", Namespace.DAV);
+   public static final QName GETLASTMODIFIED = new QName("getlastmodified", Namespace.DAV);
 
-   public static QName GETCONTENTLENGTH = new QName("getcontentlength", Namespace.DAV);
+   public static final QName GETCONTENTLENGTH = new QName("getcontentlength", Namespace.DAV);
 
-   public static QName RESOURCETYPE = new QName("resourcetype", Namespace.DAV);
+   public static final QName RESOURCETYPE = new QName("resourcetype", Namespace.DAV);
 
    /*
     * JCR_PROPERTIES
     */
 
-   public static QName JCR_CONTENT = new QName("content", Namespace.JCR);
+   public static final QName JCR_CONTENT = new QName("content", Namespace.JCR);
 
-   public static QName JCR_NODETYPE = new QName("nodeType", Namespace.JCR);
+   public static final QName JCR_NODETYPE = new QName("nodeType", Namespace.JCR);
 
-   public static QName JCR_PRIMARYTYPE = new QName("primaryType", Namespace.JCR);
+   public static final QName JCR_PRIMARYTYPE = new QName("primaryType", Namespace.JCR);
 
-   public static QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespace.JCR);
+   public static final QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespace.JCR);
 
    /*
     * EXO PROPERTIES
     */
 
-   public static QName EXO_AUTOLOAD = new QName("autoload", Namespace.EXO);
+   public static final QName EXO_AUTOLOAD = new QName("autoload", Namespace.EXO);
 
 }

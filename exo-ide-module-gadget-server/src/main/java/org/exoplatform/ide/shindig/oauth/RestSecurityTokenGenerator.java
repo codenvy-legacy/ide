@@ -48,11 +48,12 @@ public class RestSecurityTokenGenerator implements ResourceContainer
    
    private String keyFile;
    
-   private static String DEFAULT_KEY_FILE = "key.txt";
+   private static final String DEFAULT_KEY_FILE = "key.txt";
    
    public RestSecurityTokenGenerator(InitParams initParams)
    {
-      if (initParams != null) {
+      if (initParams != null) 
+      {
          ValueParam param = initParams.getValueParam("keyFile");
          if (param != null)
             keyFile = param.getValue();
@@ -67,7 +68,8 @@ public class RestSecurityTokenGenerator implements ResourceContainer
    @Path("/createToken")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response createToken(TokenRequest tokenRequest)  {
+   public Response createToken(TokenRequest tokenRequest)  
+   {
       try
       {
          return Response.ok(SecurityTokenGenerator.createToken(tokenRequest,keyFile)).build();
@@ -81,7 +83,7 @@ public class RestSecurityTokenGenerator implements ResourceContainer
       catch (BlobCrypterException e)
       {
          if (log.isDebugEnabled())
-           e.printStackTrace();
+            e.printStackTrace();
          throw new WebApplicationException(e);
       } 
       

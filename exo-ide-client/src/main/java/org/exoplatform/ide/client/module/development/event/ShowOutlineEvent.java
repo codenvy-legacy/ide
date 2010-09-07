@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
 {
 
-   public static GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
+   public static final GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
    
    private boolean show;
 

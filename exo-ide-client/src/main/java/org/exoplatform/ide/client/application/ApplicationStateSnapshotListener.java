@@ -22,6 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
+import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -47,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler, EditorUpdateFileStateHandler
 {
 
    private HandlerManager eventBus;
@@ -55,17 +58,23 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    private ApplicationSettings applicationSettings;
+   
+   private Handlers handlers;
 
    public ApplicationStateSnapshotListener(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      handlers = new Handlers(eventBus);
+      
+      
 
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -128,6 +137,14 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler#onEditorUdateFileState(org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent)
+    */
+   public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
+   {
+      storeOpenedFiles();
    }
 
 }

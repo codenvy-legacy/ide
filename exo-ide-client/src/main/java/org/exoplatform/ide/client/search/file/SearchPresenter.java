@@ -60,17 +60,12 @@ public class SearchPresenter
 
    private Display display;
 
-   private HandlerManager eventBus;
-
-   //private ApplicationContext context;
-   
    private List<Item> selectedItems;
    
    private String entryPoint;
 
    public SearchPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
    {
-      this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.entryPoint = entryPoint;
    }

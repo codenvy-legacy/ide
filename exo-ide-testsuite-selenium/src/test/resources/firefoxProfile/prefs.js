@@ -17,7 +17,14 @@ user_pref("app.update.lastUpdateTime.microsummary-generator-update-timer", 12797
 user_pref("app.update.lastUpdateTime.places-maintenance-timer", 1279798433);
 user_pref("app.update.lastUpdateTime.search-engine-update-timer", 1279798417);
 user_pref("browser.bookmarks.restore_default_bookmarks", false);
-user_pref("browser.download.useDownloadDir", false);
+user_pref("browser.download.useDownloadDir", true);
+user_pref("browser.download.dir", "@@@@@@");
+user_pref("browser.download.lastDir", "@@@@@@");
+user_pref("browser.download.manager.showWhenStarting",false);
+user_pref("browser.download.folderList", 2);
+user_pref("browser.download.manager.closeWhenDone",true);
+user_pref("browser.download.manager.useWindow",false);
+user_pref("browser.download.show_plugins_in_list",false);
 user_pref("browser.history_expire_days.mirror", 180);
 user_pref("browser.migration.version", 1);
 user_pref("browser.places.smartBookmarksVersion", 1);

@@ -49,11 +49,7 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
    ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
-   private String CONTEXT_DOWNLOAD = "/services/downloadcontent";
-
-   private HandlerManager eventBus;
-
-   //private ApplicationContext context;
+   private final String CONTEXT_DOWNLOAD = "/services/downloadcontent";
 
    private Handlers handlers;
 
@@ -65,8 +61,6 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
 
    public DownloadForm(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
       handlers = new Handlers(eventBus);
       eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);

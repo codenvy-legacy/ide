@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class SaveFileEvent extends GwtEvent<SaveFileHandler>
 {
 
-   public static GwtEvent.Type<SaveFileHandler> TYPE = new GwtEvent.Type<SaveFileHandler>();
+   public static final GwtEvent.Type<SaveFileHandler> TYPE = new GwtEvent.Type<SaveFileHandler>();
 
    private File file;
 

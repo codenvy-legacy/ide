@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class TabPanelSelectedEvent extends GwtEvent<TabPanelSelectedHandler>
 {
 
-   public static GwtEvent.Type<TabPanelSelectedHandler> TYPE = new GwtEvent.Type<TabPanelSelectedHandler>();
+   public static final GwtEvent.Type<TabPanelSelectedHandler> TYPE = new GwtEvent.Type<TabPanelSelectedHandler>();
 
    @Override
    protected void dispatch(TabPanelSelectedHandler handler)

@@ -17,11 +17,9 @@
 package org.exoplatform.ide.client.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.model.conversation.UserInfo;
 import org.exoplatform.ide.client.model.template.TemplateList;

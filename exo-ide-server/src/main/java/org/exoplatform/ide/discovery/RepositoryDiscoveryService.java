@@ -47,7 +47,7 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 public class RepositoryDiscoveryService implements ResourceContainer
 {
 
-   private String WEBDAV_CONTEXT = "jcr";
+   private final String WEBDAV_CONTEXT = "jcr";
 
    /**
     * To disable cache control.

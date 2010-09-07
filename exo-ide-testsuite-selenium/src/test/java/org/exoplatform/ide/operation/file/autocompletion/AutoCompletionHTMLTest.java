@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -34,9 +35,9 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
-      openNewFileFromToolbar("HTML File");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
+      createFileFromToolbar("HTML File");
+      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -58,9 +59,9 @@ public class AutoCompletionHTMLTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
-      openNewFileFromToolbar("Google Gadget");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
+      createFileFromToolbar("Google Gadget");
+      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -79,9 +80,9 @@ public class AutoCompletionHTMLTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
-      openNewFileFromToolbar("Groovy Template");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
+      createFileFromToolbar("Groovy Template");
+      Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
@@ -188,6 +189,6 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
       selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
       selenium.controlKeyUp();
-      Thread.sleep(1500);
+      Thread.sleep(TestConstants.SLEEP);
    }
 }

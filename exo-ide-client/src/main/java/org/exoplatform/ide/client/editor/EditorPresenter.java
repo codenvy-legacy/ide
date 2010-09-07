@@ -161,8 +161,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    private Handlers handlers;
 
-   private ApplicationContext context;
-
    private ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
 
    private boolean closeFileAfterSaving = false;
@@ -172,14 +170,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    private File activeFile;
 
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
-   
+
    private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
 
    public EditorPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
@@ -259,6 +255,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     * Initializing application handler
     * 
     */
+   @SuppressWarnings("unchecked")
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       this.openedFiles = event.getOpenedFiles();
@@ -268,9 +265,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          activeFile = openedFiles.get(event.getActiveFile());
       }
-      
-      Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
-      if (defaultEditors == null) {
+
+      Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+      if (defaultEditors == null)
+      {
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
@@ -278,8 +276,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          ignoreContentChangedList.add(file.getHref());
          try
-         {            
-            String editorDescription = defaultEditors.get(file.getContentType());            
+         {
+            String editorDescription = defaultEditors.get(file.getContentType());
             Editor editor = EditorUtil.getEditor(file.getContentType(), editorDescription);
             openedEditors.put(file.getHref(), editor.getDescription());
 
@@ -326,7 +324,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                   selectFile(activeFile);
                }
             }
-            
+
          }
       }.schedule(1000);
 
@@ -440,9 +438,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       openedFiles.remove(file.getHref());
 
-      try {
-         eventBus.fireEvent(new EditorFileClosedEvent(file, openedFiles));         
-      } catch (Exception e) {
+      try
+      {
+         eventBus.fireEvent(new EditorFileClosedEvent(file, openedFiles));
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
    }
@@ -564,7 +565,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       File file = event.getFile();
-      
+
       if (openedFiles.get(file.getHref()) != null
          && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
       {
@@ -583,14 +584,18 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
       }
 
-      try {
+      try
+      {
          display.openTab(file, lineNumbers, event.getEditor(), true);
-         display.selectTab(file.getHref());         
-      } catch (Throwable e) {
+         display.selectTab(file.getHref());
+      }
+      catch (Throwable e)
+      {
          e.printStackTrace();
       }
 
       eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
    }
 
    public void onFileSaved(FileSavedEvent event)
@@ -617,7 +622,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
             openedFiles.put(savedFile.getHref(), savedFile);
             display.relocateFile(currentOpenedFile, savedFile);
          }
-         
+
          updateTabTitle(savedFile.getHref());
       }
    }

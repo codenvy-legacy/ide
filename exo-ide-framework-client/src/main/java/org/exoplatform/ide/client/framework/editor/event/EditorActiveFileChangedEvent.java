@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>
 {
 
-   public static GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
+   public static final GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
       new GwtEvent.Type<EditorActiveFileChangedHandler>();
 
    private File file;

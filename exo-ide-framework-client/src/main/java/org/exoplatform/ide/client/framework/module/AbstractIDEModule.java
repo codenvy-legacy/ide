@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -37,8 +36,6 @@ public class AbstractIDEModule implements IDEModule
 
    protected Handlers handlers;
   
-   private List<Control> controls = new ArrayList<Control>();
-
    private List<String> toolbarItems = new ArrayList<String>();
    
    public AbstractIDEModule(HandlerManager eventBus)

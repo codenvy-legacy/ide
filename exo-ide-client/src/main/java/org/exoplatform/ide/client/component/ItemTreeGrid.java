@@ -45,27 +45,27 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    private TreeNode rootNode;
 
    private boolean allowSameNames = false;
-   
+
    private static final String NAME = "name";
 
    public ItemTreeGrid(String id)
    {
       setID(id);
       setShowRoot(false);
-      
+
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
-      tree.setRoot(new TreeNode("root"));      
+      tree.setRoot(new TreeNode("root"));
       setData(tree);
-      
+
       setSelectionType(SelectionStyle.SINGLE);
-      
+
       setSeparateFolders(true);
 
       setCanFocus(false);
       setShowConnectors(false);
       setCanSort(false);
-      
+
       TreeGridField nameField = new TreeGridField(NAME);
       //TODO
       //This field need for selenium.
@@ -85,17 +85,19 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    @Override
    protected void doUpdateValue()
    {
-      if (getValue() == null) {
-         if (rootNode != null) {
+      if (getValue() == null)
+      {
+         if (rootNode != null)
+         {
             tree.remove(rootNode);
          }
          rootNode = null;
          return;
       }
-      
+
       if (rootNode == null)
       {
-//         tree.setRoot(new TreeNode("root"));
+         //         tree.setRoot(new TreeNode("root"));
 
          String nodeName = getValue().getHref();
          if (nodeName.endsWith("/"))
@@ -105,20 +107,18 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
          nodeName = nodeName.substring(nodeName.lastIndexOf("/") + 1);
 
-         
-//         rootNode = new TreeNode("<span>" + iconPrefix + "</span>&nbsp;" + nodeName);
+         //         rootNode = new TreeNode("<span>" + iconPrefix + "</span>&nbsp;" + nodeName);
          rootNode = new TreeNode(nodeName);
          rootNode.setAttribute(getValuePropertyName(), getValue());
 
-         String iconPrefix = "";
          if (getValue().getIcon() != null)
          {
             rootNode.setAttribute("icon", getValue().getIcon());
             rootNode.setAttribute(NAME, nodeName);
-//            Image i = new Image(IDEImageBundle.INSTANCE.search());
-//            iconPrefix = ImageUtil.getHTML(i);
-         }         
-         
+            //            Image i = new Image(IDEImageBundle.INSTANCE.search());
+            //            iconPrefix = ImageUtil.getHTML(i);
+         }
+
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
 
@@ -137,7 +137,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       }
 
       TreeNode parent = getNodeByHref(getValue().getHref());
-      
+
       setItems(parent, ((Folder)getValue()).getChildren());
    }
 
@@ -158,7 +158,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    {
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
       String path = href.substring(rootFolder.getHref().length());
-      
+
       if (path.startsWith("/"))
       {
          path = path.substring(1);
@@ -210,13 +210,15 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          tree.closeAll(parentNode);
          return;
       }
-      
+
       /*
        * check differences in name of tree node and item href
        */
-      for (TreeNode childNode : tree.getChildren(parentNode)) {
+      for (TreeNode childNode : tree.getChildren(parentNode))
+      {
          Item item = ((Item)childNode.getAttributeAsObject(getValuePropertyName()));
-         if (!childNode.getName().equals(item.getName())) {
+         if (!childNode.getName().equals(item.getName()))
+         {
             tree.remove(childNode);
          }
       }
@@ -231,7 +233,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          }
          tree.closeAll(childNode);
       }
-      
+
       for (Item child : children)
       {
          // see if parentNode already has child with this name
@@ -274,7 +276,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       {
          return;
       }
-      
+
       deselectAllRecords();
       selectRecord(node);
    }

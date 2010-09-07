@@ -55,6 +55,38 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private static final String ID = "ideGroovyServiceOutputPreviewForm";
 
+   private static final String ID_FORM = "ideGroovyServiceForm";
+
+   private static final String NAME_PATH = "ideGroovyServicePath";
+
+   private static final String NAME_METHOD = "ideGroovyServiceMethod";
+
+   private static final String NAME_REQUEST = "ideGroovyServiceRequest";
+
+   private static final String NAME_RESPONSE = "ideGroovyServiceResponse";
+
+   private static final String ID_GET_URL = "ideGroovyServiceGetURL";
+
+   private static final String ID_SEND = "ideGroovyServiceSend";
+
+   private static final String ID_CANCEL = "ideGroovyServiceCancel";
+
+   private static final String ID_HEADER_TAB = "ideGroovyServiceHeaderTab";
+
+   private static final String ID_QUERY_TAB = "ideGroovyServiceQueryTab";
+   
+   private static final String ID_HEADER_TABLE = "ideGroovyServiceHeaderTable";
+
+   private static final String ID_QUERY_TABLE = "ideGroovyServiceQueryTable";
+
+   private static final String ID_BODY_TAB = "ideGroovyServiceBodyTab";
+   
+   private static final String ID_TAB_SET = "ideGroovyServiceTabSet";
+   
+   private static final String ID_BODY_FORM = "ideGroovyServiceBodyForm";
+   
+   private static final String ID_BODY_FORM_TEXT = "ideGroovyServiceBodyFormText";
+
    private static final String TITLE = "Launch REST Service";
 
    private IButton showUrlButton;
@@ -127,11 +159,13 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parameterHeaderGrid = new WadlParameterEntryListGrid();
       parameterHeaderGrid.setHeight100();
       parameterHeaderGrid.setCanEdit(true);
+      parameterHeaderGrid.setID(ID_HEADER_TABLE);
+      
       //parameterHeaderGrid.getFields()[0].setHidden(true);
 
       Tab headerTab = new Tab("Header Parameter");
       headerTab.setPane(parameterHeaderGrid);
-
+      headerTab.setID(ID_HEADER_TAB);
       return headerTab;
    }
 
@@ -139,12 +173,14 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    {
 
       bodyTab = new Tab("Body");
+      bodyTab.setID(ID_BODY_TAB);
 
       DynamicForm form = new DynamicForm();
       form.setWidth100();
       form.setHeight100();
       form.setLayoutAlign(Alignment.CENTER);
       form.setLayoutAlign(VerticalAlignment.CENTER);
+      form.setID(ID_BODY_FORM);
 
       requestbody = new TextAreaItem();
       requestbody.setShowTitle(false);
@@ -152,6 +188,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       requestbody.setWidth(465);
       requestbody.setHeight("100%");
       requestbody.setValue("");
+      requestbody.setName(ID_BODY_FORM_TEXT);
 
       form.setLayoutAlign(Alignment.CENTER);
       form.setLayoutAlign(VerticalAlignment.CENTER);
@@ -168,8 +205,11 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parametersQueryGrid = new WadlParameterEntryListGrid();
       parametersQueryGrid.setHeight100();
       parametersQueryGrid.setCanEdit(true);
+      parametersQueryGrid.setID(ID_QUERY_TABLE);
 
       Tab queryTab = new Tab("Query Parameter");
+      queryTab.setID(ID_QUERY_TAB);
+      
       queryTab.setPane(parametersQueryGrid);
 
       return queryTab;
@@ -181,6 +221,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parametersTabSet.setHeight100();
       parametersTabSet.setLayoutAlign(Alignment.CENTER);
       parametersTabSet.setWidth(480);
+      parametersTabSet.setID(ID_TAB_SET);
 
       parametersTabSet.addTab(createParametersQueryTab());
       parametersTabSet.addTab(createParametersHeaderTab());
@@ -192,6 +233,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private void createParamsForm()
    {
       DynamicForm form = new DynamicForm();
+      form.setID(ID_FORM);
 
       VLayout vLay = new VLayout();
 
@@ -205,6 +247,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       pathTitle.setDefaultValue("Path:");
 
       pathField = new SelectItem();
+      pathField.setName(NAME_PATH);
       pathField.setShowTitle(false);
       pathField.setWidth(480);
       pathField.setColSpan(2);
@@ -220,6 +263,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       methodField.setShowTitle(false);
       methodField.setWidth(480);
       methodField.setColSpan(2);
+      methodField.setName(NAME_METHOD);
 
       StaticTextItem requestTitle = new StaticTextItem();
       requestTitle.setColSpan(2);
@@ -230,6 +274,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       requestMediaTypeField.setShowTitle(false);
       requestMediaTypeField.setColSpan(2);
       requestMediaTypeField.setWidth(480);
+      requestMediaTypeField.setName(NAME_REQUEST);
 
       StaticTextItem responseTitle = new StaticTextItem();
       responseTitle.setColSpan(2);
@@ -240,6 +285,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       responseMediaTypeField.setShowTitle(false);
       responseMediaTypeField.setColSpan(2);
       responseMediaTypeField.setWidth(480);
+      responseMediaTypeField.setName(NAME_RESPONSE);
 
       SpacerItem spacer = new SpacerItem();
       spacer.setHeight(5);
@@ -265,6 +311,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       showUrlButton = new IButton("Get URL");
       showUrlButton.setWidth(90);
       showUrlButton.setHeight(22);
+      showUrlButton.setID(ID_GET_URL);
 
       showUrlButton.setIcon(Images.Buttons.URL);
 
@@ -273,11 +320,13 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       sendRequestButton.setHeight(22);
       sendRequestButton.setIcon(Images.Buttons.YES);
       sendRequestButton.setDisabled(true);
+      sendRequestButton.setID(ID_SEND);
 
       cancelButton = new IButton("Cancel");
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
+      cancelButton.setID(ID_CANCEL);
 
       ToolbarItem tbi = new ToolbarItem();
       StatefulCanvas delimiter1 = new StatefulCanvas();

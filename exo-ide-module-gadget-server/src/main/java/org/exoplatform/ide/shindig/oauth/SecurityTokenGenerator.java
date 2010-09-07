@@ -30,20 +30,21 @@ import org.apache.shindig.common.crypto.BlobCrypterException;
 */
 public class SecurityTokenGenerator
 {
-   
-   public static TokenResponse createToken(TokenRequest tokenRequest, String keyFile) throws IOException, BlobCrypterException
-   {
-         BasicBlobCrypter crypter = new BasicBlobCrypter(new File(keyFile));
 
-         BlobCrypterSecurityToken t =
-            new BlobCrypterSecurityToken(crypter, tokenRequest.getContainer(), null);
-         t.setAppUrl(tokenRequest.getGadgetURL());
-         t.setModuleId(tokenRequest.getModuleId());
-         t.setOwnerId(tokenRequest.getOwner());
-         t.setViewerId(tokenRequest.getViewer());
-         t.setTrustedJson("trusted");
-         String securityToken = t.encrypt();
-         TokenResponse tokenResponse = new TokenResponse(securityToken, tokenRequest.getGadgetURL(), tokenRequest.getModuleId());
-         return tokenResponse;
-  }
+   public static TokenResponse createToken(TokenRequest tokenRequest, String keyFile) throws IOException,
+      BlobCrypterException
+   {
+      BasicBlobCrypter crypter = new BasicBlobCrypter(new File(keyFile));
+
+      BlobCrypterSecurityToken t = new BlobCrypterSecurityToken(crypter, tokenRequest.getContainer(), null);
+      t.setAppUrl(tokenRequest.getGadgetURL());
+      t.setModuleId(tokenRequest.getModuleId());
+      t.setOwnerId(tokenRequest.getOwner());
+      t.setViewerId(tokenRequest.getViewer());
+      t.setTrustedJson("trusted");
+      String securityToken = t.encrypt();
+      TokenResponse tokenResponse =
+         new TokenResponse(securityToken, tokenRequest.getGadgetURL(), tokenRequest.getModuleId());
+      return tokenResponse;
+   }
 }

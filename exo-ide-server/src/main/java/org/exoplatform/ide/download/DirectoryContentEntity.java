@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -32,8 +31,6 @@ import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +56,7 @@ public class DirectoryContentEntity implements StreamingOutput, Const
     * 
     * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
     */
-   public void write(OutputStream outputStream) throws IOException, WebApplicationException
+   public void write(OutputStream outputStream) throws IOException
    {
       ZipArchiveOutputStream zipOut = new ZipArchiveOutputStream(outputStream);
       zipOut.setEncoding("UTF-8");

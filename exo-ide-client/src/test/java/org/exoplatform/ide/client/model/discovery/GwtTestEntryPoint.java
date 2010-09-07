@@ -31,18 +31,20 @@ import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
  */
 public class GwtTestEntryPoint extends AbstractGwtTest
 {
-   private String entryPoints = "{\"entryPoints\":["
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/dev-monit/\"},"
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/system/\"},"
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-system/\"},"
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-work/\"},"
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/wsrp-system/\"},"
-      +"{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/pc-system/\"}]}";
-   
+   private String entryPoints =
+      "{\"entryPoints\":["
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/dev-monit/\"},"
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/system/\"},"
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-system/\"},"
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-work/\"},"
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/wsrp-system/\"},"
+         + "{\"scheme\":\"jcr-webdav\",\"href\":\"http://db2.exoplatform.org:8080/rest/private/jcr/repository/pc-system/\"}]}";
+
    /**
     * Test the unmarshaller for entry points response.
     */
-   public void testEntryPointUnmarshaller(){
+   public void testEntryPointUnmarshaller()
+   {
       EntryPointList entryPointList = EntryPointList.build(entryPoints);
       assertEquals(6, entryPointList.getEntryPoints().length());
       EntryPoint entryPoint = entryPointList.getEntryPoints().get(0);

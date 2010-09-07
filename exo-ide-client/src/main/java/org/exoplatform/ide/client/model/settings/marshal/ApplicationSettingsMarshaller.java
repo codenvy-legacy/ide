@@ -57,7 +57,7 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       while (keyIter.hasNext())
       {
          String key = keyIter.next();
-
+         
          if (applicationSettings.getStoredIn(key) != Store.REGISTRY)
          {
             continue;
@@ -91,21 +91,18 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       return xml;
    }
 
-   @SuppressWarnings("unchecked")
    private String getStringNode(String key, Object value)
    {
       String xmlNodeName = key + "_str";
       return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
    }
 
-   @SuppressWarnings("unchecked")
    private String getIntegerNode(String key, Object value)
    {
       String xmlNodeName = key + "_int";
       return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
    }
 
-   @SuppressWarnings("unchecked")
    private String getBooleanNode(String key, Object value)
    {
       String xmlNodeName = key + "_bool";

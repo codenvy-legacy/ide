@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.event.file.OpenFileEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
@@ -37,7 +36,6 @@ import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -98,7 +96,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private String path;
 
    private boolean openLocalFile;
-   
+
    private List<Item> selectedItems;
 
    public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openLocalFile)
@@ -168,8 +166,8 @@ public class UploadPresenter implements UploadFileSelectedHandler
     * @return result of javaScript function <code>encodeURI(url)</code>
     */
    public static native String encodeURI(String url) /*-{
-         return encodeURI(url);
-       }-*/;
+        return encodeURI(url);
+     }-*/;
 
    private void uploadFile()
    {
@@ -238,7 +236,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       int lastIndexOfCloseBracket = content.lastIndexOf(closeBracketPattern);
       content = content.substring(0, lastIndexOfCloseBracket);
 
-      content = Utils.URLDecode_decode(content); // to unescape end of lines
+      content = Utils.urlDecode_decode(content); // to unescape end of lines
       return content;
    }
 
@@ -345,20 +343,22 @@ public class UploadPresenter implements UploadFileSelectedHandler
       IDELoader.getInstance().hide();
       if (openLocalFile)
       {
-         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>")) {
+         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>"))
+         {
             Dialogs.getInstance().showError("Can not open local file!");
             return;
          }
-         
+
          completeOpenLocalFile(uploadServiceResponse);
       }
       else
       {
-         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>")) {
+         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>"))
+         {
             Dialogs.getInstance().showError("Can not upload file!");
             return;
          }
-         
+
          completeUpload();
       }
    }

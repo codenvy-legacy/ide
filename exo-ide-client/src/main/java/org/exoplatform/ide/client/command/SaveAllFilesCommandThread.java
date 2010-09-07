@@ -53,8 +53,6 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
-   private ApplicationContext context;
-
    private Handlers handlers;
    
    private HandlerManager eventBus;
@@ -63,12 +61,11 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
 
    public SaveAllFilesCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
-      this.context = context;
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      this.eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
+      this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      this.eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onSaveAllFiles(SaveAllFilesEvent event)

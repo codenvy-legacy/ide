@@ -49,6 +49,13 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 {
+
+   public interface LabelStyle 
+   {
+      static final String INFO = "exo-cutomizeHotKey-label-info";
+      
+      static final String ERROR = "exo-cutomizeHotKey-label-error";
+   }
    
    public interface Display
    {
@@ -86,7 +93,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       void focusOnHotKeyField();
 
-      void showError(String text);
+      void showError(String style, String text);
 
    }
 
@@ -94,27 +101,24 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
-   //private ApplicationContext context;
-
    private Display display;
 
    private List<HotKeyItem> hotKeys = new ArrayList<HotKeyItem>();
 
    private HotKeyItem selectedItem;
-   
+
    private ApplicationSettings applicationSettings;
-   
+
    private List<Control> controls;
 
-   public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
+   public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
+      List<Control> controls)
    {
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       this.controls = controls;
 
-      handlers = new Handlers(eventBus);
+      new Handlers(eventBus);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
    }
 
@@ -153,7 +157,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
                return;
             }
             hotKeySelected(event.getSelectedItem());
-            display.showError(null);
+            display.showError(null, null);
          }
       });
 
@@ -182,6 +186,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
    private void fillHotKeyList()
    {
+      /*
+       * fill list of available controls
+       */
       for (Control command : controls)
       {
          if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null)
@@ -192,19 +199,26 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
                groupName = groupName.substring(0, groupName.lastIndexOf("/"));
             }
 
+            String hotKey = command.getHotKey();
+            if (hotKey == null)
+            {
+               hotKey = "";
+            }
+
             if (command.getNormalImage() != null)
             {
-               hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), command.getNormalImage(),
-                  groupName));
+               hotKeys.add(new HotKeyItem(command.getId(), hotKey, command.getNormalImage(), groupName));
             }
             else
             {
-               hotKeys.add(new HotKeyItem(command.getId(), findHotKey(command.getId()), command.getIcon(), groupName));
+               hotKeys.add(new HotKeyItem(command.getId(), hotKey, command.getIcon(), groupName));
             }
-
          }
       }
 
+      /*
+       * fill default hot keys
+       */
       Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
       while (it.hasNext())
       {
@@ -215,28 +229,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       }
 
       display.getHotKeyItemListGrid().setValue(hotKeys);
-   }
-
-   /**
-    * Find hot key in hotKeysMap by id of control.
-    * 
-    * @param controlId id of control
-    * @return hotKey for control or empty string
-    */
-   @SuppressWarnings("unchecked")
-   private String findHotKey(String controlId)
-   {
-      Map<String, String> hotKeysMap = (Map<String, String>)applicationSettings.getValue("hotkeys");
-      Iterator<Entry<String, String>> it = hotKeysMap.entrySet().iterator();
-      while (it.hasNext())
-      {
-         Entry<String, String> entry = it.next();
-         if (entry.getValue().equals(controlId))
-         {
-            return HotKeyHelper.convertToStringCombination(entry.getKey());
-         }
-      }
-      return "";
    }
 
    private void hotKeySelected(HotKeyItem hotKeyItem)
@@ -286,9 +278,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    }
 
    /**
-    * Validates hot keys.
+    * Validates hotkeys.
     * 
-    * If key is null or empty return false and show error message.
+    * If key is null or empty return false and show info message.
     * 
     * If combination of controlKey and key already exists, 
     * return false and show error message.
@@ -296,39 +288,111 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     * If combination of hot keys doesn't start with Ctrl or Alt,
     * return false and show error message.
     * 
+    * If you try to bind such hotkey return false and show info message
+    * 
     * Otherwise return true;
     * 
     * @param newHotKey
     * @return is combination of hot key is valid
     */
-   private boolean validateHotKey(String newHotKey)
+   private boolean validateHotKey(boolean isCtrl, boolean isAlt, int keyCode)
    {
+      final String firstKeyCtrlOrAltMsg = "First key should be Ctrl or Alt";
+
+      final String hotkeyIsUsedInCkEditorMsg = "This hotkey is used by Code or WYSIWYG Editors";
+
+      final String pressControlKeyThenKey = "Holt Ctrl or Alt, then press key";
+
+      final String boundToAnotherCommand = "Such hotkey already bound to another command";
+      
+      final String tryToBindTheSameHotKey = "Such hotkey already bound to this command";
+      
+      final String tryAnotherKey = "Undefined key. Please, use another key";
+      
+      //--- check is control key pressed first ---
+      //
+      //17 - key code of Ctrl
+      //18 - key code of Alt
+      //on Linux, if single Ctrl or Alt key pressed, than isCtrl or isAlt will be false,
+      //but keyCode will contain 17 or 18 key. To check keyCode - is the one way
+      //to know, that Ctrl or Alt single key was pressed on Linux
+      if (!isCtrl && !isAlt)
+      {
+         //if control is null, but keyCode is Ctrl or Alt,
+         //than Ctrl or Alt is pressed first
+         if (keyCode == 17 || keyCode == 18)
+         {
+            display.getHotKeyField().setValue(HotKeyHelper.getKeyName(String.valueOf(keyCode)) + "+");
+            display.showError(LabelStyle.INFO, pressControlKeyThenKey);
+            return false;
+         }
+         //if keyCode is not Ctrl or Alt
+         //than another key is pressed
+         else
+         {
+            display.getHotKeyField().setValue("");
+            display.showError(LabelStyle.ERROR, firstKeyCtrlOrAltMsg);
+            return false;
+         }
+      }
+      
+      //--- controlKey must be Ctrl or Alt ---
+      String controlKey = null;
+      if (isCtrl)
+      {
+         controlKey = "Ctrl";
+      }
+      else if (isAlt)
+      {
+         controlKey = "Alt";
+      }
+      
+      //if control key is correct, but keyCode is not pressed yet
+      if (keyCode == 0 || keyCode == 17 || keyCode == 18)
+      {
+         display.getHotKeyField().setValue(controlKey + "+");
+         display.showError(LabelStyle.INFO, pressControlKeyThenKey);
+         return false;
+      }
+      
+      //control key is correct, keyCode is pressed
+      String keyString = HotKeyHelper.getKeyName(String.valueOf(keyCode));
+      //--- check, is keyCode correct (maybe pressed not standard key on keyboard) ---
+      if (keyString == null)
+      {
+         display.getHotKeyField().setValue(controlKey + "+");
+         display.showError(LabelStyle.INFO, tryAnotherKey);
+         return false;
+      }
+      
+      String stringHotKey = controlKey + "+" + keyString;
+      
+      //show hotkey in text field
+      display.getHotKeyField().setValue(stringHotKey);
+      
+      //--- check, is stringHotKey is reserved by editor ---
+      if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
+      {
+         display.showError(LabelStyle.ERROR, hotkeyIsUsedInCkEditorMsg);
+         return false;
+      }
+      
+      //--- check, if you try to bind the same hotkey ---
+      if (stringHotKey.equals(selectedItem.getHotKey()))
+      {
+         display.showError(LabelStyle.ERROR, tryToBindTheSameHotKey);
+         return false;
+      }
+      
+      //--- check, is hotkey alread bound to another command ---
       String controlId = selectedItem.getControlId();
-
-      if (newHotKey == null || newHotKey.length() < 1)
-      {
-         display.showError("Enter value for key");
-         return false;
-      }
-
-      if (!newHotKey.startsWith("Ctrl") && !newHotKey.startsWith("Alt"))
-      {
-         display.showError("First key should be Ctrl or Alt ");
-         return false;
-      }
-
-      if (newHotKey.endsWith("+") && !newHotKey.endsWith("++"))
-      {
-         display.showError("Hold control and press key");
-         return false;
-      }
-
+      
       for (HotKeyItem hotKeyIdentifier : hotKeys)
       {
-         if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(newHotKey)
+         if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(stringHotKey)
             && !hotKeyIdentifier.getControlId().equals(controlId))
          {
-            display.showError("Such hot key already bound to another control");
+            display.showError(LabelStyle.ERROR, boundToAnotherCommand);
             return false;
          }
       }
@@ -339,28 +403,29 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    /**
     * Save hot keys.
     */
+   @SuppressWarnings("unchecked")
    private void saveHotKeys()
    {
       Map<String, String> keys = (Map<String, String>)applicationSettings.getValue("hotkeys");
       keys.clear();
-      
+
       for (HotKeyItem hotKeyItem : hotKeys)
       {
          if (!hotKeyItem.getGroup().equals(EDITOR_GROUP))
          {
             String hotKey = hotKeyItem.getHotKey();
 
-            if (hotKey != null && hotKey.length() > 0)
+            if (hotKey != null && !"".equals(hotKey))
             {
                String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
                keys.put(keyCode, hotKeyItem.getControlId());
             }
          }
       }
-      
-      display.closeForm();      
-      
-      eventBus.fireEvent(new RefreshHotKeysEvent(keys));      
+
+      display.closeForm();
+
+      eventBus.fireEvent(new RefreshHotKeysEvent(keys));
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
@@ -389,40 +454,15 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     * 
     * @see org.exoplatform.ide.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String, java.lang.String)
     */
-   public void onHotKeyPressed(String controlKey, String keyCode)
+   public void onHotKeyPressed(boolean isCtrl, boolean isAlt, int keyCode)
    {
       if (selectedItem == null)
       {
          return;
       }
-
-      if (controlKey == null)
+      if (validateHotKey(isCtrl, isAlt, keyCode))
       {
-         display.getHotKeyField().setValue("");
-         display.showError("First key should be Ctrl or Alt ");
-         return;
-      }
-
-      String stringHotKey = controlKey + "+";
-
-      //17 - key code of Ctrl
-      //18 - key code of Alt
-      if (!keyCode.equals("17") && !keyCode.equals("18") && HotKeyHelper.getKeyName(keyCode) != null)
-      {
-         stringHotKey += HotKeyHelper.getKeyName(keyCode);
-      }
-
-      display.getHotKeyField().setValue(stringHotKey);
-
-      if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
-      {
-         display.showError("This hot key is used by Code or WYSIWYG Editors");
-         display.disableBindButton();
-         return;
-      }
-      if (validateHotKey(stringHotKey))
-      {
-         display.showError(null);
+         display.showError(null, null);
          display.enableBindButton();
       }
       else

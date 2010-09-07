@@ -74,6 +74,12 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
          return;
       }
 
+      if(!event.getEditor().canCreateTokenList())
+      {
+         display.hide();
+         return;
+      }
+      
       if (OutlineTreeGrid.haveOutline(file))
       {
          boolean show =

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
    <external-component-plugins>
       <!-- The full qualified name of the PortalContainerConfig -->
@@ -9,8 +8,7 @@
          <!-- The name of the plugin -->
          <name>Add PortalContainer Definitions</name>
          <!--
-            The name of the method to call on the PortalContainerConfig
-            in order to register the PortalContainerDefinitions
+            The name of the method to call on the PortalContainerConfig in order to register the PortalContainerDefinitions
          -->
          <set-method>registerPlugin</set-method>
          <!-- The full qualified name of the PortalContainerDefinitionPlugin -->
@@ -18,8 +16,7 @@
          <init-params>
             <object-param>
                <name>portal</name>
-               <object
-                  type="org.exoplatform.container.definition.PortalContainerDefinition">
+               <object type="org.exoplatform.container.definition.PortalContainerDefinition">
                   <!-- The name of the portal container -->
                   <field name="name">
                      <string>portal</string>

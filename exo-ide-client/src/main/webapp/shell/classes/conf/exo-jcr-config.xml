@@ -1,31 +1,25 @@
 <repository-service default-repository="repository">
    <repositories>
-      <repository name="repository" system-workspace="production"
-         default-workspace="production">
+      <repository name="repository" system-workspace="production" default-workspace="production">
          <security-domain>exo-domain</security-domain>
          <access-control>optional</access-control>
-         <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator
-         </authentication-policy>
+         <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
          <workspaces>
             <workspace name="production">
                <!-- for system storage -->
-               <container
-                  class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+               <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
                   <properties>
                      <property name="source-name" value="jdbcjcr" />
                      <property name="dialect" value="hsqldb" />
                      <property name="multi-db" value="false" />
                      <property name="update-storage" value="false" />
                      <property name="max-buffer-size" value="200k" />
-                     <property name="swap-directory"
-                        value="target/temp/swap/production" />
+                     <property name="swap-directory" value="target/temp/swap/production" />
                   </properties>
                   <value-storages>
-                     <value-storage id="system"
-                        class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                     <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                         <properties>
-                           <property name="path"
-                              value="target/temp/values/production" />
+                           <property name="path" value="target/temp/values/production" />
                         </properties>
                         <filters>
                            <filter property-type="Binary" />
@@ -33,58 +27,46 @@
                      </value-storage>
                   </value-storages>
                </container>
-               <initializer
-                  class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
+               <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
                   <properties>
                      <property name="root-nodetype" value="nt:unstructured" />
                   </properties>
                </initializer>
-               <cache enabled="true"
-                  class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
+               <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
                   <properties>
                      <property name="max-size" value="10k" />
                      <property name="live-time" value="1h" />
                   </properties>
                </cache>
-               <query-handler
-                  class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+               <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
                   <properties>
-                     <property name="index-dir"
-                        value="target/temp/jcrlucenedb/production" />
+                     <property name="index-dir" value="target/temp/jcrlucenedb/production" />
                   </properties>
                </query-handler>
                <lock-manager>
                   <time-out>15m</time-out>
-                  <persister
-                     class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
+                  <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
                      <properties>
-                        <property name="path"
-                           value="target/temp/lock/system" />
+                        <property name="path" value="target/temp/lock/system" />
                      </properties>
                   </persister>
                </lock-manager>
             </workspace>
 
-
-
             <workspace name="dev-monit">
-               <container
-                  class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+               <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
                   <properties>
                      <property name="source-name" value="jdbcjcr" />
                      <property name="dialect" value="hsqldb" />
                      <property name="multi-db" value="false" />
                      <property name="update-storage" value="false" />
                      <property name="max-buffer-size" value="200k" />
-                     <property name="swap-directory"
-                        value="target/temp/swap/dev-monit" />
+                     <property name="swap-directory" value="target/temp/swap/dev-monit" />
                   </properties>
                   <value-storages>
-                     <value-storage id="digital-assets"
-                        class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                     <value-storage id="digital-assets" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                         <properties>
-                           <property name="path"
-                              value="target/temp/values/dev-monit" />
+                           <property name="path" value="target/temp/values/dev-monit" />
                         </properties>
                         <filters>
                            <filter property-type="Binary" />
@@ -92,24 +74,20 @@
                      </value-storage>
                   </value-storages>
                </container>
-               <initializer
-                  class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
+               <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
                   <properties>
                      <property name="root-nodetype" value="nt:folder" />
                   </properties>
                </initializer>
-               <cache enabled="true"
-                  class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
+               <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
                   <properties>
                      <property name="max-size" value="5k" />
                      <property name="live-time" value="15m" />
                   </properties>
                </cache>
-               <query-handler
-                  class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+               <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
                   <properties>
-                     <property name="index-dir"
-                        value="target/temp/jcrlucenedb/dev-monit" />
+                     <property name="index-dir" value="target/temp/jcrlucenedb/dev-monit" />
                   </properties>
                </query-handler>
             </workspace>

@@ -41,51 +41,62 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
  */
 
 @Path("/services/loopbackcontent")
-public class LoopbackContentService implements ResourceContainer {
+public class LoopbackContentService implements ResourceContainer
+{
 
-  /**
-   * POST method that gets the request body and returns it wrapped in the
-   * JavaScript.
-   * 
-   * @param items file items form the request body.
-   * @return the request body content wrapped with JavaScript.
-   */
-  @POST
-  @Consumes( { "multipart/*" })
-  public Response post(Iterator<FileItem> items) {
-    InputStream stream = null;
-    while (items.hasNext()) {
-      FileItem fitem = items.next();
-      if (!fitem.isFormField()) {
-        try {
-          stream = fitem.getInputStream();
-        } catch (IOException ioe) {
-          ioe.printStackTrace();
-          return Response.serverError().build();
-        }
+   /**
+    * POST method that gets the request body and returns it wrapped in the
+    * JavaScript.
+    * 
+    * @param items file items form the request body.
+    * @return the request body content wrapped with JavaScript.
+    */
+   @POST
+   @Consumes({"multipart/*"})
+   public Response post(Iterator<FileItem> items)
+   {
+      InputStream stream = null;
+      while (items.hasNext())
+      {
+         FileItem fitem = items.next();
+         if (!fitem.isFormField())
+         {
+            try
+            {
+               stream = fitem.getInputStream();
+            }
+            catch (IOException ioe)
+            {
+               ioe.printStackTrace();
+               return Response.serverError().build();
+            }
+         }
       }
-    }
 
-    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-    StringBuilder sb = new StringBuilder();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+      StringBuilder sb = new StringBuilder();
 
-    String line = null;
+      String line = null;
 
-    try {
-      while ((line = reader.readLine()) != null) {
-        String str = URLEncoder.encode(line + "\n", "UTF-8");
-        sb.append(str);
+      try
+      {
+         while ((line = reader.readLine()) != null)
+         {
+            String str = URLEncoder.encode(line + "\n", "UTF-8");
+            sb.append(str);
+         }
       }
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
-      return Response.serverError().build();
-    }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         return Response.serverError().build();
+      }
 
-    String bodyString = sb.toString();
+      String bodyString = sb.toString();
 
-    String responceString = "<pre>" + bodyString + "</pre>";
+      String responceString = "<pre>" + bodyString + "</pre>";
 
-    return Response.ok(responceString, MediaType.TEXT_HTML).build();
-  }
+      return Response.ok(responceString, MediaType.TEXT_HTML).build();
+   }
 
 }

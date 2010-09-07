@@ -68,7 +68,7 @@ public class DownloadContentService implements Const, ResourceContainer
 
    private static final String APPLICATION_OCTETSTREAM = "application/octet-stream";
 
-   private String WEBDAV_CONTEXT = "jcr";
+   private final String WEBDAV_CONTEXT = "jcr";
 
    private static Log log = ExoLogger.getLogger(DownloadContentService.class);
 

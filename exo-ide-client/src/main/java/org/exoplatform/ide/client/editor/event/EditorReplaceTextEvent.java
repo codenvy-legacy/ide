@@ -30,28 +30,32 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorReplaceTextEvent extends GwtEvent<EditorReplaceTextHandler>
 {
    public static final GwtEvent.Type<EditorReplaceTextHandler> TYPE = new GwtEvent.Type<EditorReplaceTextHandler>();
-   
+
    private String findText;
+
    private String replaceText;
+
    private boolean caseSensitive;
+
    private String path;
+
    private boolean replaceAll;
-   
+
    /**
     * @param findText text to find
     * @param replaceText text to replace
     * @param caseSensitive is case sensitive
-    * @param fromStart find from start
     * @param path path to file
     */
-   public EditorReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path){
+   public EditorReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
+   {
       this.findText = findText;
       this.replaceText = replaceText;
       this.caseSensitive = caseSensitive;
       this.path = path;
       this.replaceAll = false;
    }
-   
+
    /**
     * @param findText text to find
     * @param replaceText text to replace
@@ -59,14 +63,16 @@ public class EditorReplaceTextEvent extends GwtEvent<EditorReplaceTextHandler>
     * @param path path to file
     * @param replaceAll to replace all or first found
     */
-   public EditorReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path, boolean replaceAll){
+   public EditorReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path,
+      boolean replaceAll)
+   {
       this.findText = findText;
       this.replaceText = replaceText;
       this.caseSensitive = caseSensitive;
       this.path = path;
       this.replaceAll = replaceAll;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

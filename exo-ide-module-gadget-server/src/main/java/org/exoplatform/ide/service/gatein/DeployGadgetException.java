@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ide.service.gatein;
 
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -24,25 +23,28 @@ package org.exoplatform.ide.service.gatein;
 */
 public class DeployGadgetException extends Exception
 {
-  
+
    /**
     * 
     */
    private static final long serialVersionUID = 1478688088741097862L;
-   
-   private Throwable cause;
-   
-   public DeployGadgetException(String message) {
-      super(message);
-  }
 
-  public DeployGadgetException(Throwable t) {
+   private Throwable cause;
+
+   public DeployGadgetException(String message)
+   {
+      super(message);
+   }
+
+   public DeployGadgetException(Throwable t)
+   {
       super(t.getMessage());
       this.cause = t;
-  }
+   }
 
-  public Throwable getCause() {
+   public Throwable getCause()
+   {
       return this.cause;
-  }
-   
+   }
+
 }

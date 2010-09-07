@@ -167,7 +167,8 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
          Editor defaultEditor = null;
          
          Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
-         if (defaultEditors == null) {
+         if (defaultEditors == null) 
+         {
             defaultEditors = new HashMap<String, String>();
          }
 
@@ -208,6 +209,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       }
    }
 
+   @SuppressWarnings("unchecked")
    private void openFile()
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
@@ -219,8 +221,9 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       {
          String mimeType = selectedFile.getContentType();
          
-         Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
-         if (defaultEditors == null) {
+         Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+         if (defaultEditors == null) 
+         {
             defaultEditors = new HashMap<String, String>();
             applicationSettings.setValue("default-editors", defaultEditors, Store.REGISTRY);
          }

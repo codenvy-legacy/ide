@@ -55,7 +55,8 @@ public class EditorTab extends Tab
 
    public void setTextEditor(SmartGWTTextEditor textEditor)
    {
-      if (this.textEditor != null) {
+      if (this.textEditor != null) 
+      {
          tabPane.removeMember(this.textEditor);
       }
       

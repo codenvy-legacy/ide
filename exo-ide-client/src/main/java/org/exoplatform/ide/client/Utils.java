@@ -73,7 +73,7 @@ public class Utils
      }-*/;
 
    // emulate java.net.URLDecoder.decode(string,"UTF-8"): before calling decodeURIComponent we replacing "+" on "%20", and "%2F" on "/".
-   public static native String URLDecode_decode(String string) /*-{
+   public static native String urlDecode_decode(String string) /*-{
        string = string.replace(/[+]/g,"%20"); // replace "+" on "%20"
        string = string.replace("%2F", "/");  // replace "%2F" on "/"      
        return decodeURIComponent(string);

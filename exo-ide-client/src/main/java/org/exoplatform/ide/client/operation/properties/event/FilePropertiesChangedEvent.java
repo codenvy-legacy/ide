@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class FilePropertiesChangedEvent extends GwtEvent<FilePropertiesChangedHandler>
 {
 
-   public static GwtEvent.Type<FilePropertiesChangedHandler> TYPE = new GwtEvent.Type<FilePropertiesChangedHandler>();
+   public static final GwtEvent.Type<FilePropertiesChangedHandler> TYPE = new GwtEvent.Type<FilePropertiesChangedHandler>();
 
    private File file;
 

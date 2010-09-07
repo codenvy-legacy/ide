@@ -33,9 +33,9 @@ import com.google.gwt.event.shared.HandlerManager;
 public class StatusBarEventHandler
 {
 
-   public StatusBarEventHandler(HandlerManager eventBus, ApplicationContext context) {
-      
-      
+   public StatusBarEventHandler(HandlerManager eventBus, ApplicationContext context)
+   {
+
    }
-   
+
 }

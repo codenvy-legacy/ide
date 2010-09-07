@@ -73,6 +73,8 @@ public class SaveAllFilesCommand extends IDEControl implements EditorFileContent
       addHandler(EditorFileContentChangedEvent.TYPE, this);
       addHandler(FileContentSavedEvent.TYPE, this);
       addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      addHandler(EditorFileClosedEvent.TYPE, this);
+      addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    private void checkItemEnabling()

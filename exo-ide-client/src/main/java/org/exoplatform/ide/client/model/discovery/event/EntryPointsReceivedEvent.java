@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EntryPointsReceivedEvent extends GwtEvent<EntryPointsReceivedHandler>
 {
 
-   public static GwtEvent.Type<EntryPointsReceivedHandler> TYPE = new GwtEvent.Type<EntryPointsReceivedHandler>();
+   public static final GwtEvent.Type<EntryPointsReceivedHandler> TYPE = new GwtEvent.Type<EntryPointsReceivedHandler>();
 
    private EntryPointList entryPointList;
 

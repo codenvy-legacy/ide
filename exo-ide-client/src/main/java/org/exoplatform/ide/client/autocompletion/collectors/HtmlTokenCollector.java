@@ -91,8 +91,6 @@ public class HtmlTokenCollector implements TokenCollector
       noBaseEvents.add("title");
    }
 
-   private HandlerManager eventBus;
-
    private String beforeToken;
 
    private String afterToken;
@@ -103,7 +101,6 @@ public class HtmlTokenCollector implements TokenCollector
 
    public HtmlTokenCollector(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
    }
 
    /**

@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandle
 import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
 import org.exoplatform.ide.client.module.vfs.api.File;
@@ -57,7 +56,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class OperationForm extends Layout implements OperationPresenter.Display, OperationPanelRestoredHandler
 {
-   
+
    private final String ID = "ideOperationFormTabSet";
 
    private HandlerManager eventBus;
@@ -190,32 +189,33 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
     */
    public void changeActiveFile(File file)
    {
-//      TODO
-//      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
-//      if (propertiesTab != null)
-//      {
-//         propertiesForm.refreshProperties(file);
-//      }
+      //      TODO
+      //      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
+      //      if (propertiesTab != null)
+      //      {
+      //         propertiesForm.refreshProperties(file);
+      //      }
 
       Tab previewTab = tabSet.getTab(previewForm.getId());
       if (previewTab != null)
       {
          previewForm.showPreview(file.getHref());
       }
-      
+
       Tab gadgetPreviewTab = tabSet.getTab(GadgetPreviewPane.ID);
       if (gadgetPreviewTab != null)
       {
          tabSet.removeTab(GadgetPreviewPane.ID);
       }
    }
-   
-   public void closeGadgetPreviewTab() {
+
+   public void closeGadgetPreviewTab()
+   {
       Tab gadgetPreviewTab = tabSet.getTab(GadgetPreviewPane.ID);
       if (gadgetPreviewTab != null)
       {
          tabSet.removeTab(GadgetPreviewPane.ID);
-      }      
+      }
    }
 
    private TabSelectedHandler tabSelectedHandler = new TabSelectedHandler()
@@ -338,14 +338,12 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       }
    }
 
-   protected Tab gadgetPreviewTab;
-
    public void showGadget(GadgetMetadata metadata, ApplicationConfiguration applicationConfiguration)
    {
       show();
       gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
       // if preview already opened
-      gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
+      Tab gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
       if (gadgetPreviewTab == null)
       {
          gadgetPreviewTab = addTab(gadgetPreviewPane, true);

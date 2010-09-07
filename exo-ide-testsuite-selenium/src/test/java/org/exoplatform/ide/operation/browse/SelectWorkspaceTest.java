@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -38,7 +39,7 @@ public class SelectWorkspaceTest extends BaseTest
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Select Workspace')]", "");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       assertTrue(selenium.isTextPresent("Workspace"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
@@ -49,16 +50,16 @@ public class SelectWorkspaceTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       assertTrue(selenium.isTextPresent("dev-monit"));
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Select Workspace')]", "");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[0]/col[fieldName=entryPoint||0]\"");
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isTextPresent("production"));
       assertTrue(selenium.isTextPresent("exo:registry"));
       assertTrue(selenium.isTextPresent("jcr:system"));

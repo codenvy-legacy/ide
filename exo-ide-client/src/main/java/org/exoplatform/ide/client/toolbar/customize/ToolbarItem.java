@@ -31,7 +31,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 public class ToolbarItem
 {
 
-   public static enum Type {
+   public static enum Type 
+   {
 
       COMMAND, DELIMITER, SPACER
 

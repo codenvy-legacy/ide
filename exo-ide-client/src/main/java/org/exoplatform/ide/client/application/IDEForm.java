@@ -49,7 +49,7 @@ public class IDEForm extends Layout implements IDEPresenter.Display
    {
       this.eventBus = eventBus;
       this.context = context;
-      
+
       setWidth100();
       setHeight100();
       setOverflow(Overflow.HIDDEN);
@@ -62,7 +62,7 @@ public class IDEForm extends Layout implements IDEPresenter.Display
       {
          public void onResize(ResizeEvent event)
          {
-           eventBus.fireEvent(new WindowResizeEvent()); 
+            eventBus.fireEvent(new WindowResizeEvent());
          }
       });
 

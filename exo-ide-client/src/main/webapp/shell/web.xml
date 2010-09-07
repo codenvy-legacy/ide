@@ -26,71 +26,55 @@
 
 
    <listener>
-      <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener
-      </listener-class>
+      <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
    </listener>
 
    <!-- Render a Gadget -->
    <servlet>
       <servlet-name>xml-to-html</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.GadgetRenderingServlet</servlet-class>
    </servlet>
 
    <!-- Proxy -->
    <servlet>
       <servlet-name>proxy</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.ProxyServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.ProxyServlet</servlet-class>
    </servlet>
 
    <!-- makeRequest -->
    <servlet>
       <servlet-name>makeRequest</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.MakeRequestServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.MakeRequestServlet</servlet-class>
    </servlet>
 
    <!-- Concat -->
    <servlet>
       <servlet-name>concat</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.ConcatProxyServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.ConcatProxyServlet</servlet-class>
    </servlet>
 
    <!-- OAuth callback -->
    <servlet>
       <servlet-name>oauthCallback</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.OAuthCallbackServlet</servlet-class>
    </servlet>
 
    <!-- Metadata RPC -->
    <servlet>
       <servlet-name>metadata</servlet-name>
-      <servlet-class>
-         org.apache.shindig.gadgets.servlet.RpcServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.RpcServlet</servlet-class>
    </servlet>
 
    <!-- javascript serving -->
    <servlet>
       <servlet-name>js</servlet-name>
-      <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet</servlet-class>
    </servlet>
 
    <!-- Serve social REST api -->
    <servlet>
       <servlet-name>socialRestapiServlet</servlet-name>
-      <servlet-class>
-         org.apache.shindig.protocol.DataServiceServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.protocol.DataServiceServlet</servlet-class>
       <init-param>
          <param-name>handlers</param-name>
          <param-value>org.apache.shindig.social.handlers</param-value>
@@ -100,9 +84,7 @@
    <!-- Serve social RPC api -->
    <servlet>
       <servlet-name>socialJsonRpcServlet</servlet-name>
-      <servlet-class>
-         org.apache.shindig.protocol.JsonRpcServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.protocol.JsonRpcServlet</servlet-class>
       <init-param>
          <param-name>handlers</param-name>
          <param-value>org.apache.shindig.social.handlers</param-value>
@@ -112,9 +94,7 @@
    <!-- Serve gadgets RPC api -->
    <servlet>
       <servlet-name>gadgetsJsonRpcServlet</servlet-name>
-      <servlet-class>
-         org.apache.shindig.protocol.JsonRpcServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.protocol.JsonRpcServlet</servlet-class>
       <init-param>
          <param-name>handlers</param-name>
          <param-value>org.apache.shindig.gadgets.handlers</param-value>
@@ -123,9 +103,7 @@
 
    <servlet>
       <servlet-name>gadgetsRestapiServlet</servlet-name>
-      <servlet-class>
-         org.apache.shindig.protocol.DataServiceServlet
-    </servlet-class>
+      <servlet-class>org.apache.shindig.protocol.DataServiceServlet</servlet-class>
       <init-param>
          <param-name>handlers</param-name>
          <param-value>org.apache.shindig.gadgets.handlers</param-value>
@@ -135,9 +113,7 @@
    <!-- Serve sample OAuth apis -->
    <servlet>
       <servlet-name>sampleOAuth</servlet-name>
-      <servlet-class>
-         org.apache.shindig.social.sample.oauth.SampleOAuthServlet
-      </servlet-class>
+      <servlet-class>org.apache.shindig.social.sample.oauth.SampleOAuthServlet</servlet-class>
    </servlet>
 
    <servlet-mapping>
@@ -200,7 +176,6 @@
       <url-pattern>/oauth/*</url-pattern>
    </servlet-mapping>
 
-
    <servlet-mapping>
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/org.exoplatform.ide.IDEApplication/rest/*</url-pattern>
@@ -222,10 +197,8 @@
    </servlet-mapping>
 
    <filter>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter
-      </filter-name>
-      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter
-      </filter-class>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
 
    <filter>
@@ -235,8 +208,7 @@
    </filter>
    <filter>
       <filter-name>AnonymousUserContextRedirectionFilter</filter-name>
-      <filter-class>org.exoplatform.ws.frameworks.servlet.AnonymousUserContextRedirectionFilter
-      </filter-class>
+      <filter-class>org.exoplatform.ws.frameworks.servlet.AnonymousUserContextRedirectionFilter</filter-class>
       <init-param>
          <param-name>context-name</param-name>
          <param-value>/rest/private</param-value>
@@ -245,31 +217,25 @@
 
    <filter>
       <filter-name>RestEncodingFilter</filter-name>
-      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter
-      </filter-class>
+      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
       <init-param>
          <param-name>REQUEST_ENCODING</param-name>
          <param-value>UTF-8</param-value>
       </init-param>
    </filter>
 
-
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <url-pattern>/*</url-pattern>
    </filter-mapping>
    <filter-mapping>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter
-      </filter-name>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
       <url-pattern>/*</url-pattern>
    </filter-mapping>
 
-
    <filter-mapping>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter
-      </filter-name>
-      <url-pattern>/org.exoplatform.ide.IDEApplication/*
-      </url-pattern>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <url-pattern>/org.exoplatform.ide.IDEApplication/*</url-pattern>
    </filter-mapping>
 
 </web-app>

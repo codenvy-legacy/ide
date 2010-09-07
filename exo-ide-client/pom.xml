@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -52,28 +50,18 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
-         <version>${project.version}</version>
       </dependency>
-
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
-         <version>${project.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-module-gadget-client</artifactId>
-         <version>${project.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-module-groovy-client</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-netvibes-client</artifactId>
-         <version>${project.version}</version>
       </dependency>
    </dependencies>
    <build>
@@ -115,11 +103,8 @@
                   <phase>initialize</phase>
                   <configuration>
                      <tasks>
-                        <delete
-                           file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties" />
-                        <echo
-                           file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties"
-                           append="false">buildNumber: ${buildNumber}
+                        <delete file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties" />
+                        <echo file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties" append="false">buildNumber: ${buildNumber}
                            buildTime:
                            ${timestamp}
                            version: ${project.version}</echo>
@@ -139,7 +124,7 @@
             <activeByDefault>false</activeByDefault>
          </activation>
          <dependencies>
-         <dependency>
+            <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
                <scope>runtime</scope>
@@ -192,12 +177,6 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
-               <scope>runtime</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-netvibes-server</artifactId>
-               <version>${project.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -283,31 +262,26 @@
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.apt</artifactId>
-               <version>${version.chromattic}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.api</artifactId>
-               <version>${version.chromattic}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.spi</artifactId>
-               <version>${version.chromattic}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.core</artifactId>
-               <version>${version.chromattic}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
-               <version>${version.chromattic}</version>
                <scope>runtime</scope>
             </dependency>
          </dependencies>
@@ -317,6 +291,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.IDEApplication</module>
                      <runTarget>org.exoplatform.ide.IDEApplication/IDEApplication.html</runTarget>
@@ -362,9 +337,9 @@
                      <webXml>src/main/webapp/application/web.xml</webXml>
                      <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
                      <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
-                                        **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
-                                        **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
-                                        **/preloadIDE.js,**/init_smartgwt_for_gadget.js</packagingExcludes>
+                        **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
+                        **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
+                        **/preloadIDE.js,**/init_smartgwt_for_gadget.js</packagingExcludes>
                      <classifier>application</classifier>
                      <warName>IDE</warName>
                      <webResources>
@@ -438,22 +413,14 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
-               <version>${project.version}</version>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-netvibes-server</artifactId>
-               <version>${project.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-groovy-server</artifactId>
-               <version>${project.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-gadget-server</artifactId>
-               <version>${project.version}</version>
                <exclusions>
                   <exclusion>
                      <groupId>pull-parser</groupId>
@@ -489,11 +456,6 @@
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-log4j12</artifactId>
             </dependency>
-            <!--
-               <dependency> <groupId>log4j</groupId>
-               <artifactId>log4j</artifactId> <version>1.2.14</version>
-               </dependency>
-            -->
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice</artifactId>
@@ -519,28 +481,23 @@
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.apt</artifactId>
-               <version>${version.chromattic}</version>
-               <scope>compile</scope>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.api</artifactId>
-               <version>${version.chromattic}</version>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.spi</artifactId>
-               <version>${version.chromattic}</version>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.core</artifactId>
-               <version>${version.chromattic}</version>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
-               <version>${version.chromattic}</version>
             </dependency>
          </dependencies>
          <build>
@@ -570,14 +527,11 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.IDEShell</module>
                      <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
                      <logLevel>INFO</logLevel>
-                     <!--
-                        <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel
-                        'INFO</logLevel>
-                     -->
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
@@ -615,6 +569,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.IDEGadget</module>
                      <runTarget>org.exoplatform.ide.IDEGadget/IDEGadget.html</runTarget>
@@ -632,23 +587,21 @@
                   </executions>
                </plugin>
                <!--
-                  If you want to use the target/web.xml file mergewebxml
-                  produces, tell the war plugin to use it. Also, exclude
-                  what you want from the final artifact here.
+                  If you want to use the target/web.xml file mergewebxml produces, tell the war plugin to use it. Also, exclude what you want from the
+                  final artifact here.
                -->
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-war-plugin</artifactId>
                   <configuration>
                      <webXml>src/main/webapp/gadget/web.xml</webXml>
-                     <packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadget,**/gadget/gadget.xml,**/gadget/web.xml,,**/classes/**</packagingExcludes>
+                     <packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadget,**/gadget/gadget.xml,**/gadget/web.xml,**/classes/org/**</packagingExcludes>
                      <webResources>
                         <resource>
                            <directory>src/main/webapp/gadget</directory>
                            <targetPath>WEB-INF</targetPath>
                         </resource>
                      </webResources>
-                     <classifier>gadget</classifier>
                   </configuration>
                </plugin>
                <!--  tell the compiler we can use 1.5 -->
@@ -712,7 +665,6 @@
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
-               <version>${org.exoplatform.jcr.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -740,10 +692,6 @@
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-log4j12</artifactId>
             </dependency>
-            <!--
-               <dependency> <groupId>log4j</groupId>
-               <artifactId>log4j</artifactId> </dependency>
-            -->
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice</artifactId>
@@ -785,14 +733,10 @@
                            <tasks>
                               <echo>copy tomcat resources</echo>
                               <copy todir="${basedir}/tomcat/">
-                                 <fileset
-                                    dir="${basedir}/src/test/resources/tomcat-res" />
+                                 <fileset dir="${basedir}/src/test/resources/tomcat-res" />
                               </copy>
                               <echo>build IDE.war</echo>
-                              <war
-                                 destfile="${basedir}/tomcat/webapps/IDE.war"
-                                 basedir="${basedir}/src/test/webapp"
-                                 needxmlfile="false" />
+                              <war destfile="${basedir}/tomcat/webapps/IDE.war" basedir="${basedir}/src/test/webapp" needxmlfile="false" />
                            </tasks>
                         </configuration>
                      </execution>
@@ -825,7 +769,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>1.3-SNAPSHOT</version>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.IDEGwtTest</module>
                      <runTarget>org.exoplatform.ide.IDEGwtTest/IDEGwtTest.html</runTarget>

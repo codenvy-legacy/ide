@@ -96,7 +96,7 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
       }
 
       workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
-      String p[] = workingPath.split("/");
+      String[] p = workingPath.split("/");
       pathes = new ArrayList<String>();
       pathToOpen = entryPoint + "/" + p[0] + "/";
       if (p.length > 1)

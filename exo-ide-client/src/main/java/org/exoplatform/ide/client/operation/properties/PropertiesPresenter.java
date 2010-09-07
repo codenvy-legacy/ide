@@ -20,13 +20,13 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,27 +35,23 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler, EditorActiveFileChangedHandler
+public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler,
+   EditorActiveFileChangedHandler
 {
 
    public interface Display
    {
-
       void refreshProperties(File file);
-
    }
-
-   private HandlerManager eventBus;
 
    private Display display;
 
    private Handlers handlers;
-   
+
    private File activeFile;
 
    public PropertiesPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -72,29 +68,43 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       handlers.removeHandlers();
    }
 
-   private void refreshProperties()
+   private void refreshProperties(File file)
    {
-      if (activeFile == null) {
+      refresh.cancel();
+      if (file == null)
+      {
          return;
       }
+      activeFile = file;
       
-      display.refreshProperties(activeFile);
+      refresh.schedule(200);
    }
+   
+   Timer refresh = new Timer()
+   {
+      
+      @Override
+      public void run()
+      {
+         display.refreshProperties(activeFile);
+      }
+   };
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      refreshProperties();
+      if (event.getItem() instanceof File)
+         refreshProperties((File)event.getItem());
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      refreshProperties();
+      if (event.getItem() instanceof File)
+         refreshProperties((File)event.getItem());
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      activeFile = event.getFile();
-      refreshProperties();
+      refreshProperties(event.getFile());
    }
 
 }

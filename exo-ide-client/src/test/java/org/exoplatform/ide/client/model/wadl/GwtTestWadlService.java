@@ -68,11 +68,11 @@ public class GwtTestWadlService extends AbstractGwtTest
 
    private final int DELAY_TEST = 5000;
    
-   private static String TEST_URL_CREATE;
+   private static String testUrlCreate;
    
-   private static String TEST_URL_DEPLOY;
+   private static String testUrlDeploy;
    
-   private static String TEST_URL_GET_WADL;
+   private static String testUrlGetWadl;
    
    private final static String WADL_ERROR_MESSAGE = "Service is not deployed.";
    
@@ -111,9 +111,9 @@ public class GwtTestWadlService extends AbstractGwtTest
       vfsWebDav = null;
       groovyService = null;
       wadlService = null;
-      TEST_URL_CREATE = null;
-      TEST_URL_DEPLOY = null;
-      TEST_URL_GET_WADL = null;
+      testUrlCreate = null;
+      testUrlDeploy = null;
+      testUrlGetWadl = null;
       file = null;
    }
 
@@ -133,7 +133,7 @@ public class GwtTestWadlService extends AbstractGwtTest
             {
                WadlApplication application = event.getApplication();
                
-               assertEquals(TEST_URL_GET_WADL, application.getResources().getBase());
+               assertEquals(testUrlGetWadl, application.getResources().getBase());
                assertEquals(1, application.getResources().getResource().size());
                
                Resource resource = application.getResources().getResource().get(0);
@@ -236,7 +236,7 @@ public class GwtTestWadlService extends AbstractGwtTest
             if (event.getException() == null)
             {
                assertEquals(file.getHref(), event.getPath());
-               wadlService.getWadl(TEST_URL_GET_WADL + "/not-mine");
+               wadlService.getWadl(testUrlGetWadl + "/not-mine");
             }
             else
             {
@@ -252,7 +252,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          {
             assertNotNull(event.getFile());
             assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref(), TEST_URL_DEPLOY);
+            groovyService.deploy(event.getFile().getHref(), testUrlDeploy);
          }
       });
 
@@ -269,7 +269,7 @@ public class GwtTestWadlService extends AbstractGwtTest
             if (event.getException() == null)
             {
                assertEquals(file.getHref(), event.getPath());
-               wadlService.getWadl(TEST_URL_GET_WADL + "/mine");
+               wadlService.getWadl(testUrlGetWadl + "/mine");
             }
             else
             {
@@ -290,7 +290,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          {
             assertNotNull(event.getFile());
             assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref(), TEST_URL_DEPLOY);
+            groovyService.deploy(event.getFile().getHref(), testUrlDeploy);
          }
       });
 
@@ -313,14 +313,14 @@ public class GwtTestWadlService extends AbstractGwtTest
    
    private void initUrls()
    {
-      TEST_URL_CREATE = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/dev-monit/";
-      TEST_URL_DEPLOY = "http://" + Window.Location.getHost() + "/ideall/rest/private/services/groovy/load?state=true";
-      TEST_URL_GET_WADL = "http://" + Window.Location.getHost() + "/ideall/rest/private";
+      testUrlCreate = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/dev-monit/";
+      testUrlDeploy = "http://" + Window.Location.getHost() + "/ideall/rest/private/services/groovy/load?state=true";
+      testUrlGetWadl = "http://" + Window.Location.getHost() + "/ideall/rest/private";
    }
    
    private void initFile()
    {
-      file = new File(TEST_URL_CREATE + "newFile.groovy");
+      file = new File(testUrlCreate + "newFile.groovy");
       file.setContentType(MimeType.GROOVY_SERVICE);
       file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(MimeType.GROOVY_SERVICE));
       file.setNewFile(true);

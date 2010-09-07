@@ -37,21 +37,13 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
 
    public static final String TITLE = "Workspace";
 
-   private HandlerManager eventBus;
-
    private ItemTreeGrid<Item> treeGrid;
-
-   private ApplicationContext context;
 
    private BrowserPresenter presenter;
 
    public BrowserForm(HandlerManager eventBus, ApplicationContext context)
    {
       super(ID);
-      this.eventBus = eventBus;
-
-      this.context = context;
-
       treeGrid = new ItemTreeGrid<Item>(TREE_ID);
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);

@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ide.client.model.discovery;
 
-
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -27,18 +24,19 @@ package org.exoplatform.ide.client.model.discovery;
 public abstract class DiscoveryService
 {
    private static DiscoveryService instance;
-   
-   public static DiscoveryService getInstance() {
+
+   public static DiscoveryService getInstance()
+   {
       return instance;
    }
-   
+
    protected DiscoveryService()
    {
       instance = this;
    }
-   
-   public abstract void getEntryPoints(); 
-   
+
+   public abstract void getEntryPoints();
+
    protected abstract void getEntryPoints(String url);
 
 }

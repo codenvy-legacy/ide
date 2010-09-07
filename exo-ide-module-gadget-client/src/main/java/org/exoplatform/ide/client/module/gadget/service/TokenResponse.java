@@ -78,13 +78,11 @@ public class TokenResponse
       return moduleId;
    }
    
-   
-   
    @Override
    public String toString()
    {
       String json = "{\"" + GADGET_URL + "\":\"" + gadgetURL
-      + "\",\""+ SECURITY_TOKEN + "\":\"" + securityToken
+      + "\",\"" + SECURITY_TOKEN + "\":\"" + securityToken
       + "\",\""+ MODULE_ID + "\":\"" + moduleId
       + "\"}";
       return json;

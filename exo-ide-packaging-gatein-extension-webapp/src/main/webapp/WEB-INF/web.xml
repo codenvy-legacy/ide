@@ -24,7 +24,6 @@
       </init-param>
    </filter>
 
-
    <filter-mapping>
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
       <url-pattern>/rest/private/*</url-pattern>
@@ -40,38 +39,15 @@
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
 
-   <!-- END WEBDAV -->
-
-
-
-   <!--
-      ==================================================================
-   -->
-   <!--
-		LISTENER
-	-->
-   <!--
-      ==================================================================
-   -->
    <listener>
       <listener-class>org.exoplatform.container.web.PortalContainerConfigOwner</listener-class>
    </listener>
-   <!--
-      ==================================================================
-   -->
-   <!--
-		SERVLET
-	-->
-   <!--
-      ==================================================================
-   -->
    <servlet>
       <servlet-name>GateInServlet</servlet-name>
       <servlet-class>org.gatein.wci.api.GateInServlet</servlet-class>
       <load-on-startup>0</load-on-startup>
    </servlet>
 
-   <!-- WEBDAV -->
    <servlet>
       <servlet-name>RestServer</servlet-name>
       <description>eXo - Platform REST Server</description>
@@ -79,18 +55,11 @@
       <load-on-startup>4</load-on-startup>
    </servlet>
 
-   <!-- END WEBDAV -->
-
-   <!--
-      =================================================================
-   -->
    <servlet-mapping>
       <servlet-name>GateInServlet</servlet-name>
       <url-pattern>/gateinservlet</url-pattern>
    </servlet-mapping>
 
-
-   <!-- WEBDAV -->
    <servlet-mapping>
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
@@ -140,6 +109,5 @@
       <description>the admin role</description>
       <role-name>admin</role-name>
    </security-role>
-   <!-- END WEBDAV -->
 
 </web-app>

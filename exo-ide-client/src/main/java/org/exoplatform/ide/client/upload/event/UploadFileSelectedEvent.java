@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class UploadFileSelectedEvent extends GwtEvent<UploadFileSelectedHandler>
 {
 
-   public static GwtEvent.Type<UploadFileSelectedHandler> TYPE = new GwtEvent.Type<UploadFileSelectedHandler>();
+   public static final GwtEvent.Type<UploadFileSelectedHandler> TYPE = new GwtEvent.Type<UploadFileSelectedHandler>();
 
    private String fileName;
 

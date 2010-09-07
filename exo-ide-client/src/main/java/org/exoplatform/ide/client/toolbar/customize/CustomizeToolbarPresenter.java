@@ -134,6 +134,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       handlers.removeHandlers();
    }
 
+   @SuppressWarnings("unchecked")
    public void bindDisplay(Display d)
    {
       display = d;
@@ -226,7 +227,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
       fillCommandListGrid();
 
-      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
+      List<String> toolbarItems = (List<String>) applicationSettings.getValue("toolbar-items");
       if (toolbarItems == null)
       {
          toolbarItems = new ArrayList<String>();
@@ -499,9 +500,10 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    private List<String> itemsToUpdate;
 
+   @SuppressWarnings("unchecked")
    private void updateToolbar()
    {
-      itemsToUpdate = (List<String>)applicationSettings.getValue("toolbar-items");
+      itemsToUpdate = (List<String>) applicationSettings.getValue("toolbar-items");
       itemsToUpdate.clear();
 
       for (ToolbarItem toolbarItem : toolbarItems)
@@ -525,9 +527,10 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
+   @SuppressWarnings("unchecked")
    private void restoreDefaults()
    {
-      List<String> toolbarDefaultItems = (List<String>)applicationSettings.getValue("toolbar-default-items");
+      List<String> toolbarDefaultItems = (List<String>) applicationSettings.getValue("toolbar-default-items");
       if (toolbarDefaultItems == null)
       {
          toolbarDefaultItems = new ArrayList<String>();

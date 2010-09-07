@@ -51,19 +51,20 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
       presenter.bindDisplay(this);
    }
 
-   //   @Override
-   //   public void destroy()
-   //   {
-   //      //presenter.destroy();
-   //      super.destroy();
-   //   }
+//      @Override
+//      public void destroy()
+//      {
+//         presenter.destroy();
+//         super.destroy();
+//      }
 
    public void refreshProperties(File file)
    {
-      clear();
+//      clear(); //bug with many refresh, content not shown! 
       
       if (content != null)
       {
+         content.hide();
          content.removeFromParent();
          content.destroy();
       }
@@ -79,7 +80,7 @@ public class PropertiesForm extends TabPanel implements PropertiesPresenter.Disp
       {
          content = new PropertyEditor(file);
       }
-
+      
       addMember(content);
    }
 

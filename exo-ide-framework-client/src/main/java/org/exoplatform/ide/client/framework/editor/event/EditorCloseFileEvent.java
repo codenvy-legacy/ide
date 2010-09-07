@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
 {
 
-   public static GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
+   public static final GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
    private File file;
    

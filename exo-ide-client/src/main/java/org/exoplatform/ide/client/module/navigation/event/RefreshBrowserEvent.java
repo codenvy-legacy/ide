@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
 {
 
-   public static GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
+   public static final GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
 
    private List<Folder> folders;
 

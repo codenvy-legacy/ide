@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 {
 
-   public static GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
+   public static final GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
 
    private File file;
 

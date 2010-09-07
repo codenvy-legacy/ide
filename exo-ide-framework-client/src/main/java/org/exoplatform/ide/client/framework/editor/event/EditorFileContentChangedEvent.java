@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler>
 {
 
-   public static GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
+   public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
 
    private File file;
 
@@ -37,9 +37,6 @@ public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentCha
 
    private boolean hasRedoChanges;
 
-   /**
-    * @param changed item 
-    */
    public EditorFileContentChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
    {
       this.file = file;

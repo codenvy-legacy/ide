@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class GadgetMetadaRecievedEvent extends GwtEvent<GadgetMetadaRecievedHandler>
 {
 
-   public static GwtEvent.Type<GadgetMetadaRecievedHandler> TYPE = new Type<GadgetMetadaRecievedHandler>();
+   public static final GwtEvent.Type<GadgetMetadaRecievedHandler> TYPE = new Type<GadgetMetadaRecievedHandler>();
 
    private GadgetMetadata metadata;
 

@@ -39,7 +39,6 @@ public class EditorFindTextEvent extends GwtEvent<EditorFindTextHandler>
    /**
     * @param findText text to find
     * @param caseSensitive is case sensitive
-    * @param fromStart find from start
     * @param path path to file
     */
    public EditorFindTextEvent(String findText, boolean caseSensitive, String path)

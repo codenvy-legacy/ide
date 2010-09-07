@@ -29,27 +29,31 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHandler>
 {
-   public static final GwtEvent.Type<EditorFindReplaceTextHandler> TYPE = new GwtEvent.Type<EditorFindReplaceTextHandler>();
-   
+   public static final GwtEvent.Type<EditorFindReplaceTextHandler> TYPE =
+      new GwtEvent.Type<EditorFindReplaceTextHandler>();
+
    private String findText;
+
    private String replaceText;
+
    private boolean caseSensitive;
+
    private String path;
-   
+
    /**
     * @param findText text to find
     * @param replaceText text to replace
     * @param caseSensitive is case sensitive
     * @param path path to file
     */
-   public EditorFindReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path){
+   public EditorFindReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
+   {
       this.findText = findText;
       this.replaceText = replaceText;
       this.caseSensitive = caseSensitive;
       this.path = path;
    }
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
@@ -68,7 +72,6 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
       return TYPE;
    }
 
-
    /**
     * @return the findText
     */
@@ -77,7 +80,6 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
       return findText;
    }
 
-
    /**
     * @return the replaceText
     */
@@ -85,7 +87,6 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
    {
       return replaceText;
    }
-
 
    /**
     * @return the caseSensitive

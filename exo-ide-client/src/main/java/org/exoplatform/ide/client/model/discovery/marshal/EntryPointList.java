@@ -31,16 +31,17 @@ import com.google.gwt.core.client.JsArray;
 
 public class EntryPointList extends JavaScriptObject
 {
-   
-   protected EntryPointList() {      
+
+   protected EntryPointList()
+   {
    }
-   
+
    public final native JsArray<EntryPoint> getEntryPoints() /*-{
-      return this.entryPoints;
-   }-*/;
-   
+        return this.entryPoints;
+     }-*/;
+
    public static native EntryPointList build(String json) /*-{
-      return eval('(' + json + ')');      
-   }-*/;
+        return eval('(' + json + ')');      
+     }-*/;
 
 }

@@ -16,11 +16,8 @@
  */
 package org.exoplatform.ide.client.module.development;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.module.AbstractIDEModule;
 import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ide.client.module.development.control.ShowPreviewCommand;
 
@@ -35,12 +32,8 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DevelopmentModule implements IDEModule
 {
    
-   private HandlerManager eventBus;
-
    public DevelopmentModule(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-      
       eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(eventBus), true));
       eventBus.fireEvent(new RegisterControlEvent(new ShowPreviewCommand(eventBus), true, true));
       

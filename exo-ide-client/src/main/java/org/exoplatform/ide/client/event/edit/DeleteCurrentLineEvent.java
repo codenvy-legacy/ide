@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class DeleteCurrentLineEvent extends GwtEvent<DeleteCurrentLineHandler>
 {
    
-   public static GwtEvent.Type<DeleteCurrentLineHandler> TYPE = new GwtEvent.Type<DeleteCurrentLineHandler>();
+   public static final GwtEvent.Type<DeleteCurrentLineHandler> TYPE = new GwtEvent.Type<DeleteCurrentLineHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
@@ -36,7 +36,7 @@ public class DeleteCurrentLineEvent extends GwtEvent<DeleteCurrentLineHandler>
    @Override
    protected void dispatch(DeleteCurrentLineHandler handler)
    {
-           handler.onDeleteCurrentLine(this); 
+      handler.onDeleteCurrentLine(this); 
    }
 
    /**

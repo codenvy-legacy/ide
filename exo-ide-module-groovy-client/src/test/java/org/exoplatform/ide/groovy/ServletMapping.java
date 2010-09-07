@@ -50,7 +50,8 @@ public class ServletMapping
    
    private static final String TEST_SERVLET_MAPPING = "/test_servlet";
    
-   public static String getURLFor(String mapping) {
+   public static String getURLFor(String mapping) 
+   {
       return "http://" + Window.Location.getHost() + TEST_SERVLET_MAPPING + "/" + mapping;
    }
 

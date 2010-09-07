@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -55,9 +54,21 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 225;
-   
-   private static final String ID = "ideallUploadForm";
-   
+
+   private static final String ID = "ideUploadForm";
+
+   private static final String ID_UPLOAD_BUTTON = "ideUploadFormUploadButton";
+
+   private static final String ID_CLOSE_BUTTON = "ideUploadFormCloseButton";
+
+   private static final String ID_DYNAMIC_FORM = "ideUploadFormDynamicForm";
+
+   private static final String FILE_NAME_FIELD = "ideUploadFormFilenameField";
+
+   private static final String MIME_TYPE_FIELD = "ideUploadFormMimeTypeField";
+
+   private static final String ID_BROWSE_BUTTON = "ideUploadFormBrowseButton";
+
    private FormPanel uploadForm;
 
    private TextField fileNameField;
@@ -79,10 +90,11 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    private boolean openFile;
 
    private VerticalPanel postFieldsPanel;
-   
+
    private ApplicationConfiguration applicationConfiguration;
 
-   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile, ApplicationConfiguration applicationConfiguration)
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile,
+      ApplicationConfiguration applicationConfiguration)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
@@ -154,6 +166,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       spacer3.setHeight(2);
 
       mimeTypesField = new ComboBoxField();
+      mimeTypesField.setName(MIME_TYPE_FIELD);
       mimeTypesField.setWidth(334);
       mimeTypesField.setShowTitle(false);
       mimeTypesField.setColSpan(2);
@@ -174,11 +187,15 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
 
       uploadButton = new IButton(buttonTitle);
+      uploadButton.setID(ID_UPLOAD_BUTTON);
       uploadButton.setHeight(22);
       // uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
-      if (openFile) {
+      if (openFile)
+      {
          uploadButton.setIcon(Images.MainMenu.File.OPEN_LOCAL_FILE);
-      } else {
+      }
+      else
+      {
          uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
       }
 
@@ -186,6 +203,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       buttonSpacer.setWidth(5);
 
       closeButton = new IButton("Cancel");
+      closeButton.setID(ID_CLOSE_BUTTON);
       closeButton.setHeight(22);
       closeButton.setIcon(Images.Buttons.CANCEL);
 
@@ -204,8 +222,10 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadLayout.setHeight(22);
 
       DynamicForm textFieldForm = new DynamicForm();
+      textFieldForm.setID(ID_DYNAMIC_FORM);
       textFieldForm.setCellPadding(0);
       fileNameField = new TextField();
+      fileNameField.setName(FILE_NAME_FIELD);
       fileNameField.setShowTitle(false);
       fileNameField.setColSpan(2);
       fileNameField.setWidth("*");
@@ -226,6 +246,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadButtonCanvas.addChild(uploadCanvas);
 
       IButton selectButton = new IButton("Browse...");
+      selectButton.setID(ID_BROWSE_BUTTON);
       selectButton.setTop(0);
       selectButton.setWidth(80);
       uploadCanvas.addChild(selectButton);
@@ -250,9 +271,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       FileUploadInput upload = new FileUploadInput(eventBus);
       upload.setWidth("80px");
-      upload.setHeight("22px");      
+      upload.setHeight("22px");
       postFieldsPanel.add(upload);
-      
+
       //uploadForm.setEncoding(encodingType)
 
       if (openFile)

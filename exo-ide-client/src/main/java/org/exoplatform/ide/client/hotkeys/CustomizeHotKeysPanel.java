@@ -54,7 +54,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    public static interface Style
    {
 
-      final static String ERROR = "exo-cutomizeHotKey-label-error";
+      static final String ERROR = "exo-cutomizeHotKey-label-error";
 
    }
 
@@ -64,7 +64,21 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    private static final int HEIGHT = 350;
 
-   private static final String ID = "ideallCustomizeHotKeysPanel";
+   private static final String ID = "ideCustomizeHotKeysForm";
+
+   private static final String LIST_GRID_ID = "ideCustomizeHotKeysFormListGrid";
+
+   private static final String DYNAMIC_FORM_HOTKEY_FIELD_ID = "ideCustomizeHotKeysFormDynamicFormHotKeyField";
+
+   private static final String HOTKEY_FIELD_NAME = "ideCustomizeHotKeysFormHotKeyField";
+
+   private static final String BIND_BUTTON_ID = "ideCustomizeHotKeysFormBindButton";
+
+   private static final String UNBIND_BUTTON_ID = "ideCustomizeHotKeysFormUnbindButton";
+
+   private static final String SAVE_BUTTON_ID = "ideCustomizeHotKeysFormSaveButton";
+
+   private static final String CANCEL_BUTTON_ID = "ideCustomizeHotKeysFormCancelButton";
 
    private static final int BUTTON_DELIMITER_WIDTH = 3;
 
@@ -86,10 +100,6 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    private IButton cancelButton;
 
-   private HandlerManager eventBus;
-
-   //private ApplicationContext context;
-
    private CustomizeHotKeysPresenter presenter;
 
    private HotKeyItemListGrid hotKeyItemListGrid;
@@ -108,9 +118,6 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       setTitle(TITLE);
       setShowMaximizeButton(true);
-
-      this.eventBus = eventBus;
-      //this.context = applicationContext;
 
       vLayout = new VLayout();
       vLayout.setMargin(10);
@@ -140,9 +147,12 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       addItem(vLayout);
 
-      try {
-         show();         
-      } catch (Exception e) {
+      try
+      {
+         show();
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
 
@@ -174,16 +184,19 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    private void createHotKeysListGrid()
    {
       hotKeyItemListGrid = new HotKeyItemListGrid();
+      hotKeyItemListGrid.setID(LIST_GRID_ID);
       vLayout.addMember(hotKeyItemListGrid);
    }
 
    private DynamicForm createHotKeyForm()
    {
       DynamicForm hotKeyform = new DynamicForm();
+      hotKeyform.setID(DYNAMIC_FORM_HOTKEY_FIELD_ID);
       hotKeyform.setCellPadding(0);
       hotKeyform.setHeight(BUTTON_FORM_HEIGHT);
 
       hotKeyField = new TextField();
+      hotKeyField.setName(HOTKEY_FIELD_NAME);
       hotKeyField.setWidth(TEXT_FIELD_WIDTH);
       hotKeyField.setShowTitle(false);
 
@@ -200,12 +213,14 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       bindForm.setHeight(BUTTON_FORM_HEIGHT);
 
       bindButton = new IButton("Bind");
+      bindButton.setID(BIND_BUTTON_ID);
       bindButton.setWidth(BUTTON_WIDTH);
       bindButton.setHeight(BUTTON_HEIGHT);
       bindButton.setIcon(Images.Buttons.YES);
       bindButton.setDisabled(true);
 
       unbindButton = new IButton("Unbind");
+      unbindButton.setID(UNBIND_BUTTON_ID);
       unbindButton.setWidth(BUTTON_WIDTH);
       unbindButton.setHeight(BUTTON_HEIGHT);
       unbindButton.setIcon(Images.Buttons.YES);
@@ -231,12 +246,14 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       buttonsForm.setCellPadding(0);
 
       saveButton = new IButton("Save");
+      saveButton.setID(SAVE_BUTTON_ID);
       saveButton.setWidth(BUTTON_WIDTH);
       saveButton.setHeight(BUTTON_HEIGHT);
       saveButton.setIcon(Images.Buttons.YES);
       saveButton.setDisabled(true);
 
       cancelButton = new IButton("Cancel");
+      cancelButton.setID(CANCEL_BUTTON_ID);
       cancelButton.setWidth(BUTTON_WIDTH);
       cancelButton.setHeight(BUTTON_HEIGHT);
       cancelButton.setIcon(Images.Buttons.NO);
@@ -262,7 +279,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       vLayout.addMember(errorLabel);
    }
 
-   public void showError(String text)
+   public void showError(String style, String text)
    {
       if (text == null)
       {
@@ -271,6 +288,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       else
       {
          errorLabel.setText(text);
+         errorLabel.setStyleName(style);
       }
    }
 

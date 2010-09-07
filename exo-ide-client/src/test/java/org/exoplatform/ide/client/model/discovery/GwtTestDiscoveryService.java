@@ -44,9 +44,9 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
 
    private final int DELAY_TEST = 5000;
    
-   private static String TEST_URL;
+   private static String testUrl;
 
-   private static String TEST_URL_WRONG;
+   private static String testUrlWrong;
    
    private DiscoveryService discovertyService;
    
@@ -56,9 +56,9 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
       super.gwtSetUp();
       eventbus = new HandlerManager(null);
       discovertyService = new DiscoveryServiceImpl(eventbus, new EmptyLoader(), Const.REST_SERVICE_CONTEXT);
-      TEST_URL = "http://" + Window.Location.getHost()
+      testUrl = "http://" + Window.Location.getHost()
             + "/ideall/rest/private/services/discovery/entrypoints";
-      TEST_URL_WRONG = "http://" + Window.Location.getHost()
+      testUrlWrong = "http://" + Window.Location.getHost()
       + "/ideall/rest/private/services/discovery/entrypoints/not-found";
    }
    
@@ -68,8 +68,8 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
       super.gwtTearDown();
       eventbus = null;
       discovertyService = null;
-      TEST_URL = null;
-      TEST_URL_WRONG = null;
+      testUrl = null;
+      testUrlWrong = null;
    }
 
    public void testGetEntryPoints()
@@ -112,7 +112,7 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
          }
       });
       
-      discovertyService.getEntryPoints(TEST_URL);
+      discovertyService.getEntryPoints(testUrl);
       delayTestFinish(DELAY_TEST);
    }
    
@@ -138,7 +138,7 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
          }
       });
       
-      discovertyService.getEntryPoints(TEST_URL_WRONG);
+      discovertyService.getEntryPoints(testUrlWrong);
       delayTestFinish(DELAY_TEST);
    }
    

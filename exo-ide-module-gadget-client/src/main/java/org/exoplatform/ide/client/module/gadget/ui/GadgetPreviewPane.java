@@ -35,7 +35,7 @@ public class GadgetPreviewPane extends TabPanel
    /**
     * 
     */
-   public static final String title = "Gadget Preview";
+   public static final String TITLE = "Gadget Preview";
 
    private String meta;
 
@@ -63,7 +63,7 @@ public class GadgetPreviewPane extends TabPanel
    @Override
    public String getTitle()
    {
-      return title;
+      return TITLE;
    }
 
    //   /**

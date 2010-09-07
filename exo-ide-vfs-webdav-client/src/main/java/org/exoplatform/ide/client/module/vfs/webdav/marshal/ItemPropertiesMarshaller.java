@@ -46,8 +46,6 @@ public class ItemPropertiesMarshaller implements Marshallable
 
       for (Property property : item.getProperties())
       {
-         String propertyValue = property.getValue();
-
          if (property.getName().equals(ItemProperty.JCR_CONTENT))
          {
 

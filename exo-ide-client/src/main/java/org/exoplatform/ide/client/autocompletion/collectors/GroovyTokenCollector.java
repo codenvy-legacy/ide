@@ -38,11 +38,8 @@ import com.google.gwt.event.shared.HandlerManager;
 public class GroovyTokenCollector implements TokenCollector
 {
 
-   private HandlerManager eventBus;
-
    public GroovyTokenCollector(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
    }
 
    /**

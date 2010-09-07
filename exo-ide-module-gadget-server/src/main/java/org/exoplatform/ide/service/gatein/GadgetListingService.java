@@ -46,8 +46,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.uri.UriComponent;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,35 +61,34 @@ public class GadgetListingService implements Startable
    /**
      * Class logger.
      */
-   private final Log log = ExoLogger.getLogger(GadgetListingService.class);
-   
+   //   private final Log log = ExoLogger.getLogger(GadgetListingService.class);
    public static final String GADGET_MIME_TYPE = "application/x-google-gadget";
-   
+
    private final String workspaceName;
-   
+
    private final String host;
-   
+
    private final String port;
-   
-   private final String context;  
-   
-   private  String baseUrl;
-   
+
+   private final String context;
+
+   private String baseUrl;
+
    private final String country;
-   
+
    private final String language;
-   
+
    private final String moduleId;
-   
+
    private final String gadgetHostName;
-   
+
    public GadgetListingService(InitParams params, GadgetRegistryService gadgetService)
    {
       country = gadgetService.getCountry();
       language = gadgetService.getLanguage();
       moduleId = gadgetService.getModuleId();
       gadgetHostName = gadgetService.getHostName();
-      
+
       if (params != null)
       {
          ValueParam workspaceParam = params.getValueParam("workspace");
@@ -102,22 +99,21 @@ public class GadgetListingService implements Startable
          port = portParam != null ? portParam.getValue() : null;
          ValueParam contextParam = params.getValueParam("context");
          context = contextParam != null ? contextParam.getValue() : "/rest/jcr";
-      } else 
+      }
+      else
       {
          workspaceName = "production";
          host = "127.0.0.1";
          port = "";
          context = "/rest/jcr";
-       }
-      
+      }
+
       baseUrl = "http://" + host;
-      if (port!=null && !port.equals(""))
-         baseUrl+= ":" + port;
-      
+      if (port != null && !port.equals(""))
+         baseUrl += ":" + port;
+
    }
-   
-   
-   
+
    public Gadget createGadget(String name, String path, boolean isLocal) throws Exception
    {
       Gadget gadget = new Gadget();
@@ -138,7 +134,7 @@ public class GadgetListingService implements Startable
       gadget.setThumbnail(metaData.get("thumbnail"));
       return gadget;
    }
-   
+
    /**
     * Gets map metadata of gadget application
     * 
@@ -162,7 +158,6 @@ public class GadgetListingService implements Startable
       return mapMetaData;
    }
 
-
    /**
     * Fetchs Metatada of gadget application, create the connection to shindig
     * server to get the metadata TODO cache the informations for better
@@ -176,9 +171,8 @@ public class GadgetListingService implements Startable
       try
       {
          String data =
-            "{\"context\":{\"country\":\"" + country + "\",\"language\":\""
-               + language + "\"},\"gadgets\":[" + "{\"moduleId\":" + moduleId
-               + ",\"url\":\"" + urlStr + "\",\"prefs\":[]}]}";
+            "{\"context\":{\"country\":\"" + country + "\",\"language\":\"" + language + "\"},\"gadgets\":["
+               + "{\"moduleId\":" + moduleId + ",\"url\":\"" + urlStr + "\",\"prefs\":[]}]}";
          // Send data
          String gadgetServer = baseUrl + "/" + gadgetHostName;
          URL url = new URL(gadgetServer + (gadgetServer.endsWith("/") ? "" : "/") + "metadata");
@@ -198,19 +192,17 @@ public class GadgetListingService implements Startable
       return result;
    }
 
-   
-   
-   
-   
-   private void addlistener() throws UnsupportedRepositoryOperationException, RepositoryException, RepositoryConfigurationException
+   private void addlistener() throws UnsupportedRepositoryOperationException, RepositoryException,
+      RepositoryConfigurationException
    {
       ExoContainer container = ExoContainerContext.getCurrentContainer();
-      RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      RepositoryService repositoryService =
+         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       RepositoryImpl repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       final String repositoryName = repository.getName();
       final SessionImpl session = (SessionImpl)repository.login(workspaceName);
-      Workspace workspace = session.getWorkspace();;
-    
+      Workspace workspace = session.getWorkspace();
+
       ObservationManager observationManager = workspace.getObservationManager();
       observationManager.addEventListener(new EventListener()
       {
@@ -221,21 +213,26 @@ public class GadgetListingService implements Startable
                Event event = (Event)events.next();
                try
                {
-                  
-                  if (event.getPath().contains("jcr:data")){
+
+                  if (event.getPath().contains("jcr:data"))
+                  {
                      Property property = (Property)session.getItem(event.getPath());
                      Node node = property.getParent();
-                     String url = baseUrl + context + "/" +repositoryName + "/" + workspaceName +  node.getParent().getPath();
+                     String url =
+                        baseUrl + context + "/" + repositoryName + "/" + workspaceName + node.getParent().getPath();
                      String urlEnc = UriComponent.encode(url, UriComponent.PATH, false);
                      String name = "gadget" + event.getPath().hashCode();
-                     Gadget gadget =  createGadget(name, urlEnc, false);
+                     Gadget gadget = createGadget(name, urlEnc, false);
                      ExoContainer container = ExoContainerContext.getCurrentContainer();
-                     RequestLifeCycle.begin(container,true);
-                     try {
-                        GadgetRegistryService gadgetService = (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
+                     RequestLifeCycle.begin(container, true);
+                     try
+                     {
+                        GadgetRegistryService gadgetService =
+                           (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
                         gadgetService.saveGadget(gadget);
                      }
-                     finally {
+                     finally
+                     {
                         RequestLifeCycle.end();
                      }
                   }
@@ -248,58 +245,61 @@ public class GadgetListingService implements Startable
                {
                   e.printStackTrace();
                }
-               
+
             }
-         }                                                 
+         }
       }, Event.PROPERTY_ADDED, null, true, null, new String[]{"exo:googleGadget"}, false);
    }
-      
-      
-      
-      private void removelistener() throws UnsupportedRepositoryOperationException, RepositoryException, RepositoryConfigurationException
+
+   private void removelistener() throws UnsupportedRepositoryOperationException, RepositoryException,
+      RepositoryConfigurationException
+   {
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      RepositoryService repositoryService =
+         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      RepositoryImpl repository = (RepositoryImpl)repositoryService.getDefaultRepository();
+      final SessionImpl session = (SessionImpl)repository.login(workspaceName);
+      Workspace workspace = session.getWorkspace();
+      ObservationManager observationManager = workspace.getObservationManager();
+      observationManager.addEventListener(new EventListener()
       {
-         ExoContainer container = ExoContainerContext.getCurrentContainer();
-         RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-         RepositoryImpl repository = (RepositoryImpl)repositoryService.getDefaultRepository();
-         final SessionImpl session = (SessionImpl)repository.login(workspaceName);
-         Workspace workspace = session.getWorkspace();;
-                ObservationManager observationManager = workspace.getObservationManager();
-         observationManager.addEventListener(new EventListener()
+         public void onEvent(EventIterator events)
          {
-            public void onEvent(EventIterator events)
+            while (events.hasNext())
             {
-               while (events.hasNext())
+               Event event = (Event)events.next();
+               try
                {
-                  Event event = (Event)events.next();
-                  try
+                  if (event.getPath().contains("jcr:data"))
                   {
-                        if (event.getPath().contains("jcr:data")){
-                           String name = "gadget" + event.getPath().hashCode();
-                           ExoContainer container = ExoContainerContext.getCurrentContainer();
-                           RequestLifeCycle.begin(container,true);
-                           try {
-                              GadgetRegistryService gadgetService = (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
-                              gadgetService.removeGadget(name);
-                           }
-                           finally {
-                              RequestLifeCycle.end();
-                           }
-                        }
+                     String name = "gadget" + event.getPath().hashCode();
+                     ExoContainer container = ExoContainerContext.getCurrentContainer();
+                     RequestLifeCycle.begin(container, true);
+                     try
+                     {
+                        GadgetRegistryService gadgetService =
+                           (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
+                        gadgetService.removeGadget(name);
+                     }
+                     finally
+                     {
+                        RequestLifeCycle.end();
+                     }
                   }
-                  catch (RepositoryException e)
-                  {
-                     e.printStackTrace();
-                  }
-                  catch (Exception e)
-                  {
-                     e.printStackTrace();
-                  }
-                  
                }
+               catch (RepositoryException e)
+               {
+                  e.printStackTrace();
+               }
+               catch (Exception e)
+               {
+                  e.printStackTrace();
+               }
+
             }
-         }, Event.PROPERTY_REMOVED, null, true, null, new String[]{"exo:googleGadget"}, false);
-                    
-      
+         }
+      }, Event.PROPERTY_REMOVED, null, true, null, new String[]{"exo:googleGadget"}, false);
+
    }
 
    public void start()
@@ -326,5 +326,5 @@ public class GadgetListingService implements Startable
    public void stop()
    {
    }
-   
+
 }

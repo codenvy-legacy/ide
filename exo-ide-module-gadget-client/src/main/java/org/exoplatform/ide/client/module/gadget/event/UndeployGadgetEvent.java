@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class UndeployGadgetEvent extends GwtEvent<UndeployGadgetHandler>
 {
 
-   public static Type<UndeployGadgetHandler> TYPE = new Type<UndeployGadgetHandler>();
+   public static final Type<UndeployGadgetHandler> TYPE = new Type<UndeployGadgetHandler>();
    
    
    @Override

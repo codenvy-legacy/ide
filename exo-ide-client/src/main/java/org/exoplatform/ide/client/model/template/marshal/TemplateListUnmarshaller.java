@@ -41,19 +41,16 @@ import com.google.gwt.xml.client.XMLParser;
 public class TemplateListUnmarshaller implements Unmarshallable, Const
 {
 
-   private HandlerManager eventBus;
-
    private TemplateList templateList;
 
    public TemplateListUnmarshaller(HandlerManager eventBus, TemplateList templateList)
    {
       this.templateList = templateList;
-      this.eventBus = eventBus;
    }
 
    public static native String javaScriptDecodeURIComponent(String text) /*-{
-            return decodeURIComponent(text);
-         }-*/;
+                                                                         return decodeURIComponent(text);
+                                                                         }-*/;
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
@@ -80,7 +77,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    private void parseTemplate(Node templateNode)
    {
       String nodeName = templateNode.getNodeName();
-      
+
       Node node = getChildNode(templateNode, TEMPLATE);
 
       Node nameNode = getChildNode(node, NAME);
@@ -98,11 +95,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       String mimeType = javaScriptDecodeURIComponent(mimeTypeNode.getChildNodes().item(0).getNodeValue());
 
       Node contentNode = getChildNode(node, CONTENT);
-      String content = "";
-      if(contentNode.getChildNodes().getLength() != 0)
-      {
-        content = javaScriptDecodeURIComponent(contentNode.getChildNodes().item(0).getNodeValue());
-      }
+      String content = javaScriptDecodeURIComponent(getNodeText(contentNode));
       
       Template template = new Template(mimeType, name, description, content, nodeName);
       templateList.getTemplates().add(template);
@@ -122,4 +115,13 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       return null;
    }
 
+   private String getNodeText(Node xmlNode)
+   {
+      if (xmlNode == null)
+         return "";
+      StringBuilder result = new StringBuilder(4096);
+      for (Node node = xmlNode.getFirstChild(); node != null; node = node.getNextSibling())
+         result.append(node.getNodeValue());
+      return result.toString();
+   }
 }

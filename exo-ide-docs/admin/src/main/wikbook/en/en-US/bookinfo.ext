@@ -4,7 +4,7 @@
   <edition>${project.version}</edition>
   <pubsnumber>1</pubsnumber>
   <productname>eXo IDE</productname>
-  <productnumber>${project.version{</productnumber>
+  <productnumber>${project.version}</productnumber>
   <copyright>
     <year>2010</year>
     <holder>eXo Platform SAS</holder>

@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -48,6 +49,8 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
    private static final String TITLE_HIDE = "Hide Line Numbers";
 
    private File activeFile;
+
+   private TextEditor activeEditor;
 
    private boolean showLineNumbers = true;
 
@@ -93,7 +96,7 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
       }
 
       // verify and show
-      if (activeFile == null)
+      if (activeFile == null || activeEditor == null || !activeEditor.canSetLineNumbers())
       {
          setVisible(false);
          setEnabled(false);
@@ -107,19 +110,23 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      activeEditor = event.getEditor();
       activeFile = event.getFile();
       updateState();
    }
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      if (event.getApplicationSettings().getValue("line-numbers") != null) {
+      if (event.getApplicationSettings().getValue("line-numbers") != null)
+      {
          showLineNumbers = (Boolean)event.getApplicationSettings().getValue("line-numbers");
-      } else {
+      }
+      else
+      {
          showLineNumbers = true;
       }
-      
-      updateState();      
+
+      updateState();
    }
 
 }

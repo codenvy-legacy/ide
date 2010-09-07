@@ -1,45 +1,27 @@
 <module rename-to="IDE">
    <!-- Inherit the core Web Toolkit stuff.                        -->
    <inherits name='com.google.gwt.user.User' />
-
-   <!-- Inherit the default GWT style sheet.  You can change       -->
-   <!-- the theme of your GWT application by uncommenting          -->
-   <!-- any one of the following lines.                            -->
    <inherits name='com.google.gwt.user.theme.standard.Standard' />
    <inherits name="com.google.gwt.http.HTTP" />
    <inherits name='com.google.gwt.user.Debug' />
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name="com.google.gwt.i18n.I18N" />
-
    <inherits name='com.google.gwt.user.RemoteService' />
-
-
-   <!--
-      extend-property name="locale" values="ua" /> <extend-property
-      name="locale" values="ru" /> <extend-property name="locale"
-      values="en" /
-   -->
-
-   <inherits name='com.smartgwt.tools.SmartGwtTools' />
 
    <!--  Inherit the SmartGWT Toolkit library configuration. -->
    <inherits name="com.smartgwt.SmartGwt" />
-   <!--
-      <script src="init_smartgwt_for_gadget.js" /> <inherits
-      name="com.smartgwt.SmartGwtNoScript"/>
-   -->
+   <inherits name='com.smartgwt.tools.SmartGwtTools' />
 
    <!-- load GWT Commons Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.gwtframework.editor.Editor' />
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
-
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
+   
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEApplication' />

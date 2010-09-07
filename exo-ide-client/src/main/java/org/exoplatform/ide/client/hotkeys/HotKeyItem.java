@@ -38,10 +38,10 @@ public class HotKeyItem
 
    private String group;
 
-   public HotKeyItem(String controlId, String hotKeys, String icon, String group)
+   public HotKeyItem(String controlId, String hotKey, String icon, String group)
    {
       this.controlId = controlId;
-      this.hotKey = hotKeys;
+      this.hotKey = hotKey;
       this.icon = icon;
       this.group = group;
    }

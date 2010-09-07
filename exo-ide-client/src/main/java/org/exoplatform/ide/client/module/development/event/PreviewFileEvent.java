@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class PreviewFileEvent extends GwtEvent<PreviewFileHandler>
 {
 
-   public static GwtEvent.Type<PreviewFileHandler> TYPE = new GwtEvent.Type<PreviewFileHandler>();
+   public static final GwtEvent.Type<PreviewFileHandler> TYPE = new GwtEvent.Type<PreviewFileHandler>();
 
    @Override
    protected void dispatch(PreviewFileHandler handler)

@@ -67,8 +67,9 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
 
    private TreeNode rootNode;
 
-   public OutlineTreeGrid()
+   public OutlineTreeGrid(String id)
    {
+      setID(id);
       setSelectionType(SelectionStyle.SINGLE);
       
       setCanFocus(false);

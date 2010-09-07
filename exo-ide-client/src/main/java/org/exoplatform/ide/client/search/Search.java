@@ -25,6 +25,6 @@ package org.exoplatform.ide.client.search;
 public interface Search
 {
    
-   public static final String FORM_ID = "ideallFindReplaceForm";   
+   public static final String FORM_ID = "ideFindReplaceForm";   
 
 }

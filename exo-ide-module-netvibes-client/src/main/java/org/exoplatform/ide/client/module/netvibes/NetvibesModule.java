@@ -32,12 +32,8 @@ import com.google.gwt.event.shared.HandlerManager;
 public class NetvibesModule implements IDEModule
 {
 
-   private HandlerManager eventBus;
-
    public NetvibesModule(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
          "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET)));
    }

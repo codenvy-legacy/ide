@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.module.groovy.service.groovy.marshal.RestServi
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestBuilder.Method;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -150,6 +151,10 @@ public class GroovyServiceImpl extends GroovyService
       {
          httpMethod = RequestBuilder.GET;
       }
+      else if (method.equals(HTTPMethod.POST))
+      {
+         httpMethod = RequestBuilder.POST;
+      }
       else
       {
          httpMethod = RequestBuilder.POST;
@@ -169,6 +174,9 @@ public class GroovyServiceImpl extends GroovyService
                request.header(header.getName(), header.getValue());
          }
       }
+      
+      //Add this code for fix bug http://jira.exoplatform.org/browse/IDE-229
+      body = body.intern();
       if (body != null && body.length() > 0)
       {
          request.data(body);

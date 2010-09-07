@@ -129,20 +129,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
    ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler
 {
-   private SaveFileCommandThread saveFileCommandHandler;
-
-   private SaveFileAsCommandThread saveFileAsCommandHandler;
-
-   private SaveAllFilesCommandThread saveAllFilesCommandHandler;
-
-   private GoToFolderCommandThread goToFolderCommandHandler;
-
-   private PasteItemsCommandThread pasteItemsCommandHandler;
-
-   private OpenFileCommandThread openFileCommandThread;
-
-   private CreateFileCommandThread createFileCommandThread;
-
    private HandlerManager eventBus;
 
    private ApplicationContext context;
@@ -206,13 +192,13 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      createFileCommandThread = new CreateFileCommandThread(eventBus, context);
-      openFileCommandThread = new OpenFileCommandThread(eventBus);
-      saveFileCommandHandler = new SaveFileCommandThread(eventBus);
-      saveFileAsCommandHandler = new SaveFileAsCommandThread(eventBus);
-      saveAllFilesCommandHandler = new SaveAllFilesCommandThread(eventBus, context);
-      goToFolderCommandHandler = new GoToFolderCommandThread(eventBus);
-      pasteItemsCommandHandler = new PasteItemsCommandThread(eventBus, context);
+      new CreateFileCommandThread(eventBus, context);
+      new OpenFileCommandThread(eventBus);
+      new SaveFileCommandThread(eventBus);
+      new SaveFileAsCommandThread(eventBus);
+      new SaveAllFilesCommandThread(eventBus, context);
+      new GoToFolderCommandThread(eventBus);
+      new PasteItemsCommandThread(eventBus, context);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

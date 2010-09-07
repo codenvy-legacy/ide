@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface GoToLineHandler extends EventHandler
 {
-   
-    void onGoToLine(GoToLineEvent event);
-    
+
+   void onGoToLine(GoToLineEvent event);
+
 }

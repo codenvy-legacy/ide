@@ -30,21 +30,21 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class EntryPoint extends JavaScriptObject
 {
-   
-   protected EntryPoint() {
-      
+
+   protected EntryPoint()
+   {
    }
-   
+
    public final native String getScheme() /*-{
-      return this.scheme;
-   }-*/;
+        return this.scheme;
+     }-*/;
 
    public final native String getHref() /*-{
-      return this.href;
-   }-*/;   
+        return this.href;
+     }-*/;
 
    public static final native EntryPoint build(String json) /*-{
-      return eval('(' + json + ')');
-   }-*/;   
-   
+        return eval('(' + json + ')');
+     }-*/;
+
 }

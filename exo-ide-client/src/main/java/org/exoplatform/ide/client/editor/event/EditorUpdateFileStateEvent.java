@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorUpdateFileStateEvent extends GwtEvent<EditorUpdateFileStateHandler>
 {
 
-   public static GwtEvent.Type<EditorUpdateFileStateHandler> TYPE = new GwtEvent.Type<EditorUpdateFileStateHandler>();
+   public static final GwtEvent.Type<EditorUpdateFileStateHandler> TYPE = new GwtEvent.Type<EditorUpdateFileStateHandler>();
 
    private File file;
 

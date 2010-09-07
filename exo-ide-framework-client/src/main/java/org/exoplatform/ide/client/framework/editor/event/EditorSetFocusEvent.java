@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorSetFocusEvent extends GwtEvent<EditorSetFocusHandler>
 {
 
-   public static GwtEvent.Type<EditorSetFocusHandler> TYPE =
+   public static final GwtEvent.Type<EditorSetFocusHandler> TYPE =
       new GwtEvent.Type<EditorSetFocusHandler>();
 
    /**

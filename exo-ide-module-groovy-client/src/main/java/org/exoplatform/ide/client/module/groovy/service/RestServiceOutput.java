@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.groovy.service;
 
 import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,7 +34,7 @@ public class RestServiceOutput
 {
 
    private String url;
-   
+
    private String method;
 
    private Response response;
@@ -43,12 +44,12 @@ public class RestServiceOutput
       this.url = url;
       this.method = method;
    }
-   
+
    public void setResponse(Response response)
    {
       this.response = response;
    }
-   
+
    public Response getResponse()
    {
       return response;
@@ -58,27 +59,34 @@ public class RestServiceOutput
    {
       return url;
    }
-   
+
    public String getMethod()
    {
       return method;
    }
-   
+
    public String getResponseAsHtmlString()
    {
       String headers = new String();
       for (Header header : response.getHeaders())
       {
-         headers += "<b>" + header.getName() + "</b>" + "&nbsp;:&nbsp;" 
-                  + header.getValue() + "<br/>";
+         //Add temporary for fix strange bug in IE http://jira.exoplatform.org/browse/IDE-250
+         //TODO: try found problem
+         try
+         {
+            headers += "<b>" + header.getName() + "</b>" + "&nbsp;:&nbsp;" + header.getValue() + "<br/>";
+         }
+         catch (Exception e)
+         {
+            // TODO: handle exception
+         }
+         
       }
-      
-      String result = "- -Status - - - - - - - -<br/>" 
-         + response.getStatusCode() + "&nbsp;" + response.getStatusText() + "<br/>"
-         + "- -Headers- - - - - - - -<br/>"
-         + headers
-         + "- -Text - - - - - - - - -<br/>"
-         + response.getText().replace("<", "&lt;").replace(">", "&gt;");
+      //      
+      String result =
+         "- -Status - - - - - - - -<br/>" + response.getStatusCode() + "&nbsp;" + response.getStatusText() + "<br/>"
+            + "- -Headers- - - - - - - -<br/>" + headers + "- -Text - - - - - - - - -<br/>"
+            + response.getText().replace("<", "&lt;").replace(">", "&gt;");
       return result;
    }
 

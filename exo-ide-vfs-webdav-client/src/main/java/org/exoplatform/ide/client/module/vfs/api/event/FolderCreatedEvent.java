@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class FolderCreatedEvent extends GwtEvent<FolderCreatedHandler>
 {
 
-   public static GwtEvent.Type<FolderCreatedHandler> TYPE = new GwtEvent.Type<FolderCreatedHandler>();
+   public static final GwtEvent.Type<FolderCreatedHandler> TYPE = new GwtEvent.Type<FolderCreatedHandler>();
 
    private Folder folder;
 

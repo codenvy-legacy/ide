@@ -33,11 +33,13 @@ public class IDELoader extends SmartGWTLoader
    
    private static IDELoader loader;
    
-   public static IDELoader getInstance() {
-      if (loader == null) {
+   public static IDELoader getInstance()
+   {
+      if (loader == null)
+      {
          loader = new IDELoader();
       }
-      
+
       return loader;
    }
 

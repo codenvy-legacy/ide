@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class OutputEvent extends GwtEvent<OutputHandler>
 {
 
-   public static GwtEvent.Type<OutputHandler> TYPE = new GwtEvent.Type<OutputHandler>();
+   public static final GwtEvent.Type<OutputHandler> TYPE = new GwtEvent.Type<OutputHandler>();
 
    private String message;
 

@@ -1,20 +1,20 @@
-eXo _IDE_ gadget provides original approach to operate with _REST Service_ \- ability to *validate*, *deploy/undeploy* and *launch* this applications which compatible with JSR-311 specification without restating portal, or installing additional programs. Actually, eXo _IDE_ works as client side of GateIn with plugin [org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoaderPlugin|#JCR.RESTServicesOnGroovy]. Due to this application you can validate REST Service before saving, deploy, launch or undeploy service which saved in JCR. Feedback from server is automatic displayed in the _Output Tab_:
+eXo IDE gadget provides original approach to operate with _REST Service_ - ability to *validate*, *deploy/undeploy* and *launch* this applications, which are compatible with JSR-311 specification without restarting portal, or installing additional programs. Due to this application you can validate REST Service before saving, deploying, launching or undeploying service. Feedback from server is displayed in the _Output Tab_:
 
 !ide-groovy_script_operations.PNG!
 
-*Picture 22. REST Service operations*
+*Picture 23. REST Service operations*
 
-All _REST Service_ commands are placed at the right part of toolbar and in the special menu item *"Run"*.
+All _REST Service_ commands are placed at the right part of the _Toolbar_ and in the special top menu item *"Run"*.
 
-To clear output panel use special button at the right top corner of _Output Tab_.
+To clear _Output Panel_ \- use special button at the right top corner of _Output Tab_.
 
-h2. Validate REST Service
+h1. Validate REST Service
 
-You can verify of content of _REST Service_ content by using special validation service before saving. You should just click on *"Validate REST Service"* button or call *"Run->Validate"* top menu command. If there are no errors in service, then in the Output Tab will be displayed message like this:
+You can verify the content of _REST Service_ content by using special validation service before saving. Just click on *"Validate REST Service"* button or select *"Run->Validate"* from top menu. If there are no errors in service, then the alike message will be shown in the _Output Tab_:
 
-"{color:#007700}\[INFO\]{color} {color:#007700}{*}rennes.groovy{*}{color} {color:#007700}validated successfully".{color}
+{screen}\[INFO\]rennes.groovy validated successfully".{screen}
 
-Otherwise, in the _Output Tab_ will be displayed error message like this:
+Otherwise, there will be a error message displayed in the _Output Tab_:
 
 {screen}
 [ERROR] rennes.groovyvalidation failed. Error (400: Bad Request)
@@ -26,18 +26,15 @@ startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
 3 errors
 {screen}
 
-h2. Deploy/Undeploy REST Service
+h1. Deploy/Undeploy REST Service
 
-To deploy some REST Service under the GateIn, please:
-
-# Save file before deploying
-# Open file in the _Content Panel_
-# Click on *"Deploy REST Service"* button of toolbar or call *"Run->Deploy"*.
-
-After that the deploy request will be sent to the server, and if there are no errors - the message like this
-"{color:#007700}\[INFO\]{color} {color:#007700}{*}rennes.groovy{*}{color} {color:#007700}deployed successfully{color}"
-will be displayed in the _Output Tab_. Otherwise, in the _Output Tab_ will be displayed error message, e.g.:
-
+To deploy some REST Service, please:
+# Save file before deploying.
+# Open file in the _Content Panel_.
+# Click on *"Deploy REST Service"* button of _Toolbar_ or call *"Run->Deploy"*.
+After that the deploy request will be sent to the server, and if there are no errors - the message like following:
+{screen}\[INFO\]rennes.groovy deployed successfully{screen}
+will be displayed in the _Output Tab_. Otherwise, error message will be shown, e.g.:
 {screen}
 [ERROR] rennes.groovy deploy failed. Error (400: Bad Request)
 Unexpected error. Error occurs when parse stream, compiler error:
@@ -50,51 +47,60 @@ find class for annotation
 3 errors
 {screen}
 
+{warning:title=Deploy service with the already registered URI pattern}
+It is impossible to deploy service with the URI pattern, that has been already registered, if the path(including name) of new service is different than original one.
+To cope with it, please, first undeploy the service with the registered URI pattern.
+{warning}
+
+{warning:title=Deploy service, which uses shared groovy scripts}
+It is necessary to validate groovy scripts (open and select "Run->Validate" from top menu), that are used by service before deploying it.
+{warning}
+
 Calling the *"Undeploy"* operation is similar to the *"Deploy"* \- you should:
-
 # Find out deployed earlier service in the _Workspace_ and open this one in the _Content Panel_.
-# Click on *"Undeploy REST Service"* button of toolbar and verify if there is no error message in the _Output Tab_.
+# Click on *"Undeploy REST Service"* button of _Toolbar_ and verify if there is no error message in the _Output Tab_.
 
-If everything Ok, then you will get message like that:
-{color:#007700}\[INFO\] /repository/collaboration/rennes.groovy undeployed successfully.{color}
+If everything is fine, then you will get message like that:
+{screen}\[INFO\] /repository/collaboration/rennes.groovy undeployed successfully.{screen}
 
-You can deploy as many REST Services as you want, and double deploying is possible. But you can't undeploy non-deployed earlier service - in this case you will get error feedback from the server like this:
+You can deploy as many REST Services as you want, and double deploying is also possible. But you can't undeploy earlier non-deployed  service - in this case you will get the error feedback from the server like this:
 
-{screen}
+{code}
 [ERROR] /repository/collaboration/rennes.groovy
 undeploy failed. Error (400: Bad Request)
 Can't unbind script rennes.groovy, not bound or has wrong mapping to the
 resource class
-{screen}
+{code}
 
-h2. Using Autoload Property
+{warning:title=Undeploy deleted service}
+The deletion of service will not make it undeploy. So, please, undeploy service before deleting it. In other case, the workaround is to create it again in the same place and then undeploy.
+{warning}
 
-_REST Service_ will be automatic deployed on the server just after saving, if the *"Autoload"* service property was set (has value _true_). You could view this property in the _Property Tab_ which calls by clicking *"Show Properties"* button. To set/unset "Autoload" property, please, use *"Set REST Service autoload"* or *"Unset REST Service autoload"* commands respectively. This commands are displayed according to the current state of autoload property so that you will be able to invert this property. Default value *autoload* property = _false_. See next picture below for details:
+h1. Using Autoload Property
+
+_REST Service_ will be deployed automaticaly on the server just after saving, if the *"Autoload"* service property is set (has value _true_). You can view this property in the _Property Tab_ which is shown by clicking *"Show Properties"* button. To set/unset "Autoload" property, please, use *"Set REST Service autoload"* or *"Unset REST Service autoload"* commands respectively. This commands are displayed according to the current state of autoload property so that you will be able to invert this property. Default value *autoload* property = _false_. See the picture below for details:
 
 !ide_change_autoload_property.png!
-*Picture 23. Change Autoload service property*
 
-h2. Launch REST Service with set parameters and Preview Server Console Messages in Output Tab
+*Picture 24. Change Autoload service property*
 
-With eXo _IDE_ you can not only write and deploy sevice but make request to them with your own _header_, _query_ and _path parameters_ and _body content_ by using one of _supported methods_, _view WADL-description_ of method, _launch_ those services methods and _view service response_ in the _Output Tab_. To do this just call "*Launch REST Service...*" command by clicking on appropriate button or *"Run*" menu item:
+h1. Launch REST Service with set parameters and Preview Server Console Messages in Output Tab
 
+You can not only write and deploy service With eXo IDE, but make request to them with your own _header_, _query_ and _path parameters_ and _body content_ using one of _supported methods_, _view WADL-description_ of method, _launch_ those services methods and _view service response_ in the _Output Tab_. To do these just call *"Launch REST Service..."* command by clicking on appropriate button or select *"Run"* menu item:
 # Create, save and deploy _REST Service_.
-# Click on *"Launch REST Service..."* button to get REST service launching form. Gadget is filling this form on the basic of WADL-description of REST Service.
+# Click on *"Launch REST Service..."* button to get REST service launching form. Gadget is filling this form, based on WADL-description of _REST Service_.
 # Select or/and type path to the service in the *"Path"* field. Path parameters are enclosed in curly braces.
-# Select one of the supported method from *"Method"* combobox.
+# Select one of the supported methods from *"Method"* combobox.
 # Select correct *"Request Media Type"*.
 # Check *"Response Media Type"*.
-# Uncheck redundant query parameters and set values of the rest in the table at the bottom of dialog window..
+# Uncheck redundant query parameters and set values of the rest in the table at the bottom of dialog window.
 # Go to middle tab *"Header Parameters"* and set appropriate values.
-# You can set request body content within the tab *"Body"*. This tab is disabled for _GET_\-request.
+# You can set request body content within the tab *"Body"*. This tab is disabled for _GET_ request.
 # Press *"Send"* button.
 
-After this gadget will verify if path is correct and send described request to the service or display error message. Service response will be displayed in the _Output Tab_.
+After this gadget verify whether path is correct and send formed request to the service or display error message, Response Service  will be displayed in the _Output Tab_.
 
-
-See example of launching at the picture *"REST Service operations"* above.
-
-Table. *Reproducing service annotations in the "Launch REST Service" dialog.*
+See example of launching in the illustration *"REST Service operations"* above.
 
 | *REST Service Annotation* | *Element of "Launch REST Service" dialog* |
 | _@Path_ | *"Path"* field |
@@ -105,18 +111,18 @@ Table. *Reproducing service annotations in the "Launch REST Service" dialog.*
 | _@HeaderParam_ | *"Header Parameter"* tab of bottom table |
 | _@QueryParam_ | *"Query Parameter"* tab of bottom table |
 | _@DefaultValue_ | *"By default"* column of bottom table |
+*Table2. Reproducing service annotations in the "Launch REST Service" dialog*
 
-h2. Get REST Service URL
+h1. Get REST Service URL
 
-From the send request window you also can get REST Service URL by clicking on *"Get URL"* button:
-
+From the send request window you can also get REST Service URL by clicking on *"Get URL"* button:
 # Create, save and deploy REST Service.
 # Click on *"Launch REST Service..."* button to get REST service launching form.
 # Press *"Get URL"* button to view REST Service URL.
 
-h2. Review of the response headers from REST Service (since 1.0 beta2)
+h1. Review of the response headers from REST Service
 
-Since 1.0 beta 2 you can also review headers, status code and status text in the _Output Panel_ after sending request. The message will be like this:
+It is possible to view headers, status code and status text in the _Output Panel_ after sending request. The message will be like this:
 
 {screen}
 [OUTPUT] - -Status - - - - - - - -
@@ -130,12 +136,11 @@ Hello steve
 {screen}
 
 
-h2. Examples of using the REST Service
+h1. Examples of using the REST Service
 
-h3. Example1: REST service with complex media types output preview
+h2. Example1: REST service with complex media types output preview
 
 # Create, save and deploy REST service with next content:
-
 {code}
 // simple groovy script
 import javax.ws.rs.Path
@@ -157,7 +162,8 @@ public class TestService {
     @HeaderParam("Test-Header1") String testHeader,
     @QueryParam("Test Query Parameter 1") String testQueryParam,
     String body) {
-      return "PathParam 1:" + pathParam + "; Test Query Parameter 1: " + testQueryParam + "; Test-Header1: " + testHeader + "; Body: " + body;
+      return "PathParam 1:" + pathParam + "; Test Query Parameter 1: " + testQueryParam + ";
+      Test-Header1: " + testHeader + "; Body: " + body;
   }
 
   @POST
@@ -169,63 +175,61 @@ public class TestService {
     @HeaderParam("Test-Header2") String testHeader,
     @QueryParam("Test Query Parameter 2") String testQueryParam,
     String body) {
-      return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam + "; Test-Header2: " + testHeader + "; Body: " + body;
+      return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam + ";
+      Test-Header2: " + testHeader + "; Body: " + body;
   }
 
 }
-
 {code}
-
 # Call the *"Run->Launch REST Service..."* top menu command.
 # Select *Path* field item "/testMediaTypes", method OPTIONS and the click on *"Send"* button. After this gadget will send OPTIONS-request and display received response in the _Output Tab_. E.g.:
-
-{code:xml}<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+{code}<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <application xmlns="http://research.sun.com/wadl/2006/10">
-	<resources base="http://192.168.0.8:8080/rest">
-		<resource path="/testMediaTypes">
-			<method name="OPTIONS">
-				<response>
-					<representation mediaType="application/vnd.sun.wadl+xml" />
-				</response>
-			</method>
-			<resource path="InnerPath/{pathParam}">
-				<param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string"
-					style="template" name="pathParam" />
-				<method name="POST" id="post1">
-					<request>
-						<param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string"
-							style="header" name="Test-Header1" />
-						<param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string"
-							style="query" name="Test Query Parameter 1" />
-						<representation mediaType="application/xml" />
-					</request>
-					<response>
-						<representation mediaType="text/html" />
-					</response>
-				</method>
-				<method name="POST" id="post2">
-					<request>
-						<param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string"
-							style="header" name="Test-Header2" />
-						<param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string"
-							style="query" name="Test Query Parameter 2" />
-						<representation mediaType="application/xml" />
-					</request>
-					<response>
-						<representation mediaType="application/json" />
-					</response>
-				</method>
-			</resource>
-		</resource>
-	</resources>
+   <resources base="http://192.168.0.8:8080/rest">
+      <resource path="/testMediaTypes">
+         <method name="OPTIONS">
+            <response>
+               <representation mediaType="application/vnd.sun.wadl+xml" />
+            </response>
+         </method>
+         <resource path="InnerPath/{pathParam}">
+            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" 
+	     name="pathParam" />
+            <method name="POST" id="post1">
+               <request>
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
+		   name="Test-Header1" />
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
+                     name="Test Query Parameter 1" />
+                  <representation mediaType="application/xml" />
+               </request>
+               <response>
+                  <representation mediaType="text/html" />
+               </response>
+            </method>
+            <method name="POST" id="post2">
+               <request>
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
+		   name="Test-Header2" />
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
+                     name="Test Query Parameter 2" />
+                  <representation mediaType="application/xml" />
+               </request>
+               <response>
+                  <representation mediaType="application/json" />
+               </response>
+            </method>
+         </resource>
+      </resource>
+   </resources>
 </application>
 {code}
-
-# Call *"Launch REST Service"* dialog and select *Path* field item {noformat}"/testMediaTypes/InnerPath/{pathParam}"{noformat}
+# Call *"Launch REST Service"* dialog and select *Path* field item
+{code}"/testMediaTypes/InnerPath/{pathParam}"{code}
 # Select *Response Media Type =* "text/html" item.
 # Type in *Path* filed "/testMediaTypes/InnerPath/value1". In the _Query Parameter_ tab set "Test Query Parameter 1"="value2". In the _Header Parameter_ tab set "Test-Header1"="value3". In the _Body_ tab type "example". Then click on *"Send"* button.
 
-Then eXo _IDE_ will create request to the service and send it. Response will be added into the _Output Tab_:
+Then eXo IDE will create request to the service and send it. Response will be added into the _Output Tab_:
 
 {screen}
 [OUTPUT] - -Status - - - - - - - -
@@ -238,5 +242,3 @@ Date : Mon, 05 Jul 2010 09:06:55 GMT
 - -Text - - - - - - - - -
 PathParam 1:value1; Test Query Parameter 1: value2; Test-Header1: value3; Body: example
 {screen}
-
-

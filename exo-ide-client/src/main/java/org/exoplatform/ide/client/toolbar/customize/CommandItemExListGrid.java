@@ -47,9 +47,9 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    }
 
    private final static String TITLE = "Command";
-   
+
    private final static String ID = "ideCommandItemExListGrid";
-   
+
    public final static String COMMAND_ID = "CommandId";
 
    public CommandItemExListGrid()
@@ -96,7 +96,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          {
             commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
          }
-         
+
          while (commandName.indexOf("\\") >= 0)
          {
             commandName = commandName.replace("\\", "/");

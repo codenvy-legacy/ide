@@ -1,29 +1,31 @@
-h2. View info about gadget
+h1. View information about gadget
 
-To view info about current version of eXo _IDE_, please, click on *"Help->About"* top menu command.
+To view information about current version of eXo IDE, select *"Help->About"* from top menu.
 
-h2. Customize Toolbar
+h1. Customize Toolbar
 
-If you want to customize toolbar - add or remove some buttons, change their positions or change delimiters - you can do it from the *"Customize toolbar"* dialog window. This dialog can be called by clicking on *"Window->Customize Toolbar..."* top menu item. This dialog have typical interface and command set for such operations:
+If you want to customize _Toolbar_ \- add or remove some buttons, change their positions or change delimiters - you can do it from the *"Customize toolbar"* dialog window. This dialog can be called by selectiong *"Window->Customize Toolbar..."* from top menu. This dialog have typical interface and command set for such operations:
 
 !ide-customize_toolbar.png!
-*Picture 27. Customize Toolbar*
 
-h2. Hotkeys customization (since 1.0 beta2)
+*Picture 28. Customize Toolbar*
 
-Hotkey manager supports hotkeys customization. If you use your hotkeys, that match to browser hotkeys, only eXo _IDE_ hotkeys will work out.
+h1. Hotkeys customization
+
+Hotkey manager supports hotkeys customization. If you use your hotkeys that match to browser hotkeys, only eXo IDE hotkeys will work out.
 
 If you don't override browser hotkeys, they will work as usual.
 
 You can customize hotkeys in *"Customize hotkeys"* dialog window. To call this dialog, you should call *"Window->Customize Hotkeys..."* top menu command.
 
 !customize-hotkeys.png!
-*Picture 28. Customize hotkeys*
+
+*Picture 29. Customize hotkeys*
 
 *"Customize hotkeys"* dialog window consists of list grid with all commands divided on groups and their hotkeys, binding to them.
-If you want to bind hotkey for some control:
-# Select command in *"Customize hotkeys"* dialog window. After selection the focus will be set on *"Hotkey"* field.
-# Press hotkeys combination. It should begins from "Ctrl" or "Alt" key + other allowed key.
+If you want to assign your own hotkeys, do as follows:
+# Select command in *"Customize hotkeys"* dialog window. After selecting the focus will be set on *"Hotkey"* field.
+# Press hotkeys combination. It should be the combination of "Ctrl" or "Alt" key with other allowed key.
 # If hotkeys combination is valid, *"Bind"* button will be active. Otherwise the error message will be shown under the *"Hotkey"* field.
 # Press *"Bind"* button.
 # Press *"Save"* button to save your settings on the server, or *"Cancel"* button if you want to cancel changes.
@@ -31,18 +33,19 @@ If you want to bind hotkey for some control:
 If you entered invalid hotkeys combination, error message will be shown:
 
 !customize-hotkeys-error.png!
-*Picture 29. Error message*
 
-If you want to unbind hotkeys from some command, you could:
+*Picture 30. Error message*
+
+If you want to unbind hotkeys for some commands, do as follows:
 
 # Open *"Customize hotkeys"* dialog window.
 # Find needed command in list grid.
 # Press *"Unbind"* button.
 # Press *"Save"* button to save your settings on the server, or press *"Cancel"* button to cancel changes.
 
-At the end of hotkeys list, you can see "Editor hotkeys" group. You can't change this hotkeys, because they are reserved and used in editors. Also you can't use this hotkeys for other commands. There are lists of predefined hotkeys:
+At the end of hotkeys list, you can see "Editor hotkeys" group. You can't change this hotkeys, because they are reserved and used in editors. Also you can't use this hotkeys for other commands. Followings are lists of predefined hotkeys:
 
-h3. Default global hotkeys
+h2. Default global hotkeys
 
 * Ctrl+F - Find/Replace
 * Ctrl+D - Delete line
@@ -50,12 +53,12 @@ h3. Default global hotkeys
 * Ctrl+N - Create file from template
 * Ctrl+S - Save file
 
-h3. Non-changable hotkeys which work within the editors
+h2. Non-changable hotkeys which work within the editors
 
 * Ctrl+Space - Autocomplete
 * Ctrl+B - Make text bold
 * Ctrl+I - Make text italic
-* Ctrl+U - Make text undeline
+* Ctrl+U - Make text underlined
 * Ctrl+C - Copy selected text
 * Ctrl+V - Paste copied text
 * Ctrl+X - Cut selected text
@@ -64,5 +67,3 @@ h3. Non-changable hotkeys which work within the editors
 * Ctrl+A - Select all
 * Ctrl+Home - Go to the start of document
 * Ctrl+End - Go to the end of document
-  
-

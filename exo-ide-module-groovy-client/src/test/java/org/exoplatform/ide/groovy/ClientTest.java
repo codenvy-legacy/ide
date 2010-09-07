@@ -39,7 +39,8 @@ public abstract class ClientTest extends GWTTestCase
       return "org.exoplatform.ide.ideGroovyModule";
    }
    
-   protected void sleepTest() {
+   protected void sleepTest() 
+   {
       delayTestFinish(SLEEP_TIME);
    }
 

@@ -144,10 +144,10 @@ public class SettingsService implements SaveApplicationSettingsHandler
 
       ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
       ApplicationSettingsSavedEvent event = new ApplicationSettingsSavedEvent(applicationSettings, saveType);
-      
+
       String errorMessage = "Registry service is not deployed.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      
+
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
          HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
@@ -265,7 +265,7 @@ public class SettingsService implements SaveApplicationSettingsHandler
 
    private void restoreListValue(ApplicationSettings applicationSettings, String name)
    {
-      String n = getName(name, "_bool");
+      String n = getName(name, "_list");
       String value = Cookies.getCookie(name);
       List<String> list = new ArrayList<String>();
 
@@ -273,7 +273,8 @@ public class SettingsService implements SaveApplicationSettingsHandler
       for (String i : items)
       {
          String v = javaScriptDecodeURIComponent(i);
-         if ("".equals(v)) {
+         if ("".equals(v))
+         {
             continue;
          }
          list.add(v);
@@ -283,11 +284,11 @@ public class SettingsService implements SaveApplicationSettingsHandler
    }
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-        return decodeURIComponent(text);
-     }-*/;
+          return decodeURIComponent(text);
+       }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-        return encodeURIComponent(text);
-     }-*/;
+          return encodeURIComponent(text);
+       }-*/;
 
 }

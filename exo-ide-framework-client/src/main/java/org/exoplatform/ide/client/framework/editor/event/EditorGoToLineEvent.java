@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorGoToLineEvent extends GwtEvent<EditorGoToLineHandler>
 {
 
-   public static GwtEvent.Type<EditorGoToLineHandler> TYPE = new GwtEvent.Type<EditorGoToLineHandler>();
+   public static final GwtEvent.Type<EditorGoToLineHandler> TYPE = new GwtEvent.Type<EditorGoToLineHandler>();
 
    private int lineNumber;
    

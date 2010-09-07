@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -33,7 +35,11 @@ import org.junit.Test;
  */
 public class GeItemUrlTest extends BaseTest
 {
-   private final String content = "Hello!!!";
+   private final String content1 = "<p> Hello!!! </p>";
+   
+   private final String content2 = "Hello!!!";
+   
+   private final String searchPhrase = "Hello!!!";
 
    private final String file1Name = "gadget.xml";
 
@@ -46,25 +52,25 @@ public class GeItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrl() throws Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       //Create first file
-      openNewFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(2000);
+      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(7);
       assertEquals("", getTextFromCodeEditor(0));
-      typeText(content);
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
       assertElementPresentInWorkspaceTree(file1Name);
 
       createFolder(folderName);
-      openNewFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(2000);
+      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      Thread.sleep(TestConstants.SLEEP);
       assertEquals("", getTextFromCodeEditor(0));
-      typeText(content);
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
       assertElementPresentInWorkspaceTree(file2Name);
 
@@ -84,7 +90,7 @@ public class GeItemUrlTest extends BaseTest
       assertTrue(selenium.isElementPresent("link=" + folderName));
       selenium.goBack();
       selenium.waitForPageToLoad("12000");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for file in root of the tree
       selectItemInWorkspaceTree(file1Name);
@@ -103,11 +109,11 @@ public class GeItemUrlTest extends BaseTest
       assertTrue(selenium.isElementPresent("link=" + file2Name));
       selenium.goBack();
       selenium.waitForPageToLoad("12000");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for the file in the folder
       openOrCloseFolder(folderName);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(file2Name);
       url = getItemUrl();
       assertTrue(url.startsWith(BASE_URL));
@@ -123,7 +129,7 @@ public class GeItemUrlTest extends BaseTest
    {
       selectRootOfWorkspaceTree();
       runToolbarButton("Search...");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
@@ -134,10 +140,10 @@ public class GeItemUrlTest extends BaseTest
       assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
       //Type content to input
       selenium.click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element");
-      selenium.type("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element", content);
+      selenium.type("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element", searchPhrase);
       //Click "Search" button
       selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       
       //Check files are found
       assertElementPresentSearchResultsTree(file1Name);
@@ -162,8 +168,8 @@ public class GeItemUrlTest extends BaseTest
       selenium.controlKeyDown();
       selectItemInWorkspaceTree(file1Name);
       selenium.controlKeyUp();
-      deleteSelectedItem();
-      Thread.sleep(5000);
+      deleteSelectedItems();
+      Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
@@ -176,6 +182,6 @@ public class GeItemUrlTest extends BaseTest
    {
       selenium.open(link);
       selenium.waitForPageToLoad("6000");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
    }
 }

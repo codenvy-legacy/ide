@@ -42,13 +42,10 @@ public class NavigationPresenter implements SearchResultReceivedHandler
 
    protected Display display;
 
-   private HandlerManager eventBus;
-
    private Handlers handlers;
 
    public NavigationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
    }
 

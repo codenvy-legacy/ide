@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler>
 {
 
-   public static Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
+   public static final Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
 
    private String url;
 

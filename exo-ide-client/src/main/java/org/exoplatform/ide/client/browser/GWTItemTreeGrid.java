@@ -107,8 +107,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       return null;
    }
 
-   private Item value;
-
    public void setValue(Item value)
    {
       try
@@ -121,7 +119,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
          if (tree.getRoot() == null)
          {
-            this.value = value;
             TreeNode rootNode = new TreeNode(value.getName(), value.getIcon(), value);
             tree.setRoot(rootNode);
 
@@ -236,10 +233,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       //setEmptyMessage(emptyMessage);
    }
 
-   private void onItemClicked()
-   {
-   }
-
    private class OpenHandlerRegistration implements HandlerRegistration
    {
 
@@ -276,8 +269,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
    private class SelectionEventImpl extends SelectionEvent<Item>
    {
 
-      private Item selectedItem;
-
       public SelectionEventImpl(Item selectedItem)
       {
          super(selectedItem);
@@ -287,8 +278,6 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    private class OpenEventImpl extends OpenEvent<Item>
    {
-
-      private Item item;
 
       protected OpenEventImpl(Item item)
       {

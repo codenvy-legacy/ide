@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.browse;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -38,7 +39,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
    @Test
    public void testExplodeCollapseFolder() throws Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       createFolder("folder-1");
       createFolder("folder-1-1");
       selectItemInWorkspaceTree("folder-1");
@@ -64,7 +65,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
 
       //Close folder "folder-2"
       openOrCloseFolder("folder-2");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertElementPresentInWorkspaceTree("folder-1");
       assertElementPresentInWorkspaceTree("folder-2");
       //Sub folders of folder "folder-2" are hidden 
@@ -73,7 +74,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       
       //Open "folder-1"
       openOrCloseFolder("folder-1");
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertElementPresentInWorkspaceTree("folder-1");
       assertElementPresentInWorkspaceTree("folder-1-1");
       assertElementPresentInWorkspaceTree("folder-1-2");
@@ -81,11 +82,11 @@ public class ExploringWorkspacePanelTest extends BaseTest
       //Sub folders of folder "folder-2" are hidden 
       assertElementNotPresentInWorkspaceTree("folder-2-1");
       assertElementNotPresentInWorkspaceTree("folder-2-2");
-      Thread.sleep(5000);
+      Thread.sleep(TestConstants.SLEEP);
 
       //Close workspace item
       openCloseRootWorkspace();
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       //All sub folders hide
       assertElementNotPresentInWorkspaceTree("folder-2");
       assertElementNotPresentInWorkspaceTree("folder-2-2");
@@ -96,7 +97,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
 
       //Open workspace item
       openCloseRootWorkspace();
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.SLEEP);
       assertElementPresentInWorkspaceTree("folder-1");
       assertElementNotPresentInWorkspaceTree("folder-1-1");
       assertElementNotPresentInWorkspaceTree("folder-1-2");
@@ -105,8 +106,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       assertElementNotPresentInWorkspaceTree("folder-2-2");
       
       selectItemInWorkspaceTree("folder-1");
-      deleteSelectedItem();
+      deleteSelectedItems();
       selectItemInWorkspaceTree("folder-2");
-      deleteSelectedItem();
+      deleteSelectedItems();
    }
 }

@@ -56,9 +56,12 @@ public class GroovyScriptService
    @Path("/validate")
    public Response validate(@HeaderParam("location") String location, InputStream inputStream)
    {
-      try {
+      try
+      {
          return groovyScript2RestLoader.validateScript(location, inputStream);
-      } catch (Throwable e) {
+      }
+      catch (Throwable e)
+      {
          return Response.status(HTTPStatus.INTERNAL_ERROR).entity(e.getMessage()).build();
       }
    }
@@ -68,7 +71,8 @@ public class GroovyScriptService
    public Response load(@Context UriInfo uriInfo, @HeaderParam("location") String location,
       @QueryParam("state") String state)
    {
-      try {
+      try
+      {
          String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
 
          if (!location.startsWith(prefix))
@@ -87,11 +91,13 @@ public class GroovyScriptService
          String path = location.substring(location.indexOf("/") + 1);
 
          boolean load = Boolean.parseBoolean(state);
-         return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);         
-      } catch (Throwable e) {
+         return groovyScript2RestLoader.load(repositoryName, workspaceName, path, load);
+      }
+      catch (Throwable e)
+      {
          return Response.status(HTTPStatus.INTERNAL_ERROR).entity(e.getMessage()).build();
       }
-      
+
    }
 
 }

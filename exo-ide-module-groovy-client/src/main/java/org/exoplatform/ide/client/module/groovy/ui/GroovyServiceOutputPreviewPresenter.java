@@ -40,6 +40,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -356,7 +358,10 @@ public class GroovyServiceOutputPreviewPresenter
       String entered = display.getPathField().getValue();
       String path = resource.getPath();
       String[] patterns = path.split(REPLACEMENT_REGEX);
-      ArrayList<String> parameters = getParams(entered, patterns);
+      ArrayList<String> parameters;
+
+      parameters = getParams(entered, patterns);
+
       for (String param : parameters)
       {
          if (param.contains("?"))
@@ -389,7 +394,7 @@ public class GroovyServiceOutputPreviewPresenter
     *  "/rest/hello/",
     *  "/world"
     * } 
-    * <pre>
+    * </pre>
     * 
     * @param str path
     * @param patterns array of patterns
@@ -402,9 +407,11 @@ public class GroovyServiceOutputPreviewPresenter
       if (str.indexOf(patterns[0]) > 0)
          params.add(str.substring(0, str.indexOf(patterns[0])));
 
+      int p = 0;
       for (int i = 0; i < patterns.length - 1; i++)
       {
-         params.add(str.substring(str.indexOf(patterns[i]) + patterns[i].length(), str.indexOf(patterns[i + 1])));
+         p += str.indexOf(patterns[i]) + patterns[i].length();
+         params.add(str.substring(str.indexOf(patterns[i], p) + patterns[i].length(), str.indexOf(patterns[i + 1], p)));
       }
 
       String lastPattern = patterns[patterns.length - 1];
@@ -705,11 +712,33 @@ public class GroovyServiceOutputPreviewPresenter
     */
    private String getPathRegex(Resource resource)
    {
-      if (resource.getPath().contains(".+"))
+      if (resource.getPath().contains(": ."))
       {
-         String reg = resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
-         reg = reg.replace(PATH_REGEX, "");
-         return reg + "[A-Za-z0-9+&@#/%=~_|][A-Za-z0-9+&@#/%=~_|]*$";
+         String nReg = resource.getPath().substring(0, resource.getPath().lastIndexOf("/"));
+
+         String reg = nReg.replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
+
+         //get path param list i.e. /{pathPatamList: .+}
+         String[] pathParam = display.getPathField().getValue().split(reg);
+
+         //if no path parameters list return 
+         if(pathParam.length <= 1)
+         {
+            return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
+         }
+
+         //Remove first "/"
+         String exp = pathParam[1].substring(1);
+
+         //Split path parameter list
+         String[] arr = exp.split("/");
+         reg += "/";
+         for (int i = 0; i < arr.length; i++)
+         {
+            reg += PATH_REGEX + "/";
+         }
+
+         return reg + "{0,1}$";
       }
 
       return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
