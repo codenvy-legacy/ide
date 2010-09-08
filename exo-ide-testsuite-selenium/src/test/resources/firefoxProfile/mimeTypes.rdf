@@ -1,0 +1,730 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:mimetype:handler:application/rar"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/rar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-jaxrs+groovy"
+                   NC:value="application/x-jaxrs+groovy"
+                   NC:editable="true"
+                   NC:fileExtensions="groovy"
+                   NC:description="">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-jaxrs+groovy"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:script/groovy"
+                   NC:value="script/groovy"
+                   NC:editable="true"
+                   NC:fileExtensions="groovy"
+                   NC:description="">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:script/groovy"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:ircs"
+                   NC:alwaysAsk="true">
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://www.mibbit.com/?url=%s"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:text/javascript"
+                   NC:description="JavaScript program"
+                   NC:value="text/javascript"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/javascript"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:text/html"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/atom+xml"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="false"
+                   NC:useSystemDefault="false"
+                   NC:handleInternal="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/atom+xml"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/vnd.openofficeorg.extension"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:text/css"
+                   NC:value="text/css"
+                   NC:editable="true"
+                   NC:description="CSS stylesheet">
+    <NC:fileExtensions>css</NC:fileExtensions>
+    <NC:fileExtensions>cssl</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/css"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/rtf"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/rtf"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:script/groovy"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="false"
+                   NC:useSystemDefault="false"
+                   NC:handleInternal="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:script/groovy"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:text/javascript"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/javascript"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:mailto"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="false">
+    <NC:possibleApplication RDF:resource="urn:handler:web:http://mbox.i.ua/compose/?mailto=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:http://webmail.meta.ua/compose.php?mail_to=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://mail.google.com/mail/?extsrc=mailto&amp;url=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:http://compose.mail.yahoo.com/?To=%s"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/zip"
+                   NC:prettyName=""
+                   NC:path=""
+                   NC:alwaysAsk="false"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="true">
+  <RDF:Description RDF:about="urn:mimetype:handler:application/ogg"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="false" />
+  <RDF:Description RDF:about="urn:handler:web:http://mbox.i.ua/compose/?mailto=%s"
+                   NC:prettyName="Пошта I.ua"
+                   NC:uriTemplate="http://mbox.i.ua/compose/?mailto=%s" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/download"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/download"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/empty"
+                   NC:value="application/empty"
+                   NC:editable="true"
+                   NC:description="Bzip archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/empty"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/atom+xml"
+                   NC:path="/usr/bin/kwrite"
+                   NC:prettyName="kwrite" />
+  <RDF:Description RDF:about="urn:mimetype:handler:image/x.djvu"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:image/x.djvu"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/rtf"
+                   NC:value="application/rtf"
+                   NC:editable="true"
+                   NC:fileExtensions="rtf"
+                   NC:description="Документ RTF">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/rtf"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-java-archive"
+                   NC:value="application/x-java-archive"
+                   NC:editable="true"
+                   NC:description="Java archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-java-archive"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:video/mpeg"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="false" />
+  <RDF:Description RDF:about="urn:handler:web:https://mail.yandex.ru/compose?mailto=%s"
+                   NC:prettyName="Яндекс.Пошта"
+                   NC:uriTemplate="https://mail.yandex.ru/compose?mailto=%s" />
+  <RDF:Description RDF:about="urn:mimetype:application/java-archive"
+                   NC:value="application/java-archive"
+                   NC:editable="true"
+                   NC:description="Java archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/java-archive"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-gzip"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-gzip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/empty"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/empty"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:text/x-patch"
+                   NC:value="text/x-patch"
+                   NC:editable="true"
+                   NC:description="differences between files">
+    <NC:fileExtensions>patch</NC:fileExtensions>
+    <NC:fileExtensions>diff</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/x-patch"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/vnd.ms-excel"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:application/x-rar-compressed"
+                   NC:value="application/x-rar-compressed"
+                   NC:editable="true"
+                   NC:fileExtensions="rar"
+                   NC:description="Архів RAR">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-rar-compressed"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/msword"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-bzip2"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-bzip2"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/json"
+                   NC:description=""
+                   NC:value="application/json"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/json"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:video/mpeg"
+                   NC:value="video/mpeg">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:video/mpeg"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:video/x-msvideo"
+                   NC:value="video/x-msvideo"
+                   NC:editable="true"
+                   NC:fileExtensions="avi"
+                   NC:description="AVI video">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:video/x-msvideo"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:video/x-msvideo"
+                   NC:prettyName="libvlcplugin.so"
+                   NC:path="/usr/lib/browser-plugins/libvlcplugin.so" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-jaxrs+groovy"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-jaxrs+groovy"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:web:https://mail.google.com/mail/?extsrc=mailto&amp;url=%s"
+                   NC:prettyName="Gmail"
+                   NC:uriTemplate="https://mail.google.com/mail/?extsrc=mailto&amp;url=%s" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-gzip"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:text/html"
+                   NC:value="text/html"
+                   NC:editable="true"
+                   NC:description="HTML document">
+    <NC:fileExtensions>html</NC:fileExtensions>
+    <NC:fileExtensions>htm</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/html"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:image/png"
+                   NC:fileExtensions="png"
+                   NC:description="PNG image"
+                   NC:value="image/png"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:image/png"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:text/x-patch"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/x-patch"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-bittorrent"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-bittorrent"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-java-archive"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:text/x-js"
+                   NC:value="text/x-js"
+                   NC:editable="true"
+                   NC:fileExtensions="js"
+                   NC:description="">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/x-js"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:schemes">
+    <NC:Protocol-Schemes RDF:resource="urn:schemes:root"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-tar"
+                   NC:fileExtensions="tar"
+                   NC:description="Tar archive"
+                   NC:value="application/x-tar"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-tar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/rar"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:handler:web:http://30boxes.com/external/widget?refer=ff&amp;url=%s"
+                   NC:prettyName="30 Boxes"
+                   NC:uriTemplate="http://30boxes.com/external/widget?refer=ff&amp;url=%s" />
+  <RDF:Description RDF:about="urn:mimetype:application/x-bittorrent"
+                   NC:value="application/x-bittorrent"
+                   NC:editable="true"
+                   NC:fileExtensions="torrent"
+                   NC:description="файл початкового значення BitTorrent">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-bittorrent"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-debian-package"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-debian-package"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-cd-image"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:video/3gpp"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:video/3gpp"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/zip"
+                   NC:fileExtensions="zip"
+                   NC:description="Zip archive"
+                   NC:value="application/zip"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/zip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:video/3gpp"
+                   NC:value="video/3gpp"
+                   NC:editable="true"
+                   NC:fileExtensions="3gp"
+                   NC:description="Мультимедіа 3GPP">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:video/3gpp"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:image/jpeg"
+                   NC:description="JPEG image"
+                   NC:value="image/jpeg"
+                   NC:editable="true">
+    <NC:fileExtensions>jpg</NC:fileExtensions>
+    <NC:fileExtensions>jpeg</NC:fileExtensions>
+    <NC:fileExtensions>jpe</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:image/jpeg"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/msword"
+                   NC:value="application/msword"
+                   NC:editable="true"
+                   NC:fileExtensions="doc"
+                   NC:description="Word document">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/msword"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/pdf"
+                   NC:fileExtensions="pdf"
+                   NC:description="PDF document"
+                   NC:value="application/pdf"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/pdf"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:video/x-ms-wmv"
+                   NC:value="video/x-ms-wmv"
+                   NC:editable="true"
+                   NC:fileExtensions="wmv"
+                   NC:description="Windows Media video">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:video/x-ms-wmv"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/zip"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true"
+                   NC:useSystemDefault="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/zip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:local:/usr/lib/browser-plugins/mplayerplug-in.so"
+                   NC:prettyName="mplayerplug-in.so"
+                   NC:path="/usr/lib/browser-plugins/mplayerplug-in.so" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-cd-image"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-cd-image"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:local:/usr/lib/firefox"
+                   NC:prettyName="firefox"
+                   NC:path="/usr/lib/firefox" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/empty"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-shockwave-flash"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="true" />
+  <RDF:Description RDF:about="urn:mimetype:handler:image/png"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:image/png"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-bzip2"
+                   NC:value="application/x-bzip2"
+                   NC:editable="true"
+                   NC:description="Bzip archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-bzip2"/>
+  </RDF:Description>
+  <RDF:Seq RDF:about="urn:mimetypes:root">
+    <RDF:li RDF:resource="urn:mimetype:application/x-bittorrent"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-gzip"/>
+    <RDF:li RDF:resource="urn:mimetype:application/zip"/>
+    <RDF:li RDF:resource="urn:mimetype:application/force-download"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-rar"/>
+    <RDF:li RDF:resource="urn:mimetype:application/rar"/>
+    <RDF:li RDF:resource="urn:mimetype:application/rtf"/>
+    <RDF:li RDF:resource="urn:mimetype:video/3gpp"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-tar"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-bzip2"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-debian-package"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-cd-image"/>
+    <RDF:li RDF:resource="urn:mimetype:text/javascript"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-java-archive"/>
+    <RDF:li RDF:resource="urn:mimetype:application/pdf"/>
+    <RDF:li RDF:resource="urn:mimetype:application/vnd.openofficeorg.extension"/>
+    <RDF:li RDF:resource="urn:mimetype:video/x-msvideo"/>
+    <RDF:li RDF:resource="urn:mimetype:application/vnd.ms-excel"/>
+    <RDF:li RDF:resource="urn:mimetype:video/mpeg"/>
+    <RDF:li RDF:resource="urn:mimetype:application/ogg"/>
+    <RDF:li RDF:resource="urn:mimetype:application/msword"/>
+    <RDF:li RDF:resource="urn:mimetype:application/empty"/>
+    <RDF:li RDF:resource="urn:mimetype:application/download"/>
+    <RDF:li RDF:resource="urn:mimetype:text/html"/>
+    <RDF:li RDF:resource="urn:mimetype:application/java-archive"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-shockwave-flash"/>
+    <RDF:li RDF:resource="urn:mimetype:image/jpeg"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-google-gadget"/>
+    <RDF:li RDF:resource="urn:mimetype:text/x-js"/>
+    <RDF:li RDF:resource="urn:mimetype:image/x.djvu"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-rar-compressed"/>
+    <RDF:li RDF:resource="urn:mimetype:image/png"/>
+    <RDF:li RDF:resource="urn:mimetype:text/plain"/>
+    <RDF:li RDF:resource="urn:mimetype:application/atom+xml"/>
+    <RDF:li RDF:resource="urn:mimetype:script/groovy"/>
+    <RDF:li RDF:resource="urn:mimetype:application/json"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-zip"/>
+    <RDF:li RDF:resource="urn:mimetype:video/x-ms-wmv"/>
+    <RDF:li RDF:resource="urn:mimetype:application/gzip"/>
+    <RDF:li RDF:resource="urn:mimetype:text/css"/>
+    <RDF:li RDF:resource="urn:mimetype:application/x-jaxrs+groovy"/>
+    <RDF:li RDF:resource="urn:mimetype:text/x-patch"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="urn:mimetype:application/x-zip"
+                   NC:value="application/x-zip"
+                   NC:editable="true"
+                   NC:fileExtensions="zip"
+                   NC:description="Zip archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-zip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-tar"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/java-archive"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:video/x-ms-wmv"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:video/x-ms-wmv"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/force-download"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/force-download"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:webcal"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="true">
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://calendar.yandex.ru/importics.xml?ics=%s"/>
+    <NC:possibleApplication RDF:resource="urn:handler:web:http://30boxes.com/external/widget?refer=ff&amp;url=%s"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:ircs"
+                   NC:value="ircs">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:ircs"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:text/plain"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/plain"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:video/x-msvideo"
+                   NC:alwaysAsk="false">
+    <NC:possibleApplication RDF:resource="urn:handler:local:/usr/lib/firefox"/>
+    <NC:possibleApplication RDF:resource="urn:handler:local:/usr/bin/mplayer"/>
+    <NC:possibleApplication RDF:resource="urn:handler:local:/usr/lib/browser-plugins/mplayerplug-in.so"/>
+    <NC:possibleApplication RDF:resource="urn:handler:local:/usr/lib/browser-plugins/libvlcplugin.so"/>
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:video/x-msvideo"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:text/css"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/css"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/rtf"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:root"
+                   NC:uk_defaultHandlersVersion="1"
+                   NC:ru_defaultHandlersVersion="1"
+                   NC:en-GB_defaultHandlersVersion="2"
+                   NC:en-US_defaultHandlersVersion="3" />
+  <RDF:Description RDF:about="urn:scheme:webcal"
+                   NC:value="webcal">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:webcal"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:text/x-js"
+                   NC:path="/usr/bin/firefox"
+                   NC:prettyName="firefox" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-rar"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:text/x-js"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="false"
+                   NC:useSystemDefault="false"
+                   NC:handleInternal="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/x-js"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:script/groovy"
+                   NC:path="/usr/bin/kwrite"
+                   NC:prettyName="kwrite" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-google-gadget"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-google-gadget"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/force-download"
+                   NC:value="application/force-download"
+                   NC:editable="true"
+                   NC:description="Архів RAR">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/force-download"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:local:/usr/bin/mplayer"
+                   NC:prettyName="mplayer"
+                   NC:path="/usr/bin/mplayer" />
+  <RDF:Description RDF:about="urn:handler:web:http://compose.mail.yahoo.com/?To=%s"
+                   NC:prettyName="Yahoo! Mail"
+                   NC:uriTemplate="http://compose.mail.yahoo.com/?To=%s" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/pdf"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/pdf"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/msword"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/msword"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:text/javascript"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:application/x-rar"
+                   NC:value="application/x-rar"
+                   NC:editable="true"
+                   NC:description="Архів RAR">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-rar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/ogg"
+                   NC:value="application/ogg">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/ogg"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/json"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="false"
+                   NC:useSystemDefault="false"
+                   NC:handleInternal="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/json"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:image/x.djvu"
+                   NC:description=""
+                   NC:value="image/x.djvu"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:image/x.djvu"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:web:https://calendar.yandex.ru/importics.xml?ics=%s"
+                   NC:prettyName="Яндекс.Календар"
+                   NC:uriTemplate="https://calendar.yandex.ru/importics.xml?ics=%s" />
+  <RDF:Description RDF:about="urn:mimetype:application/vnd.openofficeorg.extension"
+                   NC:value="application/vnd.openofficeorg.extension"
+                   NC:editable="true"
+                   NC:fileExtensions="oxt"
+                   NC:description="">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/vnd.openofficeorg.extension"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-cd-image"
+                   NC:value="application/x-cd-image"
+                   NC:editable="true"
+                   NC:description="raw CD image">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-cd-image"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/java-archive"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/java-archive"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-java-archive"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-java-archive"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:web:https://www.mibbit.com/?url=%s"
+                   NC:prettyName="Mibbit"
+                   NC:uriTemplate="https://www.mibbit.com/?url=%s" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-zip"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-zip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:text/plain"
+                   NC:value="text/plain"
+                   NC:editable="true"
+                   NC:description="plain text document">
+    <NC:fileExtensions>txt</NC:fileExtensions>
+    <NC:fileExtensions>asc</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:text/plain"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-gzip"
+                   NC:value="application/x-gzip"
+                   NC:editable="true"
+                   NC:description="Gzip archive">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-gzip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/force-download"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:handler:web:http://webmail.meta.ua/compose.php?mail_to=%s"
+                   NC:prettyName="Метапошта"
+                   NC:uriTemplate="http://webmail.meta.ua/compose.php?mail_to=%s" />
+  <RDF:Description RDF:about="urn:mimetypes">
+    <NC:MIME-types RDF:resource="urn:mimetypes:root"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:irc"
+                   NC:value="irc">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:irc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-bittorrent"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/gzip"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/gzip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/atom+xml"
+                   NC:description="Atom syndication feed"
+                   NC:value="application/atom+xml"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/atom+xml"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/vnd.openofficeorg.extension"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/vnd.openofficeorg.extension"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:video/3gpp"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:application/vnd.ms-excel"
+                   NC:description="Excel spreadsheet"
+                   NC:value="application/vnd.ms-excel"
+                   NC:editable="true">
+    <NC:fileExtensions>xls</NC:fileExtensions>
+    <NC:fileExtensions>xlb</NC:fileExtensions>
+    <NC:fileExtensions>xlt</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/vnd.ms-excel"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:irc"
+                   NC:useSystemDefault="true"
+                   NC:alwaysAsk="true">
+    <NC:possibleApplication RDF:resource="urn:handler:web:https://www.mibbit.com/?url=%s"/>
+  </RDF:Description>
+  <RDF:Seq RDF:about="urn:schemes:root">
+    <RDF:li RDF:resource="urn:scheme:mailto"/>
+    <RDF:li RDF:resource="urn:scheme:webcal"/>
+    <RDF:li RDF:resource="urn:scheme:irc"/>
+    <RDF:li RDF:resource="urn:scheme:ircs"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="urn:mimetype:application/x-debian-package"
+                   NC:description="Пакет"
+                   NC:value="application/x-debian-package"
+                   NC:editable="true">
+    <NC:fileExtensions>deb</NC:fileExtensions>
+    <NC:fileExtensions>udeb</NC:fileExtensions>
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-debian-package"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/rar"
+                   NC:fileExtensions="rar"
+                   NC:description="Архів RAR"
+                   NC:value="application/rar"
+                   NC:editable="true">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/rar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:handler:local:/usr/lib/browser-plugins/libvlcplugin.so"
+                   NC:prettyName="libvlcplugin.so"
+                   NC:path="/usr/lib/browser-plugins/libvlcplugin.so" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/download"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-tar"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true"
+                   NC:useSystemDefault="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-tar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:mailto"
+                   NC:value="mailto">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:mailto"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-rar-compressed"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-rar-compressed"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/x-shockwave-flash"
+                   NC:value="application/x-shockwave-flash">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-shockwave-flash"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/pdf"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-bzip2"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:handler:image/jpeg"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:image/jpeg"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:application/download"
+                   NC:value="application/download"
+                   NC:editable="true"
+                   NC:description="DOS/Windows executable">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/download"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/x-debian-package"
+                   NC:prettyName=""
+                   NC:path="" />
+  <RDF:Description RDF:about="urn:mimetype:application/x-google-gadget"
+                   NC:value="application/x-google-gadget"
+                   NC:editable="true"
+                   NC:description="XML document">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/x-google-gadget"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:externalApplication:application/json"
+                   NC:path="/usr/bin/kwrite"
+                   NC:prettyName="kwrite" />
+  <RDF:Description RDF:about="urn:mimetype:application/gzip"
+                   NC:value="application/gzip"
+                   NC:editable="true"
+                   NC:fileExtensions="gz"
+                   NC:description="">
+    <NC:handlerProp RDF:resource="urn:mimetype:handler:application/gzip"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/x-rar"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-rar"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:text/html"
+                   NC:alwaysAsk="true"
+                   NC:saveToDisk="true">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/html"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mimetype:handler:application/vnd.ms-excel"
+                   NC:alwaysAsk="true"
+                   NC:useSystemDefault="true"
+                   NC:saveToDisk="false">
+    <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/vnd.ms-excel"/>
+  </RDF:Description>
+</RDF:RDF>

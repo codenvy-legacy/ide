@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Hello World!" />
+<Content type="html">
+<![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>helpAbout</title>
+<script>
+var a;
+</script>
+<style>
+span {
+font-size: 12pt;
+}
+</style>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">helpAbout</td></tr>
+</thead>
+<tbody>
+<tr>
+<td>open</td>
+<td>/org.exoplatform.ideall.IDEApplication/IDEApplication.html?gwt.codesvr=127.0.0.1:9997</td>
+<td></td>
+</tr>
+</tbody></table>
+<br />
+<br>
+<style>
+body {
+font-size: 12pt;
+}
+</style>
+
+<script>
+var b;
+</script>
+</body>
+</html>
+]]></Content></Module>

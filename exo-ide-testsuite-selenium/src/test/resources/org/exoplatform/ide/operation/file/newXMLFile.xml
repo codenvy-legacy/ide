@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Module>
+  <ModulePrefs author="Labpixies"
+  author_email="info@labpixies.com"
+  title="__MSG_g_title___"
+  screenshot="http://cdn.labpixies.com"
+  height="440"
+  width ="500"
+  title_url="www.labpixies.com"
+  <Locale lang="es" messages="http://www.labpixies.com">
+  <Require feature="analytics" />
+</ModulePrefs>
+  <UserPref name="last_location" datatype="hidden">
+    <Content type="html">
+    <![CDATA[
+<!--
+Google Maps Gadget
+Design $ code Labpixies
+All subsequent code and resourses used are propprietary of Labpixixes
+Coppyright (C) 2008 LabPixies
+www.Labpixies.com

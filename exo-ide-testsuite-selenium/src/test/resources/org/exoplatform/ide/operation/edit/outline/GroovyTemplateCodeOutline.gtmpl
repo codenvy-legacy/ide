@@ -1,0 +1,35 @@
+<%
+def a1 = '1';
+public String a2;
+boolean a2() {
+return a1 = 1;
+}
+void a3(String a4) {
+a1 = a2();
+}
+String cTab, cName, description, displayName;
+boolean isSelected = false;
+for(category in categories) {
+cName = category.getName();
+if(selectedCategory != null && cName == selectedCategory.getName()) {
+isSelected = true;
+cTab = 'SelectedTab';
+}else {
+isSelected = false;
+cTab = 'NormalTab';
+}
+}
+Integer a4 = 2;
+
+%>
+
+<% if(appCategories==null || appCategories.isEmpty()){ %>
+<div class='ItemDetail' style='display:block'>
+<div class='NoneAppsMessage' style='display:block'>
+<%=_ctx.appRes('UIAddNewApplication.label.NoneApp')%>
+</div>
+</div>
+<%}%>
+<div class='<%= selected ? 'SelectedItem' : '' %> Item' title='<%=category.getDisplayName()%>' >
+<a href='javascript:void(0);'><%=_ctx.appRes('UIAddNewApplication.label.Close')%></a>
+</div>

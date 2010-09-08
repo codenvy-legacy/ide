@@ -1,0 +1,162 @@
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.operation.templates;
+
+import static org.junit.Assert.*;
+
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+
+/**
+ * Created by The eXo Platform SAS.
+ *	
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:   ${date} ${time}
+ *
+ */
+public class SaveFileAsTemplateTest extends BaseTest
+{
+   private static final String FILE_NAME = "RestServiceTemplate.groovy";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+
+   private static final String REST_SERVICE_TEMPLATE_NAME = "test REST template";
+   
+   private static final String REST_SERVICE_TEMPLATE_DESCRIPTION = "test REST Service template description";
+   
+   private static final String REST_SERVICE_FILE_NAME = "TestRestServiceFile";
+   
+   private static final String TEXT = "// test groovy file template";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      
+      String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/RestServiceTemplate.groovy";
+      try
+      {
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      cleanRegistry();
+      try
+      {
+         VirtualFileSystemUtils.delete(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   //IDE-62:Save File as Template
+   @Test
+   public void testSaveFileAsTemplate() throws Exception
+   {
+      //-------- 1 ----------
+      //open file with text
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //--------- 2 --------
+      //Click on "File->Save As Template" top menu item, 
+      //set "Name" field on "test REST template", 
+      //"Description" field on "test REST Service template description", and then click on "Save" button.
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
+      Thread.sleep(TestConstants.SLEEP);
+      // check "Save file as template" dialog window
+      TemplateUtils.checkSaveAsTemplateWindow(selenium);
+      //set name
+      selenium.type("scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
+         + "name=ideSaveAsTemplateFormNameField]/element", REST_SERVICE_TEMPLATE_NAME);
+      //set description
+      selenium.type("scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
+         + "name=ideSaveAsTemplateFormDescriptionField]/element", REST_SERVICE_TEMPLATE_DESCRIPTION);
+      //click save button
+      selenium.click("scLocator=//IButton[ID=\"ideSaveAsTemplateFormSaveButton\"]/");
+      Thread.sleep(TestConstants.SLEEP);
+      //check info dialog, that template crated successfully
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/"));
+      assertTrue(selenium.isTextPresent("Template created successfully!"));
+      //click ok button
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      
+      //------------ 3 ----------
+      //Click on "New->From Template" button and then click on "test groovy template" item.
+      createFileFromToolbar(MenuCommands.New.FROM_TEMPLATE);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      // check create "Create file dialog window"
+      TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
+      
+      TemplateUtils.selectItemInTemplateList(selenium, REST_SERVICE_TEMPLATE_NAME);
+      
+      //------------ 4 ----------
+      //Change "File Name.groovy" field text on "Test Groovy File.groovy" name, click on "Create" button.
+      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[" 
+         + "name=ideCreateFileFromTemplateFormFileNameField||title=File Name]/element", 
+         REST_SERVICE_FILE_NAME);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //click Create button
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
+      Thread.sleep(TestConstants.SLEEP);
+      //there should be new tab with title "Test Groovy File.groovy", 
+      //first line "// test groovy file template" in content and with "Groovy" 
+      //highlighting opened in the Content Panel.
+      assertEquals(REST_SERVICE_FILE_NAME + " *", getTabTitle(1));
+      assertTrue(getTextFromCodeEditor(0).startsWith(TEXT));
+      
+      //------------ 5 ----------
+      //Close files "Test File.groovy" and "Test Groovy File.groovy".
+      closeUnsavedFileAndDoNotSave("1");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      closeTab("0");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+   
+}

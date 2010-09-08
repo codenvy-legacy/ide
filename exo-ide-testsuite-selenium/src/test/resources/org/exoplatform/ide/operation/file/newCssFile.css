@@ -1,0 +1,14 @@
+/*Some example CSS*/
+
+@import url ("something.css")
+body {
+  margin 0;
+  padding 3em 6em;
+  font-family: tahoma, arial, sans-serif;
+  color #000;
+}
+  #navigation a {
+    font-weigt: bold;
+  text-decoration: none !important;
+}
+}
