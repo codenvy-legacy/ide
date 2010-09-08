@@ -1,0 +1,91 @@
+*Step 1.* Get source.
+* To get source of GWT Framework, execute the following command:
+{screen}
+svn co http://svn.exoplatform.org/projects/gwt/tags/1.0.0-CR01 gwt-commons
+{screen}
+* To get source of eXo IDE, execute the following command:
+{screen}
+svn co http://svn.exoplatform.org/exo-int/ideall/tags/1.0.0-CR01 ide
+{screen}
+
+*Step 2.* Source compile.
+* Go to folder gwt-commons and run the command:
+{screen}
+mvn clean install
+{screen}
+* Go to folder ide and run the command:
+{screen}
+mvn clean install
+{screen}
+h1. Run As Standalone Application
+* Download Apache Tomcat from [here|http://tomcat.apache.org/download-60.cgi] and unzip it to the directory with your project's dependencies.
+* Go to the root directory of maven and edit file *"conf/settings.xml"*. Add two properties: directory with your project's dependencies and tomcat version like following: 
+{code:language=xml}
+...
+<profile>
+   <id>local-properties</id>
+      <properties>
+      ...  
+         <exo.projects.directory.dependencies>[PATH_TO_PROJECT_DEPENDENCIES]</exo.projects.
+          directory.dependencies>
+         <exo.projects.app.tomcat.version>tomcat-[TOMCAT_VERSION]</exo.projects.app.tomcat.version>
+      </properties>
+      ...  
+</profile>  
+...
+{code}
+In this case, the path to the Apache Tomcat will be "\[PATH_TO_PROJECT_DEPENDENCIES\]/tomcat-\[TOMCAT_VERSION\]".
+* Go to folder *exo-ide-client* and execute the command:
+{screen}
+mvn clean install -Pstandalone
+{screen}
+* Go to folder *exo-ide-packaging-standalone-tomcat* and execute the command:
+{screen}
+mvn clean install
+{screen}
+# Go to folder *exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin* and execute the command:
+In Windows:
+{screen}
+ide.bat run
+{screen}
+In Unix:
+{screen}
+./ide.sh run
+{screen}
+* Application is available in browser by this URL:
+{screen}
+http://localhost:8080/IDE-application/IDE/IDEApplication.html
+{screen}
+
+h1. Run GWT Development Mode
+
+* Edit file *ide/exo-ide-client/src/main/resources/org/exoplatform/ide/public/applicationInitializer.js* like below:
+{code:language=javascript}
+var registryURL = "/rest/private/registry/repository";
+var proxyServiceContext = "/rest/private/proxy";
+   var appConfig = {
+        "context" : "/rest/private",
+        "publicContext" : "/rest",
+        "entryPoint" : "/rest/private/jcr/repository/dev-monit/",
+        "gadgetServer" : "/gadgets/" /*under GWT Shell*/
+    }
+{code}
+* Go to folder *exo-ide-client* and execute the command:
+{screen}
+mvn clean gwt:run -Pshell
+{screen}
+GWT Development window will appear.
+* Click on "Launch Default Browser" button in the GWT window to open eXo IDE in your Web browser.
+
+{note}
+If you don't have Google Web Toolkit Developer Plugin in your browser installed, then you will be prompted to install it.
+Follow the instructions in your web browser to install the plugin:
+* download and install required Google Web Toolkit Developer Plugin for your browser. E.g., for the FireFox this plugin can be downloaded from [this URL|https://dl-ssl.google.com/gwt/plugins/firefox/gwt-dev-plugin.xpi].
+* allow GWT plugin connection in the special dialog window.
+{note}
+
+After successfully launched, eXo IDE will be opened in your default browser.
+
+{tip}
+To open eXo IDE in non-default browser - copy the URL by clicking on "Copy to Clipboard" button then paste it into browser's address bar.
+{tip}

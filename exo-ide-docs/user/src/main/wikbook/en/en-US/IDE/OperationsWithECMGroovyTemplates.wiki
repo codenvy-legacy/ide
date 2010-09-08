@@ -1,0 +1,13 @@
+The template file is a combination of HTML code and groovy code blocks. The usage of eXo IDE gives the possibility to create and edit those files in editor.
+
+h1. Creation and editing templates
+
+To create new groovy template, click on _Toolbar_ *"New->Groovy Template"* button or select *"File->New->Groovy Template"* in top menu. The editor will open new empty file; add content there and the code will be highlighted. Save file using "Save As" in "File" on top menu or _Toolbar_ button. With groovy template file _Outline Panel_ and autocomplete, but only in HTML tags by now, can be used.
+
+!groovy_template.png|border=1!
+
+*Picture 27. Operations with groovy templates*
+
+h1. View properties
+
+To view properties of the groovy template click "Show Properties" button on the right corner of the _Toolbar_.
