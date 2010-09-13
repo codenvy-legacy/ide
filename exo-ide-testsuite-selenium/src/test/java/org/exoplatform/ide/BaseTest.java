@@ -807,6 +807,7 @@ public abstract class BaseTest
    protected void checkMenuCommandState(String topMenuName, String commandName, boolean enabled) throws Exception
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       if (enabled)
       {
          assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName
