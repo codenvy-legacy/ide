@@ -45,6 +45,14 @@ public abstract class VirtualFileSystem
     * @param path
     */
    public abstract void saveContent(File file);
+   
+   /**
+    * Save locked file content
+    * 
+    * @param file
+    * @param lockToken
+    */
+   public abstract void saveContent(File file, LockToken lockToken);
 
    /**
     * Delete file or folder
@@ -92,5 +100,23 @@ public abstract class VirtualFileSystem
     * @param path
     */
    public abstract void search(Folder folder, String text, String mimeType, String path);
+   
+
+   /**
+    * Lock item
+    * 
+    * @param item
+    * @param timeout
+    * @param userName
+    */
+   public abstract void lock(Item item, int timeout, String userName);
+   
+   /**
+    * Unlock item
+    * 
+    * @param item
+    * @param lockToken
+    */
+   public abstract void unlock(Item item, LockToken lockToken);
 
 }
