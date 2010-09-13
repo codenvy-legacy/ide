@@ -65,12 +65,12 @@ public class GoToFolderControl extends IDEControl implements EditorActiveFileCha
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || event.getFile().isNewFile())
       {
          setEnabled(false);
          return;
       }
-
+      
       setEnabled(true);
    }
 
