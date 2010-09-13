@@ -48,6 +48,14 @@ public interface ToolbarCommands
       public static final String DELETE = "Delete Item(s)...";
       
       public static final String REFRESH = "Refresh Selected Folder";
+      
+      public static final String CUT_SELECTED_ITEM = "Cut Selected Item(s)";
+      
+      public static final String COPY_SELECTED_ITEM = "Copy Selected Item(s)";
+      
+//      public static final String NEW = "New";
+      
+      public static final String SEARCH = "Search...";      
    }
    
    public interface View
