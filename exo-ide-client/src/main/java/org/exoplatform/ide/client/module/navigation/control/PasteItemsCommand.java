@@ -82,6 +82,10 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       {
          updateEnabling();
       }
+      else
+      {
+         setEnabled(false);
+      }
 
    }
 

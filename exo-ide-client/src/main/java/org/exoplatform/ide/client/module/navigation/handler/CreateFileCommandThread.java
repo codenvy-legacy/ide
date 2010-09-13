@@ -106,14 +106,23 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    @SuppressWarnings("unchecked")
    public void onCreateNewFile(CreateNewFileEvent event)
    {
-      Item item = selectedItems.get(0);
-
       String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
-
-      String href = item.getHref();
-      if (item instanceof File)
+      
+      String href;
+      
+      if (selectedItems != null && selectedItems.size() != 0)
       {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
+         Item item = selectedItems.get(0);
+
+         href = item.getHref();
+         if (item instanceof File)
+         {
+            href = href.substring(0, href.lastIndexOf("/") + 1);
+         }
+      }
+      else
+      {
+         href = "";
       }
 
       String content = FileTemplates.getTemplateFor(event.getMimeType());

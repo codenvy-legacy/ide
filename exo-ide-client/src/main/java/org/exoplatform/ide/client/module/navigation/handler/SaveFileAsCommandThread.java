@@ -26,6 +26,7 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
@@ -93,6 +94,12 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {
+      if (selectedItems == null || selectedItems.size() == 0)
+      {
+         SmartGWTDialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling trying to save new file !");
+         return;
+      }
+      
       event.isSaveOnly();
 
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
@@ -110,7 +117,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     * @param file
     */
    private void onSaveAsFile(final File file)
-   {
+   {      
       final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
       new AskForValueDialog("Save file as", "Enter new file name:", newFileName, 400, new ValueCallback()

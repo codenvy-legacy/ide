@@ -69,6 +69,11 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
          copyReady = isItemsInSameFolder(event.getSelectedItems());
          updateEnabling();
       }
+      else
+      {
+         setEnabled(false);
+         return;
+      }
    }
 
    @Override

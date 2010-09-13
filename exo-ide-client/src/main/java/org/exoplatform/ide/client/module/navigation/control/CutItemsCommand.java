@@ -95,7 +95,11 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
          cutReady = isItemsInSameFolder(event.getSelectedItems());
          updateEnabling();
       }
-
+      else
+      {
+         setEnabled(false);
+         return;
+      }
    }
 
 }

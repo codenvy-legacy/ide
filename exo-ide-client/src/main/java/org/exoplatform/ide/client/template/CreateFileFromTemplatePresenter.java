@@ -235,12 +235,21 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
          return;
       }
 
-      Item item = selectedItems.get(0);
-
-      String href = item.getHref();
-      if (item instanceof File)
+      String href;
+           
+      if (selectedItems != null && selectedItems.size() != 0)
       {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
+         Item item = selectedItems.get(0);
+
+         href = item.getHref();
+         if (item instanceof File)
+         {
+            href = href.substring(0, href.lastIndexOf("/") + 1);
+         }
+      }
+      else
+      {
+         href = "";
       }
 
       String contentType = selectedTemplate.getMimeType();

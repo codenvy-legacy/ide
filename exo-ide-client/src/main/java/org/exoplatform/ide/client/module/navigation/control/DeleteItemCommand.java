@@ -86,6 +86,11 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       {
          selectedItem = event.getSelectedItems().get(0);
          updateEnabling();
+      } 
+      else
+      {
+         setEnabled(false);
+         return;
       }
    }
 
