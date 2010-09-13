@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.command;
+package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
@@ -59,9 +60,13 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   public SaveAllFilesCommandThread(HandlerManager eventBus, ApplicationContext context)
+   private Map<String, LockToken> lockTokens; 
+   
+   public SaveAllFilesCommandThread(HandlerManager eventBus, Map<String, LockToken> lockTokens)
    {
       this.eventBus = eventBus;
+      this.lockTokens = lockTokens;
+      
       handlers = new Handlers(eventBus);
       this.eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
       this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
@@ -83,7 +88,7 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
-            VirtualFileSystem.getInstance().saveContent(file);
+            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
             return;
          }
       }

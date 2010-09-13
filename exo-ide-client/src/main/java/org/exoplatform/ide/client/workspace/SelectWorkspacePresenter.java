@@ -17,6 +17,7 @@
 package org.exoplatform.ide.client.workspace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +38,14 @@ import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEv
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -95,12 +101,14 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
 
    private Map<String, File> openedFiles;
 
+   private Map<String, LockToken> lockTokens;
+
    public SelectWorkspacePresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
-      EntryPointList entryPointList, Map<String, File> openedFiles)
+      EntryPointList entryPointList, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
    {
       this.eventBus = eventBus;
       this.entryPointList = entryPointList;
-
+      this.lockTokens = lockTokens;
       this.applicationSettings = applicationSettings;
       this.openedFiles = openedFiles;
 
@@ -254,7 +262,7 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
                   }
                   else
                   {
-                     VirtualFileSystem.getInstance().saveContent(file);
+                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
                   }
                }
                else
@@ -283,17 +291,18 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
    private void swichEntryPoint()
    {
       applicationSettings.setValue("entry-point", selectedEntryPoint.getHref(), Store.COOKIES);
-//      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
-      
+      //      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
+
       handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
    }
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      handlers.removeHandler(ApplicationSettingsSavedEvent.TYPE);      
+      handlers.removeHandler(ApplicationSettingsSavedEvent.TYPE);
       display.closeForm();
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
+
 
 }

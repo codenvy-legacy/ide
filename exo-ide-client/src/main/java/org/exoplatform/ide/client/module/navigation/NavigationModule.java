@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.module.navigation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,6 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.command.GoToFolderCommandThread;
-import org.exoplatform.ide.client.command.OpenFileCommandThread;
-import org.exoplatform.ide.client.command.PasteItemsCommandThread;
-import org.exoplatform.ide.client.command.SaveAllFilesCommandThread;
-import org.exoplatform.ide.client.command.SaveFileAsCommandThread;
-import org.exoplatform.ide.client.command.SaveFileCommandThread;
 import org.exoplatform.ide.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
@@ -108,8 +103,20 @@ import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelecte
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileHandler;
 import org.exoplatform.ide.client.module.navigation.handler.CreateFileCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.FileClosedHandler;
+import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandThread;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
@@ -127,7 +134,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
-   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler
+   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ItemLockedHandler, ItemUnlockedHandler
 {
    private HandlerManager eventBus;
 
@@ -146,11 +153,13 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    private String entryPoint;
 
    private File activeFile;
+   
+   private Map<String, LockToken> lockTokens = new HashMap<String, LockToken>();
 
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      this.context = context;      
+      this.context = context;
       handlers = new Handlers(eventBus);
 
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
@@ -159,11 +168,17 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File", "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML File", "HTML File", "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT File", "Text File", "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script File", "JavaScript File", "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File", "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File",
+         "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML File", "HTML File",
+         "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT File", "Text File",
+         "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
+      eventBus.fireEvent(new RegisterControlEvent(
+         new NewItemControl("File/New/New Java Script File", "JavaScript File", "Create New Java Script File",
+            Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
+         "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
       eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand(eventBus)));
@@ -184,32 +199,37 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
-      
+
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
       new CreateFileCommandThread(eventBus, context);
-      new OpenFileCommandThread(eventBus);
-      new SaveFileCommandThread(eventBus);
-      new SaveFileAsCommandThread(eventBus);
-      new SaveAllFilesCommandThread(eventBus, context);
+      new OpenFileCommandThread(eventBus, lockTokens, context);
+      new SaveFileCommandThread(eventBus, lockTokens);
+      new SaveFileAsCommandThread(eventBus, lockTokens);
+      new SaveAllFilesCommandThread(eventBus, lockTokens);
       new GoToFolderCommandThread(eventBus);
       new PasteItemsCommandThread(eventBus, context);
+      new FileClosedHandler(eventBus, lockTokens);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
    }
-   
+
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event.getApplicationConfiguration().getContext());
-   }   
+      new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event
+         .getApplicationConfiguration().getContext());
+   }
 
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
@@ -284,7 +304,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    public void onRenameItem(RenameItemEvent event)
    {
-      new RenameItemForm(eventBus, selectedItems, openedFiles);
+      new RenameItemForm(eventBus, selectedItems, openedFiles, lockTokens);
    }
 
    public void onDeleteItem(DeleteItemEvent event)
@@ -331,6 +351,22 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    */
+   public void onItemUnlocked(ItemUnlockedEvent event)
+   {
+      lockTokens.remove(event.getItem().getHref());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      lockTokens.put(event.getItem().getHref(), event.getLockToken());
    }
 
 }

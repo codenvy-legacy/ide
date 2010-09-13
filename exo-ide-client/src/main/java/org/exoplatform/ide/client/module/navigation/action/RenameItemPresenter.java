@@ -27,11 +27,14 @@ import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler;
 
@@ -83,12 +86,15 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    private List<Item> selectedItems;
 
    private Map<String, File> openedFiles;
+   
+   private Map<String, LockToken> lockTokens;
 
-   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
+   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.openedFiles = openedFiles;
+      this.lockTokens = lockTokens;
       handlers = new Handlers(eventBus);
    }
 
@@ -180,7 +186,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
             File file = openedFiles.get(key);
             if (file.isContentChanged())
             {
-               VirtualFileSystem.getInstance().saveContent(file);
+               VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
                return true;
             }
          }

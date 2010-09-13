@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.command;
+package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,7 +211,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
                      {
                         if (value != null && value == true)
                         {
-                           VirtualFileSystem.getInstance().saveContent(openedFile);
+                           VirtualFileSystem.getInstance().saveContent(openedFile, context.getLockTokens().get(openedFile.getHref()));
                         }
                         else
                         {

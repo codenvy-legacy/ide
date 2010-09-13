@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -74,7 +75,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    private RenameItemPresenter presenter;
 
-   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
+   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Rename item");
@@ -87,7 +88,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       show();
 
-      presenter = new RenameItemPresenter(eventBus, selectedItems, openedFiles);
+      presenter = new RenameItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()

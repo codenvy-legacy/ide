@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.command;
+package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.Map;
 
@@ -28,13 +28,17 @@ import org.exoplatform.ide.client.editor.EditorUtil;
 import org.exoplatform.ide.client.event.file.OpenFileEvent;
 import org.exoplatform.ide.client.event.file.OpenFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
@@ -46,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
+   ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler, ItemLockedHandler
 {
    private HandlerManager eventBus;
 
@@ -56,9 +60,15 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    private ApplicationSettings applicationSettings;
 
-   public OpenFileCommandThread(HandlerManager eventBus)
+   private ApplicationContext context;
+
+   private Map<String, LockToken> lockTokens;
+
+   public OpenFileCommandThread(HandlerManager eventBus, Map<String, LockToken> lockTokens, ApplicationContext context)
    {
       this.eventBus = eventBus;
+      this.context = context;
+      this.lockTokens = lockTokens;
 
       handlers = new Handlers(eventBus);
 
@@ -71,27 +81,35 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       File file = event.getFile();
       selectedEditor = event.getEditor();
 
+      LockToken lockToken = lockTokens.get(file.getHref());
+      if (lockToken != null)
+      {
+         Dialogs.getInstance()
+            .showInfo("File " + file.getName() + " are locked by <b>" + lockToken.getOwner() + "</b>");
+         return;
+      }
+
       //      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
       //      {
       //         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
       //         return;
       //      }
 
-      if (file.getContent() != null)
-      {
-         open(file);
-         return;
-      }
-
+      //
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getContent(file);
+      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      VirtualFileSystem.getInstance().lock(file, 600, context.getUserInfo().getName());
+      //      VirtualFileSystem.getInstance().getContent(file);
+
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
-      VirtualFileSystem.getInstance().getProperties(event.getFile());
+      handlers.removeHandlers();
+      //      VirtualFileSystem.getInstance().getProperties(event.getFile());
+      open(event.getFile());
    }
 
    @SuppressWarnings("unchecked")
@@ -124,13 +142,33 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      handlers.removeHandlers();
-      open((File)event.getItem());
+
+      VirtualFileSystem.getInstance().getContent((File)event.getItem());
+      //      open((File)event.getItem());
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      //      context.getLockTokens().put(event.getItem().getHref(), event.getLockToken());
+      
+      
+      
+      File file = (File)event.getItem();
+      if (file.getContent() != null)
+      {
+         open(file);
+         return;
+      }
+      VirtualFileSystem.getInstance().getProperties(file);
+
    }
 
 }

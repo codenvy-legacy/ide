@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.command;
+package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
 

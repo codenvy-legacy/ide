@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.LockToken;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -67,7 +68,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    private EntryPointListGrid entryPointListGrid;
 
    public SelectWorkspaceForm(HandlerManager eventBus, ApplicationSettings applicationSettings, EntryPointList entryPointList,
-      Map<String, File> openedFiles)
+      Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 
@@ -85,7 +86,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
       show();
 
-      presenter = new SelectWorkspacePresenter(eventBus, applicationSettings, entryPointList, openedFiles);
+      presenter = new SelectWorkspacePresenter(eventBus, applicationSettings, entryPointList, openedFiles, lockTokens);
       presenter.bindDisplay(this);
    }
 
