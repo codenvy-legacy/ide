@@ -47,8 +47,6 @@ public class OpenLocalFileCommand extends IDEControl implements ItemsSelectedHan
 
    private boolean browserPanelSelected = true;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
-
    public OpenLocalFileCommand(HandlerManager eventBus)
    {
       super(ID, eventBus);
@@ -77,14 +75,7 @@ public class OpenLocalFileCommand extends IDEControl implements ItemsSelectedHan
    {
       if (browserPanelSelected)
       {
-         if (selectedItems.size() == 1)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
+         setEnabled(true);
       }
       else
       {
@@ -92,15 +83,11 @@ public class OpenLocalFileCommand extends IDEControl implements ItemsSelectedHan
       }
    }
 
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
-   }
-
    public void onPanelSelected(PanelSelectedEvent event)
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
    }
+
+   public void onItemsSelected(ItemsSelectedEvent event) {}
 
 }

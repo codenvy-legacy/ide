@@ -96,7 +96,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         SmartGWTDialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling trying to save new file !");
+         SmartGWTDialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling this command !");
          return;
       }
       

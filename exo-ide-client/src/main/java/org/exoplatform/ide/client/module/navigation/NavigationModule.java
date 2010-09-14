@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
@@ -256,12 +257,25 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    public void onUploadFile(UploadFileEvent event)
    {
-      Item item = selectedItems.get(0);
-
-      String path = item.getHref();
-      if (item instanceof File)
+      String path = "";
+     
+      if (selectedItems == null || selectedItems.size() == 0)
       {
-         path = path.substring(path.lastIndexOf("/"));
+         if (! event.isOpenFile() )
+         {
+            SmartGWTDialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling this command !");
+            return;
+         }
+      }
+      else
+      {
+         Item item = selectedItems.get(0);
+   
+         path = item.getHref();
+         if (item instanceof File)
+         {
+            path = path.substring(path.lastIndexOf("/"));
+         }
       }
       eventBus.fireEvent(new ClearFocusEvent());
       new UploadForm(eventBus, selectedItems, path, event.isOpenFile(), applicationConfiguration);
