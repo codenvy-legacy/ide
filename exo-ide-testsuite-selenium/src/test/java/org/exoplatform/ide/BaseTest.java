@@ -901,7 +901,7 @@ public abstract class BaseTest
       AbstractTextUtil.getInstance().typeToInput(textItemLocator, name, true);
 
       selenium.click(okButtonLocator);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
    }
 
    /**

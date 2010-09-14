@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import org.exoplatform.ide.operation.browse.NavigationPanelWithoutSelectedItemTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -29,11 +30,12 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({PreviewHtmlFileTest.class, OpenFileWithNonDefaultEditorTest.class,
-   OpenAndSaveXmlFileWithNonLatinNameTest.class, DeleteSeveralFilesSimultaniouslyTest.class, 
+   OpenAndSaveXmlFileWithNonLatinNameTest.class, DeleteSeveralFilesSimultaniouslyTest.class,
    CreatingAndSavingAsNewFileTest.class, DisplayingWarningMessageTest.class, StoreOpenedFilesHistoryTest.class,
    ShowHideLineNumbersTest.class, CreateSaveAsXmlWithNonLatinNameTest.class, SaveAllFilesTest.class,
    SavingPreviouslyEditedFileTest.class, RenameClosedFileTest.class, RenameOpenedFileTest.class,
-   DeletingFilesTest.class, DeletingXmlFileWithNonLatinNameTest.class,OpeningSavingAndClosingTabsWithFilesTest.class})
+   DeletingFilesTest.class, DeletingXmlFileWithNonLatinNameTest.class, OpeningSavingAndClosingTabsWithFilesTest.class,
+   NavigationPanelWithoutSelectedItemTest.class})
 public class FileTestSuite
 {
 
