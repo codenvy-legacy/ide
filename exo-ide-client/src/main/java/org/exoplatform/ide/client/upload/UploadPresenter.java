@@ -214,30 +214,12 @@ public class UploadPresenter implements UploadFileSelectedHandler
     */
    private String extractRecievedContent(String uploadServiceResponse)
    {
-      // test if server returns an error. In this case the received content will not be started from "<PRE>" and finished by "</PRE>"
-      String openBracketPattern = "<PRE>";
-      String closeBracketPattern = "</PRE>";
-
-      if (!uploadServiceResponse.matches("^" + openBracketPattern + "(.*)" + closeBracketPattern + "$"))
-      {
-         // trying to test by using RegExp patterns in lower case
-         openBracketPattern = openBracketPattern.toLowerCase();
-         closeBracketPattern = closeBracketPattern.toLowerCase();
-         if (!uploadServiceResponse.matches(openBracketPattern + "(.*)" + closeBracketPattern))
-         {
-            return null;
-         }
-      }
-
-      // extract uploaded file content from upload service response
-      String content = uploadServiceResponse.replaceFirst(openBracketPattern, "");
-
-      // replace last occurrence of closeBracketPattern on ""
-      int lastIndexOfCloseBracket = content.lastIndexOf(closeBracketPattern);
-      content = content.substring(0, lastIndexOfCloseBracket);
-
-      content = Utils.urlDecode_decode(content); // to unescape end of lines
-      return content;
+      //extract content from uploadServiceResponse
+      //5 - index of letter, that follows after tag <pre>
+      //6 - number of letters in </pre> closing tag
+      String content = uploadServiceResponse.substring(5, uploadServiceResponse.length() - 6);
+      
+      return Utils.urlDecode_decode(content); // to unescape end of lines
    }
 
    private void openInEditor(String fileName)
@@ -341,40 +323,51 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private void submitComplete(String uploadServiceResponse)
    {
       IDELoader.getInstance().hide();
+
+      final String errorMsg = openLocalFile ? "Can not open local file!" : "Can not upload file!";
+
+      boolean matches = false;
+      //check is uploadServiceResponse enclosed in xml tag <pre></pre> (do not case sensitive)
       if (openLocalFile)
       {
-         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>"))
-         {
-            Dialogs.getInstance().showError("Can not open local file!");
-            return;
-         }
+         matches =
+            uploadServiceResponse.matches("^<PRE>(.*)</PRE>$") || uploadServiceResponse.matches("^<pre>(.*)</pre>$");
+      }
+      else
+      {
+         //in browser chrome tag <pre> can have some attributes, that's why regexp is another
+         matches =
+            uploadServiceResponse.matches("^<PRE(.*)</PRE>$") || uploadServiceResponse.matches("^<pre(.*)</pre>$");
+      }
 
+      if (uploadServiceResponse == null || !matches)
+      {
+         Dialogs.getInstance().showError(errorMsg);
+         return;
+      }
+
+      //if uploadServiceResponse is correct, than continue uploading (or opening) file
+      if (openLocalFile)
+      {
          completeOpenLocalFile(uploadServiceResponse);
       }
       else
       {
-         if (uploadServiceResponse == null || !uploadServiceResponse.startsWith("<pre>"))
-         {
-            Dialogs.getInstance().showError("Can not upload file!");
-            return;
-         }
-
          completeUpload();
       }
+
    }
 
+   /**
+    * Opening local file.
+    * 
+    * @param uploadServiceResponse is checked in parent method, so we sure that it is not null,
+    * and data is enclose in tag <pre></pre> (or <PRE></PRE>)
+    */
    private void completeOpenLocalFile(String uploadServiceResponse)
    {
-      if (uploadServiceResponse == null)
-      {
-         // error - displaying behind the window
-         Dialogs.getInstance().showError(
-            "There is an error of file '" + display.getFileNameField().getValue() + "' loading.");
-         return;
-      }
 
       // extract uploaded file content from response
-      //final String submittedFileContent = uploadServiceResponse; // extractRecievedContent(uploadServiceResponse);
       final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
       if (submittedFileContent == null)
       {
