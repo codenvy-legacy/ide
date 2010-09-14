@@ -41,7 +41,7 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 
    public OpenFileEvent(File file, String editor)
    {
-      this.file = file;
+      this(file);
       this.editor = editor;
    }
 
@@ -54,7 +54,7 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       return editor;
    }
-
+   
    @Override
    protected void dispatch(OpenFileHandler hendler)
    {
