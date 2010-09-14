@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -34,12 +36,14 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.form.FormClosedEvent;
+import org.exoplatform.ide.client.framework.form.FormClosedHandler;
+import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,7 +52,7 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorActivityHandler
+   EditorActivityHandler, FormOpenedHandler, FormClosedHandler
 {
    interface Display
    {
@@ -72,10 +76,12 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private boolean goToLine;
 
    private Token currentToken;
-   
+
    private File activeFile;
-   
+
    private TextEditor activeTextEditor;
+
+   private boolean outLineFormOpened;
 
    public OutlinePresenter(HandlerManager bus)
    {
@@ -85,7 +91,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorActivityEvent.TYPE, this);
-      
+      handlers.addHandler(FormClosedEvent.TYPE, this);
+      handlers.addHandler(FormOpenedEvent.TYPE, this);
+
    }
 
    public void bindDisplay(Display d)
@@ -97,7 +105,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          public void onSelection(SelectionEvent<Token> event)
          {
             if (currentToken != null && event.getSelectedItem().getName().equals(currentToken.getName())
-                     && event.getSelectedItem().getLineNumber() == currentToken.getLineNumber())
+               && event.getSelectedItem().getLineNumber() == currentToken.getLineNumber())
             {
                return;
             }
@@ -129,14 +137,19 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      if (isShowOutline(activeTextEditor, activeFile))
+      if (!outLineFormOpened)
+      {
+         return;
+      }
+
+      if (isShowOutlineTree(activeTextEditor, activeFile))
       {
          refreshOutlineTimer.cancel();
          refreshOutlineTimer.schedule(2000);
       }
    }
 
-   private boolean isShowOutline(TextEditor editor, File file)
+   private boolean isShowOutlineTree(TextEditor editor, File file)
    {
       if (editor == null || file == null || file.getContentType() == null)
       {
@@ -168,10 +181,15 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       activeFile = event.getFile();
       activeTextEditor = event.getEditor();
-      
+
       File file = event.getFile();
       TextEditor editor = event.getEditor();
-      if (isShowOutline(editor, file))
+      if (!outLineFormOpened)
+      {
+         return;
+      }
+
+      if (isShowOutlineTree(editor, file))
       {
          refreshOutline(editor);
       }
@@ -181,7 +199,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          display.getBrowserTree().setValue(new Token("", null));
       }
    }
-   
+
    private boolean selectTokenByRow(List<Token> tokens)
    {
       if (tokens == null || tokens.size() == 0)
@@ -315,6 +333,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       currentRow = event.getRow();
 
+      if (!outLineFormOpened)
+      {
+         return;
+      }
       selectOutlineTimer.cancel();
       selectOutlineTimer.schedule(1000);
    }
@@ -326,6 +348,22 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          selectTokenByRow(tokens);
       }
-   };   
-   
+   };
+
+   public void onFormOpened(FormOpenedEvent event)
+   {
+      if (CodeHelperForm.ID.equals(event.getFormId()))
+      {
+         outLineFormOpened = true;
+         refreshOutline(activeTextEditor);
+      }
+   }
+
+   public void onFormClosed(FormClosedEvent event)
+   {
+      if (CodeHelperForm.ID.equals(event.getFormId()))
+      {
+         outLineFormOpened = false;
+      }
+   }
 }
