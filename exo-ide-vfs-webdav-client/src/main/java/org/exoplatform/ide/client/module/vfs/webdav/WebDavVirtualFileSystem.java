@@ -110,6 +110,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    public static final String CONTEXT = "/jcr";
 
+   public static final String DEFAULT_CHARSET = "charset=UTF-8";
+
    private HandlerManager eventBus;
 
    private Loader loader;
@@ -215,23 +217,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void saveContent(File file)
    {
-      String url = javaScriptEncodeURI(file.getHref());
-      boolean isNewFile = file.isNewFile();
-
-      FileContentMarshaller marshaller = new FileContentMarshaller(file);
-      FileContentSavedEvent event = new FileContentSavedEvent(file, isNewFile);
-      FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
-
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-
-      loader.setMessage(Messages.SAVE_FILE_CONTENT);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-         .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-         .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+      saveContent(file, null);
+      
    }
 
    /**
@@ -255,16 +242,31 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
       if (lockToken != null)
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+            .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">")
+            .data(marshaller)
+            .send(callback);
+         
+//         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+//            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
+//            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
+//            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
       }
       else
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
+         .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
+         .data(marshaller)
+         .send(callback);
+         
+//         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+//            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
+//            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
       }
    }
 
