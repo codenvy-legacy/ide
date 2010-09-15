@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.module.groovy;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -32,6 +34,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
+import org.exoplatform.ide.client.module.groovy.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.client.module.groovy.controls.SetAutoloadCommand;
 import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.controls.ValidateGroovyCommand;
@@ -45,6 +48,7 @@ import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptHandler;
+import org.exoplatform.ide.client.module.groovy.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
@@ -64,8 +68,6 @@ import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -106,6 +108,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(eventBus), true, true));
 
       handlers.addHandler(ValidateGroovyScriptEvent.TYPE, this);
@@ -124,6 +127,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      new RunGroovyServiceCommandHandler(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

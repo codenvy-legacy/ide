@@ -56,6 +56,8 @@ public class Images
       static final String UNDEPLOY = IMAGE_URL + "module/groovy/bundled/undeploy.png";
 
       static final String VALIDATE = IMAGE_URL + "module/groovy/bundled/validate.png";
+      
+      static final String RUN_GROOVY_SERVICE = IMAGE_URL + "module/groovy/bundled/run_groovy_service.png";
 
    }
 
