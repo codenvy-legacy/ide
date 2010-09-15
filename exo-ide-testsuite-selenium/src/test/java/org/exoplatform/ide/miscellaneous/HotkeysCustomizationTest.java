@@ -81,7 +81,7 @@ public class HotkeysCustomizationTest extends BaseTest
    public void beforeMethod() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selenium.deleteAllVisibleCookies();
+      deleteCookies();
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);

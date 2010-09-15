@@ -91,7 +91,7 @@ public class ClosingOutlinePanelTest extends BaseTest
    
    public void afterMethod()
    {
-      selenium.deleteAllVisibleCookies();
+      deleteCookies();
       cleanRegistry();
       cleanDefaultWorkspace();
    }

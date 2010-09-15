@@ -1480,4 +1480,27 @@ public abstract class BaseTest
             + "and contains(@style,'visibility: hidden;')]//div[@class='tabSetContainer']"));
       }
    }
+   
+   /**
+    * remove all cookies which can be stored by IDE
+    */
+   protected static void deleteCookies()
+   {     
+      if (selenium.isCookiePresent("line-numbers_bool"))
+      {
+         selenium.deleteCookie("line-numbers_bool", "/");
+      }
+      if (selenium.isCookiePresent("opened-files_list"))
+      {
+         selenium.deleteCookie("opened-files_list", "/");
+      }
+      if (selenium.isCookiePresent("active-file_str"))
+      {
+         selenium.deleteCookie("active-file_str", "/");
+      }
+      if (selenium.isCookiePresent("line-numbers_bool"))
+      {
+         selenium.deleteCookie("line-numbers_bool", "/");
+      }    
+   }
 }

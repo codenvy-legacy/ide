@@ -42,7 +42,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      selenium.deleteAllVisibleCookies();
+      deleteCookies();
       cleanRegistry();
       cleanDefaultWorkspace();
    }

@@ -355,7 +355,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    @After
    public void testTearDown() throws IOException
    {
-      selenium.deleteAllVisibleCookies();
+      deleteCookies();
       cleanRegistry();
       cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
    }
