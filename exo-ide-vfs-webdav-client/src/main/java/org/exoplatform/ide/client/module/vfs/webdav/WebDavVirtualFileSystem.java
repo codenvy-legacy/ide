@@ -156,8 +156,13 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    @Override
    public void getChildren(Folder folder)
-   {
-      String url = javaScriptEncodeURI(folder.getHref());
+   {      
+      String href = folder.getHref();
+      if (!href.endsWith("/")) {
+         new Exception("Href must ends with \"/\"").printStackTrace();
+      }
+      
+      String url = javaScriptEncodeURI(href);
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder, images);

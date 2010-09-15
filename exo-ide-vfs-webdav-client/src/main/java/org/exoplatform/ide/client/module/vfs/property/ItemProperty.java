@@ -69,6 +69,8 @@ public class ItemProperty
    public static final QName JCR_PRIMARYTYPE = new QName("primaryType", Namespace.JCR);
 
    public static final QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespace.JCR);
+   
+   public static final QName JCR_LOCKOWNER = new QName("lockOwner", Namespace.JCR);
 
    /*
     * EXO PROPERTIES
