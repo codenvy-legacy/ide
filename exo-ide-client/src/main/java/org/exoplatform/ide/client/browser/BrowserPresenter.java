@@ -25,6 +25,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.event.file.OpenFileEvent;
@@ -47,6 +48,11 @@ import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
@@ -72,7 +78,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler,
-   PanelSelectedHandler, EntryPointChangedHandler
+   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockedHandler
 {
 
    interface Display
@@ -83,6 +89,8 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       List<Item> getSelectedItems();
 
       void selectItem(String path);
+
+      void updateItemState(File file);
 
    }
 
@@ -111,7 +119,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-
+      //handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+      handlers.addHandler(ItemLockedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -212,7 +222,15 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
       else
       {
-         itemToSelect = null;
+         List<Item> selectedItems = display.getSelectedItems();
+         if (selectedItems.size() > 0)
+         {
+            itemToSelect = selectedItems.get(0).getHref();
+         }
+         else
+         {
+            itemToSelect = null;
+         }
       }
 
       if (event.getFolders() != null)
@@ -227,7 +245,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          if (item instanceof File)
          {
             String href = item.getHref();
-            href = href.substring(0, href.lastIndexOf("/"));
+            href = href.substring(0, href.lastIndexOf("/") + 1);
             Folder folder = new Folder(href);
             foldersToRefresh.add(folder);
          }
@@ -419,6 +437,49 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
+   }
+
+//   /**
+//    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent)
+//    */
+//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+//   {
+//      Item item = event.getItem();
+//      if (item instanceof File)
+//      {
+//         display.updateItemState((File)item);
+//      }
+//   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    */
+   public void onItemUnlocked(ItemUnlockedEvent event)
+   {
+      Item item = event.getItem();
+      if (item instanceof File)
+      {
+         File file = (File)item;
+         Property lockOwnerProperty = file.getProperty(ItemProperty.JCR_LOCKOWNER);
+         file.getProperties().remove(lockOwnerProperty);
+         display.updateItemState(file);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      Item item = event.getItem();
+      if (item instanceof File)
+      {
+         File file = (File)item;         
+         Property lockOwnerProperty = new Property(ItemProperty.JCR_LOCKOWNER);
+         lockOwnerProperty.setValue("&nbsp;");         
+         file.getProperties().add(lockOwnerProperty);
+         display.updateItemState(file);
+      }      
    }
 
 }

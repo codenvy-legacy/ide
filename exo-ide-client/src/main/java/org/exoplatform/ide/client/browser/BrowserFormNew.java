@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
@@ -76,6 +77,15 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
    public List<Item> getSelectedItems()
    {
       return treeGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#updateItemState(org.exoplatform.ide.client.module.vfs.api.File)
+    */
+   public void updateItemState(File file)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }

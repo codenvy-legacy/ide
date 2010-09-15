@@ -19,7 +19,9 @@ package org.exoplatform.ide.client.component;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
+import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 
@@ -48,6 +50,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private static final String NAME = "name";
 
+   private static final String TITLE = "title";
+
    public ItemTreeGrid(String id)
    {
       setID(id);
@@ -66,7 +70,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       setShowConnectors(false);
       setCanSort(false);
 
-      TreeGridField nameField = new TreeGridField(NAME);
+      TreeGridField nameField = new TreeGridField(TITLE);
+
       //TODO
       //This field need for selenium.
       //We can't select tree node, if click on first column.
@@ -97,31 +102,18 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       if (rootNode == null)
       {
-         //         tree.setRoot(new TreeNode("root"));
-
-         String nodeName = getValue().getHref();
-         if (nodeName.endsWith("/"))
-         {
-            nodeName = nodeName.substring(0, nodeName.length() - 1);
-         }
-
-         nodeName = nodeName.substring(nodeName.lastIndexOf("/") + 1);
-
-         //         rootNode = new TreeNode("<span>" + iconPrefix + "</span>&nbsp;" + nodeName);
+         String nodeName = getValue().getName();
          rootNode = new TreeNode(nodeName);
+         rootNode.setAttribute(TITLE, getTitle(getValue()));
          rootNode.setAttribute(getValuePropertyName(), getValue());
 
          if (getValue().getIcon() != null)
          {
             rootNode.setAttribute("icon", getValue().getIcon());
-            rootNode.setAttribute(NAME, nodeName);
-            //            Image i = new Image(IDEImageBundle.INSTANCE.search());
-            //            iconPrefix = ImageUtil.getHTML(i);
          }
 
          rootNode.setIsFolder(true);
          tree.add(rootNode, tree.getRoot());
-
          selectRecord(rootNode);
       }
 
@@ -131,14 +123,24 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       }
 
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-      if (!getValue().getHref().startsWith(rootFolder.getHref()))
+      
+      String rootFolderHref = rootFolder.getHref();
+      if (!getValue().getHref().startsWith(rootFolderHref))
       {
          return;
       }
 
       TreeNode parent = getNodeByHref(getValue().getHref());
 
-      setItems(parent, ((Folder)getValue()).getChildren());
+      try
+      {
+         setItems(parent, ((Folder)getValue()).getChildren());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+
    }
 
    private TreeNode getChild(TreeNode parent, String name)
@@ -223,7 +225,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          }
       }
 
-      // remove not existed items in response from tree
+      /*
+       * Remove deleted files on the server from tree
+       */
       for (TreeNode childNode : tree.getChildren(parentNode))
       {
          String name = ((Item)childNode.getAttributeAsObject(getValuePropertyName())).getName();
@@ -234,39 +238,63 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          tree.closeAll(childNode);
       }
 
-      for (Item child : children)
+      for (int position = 0; position < children.size(); position++)
       {
-         // see if parentNode already has child with this name
-         TreeNode existedNode = getChild(parentNode, child.getName());
+         Item item = children.get(position);
+
+         TreeNode existedNode = getChild(parentNode, item.getName());
 
          if (!allowSameNames)
          {
             if (existedNode != null)
             {
-               existedNode.setAttribute(getValuePropertyName(), child);
-               existedNode.setAttribute(NAME, child.getName());
+               TreeNode newNode = getNode(item);
+               tree.remove(existedNode);
+               tree.add(newNode, parentNode, position);               
                continue;
             }
          }
 
-         TreeNode node = new TreeNode(child.getName());
-         node.setAttribute(getValuePropertyName(), child);
-         if (child instanceof Folder)
-         {
-            node.setIsFolder(true);
-         }
-
-         if (child.getIcon() != null)
-         {
-            node.setAttribute("icon", child.getIcon());
-            node.setAttribute(NAME, child.getName());
-         }
-
-         //tree.add(node, parentNode);
-         tree.add(node, parentNode, children.indexOf(child));
+         TreeNode node = getNode(item);
+         tree.add(node, parentNode, position);
       }
 
       tree.openFolder(parentNode);
+   }
+
+   private TreeNode getNode(Item item)
+   {
+      TreeNode node = new TreeNode(item.getName());
+      node.setAttribute(TITLE, getTitle(item));
+      node.setAttribute(getValuePropertyName(), item);
+      if (item instanceof Folder)
+      {
+         node.setIsFolder(true);
+      }
+
+      if (item.getIcon() != null)
+      {
+         node.setAttribute("icon", item.getIcon());
+      }
+
+      return node;
+   }
+
+   private String getTitle(Item item)
+   {
+      String title = item.getName();
+
+      for (Property p : item.getProperties())
+      {
+         if ("http://www.jcp.org/jcr/1.0".equals(p.getName().getNamespaceURI())
+            && "lockowner".equalsIgnoreCase(p.getName().getLocalName()))
+         {
+            title += "&nbsp;&nbsp;&nbsp;<font color=\"#AA1111\">[ Locked ]</font>";
+            break;
+         }
+      }
+
+      return title;
    }
 
    public void selectItem(String href)
@@ -291,6 +319,19 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       }
 
       return selectedItems;
+   }
+   
+   public void updateFileState(File file) {
+      TreeNode fileNode = getNodeByHref(file.getHref());
+      if (fileNode == null) {
+         return;
+      }
+      
+      fileNode.setAttribute(NAME, file.getName());
+      fileNode.setAttribute(TITLE, getTitle(file));
+      fileNode.setAttribute(getValuePropertyName(), file);      
+      
+      tree.openFolder(fileNode);
    }
 
 }

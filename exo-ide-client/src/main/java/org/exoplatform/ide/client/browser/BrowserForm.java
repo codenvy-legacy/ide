@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
@@ -32,7 +33,7 @@ import com.smartgwt.client.widgets.events.MouseDownHandler;
 
 public class BrowserForm extends SimpleTabPanel implements BrowserPanel, BrowserPresenter.Display
 {
-   
+
    private final String TREE_ID = "ideNavigatorItemTreeGrid";
 
    public static final String TITLE = "Workspace";
@@ -88,6 +89,14 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
    public List<Item> getSelectedItems()
    {
       return treeGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#updateItemState(org.exoplatform.ide.client.module.vfs.api.Item)
+    */
+   public void updateItemState(File file)
+   {
+      treeGrid.updateFileState(file);
    }
 
 }

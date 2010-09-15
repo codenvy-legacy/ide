@@ -176,7 +176,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
          applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
       }
-
+      
       /*
        * verify toolbar items
        */
@@ -265,7 +265,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
       if (applicationSettings.getValue("entry-point") != null)
       {
-         String entryPoint = (String)applicationSettings.getValue("entry-point");
+         String entryPoint = applicationSettings.getStringValue("entry-point");
          eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
          new WorkspaceChecker(eventBus, entryPoint, applicationSettings);
       }
