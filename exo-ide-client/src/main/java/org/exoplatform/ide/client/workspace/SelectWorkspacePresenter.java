@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceive
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
@@ -36,7 +37,6 @@ import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedE
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;

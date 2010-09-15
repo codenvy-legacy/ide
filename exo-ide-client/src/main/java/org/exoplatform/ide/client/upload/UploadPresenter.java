@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;

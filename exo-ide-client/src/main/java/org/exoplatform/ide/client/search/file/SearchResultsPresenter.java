@@ -21,7 +21,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;

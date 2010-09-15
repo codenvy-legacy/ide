@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ide.client.event.file.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;

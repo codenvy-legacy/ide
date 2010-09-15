@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.event.file.OpenFileEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -36,6 +35,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeApplicat
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserHandler;
