@@ -95,20 +95,43 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       //         return;
       //      }
 
-      //
+      if (file.isNewFile())
+      {
+         open(file);
+         return;
+      }
+
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemLockedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().lock(file, 600, context.getUserInfo().getName());
-      //      VirtualFileSystem.getInstance().getContent(file);
 
+      VirtualFileSystem.getInstance().getProperties(file);
+
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      VirtualFileSystem.getInstance().lock(event.getItem(), 600, context.getUserInfo().getName());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      File file = (File)event.getItem();
+      if (file.getContent() != null)
+      {
+         open(file);
+         return;
+      }
+      VirtualFileSystem.getInstance().getContent((File)event.getItem());
    }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
       handlers.removeHandlers();
-      //      VirtualFileSystem.getInstance().getProperties(event.getFile());
       open(event.getFile());
    }
 
@@ -140,35 +163,9 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       handlers.removeHandlers();
    }
 
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-
-      VirtualFileSystem.getInstance().getContent((File)event.getItem());
-      //      open((File)event.getItem());
-   }
-
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
-    */
-   public void onItemLocked(ItemLockedEvent event)
-   {
-      //      context.getLockTokens().put(event.getItem().getHref(), event.getLockToken());
-      
-      
-      
-      File file = (File)event.getItem();
-      if (file.getContent() != null)
-      {
-         open(file);
-         return;
-      }
-      VirtualFileSystem.getInstance().getProperties(file);
-
    }
 
 }

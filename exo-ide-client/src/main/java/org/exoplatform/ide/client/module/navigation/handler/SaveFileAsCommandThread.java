@@ -32,6 +32,9 @@ import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.model.conversation.UserInfo;
+import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler;
@@ -44,10 +47,14 @@ import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -60,7 +67,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ItemUnlockedHandler, UserInfoReceivedHandler, ItemLockedHandler
 {
 
    private Handlers handlers;
@@ -73,17 +80,24 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private File activeFile;
 
-   private Map<String, LockToken> lockTokens; 
+   private Map<String, LockToken> lockTokens;
+
+   private UserInfo userInfo;
+
+   private File oldFile;
+
+   private File newFile;
 
    public SaveFileAsCommandThread(HandlerManager eventBus, Map<String, LockToken> lockTokens)
    {
       this.eventBus = eventBus;
       this.lockTokens = lockTokens;
-      
+
       handlers = new Handlers(eventBus);
       this.eventBus.addHandler(SaveFileAsEvent.TYPE, this);
       this.eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       this.eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      this.eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    /**
@@ -96,19 +110,22 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         SmartGWTDialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling this command !");
+         SmartGWTDialogs.getInstance().showInfo(
+            "Please, select target folder in the Workspace Panel before calling this command !");
          return;
       }
-      
+
       event.isSaveOnly();
 
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+      handlers.addHandler(ItemLockedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
-      onSaveAsFile(file);
+      newFileName(file);
    }
 
    /**
@@ -116,8 +133,9 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
     * 
     * @param file
     */
-   private void onSaveAsFile(final File file)
-   {      
+   private void newFileName(final File file)
+   {
+
       final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
       new AskForValueDialog("Save file as", "Enter new file name:", newFileName, 400, new ValueCallback()
@@ -129,7 +147,6 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
                handlers.removeHandlers();
                return;
             }
-
             String pathToSave = getFilePath(selectedItems.get(0)) + value;
             File newFile = new File(pathToSave);
             newFile.setContent(file.getContent());
@@ -145,7 +162,12 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
             }
 
             newFile.setIcon(file.getIcon());
-            VirtualFileSystem.getInstance().saveContent(newFile, lockTokens.get(newFile.getHref()));
+
+            oldFile = file;
+            SaveFileAsCommandThread.this.newFile = newFile;
+
+            //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
+            VirtualFileSystem.getInstance().saveContent(newFile);
          }
 
       });
@@ -163,22 +185,18 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (event.getFile().isPropertiesChanged())
+      if (!oldFile.isNewFile())
       {
-         VirtualFileSystem.getInstance().saveProperties(event.getFile());
+         VirtualFileSystem.getInstance().unlock(oldFile, lockTokens.get(oldFile.getHref()));
       }
       else
       {
-         VirtualFileSystem.getInstance().getProperties(event.getFile());
+         VirtualFileSystem.getInstance().lock(event.getFile(), 600, userInfo.getName());
       }
    }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      //      handlers.removeHandlers();
-      //      
-      //      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), sourceHref));
-      //      refreshBrowser(event.getItem().getHref());
       VirtualFileSystem.getInstance().getProperties(event.getItem());
    }
 
@@ -209,6 +227,38 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    */
+   public void onItemUnlocked(ItemUnlockedEvent event)
+   {
+      VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
+    */
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      userInfo = event.getUserInfo();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+
+      if (event.getItem().isPropertiesChanged())
+      {
+         VirtualFileSystem.getInstance().saveProperties(event.getItem(), lockTokens.get(event.getItem().getHref()));
+      }
+      else
+      {
+         VirtualFileSystem.getInstance().getProperties(event.getItem());
+      }
    }
 
 }
