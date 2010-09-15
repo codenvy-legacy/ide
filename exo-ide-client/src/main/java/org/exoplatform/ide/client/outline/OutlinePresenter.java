@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -56,11 +58,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 {
    interface Display
    {
-      TreeGridItem<Token> getBrowserTree();
+      TreeGridItem<Token> getOutlineTree();
 
       void selectToken(Token token);
 
       boolean isFormVisible();
+      
+      List<Token> getSelectedTokens();
    }
 
    private HandlerManager eventBus;
@@ -100,7 +104,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       display = d;
 
-      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Token>()
+      display.getOutlineTree().addSelectionHandler(new SelectionHandler<Token>()
       {
          public void onSelection(SelectionEvent<Token> event)
          {
@@ -121,6 +125,20 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             goToLine = true;
          }
       });
+      
+      display.getOutlineTree().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            if (display.getSelectedTokens().size() > 0)
+            {
+               currentToken = display.getSelectedTokens().get(0);
+               int line = currentToken.getLineNumber();
+               int maxLineNumber = activeFile.getContent().split("\n").length;
+               eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
+            }
+         }
+      });
 
       currentRow = 0;
       goToLine = true;
@@ -129,7 +147,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private void refreshOutline(TextEditor editor)
    {
       tokens = editor.getTokenList();
-      display.getBrowserTree().setValue(new Token("", null, -1, tokens));
+      display.getOutlineTree().setValue(new Token("", null, -1, tokens));
       currentRow = editor.getCursorRow();
       currentToken = null;
       selectTokenByRow(tokens);
@@ -196,7 +214,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       else
       {
          tokens = null;
-         display.getBrowserTree().setValue(new Token("", null));
+         display.getOutlineTree().setValue(new Token("", null));
       }
    }
 

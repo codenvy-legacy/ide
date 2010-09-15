@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.tab.Tab;
+
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.tab.Tab;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -70,7 +72,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
    }
 
-   public TreeGridItem<Token> getBrowserTree()
+   public TreeGridItem<Token> getOutlineTree()
    {
       return treeGrid;
    }
@@ -86,6 +88,11 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
    public boolean isFormVisible()
    {
       return getTabSet().isVisible();
+   }
+   
+   public List<Token> getSelectedTokens()
+   {
+      return treeGrid.getSelectedTokens();
    }
 
 }

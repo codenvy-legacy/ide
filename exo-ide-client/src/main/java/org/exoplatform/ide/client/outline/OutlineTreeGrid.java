@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.tree.Tree;
+import com.smartgwt.client.widgets.tree.TreeGridField;
+import com.smartgwt.client.widgets.tree.TreeNode;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
@@ -25,14 +32,8 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGridField;
-import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
  * Created by The eXo Platform SAS.
@@ -232,6 +233,18 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.TEXT_XML)
          || file.getContentType().equals(MimeType.TEXT_HTML)
          || file.getContentType().equals(MimeType.GROOVY_TEMPLATE);
+   }
+   
+   public List<Token> getSelectedTokens()
+   {
+      List<Token> selectedItems = new ArrayList<Token>();
+
+      for (ListGridRecord record : getSelection())
+      {
+         selectedItems.add((Token)record.getAttributeAsObject(getValuePropertyName()));
+      }
+
+      return selectedItems;
    }
 
 }
