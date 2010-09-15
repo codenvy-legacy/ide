@@ -156,12 +156,13 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    @Override
    public void getChildren(Folder folder)
-   {      
+   {
       String href = folder.getHref();
-      if (!href.endsWith("/")) {
+      if (!href.endsWith("/"))
+      {
          new Exception("Href must ends with \"/\"").printStackTrace();
       }
-      
+
       String url = javaScriptEncodeURI(href);
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
@@ -223,7 +224,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void saveContent(File file)
    {
       saveContent(file, null);
-      
+
    }
 
    /**
@@ -247,31 +248,25 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
       if (lockToken != null)
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">")
-            .data(marshaller)
-            .send(callback);
-         
-//         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-//            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-//            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-//            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+
+         //         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         //            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
+         //            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
+         //            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
       }
       else
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-         .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
-         .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-         .data(marshaller)
-         .send(callback);
-         
-//         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-//            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-//            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+            .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
+            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+
+         //         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         //            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
+         //            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
       }
    }
 
@@ -314,6 +309,41 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url, loader)
          .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.module.vfs.api.Item, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    */
+   @Override
+   public void saveProperties(Item item, LockToken lockToken)
+   {
+      String url = javaScriptEncodeURI(item.getHref());
+
+      ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
+      ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
+      ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
+
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+
+      loader.setMessage(Messages.SAVE_PROPERTIES);
+
+      if (lockToken != null)
+      {
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">")
+            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
+            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+      }
+
    }
 
    @Override
@@ -378,6 +408,62 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
       }
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#move(org.exoplatform.ide.client.module.vfs.api.Item, java.lang.String, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    */
+   @Override
+   public void move(Item item, String destination, LockToken lockToken)
+   {
+      String url = javaScriptEncodeURI(item.getHref());
+      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
+      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+
+      String errorMessage =
+         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      if (item instanceof File)
+      {
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+
+         loader.setMessage(Messages.MOVE_FILE);
+         if (lockToken != null)
+         {
+            AsyncRequest.build(RequestBuilder.POST, url, loader)
+               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+               .header(HTTPHeader.CONTENT_LENGTH, "0")
+               .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").send(callback);
+         }
+         else
+         {
+
+            AsyncRequest.build(RequestBuilder.POST, url, loader)
+               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+               .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+         }
+      }
+      else
+      {
+         if (!url.endsWith("/"))
+         {
+            url += "/";
+         }
+
+         if (!destination.endsWith("/"))
+         {
+            destination += "/";
+         }
+
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+
+         loader.setMessage(Messages.MOVE_FOLDER);
+
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      }
    }
 
    @Override

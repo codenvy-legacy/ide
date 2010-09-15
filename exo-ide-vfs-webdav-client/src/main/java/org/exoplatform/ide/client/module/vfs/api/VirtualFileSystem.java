@@ -68,6 +68,15 @@ public abstract class VirtualFileSystem
     * @param destination
     */
    public abstract void move(Item item, String destination);
+   
+   /**
+    * Move existed item to another location as path
+    * 
+    * @param item
+    * @param destination
+    * @param lockToken
+    */
+   public abstract void move(Item item, String destination, LockToken lockToken);
 
    /**
     * Copy item to another locations as path
@@ -90,6 +99,14 @@ public abstract class VirtualFileSystem
     * @param item
     */
    public abstract void saveProperties(Item item);
+   
+   /**
+    * Save properties of file or folder
+    * 
+    * @param item
+    * @param lockToken
+    */
+   public abstract void saveProperties(Item item, LockToken lockToken);
 
    /**
     * Search files
