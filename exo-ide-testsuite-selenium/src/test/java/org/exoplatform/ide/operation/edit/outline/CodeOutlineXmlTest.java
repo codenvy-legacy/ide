@@ -252,7 +252,10 @@ public class CodeOutlineXmlTest extends BaseTest
       //navigate in editor and check, that tree
       //works correctly with new node
       
+      //click on node
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[1]");
       
+      selectIFrameWithEditor(0);
       //click on editor
       selenium.clickAt("//body[@class='editbox']", "5,5");
       Thread.sleep(TestConstants.SLEEP);
@@ -260,6 +263,9 @@ public class CodeOutlineXmlTest extends BaseTest
       //and node value selected
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.SLEEP);
+      selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated
@@ -276,7 +282,7 @@ public class CodeOutlineXmlTest extends BaseTest
       checkOutlineTreeNodeSelected(3, "value", true);
       
       //check cursor position
-      assertEquals("8 : 3", getCursorPositionUsingStatusBar());
+      assertEquals("8 : 1", getCursorPositionUsingStatusBar());
       
       
       //---- 4 ----
@@ -302,18 +308,14 @@ public class CodeOutlineXmlTest extends BaseTest
       //check, that settings node is selected
       checkOutlineTreeNodeSelected(2, "settings", true);
       checkOutlineTreeNodeSelected(3, "value", false);
-      assertEquals("9 : 3", getCursorPositionUsingStatusBar());
-      
-      //TODO:
-      //IDE-244
-      //cursor doesn't go to the 7 line, test fails
+      assertEquals("9 : 1", getCursorPositionUsingStatusBar());
       
       //now click on node "settings" in tree
       //and cursor must go to <settings> tab in editor: line 7, column 1
-//      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[1]");
-//      Thread.sleep(TestConstants.SLEEP);
-//      checkOutlineTreeNodeSelected(2, "settings", true);
-//      assertEquals("7 : 1", getCursorPositionUsingStatusBar());
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[1]");
+      Thread.sleep(TestConstants.SLEEP);
+      checkOutlineTreeNodeSelected(2, "settings", true);
+      assertEquals("7 : 1", getCursorPositionUsingStatusBar());
    }
    
    private void checkTreeNavigation() throws Exception
