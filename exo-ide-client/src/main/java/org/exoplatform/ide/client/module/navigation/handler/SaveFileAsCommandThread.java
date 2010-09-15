@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.event.file.FileSavedEvent;
@@ -110,7 +110,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    {
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         SmartGWTDialogs.getInstance().showInfo(
+         Dialogs.getInstance().showInfo(
             "Please, select target folder in the Workspace Panel before calling this command !");
          return;
       }
