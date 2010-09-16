@@ -68,6 +68,8 @@ public interface MenuCommands
 
       public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
       
+      public static final String RUN_GROOVY_SERVICE = "Run Groovy Service...";
+      
       public static final String SHOW_PREVIEW = "Show Preview";
       
       public static final String VALIDATE = "Validate";

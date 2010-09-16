@@ -74,6 +74,12 @@ public interface ToolbarCommands
       public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
       
       public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
+      
+      public static final String RUN_GROOVY_SERVICE = "Run Groovy Service...";
+      
+      public static final String VALIDATE_GROOVY_SERVICE = "Validate REST Service";
+      
+      public static final String DEPLOY_GROOVY_SERVICE = "Deploy REST Service";
 
    }
 }
