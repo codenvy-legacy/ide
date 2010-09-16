@@ -19,6 +19,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -30,8 +31,10 @@ import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileHandler;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
@@ -50,26 +53,27 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveFileCommandThread implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
-   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler, EditorActiveFileChangedHandler
+   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler, EditorActiveFileChangedHandler,
+   ApplicationSettingsReceivedHandler
 {
 
    private Handlers handlers;
 
    private HandlerManager eventBus;
-   
-   private File activeFile;
-   
-   private Map<String, LockToken> lockTokens; 
 
-   public SaveFileCommandThread(HandlerManager eventBus, Map<String, LockToken> lockTokens)
+   private File activeFile;
+
+   private Map<String, String> lockTokens;
+
+   public SaveFileCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.lockTokens= lockTokens;
-      
+
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(SaveFileEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onSaveFile(SaveFileEvent event)
@@ -133,6 +137,19 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @SuppressWarnings("unchecked")
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
    }
 
 }

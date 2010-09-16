@@ -101,10 +101,10 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
 
    private Map<String, File> openedFiles;
 
-   private Map<String, LockToken> lockTokens;
+   private Map<String, String> lockTokens;
 
    public SelectWorkspacePresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
-      EntryPointList entryPointList, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
+      EntryPointList entryPointList, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.entryPointList = entryPointList;

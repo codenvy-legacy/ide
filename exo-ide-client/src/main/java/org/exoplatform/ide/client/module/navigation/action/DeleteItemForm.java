@@ -69,7 +69,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private DeleteItemPresenter presenter;
 
-   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
+   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 
@@ -100,7 +100,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
          }
       });
 
-      presenter = new DeleteItemPresenter(eventBus, selectedItems, openedFiles);
+      presenter = new DeleteItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
       presenter.bindDisplay(this);
    }
 

@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -30,10 +31,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
@@ -50,26 +53,27 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   ApplicationSettingsReceivedHandler
 {
 
    private Handlers handlers;
-   
+
    private HandlerManager eventBus;
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   private Map<String, LockToken> lockTokens; 
-   
-   public SaveAllFilesCommandThread(HandlerManager eventBus, Map<String, LockToken> lockTokens)
+   private Map<String, String> lockTokens;
+
+   public SaveAllFilesCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.lockTokens = lockTokens;
-      
+
       handlers = new Handlers(eventBus);
       this.eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
       this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       this.eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      this.eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onSaveAllFiles(SaveAllFilesEvent event)
@@ -127,6 +131,19 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @SuppressWarnings("unchecked")
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
    }
 
 }

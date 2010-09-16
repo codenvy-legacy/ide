@@ -40,6 +40,8 @@ import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceiv
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
@@ -54,7 +56,8 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler, EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler,
+   EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler
 {
 
    private HandlerManager eventBus;
@@ -62,17 +65,15 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    private ApplicationSettings applicationSettings;
-   
+
    private Handlers handlers;
-   
-   private Map<String, String> lockTokens = new LinkedHashMap<String, String>();
+
+   private Map<String, String> lockTokens;
 
    public ApplicationStateSnapshotListener(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      
-      
 
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
@@ -83,11 +84,18 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
       handlers.addHandler(ItemLockedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+      handlers.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
+   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+      if (applicationSettings.getValue("lock-tokens") == null)
+      {
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -160,8 +168,8 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
-     lockTokens.remove(event.getItem().getHref());
-     storeLockTokens();
+      lockTokens.remove(event.getItem().getHref());
+      storeLockTokens();
    }
 
    /**
@@ -172,13 +180,25 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
       storeLockTokens();
    }
-   
+
    /**
     * Store Lock Tokens 
     */
    private void storeLockTokens()
    {
       applicationSettings.setValue("lock-tokens", lockTokens, Store.COOKIES);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent)
+    */
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      if (event.getItem() instanceof File)
+      {
+         lockTokens.remove(event.getItem().getHref());
+         storeLockTokens();
+      }
    }
 
 }

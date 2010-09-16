@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.module.navigation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +50,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.util.ImageUtil;
@@ -113,11 +113,6 @@ import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThr
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandThread;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
@@ -135,8 +130,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
-   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
-   ItemLockedHandler, ItemUnlockedHandler
+   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler
 {
    private HandlerManager eventBus;
 
@@ -156,7 +150,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    private File activeFile;
 
-   private Map<String, LockToken> lockTokens = new LinkedHashMap<String, LockToken>();
+   private Map<String, String> lockTokens;
 
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
@@ -209,33 +203,38 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      handlers.addHandler(ItemLockedEvent.TYPE, this);
-      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+//      handlers.addHandler(ItemLockedEvent.TYPE, this);
+//      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
       new CreateFileCommandThread(eventBus, context);
-      new OpenFileCommandThread(eventBus, lockTokens, context);
-      new SaveFileCommandThread(eventBus, lockTokens);
-      new SaveFileAsCommandThread(eventBus, lockTokens);
-      new SaveAllFilesCommandThread(eventBus, lockTokens);
+      new OpenFileCommandThread(eventBus, context);
+      new SaveFileCommandThread(eventBus);
+      new SaveFileAsCommandThread(eventBus);
+      new SaveAllFilesCommandThread(eventBus);
       new GoToFolderCommandThread(eventBus);
       new PasteItemsCommandThread(eventBus, context);
-      new FileClosedHandler(eventBus, lockTokens);
+      new FileClosedHandler(eventBus);
    }
 
+   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
 
-      @SuppressWarnings("unchecked")
-      Map<String, String> strMap = (Map<String, String>)applicationSettings.getValue("lock-tokens");
-      
-      if (strMap != null)
+   
+      if (applicationSettings.getValue("lock-tokens") == null)
       {
-         for (String key : strMap.keySet())
-         {
-            lockTokens.put(key, new LockToken(context.getUserInfo().getName(), strMap.get(key), 0));
-         }
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
+      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      
+//      if (strMap != null)
+//      {
+//         for (String key : strMap.keySet())
+//         {
+//            lockTokens.put(key, new LockToken(context.getUserInfo().getName(), strMap.get(key), 0));
+//         }
+//      }
 
    }
 
@@ -337,7 +336,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    public void onDeleteItem(DeleteItemEvent event)
    {
-      new DeleteItemForm(eventBus, selectedItems, openedFiles);
+      new DeleteItemForm(eventBus, selectedItems, openedFiles, lockTokens);
    }
 
    public void onSearchFile(SearchFileEvent event)
@@ -379,22 +378,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
-    */
-   public void onItemUnlocked(ItemUnlockedEvent event)
-   {
-      lockTokens.remove(event.getItem().getHref());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
-    */
-   public void onItemLocked(ItemLockedEvent event)
-   {
-      lockTokens.put(event.getItem().getHref(), event.getLockToken());
    }
 
 }

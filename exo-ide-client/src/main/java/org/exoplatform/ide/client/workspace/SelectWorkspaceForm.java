@@ -68,7 +68,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    private EntryPointListGrid entryPointListGrid;
 
    public SelectWorkspaceForm(HandlerManager eventBus, ApplicationSettings applicationSettings, EntryPointList entryPointList,
-      Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
+      Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 

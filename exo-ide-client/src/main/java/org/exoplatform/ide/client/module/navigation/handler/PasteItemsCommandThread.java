@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
@@ -59,7 +63,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -72,10 +77,12 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    private String folderToPaste;
 
    private int numItemToCut;
-   
+
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
+
+   private Map<String, String> lockTokens;
 
    public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -88,6 +95,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onPasteItems(PasteItemsEvent event)
@@ -207,11 +215,13 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
                Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
                   new BooleanValueReceivedCallback()
                   {
+
                      public void execute(Boolean value)
                      {
                         if (value != null && value == true)
                         {
-                           VirtualFileSystem.getInstance().saveContent(openedFile, context.getLockTokens().get(openedFile.getHref()));
+                           VirtualFileSystem.getInstance()
+                              .saveContent(openedFile, lockTokens.get(openedFile.getHref()));
                         }
                         else
                         {
@@ -275,7 +285,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private void updateOpenedFiles(String href, String sourceHref)
    {
-      if(!href.endsWith("/"))
+      if (!href.endsWith("/"))
       {
          href += "/";
       }
@@ -337,18 +347,18 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    public void onItemDeleted(ItemDeletedEvent event)
    {
       Item del = event.getItem();
-      for(Item i : context.getItemsToCopy())
+      for (Item i : context.getItemsToCopy())
       {
-         if(i.getHref().equals(del.getHref()))
+         if (i.getHref().equals(del.getHref()))
          {
             context.getItemsToCopy().remove(i);
             break;
          }
       }
-      
-      for(Item i : context.getItemsToCut())
+
+      for (Item i : context.getItemsToCut())
       {
-         if(i.getHref().equals(del.getHref()))
+         if (i.getHref().equals(del.getHref()))
          {
             context.getItemsToCut().remove(i);
             break;
@@ -370,5 +380,19 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    {
       openedFiles = event.getOpenedFiles();
    }
+
+
+   /**
+    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+            if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      {
+               event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
+   }
+   
 
 }

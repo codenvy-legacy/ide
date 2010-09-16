@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -47,7 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler
+public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler, ItemUnlockedHandler
 {
 
    public interface Display
@@ -75,11 +77,16 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private Map<String, File> openedFiles;
 
-   public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles)
+   private Map<String, String> lockTokens;
+
+   public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
+      Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.openedFiles = openedFiles;
+      this.lockTokens = lockTokens;
+
       handlers = new Handlers(eventBus);
    }
 
@@ -172,8 +179,15 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          }
 
       }
-
-      VirtualFileSystem.getInstance().deleteItem(item);
+      if (lockTokens.containsKey(item.getHref()))
+      {
+         handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()));
+      }
+      else
+      {
+         VirtualFileSystem.getInstance().deleteItem(item);
+      }
    }
 
    private void showDialog(final Item item, String msg)
@@ -273,6 +287,15 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    */
+   public void onItemUnlocked(ItemUnlockedEvent event)
+   {
+      handlers.removeHandler(ItemUnlockedEvent.TYPE);
+      VirtualFileSystem.getInstance().deleteItem(event.getItem());
    }
 
 }

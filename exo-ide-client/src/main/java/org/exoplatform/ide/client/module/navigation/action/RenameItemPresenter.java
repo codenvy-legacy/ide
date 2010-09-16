@@ -87,9 +87,9 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    private Map<String, File> openedFiles;
    
-   private Map<String, LockToken> lockTokens;
+   private Map<String, String> lockTokens;
 
-   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
+   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;

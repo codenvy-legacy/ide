@@ -17,7 +17,6 @@
 package org.exoplatform.ide.client.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -26,7 +25,6 @@ import org.exoplatform.ide.client.model.conversation.UserInfo;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,11 +55,6 @@ public class ApplicationContext
     * List of available templates
     */
    private TemplateList templateList;
-
-   /**
-    * Map of lock tokens
-    */
-   private HashMap<String, LockToken> lockTokens = new HashMap<String, LockToken>();
 
    /*
     * Last entered value in Groovy script output form
@@ -248,12 +241,5 @@ public class ApplicationContext
       this.selectedEditorDescription = selectedEditor;
    }
 
-   /**
-    * @return the lockTokens
-    */
-   public HashMap<String, LockToken> getLockTokens()
-   {
-      return lockTokens;
-   }
 
 }

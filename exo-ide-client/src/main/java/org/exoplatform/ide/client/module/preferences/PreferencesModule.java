@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeHotKeysCommand;
@@ -94,7 +95,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   private Map<String, LockToken> lockTokens = new LinkedHashMap<String, LockToken>();;
+   private Map<String, String> lockTokens;
 
    public PreferencesModule(HandlerManager eventBus)
    {
@@ -122,15 +123,11 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    {
       applicationSettings = event.getApplicationSettings();
 
-      @SuppressWarnings("unchecked")
-      Map<String, String> strMap = (Map<String, String>)applicationSettings.getValue("lock-tokens");
-      if (strMap != null)
+      if (applicationSettings.getValue("lock-tokens") == null)
       {
-         for (String key : strMap.keySet())
-         {
-            lockTokens.put(key, new LockToken("", strMap.get(key), 0));
-         }
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
+      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -209,7 +206,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
     */
    public void onItemLocked(ItemLockedEvent event)
    {
-      lockTokens.put(event.getItem().getHref(), event.getLockToken());
+      lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
    }
 
 }

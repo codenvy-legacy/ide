@@ -75,7 +75,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    private RenameItemPresenter presenter;
 
-   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, LockToken> lockTokens)
+   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Rename item");

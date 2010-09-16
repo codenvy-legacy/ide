@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,23 +36,23 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Sep 13, 2010 $
  *
  */
-public class FileClosedHandler implements EditorFileClosedHandler, ItemUnlockedHandler
+public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
 
    private Handlers handlers;
-   
-   private Map<String, LockToken> lockTokens; 
 
-   public FileClosedHandler(HandlerManager eventBus, Map<String, LockToken> lockTokens)
+   private Map<String, String> lockTokens;
+
+   public FileClosedHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.lockTokens = lockTokens;
 
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -59,25 +60,33 @@ public class FileClosedHandler implements EditorFileClosedHandler, ItemUnlockedH
     */
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
-      LockToken lockToken = lockTokens.get(event.getFile().getHref());
-      
-      System.out.println("FileClosedHandler.onEditorFileClosed()");
-      System.out.println(lockToken.getLockToken());
-      
+      String lockToken = lockTokens.get(event.getFile().getHref());
+
       if (lockToken != null)
       {
-         handlers.addHandler(ItemUnlockedEvent.TYPE, this);
          VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
     */
-   public void onItemUnlocked(ItemUnlockedEvent event)
+   @SuppressWarnings("unchecked")
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      handlers.removeHandlers();
-//      context.getLockTokens().remove(event.getItem().getHref());
+      if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
    }
+
+   //   /**
+   //    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+   //    */
+   //   public void onItemUnlocked(ItemUnlockedEvent event)
+   //   {
+   //      handlers.removeHandlers();
+   //   }
 
 }
