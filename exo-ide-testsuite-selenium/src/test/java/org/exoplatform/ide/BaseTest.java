@@ -39,6 +39,7 @@ import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
@@ -81,7 +82,7 @@ public abstract class BaseTest
    //protected static final String APPLICATION_URL = "http://192.168.0.3:8080/portal/public/default/ide";
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
 
-   protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.FIREFOX;
+   protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.CHROME;
 
    /**
     * Name of window with application.
@@ -94,16 +95,22 @@ public abstract class BaseTest
    public static void startSelenium() throws Exception
    {
       cleanDefaultWorkspace();
-      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.value(), BASE_URL);
+      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
 
-      if (BROWSER_COMMAND.equals(EnumBrowserCommand.GOOGLE_CHROME) || BROWSER_COMMAND.equals(EnumBrowserCommand.SAFARI))
+      switch (BROWSER_COMMAND)
       {
-         new WebKitUtil(selenium);
-      }
-      else
-      {
-         new TextUtil(selenium);
-      }
+         case GOOGLE_CHROME:
+         case SAFARI:            
+            new WebKitUtil(selenium);            
+            break;
+         
+         case IE_EXPLORE_PROXY:
+            new InternetExplorerUtil(selenium);
+            break;
+            
+         default :
+            new TextUtil(selenium);
+      } 
 
       selenium.start();
       selenium.open(APPLICATION_URL);
@@ -276,8 +283,7 @@ public abstract class BaseTest
     */
    protected void selectIFrameWithEditor(int tabIndex) throws Exception
    {
-      String divIndex = String.valueOf(tabIndex + 2);
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe");
+      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -295,9 +301,8 @@ public abstract class BaseTest
    protected void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      int divIndex = tabIndex + 2;
-      if (selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
-         + "]//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
+
+      if (selenium.isElementPresent(getContentPanelLocator(tabIndex) + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
       {
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
       }
@@ -305,6 +310,7 @@ public abstract class BaseTest
       {
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);  
       }
+
       selectMainFrame();
    }
 
@@ -852,7 +858,8 @@ public abstract class BaseTest
     */
    protected void runTopMenuCommand(String topMenuName, String commandName) throws Exception
    {
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");
+//    selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");  // Doesn't work in the IE
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
@@ -1481,6 +1488,24 @@ public abstract class BaseTest
       }
    }
    
+   /**
+    * 
+    * @param tabIndex begins from 0
+    * @return content panel locator 
+    */
+   protected String getContentPanelLocator(int tabIndex)
+   {
+      String divIndex = String.valueOf(tabIndex + 2);
+      if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
+      {
+         return "//div[@class='tabSetContainer']/div[" + divIndex + "]";
+      }
+      else
+      {
+         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";         
+      }
+   }
+
    /**
     * remove all cookies which can be stored by IDE
     */

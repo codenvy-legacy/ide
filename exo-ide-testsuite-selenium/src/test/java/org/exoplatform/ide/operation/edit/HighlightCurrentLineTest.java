@@ -256,17 +256,6 @@ public class HighlightCurrentLineTest extends BaseTest
       return scrollTop;
    }
 
-
-   /**
-    * 
-    * @param tabIndex begins from 0
-    * @return content panel locator 
-    */
-   private String getContentPanelLocator(int tabIndex) {
-      String divIndex = String.valueOf(tabIndex + 2);
-      return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
-   }
-   
    @AfterClass
    public static void tearDown()
    {

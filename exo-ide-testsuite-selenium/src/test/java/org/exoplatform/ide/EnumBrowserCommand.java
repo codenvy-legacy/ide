@@ -21,7 +21,7 @@ package org.exoplatform.ide;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: 2010
- *
+ * <br />Command "*iexplore" had been commented because of Selenium doesn't perform selenium.type(), selenium.typeKeys() and selenium.keyPressNative() methods properly in the CodeMirror and TextItems of DynamicForms. Use IE_EXPLORE_PROXY("*iexploreproxy") instead.
  */
 public enum EnumBrowserCommand {
    FIREFOX("*firefox"),
@@ -30,7 +30,7 @@ public enum EnumBrowserCommand {
    PIFIREFOX("*pifirefox"),
    CHROME("*chrome"),
    IE_EXPLORE_PROXY("*iexploreproxy"),
-   IE_EXPLORE("*iexplore"),
+   // IE_EXPLORE("*iexplore"),  commented because of Selenium doesn't perform selenium.type(), selenium.typeKeys() and selenium.keyPressNative() methods properly in the CodeMirror and TextItems of DynamicForms. Use IE_EXPLORE_PROXY("*iexploreproxy") instead.
    FIREFOX_3("*firefox3"),
    FIREFOX_2("*firefox2"),
    SAFARI_PROXY("*safariproxy"), 
@@ -58,7 +58,8 @@ public enum EnumBrowserCommand {
    /**
     * @return String
     */
-   public String value()
+   @Override
+   public String toString()
    {
       return value;
    }
