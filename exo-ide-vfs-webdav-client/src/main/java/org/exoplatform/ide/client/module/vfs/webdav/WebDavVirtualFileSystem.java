@@ -231,7 +231,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#saveContent(org.exoplatform.ide.client.module.vfs.api.File, org.exoplatform.ide.client.module.vfs.api.LockToken)
     */
    @Override
-   public void saveContent(File file, LockToken lockToken)
+   public void saveContent(File file, String lockToken)
    {
       String url = javaScriptEncodeURI(file.getHref());
       boolean isNewFile = file.isNewFile();
@@ -251,7 +251,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
 
          //         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
          //            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
@@ -315,7 +315,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.module.vfs.api.Item, org.exoplatform.ide.client.module.vfs.api.LockToken)
     */
    @Override
-   public void saveProperties(Item item, LockToken lockToken)
+   public void saveProperties(Item item, String lockToken)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
@@ -334,7 +334,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       {
          AsyncRequest.build(RequestBuilder.POST, url, loader)
             .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">")
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
             .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
       }
       else
@@ -414,7 +414,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#move(org.exoplatform.ide.client.module.vfs.api.Item, java.lang.String, org.exoplatform.ide.client.module.vfs.api.LockToken)
     */
    @Override
-   public void move(Item item, String destination, LockToken lockToken)
+   public void move(Item item, String destination, String lockToken)
    {
       String url = javaScriptEncodeURI(item.getHref());
       MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
@@ -433,8 +433,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          {
             AsyncRequest.build(RequestBuilder.POST, url, loader)
                .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-               .header(HTTPHeader.CONTENT_LENGTH, "0")
-               .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").send(callback);
+               .header(HTTPHeader.CONTENT_LENGTH, "0").header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+               .send(callback);
          }
          else
          {
@@ -545,7 +545,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#unlock(org.exoplatform.ide.client.module.vfs.api.Item, org.exoplatform.ide.client.module.vfs.api.LockToken)
     */
    @Override
-   public void unlock(Item item, LockToken lockToken)
+   public void unlock(Item item, String lockToken)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
@@ -562,7 +562,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UNLOCK)
-         .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+         .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
 
    }
 

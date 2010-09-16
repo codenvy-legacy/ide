@@ -52,7 +52,7 @@ public abstract class VirtualFileSystem
     * @param file
     * @param lockToken
     */
-   public abstract void saveContent(File file, LockToken lockToken);
+   public abstract void saveContent(File file, String lockToken);
 
    /**
     * Delete file or folder
@@ -76,7 +76,7 @@ public abstract class VirtualFileSystem
     * @param destination
     * @param lockToken
     */
-   public abstract void move(Item item, String destination, LockToken lockToken);
+   public abstract void move(Item item, String destination, String lockToken);
 
    /**
     * Copy item to another locations as path
@@ -106,7 +106,7 @@ public abstract class VirtualFileSystem
     * @param item
     * @param lockToken
     */
-   public abstract void saveProperties(Item item, LockToken lockToken);
+   public abstract void saveProperties(Item item, String lockToken);
 
    /**
     * Search files
@@ -134,6 +134,6 @@ public abstract class VirtualFileSystem
     * @param item
     * @param lockToken
     */
-   public abstract void unlock(Item item, LockToken lockToken);
+   public abstract void unlock(Item item, String lockToken);
 
 }
