@@ -113,6 +113,7 @@ public abstract class BaseTest
       } 
 
       selenium.start();
+      selenium.windowFocus();
       selenium.open(APPLICATION_URL);
       selenium.waitForPageToLoad("10000");
       selenium.windowMaximize();
