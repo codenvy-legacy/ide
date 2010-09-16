@@ -23,7 +23,6 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
@@ -61,7 +60,10 @@ public class FileClosedHandler implements EditorFileClosedHandler, ItemUnlockedH
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       LockToken lockToken = lockTokens.get(event.getFile().getHref());
-
+      
+      System.out.println("FileClosedHandler.onEditorFileClosed()");
+      System.out.println(lockToken.getLockToken());
+      
       if (lockToken != null)
       {
          handlers.addHandler(ItemUnlockedEvent.TYPE, this);

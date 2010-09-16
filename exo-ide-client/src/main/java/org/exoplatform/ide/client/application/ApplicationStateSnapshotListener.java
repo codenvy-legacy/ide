@@ -40,6 +40,10 @@ import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceiv
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -50,7 +54,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler, EditorUpdateFileStateHandler
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler, EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler
 {
 
    private HandlerManager eventBus;
@@ -60,6 +64,8 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private ApplicationSettings applicationSettings;
    
    private Handlers handlers;
+   
+   private Map<String, String> lockTokens = new LinkedHashMap<String, String>();
 
    public ApplicationStateSnapshotListener(HandlerManager eventBus)
    {
@@ -75,6 +81,8 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
+      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -145,6 +153,32 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
    {
       storeOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    */
+   public void onItemUnlocked(ItemUnlockedEvent event)
+   {
+     lockTokens.remove(event.getItem().getHref());
+     storeLockTokens();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    */
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
+      storeLockTokens();
+   }
+   
+   /**
+    * Store Lock Tokens 
+    */
+   private void storeLockTokens()
+   {
+      applicationSettings.setValue("lock-tokens", lockTokens, Store.COOKIES);
    }
 
 }

@@ -17,6 +17,7 @@
 package org.exoplatform.ide.client.module.preferences;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +94,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   private Map<String, LockToken> lockTokens =  new HashMap<String, LockToken>(); 
+   private Map<String, LockToken> lockTokens = new LinkedHashMap<String, LockToken>();;
 
    public PreferencesModule(HandlerManager eventBus)
    {
@@ -120,6 +121,16 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+
+      @SuppressWarnings("unchecked")
+      Map<String, String> strMap = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      if (strMap != null)
+      {
+         for (String key : strMap.keySet())
+         {
+            lockTokens.put(key, new LockToken("", strMap.get(key), 0));
+         }
+      }
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

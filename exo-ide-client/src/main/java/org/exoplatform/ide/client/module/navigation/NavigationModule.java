@@ -135,7 +135,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
-   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ItemLockedHandler, ItemUnlockedHandler
+   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
+   ItemLockedHandler, ItemUnlockedHandler
 {
    private HandlerManager eventBus;
 
@@ -154,8 +155,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    private String entryPoint;
 
    private File activeFile;
-   
-   private Map<String, LockToken> lockTokens = new HashMap<String, LockToken>();
+
+   private Map<String, LockToken> lockTokens = new LinkedHashMap<String, LockToken>();
 
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
@@ -207,7 +208,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       handlers.addHandler(ItemLockedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
@@ -224,6 +225,18 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+
+      @SuppressWarnings("unchecked")
+      Map<String, String> strMap = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      
+      if (strMap != null)
+      {
+         for (String key : strMap.keySet())
+         {
+            lockTokens.put(key, new LockToken(context.getUserInfo().getName(), strMap.get(key), 0));
+         }
+      }
+
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -258,19 +271,20 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onUploadFile(UploadFileEvent event)
    {
       String path = "";
-     
+
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         if (! event.isOpenFile() )
+         if (!event.isOpenFile())
          {
-            Dialogs.getInstance().showInfo("Please, select target folder in the Workspace Panel before calling this command !");
+            Dialogs.getInstance().showInfo(
+               "Please, select target folder in the Workspace Panel before calling this command !");
             return;
          }
       }
       else
       {
          Item item = selectedItems.get(0);
-   
+
          path = item.getHref();
          if (item instanceof File)
          {
@@ -366,7 +380,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    {
       activeFile = event.getFile();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
     */

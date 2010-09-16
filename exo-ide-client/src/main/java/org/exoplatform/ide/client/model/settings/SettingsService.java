@@ -21,7 +21,9 @@ package org.exoplatform.ide.client.model.settings;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
@@ -57,6 +59,10 @@ public class SettingsService implements SaveApplicationSettingsHandler
 {
 
    private static final String LIST_ITEMS_DELIMITER = "#";
+
+   private static final String MAP_ITEMS_DELIMETER = LIST_ITEMS_DELIMITER;
+
+   private static final String MAP_KEYS_DELIMETER = "@";
 
    private HandlerManager eventBus;
 
@@ -149,8 +155,8 @@ public class SettingsService implements SaveApplicationSettingsHandler
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
-         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
 
    }
 
@@ -185,7 +191,36 @@ public class SettingsService implements SaveApplicationSettingsHandler
          {
             storeList(key, value);
          }
+         else if (value instanceof Map)
+         {
+            storeMap(key, value);
+         }
       }
+   }
+
+   /**
+    * @param key
+    * @param value
+    */
+   private void storeMap(String key, Object value)
+   {
+      @SuppressWarnings("unchecked")
+      Map<String, String> map = (Map<String, String>)value;
+
+      String lockTokens = "";
+
+      for (String k : map.keySet())
+      {
+         String val = map.get(k);
+         if (!"".equals(lockTokens))
+         {
+            lockTokens += MAP_KEYS_DELIMETER;
+         }
+         lockTokens += javaScriptEncodeURIComponent(k);
+         lockTokens += MAP_ITEMS_DELIMETER + val;
+
+      }
+      Cookies.setCookie(key + "_map", lockTokens);
    }
 
    private void storeString(String key, String value)
@@ -241,7 +276,38 @@ public class SettingsService implements SaveApplicationSettingsHandler
          {
             restoreListValue(applicationSettings, name);
          }
+         else if (name.endsWith("_map"))
+         {
+            restoreMapValue(applicationSettings, name);
+         }
       }
+   }
+
+   /**
+    * @param applicationSettings
+    * @param name
+    */
+   private void restoreMapValue(ApplicationSettings applicationSettings, String name)
+   {
+      String n = getName(name, "_map");
+      
+      String value = Cookies.getCookie(name);
+      
+      Map<String, String> map = new LinkedHashMap<String, String>();
+      
+      String[] items = value.split(MAP_KEYS_DELIMETER); 
+      
+      for(int i=0; i< items.length; i++)
+      {
+         String s = items[i];
+         if("".equals(s))
+         {
+            continue;
+         }
+         String[] v = s.split(MAP_ITEMS_DELIMETER);
+         map.put(javaScriptDecodeURIComponent(v[0]), v[1]);
+      }
+      applicationSettings.setValue(n, map, Store.COOKIES);
    }
 
    private String getName(String name, String suffix)
@@ -284,11 +350,11 @@ public class SettingsService implements SaveApplicationSettingsHandler
    }
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-          return decodeURIComponent(text);
-       }-*/;
+                                                                          return decodeURIComponent(text);
+                                                                          }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-          return encodeURIComponent(text);
-       }-*/;
+                                                                          return encodeURIComponent(text);
+                                                                          }-*/;
 
 }
