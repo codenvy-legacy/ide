@@ -59,11 +59,6 @@ import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceHandle
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogEvent;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.toolbar.customize.CustomizeToolbarForm;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;
@@ -80,7 +75,7 @@ import com.google.gwt.event.shared.HandlerManager;
 public class PreferencesModule implements IDEModule, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
    ControlsUpdatedHandler, EntryPointsReceivedHandler, RegisterEventHandlersHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler,
-   ShowAboutDialogHandler, ItemLockedHandler, ItemUnlockedHandler
+   ShowAboutDialogHandler
 {
 
    private HandlerManager eventBus;
@@ -110,15 +105,13 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
 
-      eventBus.addHandler(ItemLockedEvent.TYPE, this);
-      eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
-
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
       handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
@@ -182,7 +175,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       new CustomizeToolbarForm(eventBus, applicationSettings, controls);
    }
 
-   @SuppressWarnings("unchecked")
    public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
    {
       new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
@@ -193,20 +185,5 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       new AboutForm(eventBus);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
-    */
-   public void onItemUnlocked(ItemUnlockedEvent event)
-   {
-      lockTokens.remove(event.getItem().getHref());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
-    */
-   public void onItemLocked(ItemLockedEvent event)
-   {
-      lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
-   }
 
 }

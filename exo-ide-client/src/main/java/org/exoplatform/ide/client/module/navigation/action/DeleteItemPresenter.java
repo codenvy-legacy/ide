@@ -243,6 +243,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          {
             if (file.getHref().startsWith(href) && !file.isNewFile())
             {
+               lockTokens.remove(file.getHref());
                eventBus.fireEvent(new EditorCloseFileEvent(file, true));
             }
 

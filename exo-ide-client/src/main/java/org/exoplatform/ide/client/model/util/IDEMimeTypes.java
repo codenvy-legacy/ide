@@ -71,14 +71,7 @@ public class IDEMimeTypes
 
    public static boolean isMimeTypeSupported(String mimeType)
    {
-      if (mimeTypes.get(mimeType) == null)
-      {
-         return false;
-      }
-      else
-      {
-         return true;
-      }
+      return !(mimeTypes.get(mimeType) == null);
    }
 
    public static Set<String> getExtensions()

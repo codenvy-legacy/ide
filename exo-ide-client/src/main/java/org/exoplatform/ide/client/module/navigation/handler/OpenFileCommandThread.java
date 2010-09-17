@@ -1,3 +1,4 @@
+// $codepro.audit.disable logExceptions
 /*
  * Copyright (C) 2003-2010 eXo Platform SAS.
  *
@@ -82,13 +83,12 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       selectedEditor = event.getEditor();
 
       //TODO 
-      //      LockToken lockToken = lockTokens.get(file.getHref());
-      //      if (lockToken != null)
-      //      {
-      //         Dialogs.getInstance()
-      //            .showInfo("File " + file.getName() + " are locked");
-      //         return;
-      //      }
+      String lockToken = lockTokens.get(file.getHref());
+      if (lockToken != null)
+      {
+         open(file);
+         return;
+      }
 
       //      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
       //      {

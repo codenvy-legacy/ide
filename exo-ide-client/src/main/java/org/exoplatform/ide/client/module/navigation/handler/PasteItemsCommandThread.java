@@ -245,7 +245,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
       String destination = folderToPaste + item.getName();
 
-      VirtualFileSystem.getInstance().move(item, destination);
+      VirtualFileSystem.getInstance().move(item, destination,lockTokens.get(item.getHref()));
    }
 
    private void cutCompleted()
@@ -385,6 +385,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
    /**
     * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
     */
+   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
             if (event.getApplicationSettings().getValue("lock-tokens") == null)

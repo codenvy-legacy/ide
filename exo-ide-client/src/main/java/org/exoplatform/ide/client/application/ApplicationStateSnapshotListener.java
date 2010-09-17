@@ -40,12 +40,15 @@ import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceiv
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -57,7 +60,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler,
-   EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler
+   EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, MoveCompleteHandler
 {
 
    private HandlerManager eventBus;
@@ -85,6 +88,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       handlers.addHandler(ItemLockedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
+      handlers.addHandler(MoveCompleteEvent.TYPE, this);
    }
 
    @SuppressWarnings("unchecked")
@@ -198,6 +202,41 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       {
          lockTokens.remove(event.getItem().getHref());
          storeLockTokens();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent)
+    */
+   public void onMoveComplete(MoveCompleteEvent event)
+   {
+      if (lockTokens.containsKey(event.getSourceHref()))
+      {
+         String lock = lockTokens.get(event.getSourceHref());
+         lockTokens.remove(event.getSourceHref());
+         lockTokens.put(event.getItem().getHref(), lock);
+         storeLockTokens();
+      }
+      else if (event.getItem() instanceof Folder)
+      {
+         String sourceHref = event.getSourceHref();
+         List<String> keys = new ArrayList<String>();
+         for (String k : lockTokens.keySet())
+         {
+            keys.add(k);
+         }
+         
+         for (String key : keys)
+         {
+            if (key.startsWith(sourceHref))
+            {
+               String lock = lockTokens.get(key);
+               String name = key.substring(sourceHref.length());
+               lockTokens.remove(key);
+               lockTokens.put(event.getItem().getHref() +"/"+ name, lock);
+               storeLockTokens();
+            }
+         }
       }
    }
 
