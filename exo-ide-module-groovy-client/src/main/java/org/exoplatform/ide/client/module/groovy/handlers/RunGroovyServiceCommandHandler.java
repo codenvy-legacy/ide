@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.module.groovy.handlers;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
@@ -31,7 +29,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
-import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
@@ -75,8 +72,17 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
     */
    public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
    {
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      this.activeFile = event.getFile();
+   }
+   
 
    /**
     * @see org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler#onRunGroovyService(org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent)
@@ -85,26 +91,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
    {
       if (activeFile == null)
       {
-         return;
-      }
-
-      if (activeFile.isNewFile())
-      {
-         Dialogs.getInstance().ask("IDE",
-            "File <b>" + activeFile.getName() + "</b> is not saved. Would you like to save it?",
-            new BooleanValueReceivedCallback()
-            {
-               public void execute(Boolean value)
-               {
-                  if (value == null || value == false)
-                  {
-                     return;
-                  }
-
-                  saveFileAs();
-               }
-            });
-
          return;
       }
 
@@ -118,26 +104,18 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
 
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
-   }
-
-   protected void saveFileAs()
-   {
-      handlers.addHandler(FileSavedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.fireEvent(new SaveFileAsEvent());
-   }
-
    protected void saveFile()
    {
       handlers.addHandler(FileSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.fireEvent(new SaveFileEvent());
+   }
+   
+   @Override
+   public void onFileSaved(FileSavedEvent event)
+   {
+      handlers.removeHandler(FileSavedEvent.TYPE);
+      validateFile();
    }
 
    protected void validateFile()
@@ -146,24 +124,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       eventBus.fireEvent(new ValidateGroovyScriptEvent());
    }
    
-   protected void reDeployFile()
-   {
-      handlers.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
-      eventBus.fireEvent(new DeployGroovyScriptEvent());
-   }
-   
-   protected void launchWadl()
-   {
-      eventBus.fireEvent(new PreviewWadlOutputEvent());
-   }
-
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      handlers.removeHandler(FileSavedEvent.TYPE);
-      validateFile();
-   }
-
    @Override
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
    {
@@ -174,13 +134,19 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       }
    }
    
+   protected void reDeployFile()
+   {
+      handlers.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
+      eventBus.fireEvent(new DeployGroovyScriptEvent());
+   }
+   
    @Override
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
    {
       handlers.removeHandler(GroovyDeployResultReceivedEvent.TYPE);
       if (event.getException() == null)
       {
-         launchWadl();
+         eventBus.fireEvent(new PreviewWadlOutputEvent());
       }
    }
    
@@ -192,6 +158,7 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       //Before saving file, we add FileSavedHandler,
       //remove it
       handlers.removeHandler(FileSavedEvent.TYPE);
+      
    }
 
 }
