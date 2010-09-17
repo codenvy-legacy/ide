@@ -183,9 +183,9 @@ public class HighlightCurrentLineTest extends BaseTest
          
          // goto last line 58 
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_DOWN);
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_DOWN); 
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP); 
          Thread.sleep(TestConstants.SLEEP_SHORT);
-         lineHighlighterTest(58, 0);
+         lineHighlighterTest(4, 0);
       }
       
    }
