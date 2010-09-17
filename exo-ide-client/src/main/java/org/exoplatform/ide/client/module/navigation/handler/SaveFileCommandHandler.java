@@ -52,7 +52,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileCommandThread implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
+public class SaveFileCommandHandler implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
    ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler, EditorActiveFileChangedHandler,
    ApplicationSettingsReceivedHandler
 {
@@ -65,7 +65,7 @@ public class SaveFileCommandThread implements FileContentSavedHandler, ItemPrope
 
    private Map<String, String> lockTokens;
 
-   public SaveFileCommandThread(HandlerManager eventBus)
+   public SaveFileCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 

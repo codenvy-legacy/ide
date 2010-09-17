@@ -110,7 +110,7 @@ import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandThrea
 import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
-import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
@@ -208,7 +208,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
       new CreateFileCommandThread(eventBus, context);
       new OpenFileCommandThread(eventBus, context);
-      new SaveFileCommandThread(eventBus);
+      new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandThread(eventBus);
       new SaveAllFilesCommandThread(eventBus);
       new GoToFolderCommandThread(eventBus);
