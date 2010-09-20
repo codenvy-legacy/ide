@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -43,6 +44,7 @@ import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -82,7 +84,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       File file = event.getFile();
       selectedEditor = event.getEditor();
 
-      //TODO 
+      //TODO Check opened file!!!
       String lockToken = lockTokens.get(file.getHref());
       if (lockToken != null)
       {
@@ -113,6 +115,25 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
+      File file = (File)event.getItem();
+      for (Property p : file.getProperties())
+      {
+         if (ItemProperty.Namespace.JCR.equals(p.getName().getNamespaceURI())
+            && ItemProperty.JCR_LOCKOWNER.getLocalName().equalsIgnoreCase(p.getName().getLocalName()))
+         {
+            //            Dialogs.getInstance().showInfo("This file are locked by " + p.getValue());
+            if (!lockTokens.containsKey(file.getHref()))
+            {
+               if (file.getContent() != null)
+               {
+                  open(file);
+                  return;
+               }
+               VirtualFileSystem.getInstance().getContent((File)event.getItem());
+               return;
+            }
+         }
+      }
       VirtualFileSystem.getInstance().lock(event.getItem(), 600, context.getUserInfo().getName());
    }
 

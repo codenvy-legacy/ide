@@ -157,7 +157,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    };
 
    @SuppressWarnings("unchecked")
-   public void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent)
+   public void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent, boolean readOnly)
    {
       EditorTab tab = getEditorTab(file.getHref());
       boolean addTab = false;
@@ -165,6 +165,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          tab = new EditorTab(file);
          tab.setCanClose(true);
+         if (readOnly)
+            tab.showReadOnlyStatus();
+         else
+            tab.hideReadOnlyStatus();
          addTab = true;
       }
 
@@ -174,7 +178,8 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
-      List<String> hotKeyList = new ArrayList<String>(((Map<String, String>)applicationSettings.getValue("hotkeys")).keySet());
+      List<String> hotKeyList =
+         new ArrayList<String>(((Map<String, String>)applicationSettings.getValue("hotkeys")).keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
@@ -267,7 +272,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public void updateTabTitle(String href)
    {
       EditorTab tab = getEditorTab(href);
-      tabSet.setTabTitle((Tab)tab, tab.getTabTitle());
+      tabSet.setTabTitle(tab, tab.getTabTitle());
    }
 
    public void redoEditing(String path)

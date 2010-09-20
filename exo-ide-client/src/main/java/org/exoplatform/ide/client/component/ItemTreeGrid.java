@@ -161,7 +161,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
       String path = href.substring(rootFolder.getHref().length());
 
-      if (path.startsWith("/"))
+      if (path.length() > 0 && path.charAt(0) == '/')
       {
          path = path.substring(1);
       }

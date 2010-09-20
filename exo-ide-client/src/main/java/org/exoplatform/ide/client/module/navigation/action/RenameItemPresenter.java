@@ -27,14 +27,9 @@ import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler;
 
@@ -55,7 +50,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class RenameItemPresenter implements MoveCompleteHandler, FileContentSavedHandler, ItemPropertiesReceivedHandler
+public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesReceivedHandler
 {
 
    public interface Display
@@ -86,10 +81,11 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
    private List<Item> selectedItems;
 
    private Map<String, File> openedFiles;
-   
+
    private Map<String, String> lockTokens;
 
-   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
+   public RenameItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
+      Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
@@ -161,7 +157,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
          return;
       }
 
-      VirtualFileSystem.getInstance().move(item, destination);
+      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()));
    }
 
    private String getDestination(Item item)
@@ -177,24 +173,25 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       return href;
    }
 
-   private boolean saveNextOpenedFile(String path)
-   {
-      for (String key : openedFiles.keySet())
-      {
-         if (key.startsWith(path))
-         {
-            File file = openedFiles.get(key);
-            if (file.isContentChanged())
-            {
-               VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
-
+   //
+   //   private boolean saveNextOpenedFile(String path)
+   //   {
+   //      for (String key : openedFiles.keySet())
+   //      {
+   //         if (key.startsWith(path))
+   //         {
+   //            File file = openedFiles.get(key);
+   //            if (file.isContentChanged())
+   //            {
+   //               VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+   //               return true;
+   //            }
+   //         }
+   //      }
+   //
+   //      return false;
+   //   }
+   //
    private void updateOpenedFiles(String href, String sourceHref)
    {
       List<String> keys = new ArrayList<String>();
@@ -222,6 +219,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
 
    private String sourceHref;
 
+   //
    public void onMoveComplete(MoveCompleteEvent event)
    {
       renamedItem = event.getItem();
@@ -275,16 +273,16 @@ public class RenameItemPresenter implements MoveCompleteHandler, FileContentSave
       handlers.removeHandlers();
       display.closeForm();
    }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      if (selectedItems.size() != 1 && saveNextOpenedFile(selectedItems.get(0).getHref()))
-      {
-         return;
-      }
-
-      String href = getDestination(selectedItems.get(0));
-      VirtualFileSystem.getInstance().move(selectedItems.get(0), href);
-   }
+   //
+   //   public void onFileContentSaved(FileContentSavedEvent event)
+   //   {
+   //      if (selectedItems.size() != 1 && saveNextOpenedFile(selectedItems.get(0).getHref()))
+   //      {
+   //         return;
+   //      }
+   //
+   //      String href = getDestination(selectedItems.get(0));
+   //      VirtualFileSystem.getInstance().move(selectedItems.get(0), href);
+   //   }
 
 }

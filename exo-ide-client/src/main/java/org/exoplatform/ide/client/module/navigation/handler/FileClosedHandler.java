@@ -61,7 +61,11 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       String lockToken = lockTokens.get(event.getFile().getHref());
-
+      if(event.getFile().isNewFile())
+      {
+         return;
+      }
+      
       if (lockToken != null)
       {
          VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken);

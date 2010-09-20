@@ -76,6 +76,7 @@ import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
@@ -87,6 +88,7 @@ import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.search.text.event.FindTextResultEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -111,7 +113,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public interface Display
    {
 
-      void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent);
+      void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent, boolean readOnly);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -176,6 +178,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
+   
+   private Map<String, String> lockTokens;
 
    public EditorPresenter(HandlerManager eventBus, ApplicationContext context)
    {
@@ -278,6 +282,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
+      if (applicationSettings.getValue("lock-tokens") == null)
+      {
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      
       for (File file : openedFiles.values())
       {
          ignoreContentChangedList.add(file.getHref());
@@ -293,7 +303,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
             }
 
-            display.openTab(file, lineNumbers, editor, false);
+            display.openTab(file, lineNumbers, editor, false, isReadOnly(file));
             eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
          }
          catch (EditorNotFoundException e)
@@ -478,7 +488,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                return;
             }
 
-            if (value == true)
+            if (value)
             {
                closeFileAfterSaving = true;
 
@@ -571,7 +581,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       File file = event.getFile();
-
+      
       if (openedFiles.get(file.getHref()) != null
          && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
       {
@@ -592,7 +602,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       try
       {
-         display.openTab(file, lineNumbers, event.getEditor(), true);
+         display.openTab(file, lineNumbers, event.getEditor(), true, isReadOnly(file));
          display.selectTab(file.getHref());
       }
       catch (Throwable e)
@@ -602,6 +612,20 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
       eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
+   }
+
+   /**
+    * @param file
+    * @return
+    */
+   private boolean isReadOnly(File file)
+   {
+      if(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      {
+         return !(lockTokens.containsKey(file.getHref()));
+      }
+      else return false;
+//      return !(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null && !lockTokens.containsKey(file.getHref()));
    }
 
    public void onFileSaved(FileSavedEvent event)

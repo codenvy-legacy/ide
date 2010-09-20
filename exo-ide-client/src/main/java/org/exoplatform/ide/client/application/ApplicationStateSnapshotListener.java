@@ -225,15 +225,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
          {
             keys.add(k);
          }
-         
+
          for (String key : keys)
          {
             if (key.startsWith(sourceHref))
             {
                String lock = lockTokens.get(key);
                String name = key.substring(sourceHref.length());
+               String path = event.getItem().getHref();
+               if (!path.endsWith("/"))
+               {
+                  path += "/";
+               }
                lockTokens.remove(key);
-               lockTokens.put(event.getItem().getHref() +"/"+ name, lock);
+               lockTokens.put(path + name, lock);
                storeLockTokens();
             }
          }

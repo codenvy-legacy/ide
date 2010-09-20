@@ -21,7 +21,7 @@ import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 
 /**
@@ -34,18 +34,32 @@ import com.smartgwt.client.widgets.tab.Tab;
 public class EditorTab extends Tab
 {
 
-   private Layout tabPane;
-   
+   private VLayout tabPane;
+
    private SmartGWTTextEditor textEditor;
 
    private File file;
+
+   private boolean readOnly = false;
 
    public EditorTab(File file)
    {
       this.file = file;
       setTitle(getTabTitle());
-      tabPane = new Layout();
+      tabPane = new VLayout();
       setPane(tabPane);
+   }
+
+   public void showReadOnlyStatus()
+   {
+      readOnly = true;
+      setTitle(getTabTitle());
+   }
+
+   public void hideReadOnlyStatus()
+   {
+      readOnly = false;
+      setTitle(getTabTitle());
    }
 
    public SmartGWTTextEditor getTextEditor()
@@ -55,11 +69,11 @@ public class EditorTab extends Tab
 
    public void setTextEditor(SmartGWTTextEditor textEditor)
    {
-      if (this.textEditor != null) 
+      if (this.textEditor != null)
       {
          tabPane.removeMember(this.textEditor);
       }
-      
+
       this.textEditor = textEditor;
       tabPane.addMember(textEditor);
    }
@@ -78,8 +92,11 @@ public class EditorTab extends Tab
    {
       boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
       String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+      String hint = "File opened in read only mode. Use SaveAs command.";
+      String readTitle = readOnly ? "&nbsp;<font color=\"#aa2233\" title=\"" + hint + "\">[ Read only ]</font>" : "";
       String title =
-         "<span title=\"" + file.getHref() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + "</span>";
+         "<span title=\"" + file.getHref() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + readTitle
+            + "</span>";
       return title;
    }
 
