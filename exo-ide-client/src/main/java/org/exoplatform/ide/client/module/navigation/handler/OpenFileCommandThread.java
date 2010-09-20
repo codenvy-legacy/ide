@@ -17,6 +17,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,7 +29,14 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
+import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.event.FileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -54,7 +62,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler, ItemLockedHandler
+   ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler, ItemLockedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
    private HandlerManager eventBus;
 
@@ -67,6 +75,8 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    private ApplicationContext context;
 
    private Map<String, String> lockTokens;
+   
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public OpenFileCommandThread(HandlerManager eventBus, ApplicationContext context)
    {
@@ -77,6 +87,8 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
       eventBus.addHandler(OpenFileEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onOpenFile(OpenFileEvent event)
@@ -93,9 +105,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          }
 
          //TODO Check opened file!!!
-         String lockToken = lockTokens.get(file.getHref());
-         if (lockToken != null)
-         {
+         if (openedFiles.containsKey(file.getHref())) {
             openFile(file);
             return;
          }
@@ -190,6 +200,22 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       }
 
       lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }
