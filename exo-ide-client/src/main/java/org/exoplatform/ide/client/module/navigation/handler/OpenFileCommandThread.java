@@ -81,27 +81,28 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onOpenFile(OpenFileEvent event)
    {
-      File file = event.getFile();
       selectedEditor = event.getEditor();
 
-      //TODO Check opened file!!!
-      String lockToken = lockTokens.get(file.getHref());
-      if (lockToken != null)
+      File file = event.getFile();
+      if (file != null)
       {
-         open(file);
-         return;
+         if (file.isNewFile())
+         {
+            openFile(file);
+            return;
+         }
+
+         //TODO Check opened file!!!
+         String lockToken = lockTokens.get(file.getHref());
+         if (lockToken != null)
+         {
+            openFile(file);
+            return;
+         }
       }
-
-      //      if (!IDEMimeTypes.isMimeTypeSupported(file.getContentType()))
-      //      {
-      //         Dialogs.getInstance().showError("Can't open file <b>" + file.getName() + "</b>!<br>Mime type <b>" + file.getContentType() + "</b> is not supported!");
-      //         return;
-      //      }
-
-      if (file.isNewFile())
+      else
       {
-         open(file);
-         return;
+         file = new File(event.getHref());
       }
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -110,7 +111,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       handlers.addHandler(ItemLockedEvent.TYPE, this);
 
       VirtualFileSystem.getInstance().getProperties(file);
-
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
@@ -121,19 +121,11 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          if (ItemProperty.Namespace.JCR.equals(p.getName().getNamespaceURI())
             && ItemProperty.JCR_LOCKOWNER.getLocalName().equalsIgnoreCase(p.getName().getLocalName()))
          {
-            //            Dialogs.getInstance().showInfo("This file are locked by " + p.getValue());
-            if (!lockTokens.containsKey(file.getHref()))
-            {
-               if (file.getContent() != null)
-               {
-                  open(file);
-                  return;
-               }
-               VirtualFileSystem.getInstance().getContent((File)event.getItem());
-               return;
-            }
+            VirtualFileSystem.getInstance().getContent((File)event.getItem());
+            return;
          }
       }
+
       VirtualFileSystem.getInstance().lock(event.getItem(), 600, context.getUserInfo().getName());
    }
 
@@ -145,7 +137,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       File file = (File)event.getItem();
       if (file.getContent() != null)
       {
-         open(file);
+         openFile(file);
          return;
       }
       VirtualFileSystem.getInstance().getContent((File)event.getItem());
@@ -154,12 +146,14 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
       handlers.removeHandlers();
-      open(event.getFile());
+      openFile(event.getFile());
    }
 
    @SuppressWarnings("unchecked")
-   private void open(File file)
+   private void openFile(File file)
    {
+      handlers.removeHandlers();
+
       try
       {
          if (selectedEditor == null)
@@ -194,6 +188,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
+
       lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
    }
 
