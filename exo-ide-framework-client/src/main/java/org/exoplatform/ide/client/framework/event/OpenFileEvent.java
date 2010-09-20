@@ -31,12 +31,19 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    public static final GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
 
    private File file;
-
+   
+   private String href;
+   
    private String editor;
 
    public OpenFileEvent(File file)
    {
       this.file = file;
+   }
+   
+   public OpenFileEvent(String href)
+   {
+      this.href = href;
    }
 
    public OpenFileEvent(File file, String editor)
@@ -53,6 +60,11 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    public String getEditor()
    {
       return editor;
+   }
+   
+   public String getHref()
+   {
+      return href;
    }
    
    @Override
