@@ -1,5 +1,0 @@
-* [Compile and debug GWT application|http://code.google.com/intl/uk/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html]
-* [eXo IDE user manual|http://wiki-int.exoplatform.org/display/exoproducts/eXo+IDE+User+Manual]
-* [REST Service design|http://wiki-int.exoplatform.org/display/exoproducts/REST+Service+Design]
-* [Registry Service|http://wiki-int.exoplatform.org/display/exoproducts/Registry+Service]
-* [Developer's manual for building and deploying eXo IDE Gadget under GateIn|http://wiki-int.exoplatform.org/display/exoproducts/Developer%27s+Manual+for+Building+and+Deploying+eXo+IDE+Gadget+Under+GateIn] 

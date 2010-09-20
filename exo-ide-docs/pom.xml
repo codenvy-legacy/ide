@@ -21,6 +21,5 @@
   
   <modules>
     <module>user</module>
-    <module>admin</module>
   </modules>
 </project>

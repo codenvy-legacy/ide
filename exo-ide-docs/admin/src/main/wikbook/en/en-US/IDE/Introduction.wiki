@@ -1,7 +1,0 @@
-This document describes the ways of configuring and launching eXo IDE application.
-
-h1. Requirements
-
-* [JDK 1.6|http://java.sun.com/javase/downloads/index.jsp] or upper (32 bit);
-* [Maven 2.2.1|http://maven.apache.org/download.html] (or later);
-* Console SVN client 1.6 or later.
