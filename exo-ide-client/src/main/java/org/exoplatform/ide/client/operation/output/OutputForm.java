@@ -16,13 +16,6 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.ui.TabPanel;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -30,6 +23,13 @@ import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.TabPanel;
 
 /**
  * Created by The eXo Platform SAS .

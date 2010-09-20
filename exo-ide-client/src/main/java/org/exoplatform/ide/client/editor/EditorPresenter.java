@@ -62,6 +62,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
@@ -103,7 +105,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
    EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
-   ApplicationSettingsReceivedHandler
+   ApplicationSettingsReceivedHandler, EditorGoToPositionHandler
 {
 
    public interface Display
@@ -142,6 +144,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       void deleteCurrentLune(String path);
 
       void goToLine(String path, int lineNumber);
+      
+      void goToPosition(String path, int lineNumber, int columnNumber);
 
       boolean findText(String findText, boolean caseSensitive, String path);
 
@@ -247,6 +251,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
 
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
+      
+      handlers.addHandler(EditorGoToPositionEvent.TYPE, this);
 
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
    }
@@ -646,6 +652,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorGoToLine(EditorGoToLineEvent event)
    {
       display.goToLine(activeFile.getHref(), event.getLineNumber());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionHandler#onEditorGoToPosition(org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionEvent)
+    */
+   public void onEditorGoToPosition(EditorGoToPositionEvent event)
+   {
+      display.goToPosition(activeFile.getHref(), event.getLineNumber(), event.getColumnNumber());
    }
 
    /**
