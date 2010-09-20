@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -88,6 +89,10 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    private File activeFile;
 
    private ApplicationConfiguration configuration;
+   
+   private int errLineNumber;
+   
+   private int errColumnNumber;
 
    public GroovyModule(HandlerManager eventBus)
    {
@@ -127,7 +132,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       new RunGroovyServiceCommandHandler(eventBus);
    }
 
@@ -163,6 +168,46 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       GroovyService.getInstance().undeploy(activeFile.getHref());
    }
 
+   private native void initGoToErrorFunction() /*-{
+      var instance = this;       
+      var goToErrorFunction = function(lineNumber, columnNumber) {
+         instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(II)(lineNumber, columnNumber);
+      };
+      
+      $wnd.groovyGoToErrorFunction = goToErrorFunction;
+   }-*/;
+
+   public void goToError(int lineNumber, int columnNumber)
+   {
+      eventBus.fireEvent(new EditorGoToPositionEvent(lineNumber, columnNumber));
+   }
+   
+   /**
+    * Parse text and find number of column and line number of error
+    * 
+    * @param text validation text, which contains number of column and line number of error
+    */
+   private void findLineNumberAndColNumberOfError(String text)
+   {
+      try
+      {
+         //find line number
+         int firstIndex = text.indexOf("@ line") + 7;
+         int lastIndex =  text.indexOf(", column");
+         errLineNumber =  Integer.valueOf(text.substring(firstIndex, lastIndex));
+         
+         //find column number
+         firstIndex = lastIndex + 9;
+         lastIndex = text.indexOf(".", firstIndex);
+         errColumnNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
+         
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedEvent)
     */
@@ -178,6 +223,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
       else
       {
+         initGoToErrorFunction();
          /*
           * Validation failed
           */
@@ -189,6 +235,12 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          {
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
+
+         findLineNumberAndColNumberOfError(exception.getMessage());
+         
+         outputContent =
+            "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
+               + "," + String.valueOf(errColumnNumber) + ");\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
          eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
