@@ -157,7 +157,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    };
 
    @SuppressWarnings("unchecked")
-   public void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent, boolean readOnly)
+   public void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly)
    {
       EditorTab tab = getEditorTab(file.getHref());
       boolean addTab = false;
@@ -192,10 +192,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          redraw();
       }
 
-      if (fireEvent)
-      {
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, textEditor));
-      }
+//      if (fireEvent)
+//      {
+//         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, textEditor));
+//      }
    }
 
    public void selectTab(String path)

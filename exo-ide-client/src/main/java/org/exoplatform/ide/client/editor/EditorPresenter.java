@@ -113,7 +113,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public interface Display
    {
 
-      void openTab(File file, boolean lineNumbers, Editor editor, boolean fireEvent, boolean readOnly);
+      void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly);
 
       void relocateFile(File oldFile, File newFile);
 
@@ -303,7 +303,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
             }
 
-            display.openTab(file, lineNumbers, editor, false, isReadOnly(file));
+            display.openTab(file, lineNumbers, editor, isReadOnly(file));
             eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
          }
          catch (EditorNotFoundException e)
@@ -363,8 +363,20 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          String editorId = event.getEditorId();
          String path = display.getPathByEditorId(editorId);
-         File file = openedFiles.get(path);
+         final File file = openedFiles.get(path);
          display.setTabContent(file.getHref(), file.getContent());
+
+         new Timer()
+         {
+            @Override
+            public void run()
+            {
+               eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+            }
+
+         }.schedule(200);
+         //eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+         //eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));         
       }
       catch (Exception exc)
       {
@@ -582,6 +594,11 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       File file = event.getFile();
       
+      if (file == null)
+      {
+         return;
+      }
+
       if (openedFiles.get(file.getHref()) != null
          && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
       {
@@ -602,7 +619,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       try
       {
-         display.openTab(file, lineNumbers, event.getEditor(), true, isReadOnly(file));
+         display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
          display.selectTab(file.getHref());
       }
       catch (Throwable e)
@@ -610,8 +627,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          e.printStackTrace();
       }
 
-      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
+//      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+//      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
    }
 
    /**
