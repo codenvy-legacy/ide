@@ -80,7 +80,7 @@ public class AutoCompletionXMLTest extends BaseTest
       selenium.keyPressNative("10");
       String textAfter = selenium.getText("//body[@class='editbox']");
       assertTrue(textAfter.contains("<root></root>"));
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+
+      closeUnsavedFileAndDoNotSave("0");      
    }
 }

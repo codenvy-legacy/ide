@@ -64,8 +64,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+      closeUnsavedFileAndDoNotSave("0");
    }
    
    /**

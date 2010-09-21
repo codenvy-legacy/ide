@@ -72,9 +72,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    @Test
@@ -105,9 +103,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    /**

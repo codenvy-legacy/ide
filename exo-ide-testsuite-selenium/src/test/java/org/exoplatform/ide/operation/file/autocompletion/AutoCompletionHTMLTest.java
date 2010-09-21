@@ -70,9 +70,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       htmlTest();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    @Test
@@ -135,8 +133,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
       
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    private void htmlTest() throws InterruptedException
