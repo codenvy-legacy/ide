@@ -34,12 +34,24 @@ import javax.ws.rs.core.Application;
 public class GroovyScriptServiceApplication extends Application
 {
 
-   @Override
+   private final Set<Object> objects = new HashSet<Object>();
+
+   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+
+   public GroovyScriptServiceApplication()
+   {
+      objects.add(new DevelopmentResourceMethodFilter());
+//      classes.add(GroovyScriptService.class);
+   }
+
    public Set<Class<?>> getClasses()
    {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.add(GroovyScriptService.class);
       return classes;
    }
-   
+
+   public Set<Object> getSingletons()
+   {
+      return objects;
+   }
+
 }
