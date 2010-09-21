@@ -39,28 +39,17 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       createFileFromToolbar("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
 
-      javaScriptTeastVar();
-
-      cleanUpFile();
-
+      javaScriptTestVar();
       javaScriptTestFunction();
-
-      cleanUpFile();
-
       javaScriptTestJSON();
-
       javaScriptTestFunctions();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-//      selenium.refresh();
-//      selenium.waitForPageToLoad("30000");
-//      Thread.sleep(TestConstants.SLEEP);
       createFileFromToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -69,140 +58,114 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);      
       selenium.typeKeys("//body[@class='editbox']", "</script>");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      javaScriptTeastVar();
-
-      deleteChars(16);
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-
+      
+      javaScriptTestVar();
       javaScriptTestFunction();
-
-      deleteChars(92);
-
       javaScriptTestJSON();
-
       javaScriptTestFunctions();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-//      selenium.refresh();
-//      selenium.waitForPageToLoad("30000");
-//      Thread.sleep(TestConstants.SLEEP);
       createFileFromToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + java.awt.event.KeyEvent.VK_END);
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</script>");
-      Thread.sleep(300);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</script>");
-      Thread.sleep(300);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       selenium.typeKeys("//body[@class='editbox']", "le>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       selenium.typeKeys("//body[@class='editbox']", "le>");
-      Thread.sleep(300);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</script>");
-      Thread.sleep(300);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       for (int i = 0; i < 9; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       }
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
-      javaScriptTeastVar();
-
-      deleteChars(18);
-
+      javaScriptTestVar();
       javaScriptTestFunction();
-
-      deleteChars(104);
-
       javaScriptTestJSON();
-
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-
       javaScriptTestFunctions();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
-//      selenium.refresh();
-//      selenium.waitForPageToLoad("30000");
-//      Thread.sleep(TestConstants.SLEEP);
       createFileFromToolbar("Groovy Template");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", " <script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", " </script>");
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<%");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "  import org.exoplatform.web.application.Parameter;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "  List appCategories = uicomponent.getApplicationCategories();");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "%>");
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</script>");
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       selenium.typeKeys("//body[@class='editbox']", "le>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       selenium.typeKeys("//body[@class='editbox']", "le>");
 
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "<script>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "</script>");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -211,50 +174,38 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
-      javaScriptTeastVar();
-
-      deleteChars(16);
-
+      javaScriptTestVar();
       javaScriptTestFunction();
-
-      deleteChars(82);
-
       javaScriptTestJSON();
-
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-
       javaScriptTestFunctions();
 
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    /**
-    * @throws InterruptedException
+    * @throws Exception 
     */
-   private void javaScriptTestFunctions() throws InterruptedException
+   private void javaScriptTestFunctions() throws Exception
    {
       selenium.typeKeys("//body[@class='editbox']", "function topFunc(x) {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "  // Local variables get a different colour than global ones.");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "  var localVarOfTopFunc = 44;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", " function privateFunc1OfTopFunc() {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "  var localVarOfPrivateFuncOfTopFunc = 1;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "   };");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "   var privateFunc2OfTopFunc = function() {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "   };");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "    };");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       openAutoCompleteForm();
@@ -265,24 +216,25 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'localVarOfPrivateFuncOfTopFunc')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'privateFunc2OfTopFunc')]"));
 
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\" + java.awt.event.KeyEvent.VK_ESCAPE);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
-    * @throws InterruptedException
+    * @throws Exception 
     */
-   private void javaScriptTestJSON() throws InterruptedException
+   private void javaScriptTestJSON() throws Exception
    {
       selenium.typeKeys("//body[@class='editbox']", "var topVar = {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "propert");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       selenium.typeKeys("//body[@class='editbox']", "1: \"value1\",");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "method1: function() {}");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "};");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "topVar");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
       openAutoCompleteForm();
@@ -290,29 +242,33 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'method1')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'property1')]"));
 
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\" + java.awt.event.KeyEvent.VK_ESCAPE);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      deleteChars(7);
+      // remove created text
+      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);    
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3)); 
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);      
    }
 
    /**
-    * @throws InterruptedException
+    * @throws Exception 
     */
-   private void javaScriptTestFunction() throws InterruptedException
+   private void javaScriptTestFunction() throws Exception
    {
       selenium.typeKeys("//body[@class='editbox']", "function a () {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
-      selenium.typeKeys("//body[@class='editbox']", "retrun 1;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.typeKeys("//body[@class='editbox']", "return 1;");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "};");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "var b = function() {");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.typeKeys("//body[@class='editbox']", "retrun 2;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
+      selenium.typeKeys("//body[@class='editbox']", "return 2;");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "};");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
       openAutoCompleteForm();
 
@@ -320,19 +276,24 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'b')]"));
 
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\40");
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
       String textAfter = selenium.getText("//body[@class='editbox']");
       assertTrue(textAfter.split("b").length >= 2);
+      
+      // remove created text
+      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3)); 
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }
 
    /**
-    * @throws InterruptedException
+    * @throws Exception 
     */
-   private void javaScriptTeastVar() throws InterruptedException
+   private void javaScriptTestVar() throws Exception
    {
       selenium.typeKeys("//body[@class='editbox']", "var a = 1;");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "a");
 
       openAutoCompleteForm();
@@ -342,32 +303,25 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.focus("//input[@class='exo-autocomplete-edit']");
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]"));
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\" + java.awt.event.KeyEvent.VK_ESCAPE);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      // remove created text
+      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);      
+      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      
+      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));      
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);      
    }
 
    /**
-    * @throws InterruptedException
+    * @throws Exception 
     */
-   private void openAutoCompleteForm() throws InterruptedException
+   private void openAutoCompleteForm() throws Exception
    {
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
-      selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
-      selenium.controlKeyUp();
+      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-   }
-
-   private void deleteChars(int number)
-   {
-      for (int i = number - 1; i >= 0; i--)
-      {
-         selenium.keyPress("//body[@class='editbox']", "\\8");
-      }
-   }
-
-   private void cleanUpFile() throws InterruptedException
-   {
-      String text = selenium.getText("//body[@class='editbox']");
-      deleteChars(text.length());
    }
 }
