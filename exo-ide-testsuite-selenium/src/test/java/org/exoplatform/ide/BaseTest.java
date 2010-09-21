@@ -1411,17 +1411,17 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-//      try
-//      {
-//         if (System.getProperty("os.name").equals("Linux"))
-//         {
-//            Runtime.getRuntime().exec("killall firefox");
-//         }
-//      }
-//      catch (IOException e)
-//      {
-//         e.printStackTrace();
-//      }
+      try
+      {
+         if (System.getProperty("os.name").equals("Linux"))
+         {
+            Runtime.getRuntime().exec("killall firefox");
+         }
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
    }
 
