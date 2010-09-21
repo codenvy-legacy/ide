@@ -19,8 +19,12 @@ package org.exoplatform.ide.client.module.gadget.ui;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
+import org.exoplatform.ide.client.module.gadget.service.GadgetService;
+import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Frame;
 
@@ -57,7 +61,6 @@ public class GadgetPreviewPane extends TabPanel
       super(eventBus, true);
       this.configuration = configuration;
       metadata = gadgetMetadata;
-      //      meta = parseMetadata(gadgetMetadata);
    }
 
    @Override
@@ -93,6 +96,20 @@ public class GadgetPreviewPane extends TabPanel
       showGadget();
    }
 
+   private native String getST()/*-{
+      return encodeURIComponent(gadgets.util.getUrlParameters().st);
+    }-*/;
+   
+   private native String getGadgetParent()/*-{
+   return encodeURIComponent(gadgets.util.getUrlParameters().parent);
+ }-*/;
+   
+   private native boolean isGadget()/*-{
+       return (typeof(gadgets) !== "undefined" ||  typeof(gadgets) !== "null");
+   }-*/;
+   
+   
+   
    /**
     * Create iframe. 
     * Gadget will be load here.
@@ -100,11 +117,20 @@ public class GadgetPreviewPane extends TabPanel
     */
    private void showGadget()
    {
+      
       String url = metadata.getIframeUrl();
       url = url.replace("?container=", "?container=default");
       url = url.replace("&view=", "&view=canvas");
       url = configuration.getGadgetServer() + "ifr" + url; // Configuration.getInstance().getGadgetServer() + "ifr" + url;
-      Frame frame = new Frame(url + "&nocache=1");
+      if (isGadget())
+      {
+         url = url + "&parent=" + getGadgetParent() + "&nocache=1&st="+ getST();
+      }
+      else
+      {
+         url = url + "&nocache=1";
+      }
+      Frame frame = new Frame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
