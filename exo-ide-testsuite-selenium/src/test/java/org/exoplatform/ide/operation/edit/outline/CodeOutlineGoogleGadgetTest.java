@@ -192,26 +192,27 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open Content node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new node appeared
       assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
 
       //open CDATA node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT * 2);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new node appeared
       assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
 
       //open html node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("head", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
       assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
 
       //open head node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.SLEEP);
+      
       //new nodes appeared
       assertEquals("meta", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
       assertEquals("link", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
@@ -223,7 +224,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open script node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
       //check other nodes
@@ -232,10 +233,10 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //close head node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //open body node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
       assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
@@ -245,7 +246,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open table node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("thead", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
       assertEquals("tbody", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
@@ -257,7 +258,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open thead node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
       //check other nodes
@@ -269,7 +270,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open tr node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
       //check other nodes
@@ -281,10 +282,10 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //close thead node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //open tbody node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
       //check other nodes
@@ -295,7 +296,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //open tr node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //new nodes appeared
       assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
       assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
@@ -308,17 +309,17 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //close tr node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //close tbody node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //close table node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //open script node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //node node appeared
       assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
 
