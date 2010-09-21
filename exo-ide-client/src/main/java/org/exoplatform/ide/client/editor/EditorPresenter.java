@@ -615,8 +615,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
+    * Check is file locked
+    * 
     * @param file
-    * @return
+    * @return true if file is locked and client not have lock token, else return false
     */
    private boolean isReadOnly(File file)
    {

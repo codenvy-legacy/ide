@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.model.settings;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,8 +38,8 @@ import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
@@ -220,7 +221,8 @@ public class SettingsService implements SaveApplicationSettingsHandler
          lockTokens += MAP_ITEMS_DELIMETER + val;
 
       }
-      Cookies.setCookie(key + "_map", lockTokens);
+
+      Cookies.setCookie(key + "_map", lockTokens, new Date(System.currentTimeMillis() + 86400000));
    }
 
    private void storeString(String key, String value)
@@ -290,17 +292,17 @@ public class SettingsService implements SaveApplicationSettingsHandler
    private void restoreMapValue(ApplicationSettings applicationSettings, String name)
    {
       String n = getName(name, "_map");
-      
+
       String value = Cookies.getCookie(name);
-      
+
       Map<String, String> map = new LinkedHashMap<String, String>();
-      
-      String[] items = value.split(MAP_KEYS_DELIMETER); 
-      
-      for(int i=0; i< items.length; i++)
+
+      String[] items = value.split(MAP_KEYS_DELIMETER);
+
+      for (int i = 0; i < items.length; i++)
       {
          String s = items[i];
-         if("".equals(s))
+         if ("".equals(s))
          {
             continue;
          }

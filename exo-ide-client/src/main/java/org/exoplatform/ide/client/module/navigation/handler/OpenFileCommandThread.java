@@ -37,6 +37,8 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -55,7 +57,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, ItemLockedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   ItemPropertiesReceivedHandler, ItemLockedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -76,6 +78,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
       handlers = new Handlers(eventBus);
 
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(OpenFileEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -95,7 +98,8 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          }
 
          //TODO Check opened file!!!
-         if (openedFiles.containsKey(file.getHref())) {
+         if (openedFiles.containsKey(file.getHref()))
+         {
             openFile(file);
             return;
          }
@@ -193,6 +197,14 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+     applicationSettings = event.getApplicationSettings(); 
    }
 
 }
