@@ -36,10 +36,13 @@ public class GroovyValidateResultReceivedEvent extends ServerExceptionEvent<Groo
    private Throwable exception;
 
    private String fileName;
-
-   public GroovyValidateResultReceivedEvent(String fileName)
+   
+   private String fileHref;
+   
+   public GroovyValidateResultReceivedEvent(String fileName, String fileHref)
    {
       this.fileName = fileName;
+      this.fileHref = fileHref;
    }
 
    @Override
@@ -64,7 +67,12 @@ public class GroovyValidateResultReceivedEvent extends ServerExceptionEvent<Groo
    {
       return fileName;
    }
-
+   
+   public String getFileHref()
+   {
+      return fileHref;
+   }
+   
    public Throwable getException()
    {
       return exception;

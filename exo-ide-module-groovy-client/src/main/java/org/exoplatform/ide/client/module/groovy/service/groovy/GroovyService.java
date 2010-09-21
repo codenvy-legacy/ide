@@ -48,7 +48,7 @@ public abstract class GroovyService
     * @param fileName
     * @param content
     */
-   public abstract void validate(String href, String content);
+   public abstract void validate(String fileName, String fileHref, String fileContent);
    
    /**
     * Validate Groovy script.
@@ -59,7 +59,7 @@ public abstract class GroovyService
     * @param content
     * @param url
     */
-   protected abstract void validate(String href, String content, String url);
+   protected abstract void validate(String fileName, String fileHref, String fileContent, String url);
 
    /**
     * Deploy Groovy script.

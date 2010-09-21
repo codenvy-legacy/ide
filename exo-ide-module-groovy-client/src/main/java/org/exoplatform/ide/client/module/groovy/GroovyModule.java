@@ -16,9 +16,13 @@
  */
 package org.exoplatform.ide.client.module.groovy;
 
+import com.google.gwt.user.client.Timer;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
@@ -29,7 +33,12 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionEvent;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -70,6 +79,9 @@ import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -79,7 +91,8 @@ import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, DeployGroovyScriptHandler,
    UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
-   WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler
+   WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ExceptionThrownHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -90,10 +103,42 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
 
    private ApplicationConfiguration configuration;
    
+   private Map<String, File> openedFiles = new HashMap<String, File>();
+   
+   /**
+    * Number of line, which extracts from error message and
+    * paths as parameter to javascript method.
+    */
    private int errLineNumber;
    
+   /**
+    * Number of column, which extracts from error message and
+    * paths as parameter to javascript method.
+    */
    private int errColumnNumber;
-
+   
+   /**
+    * Number of line, where to after,
+    * after user click on error message.
+    */
+   private int lineNumberToGo;
+   
+   /**
+    * Number of column, where to after,
+    * after user click on error message.
+    */
+   private int columnNumberToGo;
+   
+   /**
+    * Is need to go to position in active file.
+    */
+   private boolean isGoToPosition;
+   
+   /**
+    * Href of file which contains an exception and in which need to go to position.
+    */
+   private String errFileHref = "";
+   
    public GroovyModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -132,6 +177,10 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       new RunGroovyServiceCommandHandler(eventBus);
    }
@@ -149,7 +198,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
     */
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getContent());
+      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getHref(), activeFile.getContent());
    }
 
    /**
@@ -170,16 +219,40 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
 
    private native void initGoToErrorFunction() /*-{
       var instance = this;       
-      var goToErrorFunction = function(lineNumber, columnNumber) {
-         instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(II)(lineNumber, columnNumber);
+      var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
+         instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(Ljava/lang/String;II)(
+         fileHref, lineNumber, columnNumber);
       };
       
       $wnd.groovyGoToErrorFunction = goToErrorFunction;
    }-*/;
 
-   public void goToError(int lineNumber, int columnNumber)
+   public void goToError(String fileHref, int lineNumber, int columnNumber)
    {
-      eventBus.fireEvent(new EditorGoToPositionEvent(lineNumber, columnNumber));
+      if (activeFile != null && fileHref.equals(activeFile.getHref()))
+      {
+         eventBus.fireEvent(new EditorGoToPositionEvent(fileHref, lineNumber, columnNumber));
+         return;
+      }
+      
+
+      lineNumberToGo = lineNumber;
+      columnNumberToGo = columnNumber;
+      
+      //TODO:
+      //When FileOpenedEvent will be use,
+      //remove this additional variable, 
+      //and listen to that event
+      if(openedFiles != null && openedFiles.containsKey(fileHref))
+      {
+         isGoToPosition = true;
+         eventBus.fireEvent(new OpenFileEvent(openedFiles.get(fileHref)));
+      }
+      else
+      {
+         errFileHref = fileHref;
+         eventBus.fireEvent(new OpenFileEvent(fileHref));
+      }
    }
    
    /**
@@ -240,7 +313,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          
          outputContent =
             "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
-               + "," + String.valueOf(errColumnNumber) + ");\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() 
+               + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
          eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
@@ -387,6 +461,52 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+      if (isGoToPosition)
+      {
+         isGoToPosition = false;
+         new Timer()
+         {
+            @Override
+            public void run()
+            {
+               eventBus.fireEvent(new EditorGoToPositionEvent(activeFile.getHref(), lineNumberToGo, columnNumberToGo));
+            }
+
+         }.schedule(200);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+      
+      if (errFileHref.equals(event.getFile().getHref()))
+      {
+         errFileHref = "";
+         eventBus.fireEvent(new EditorGoToPositionEvent(activeFile.getHref(), lineNumberToGo, columnNumberToGo));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
+    */
+   @Override
+   public void onError(ExceptionThrownEvent event)
+   {
+      errFileHref = "";
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   @Override
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

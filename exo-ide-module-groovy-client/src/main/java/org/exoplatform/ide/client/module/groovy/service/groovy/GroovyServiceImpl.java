@@ -16,7 +16,9 @@
  */
 package org.exoplatform.ide.client.module.groovy.service.groovy;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestBuilder.Method;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -31,10 +33,7 @@ import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValid
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.marshal.RestServiceOutputUnmarshaller;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestBuilder.Method;
-import com.google.gwt.user.client.Window;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -111,19 +110,19 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#validate(java.lang.String, java.lang.String)
     */
    @Override
-   public void validate(String href, String content)
+   public void validate(String fileName, String fileHref, String fileContent)
    {
       String url = restServiceContext + SERVLET_CONTEXT + VALIDATE;
-      validate(href, content, url);
+      validate(fileName, fileHref, fileContent, url);
    }
    
-   protected void validate(String href, String content, String url)
+   protected void validate(String fileName, String fileHref, String fileContent, String url)
    {
-      GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(href);
+      GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(fileName, fileHref);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy").header(
-         HTTPHeader.LOCATION, href).data(content).send(callback);
+         HTTPHeader.LOCATION, fileName).data(fileContent).send(callback);
    }
 
    @Override

@@ -47,7 +47,10 @@ public class GwtTestValidate extends ClientTest
    public void testValidateSuccessfull()
    {
       String serviceContext = ServletMapping.getURLFor(ServletMapping.VALIDATE_SUCCESSFULL);
-      String href = "/somefile.groovy";
+      String fileName = "/somefile.groovy";
+      
+      //file href doesn't need for validation
+      String fileHref = "";
 
       HandlerManager eventBus = new HandlerManager(null);
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
@@ -75,7 +78,7 @@ public class GwtTestValidate extends ClientTest
          }
       });
 
-      service.validate(href, groovyFileContent);
+      service.validate(fileName, fileHref, groovyFileContent);
 
       sleepTest();
    }
@@ -84,7 +87,10 @@ public class GwtTestValidate extends ClientTest
    {
       String serviceContext = ServletMapping.getURLFor(ServletMapping.VALIDATE_FAILURE);
 
-      String href = "/somefile.groovy";
+      String fileName = "/somefile.groovy";
+      
+      //file href doesn't need for validation
+      String fileHref = "";
 
       HandlerManager eventBus = new HandlerManager(null);
       GroovyService service = new GroovyServiceImpl(eventBus, serviceContext, null);
@@ -112,7 +118,7 @@ public class GwtTestValidate extends ClientTest
          }
       });
 
-      service.validate(href, groovyFileContent);
+      service.validate(fileName, fileHref, groovyFileContent);
 
    }
 
