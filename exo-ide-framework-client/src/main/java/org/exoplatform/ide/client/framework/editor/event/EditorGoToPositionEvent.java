@@ -34,8 +34,11 @@ public class EditorGoToPositionEvent extends GwtEvent<EditorGoToPositionHandler>
    
    private int columnNumber;
    
-   public EditorGoToPositionEvent(int lineNumber, int columnNumber)
+   private String fileHref;
+   
+   public EditorGoToPositionEvent(String fileHref, int lineNumber, int columnNumber)
    {
+      this.fileHref = fileHref;
       this.lineNumber = lineNumber;
       this.columnNumber = columnNumber;
    }
@@ -77,7 +80,15 @@ public class EditorGoToPositionEvent extends GwtEvent<EditorGoToPositionHandler>
    {
       return columnNumber;
    }
+   
+   /**
+    * Get href of file, on which to go.
+    * 
+    * @return String
+    */
+   public String getFileHref()
+   {
+      return fileHref;
+   }
 
-   
-   
 }
