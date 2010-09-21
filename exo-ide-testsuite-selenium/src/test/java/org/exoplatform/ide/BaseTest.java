@@ -1132,7 +1132,7 @@ public abstract class BaseTest
             while ((line = input.readLine()) != null)
             {
                content.append(line);
-               content.append("\n");
+               content.append('\n');
             }
          }
          finally
@@ -1411,17 +1411,17 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-      try
-      {
-         if (System.getProperty("os.name").equals("Linux"))
-         {
-            Runtime.getRuntime().exec("killall firefox");
-         }
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+//      try
+//      {
+//         if (System.getProperty("os.name").equals("Linux"))
+//         {
+//            Runtime.getRuntime().exec("killall firefox");
+//         }
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
 
    }
 
@@ -1527,6 +1527,10 @@ public abstract class BaseTest
       if (selenium.isCookiePresent("line-numbers_bool"))
       {
          selenium.deleteCookie("line-numbers_bool", "/");
-      }    
+      }
+      if(selenium.isCookiePresent("lock-tokens_map"))
+      {
+         selenium.deleteCookie("lock-tokens_map", "/");
+      }
    }
 }
