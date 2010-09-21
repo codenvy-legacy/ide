@@ -125,9 +125,9 @@ public abstract class BaseTest
          selenium.waitForPageToLoad("10000");
          Thread.sleep(10000);
          // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-			// selenium.selectFrame("remote_iframe_0");
+         // selenium.selectFrame("remote_iframe_0");
 
-			// selectMainForm()
+         // selectMainForm()
          if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
          {
             selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
@@ -178,7 +178,7 @@ public abstract class BaseTest
     * 
     * @param index numeration starts with 0 index
     */
-   protected void closeTab(String index) throws Exception
+   protected static void closeTab(String index) throws Exception
    {
       selenium.mouseOver("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -789,7 +789,7 @@ public abstract class BaseTest
     * @param tabIndex index of tab to close
     * @throws Exception
     */
-   protected void closeUnsavedFileAndDoNotSave(String tabIndex) throws Exception
+   protected static void closeUnsavedFileAndDoNotSave(String tabIndex) throws Exception
    {
       closeTab(tabIndex);
 

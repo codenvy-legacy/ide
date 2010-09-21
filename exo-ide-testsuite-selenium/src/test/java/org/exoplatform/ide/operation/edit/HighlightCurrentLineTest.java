@@ -135,15 +135,19 @@ public class HighlightCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(8, 0);
 
-      // Click in menu "File>New->HTML File".
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      // Click in menu "File>New->REST Service".
+      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(1, 1);
       
-      // Highlight line number 2
-      goToLine(2);  
-      lineHighlighterTest(2, 1);      
+      // Highlight line number 2 and verify bug [GWTX-47] In the Firefox cursor goes to the line 3 after pressing Enter key at the start of the first line of groovy script in the Code Editor.]
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       
+      lineHighlighterTest(2, 1);
+      assertEquals("2 : 1", getCursorPositionUsingStatusBar()); // verify cursor position in the status bar
+
       // switch tab to previous file.
       selectEditorTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -167,7 +171,6 @@ public class HighlightCurrentLineTest extends BaseTest
       // test line highlighting with vertical scroll bar.
       if (getEditorScrollTop() != null)      
       {
-      
          // Press "Enter" key 37 times to appear scroll bar.
          for (int i = 0; i < 50; i++)
          {
@@ -187,7 +190,6 @@ public class HighlightCurrentLineTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP_SHORT);
          lineHighlighterTest(4, 0);
       }
-      
    }
 
    /**
@@ -257,8 +259,9 @@ public class HighlightCurrentLineTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
+      closeUnsavedFileAndDoNotSave("0");      
       cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
    }   
 
