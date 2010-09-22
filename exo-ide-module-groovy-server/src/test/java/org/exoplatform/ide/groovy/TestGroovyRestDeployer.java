@@ -97,10 +97,9 @@ public class TestGroovyRestDeployer extends Base
       assertEquals(resourceNumber + 1, binder.getSize());
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot2/script2");
+      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-
       ContainerResponse cres = launcher.service("POST", "/services/groovy/undeploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber, binder.getSize());
@@ -109,11 +108,12 @@ public class TestGroovyRestDeployer extends Base
    @Test
    public void testUndeployNotAdmin() throws Exception
    {
+      assertEquals(resourceNumber, binder.getSize());
       putAutoladedService();
       assertEquals(resourceNumber + 1, binder.getSize());
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot2/script2");
+      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/services/groovy/undeploy", "", headers, null, null, ctx);
@@ -221,7 +221,7 @@ public class TestGroovyRestDeployer extends Base
       scriptAutolad.setProperty("jcr:mimeType", "script/groovy");
       scriptAutolad.setProperty("jcr:lastModified", Calendar.getInstance());
       scriptAutolad.setProperty("jcr:data",
-         Thread.currentThread().getContextClassLoader().getResourceAsStream("test1.groovy"));
+         Thread.currentThread().getContextClassLoader().getResourceAsStream("test2.groovy"));
       session.save();
       Thread.sleep(1000);
    }
