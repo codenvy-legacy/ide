@@ -59,6 +59,7 @@ import com.thoughtworks.selenium.Selenium;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id:   ${date} ${time}
  *
  */
