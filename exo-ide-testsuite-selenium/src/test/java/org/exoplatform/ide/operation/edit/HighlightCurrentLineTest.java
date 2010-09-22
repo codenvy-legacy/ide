@@ -142,12 +142,20 @@ public class HighlightCurrentLineTest extends BaseTest
       
       // Highlight line number 2 and verify bug [GWTX-47] In the Firefox cursor goes to the line 3 after pressing Enter key at the start of the first line of groovy script in the Code Editor.]
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
       lineHighlighterTest(2, 1);
       assertEquals("2 : 1", getCursorPositionUsingStatusBar()); // verify cursor position in the status bar
 
+      // Return to blank first line to verify bug with highlighting [IDE-135] in the Internet Explorer.
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      lineHighlighterTest(1, 1);
+      assertEquals("1 : 1", getCursorPositionUsingStatusBar()); // verify cursor position in the status bar      
+      
+      // goto line 2
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       // switch tab to previous file.
       selectEditorTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
