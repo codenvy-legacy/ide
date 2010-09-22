@@ -444,7 +444,7 @@ public abstract class BaseTest
    protected void deleteSelectedItems() throws Exception
    {
       runToolbarButton(ToolbarCommands.File.DELETE);
-      //cehck deletion form
+      //check deletion form
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]/"));
       assertEquals("Delete Item(s)", selenium.getText("scLocator=//Window[ID=\"ideDeleteItemForm\"]/headerLabel/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
@@ -1308,6 +1308,21 @@ public abstract class BaseTest
       }
    }
    
+   protected void checkIsEditorTabSelected(String tabTitle, boolean isSelected)
+   {
+      if (isSelected)
+      {
+         assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), '" 
+            + tabTitle + "')]"));
+      }
+      else
+      {
+         assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '" 
+            + tabTitle + "')]"));
+      }
+    
+   }
+   
    /*
     * set the focus to hidden input
     */
@@ -1415,17 +1430,17 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-//      try
-//      {
-//         if (System.getProperty("os.name").equals("Linux"))
-//         {
-//            Runtime.getRuntime().exec("killall firefox");
-//         }
-//      }
-//      catch (IOException e)
-//      {
-//         e.printStackTrace();
-//      }
+      try
+      {
+         if (System.getProperty("os.name").equals("Linux"))
+         {
+            Runtime.getRuntime().exec("killall firefox");
+         }
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
    }
 
