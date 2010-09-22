@@ -43,7 +43,9 @@ public class ShowHideLineNumbersTest extends BaseTest
    private static final String XML = System.currentTimeMillis() + ".xml";
 
    private static final String GROOVY = System.currentTimeMillis() + ".groovy";
-
+   
+   private static final String FOLDER_NAME = "Folder" + System.currentTimeMillis(); 
+      
    @Test
    public void testShowHideLineRestService() throws Exception
    {
@@ -51,7 +53,9 @@ public class ShowHideLineNumbersTest extends BaseTest
       {
          selenium.deleteCookie("line-numbers_bool", "/IDE-application/IDE/");
       }
+      
       Thread.sleep(TestConstants.SLEEP);
+      createFolder(FOLDER_NAME);
       //------- 1 ---------------
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + "Edit" + "']", "");
       //check there is no show line number command in menu (enabled or disabled)
@@ -164,8 +168,9 @@ public class ShowHideLineNumbersTest extends BaseTest
       String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
       try
       {
-         VirtualFileSystemUtils.delete(url + XML);
-         VirtualFileSystemUtils.delete(url + GROOVY);
+         VirtualFileSystemUtils.delete(url + FOLDER_NAME);
+//         VirtualFileSystemUtils.delete(url + XML);
+//         VirtualFileSystemUtils.delete(url + GROOVY);
       }
       catch (IOException e)
       {

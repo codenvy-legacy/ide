@@ -42,12 +42,16 @@ public class RenameOpenedFileTest extends BaseTest
 {
 
    private final static String ORIG_FILE_NAME = "fileforrename.txt";
-   
+
    private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
 
-   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + ORIG_FILE_NAME;
-   
-   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + RENAMED_FILE_NAME;
+   private final static String FOLDER_NAME = "falkfsdhglesthga";
+
+   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+      + FOLDER_NAME + "/" + ORIG_FILE_NAME;
+
+   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+      + FOLDER_NAME + "/" + RENAMED_FILE_NAME;
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
 
@@ -56,6 +60,8 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
+         VirtualFileSystemUtils
+            .mkcol(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
          VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, ORIG_URL);
       }
       catch (IOException e)
@@ -76,37 +82,52 @@ public class RenameOpenedFileTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
 
-      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);      
-      
+      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+
       Thread.sleep(TestConstants.SLEEP);
-      
+
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-      
+
       assertTrue(selenium.isTextPresent("Rename item"));
       assertTrue(selenium.isTextPresent("Rename item to:"));
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRenameItemForm\"]/header/member"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]/"));
-      selenium.type("scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||Class=TextItem]/element",
+      selenium
+         .type(
+            "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||Class=TextItem]/element",
             RENAMED_FILE_NAME);
       // ----5-------
       Thread.sleep(TestConstants.SLEEP);
       selenium.click("scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isTextPresent(RENAMED_FILE_NAME));
-      
+
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
+
+      typeTextIntoEditor(0, "change content");
+      saveCurrentFile();
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
+
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+      
+      typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
+      saveCurrentFile();
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(ORIG_URL);
-         VirtualFileSystemUtils.delete(RENAME_URL);
+         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+            + FOLDER_NAME);
       }
       catch (IOException e)
       {
