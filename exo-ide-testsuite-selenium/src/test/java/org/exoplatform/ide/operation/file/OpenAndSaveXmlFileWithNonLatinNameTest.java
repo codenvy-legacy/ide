@@ -45,7 +45,10 @@ import org.junit.Test;
 //IDE-48: Opening and Saving new XML file with non-latin name
 public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 {
+   
    private static final String FILE_NAME = System.currentTimeMillis() + "ТестовыйФайл.xml";
+   
+   private static final String FOLDER_NAME = System.currentTimeMillis() + "open";
    
     
     private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" +
@@ -69,7 +72,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
     {
        try
        {
-          VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME);
+          VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
        }
        catch (IOException e)
        {
@@ -85,7 +88,8 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      createFolder(FOLDER_NAME);
+//      selectItemInWorkspaceTree(WS_NAME);
       createFileFromToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isTextPresent("Untitled file.xml"));
@@ -114,7 +118,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //File name doesn't end with *
-      assertFalse(selenium.isTextPresent(FILE_NAME + " *"));
+      assertFalse(selenium.isTextPresent(FILE_NAME + " \\*"));
       assertTrue(selenium.isTextPresent(FILE_NAME));
       
       //Save command disabled
