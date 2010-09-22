@@ -179,10 +179,11 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //new file should be closed, and file newHtmlFile.html should be opened in the WYSYWYG editor.
       checkCkEditorOpened(0);
-      assertEquals(CUR_TIME + HTML_FILE_NAME, getTabTitle(0));
+//      assertEquals(CUR_TIME + HTML_FILE_NAME, getTabTitle(0));
       
       //---- 10 -------------------------
       //Reopen file newHtmlFile.html.
+      openOrCloseFolder(FOLDER_NAME);
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);

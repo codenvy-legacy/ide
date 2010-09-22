@@ -76,7 +76,11 @@ public abstract class BaseTest
    protected static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/";
 
    protected static final String WS_NAME = "dev-monit";
-
+   
+   protected static final String USER_NAME = "__anonim";
+   // For portal 
+//   protected static final String USER_NAME = "root";
+   
    // For portal: 
    //protected static final String BASE_URL = "http://192.168.0.3:8080/";
    //protected static final String APPLICATION_URL = "http://192.168.0.3:8080/portal/public/default/ide";
@@ -1387,7 +1391,7 @@ public abstract class BaseTest
       {
          url = new URL(BASE_URL);
          connection = new HTTPConnection(url);
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/DefaultUser/IDE");
+         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/"+USER_NAME+"/IDE");
          connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications");
       }
       catch (MalformedURLException e)
@@ -1411,17 +1415,17 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-      try
-      {
-         if (System.getProperty("os.name").equals("Linux"))
-         {
-            Runtime.getRuntime().exec("killall firefox");
-         }
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+//      try
+//      {
+//         if (System.getProperty("os.name").equals("Linux"))
+//         {
+//            Runtime.getRuntime().exec("killall firefox");
+//         }
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
 
    }
 
