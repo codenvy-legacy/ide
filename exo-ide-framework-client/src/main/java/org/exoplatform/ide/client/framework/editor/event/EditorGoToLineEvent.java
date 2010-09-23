@@ -32,9 +32,17 @@ public class EditorGoToLineEvent extends GwtEvent<EditorGoToLineHandler>
 
    private int lineNumber;
    
+   private int columnNumber = -1;
+   
    public EditorGoToLineEvent(int lineNumber)
    {
       this.lineNumber = lineNumber;
+   }
+   
+   public EditorGoToLineEvent(int lineNumber, int columnNumber)
+   {
+      this.lineNumber = lineNumber;
+      this.columnNumber = columnNumber;
    }
    
    /**
@@ -63,6 +71,12 @@ public class EditorGoToLineEvent extends GwtEvent<EditorGoToLineHandler>
       return lineNumber;
    }
 
-   
-   
+   /**
+    * @return the columnNumber
+    */
+   public int getColumnNumber()
+   {
+      return columnNumber;
+   }
+
 }
