@@ -363,27 +363,20 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    /**
     * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#goToLine(java.lang.String, int)
     */
-   public void goToLine(String path, int lineNumber)
+   public void goToLine(String path, int lineNumber, int columnNumber)
    {
       TextEditor editor = getEditorTab(path).getTextEditor();
       if (editor.canGoToLine())
       {
-         editor.goToLine(lineNumber);
-
+         if (columnNumber > -1)
+         {
+            editor.goToPosition(lineNumber, columnNumber);
+         }
+         else
+         {
+            editor.goToLine(lineNumber);
+         }
       }
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#goToPosition(java.lang.String, int, int)
-    */
-   public void goToPosition(String path, int lineNumber, int columnNumber)
-   {
-      TextEditor editor = getEditorTab(path).getTextEditor();
-      if (editor.canGoToLine())
-      {
-         editor.goToPosition(lineNumber, columnNumber);
-
-      }      
    }
    
    /**
