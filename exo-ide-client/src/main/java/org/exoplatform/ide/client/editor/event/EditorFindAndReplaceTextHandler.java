@@ -27,10 +27,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id:   ${date} ${time}
  *
  */
-public interface EditorFindReplaceTextHandler extends EventHandler
+public interface EditorFindAndReplaceTextHandler extends EventHandler
 {
+   
    /**
     * @param event
     */
-   void onEditorFindReplaceText(EditorFindReplaceTextEvent event);
+   void onEditorFindReplaceText(EditorFindAndReplaceTextEvent event);
+   
 }

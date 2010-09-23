@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorFindAndReplaceTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -263,7 +263,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    {
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
       String path = activeFile.getHref();
-      eventBus.fireEvent(new EditorFindReplaceTextEvent(findText, replaceText, caseSensitive, path));
+      eventBus.fireEvent(new EditorFindAndReplaceTextEvent(findText, replaceText, caseSensitive, path));
    }
 
    /**

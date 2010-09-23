@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
@@ -227,7 +228,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
       fillCommandListGrid();
 
-      List<String> toolbarItems = (List<String>) applicationSettings.getValue("toolbar-items");
+      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
       if (toolbarItems == null)
       {
          toolbarItems = new ArrayList<String>();
@@ -255,6 +256,10 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
          {
             addCommand(groups, command);
          }
+         else if (command instanceof TextInputControl)
+         {
+            addCommand(groups, command);
+         }
       }
 
       List<CommandItemEx> commandList = new ArrayList<CommandItemEx>();
@@ -275,10 +280,15 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    private void addCommand(HashMap<String, List<Control>> groups, Control command)
    {
+
       String groupName = command.getId();
       if (groupName.indexOf("/") >= 0)
       {
          groupName = groupName.substring(0, groupName.lastIndexOf("/"));
+      }
+      else
+      {
+         groupName = "Other";
       }
 
       List<Control> commands = groups.get(groupName);
@@ -503,7 +513,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
    @SuppressWarnings("unchecked")
    private void updateToolbar()
    {
-      itemsToUpdate = (List<String>) applicationSettings.getValue("toolbar-items");
+      itemsToUpdate = (List<String>)applicationSettings.getValue("toolbar-items");
       itemsToUpdate.clear();
 
       for (ToolbarItem toolbarItem : toolbarItems)
@@ -523,14 +533,14 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       }
       //SettingsService.getInstance().saveSetting(applicationSettings);
       handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-      
+
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
    @SuppressWarnings("unchecked")
    private void restoreDefaults()
    {
-      List<String> toolbarDefaultItems = (List<String>) applicationSettings.getValue("toolbar-default-items");
+      List<String> toolbarDefaultItems = (List<String>)applicationSettings.getValue("toolbar-default-items");
       if (toolbarDefaultItems == null)
       {
          toolbarDefaultItems = new ArrayList<String>();

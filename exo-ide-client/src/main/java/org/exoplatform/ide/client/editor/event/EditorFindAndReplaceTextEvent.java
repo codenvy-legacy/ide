@@ -27,10 +27,11 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id:   ${date} ${time}
  *
  */
-public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHandler>
+public class EditorFindAndReplaceTextEvent extends GwtEvent<EditorFindAndReplaceTextHandler>
 {
-   public static final GwtEvent.Type<EditorFindReplaceTextHandler> TYPE =
-      new GwtEvent.Type<EditorFindReplaceTextHandler>();
+   
+   public static final GwtEvent.Type<EditorFindAndReplaceTextHandler> TYPE =
+      new GwtEvent.Type<EditorFindAndReplaceTextHandler>();
 
    private String findText;
 
@@ -46,7 +47,7 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
     * @param caseSensitive is case sensitive
     * @param path path to file
     */
-   public EditorFindReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
+   public EditorFindAndReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
    {
       this.findText = findText;
       this.replaceText = replaceText;
@@ -58,7 +59,7 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(EditorFindReplaceTextHandler handler)
+   protected void dispatch(EditorFindAndReplaceTextHandler handler)
    {
       handler.onEditorFindReplaceText(this);
    }
@@ -67,7 +68,7 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFindReplaceTextHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorFindAndReplaceTextHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -103,4 +104,5 @@ public class EditorFindReplaceTextEvent extends GwtEvent<EditorFindReplaceTextHa
    {
       return path;
    }
+   
 }

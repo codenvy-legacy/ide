@@ -37,8 +37,8 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent;
-import org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler;
+import org.exoplatform.ide.client.editor.event.EditorFindAndReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorFindAndReplaceTextHandler;
 import org.exoplatform.ide.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorFindTextHandler;
 import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
@@ -104,7 +104,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    RedoTypingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
    EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
-   EditorReplaceTextHandler, EditorFindReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
+   EditorReplaceTextHandler, EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
    ApplicationSettingsReceivedHandler
 {
 
@@ -193,7 +193,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       handlers.addHandler(EditorFindTextEvent.TYPE, this);
       handlers.addHandler(EditorReplaceTextEvent.TYPE, this);
-      handlers.addHandler(EditorFindReplaceTextEvent.TYPE, this);
+      handlers.addHandler(EditorFindAndReplaceTextEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -718,7 +718,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler#onEditorFindReplaceText(org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent)
     */
-   public void onEditorFindReplaceText(EditorFindReplaceTextEvent event)
+   public void onEditorFindReplaceText(EditorFindAndReplaceTextEvent event)
    {
       boolean isFound =
          display.findReplaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());

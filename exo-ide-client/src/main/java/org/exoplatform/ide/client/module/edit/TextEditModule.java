@@ -81,6 +81,8 @@ public class TextEditModule implements IDEModule, RegisterEventHandlersHandler, 
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl(eventBus)));
       
       eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(eventBus)));
+      
+      //eventBus.fireEvent(new RegisterControlEvent(new QuickTextSearchControl(eventBus), true));
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
