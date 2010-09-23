@@ -61,7 +61,7 @@ public class EditorFindAndReplaceTextEvent extends GwtEvent<EditorFindAndReplace
    @Override
    protected void dispatch(EditorFindAndReplaceTextHandler handler)
    {
-      handler.onEditorFindReplaceText(this);
+      handler.onEditorFindAndReplaceText(this);
    }
 
    /**

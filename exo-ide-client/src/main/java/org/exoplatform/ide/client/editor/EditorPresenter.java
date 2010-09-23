@@ -716,9 +716,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler#onEditorFindReplaceText(org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler#onEditorFindAndReplaceText(org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent)
     */
-   public void onEditorFindReplaceText(EditorFindAndReplaceTextEvent event)
+   public void onEditorFindAndReplaceText(EditorFindAndReplaceTextEvent event)
    {
       boolean isFound =
          display.findReplaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());

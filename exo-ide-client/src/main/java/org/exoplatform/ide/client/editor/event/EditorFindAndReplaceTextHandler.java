@@ -33,6 +33,6 @@ public interface EditorFindAndReplaceTextHandler extends EventHandler
    /**
     * @param event
     */
-   void onEditorFindReplaceText(EditorFindAndReplaceTextEvent event);
+   void onEditorFindAndReplaceText(EditorFindAndReplaceTextEvent event);
    
 }
