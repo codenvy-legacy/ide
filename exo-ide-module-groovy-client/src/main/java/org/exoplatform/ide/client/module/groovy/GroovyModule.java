@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorGoToPositionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -231,7 +231,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    {
       if (activeFile != null && fileHref.equals(activeFile.getHref()))
       {
-         eventBus.fireEvent(new EditorGoToPositionEvent(fileHref, lineNumber, columnNumber));
+         eventBus.fireEvent(new EditorGoToLineEvent(lineNumber, columnNumber));
          return;
       }
       
@@ -469,7 +469,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
             @Override
             public void run()
             {
-               eventBus.fireEvent(new EditorGoToPositionEvent(activeFile.getHref(), lineNumberToGo, columnNumberToGo));
+               eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
             }
 
          }.schedule(200);
@@ -487,7 +487,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       if (errFileHref.equals(event.getFile().getHref()))
       {
          errFileHref = "";
-         eventBus.fireEvent(new EditorGoToPositionEvent(activeFile.getHref(), lineNumberToGo, columnNumberToGo));
+         eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
       }
    }
 
