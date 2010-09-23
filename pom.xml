@@ -112,6 +112,11 @@
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
          <dependency>
+           <groupId>org.exoplatform</groupId>
+           <artifactId>exo-jcr-services</artifactId>
+           <version>${org.exoplatform.jcr.version}</version> 
+         </dependency>
+         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>exo-gwtframework-commons</artifactId>
             <version>${org.exoplatform.gwtframework.version}</version>
