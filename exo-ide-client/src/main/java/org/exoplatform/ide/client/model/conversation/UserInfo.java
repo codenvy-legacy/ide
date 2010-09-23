@@ -20,7 +20,6 @@
 package org.exoplatform.ide.client.model.conversation;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -49,8 +48,6 @@ public class UserInfo
    {
       this.name = name;
    }
-   
-   
 
    public UserInfo(String name, List<String> groups, List<String> roles)
    {
@@ -104,7 +101,5 @@ public class UserInfo
    {
       this.roles = roles;
    }
-   
-   
 
 }

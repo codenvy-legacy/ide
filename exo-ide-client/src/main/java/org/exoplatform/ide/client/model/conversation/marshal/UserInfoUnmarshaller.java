@@ -22,11 +22,10 @@ package org.exoplatform.ide.client.model.conversation.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.conversation.UserInfo;
 
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,6 +37,12 @@ import com.google.gwt.json.client.JSONValue;
 public class UserInfoUnmarshaller implements Unmarshallable
 {
 
+   public static String USER_ID = "userId";
+
+   public static String ROLES = "roles";
+
+   public static String GROUPS = "groups";
+
    private UserInfo userInfo;
 
    public UserInfoUnmarshaller(UserInfo userInfo)
@@ -47,7 +52,27 @@ public class UserInfoUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response)
    {
-      this.userInfo = UserInfoParser.parse(response.getText());
+      JSONObject json = JSONParser.parse(response.getText()).isObject();
+      if (json.containsKey(USER_ID))
+      {
+         userInfo.setName(json.get(USER_ID).isString().stringValue());
+      }
+      if (json.containsKey(ROLES))
+      {
+         JSONArray jsonRoles = json.get(ROLES).isArray();
+         for (int i = 0; i < jsonRoles.size(); i++)
+         {
+            userInfo.getRoles().add(jsonRoles.get(i).isString().stringValue());
+         }
+      }
+      if (json.containsKey(GROUPS))
+      {
+         JSONArray jsonGroups = json.get(GROUPS).isArray();
+         for (int i = 0; i < jsonGroups.size(); i++)
+         {
+            userInfo.getGroups().add(jsonGroups.get(i).isString().stringValue());
+         }
+      }
    }
 
 }

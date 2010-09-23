@@ -18,7 +18,10 @@ package org.exoplatform.ide.client.conversationstate;
 
 import org.exoplatform.ide.client.model.conversation.UserInfo;
 import org.exoplatform.ide.client.model.conversation.marshal.UserInfoParser;
+import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
 
+import com.google.gwt.http.client.Header;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;
 
 
@@ -39,17 +42,85 @@ public class TestUserInfoParser extends GWTTestCase
       return "org.exoplatform.ide.IDEGwtTest";
    }
    
-   
    public void testUserInfoParser()
    {
-     UserInfo user = UserInfoParser.parse(JSON);
-     assertEquals("root", user.getName());
-     assertTrue(user.getGroups().contains("/platform/administrators"));
-     assertTrue(user.getGroups().contains("/platform/users"));
-     assertEquals(2, user.getGroups().size());
-     assertTrue(user.getRoles().contains("administrators"));
-     assertTrue(user.getRoles().contains("users"));
-     assertEquals(2, user.getRoles().size());
+      UserInfo userInfo = new UserInfo();
+      
+      UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
+      unmarshaller.unmarshal(new MockResponse());
+      
+     //UserInfo user = UserInfoUnmarshaller UserInfoParser.parse(JSON);
+     assertEquals("root", userInfo.getName());
+     assertTrue(userInfo.getGroups().contains("/platform/administrators"));
+     assertTrue(userInfo.getGroups().contains("/platform/users"));
+     assertEquals(2, userInfo.getGroups().size());
+     assertTrue(userInfo.getRoles().contains("administrators"));
+     assertTrue(userInfo.getRoles().contains("users"));
+     assertEquals(2, userInfo.getRoles().size());
    }
+   
+   private class MockResponse extends Response
+   {
+
+      /**
+       * @see com.google.gwt.http.client.Response#getHeader(java.lang.String)
+       */
+      @Override
+      public String getHeader(String header)
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see com.google.gwt.http.client.Response#getHeaders()
+       */
+      @Override
+      public Header[] getHeaders()
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see com.google.gwt.http.client.Response#getHeadersAsString()
+       */
+      @Override
+      public String getHeadersAsString()
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see com.google.gwt.http.client.Response#getStatusCode()
+       */
+      @Override
+      public int getStatusCode()
+      {
+         // TODO Auto-generated method stub
+         return 0;
+      }
+
+      /**
+       * @see com.google.gwt.http.client.Response#getStatusText()
+       */
+      @Override
+      public String getStatusText()
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see com.google.gwt.http.client.Response#getText()
+       */
+      @Override
+      public String getText()
+      {
+         return JSON;
+      }
+      
+   }   
    
 }
