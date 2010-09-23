@@ -26,6 +26,8 @@ startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
 3 errors
 {screen}
 
+You can click on error message to go to error in REST Service file. If file is closed, than it will be opened, but sure, that you didn't delete or rename it.
+
 h1. Deploy/Undeploy REST Service
 
 To deploy some REST Service, please:
