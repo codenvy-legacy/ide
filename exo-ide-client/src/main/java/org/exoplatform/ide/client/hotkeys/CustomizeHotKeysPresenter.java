@@ -191,7 +191,14 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
        */
       for (Control command : controls)
       {
-         if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null)
+         
+         if (!(command instanceof SimpleControl)) {
+            continue;
+         }
+         
+         SimpleControl control = (SimpleControl)command;
+         
+         if (control.getEvent() != null)
          {
             String groupName = command.getId();
             if (groupName.indexOf("/") >= 0)
@@ -199,7 +206,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
                groupName = groupName.substring(0, groupName.lastIndexOf("/"));
             }
 
-            String hotKey = command.getHotKey();
+            String hotKey = control.getHotKey();
             if (hotKey == null)
             {
                hotKey = "";

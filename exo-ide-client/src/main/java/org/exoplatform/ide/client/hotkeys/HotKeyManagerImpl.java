@@ -220,7 +220,12 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
        */
       for (Control control : registeredControls)
       {
-         control.setHotKey(null);
+         if (!(control instanceof SimpleControl)) {
+            continue;
+         }
+         
+         SimpleControl simpleControl = (SimpleControl)control;         
+         simpleControl.setHotKey(null);
       }
 
       Iterator<String> keyIter = event.getHotKeys().keySet().iterator();
@@ -230,13 +235,15 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
          String controlId = event.getHotKeys().get(key);
 
          Control control = getControl(controlId);
-         if (control == null)
+         if (control == null || !(control instanceof SimpleControl))
          {
             continue;
          }
+         
+         SimpleControl simpleControl = (SimpleControl)control;
 
          String k = HotKeyHelper.convertToStringCombination(key);
-         control.setHotKey(k);
+         simpleControl.setHotKey(k);
       }
    }
 
