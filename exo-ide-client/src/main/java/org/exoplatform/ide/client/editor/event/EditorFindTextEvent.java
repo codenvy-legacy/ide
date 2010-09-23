@@ -33,7 +33,9 @@ public class EditorFindTextEvent extends GwtEvent<EditorFindTextHandler>
    public static final GwtEvent.Type<EditorFindTextHandler> TYPE = new GwtEvent.Type<EditorFindTextHandler>();
 
    private String findText;
+
    private boolean caseSensitive;
+
    private String path;
 
    /**
@@ -47,7 +49,7 @@ public class EditorFindTextEvent extends GwtEvent<EditorFindTextHandler>
       this.caseSensitive = caseSensitive;
       this.path = path;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

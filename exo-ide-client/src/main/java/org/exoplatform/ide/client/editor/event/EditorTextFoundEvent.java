@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.search.text.event;
+package org.exoplatform.ide.client.editor.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -29,44 +29,45 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextResultEvent extends GwtEvent<FindTextResultHandler>
+public class EditorTextFoundEvent extends GwtEvent<EditorTextFoundHandler>
 {
 
-   public static final GwtEvent.Type<FindTextResultHandler> TYPE = new GwtEvent.Type<FindTextResultHandler>();
+   public static final GwtEvent.Type<EditorTextFoundHandler> TYPE = new GwtEvent.Type<EditorTextFoundHandler>();
 
-   private boolean found;
+   private boolean textFound;
 
    /**
-    * @param found
+    * @param textFound
     */
-   public FindTextResultEvent(boolean found)
+   public EditorTextFoundEvent(boolean textFound)
    {
-      this.found = found;
+      this.textFound = textFound;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(FindTextResultHandler handler)
+   protected void dispatch(EditorTextFoundHandler handler)
    {
-      handler.onFindTextResult(this);
+      handler.onEditorTextFound(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FindTextResultHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorTextFoundHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    /**
-    * @return the found
+    * @return the textFound
     */
-   public boolean isFound()
+   public boolean isTextFound()
    {
-      return found;
+      return textFound;
    }
+
 }

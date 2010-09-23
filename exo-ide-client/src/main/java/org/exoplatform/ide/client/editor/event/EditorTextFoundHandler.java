@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.search.text.event;
+package org.exoplatform.ide.client.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -27,10 +27,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id:   ${date} ${time}
  *
  */
-public interface FindTextResultHandler extends EventHandler
+public interface EditorTextFoundHandler extends EventHandler
 {
+   
    /**
     * @param event
     */
-   void onFindTextResult(FindTextResultEvent event);
+   void onEditorTextFound(EditorTextFoundEvent event);
+   
 }

@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler;
 import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
 import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler;
+import org.exoplatform.ide.client.editor.event.EditorTextFoundEvent;
 import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
 import org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
@@ -87,7 +88,6 @@ import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
-import org.exoplatform.ide.client.search.text.event.FindTextResultEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -697,7 +697,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorFindText(EditorFindTextEvent event)
    {
       boolean isFound = display.findText(event.getFindText(), event.isCaseSensitive(), event.getPath());
-      eventBus.fireEvent(new FindTextResultEvent(isFound));
+      eventBus.fireEvent(new EditorTextFoundEvent(isFound));
    }
 
    /**
@@ -722,7 +722,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       boolean isFound =
          display.findReplaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
-      eventBus.fireEvent(new FindTextResultEvent(isFound));
+      eventBus.fireEvent(new EditorTextFoundEvent(isFound));
    }
 
    /**

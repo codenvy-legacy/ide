@@ -25,6 +25,8 @@ import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.editor.event.EditorFindAndReplaceTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ide.client.editor.event.EditorTextFoundEvent;
+import org.exoplatform.ide.client.editor.event.EditorTextFoundHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
@@ -33,8 +35,6 @@ import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.search.Search;
-import org.exoplatform.ide.client.search.text.event.FindTextResultEvent;
-import org.exoplatform.ide.client.search.text.event.FindTextResultHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextPresenter implements FindTextResultHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler
+public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler
 {
    interface Display
    {
@@ -108,7 +108,7 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
 
       filesFindState = new HashMap<String, FindTextState>();
       handlers = new Handlers(eventBus);
-      handlers.addHandler(FindTextResultEvent.TYPE, this);
+      handlers.addHandler(EditorTextFoundEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
    }
@@ -278,13 +278,13 @@ public class FindTextPresenter implements FindTextResultHandler, EditorActiveFil
    }
 
    /**
-    * @see org.exoplatform.ide.client.search.text.event.FindTextResultHandler#onFindTextResult(org.exoplatform.ide.client.search.text.event.FindTextResultEvent)
+    * @see org.exoplatform.ide.client.search.text.event.EditorTextFoundHandler#onEditorTextFound(org.exoplatform.ide.client.search.text.event.EditorTextFoundEvent)
     */
-   public void onFindTextResult(FindTextResultEvent event)
+   public void onEditorTextFound(EditorTextFoundEvent event)
    {
-      String resultString = (event.isFound()) ? "" : STRING_NOT_FOUND;
+      String resultString = (event.isTextFound()) ? "" : STRING_NOT_FOUND;
       String findText = display.getFindField().getValue();
-      FindTextState findTextState = new FindTextState(event.isFound(), resultString, findText);
+      FindTextState findTextState = new FindTextState(event.isTextFound(), resultString, findText);
       changeState(findTextState);
       filesFindState.put(activeFile.getHref(), findTextState);
    }
