@@ -51,17 +51,6 @@ public abstract class GroovyService
    public abstract void validate(String fileName, String fileHref, String fileContent);
    
    /**
-    * Validate Groovy script.
-    * 
-    * Used for test.
-    * 
-    * @param href
-    * @param content
-    * @param url
-    */
-   protected abstract void validate(String fileName, String fileHref, String fileContent, String url);
-
-   /**
     * Deploy Groovy script.
     * 
     * @param path
@@ -71,13 +60,17 @@ public abstract class GroovyService
    /**
     * Deploy Groovy script.
     * 
-    * Used for test.
-    * 
-    * @param href
-    * @param url
+    * @param path
     */
-   public abstract void deploy(String href, String url);
-
+   public abstract void deploySandbox(String href);
+   
+   /**
+    * Undeploy deployed Groovy script.
+    * 
+    * @param path
+    */
+   public abstract void undeploySandbox(String href);
+   
    /**
     * Undeploy deployed Groovy script.
     * 
@@ -85,16 +78,6 @@ public abstract class GroovyService
     */
    public abstract void undeploy(String href);
    
-   /**
-    * Undeploy deployed Groovy script.
-    * 
-    * Used for test.
-    * 
-    * @param href
-    * @param url
-    */
-   protected abstract void undeploy(String href, String url);
-
    /**
     * Get Groovy script output
     * 

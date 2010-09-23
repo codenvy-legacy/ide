@@ -57,7 +57,6 @@ public class RunGroovyServiceCommand extends IDEControl implements EditorActiveF
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
-   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()))

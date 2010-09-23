@@ -46,6 +46,8 @@ public class Images
    {
 
       static final String DEPLOY = IMAGE_URL + "module/groovy/bundled/deploy.png";
+      
+      static final String DEPLOY_SANDBOX = IMAGE_URL + "module/groovy/bundled/deploy-sandbox.png";
 
       static final String OUTPUT = IMAGE_URL + "module/groovy/bundled/output.png";
 
@@ -54,6 +56,8 @@ public class Images
       static final String UNSET_AUTOLOAD = IMAGE_URL + "module/groovy/bundled/unset_autoload.png";
 
       static final String UNDEPLOY = IMAGE_URL + "module/groovy/bundled/undeploy.png";
+      
+      static final String UNDEPLOY_SANDBOX = IMAGE_URL + "module/groovy/bundled/undeploy-sandbox.png";
 
       static final String VALIDATE = IMAGE_URL + "module/groovy/bundled/validate.png";
       

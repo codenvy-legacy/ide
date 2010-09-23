@@ -46,11 +46,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -65,7 +63,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $
  */
 
-@Path("/services/groovy/")
+@Path("/ide/groovy/")
 public class GroovyScriptService extends GroovyScript2RestLoader
 {
 

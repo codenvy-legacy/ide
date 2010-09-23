@@ -111,7 +111,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       eventBus.fireEvent(new SaveFileEvent());
    }
    
-   @Override
    public void onFileSaved(FileSavedEvent event)
    {
       handlers.removeHandler(FileSavedEvent.TYPE);
@@ -124,7 +123,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       eventBus.fireEvent(new ValidateGroovyScriptEvent());
    }
    
-   @Override
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
    {
       handlers.removeHandler(GroovyValidateResultReceivedEvent.TYPE);
@@ -140,7 +138,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       eventBus.fireEvent(new DeployGroovyScriptEvent());
    }
    
-   @Override
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
    {
       handlers.removeHandler(GroovyDeployResultReceivedEvent.TYPE);
@@ -150,7 +147,6 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       }
    }
    
-   @Override
    public void onError(ExceptionThrownEvent event)
    {
       //Can occurs while saving file.

@@ -100,7 +100,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/services/groovy/undeploy", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber, binder.getSize());
    }
@@ -116,7 +116,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/services/groovy/undeploy", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
       assertEquals(resourceNumber + 1, binder.getSize());
    }
@@ -129,7 +129,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/services/groovy/deploy", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber + 1, binder.getSize());
    }
@@ -142,7 +142,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/services/groovy/deploy", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber + 1, binder.getSize());
    }
@@ -157,7 +157,7 @@ public class TestGroovyRestDeployer extends Base
       roles.add("developers");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/services/groovy/deploy", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
       assertEquals(resourceNumber, binder.getSize());
 
@@ -172,7 +172,7 @@ public class TestGroovyRestDeployer extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres =
-         launcher.service("POST", "/services/groovy/deploy-sandbox", "", headers, null, null, ctx);
+         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber + 1, binder.getSize());
    }
@@ -186,7 +186,7 @@ public class TestGroovyRestDeployer extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres =
-         launcher.service("POST", "/services/groovy/deploy-sandbox", "", headers, null, null, ctx);
+         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertEquals(resourceNumber + 1, binder.getSize());
       cres = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
@@ -207,7 +207,7 @@ public class TestGroovyRestDeployer extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres =
-         launcher.service("POST", "/services/groovy/deploy-sandbox", "", headers, null, null, ctx);
+         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
       assertEquals(resourceNumber, binder.getSize());
    }

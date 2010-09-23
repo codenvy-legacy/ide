@@ -43,19 +43,25 @@ import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
+import org.exoplatform.ide.client.module.groovy.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.client.module.groovy.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.client.module.groovy.controls.SetAutoloadCommand;
 import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovyCommand;
+import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.ValidateGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptHandler;
+import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptSandboxEvent;
+import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptSandboxHandler;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputHandler;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadHandler;
 import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptHandler;
+import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandboxEvent;
+import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandboxHandler;
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.RunGroovyServiceCommandHandler;
@@ -92,7 +98,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
    WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ExceptionThrownHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler, UndeployGroovyScriptSandboxHandler
 {
 
    private HandlerManager eventBus;
@@ -158,6 +164,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(eventBus), true, true));
 
@@ -165,9 +173,11 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
 
       handlers.addHandler(DeployGroovyScriptEvent.TYPE, this);
+      handlers.addHandler(DeployGroovyScriptSandboxEvent.TYPE, this);
       handlers.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
 
       handlers.addHandler(UndeployGroovyScriptEvent.TYPE, this);
+      handlers.addHandler(UndeployGroovyScriptSandboxEvent.TYPE, this);
       handlers.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
 
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
@@ -188,7 +198,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    public void onInitializeServices(InitializeServicesEvent event)
    {
       configuration = event.getApplicationConfiguration();
-
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
    }
@@ -214,7 +223,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(activeFile.getHref());
+     GroovyService.getInstance().undeploy(activeFile.getHref());
    }
 
    private native void initGoToErrorFunction() /*-{
@@ -418,8 +427,9 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
+  
    /**
-    * @see org.exoplatform.ide.plugin.groovy.event.SetAutoloadHandler#onSetAutoload(org.exoplatform.ide.plugin.groovy.event.SetAutoloadEvent)
+    * {@inheritDoc}
     */
    public void onSetAutoload(SetAutoloadEvent event)
    {
@@ -432,8 +442,9 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       VirtualFileSystem.getInstance().saveProperties(activeFile);
    }
 
+ 
    /**
-    * @see org.exoplatform.ide.plugin.groovy.event.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ide.plugin.groovy.event.PreviewWadlOutputEvent)
+    * {@inheritDoc}
     */
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
@@ -450,8 +461,9 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       WadlService.getInstance().getWadl(url);
    }
 
+  
    /**
-    * @see org.exoplatform.ide.groovy.model.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ide.groovy.model.wadl.event.WadlServiceOutputReceivedEvent)
+    * {@inheritDoc}
     */
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
@@ -476,10 +488,10 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
+   
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    * {@inheritDoc}
     */
-   @Override
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
@@ -491,22 +503,38 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
+  
    /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
+    * {@inheritDoc}
     */
-   @Override
    public void onError(ExceptionThrownEvent event)
    {
       errFileHref = "";
    }
 
+   
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    * {@inheritDoc}
     */
-   @Override
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
+   {
+      GroovyService.getInstance().deploySandbox(activeFile.getHref());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
+   {
+      GroovyService.getInstance().undeploySandbox(activeFile.getHref());
    }
 
 }

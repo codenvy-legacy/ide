@@ -45,9 +45,15 @@ import java.util.List;
 public class GroovyServiceImpl extends GroovyService
 {
 
-   public static final String SERVLET_CONTEXT = "/services/groovy";
+   public static final String SERVICE_PATH = "/ide/groovy";
 
-   public static final String LOAD = "/load";
+   public static final String DEPLOY = "/deploy";
+   
+   public static final String DEPLOY_SANDBOX = "/deploy-sandbox";
+   
+ public static final String UNDEPLOY = "/undeploy";
+   
+   public static final String UNDEPLOY_SANDBOX = "/undeploy-sandbox";
 
    public static final String VALIDATE = "/validate";
 
@@ -64,67 +70,76 @@ public class GroovyServiceImpl extends GroovyService
       this.loader = loader;
    }
 
-   /* (non-Javadoc)
-    * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#deploy(java.lang.String)
+  
+   /**
+    * {@inheritDoc}
     */
    @Override
    public void deploy(String href)
    {
-      String url = restServiceContext + SERVLET_CONTEXT + LOAD + "?state=true";
-      deploy(href, url);
+      String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY;
+      deploy(href, deployUrl);
    }
    
-   /**
-    * @see org.exoplatform.ide.client.model.groovy.GroovyService#deploy(java.lang.String, java.lang.String)
-    */
    @Override
-   public void deploy(String href, String url)
+   public void deploySandbox(String href)
+   {
+      String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY_SANDBOX;
+      deploy(href, deployUrl);
+   }
+   
+ 
+   private void deploy(String href, String deployUrl)
    {
       GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
-
-   /* (non-Javadoc)
-    * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#undeploy(java.lang.String)
+   
+   /**
+    * {@inheritDoc}
     */
    @Override
    public void undeploy(String href)
    {
-      String url = restServiceContext + SERVLET_CONTEXT + LOAD + "?state=false";
-      undeploy(href, url);
+      String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY;
+      undeploy(href, udeployUrl);
    }
    
-   /**
-    * @see org.exoplatform.ide.client.model.groovy.GroovyService#undeploy(java.lang.String, java.lang.String)
-    */
    @Override
-   protected void undeploy(String href, String url)
+   public void undeploySandbox(String href)
+   {
+      String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY_SANDBOX;
+      undeploy(href, udeployUrl);
+   }
+   
+   
+   public void undeploy(String href, String udeployUrl)
    {
       GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, udeployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
-
-   /* (non-Javadoc)
-    * @see org.exoplatform.gadgets.devtool.client.model.groovy.GroovyService#validate(java.lang.String, java.lang.String)
+ 
+   /**
+    * {@inheritDoc}
     */
    @Override
    public void validate(String fileName, String fileHref, String fileContent)
    {
-      String url = restServiceContext + SERVLET_CONTEXT + VALIDATE;
-      validate(fileName, fileHref, fileContent, url);
-   }
-   
-   protected void validate(String fileName, String fileHref, String fileContent, String url)
-   {
+      String url = restServiceContext + SERVICE_PATH + VALIDATE;
       GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(fileName, fileHref);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy").header(
          HTTPHeader.LOCATION, fileName).data(fileContent).send(callback);
-   }
 
+   }
+   
+
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void getOutput(String url, String method, List<SimpleParameterEntry> headers,
       List<SimpleParameterEntry> params, String body)
@@ -182,5 +197,11 @@ public class GroovyServiceImpl extends GroovyService
       }
       request.send(callback);
    }
+
+
+  
+
+
+
 
 }
