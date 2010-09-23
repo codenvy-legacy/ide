@@ -16,10 +16,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.upload.UploadServiceApplication</type>
    </component>
 

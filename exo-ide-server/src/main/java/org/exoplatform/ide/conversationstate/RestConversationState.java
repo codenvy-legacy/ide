@@ -16,52 +16,49 @@
  */
 package org.exoplatform.ide.conversationstate;
 
-import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-@Path("/conversation-state")
+@Path("/ide/conversation-state")
 public class RestConversationState implements ResourceContainer
 {
    /**
      * Class logger.
      */
-   private final Log log = ExoLogger.getLogger("rest.RestConversationState");
+   private final Log log = ExoLogger.getLogger("ide.RestConversationState");
 
-   @GET
+   @POST
    @Path("/whoami")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
    public Response whoami()
    {
-      CacheControl cc = new CacheControl();
-      cc.setNoCache(true);
-      cc.setNoStore(true);
       ConversationState curentState = ConversationState.getCurrent();
       if (curentState != null)
       {
-         String username = curentState.getIdentity().getUserId();
+         Identity identity = curentState.getIdentity();
+         IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
          if (log.isDebugEnabled())
-            log.info("Getting userid: " + username);
-         return Response.ok(username, MediaType.TEXT_PLAIN).cacheControl(cc).build();
+            log.info("Getting user identity: " + identity.getUserId());
+         return Response.ok(user, MediaType.APPLICATION_JSON).build();
       }
-      return Response.status(Status.UNAUTHORIZED).header(HttpHeaders.WWW_AUTHENTICATE, "exo-domain").build();
+      return Response.status(Status.UNAUTHORIZED).build();
    }
 
 }
