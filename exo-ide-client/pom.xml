@@ -100,14 +100,13 @@
                   <goals>
                      <goal>run</goal>
                   </goals>
-                  <phase>initialize</phase>
+                  <phase>compile</phase>
                   <configuration>
                      <tasks>
-                        <delete file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties" />
-                        <echo file="src/main/resources/org/exoplatform/ide/client/BuildNumber.properties" append="false">buildNumber: ${buildNumber}
-                           buildTime:
-                           ${timestamp}
-                           version: ${project.version}</echo>
+                        <!-- <delete file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" />  -->
+                        <echo file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">buildNumber = ${buildNumber}
+                           buildTime =${timestamp}
+                           version = ${project.version}</echo>
                      </tasks>
                   </configuration>
                </execution>
@@ -532,10 +531,11 @@
                      <module>org.exoplatform.ide.IDEShell</module>
                      <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
                      <logLevel>INFO</logLevel>
+                    <!-- <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> --> 
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <extraJvmArgs>-Xmx512m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx1024m</extraJvmArgs>
                   </configuration>
                </plugin>
                <plugin>
