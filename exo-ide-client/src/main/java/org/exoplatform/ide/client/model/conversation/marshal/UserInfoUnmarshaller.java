@@ -22,7 +22,11 @@ package org.exoplatform.ide.client.model.conversation.marshal;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.conversation.UserInfo;
 
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,7 +47,7 @@ public class UserInfoUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response)
    {
-      userInfo.setName(response.getText());
+      this.userInfo = UserInfoParser.parse(response.getText());
    }
 
 }

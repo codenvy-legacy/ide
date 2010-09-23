@@ -285,7 +285,7 @@
          </dependencies>
          <build>
             <plugins>
-               <!--  configure the GWT-Maven plugin -->
+               <!-- configure the GWT-Maven plugin -->
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
@@ -407,6 +407,10 @@
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform</groupId>
+               <artifactId>exo-jcr-services</artifactId>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -564,7 +568,7 @@
          </dependencies>
          <build>
             <plugins>
-               <!--  configure the GWT-Maven plugin -->
+               <!-- configure the GWT-Maven plugin -->
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
@@ -585,10 +589,8 @@
                      </execution>
                   </executions>
                </plugin>
-               <!--
-                  If you want to use the target/web.xml file mergewebxml produces, tell the war plugin to use it. Also, exclude what you want from the
-                  final artifact here.
-               -->
+               <!-- If you want to use the target/web.xml file mergewebxml produces, tell the war plugin to use it. Also, exclude what you want from the 
+                  final artifact here. -->
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-war-plugin</artifactId>
@@ -603,7 +605,7 @@
                      </webResources>
                   </configuration>
                </plugin>
-               <!--  tell the compiler we can use 1.5 -->
+               <!-- tell the compiler we can use 1.5 -->
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-compiler-plugin</artifactId>
@@ -624,7 +626,7 @@
             <activeByDefault>false</activeByDefault>
          </activation>
          <dependencies>
-            <!--  test -->
+            <!-- test -->
             <dependency>
                <groupId>junit</groupId>
                <artifactId>junit</artifactId>
@@ -774,7 +776,7 @@
                      <runTarget>org.exoplatform.ide.IDEGwtTest/IDEGwtTest.html</runTarget>
                      <logLevel>INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
-                     <!--tomcat>${basedir}/target/tomcat</tomcat-->
+                     <!--tomcat>${basedir}/target/tomcat</tomcat -->
                      <tomcat>${basedir}/tomcat</tomcat>
                      <skipTests>false</skipTests>
                      <webXml>${basedir}/src/test/webapp/WEB-INF/web.xml</webXml>
@@ -782,7 +784,7 @@
                   <executions>
                      <execution>
                         <goals>
-                           <!--goal>compile</goal-->
+                           <!--goal>compile</goal -->
                            <goal>test</goal>
                         </goals>
                      </execution>

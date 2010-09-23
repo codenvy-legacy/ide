@@ -38,7 +38,7 @@ import com.google.gwt.http.client.RequestBuilder;
 public class ConversationServiceImpl extends ConversationService
 {
 
-   private static final String CONVERSATION_SERVICE_CONTEXT = "/conversation-state";
+   private static final String CONVERSATION_SERVICE_CONTEXT = "/ide/conversation-state";
 
    private static final String WHOAMI = "/whoami";
 
@@ -65,7 +65,7 @@ public class ConversationServiceImpl extends ConversationService
       UserInfoReceivedEvent event = new UserInfoReceivedEvent(userInfo);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
 }

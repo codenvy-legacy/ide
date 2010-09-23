@@ -19,6 +19,10 @@
  */
 package org.exoplatform.ide.client.model.conversation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -32,6 +36,10 @@ public class UserInfo
    public static final String DEFAULT_USER_NAME = "DefaultUser";
 
    private String name;
+   
+   private List<String> groups;
+   
+   private List<String> roles;
 
    public UserInfo()
    {
@@ -40,6 +48,15 @@ public class UserInfo
    public UserInfo(String name)
    {
       this.name = name;
+   }
+   
+   
+
+   public UserInfo(String name, List<String> groups, List<String> roles)
+   {
+      this.name = name;
+      this.groups = groups;
+      this.roles = roles;
    }
 
    public String getName()
@@ -51,5 +68,43 @@ public class UserInfo
    {
       this.name = name;
    }
+
+   /**
+    * @return the groups
+    */
+   public List<String> getGroups()
+   {
+      if (groups == null)
+         groups = new ArrayList<String>();
+      return groups;
+   }
+
+   /**
+    * @param groups the groups to set
+    */
+   public void setGroups(List<String> groups)
+   {
+      this.groups = groups;
+   }
+
+   /**
+    * @return the roles
+    */
+   public List<String> getRoles()
+   {
+      if (roles == null) 
+         roles = new ArrayList<String>();
+      return roles;
+   }
+
+   /**
+    * @param roles the roles to set
+    */
+   public void setRoles(List<String> roles)
+   {
+      this.roles = roles;
+   }
+   
+   
 
 }
