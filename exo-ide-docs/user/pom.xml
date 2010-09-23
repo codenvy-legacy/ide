@@ -72,7 +72,6 @@
 
                <emitDoctype>false</emitDoctype>
                <beforeBookBodyXML><![CDATA[<xi:include href="bookinfo.ext" xmlns:xi="http://www.w3.org/2001/XInclude" />]]></beforeBookBodyXML>
-               <validationMode>lax</validationMode>
                <syntaxId>confluence/1.0</syntaxId>
             </configuration>
          </plugin>
