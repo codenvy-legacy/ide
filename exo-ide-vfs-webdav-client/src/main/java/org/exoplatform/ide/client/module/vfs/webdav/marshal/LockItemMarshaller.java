@@ -30,7 +30,6 @@ public class LockItemMarshaller implements Marshallable
       this.userName = userName;
    }
 
-   @Override
    public String marshal()
    {
       String lock = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";

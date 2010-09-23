@@ -31,7 +31,6 @@ public class UnlockItemMarshaller implements Marshallable
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
-   @Override
    public String marshal()
    {
       return "";

@@ -34,7 +34,6 @@ public class UnlockItemUnmarshaller implements Unmarshallable
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
-   @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
       

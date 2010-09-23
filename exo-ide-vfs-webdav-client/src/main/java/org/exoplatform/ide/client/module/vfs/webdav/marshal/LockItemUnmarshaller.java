@@ -41,7 +41,6 @@ public class LockItemUnmarshaller implements Unmarshallable
       this.lockToken = lockToken;
    }
 
-   @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
       try
