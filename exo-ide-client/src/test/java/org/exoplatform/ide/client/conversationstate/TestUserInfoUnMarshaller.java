@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.conversationstate;
 
-import org.exoplatform.ide.client.model.conversation.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
 import org.exoplatform.ide.testframework.http.MockResponse;
 
