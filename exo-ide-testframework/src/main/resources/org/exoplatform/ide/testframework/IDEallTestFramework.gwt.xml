@@ -16,5 +16,6 @@
    -->
 
    <source path='test' />
+   <source path='http' />
 
 </module>

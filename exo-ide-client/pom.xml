@@ -63,6 +63,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-module-groovy-client</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-testframework</artifactId>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
    <build>
       <finalName>IDE</finalName>
@@ -103,7 +108,8 @@
                   <phase>compile</phase>
                   <configuration>
                      <tasks>
-                        <echo file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">buildNumber = ${buildNumber}
+                        <echo file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">buildNumber =
+                           ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
@@ -534,7 +540,7 @@
                      <module>org.exoplatform.ide.IDEShell</module>
                      <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
                      <logLevel>INFO</logLevel>
-                    <!-- <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> --> 
+                     <!-- <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> -->
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>

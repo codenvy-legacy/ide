@@ -19,6 +19,8 @@
 
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
    <inherits name="org.exoplatform.ide.client.module.IDEVirtualFileSystem" />
+   
+   <inherits name="org.exoplatform.ide.testframework.IDEallTestFramework" />
 
    <!-- Specify the app entry point class.                         -->
    <source path="client" excludes="IDEGadget.java" />
