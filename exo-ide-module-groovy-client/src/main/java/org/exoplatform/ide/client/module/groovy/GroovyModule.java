@@ -152,13 +152,13 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New REST Service", "REST Service",
-         "Create REST Service", Images.FileType.GROOVY, MimeType.GROOVY_SERVICE)));
+         "Create REST Service", Images.FileType.REST_SERVICE, MimeType.GROOVY_SERVICE)));
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Script", "Groovy Script",
          "Create Groovy Script", Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY)));
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Template", "Groovy Template",
-         "Create Groovy Template", Images.FileType.GROOVY, MimeType.GROOVY_TEMPLATE)));
+         "Create Groovy Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Chromattic Data Object",
          "Chromattic Data Object", "Create Chromattic Data Object", Images.FileType.GROOVY,

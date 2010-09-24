@@ -69,6 +69,10 @@ public class Images
    {
 
       static final String GROOVY = IMAGE_URL + "module/groovy/filetype/groovy.png";
+      
+      static final String REST_SERVICE = IMAGE_URL + "module/groovy/filetype/rest.png";
+      
+      static final String GROOVY_TEMPLATE = IMAGE_URL + "module/groovy/filetype/gtmpl.png";
 
    }
 
