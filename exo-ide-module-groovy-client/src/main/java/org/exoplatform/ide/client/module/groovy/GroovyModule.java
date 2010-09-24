@@ -108,43 +108,43 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    private File activeFile;
 
    private ApplicationConfiguration configuration;
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
-   
+
    /**
     * Number of line, which extracts from error message and
     * paths as parameter to javascript method.
     */
    private int errLineNumber;
-   
+
    /**
     * Number of column, which extracts from error message and
     * paths as parameter to javascript method.
     */
    private int errColumnNumber;
-   
+
    /**
     * Number of line, where to after,
     * after user click on error message.
     */
    private int lineNumberToGo;
-   
+
    /**
     * Number of column, where to after,
     * after user click on error message.
     */
    private int columnNumberToGo;
-   
+
    /**
     * Is need to go to position in active file.
     */
    private boolean isGoToPosition;
-   
+
    /**
     * Href of file which contains an exception and in which need to go to position.
     */
    private String errFileHref = "";
-   
+
    public GroovyModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -159,6 +159,10 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Template", "Groovy Template",
          "Create Groovy Template", Images.FileType.GROOVY, MimeType.GROOVY_TEMPLATE)));
+
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Chromattic Data Object",
+         "Chromattic Data Object", "Create Chromattic Data Object", Images.FileType.GROOVY,
+         MimeType.CHROMATTIC_DATA_OBJECT)));
 
       eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
@@ -187,7 +191,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(EditorFileClosedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -227,14 +231,14 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    }
 
    private native void initGoToErrorFunction() /*-{
-      var instance = this;       
-      var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
-         instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(Ljava/lang/String;II)(
-         fileHref, lineNumber, columnNumber);
-      };
-      
-      $wnd.groovyGoToErrorFunction = goToErrorFunction;
-   }-*/;
+                                               var instance = this;       
+                                               var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
+                                               instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(Ljava/lang/String;II)(
+                                               fileHref, lineNumber, columnNumber);
+                                               };
+                                               
+                                               $wnd.groovyGoToErrorFunction = goToErrorFunction;
+                                               }-*/;
 
    public void goToError(String fileHref, int lineNumber, int columnNumber)
    {
@@ -243,16 +247,15 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          eventBus.fireEvent(new EditorGoToLineEvent(lineNumber, columnNumber));
          return;
       }
-      
 
       lineNumberToGo = lineNumber;
       columnNumberToGo = columnNumber;
-      
+
       //TODO:
       //When FileOpenedEvent will be use,
       //remove this additional variable, 
       //and listen to that event
-      if(openedFiles != null && openedFiles.containsKey(fileHref))
+      if (openedFiles != null && openedFiles.containsKey(fileHref))
       {
          isGoToPosition = true;
          eventBus.fireEvent(new OpenFileEvent(openedFiles.get(fileHref)));
@@ -263,7 +266,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          eventBus.fireEvent(new OpenFileEvent(fileHref));
       }
    }
-   
+
    /**
     * Parse text and find number of column and line number of error
     * 
@@ -275,14 +278,14 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       {
          //find line number
          int firstIndex = text.indexOf("@ line") + 7;
-         int lastIndex =  text.indexOf(", column");
-         errLineNumber =  Integer.valueOf(text.substring(firstIndex, lastIndex));
-         
+         int lastIndex = text.indexOf(", column");
+         errLineNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
+
          //find column number
          firstIndex = lastIndex + 9;
          lastIndex = text.indexOf(".", firstIndex);
          errColumnNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
-         
+
       }
       catch (Exception e)
       {
@@ -319,11 +322,11 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          }
 
          findLineNumberAndColNumberOfError(exception.getMessage());
-         
+
          outputContent =
             "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
-               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() 
-               + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() + "', '"
+               + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
          eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
@@ -495,7 +498,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-      
+
       if (errFileHref.equals(event.getFile().getHref()))
       {
          errFileHref = "";
