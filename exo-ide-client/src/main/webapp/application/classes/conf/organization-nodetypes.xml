@@ -1,219 +1,253 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
-
-   <!-- JCR Organization service -->
-
-   <nodeType name="exo:membershipType" isMixin="false" hasOrderableChildNodes="false" primaryItemName="exo:description">
-      <supertypes>
-         <supertype>nt:base</supertype>
-         <supertype>mix:referenceable</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-      </propertyDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:userMembership" isMixin="false" hasOrderableChildNodes="false" primaryItemName="exo:group">
-      <supertypes>
-         <supertype>nt:base</supertype>
-         <supertype>mix:referenceable</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="exo:group" requiredType="Reference" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:membershipType" requiredType="Reference" autoCreated="false" mandatory="true"
-            onParentVersion="COPY" protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-      </propertyDefinitions>
-   </nodeType>
-
-   <!-- profile attributes -->
-   <nodeType name="exo:profileAttributes" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-      <supertypes>
-         <supertype>nt:base</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="*" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false"
-            multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-      </propertyDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:userProfile" isMixin="false" hasOrderableChildNodes="false" primaryItemName="exo:attributes">
-      <supertypes>
-         <supertype>nt:unstructured</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="exo:attributes" defaultPrimaryType="exo:profileAttributes" autoCreated="false" mandatory="true"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:profileAttributes</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:user" isMixin="false" hasOrderableChildNodes="false" primaryItemName="exo:lastName">
-      <supertypes>
-         <supertype>nt:base</supertype>
-         <supertype>mix:referenceable</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="exo:firstName" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:lastName" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:password" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:email" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:createdDate" requiredType="Date" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:lastLoginTime" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-      </propertyDefinitions>
-      <childNodeDefinitions>
-         <childNodeDefinition name="exo:profile" defaultPrimaryType="exo:userProfile" autoCreated="false" mandatory="false"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:userProfile</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-         <childNodeDefinition name="exo:membership" defaultPrimaryType="exo:userMembership" autoCreated="false" mandatory="false"
-            onParentVersion="COPY" protected="false" sameNameSiblings="true">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:userMembership</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:group" isMixin="false" hasOrderableChildNodes="false" primaryItemName="exo:label">
-      <supertypes>
-         <supertype>nt:base</supertype>
-         <supertype>mix:referenceable</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="exo:groupId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:parentId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:label" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-         </propertyDefinition>
-      </propertyDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:hierarchyGroup" isMixin="false" hasOrderableChildNodes="false">
-      <supertypes>
-         <supertype>exo:group</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="*" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false"
-            sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:group</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-
-   <nodeType name="exo:organizationUsers" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
-      <supertypes>
-         <supertype>nt:base</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="*" defaultPrimaryType="exo:user" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:user</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:organizationGroups" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
-      <supertypes>
-         <supertype>nt:base</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="*" defaultPrimaryType="exo:hierarchyGroup" autoCreated="false" mandatory="false"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:group</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:organizationMembershipTypes" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
-      <supertypes>
-         <supertype>nt:base</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="*" defaultPrimaryType="exo:membershipType" autoCreated="false" mandatory="false"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:membershipType</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
-   <nodeType name="exo:organizationStorage" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-      <supertypes>
-         <supertype>nt:base</supertype>
-      </supertypes>
-      <childNodeDefinitions>
-         <childNodeDefinition name="exo:users" defaultPrimaryType="exo:organizationUsers" autoCreated="false" mandatory="true"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:organizationUsers</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-         <childNodeDefinition name="exo:groups" defaultPrimaryType="exo:organizationGroups" autoCreated="false" mandatory="true"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:organizationGroups</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-         <childNodeDefinition name="exo:membershipTypes" defaultPrimaryType="exo:organizationMembershipTypes" autoCreated="false"
-            mandatory="true" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exo:organizationMembershipTypes</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
-   </nodeType>
-
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+  xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  
+  <!-- JCR Organization service -->
+  
+  <nodeType name="jos:membershipType" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="jos:description">
+    <supertypes>
+      <supertype>nt:base</supertype>
+      <supertype>mix:referenceable</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="jos:description" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:userMembership" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="jos:group">
+    <supertypes>
+      <supertype>nt:base</supertype>
+      <supertype>mix:referenceable</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="jos:group" requiredType="Reference"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:membershipType" requiredType="Reference"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
+  
+  <!-- profile attributes -->
+  <nodeType name="jos:profileAttributes" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="*" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:userProfile" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="jos:attributes">
+    <supertypes>
+      <supertype>nt:unstructured</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="jos:attributes" defaultPrimaryType="jos:profileAttributes"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:profileAttributes</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:user" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="jos:lastName">
+    <supertypes>
+      <supertype>nt:base</supertype>
+      <supertype>mix:referenceable</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="jos:firstName" requiredType="String"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:lastName" requiredType="String"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:password" requiredType="String"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:email" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:createdDate" requiredType="Date"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:lastLoginTime" requiredType="Date"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+    </propertyDefinitions>
+    <childNodeDefinitions>
+      <childNodeDefinition name="jos:profile" defaultPrimaryType="jos:userProfile"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:userProfile</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="jos:membership" defaultPrimaryType="jos:userMembership"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="true">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:userMembership</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:group" isMixin="false" hasOrderableChildNodes="false" primaryItemName="jos:label">
+    <supertypes>
+      <supertype>nt:base</supertype>
+      <supertype>mix:referenceable</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="jos:groupId" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:parentId" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:label" requiredType="String"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="jos:description" requiredType="String"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:hierarchyGroup" isMixin="false" hasOrderableChildNodes="false">
+    <supertypes>
+      <supertype>jos:group</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="*" autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:group</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>    
+  </nodeType>
+  
+  
+  <nodeType name="jos:organizationUsers" isMixin="false"
+    hasOrderableChildNodes="true" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="jos:user"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:user</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:organizationGroups" isMixin="false"
+    hasOrderableChildNodes="true" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="jos:hierarchyGroup"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:group</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:organizationMembershipTypes" isMixin="false"
+    hasOrderableChildNodes="true" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="jos:membershipType"
+        autoCreated="false" mandatory="false" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:membershipType</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="jos:organizationStorage" isMixin="false"
+    hasOrderableChildNodes="false" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <childNodeDefinitions>
+      <childNodeDefinition name="jos:users" defaultPrimaryType="jos:organizationUsers"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:organizationUsers</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="jos:groups" defaultPrimaryType="jos:organizationGroups"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:organizationGroups</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="jos:membershipTypes" defaultPrimaryType="jos:organizationMembershipTypes"
+        autoCreated="false" mandatory="true" onParentVersion="COPY"
+        protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>jos:organizationMembershipTypes</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
 </nodeTypes>

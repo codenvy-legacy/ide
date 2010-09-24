@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptEvent;
+import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler;
@@ -135,7 +136,7 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
    protected void reDeployFile()
    {
       handlers.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
-      eventBus.fireEvent(new DeployGroovyScriptEvent());
+      eventBus.fireEvent(new DeployGroovyScriptSandboxEvent());
    }
    
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)

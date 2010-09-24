@@ -13,6 +13,7 @@
       </init-params>
    </component>
 
+
    <component>
       <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
    </component>
@@ -22,8 +23,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.resource.representation.NtFileNodeRepresentationFactory
-		</type>
+      <type>org.exoplatform.services.jcr.ext.resource.representation.NtFileNodeRepresentationFactory</type>
    </component>
 
    <component>
@@ -31,13 +31,12 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService
-		</type>
+      <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
    </component>
 
+
    <component>
-      <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService
-		</type>
+      <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService</type>
    </component>
 
 
@@ -82,8 +81,28 @@
       <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
+  <component>                                                                                                                                                                                                 
+      <key>org.exoplatform.services.organization.OrganizationService</key>                                                                                                                                     
+      <type>org.exoplatform.services.jcr.ext.organization.JCROrganizationServiceImpl</type>                                                                                                                    
+      <init-params>                                                                                                                                                                                            
+         <value-param>                                                                                                                                                                                         
+            <name>storage-workspace</name>                                                                                                                                                                     
+            <description>Workspace in default repository where organization storage will be created</description>                                                                                              
+            <value>production</value>                                                                                                                                                                                  
+         </value-param>                                                                                                                                                                                        
+      </init-params>                                                                                                                                                                                           
+   </component> 
+   
+    <component>
+      <key>org.exoplatform.services.security.RolesExtractor</key>
+      <type>org.exoplatform.services.security.impl.DefaultRolesExtractorImpl</type>
+      <init-params>
+         <value-param>
+            <name>user.role.parent.group</name>
+            <description>authentication service use this value to authenticate</description>
+            <value>ide</value>
+         </value-param>
+      </init-params>
    </component>
 
 
@@ -92,31 +111,38 @@
       <init-params>
          <value-param>
             <name>keyFile</name>
-            <value>key.txt</value>
+            <value>src/main/resources/conf/key.txt</value>
          </value-param>
       </init-params>
    </component>
+
+
 
    <component>
       <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
       <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
       <init-params>
+
          <value-param>
             <name>auto-mix-lockable</name>
             <value>false</value>
          </value-param>
+
          <value-param>
             <name>def-folder-node-type</name>
             <value>nt:folder</value>
          </value-param>
+
          <value-param>
             <name>def-file-node-type</name>
             <value>nt:file</value>
          </value-param>
+
          <value-param>
             <name>def-file-mimetype</name>
             <value>text/plain</value>
          </value-param>
+
          <value-param>
             <name>update-policy</name>
             <value>create-version</value>
@@ -124,12 +150,13 @@
       </init-params>
    </component>
 
+
    <component>
       <type>org.exoplatform.services.jcr.ext.resource.jcr.Handler</type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</type>
+      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
       <init-params>
          <object-param>
             <name>observation.config</name>
@@ -148,28 +175,16 @@
          </object-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   </component>
+
+   
 
    <component>
       <type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>
    </component>
-   
-   
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>
-      <component-plugin>
-         <name>add groovy repo</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScriptAddRepoPlugin</type>
-         <init-params>
-            <properties-param>
-               <name>repo1</name>
-               <property name="repository" value="repository"/>
-               <property name="workspace" value="dev-monit"/>
-               <property name="path" value="/"/>
-            </properties-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
@@ -182,7 +197,7 @@
                <name>autoCreatedInNewRepository</name>
                <description>Node types configuration file</description>
                <value>war:/conf/ext-nodetypes-config.xml</value>
-               <value>war:/conf/organization-nodetypes.xml</value>
+               <value>jar:/conf/organization-nodetypes.xml</value>
             </values-param>
          </init-params>
       </component-plugin>
@@ -200,6 +215,7 @@
                <property name="tkn" value="http://www.gatein.org/jcr/token/1.0/" />
                <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
+               <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/"/>
             </properties-param>
          </init-params>
       </component-plugin>
@@ -228,7 +244,7 @@
                <name>ref-addresses</name>
                <description>ref-addresses</description>
                <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-               <property name="url" value="jdbc:hsqldb:file:../temp/data/portal" />
+               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal" />
                <property name="username" value="sa" />
                <property name="password" value="" />
             </properties-param>
@@ -237,7 +253,7 @@
    </external-component-plugins>
 
    <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
+      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl </target-component>
       <component-plugin>
          <name>ws.rs.method.filter</name>
          <set-method>addPlugin</set-method>
@@ -266,4 +282,120 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
+   
+   <external-component-plugins>
+    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+    <component-plugin>
+      <name>init.service.listener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.services.organization.OrganizationDatabaseInitializer</type>
+      <description>this listener populate organization data for the first launch</description>
+      <init-params>      
+        <value-param>
+          <name>checkDatabaseAlgorithm</name>
+          <description>check database</description>
+          <value>entry</value>
+        </value-param>      
+        <value-param>
+          <name>printInformation</name>
+          <description>Print information init database</description>
+          <value>false</value>
+        </value-param> 
+        <object-param>
+          <name>configuration</name>
+          <description>description</description>
+          <object type="org.exoplatform.services.organization.OrganizationConfig">
+            <field  name="membershipType">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$MembershipType">
+                    <field  name="type"><string>member</string></field>
+                    <field  name="description"><string>member membership type</string></field>
+                  </object>
+                </value>                
+              </collection>
+            </field>
+
+            <field  name="group">
+              <collection type="java.util.ArrayList">             
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field  name="name"><string>ide</string></field>
+                    <field  name="parentId"><string></string></field>
+                    <field  name="description"><string>the /ide group</string></field>
+                    <field  name="label"><string>IDE</string></field>                    
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field  name="name"><string>administrators</string></field>
+                    <field  name="parentId"><string>/ide</string></field>
+                    <field  name="description"><string>the /ide/administrators group</string></field>
+                    <field  name="label"><string>Administrators</string></field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field  name="name"><string>users</string></field>
+                    <field  name="parentId"><string>/ide</string></field>
+                    <field  name="description"><string>the /ide/users group</string></field>
+                    <field  name="label"><string>Users</string></field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field  name="name"><string>developers</string></field>
+                    <field  name="parentId"><string>/ide</string></field>
+                    <field  name="description"><string>the /ide/developers group</string></field>
+                    <field  name="label"><string>Developers</string></field>
+                  </object>
+                </value>
+              </collection>
+            </field>
+
+            <field  name="user">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                    <field  name="userName"><string>root</string></field>
+                    <field  name="password"><string>gtn</string></field>
+                    <field  name="firstName"><string>Root</string></field>
+                    <field  name="lastName"><string>Root</string></field>
+                    <field  name="email"><string>root@localhost</string></field>
+                    <field  name="groups">
+                      <string>member:/ide/administrators,member:/ide/developers,member:/ide/users</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                    <field  name="userName"><string>john</string></field>
+                    <field  name="password"><string>gtn</string></field>
+                    <field  name="firstName"><string>John</string></field>
+                    <field  name="lastName"><string>Anthony</string></field>
+                    <field  name="email"><string>john@localhost</string></field>
+                    <field  name="groups">
+                      <string>member:/ide/developers,member:/ide/users</string>
+                    </field>
+                  </object>
+                </value>                                                        
+                <value>
+                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                    <field  name="userName"><string>demo</string></field>
+                    <field  name="password"><string>gtn</string></field>
+                    <field  name="firstName"><string>Demo</string></field>
+                    <field  name="lastName"><string>gtn</string></field>
+                    <field  name="email"><string>demo@localhost</string></field>
+                    <field  name="groups">
+                      <string>member:/ide/users</string>
+                    </field>
+                  </object>
+                </value>                       
+              </collection>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+</external-component-plugins>
 </configuration>

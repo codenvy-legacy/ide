@@ -252,7 +252,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          {
             assertNotNull(event.getFile());
             assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref(), testUrlDeploy);
+            groovyService.deploy(event.getFile().getHref());
          }
       });
 
@@ -290,7 +290,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          {
             assertNotNull(event.getFile());
             assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref(), testUrlDeploy);
+            groovyService.deploy(event.getFile().getHref());
          }
       });
 
