@@ -35,7 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
@@ -57,7 +59,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, ItemLockedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   ItemPropertiesReceivedHandler, ItemLockedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler, UserInfoReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -67,14 +69,13 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    private ApplicationSettings applicationSettings;
 
-   private ApplicationContext context;
+   private UserInfo userInfo;
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   public OpenFileCommandThread(HandlerManager eventBus, ApplicationContext context)
+   public OpenFileCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
 
       handlers = new Handlers(eventBus);
 
@@ -82,6 +83,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       eventBus.addHandler(OpenFileEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    public void onOpenFile(OpenFileEvent event)
@@ -130,7 +132,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          }
       }
 
-      VirtualFileSystem.getInstance().lock(event.getItem(), 600, context.getUserInfo().getName());
+      VirtualFileSystem.getInstance().lock(event.getItem(), 600, userInfo.getName());
    }
 
    /**
@@ -205,6 +207,14 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
      applicationSettings = event.getApplicationSettings(); 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
+    */
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      userInfo = event.getUserInfo();
    }
 
 }

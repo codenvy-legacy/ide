@@ -206,8 +206,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 //      handlers.addHandler(ItemLockedEvent.TYPE, this);
 //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
-      new CreateFileCommandThread(eventBus, context);
-      new OpenFileCommandThread(eventBus, context);
+      new CreateFileCommandThread(eventBus);
+      new OpenFileCommandThread(eventBus);
       new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandThread(eventBus);
       new SaveAllFilesCommandThread(eventBus);

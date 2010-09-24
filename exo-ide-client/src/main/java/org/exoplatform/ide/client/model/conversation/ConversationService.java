@@ -26,21 +26,9 @@ package org.exoplatform.ide.client.model.conversation;
  * @version $
  */
 
-public abstract class ConversationService
+public interface ConversationService
 {
 
-   private static ConversationService instance;
-
-   public static ConversationService getInstance()
-   {
-      return instance;
-   }
-
-   protected ConversationService()
-   {
-      instance = this;
-   }
-
-   public abstract void getUserInfo();
+   void getUserInfo();
 
 }

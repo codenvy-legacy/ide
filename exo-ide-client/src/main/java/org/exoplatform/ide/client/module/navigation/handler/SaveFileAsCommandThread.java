@@ -35,9 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsHandler;
-import org.exoplatform.ide.client.model.conversation.UserInfo;
-import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;

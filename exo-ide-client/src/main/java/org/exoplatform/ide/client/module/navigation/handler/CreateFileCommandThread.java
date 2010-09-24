@@ -34,11 +34,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplates;
+import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
@@ -70,18 +70,15 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
    private Handlers handlers;
 
-   private ApplicationContext context;
-
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
    private ApplicationSettings applicationSettings;
 
-   public CreateFileCommandThread(HandlerManager eventBus, ApplicationContext context)
+   public CreateFileCommandThread(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
 
       handlers = new Handlers(eventBus);
 
@@ -173,8 +170,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    public void onTemplateListReceived(TemplateListReceivedEvent event)
    {
       handlers.removeHandler(TemplateListReceivedEvent.TYPE);
-      context.setTemplateList(event.getTemplateList());
-      new CreateFileFromTemplateForm(eventBus, selectedItems, context.getTemplateList().getTemplates());
+      TemplateList templateList = event.getTemplateList();
+      new CreateFileFromTemplateForm(eventBus, selectedItems, templateList.getTemplates());
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

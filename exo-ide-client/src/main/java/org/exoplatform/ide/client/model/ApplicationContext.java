@@ -21,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.model.conversation.UserInfo;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
@@ -36,20 +35,12 @@ import org.exoplatform.ide.client.module.vfs.api.Item;
 public class ApplicationContext
 {
 
-   /**
-    * Logged user information
-    */
-   private UserInfo userInfo;
-
    private String selectedNavigationPanel;
 
    /**
     * Current active text editor.
     */
-   //   private TextEditor activeTextEditor;
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
-
-   //   private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
 
    /**
     * List of available templates
@@ -69,27 +60,11 @@ public class ApplicationContext
 
    private List<IDEModule> modules = new ArrayList<IDEModule>();
 
-   //   /**
-   //    * Opened files in editor
-   //    */
-   //   private LinkedHashMap<String, File> openedFiles = new LinkedHashMap<String, File>();
-
-   //   /**
-   //    * Uses for storing default state of toolbar
-   //    */
-   //   //TODO
-   //   private ArrayList<String> toolBarDefaultItems = new ArrayList<String>();
-
    /*
     * Store status bar control id's here
     */
 
    private List<String> statusBarItems = new ArrayList<String>();
-
-   //   public ArrayList<String> getToolBarDefaultItems()
-   //   {
-   //      return toolBarDefaultItems;
-   //   }
 
    public List<String> getStatusBarItems()
    {
@@ -127,32 +102,6 @@ public class ApplicationContext
    }
 
    private String selectedEditorDescription;
-
-   public UserInfo getUserInfo()
-   {
-      return userInfo;
-   }
-
-   public void setUserInfo(UserInfo userInfo)
-   {
-      this.userInfo = userInfo;
-   }
-
-   //   /**
-   //    * @return the activeTextEditor
-   //    */
-   //   public TextEditor getActiveTextEditor()
-   //   {
-   //      return activeTextEditor;
-   //   }
-   //
-   //   /**
-   //    * @param activeTextEditor the activeTextEditor to set
-   //    */
-   //   public void setActiveTextEditor(TextEditor activeTextEditor)
-   //   {
-   //      this.activeTextEditor = activeTextEditor;
-   //   }
 
    public LinkedHashMap<String, File> getPreloadFiles()
    {
@@ -240,6 +189,5 @@ public class ApplicationContext
    {
       this.selectedEditorDescription = selectedEditor;
    }
-
 
 }

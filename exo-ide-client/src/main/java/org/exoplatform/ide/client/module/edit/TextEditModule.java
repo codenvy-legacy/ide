@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.module.edit.control.QuickTextSearchControl;
 import org.exoplatform.ide.client.module.edit.control.RedoTypingCommand;
 import org.exoplatform.ide.client.module.edit.control.ShowLineNumbersCommand;
 import org.exoplatform.ide.client.module.edit.control.UndoTypingCommand;
@@ -79,10 +80,10 @@ public class TextEditModule implements IDEModule, RegisterEventHandlersHandler, 
       eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new DeleteLineControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl(eventBus)));
-      
+
       eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(eventBus)));
-      
-      //eventBus.fireEvent(new RegisterControlEvent(new QuickTextSearchControl(eventBus), true));
+
+      eventBus.fireEvent(new RegisterControlEvent(new QuickTextSearchControl(eventBus), true));
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);

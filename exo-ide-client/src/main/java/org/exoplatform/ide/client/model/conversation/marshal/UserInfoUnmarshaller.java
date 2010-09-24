@@ -20,7 +20,7 @@
 package org.exoplatform.ide.client.model.conversation.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.conversation.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;

@@ -22,7 +22,10 @@ package org.exoplatform.ide.client.model.conversation;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoHandler;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -35,7 +38,7 @@ import com.google.gwt.http.client.RequestBuilder;
  * @version $
  */
 
-public class ConversationServiceImpl extends ConversationService
+public class ConversationServiceImpl implements ConversationService, GetUserInfoHandler
 {
 
    private static final String CONVERSATION_SERVICE_CONTEXT = "/ide/conversation-state";
@@ -53,9 +56,10 @@ public class ConversationServiceImpl extends ConversationService
       this.eventBus = eventBus;
       this.loader = loader;
       this.restServiceContext = restServiceContext;
+      
+      eventBus.addHandler(GetUserInfoEvent.TYPE, this);
    }
 
-   @Override
    public void getUserInfo()
    {
       String url = restServiceContext + CONVERSATION_SERVICE_CONTEXT + WHOAMI;
@@ -66,6 +70,11 @@ public class ConversationServiceImpl extends ConversationService
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+   }
+
+   public void onGetUserInfo(GetUserInfoEvent event)
+   {
+      getUserInfo();
    }
 
 }

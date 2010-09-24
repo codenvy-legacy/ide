@@ -37,14 +37,14 @@ import org.exoplatform.ide.client.framework.application.event.InitializeApplicat
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.configuration.Configuration;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.model.conversation.ConversationService;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
@@ -125,7 +125,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
             @Override
             public void run()
             {
-               ConversationService.getInstance().getUserInfo();
+               eventBus.fireEvent(new GetUserInfoEvent());
             }
          }.schedule(10);
 
@@ -143,8 +143,6 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
     */
    public void onUserInfoReceived(final UserInfoReceivedEvent event)
    {
-      context.setUserInfo(event.getUserInfo());
-
       new Timer()
       {
          @Override
