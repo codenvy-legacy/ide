@@ -101,6 +101,8 @@ public interface Images
       public static final String XML = IMAGE_URL + "filetype/xml.png";
 
       public static final String GROOVY = IMAGE_URL + "filetype/groovy.png";
+      
+      public static final String REST_SERVICE = IMAGE_URL + "filetype/rest.png";
 
       public static final String JAVASCRIPT = IMAGE_URL + "filetype/javascript.gif";
 
@@ -113,7 +115,7 @@ public interface Images
       public static final String UWA_WIDGET = IMAGE_URL + "filetype/uwa-widget.png";
       
       // TODO add appropriate icon 
-      public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/groovy.png";      
+      public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/gtmpl.png";      
 
    }
 
