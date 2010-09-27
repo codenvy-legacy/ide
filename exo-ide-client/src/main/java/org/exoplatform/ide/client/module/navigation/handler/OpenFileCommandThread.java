@@ -113,10 +113,18 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      
+      if (event.isLockFile())
+      {
+         handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+         handlers.addHandler(ItemLockedEvent.TYPE, this);
 
-      VirtualFileSystem.getInstance().getProperties(file);
+         VirtualFileSystem.getInstance().getProperties(file);
+      }
+      else
+      {
+         VirtualFileSystem.getInstance().getContent(file);
+      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
