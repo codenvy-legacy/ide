@@ -73,7 +73,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       setID(id);
       setSelectionType(SelectionStyle.SINGLE);
       
-      setCanFocus(false);
+      // setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
+      
       setShowConnectors(true);
       setCanSort(false);
       setCanEdit(false);

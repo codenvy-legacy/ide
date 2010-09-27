@@ -66,7 +66,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       setSeparateFolders(true);
 
-      setCanFocus(false);
+      // setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."  
+
       setShowConnectors(false);
       setCanSort(false);
 

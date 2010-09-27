@@ -118,7 +118,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    private void createTypeLayout()
    {
       templateListGrid = new TemplateListGrid();
-      templateListGrid.setCanFocus(false);
+      // templateListGrid.setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
       windowLayout.addMember(templateListGrid);
    }
 

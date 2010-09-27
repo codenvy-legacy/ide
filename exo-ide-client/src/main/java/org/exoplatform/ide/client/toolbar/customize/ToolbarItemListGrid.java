@@ -59,7 +59,9 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       setID(ID);
       setCanSort(false);
       setCanGroupBy(false);
-      setCanFocus(false);
+
+      // setCanFocus(false); // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
+      
       setSelectionType(SelectionStyle.SINGLE);
 
       ListGridField toolBarItemsField = new ListGridField(TOOLBAR, TOOLBAR);
