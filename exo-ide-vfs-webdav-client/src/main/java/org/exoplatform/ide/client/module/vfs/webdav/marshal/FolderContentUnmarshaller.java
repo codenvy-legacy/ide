@@ -17,6 +17,7 @@
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
@@ -73,18 +74,25 @@ public class FolderContentUnmarshaller implements Unmarshallable
    {
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
 
-      PropfindResponse response = PropfindResponse.parse(body);
+      List<Resource> resources = PropfindResponse.getResources(body);
+      
+      //PropfindResponse response = PropfindResponse.parse(body);
 
-      Resource resource = response.getResource();
+      //Resource resource = response.getResource();
       folder.setChildren(new ArrayList<Item>());
 
-      if (resource == null)
+      if (resources.size() == 0)
       {
          return;
       }
+      
+      for (int i = 0; i < resources.size(); i++) {
+         if (i == 0) {
+            continue;
+         }
+         
+         Resource child = resources.get(i);
 
-      for (Resource child : resource.getChildren())
-      {
          String href = child.getHref();
 
          Item item;
@@ -112,6 +120,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
 
          folder.getChildren().add(item);
       }
+      
    }
    
    private String getIcon(String mimeType)

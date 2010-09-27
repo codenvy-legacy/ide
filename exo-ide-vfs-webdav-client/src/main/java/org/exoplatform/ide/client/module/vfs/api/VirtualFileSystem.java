@@ -135,5 +135,18 @@ public abstract class VirtualFileSystem
     * @param lockToken
     */
    public abstract void unlock(Item item, String lockToken);
+   
+   /**
+    * Get item's versions history
+    * 
+    * @param item
+    */
+   public abstract void getVersions(Item item);
+   
+   /**
+    * @param item main item
+    * @param version version
+    */
+   public abstract void updateToVersion(Item item, Version version);
 
 }
