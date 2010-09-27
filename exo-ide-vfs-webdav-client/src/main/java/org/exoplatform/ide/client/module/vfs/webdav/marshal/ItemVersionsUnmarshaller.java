@@ -80,7 +80,6 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
 
    private void parseVarsions(String body)
    {
-      System.out.println(body);
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
 
       List<Resource> resources = PropfindResponse.getResources(body);
