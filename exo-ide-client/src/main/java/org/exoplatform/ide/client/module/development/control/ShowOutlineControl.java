@@ -26,10 +26,10 @@ import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormClosedHandler;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
@@ -134,9 +134,9 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      if (event.getApplicationSettings().getValue(COOKIE_OUTLINE) != null)
+      if (event.getApplicationSettings().getValueAsBoolean(COOKIE_OUTLINE) != null)
       {
-         showOutLine = (Boolean)event.getApplicationSettings().getValue(COOKIE_OUTLINE);
+         showOutLine = event.getApplicationSettings().getValueAsBoolean(COOKIE_OUTLINE);
       }
       else
       {

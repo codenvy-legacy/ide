@@ -71,13 +71,13 @@ import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
 import org.exoplatform.ide.client.module.edit.event.FormatFileHandler;
 import org.exoplatform.ide.client.module.edit.event.RedoTypingEvent;
@@ -259,7 +259,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     * Initializing application handler
     * 
     */
-   @SuppressWarnings("unchecked")
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
       this.openedFiles = event.getOpenedFiles();
@@ -270,17 +269,17 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          activeFile = openedFiles.get(event.getActiveFile());
       }
 
-      Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
       if (defaultEditors == null)
       {
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
-      if (applicationSettings.getValue("lock-tokens") == null)
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
       
       for (File file : openedFiles.values())
       {
@@ -292,9 +291,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
             openedEditors.put(file.getHref(), editor.getDescription());
 
             boolean lineNumbers = true;
-            if (applicationSettings.getValue("line-numbers") != null)
+            if (applicationSettings.getValueAsBoolean("line-numbers") != null)
             {
-               lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
+               lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
             }
 
             display.openTab(file, lineNumbers, editor, isReadOnly(file));
@@ -606,9 +605,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       openedEditors.put(file.getHref(), event.getEditor().getDescription());
 
       boolean lineNumbers = true;
-      if (applicationSettings.getValue("line-numbers") != null)
+      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
       {
-         lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
+         lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
       }
 
       try
@@ -733,10 +732,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.setEditorFocus(activeFile.getHref());
    }
 
-   @SuppressWarnings("unchecked")
    public void onRefreshHotKeys(RefreshHotKeysEvent event)
    {
-      Map<String, String> hotKeys = (Map<String, String>)applicationSettings.getValue("hotkeys");
+      Map<String, String> hotKeys = applicationSettings.getValueAsMap("hotkeys");
       List<String> hotKeyList = new ArrayList<String>(hotKeys.keySet());
       Iterator<String> it = openedFiles.keySet().iterator();
       while (it.hasNext())

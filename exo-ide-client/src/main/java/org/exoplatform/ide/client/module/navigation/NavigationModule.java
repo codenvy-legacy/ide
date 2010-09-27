@@ -45,14 +45,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderForm;
 import org.exoplatform.ide.client.module.navigation.action.DeleteItemForm;
@@ -216,26 +216,17 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new FileClosedHandler(eventBus);
    }
 
-   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
 
    
-      if (applicationSettings.getValue("lock-tokens") == null)
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
       
-//      if (strMap != null)
-//      {
-//         for (String key : strMap.keySet())
-//         {
-//            lockTokens.put(key, new LockToken(context.getUserInfo().getName(), strMap.get(key), 0));
-//         }
-//      }
-
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

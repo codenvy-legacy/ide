@@ -35,12 +35,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -268,14 +268,14 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    /**
     * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
     */
-   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
+
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

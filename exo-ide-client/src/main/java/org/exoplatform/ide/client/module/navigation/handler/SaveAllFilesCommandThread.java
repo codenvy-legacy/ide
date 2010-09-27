@@ -31,9 +31,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
@@ -136,14 +136,14 @@ public class SaveAllFilesCommandThread implements FileContentSavedHandler, ItemP
    /**
     * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
     */
-   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      if (event.getApplicationSettings().getValue("lock-tokens") == null)
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = (Map<String, String>)event.getApplicationSettings().getValue("lock-tokens");
+      
+      lockTokens = (Map<String, String>)event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

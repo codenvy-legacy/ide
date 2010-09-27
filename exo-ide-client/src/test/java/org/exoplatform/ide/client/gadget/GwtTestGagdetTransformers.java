@@ -41,6 +41,7 @@ import com.google.gwt.json.client.JSONValue;
  */
 public class GwtTestGagdetTransformers extends AbstractGwtTest
 {
+   
    private String gadgetMetadataWithError =
       "{\"gadgets\":[" + "{\"errors\":[\"Unable to retrieve gadget xml. HTTP error 500\"],\"moduleId\":0,"
          + "\"url\":\"http://db2.exoplatform.org:8080/rest/jcr/repository/system/Untitled%20file.xml\"}]}";

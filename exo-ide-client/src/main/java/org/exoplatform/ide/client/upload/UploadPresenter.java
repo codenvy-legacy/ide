@@ -393,8 +393,10 @@ public class UploadPresenter implements UploadFileSelectedHandler
       submittedFile.setContent(submittedFileContent);
       submittedFile.setContentType(mimeType);
       submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
-
-      eventBus.fireEvent(new OpenFileEvent(submittedFile)); // to save file content
+      
+      
+      
+      eventBus.fireEvent(new OpenFileEvent(submittedFile));
    }
 
    private void completeUpload()

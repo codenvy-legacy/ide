@@ -29,10 +29,10 @@ import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.module.navigation.control.DeleteLineControl;
@@ -80,14 +80,13 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private List<Control> registeredControls = new ArrayList<Control>();
 
-   @SuppressWarnings("unchecked")
    public HotKeyManagerImpl(HandlerManager eventBus, List<Control> registeredControls,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
       this.registeredControls = registeredControls;
 
-      hotKeys = (Map<String, String>)applicationSettings.getValue("hotkeys");
+      hotKeys = applicationSettings.getValueAsMap("hotkeys");
 
       if (hotKeys == null)
       {

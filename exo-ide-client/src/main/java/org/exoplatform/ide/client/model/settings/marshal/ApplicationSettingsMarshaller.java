@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 
 /**
  * Created by The eXo Platform SAS .
@@ -58,7 +58,7 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       {
          String key = keyIter.next();
          
-         if (applicationSettings.getStoredIn(key) != Store.REGISTRY)
+         if (applicationSettings.getStore(key) != Store.REGISTRY)
          {
             continue;
          }

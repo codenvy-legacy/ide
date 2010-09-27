@@ -29,12 +29,12 @@ import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
@@ -153,7 +153,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       fillEditorListGrid();
    }
 
-   @SuppressWarnings("unchecked")
    private void fillEditorListGrid()
    {
       String mimeType = selectedFile.getContentType();
@@ -166,7 +165,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
          Editor defaultEditor = null;
          
-         Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+         Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
          if (defaultEditors == null) 
          {
             defaultEditors = new HashMap<String, String>();
@@ -209,7 +208,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       }
    }
 
-   @SuppressWarnings("unchecked")
    private void openFile()
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
@@ -221,7 +219,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       {
          String mimeType = selectedFile.getContentType();
          
-         Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+         Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
          if (defaultEditors == null) 
          {
             defaultEditors = new HashMap<String, String>();

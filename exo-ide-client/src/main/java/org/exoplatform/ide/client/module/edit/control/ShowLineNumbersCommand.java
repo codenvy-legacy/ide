@@ -24,8 +24,8 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
@@ -117,9 +117,9 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      if (event.getApplicationSettings().getValue("line-numbers") != null)
+      if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)
       {
-         showLineNumbers = (Boolean)event.getApplicationSettings().getValue("line-numbers");
+         showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
       }
       else
       {

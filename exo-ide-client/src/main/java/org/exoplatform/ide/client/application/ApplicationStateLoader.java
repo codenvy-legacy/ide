@@ -30,8 +30,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -63,7 +63,6 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
 
    private List<String> filesToLoad;
 
-   @SuppressWarnings("unchecked")
    public ApplicationStateLoader(HandlerManager eventBus, ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
@@ -76,7 +75,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
-      filesToLoad = (List<String>)applicationSettings.getValue("opened-files");      
+      filesToLoad = applicationSettings.getValueAsList("opened-files");      
       if (filesToLoad == null)
       {
          filesToLoad = new ArrayList<String>();
@@ -104,7 +103,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
                {
                   try
                   {
-                     String activeFile = (String)applicationSettings.getValue("active-file");
+                     String activeFile = applicationSettings.getValueAsString("active-file");
                      eventBus.fireEvent(new InitializeApplicationEvent(openedFiles, activeFile));
                   }
                   catch (Throwable e)

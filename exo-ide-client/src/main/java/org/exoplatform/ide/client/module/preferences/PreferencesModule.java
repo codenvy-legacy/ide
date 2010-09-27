@@ -38,16 +38,16 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPanel;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ide.client.model.discovery.DiscoveryService;
 import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeHotKeysCommand;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeToolbarCommand;
 import org.exoplatform.ide.client.module.preferences.control.SelectWorkspaceCommand;
@@ -111,16 +111,16 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
-   @SuppressWarnings("unchecked")
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
 
-      if (applicationSettings.getValue("lock-tokens") == null)
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = (Map<String, String>)applicationSettings.getValue("lock-tokens");
+      
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

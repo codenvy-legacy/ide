@@ -37,6 +37,11 @@ import org.exoplatform.ide.client.framework.application.event.InitializeApplicat
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
@@ -45,11 +50,7 @@ import org.exoplatform.ide.client.model.configuration.Configuration;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
@@ -153,6 +154,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
             new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), event.getUserInfo().getName(),
                IDELoader.getInstance());
+            eventBus.fireEvent(new GetApplicationSettingsEvent());
          }
       }.schedule(10);
    }
@@ -164,7 +166,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       /*
        * verify entry point
        */
-      if (applicationSettings.getValue("entry-point") == null)
+      if (applicationSettings.getValueAsString("entry-point") == null)
       {
          String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
          if (!defaultEntryPoint.endsWith("/"))
@@ -174,13 +176,13 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
 
          applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
       }
-      
+
       /*
        * verify toolbar items
        */
 
       applicationSettings.setValue("toolbar-default-items", toolbarDefaultItems, Store.NONE);
-      if (applicationSettings.getValue("toolbar-items") == null)
+      if (applicationSettings.getValueAsList("toolbar-items") == null)
       {
          List<String> toolbarItems = new ArrayList<String>();
          toolbarItems.addAll(toolbarDefaultItems);
@@ -242,7 +244,6 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       }.schedule(10);
    }
 
-   @SuppressWarnings("unchecked")
    private void initialize()
    {
       /*
@@ -251,7 +252,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       eventBus.fireEvent(new UpdateMainMenuEvent(controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(context.getStatusBarItems(), controls));
 
-      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
+      List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
       if (toolbarItems == null)
       {
          toolbarItems = new ArrayList<String>();
@@ -261,9 +262,9 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
 
-      if (applicationSettings.getValue("entry-point") != null)
+      if (applicationSettings.getValueAsString("entry-point") != null)
       {
-         String entryPoint = applicationSettings.getStringValue("entry-point");
+         String entryPoint = applicationSettings.getValueAsString("entry-point");
          eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
          new WorkspaceChecker(eventBus, entryPoint, applicationSettings);
       }

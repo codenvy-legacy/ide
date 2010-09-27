@@ -33,13 +33,16 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.model.configuration.Configuration;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
@@ -56,7 +59,7 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class SettingsService implements SaveApplicationSettingsHandler
+public class SettingsService implements SaveApplicationSettingsHandler, GetApplicationSettingsHandler
 {
 
    private static final String LIST_ITEMS_DELIMITER = "#";
@@ -72,6 +75,8 @@ public class SettingsService implements SaveApplicationSettingsHandler
    private String registryServiceURL;
 
    private String userName;
+   
+   private ApplicationSettings applicationSettings = new ApplicationSettings();
 
    public SettingsService(HandlerManager eventBus, String registryServiceURL, String userName, Loader loader)
    {
@@ -80,9 +85,8 @@ public class SettingsService implements SaveApplicationSettingsHandler
       this.registryServiceURL = registryServiceURL;
       this.userName = userName;
 
+      eventBus.addHandler(GetApplicationSettingsEvent.TYPE, this);
       eventBus.addHandler(SaveApplicationSettingsEvent.TYPE, this);
-
-      getApplicationSettings(new ApplicationSettings());
    }
 
    private String getURL()
@@ -90,6 +94,14 @@ public class SettingsService implements SaveApplicationSettingsHandler
       String url =
          registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/" + Configuration.APPLICATION_NAME;
       return url;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsHandler#onGetApplicationSettings(org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent)
+    */
+   public void onGetApplicationSettings(GetApplicationSettingsEvent event)
+   {
+      getApplicationSettings(applicationSettings);
    }
 
    private void getApplicationSettings(ApplicationSettings applicationSettings)
@@ -104,21 +116,6 @@ public class SettingsService implements SaveApplicationSettingsHandler
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-
-   //   public void saveSetting(ApplicationSettings applicationSettings)
-   //   {
-   //      String url = getURL() + "/?createIfNotExist=true";
-   //      
-   //      ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
-   //      ApplicationSettingsSavedEvent event = new ApplicationSettingsSavedEvent(applicationSettings);
-   //
-   //      String errorMessage = "Registry service is not deployed.";
-   //      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-   //
-   //      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
-   //      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
-   //         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
-   //   }
 
    public void onSaveApplicationSettings(final SaveApplicationSettingsEvent event)
    {
@@ -167,7 +164,7 @@ public class SettingsService implements SaveApplicationSettingsHandler
       while (keyIter.hasNext())
       {
          String key = keyIter.next();
-         Store storing = applicationSettings.getStoredIn(key);
+         Store storing = applicationSettings.getStore(key);
 
          if (storing == null || storing == Store.REGISTRY || storing == Store.NONE)
          {
@@ -175,7 +172,7 @@ public class SettingsService implements SaveApplicationSettingsHandler
             continue;
          }
 
-         Object value = applicationSettings.getValue(key);
+         Object value = applicationSettings.getValueAsObject(key);
          if (value instanceof String)
          {
             storeString(key, (String)value);

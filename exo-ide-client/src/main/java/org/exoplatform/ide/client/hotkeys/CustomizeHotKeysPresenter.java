@@ -28,10 +28,10 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -410,10 +410,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
    /**
     * Save hot keys.
     */
-   @SuppressWarnings("unchecked")
    private void saveHotKeys()
    {
-      Map<String, String> keys = (Map<String, String>)applicationSettings.getValue("hotkeys");
+      Map<String, String> keys = applicationSettings.getValueAsMap("hotkeys");
       keys.clear();
 
       for (HotKeyItem hotKeyItem : hotKeys)

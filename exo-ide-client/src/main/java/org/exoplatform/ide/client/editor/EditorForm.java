@@ -32,10 +32,10 @@ import org.exoplatform.ide.client.event.perspective.MaximizeEditorPanelEvent;
 import org.exoplatform.ide.client.event.perspective.RestoreEditorPanelEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -156,7 +156,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       }
    };
 
-   @SuppressWarnings("unchecked")
    public void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly)
    {
       EditorTab tab = getEditorTab(file.getHref());
@@ -179,7 +178,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
       List<String> hotKeyList =
-         new ArrayList<String>(((Map<String, String>)applicationSettings.getValue("hotkeys")).keySet());
+         new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
@@ -191,11 +190,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          tabSet.addTab(tab);
          redraw();
       }
-
-//      if (fireEvent)
-//      {
-//         eventBus.fireEvent(new EditorActiveFileChangedEvent(file, textEditor));
-//      }
    }
 
    public void selectTab(String path)

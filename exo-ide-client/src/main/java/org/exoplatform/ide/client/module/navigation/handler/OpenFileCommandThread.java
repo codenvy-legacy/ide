@@ -35,12 +35,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
@@ -155,7 +155,6 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       openFile(event.getFile());
    }
 
-   @SuppressWarnings("unchecked")
    private void openFile(File file)
    {
       handlers.removeHandlers();
@@ -164,7 +163,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       {
          if (selectedEditor == null)
          {
-            Map<String, String> defaultEditors = (Map<String, String>)applicationSettings.getValue("default-editors");
+            Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
             if (defaultEditors != null)
             {
                selectedEditor = defaultEditors.get(file.getContentType());

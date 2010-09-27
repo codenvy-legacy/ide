@@ -29,12 +29,12 @@ import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -228,7 +228,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
       fillCommandListGrid();
 
-      List<String> toolbarItems = (List<String>)applicationSettings.getValue("toolbar-items");
+      List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
       if (toolbarItems == null)
       {
          toolbarItems = new ArrayList<String>();
@@ -510,10 +510,9 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    private List<String> itemsToUpdate;
 
-   @SuppressWarnings("unchecked")
    private void updateToolbar()
    {
-      itemsToUpdate = (List<String>)applicationSettings.getValue("toolbar-items");
+      itemsToUpdate = applicationSettings.getValueAsList("toolbar-items");
       itemsToUpdate.clear();
 
       for (ToolbarItem toolbarItem : toolbarItems)
@@ -537,10 +536,9 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }
 
-   @SuppressWarnings("unchecked")
    private void restoreDefaults()
    {
-      List<String> toolbarDefaultItems = (List<String>)applicationSettings.getValue("toolbar-default-items");
+      List<String> toolbarDefaultItems = applicationSettings.getValueAsList("toolbar-default-items");
       if (toolbarDefaultItems == null)
       {
          toolbarDefaultItems = new ArrayList<String>();

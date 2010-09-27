@@ -34,9 +34,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.model.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplates;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
@@ -100,7 +100,6 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       selectedItems = event.getSelectedItems();
    }
 
-   @SuppressWarnings("unchecked")
    public void onCreateNewFile(CreateNewFileEvent event)
    {
       String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
@@ -140,7 +139,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       newFile.setContent(content);
       newFile.setContentChanged(true);
 
-      Map<String, String> defaultEditors = (Map<String, String>) applicationSettings.getValue("default-editors");
+      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
       if (defaultEditors == null)
       {
          defaultEditors = new LinkedHashMap<String, String>();
