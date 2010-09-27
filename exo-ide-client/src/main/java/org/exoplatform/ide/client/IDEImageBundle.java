@@ -332,6 +332,16 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/view/go_to_folder_Disabled.png")
    ImageResource goToFolderDisabled();
+   
+   /*
+    * VERSIONING
+    */
+   @Source("../public/images/bundled/versioning/view_versions.png")
+   ImageResource viewVersions();
+   
+   @Source("../public/images/bundled/versioning/view_versions_Disabled.png")
+   ImageResource viewVersionsDisabled();
+   
 
    /*
     * WINDOW

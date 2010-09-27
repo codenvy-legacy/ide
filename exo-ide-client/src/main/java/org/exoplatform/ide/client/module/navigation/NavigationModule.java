@@ -73,6 +73,7 @@ import org.exoplatform.ide.client.module.navigation.control.SaveFileAsTemplateCo
 import org.exoplatform.ide.client.module.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.SearchFilesCommand;
 import org.exoplatform.ide.client.module.navigation.control.ViewItemPropertiesCommand;
+import org.exoplatform.ide.client.module.navigation.control.ViewItemVersionsControl;
 import org.exoplatform.ide.client.module.navigation.control.download.DownloadFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.download.DownloadZippedFolderCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
@@ -111,6 +112,7 @@ import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandThr
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.ViewItemVersionsControlHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
@@ -195,6 +197,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewItemVersionsControl(eventBus)));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -214,6 +217,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new GoToFolderCommandThread(eventBus);
       new PasteItemsCommandThread(eventBus, context);
       new FileClosedHandler(eventBus);
+      new ViewItemVersionsControlHandler(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
