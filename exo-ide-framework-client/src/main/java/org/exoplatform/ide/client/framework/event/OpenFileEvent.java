@@ -35,10 +35,21 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    private String href;
    
    private String editor;
+   
+   /**
+    * Check is lock file.
+    */
+   private boolean lockFile = true;
 
    public OpenFileEvent(File file)
    {
       this.file = file;
+   }
+   
+   public OpenFileEvent(File file, boolean lockFile)
+   {
+      this.file = file;
+      this.lockFile = lockFile;
    }
    
    public OpenFileEvent(String href)
@@ -50,6 +61,13 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       this(file);
       this.editor = editor;
+   }
+   
+   public OpenFileEvent(File file, String editor, boolean lockFile)
+   {
+      this(file);
+      this.editor = editor;
+      this.lockFile = lockFile;
    }
 
    public File getFile()
@@ -65,6 +83,11 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    public String getHref()
    {
       return href;
+   }
+   
+   public boolean isLockFile()
+   {
+      return lockFile;
    }
    
    @Override
