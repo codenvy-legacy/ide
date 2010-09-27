@@ -21,19 +21,18 @@ package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.http.client.Response;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+
+import com.google.gwt.http.client.Response;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -104,6 +103,12 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
          version.setJcrContentNodeType(jcrNodeType);
          String icon = getIcon(contentType);
          version.setIcon(icon);
+         String creationDate = getProperty(version, ItemProperty.CREATIONDATE).getValue();
+         version.setCreationDate(creationDate);
+         String displayName = getProperty(version, ItemProperty.DISPLAYNAME).getValue();
+         version.setDisplayName(displayName);
+         int length = Integer.parseInt(getProperty(version, ItemProperty.GETCONTENTLENGTH).getValue());
+         version.setContentLength(length);
         
          versions.add(version);
       }

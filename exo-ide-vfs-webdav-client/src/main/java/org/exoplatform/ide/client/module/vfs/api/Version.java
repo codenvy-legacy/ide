@@ -25,16 +25,22 @@ package org.exoplatform.ide.client.module.vfs.api;
  */
 public class Version extends File
 {
+
    /**
-    * Version's creator
+    * Version creation date 
     */
-   private String creator;
-   
+   private String creationDate;
+
    /**
-    * Version's label
+    * Content length
     */
-   private String versionLabel;
-   
+   private int contentLength;
+
+   /**
+    *  Version name
+    */
+   private String displayName;
+
    /**
     * @param path
     */
@@ -44,34 +50,51 @@ public class Version extends File
    }
 
    /**
-    * @return the creator
+    * @return the creationDate
     */
-   public String getCreator()
+   public String getCreationDate()
    {
-      return creator;
+      return creationDate;
    }
 
    /**
-    * @param creator the creator to set
+    * @param creationDate the creationDate to set
     */
-   public void setCreator(String creator)
+   public void setCreationDate(String creationDate)
    {
-      this.creator = creator;
+      this.creationDate = creationDate;
    }
 
    /**
-    * @return {@link String} version label
+    * @return the contentLength
     */
-   public String getVersionLabel()
+   public int getContentLength()
    {
-      return versionLabel;
+      return contentLength;
    }
 
    /**
-    * @param versionLabel version label
+    * @param contentLength the contentLength to set
     */
-   public void setVersionLabel(String versionLabel)
+   public void setContentLength(int contentLength)
    {
-      this.versionLabel = versionLabel;
+      this.contentLength = contentLength;
    }
+
+   /**
+    * @return the displayName
+    */
+   public String getDisplayName()
+   {
+      return displayName;
+   }
+
+   /**
+    * @param displayName the displayName to set
+    */
+   public void setDisplayName(String displayName)
+   {
+      this.displayName = displayName;
+   }
+
 }
