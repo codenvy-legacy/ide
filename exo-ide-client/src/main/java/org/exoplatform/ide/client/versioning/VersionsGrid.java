@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import com.smartgwt.client.types.Alignment;
+
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -35,13 +37,13 @@ public class VersionsGrid extends ListGrid<Version>
 {
 
    private final String NAME = "Name";
-   
+
    private final String DATE = "Creation date";
-   
+
    private final String LENGTH = "Content lenght";
-   
-   
-   public VersionsGrid(){
+
+   public VersionsGrid()
+   {
       setCanSort(false);
       setCanGroupBy(false);
       setCanFocus(false);
@@ -49,26 +51,57 @@ public class VersionsGrid extends ListGrid<Version>
       setCanFreezeFields(false);
 
       ListGridField fieldName = new ListGridField(NAME, NAME);
-      fieldName.setWidth("40%");
+      fieldName.setAlign(Alignment.LEFT);
+      fieldName.setWidth("35%");
 
       ListGridField fieldDate = new ListGridField(DATE, DATE);
+      fieldDate.setAlign(Alignment.LEFT);
       fieldDate.setWidth("40%");
 
       ListGridField fieldLenght = new ListGridField(LENGTH, LENGTH);
-      fieldLenght.setWidth("30%");
+      fieldLenght.setAlign(Alignment.CENTER);
+      fieldLenght.setWidth("25%");
 
       setFields(fieldName, fieldDate, fieldLenght);
    }
-   
+
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#getValuePropertyName()
+    */
+   @Override
+   protected String getValuePropertyName()
+   {
+      return "version";
+   }
+
    /**
     * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#setRecordFields(com.smartgwt.client.widgets.grid.ListGridRecord, java.lang.Object)
     */
    @Override
-   protected void setRecordFields(ListGridRecord record, Version item)
+   protected void setRecordFields(ListGridRecord record, Version version)
    {
-      record.setAttribute(NAME, item.getDisplayName());
-      record.setAttribute(DATE, item.getCreationDate());
-      record.setAttribute(LENGTH, item.getContentLength());
+      record.setAttribute(NAME, version.getDisplayName());
+      record.setAttribute(DATE, version.getCreationDate());
+      record.setAttribute(LENGTH, version.getContentLength());
+      record.setAttribute(getValuePropertyName(), version);
+   }
+
+   /**
+    * Returns selected version in version grid.
+    * 
+    * @return {@link Version} version
+    */
+   public Version getSelectedVersion()
+   {
+      ListGridRecord[] selectedRecords = getSelection();
+      if (selectedRecords.length > 0)
+      {
+         return (Version)selectedRecords[0].getAttributeAsObject(getValuePropertyName());
+      }
+      else
+      {
+         return null;
+      }
    }
 
 }

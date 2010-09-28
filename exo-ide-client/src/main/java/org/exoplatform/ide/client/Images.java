@@ -187,6 +187,15 @@ public interface Images
       
       public static final String CLASS_ITEM = IMAGE_URL + "outline/class-item.png";
    }
+   
+   public interface Versioning
+   {
+
+      public static final String RESTORE_VERSION = IMAGE_URL + "versioning/restore_version.png";
+      
+      public static final String OPEN_VERSION = IMAGE_URL + "versioning/open_version.png";
+
+   }
 
    public static final String BLANK = IMAGE_URL + "blank.png";
 

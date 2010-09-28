@@ -19,18 +19,15 @@
 package org.exoplatform.ide.client.versioning;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.smartgwt.client.widgets.layout.HLayout;
-
-import com.smartgwt.client.widgets.layout.VLayout;
-
+import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.Version;
@@ -45,9 +42,9 @@ import java.util.List;
 public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresenter.Display
 {
 
-   public static final int WIDTH = 400;
+   public static final int WIDTH = 460;
 
-   public static final int HEIGHT = 300;
+   public static final int HEIGHT = 250;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -68,7 +65,7 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    private IButton closeButton;
 
    private IButton restoreButton;
-   
+
    private VersionsGrid versionsGrid;
 
    private ViewVersionsPresenter presenter;
@@ -82,7 +79,12 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    public ViewVersionsForm(HandlerManager eventBus, Item item, List<Version> versions)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      setTitle(TITLE);
+      setMinHeight(HEIGHT);
+      setMinWidth(WIDTH);
+      
+      String title = ((item != null) && (item.getName() != null) && (item.getName().length() > 0)) ? TITLE+" for "+item.getName() : TITLE;
+      
+      setTitle(title);
       setCanDragResize(true);
 
       VLayout mainLayout = new VLayout();
@@ -96,11 +98,11 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       versionsGrid.setHeight100();
       versionsGrid.setValue(versions);
       mainLayout.addMember(versionsGrid);
-      
+
       mainLayout.addMember(createButtonsLayout());
 
       addItem(mainLayout);
-      
+
       addCloseClickHandler(new CloseClickHandler()
       {
          public void onCloseClick(CloseClientEvent event)
@@ -122,9 +124,9 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       hLayout.setHeight(BUTTON_HEIGHT);
       hLayout.setMembersMargin(10);
 
-      openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, "");
-      restoreButton = createButton("Restore", ID_RESTORE_BUTTON, "");
-      closeButton = createButton("Close", ID_CLOSE_BUTTON, "");
+      openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, Images.Buttons.OK);
+      restoreButton = createButton("Restore", ID_RESTORE_BUTTON, Images.Versioning.RESTORE_VERSION);
+      closeButton = createButton("Close", ID_CLOSE_BUTTON, Images.Buttons.CANCEL);
 
       hLayout.addMember(restoreButton);
 
@@ -139,12 +141,12 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       return hLayout;
    }
 
-   private IButton createButton(String title, String id, String icon)
+   private IButton createButton(String title, String id, String image)
    {
       IButton button = new IButton(title);
       button.setHeight(BUTTON_HEIGHT);
       button.setWidth(BUTTON_WIDTH);
-      button.setIcon(icon);
+      button.setIcon(image);
       return button;
    }
 
@@ -196,5 +198,44 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    public ListGridItem<Version> getVersionsGrid()
    {
       return versionsGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#getSelectedVersion()
+    */
+   public Version getSelectedVersion()
+   {
+      return versionsGrid.getSelectedVersion();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#enableOpenVersionButton(boolean)
+    */
+   public void enableOpenVersionButton(boolean enable)
+   {
+      if (enable)
+      {
+         openVersionButton.enable();
+      }
+      else
+      {
+         openVersionButton.disable();
+      }
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#enableRestoreButton(boolean)
+    */
+   public void enableRestoreButton(boolean enable)
+   {
+      if (enable)
+      {
+         restoreButton.enable();
+      }
+      else
+      {
+         restoreButton.disable();
+      }
    }
 }

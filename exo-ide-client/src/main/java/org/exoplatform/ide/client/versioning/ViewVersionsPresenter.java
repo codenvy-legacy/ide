@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -36,6 +39,11 @@ import org.exoplatform.ide.client.module.vfs.api.Version;
  * @version $Id: Sep 27, 2010 $
  *
  */
+/**
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Sep 27, 2010 $
+ *
+ */
 public class ViewVersionsPresenter
 {
    interface Display
@@ -49,13 +57,17 @@ public class ViewVersionsPresenter
       ListGridItem<Version> getVersionsGrid();
 
       void closeForm();
+
+      Version getSelectedVersion();
+
+      void enableOpenVersionButton(boolean enable);
+
+      void enableRestoreButton(boolean enable);
    }
 
    private HandlerManager eventBus;
 
    private Handlers handlers;
-
-   private Version selectedVersion;
 
    public ViewVersionsPresenter(HandlerManager eventBus)
    {
@@ -74,10 +86,7 @@ public class ViewVersionsPresenter
 
          public void onClick(ClickEvent event)
          {
-            if (selectedVersion != null)
-            {
-               eventBus.fireEvent(new OpenFileEvent(selectedVersion, false));
-            }
+            openVersion();
          }
       });
 
@@ -104,12 +113,23 @@ public class ViewVersionsPresenter
 
          public void onSelection(SelectionEvent<Version> event)
          {
-            if (event.getSelectedItem() != null && !event.getSelectedItem().equals(selectedVersion))
-            {
-               selectedVersion = event.getSelectedItem();
-            }
+            boolean enableButtons = (display.getSelectedVersion() != null);
+            display.enableOpenVersionButton(enableButtons);
+            display.enableRestoreButton(enableButtons);
          }
       });
+
+      display.getVersionsGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
+
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            openVersion();
+         }
+      });
+
+      display.enableOpenVersionButton(false);
+      display.enableRestoreButton(false);
    }
 
    /**
@@ -118,5 +138,18 @@ public class ViewVersionsPresenter
    public void destroy()
    {
       handlers.removeHandlers();
+   }
+
+   /**
+    * Open selected version in editor.
+    */
+   private void openVersion()
+   {
+      Version selectedVersion = display.getSelectedVersion();
+      if (selectedVersion != null)
+      {
+         eventBus.fireEvent(new OpenFileEvent(selectedVersion, false));
+      }
+      display.closeForm();
    }
 }
