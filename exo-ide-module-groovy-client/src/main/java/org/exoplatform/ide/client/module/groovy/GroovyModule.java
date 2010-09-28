@@ -160,9 +160,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Template", "Groovy Template",
          "Create Groovy Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Chromattic Data Object",
-         "Chromattic Data Object", "Create Chromattic Data Object", Images.FileType.GROOVY,
-         MimeType.CHROMATTIC_DATA_OBJECT)));
+      
 
       eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
