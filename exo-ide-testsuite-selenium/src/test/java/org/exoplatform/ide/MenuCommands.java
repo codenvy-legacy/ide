@@ -51,6 +51,8 @@ public interface MenuCommands
       public static final String FROM_TEMPLATE = "From Template...";
 
       public static final String FOLDER = "Folder...";
+      
+      public static final String CHROMATTIC = "Chromattic Data Object";
    }
 
    public interface Run

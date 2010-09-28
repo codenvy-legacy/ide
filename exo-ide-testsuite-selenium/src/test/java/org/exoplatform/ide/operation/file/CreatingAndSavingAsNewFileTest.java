@@ -68,6 +68,8 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private static final String GROOVY_TEMPLATE_FILE_NANE = "TestGroovyTemplate.gtmpl";
 
    private static final String GROOVY_FILE_NAME = "TestGroovyScript.groovy";
+   
+   private static final String CHROMATTIC_FILE_NAME = "TestChromatticDataObject.groovy";
 
    
    @BeforeClass
@@ -108,6 +110,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       testFileSaveAs(MenuCommands.New.GOOGLE_GADGET_FILE, "xml", GADGET_FILE_NAME);
       testFileSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       testFileSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
+      testFileSaveAs(MenuCommands.New.CHROMATTIC, "groovy", CHROMATTIC_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       testFilesCreatedOnServer();
    }
@@ -173,6 +176,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
          assertEquals(200, VirtualFileSystemUtils.get(STORAGE_URL + GADGET_FILE_NAME).getStatusCode());
          assertEquals(200, VirtualFileSystemUtils.get(STORAGE_URL + GROOVY_TEMPLATE_FILE_NANE).getStatusCode());
          assertEquals(200, VirtualFileSystemUtils.get(STORAGE_URL + REST_SERVICE_FILE_NAME).getStatusCode());
+         assertEquals(200, VirtualFileSystemUtils.get(STORAGE_URL + CHROMATTIC_FILE_NAME).getStatusCode());
       }
       catch (IOException e)
       {
