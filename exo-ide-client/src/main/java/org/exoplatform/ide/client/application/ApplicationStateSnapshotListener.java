@@ -43,8 +43,8 @@ import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
@@ -60,7 +60,8 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler,
-   EditorUpdateFileStateHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, MoveCompleteHandler
+   EditorUpdateFileStateHandler, ItemLockResultReceivedHandler, ItemUnlockedHandler, ItemDeletedHandler,
+   MoveCompleteHandler
 {
 
    private HandlerManager eventBus;
@@ -85,7 +86,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
-      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
       handlers.addHandler(MoveCompleteEvent.TYPE, this);
@@ -176,12 +177,15 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent)
     */
-   public void onItemLocked(ItemLockedEvent event)
+   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {
-      lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
-      storeLockTokens();
+      if (event.getException() == null)
+      {
+         lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
+         storeLockTokens();
+      }
    }
 
    /**

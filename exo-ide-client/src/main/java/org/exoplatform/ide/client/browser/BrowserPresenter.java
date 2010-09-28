@@ -48,8 +48,8 @@ import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
@@ -78,7 +78,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
    RegisterEventHandlersHandler, InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler,
-   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockedHandler
+   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler
 {
 
    interface Display
@@ -121,7 +121,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       //handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -439,17 +439,17 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       entryPoint = event.getEntryPoint();
    }
 
-//   /**
-//    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent)
-//    */
-//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-//   {
-//      Item item = event.getItem();
-//      if (item instanceof File)
-//      {
-//         display.updateItemState((File)item);
-//      }
-//   }
+   //   /**
+   //    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent)
+   //    */
+   //   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   //   {
+   //      Item item = event.getItem();
+   //      if (item instanceof File)
+   //      {
+   //         display.updateItemState((File)item);
+   //      }
+   //   }
 
    /**
     * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
@@ -467,19 +467,22 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent)
     */
-   public void onItemLocked(ItemLockedEvent event)
+   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {
-      Item item = event.getItem();
-      if (item instanceof File)
+      if (event.getException() == null)
       {
-         File file = (File)item;         
-         Property lockOwnerProperty = new Property(ItemProperty.JCR_LOCKOWNER);
-         lockOwnerProperty.setValue("&nbsp;");         
-         file.getProperties().add(lockOwnerProperty);
-         display.updateItemState(file);
-      }      
+         Item item = event.getItem();
+         if (item instanceof File)
+         {
+            File file = (File)item;
+            Property lockOwnerProperty = new Property(ItemProperty.JCR_LOCKOWNER);
+            lockOwnerProperty.setValue("&nbsp;");
+            file.getProperties().add(lockOwnerProperty);
+            display.updateItemState(file);
+         }
+      }
    }
 
 }

@@ -50,8 +50,8 @@ import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
@@ -70,7 +70,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler,
-   EditorActiveFileChangedHandler, ItemUnlockedHandler, UserInfoReceivedHandler, ItemLockedHandler,
+   EditorActiveFileChangedHandler, ItemUnlockedHandler, UserInfoReceivedHandler, ItemLockResultReceivedHandler,
    ApplicationSettingsReceivedHandler
 {
 
@@ -126,7 +126,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
       newFileName(file);
@@ -250,9 +250,9 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent)
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent)
     */
-   public void onItemLocked(ItemLockedEvent event)
+   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {
 
       if (event.getItem().isPropertiesChanged())
@@ -263,6 +263,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
       {
          VirtualFileSystem.getInstance().getProperties(event.getItem());
       }
+
    }
 
    /**
