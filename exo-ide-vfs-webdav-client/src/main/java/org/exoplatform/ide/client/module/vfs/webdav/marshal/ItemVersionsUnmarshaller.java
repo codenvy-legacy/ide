@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -91,7 +92,7 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
 
       for (Resource ver : resources)
       {
-         Version version = new Version(ver.getHref());
+         Version version = new Version(URL.decode(ver.getHref()));
 
          version .getProperties().clear();
          version .getProperties().addAll(ver.getProperties());
