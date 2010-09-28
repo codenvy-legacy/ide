@@ -89,7 +89,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private boolean outLineFormOpened;
    
-   private boolean isAfterGotoLine = false;
+   private boolean afterChangineCursorFromOutline = false;
 
    public OutlinePresenter(HandlerManager bus)
    {
@@ -121,11 +121,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             currentToken = event.getSelectedItem();
 
             if (goToLine)
-            {
-               int line = event.getSelectedItem().getLineNumber();
-               int maxLineNumber = activeFile.getContent().split("\n").length;
-               isAfterGotoLine = true;               
-               eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
+            {              
+               setEditorCursorPosition(event.getSelectedItem().getLineNumber());               
             }
             goToLine = true;
          }
@@ -138,10 +135,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             if (display.getSelectedTokens().size() > 0)
             {
                currentToken = display.getSelectedTokens().get(0);
-               int line = currentToken.getLineNumber();
-               int maxLineNumber = activeFile.getContent().split("\n").length;
-               isAfterGotoLine = true;
-               eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
+               setEditorCursorPosition(currentToken.getLineNumber());
             }
          }
       });
@@ -159,6 +153,19 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       selectTokenByRow(tokens);
    }
 
+   /**
+    * Set cursor within the Editor Line into the line with lineNumber and then return focus to the Outline Tree Grid
+    * @param lineNumber
+    */
+   private void setEditorCursorPosition(int lineNumber)
+   {
+      int maxLineNumber = activeFile.getContent().split("\n").length;
+
+      afterChangineCursorFromOutline = true;               
+      eventBus.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
+      display.setFocus();
+   }
+   
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
       if (!outLineFormOpened)
@@ -362,10 +369,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
       selectOutlineTimer.cancel();
-      
-      if (isAfterGotoLine)
+
+      // return focus to the outline panel after the setting of cursor position in the Editor
+      if (afterChangineCursorFromOutline)
       {
-         isAfterGotoLine = false;
+         afterChangineCursorFromOutline = false;
          display.setFocus();
       }      
       
