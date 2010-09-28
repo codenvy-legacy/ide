@@ -93,8 +93,8 @@
                <version>${org.exoplatform.jcr.version}</version>
             </dependency>
             <dependency>
-               <groupId>org.exoplatform.ideall</groupId>
-               <artifactId>exo.ideall.component.commons</artifactId>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-server</artifactId>
             </dependency>
             <dependency>
                <groupId>hsqldb</groupId>
@@ -165,7 +165,7 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ideall.IDEallVirtualFileSystem</module>
+                     <module>org.exoplatform.ide.client.module.IDEVirtualFileSystem</module>
                      <logLevel>SPAM</logLevel>
                      <skipTests>false</skipTests>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>

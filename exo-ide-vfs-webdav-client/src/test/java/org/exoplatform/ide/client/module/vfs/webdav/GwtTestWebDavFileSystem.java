@@ -36,10 +36,14 @@ import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -66,6 +70,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    private final int DELAY_TEST = 5000;
 
    @Override
+   @Before
    protected void gwtSetUp() throws Exception
    {
       super.gwtSetUp();
@@ -78,12 +83,13 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    @Override
    public String getModuleName()
    {
-      return "org.exoplatform.ideall.IDEallVirtualFileSystem";
+      return "org.exoplatform.ide.client.module.IDEVirtualFileSystem";
    }
 
    /**
     * Create new folder
     */
+   @Test
    public void testCreateFolder()
    {
 
@@ -331,6 +337,42 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       });
       vfsWebDav.copy(folder, testUrl + copyLocation);
       delayTestFinish(DELAY_TEST);
+   }
+   
+   public void testGetVersionList()
+   {
+      final String fileContent = System.currentTimeMillis() + "";
+      File file = new File(testUrl + "versionFile");
+      file.setContentType("text/plain");
+      file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType("text/plain"));
+      //     newFile.setIcon(ImageUtil.getIcon(contentType));
+      file.setNewFile(true);
+      file.setContent(fileContent);
+      file.setContentChanged(true);
+      
+      vfsWebDav.saveContent(file);
+      
+      file.setContent(file.getContent() + " " + System.currentTimeMillis());
+      file.setContentChanged(true);
+      vfsWebDav.saveContent(file);
+      
+      file.setContent(file.getContent() + " " + System.currentTimeMillis());
+      file.setContentChanged(true);
+      vfsWebDav.saveContent(file);
+      
+      eventbus.addHandler(ItemVersionsReceivedEvent.TYPE, new ItemVersionsReceivedHandler()
+      {
+         @Override
+         public void onItemVersionsReceived(ItemVersionsReceivedEvent event)
+         {
+            assertNotNull(event.getVersions());
+            assertNotNull(event.getItem());
+            assertEquals(3, event.getVersions().size());
+            assertNotNull(event.getVersions().get(0).getHref());
+         }
+      });
+      
+      vfsWebDav.getVersions(file);
    }
 
    //   /**
