@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ide.client.browser;
 
+import com.google.gwt.event.dom.client.KeyPressHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -329,6 +331,14 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       }
 
       return selectedItems;
+   }
+
+   /**
+    * @see com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler(com.google.gwt.event.dom.client.KeyPressHandler)
+    */
+   public HandlerRegistration addKeyPressHandler(KeyPressHandler handler)
+   {
+      return null;
    }
 
 }
