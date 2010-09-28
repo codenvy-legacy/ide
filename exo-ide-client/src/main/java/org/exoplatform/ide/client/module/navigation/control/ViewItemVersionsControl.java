@@ -21,40 +21,25 @@ package org.exoplatform.ide.client.module.navigation.control;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.browser.BrowserPanel;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewItemVersionsEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewItemVersionsControl extends IDEControl implements ItemsSelectedHandler, ItemDeletedHandler,
-   PanelSelectedHandler, EntryPointChangedHandler
+public class ViewItemVersionsControl extends IDEControl implements EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "View/Versions...";
+   private static final String ID = "File/Version History...";
 
-   private final String TITLE = "Versions...";
+   private final String TITLE = "Version History...";
 
-   private final String PROMPT = "View Item Versions...";
-
-   private boolean browserPanelSelected = true;
-
-   private Item selectedItem;
-
-   private String entryPoint;
+   private final String PROMPT = "View Item Version History...";
 
    /**
     * @param id
@@ -72,83 +57,26 @@ public class ViewItemVersionsControl extends IDEControl implements ItemsSelected
    @Override
    protected void onRegisterHandlers()
    {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(ItemDeletedEvent.TYPE, this);
-
-      addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(EntryPointChangedEvent.TYPE, this);
+      addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    @Override
    protected void onInitializeApplication()
    {
       setVisible(true);
-      updateEnabling();
+      setEnabled(false);
    }
 
-   private void updateEnabling()
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (!browserPanelSelected)
+      if (event.getFile() == null || event.getFile().isNewFile() || event.getFile() instanceof Version)
       {
          setEnabled(false);
          return;
       }
-
-      if (selectedItem == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (selectedItem.getHref().equals(entryPoint))
-      {
-         setEnabled(false);
-      }
-      else
-      {
-         setEnabled(selectedItem instanceof File);
-      }
+      setEnabled(true);
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
-    */
-   public void onEntryPointChanged(EntryPointChangedEvent event)
-   {
-      entryPoint = event.getEntryPoint();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.panel.event.PanelSelectedHandler#onPanelSelected(org.exoplatform.ide.client.panel.event.PanelSelectedEvent)
-    */
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent)
-    */
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      selectedItem = null;
-      updateEnabling();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
-    */
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      selectedItem = event.getSelectedItems().get(0);
-      updateEnabling();
-   }
-
 }

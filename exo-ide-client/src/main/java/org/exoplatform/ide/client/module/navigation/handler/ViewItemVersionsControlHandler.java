@@ -24,15 +24,13 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewItemVersionsEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewItemVersionsHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.versioning.ViewVersionsForm;
@@ -42,22 +40,21 @@ import org.exoplatform.ide.client.versioning.ViewVersionsForm;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewItemVersionsControlHandler implements ViewItemVersionsHandler, ItemsSelectedHandler,
-   ItemDeletedHandler, ExceptionThrownHandler, ItemVersionsReceivedHandler
+public class ViewItemVersionsControlHandler implements ViewItemVersionsHandler, ExceptionThrownHandler,
+   ItemVersionsReceivedHandler, EditorActiveFileChangedHandler
 {
    private HandlerManager eventBus;
 
    private Handlers handlers;
 
-   private Item selectedItem;
+   private File activeFile;
 
    public ViewItemVersionsControlHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ViewItemVersionsEvent.TYPE, this);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
-      handlers.addHandler(ItemDeletedEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -65,35 +62,16 @@ public class ViewItemVersionsControlHandler implements ViewItemVersionsHandler, 
     */
    public void onViewItemVersions(ViewItemVersionsEvent event)
    {
-      if (selectedItem != null && selectedItem instanceof File)
+      if (activeFile != null && !(activeFile instanceof Version))
       {
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          handlers.addHandler(ItemVersionsReceivedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().getVersions(selectedItem);
+         VirtualFileSystem.getInstance().getVersions(activeFile);
       }
       else
       {
-         Dialogs.getInstance().showInfo("Please, select file in navigation tree.");
+         Dialogs.getInstance().showInfo("Please, open file.");
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
-    */
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() == 1)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent)
-    */
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      selectedItem = null;
    }
 
    /**
@@ -121,6 +99,14 @@ public class ViewItemVersionsControlHandler implements ViewItemVersionsHandler, 
          Dialogs.getInstance().showInfo("Item \"" + event.getItem().getName() + "\" has no versions.");
       }
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }
