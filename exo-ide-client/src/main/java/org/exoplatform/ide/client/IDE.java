@@ -5,6 +5,7 @@ import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.module.chromattic.ChromatticModule;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.gadget.GadgetModule;
@@ -52,6 +53,7 @@ public class IDE extends VerticalPanel
 
       context.getModules().add(new GadgetModule(eventBus));
       context.getModules().add(new GroovyModule(eventBus));
+      context.getModules().add(new ChromatticModule(eventBus));
 //      context.getModules().add(new NetvibesModule(eventBus));
    }
 

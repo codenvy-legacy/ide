@@ -48,7 +48,7 @@ public class ImageUtil
       images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
       images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
       images.put(MimeType.GROOVY_TEMPLATE, Images.FileTypes.GROOVY_TEMPLATE);      
-      images.put(MimeType.CHROMATTIC_DATA_OBJECT, Images.FileTypes.GROOVY);
+      images.put(MimeType.CHROMATTIC_DATA_OBJECT, Images.FileTypes.CHROMATTIC);
       images.put(null, Images.FileTypes.DEFAULT);
    }
 

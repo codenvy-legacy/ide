@@ -65,6 +65,10 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-module-chromattic-client</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
          <scope>test</scope>
       </dependency>

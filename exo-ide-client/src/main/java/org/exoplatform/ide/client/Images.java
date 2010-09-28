@@ -116,6 +116,8 @@ public interface Images
       
       // TODO add appropriate icon 
       public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/gtmpl.png";      
+      
+      public static final String CHROMATTIC = IMAGE_URL + "filetype/chromattic.png";
 
    }
 

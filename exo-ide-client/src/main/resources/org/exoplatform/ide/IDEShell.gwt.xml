@@ -26,6 +26,7 @@
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
+   <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
    
 
    <!-- Specify the app entry point class. -->
