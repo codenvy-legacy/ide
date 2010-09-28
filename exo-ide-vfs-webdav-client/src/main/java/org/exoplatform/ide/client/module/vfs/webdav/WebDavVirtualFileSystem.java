@@ -43,10 +43,11 @@ import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.UpdateToVersionCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyResponseUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshaller;
@@ -65,6 +66,8 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchRequestMarshal
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemUnmarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.UpdateItemMarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.UpdateItemUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -529,17 +532,16 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       String url = javaScriptEncodeURI(item.getHref());
       LockToken lockToken = new LockToken();
 
-      ItemLockedEvent event = new ItemLockedEvent(item, lockToken);
-
       int[] acceptStatus = new int[]{HTTPStatus.OK};
 
       LockItemMarshaller marshaller = new LockItemMarshaller(userName);
       LockItemUnmarshaller unmarshaller = new LockItemUnmarshaller(lockToken);
 
       String errorMessage = "Service is not deployed.<br />Lock was not enforceable on this resource.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+      ItemLockResultReceivedEvent event = new ItemLockResultReceivedEvent(item, lockToken, errorMessage);
+      //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event, acceptStatus);
 
       loader.setMessage(Messages.LOCK);
 
@@ -605,8 +607,22 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void updateToVersion(Item item, Version version)
    {
-      // TODO Auto-generated method stub
+      String url = javaScriptEncodeURI(item.getHref());
 
+      UpdateItemMarshaller marshaller = new UpdateItemMarshaller(version);
+      UpdateItemUnmarshaller unmarshaller = new UpdateItemUnmarshaller();
+
+      UpdateToVersionCompleteEvent event = new UpdateToVersionCompleteEvent(item);
+
+      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+
+      String errorMessage = "Can't update to version";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UPDATE)
+         .data(marshaller).send(callback);
    }
 
 }

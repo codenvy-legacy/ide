@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.module.vfs.api.event;
 
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.LockToken;
 
@@ -28,32 +29,37 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Sep 13, 2010 $
  *
  */
-public class ItemLockedEvent extends GwtEvent<ItemLockedHandler>
+public class ItemLockResultReceivedEvent extends ServerExceptionEvent<ItemLockResultReceivedHandler>
 {
 
-   public static GwtEvent.Type<ItemLockedHandler> TYPE = new Type<ItemLockedHandler>();
+   public static GwtEvent.Type<ItemLockResultReceivedHandler> TYPE = new Type<ItemLockResultReceivedHandler>();
 
    private LockToken lockToken;
 
+   private Throwable exception;
+
    private Item item;
+
+   private String errorMessage;
 
    /**
     * @param lockToken
     */
-   public ItemLockedEvent(Item item, LockToken lockToken)
+   public ItemLockResultReceivedEvent(Item item, LockToken lockToken, String errorMessage)
    {
       this.item = item;
       this.lockToken = lockToken;
+      this.errorMessage = errorMessage;
    }
 
    @Override
-   protected void dispatch(ItemLockedHandler handler)
+   protected void dispatch(ItemLockResultReceivedHandler handler)
    {
-      handler.onItemLocked(this);
+      handler.onItemLockResultReceived(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemLockedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemLockResultReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -72,6 +78,28 @@ public class ItemLockedEvent extends GwtEvent<ItemLockedHandler>
    public Item getItem()
    {
       return item;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent#setException(java.lang.Throwable)
+    */
+   @Override
+   public void setException(Throwable exception)
+   {
+      this.exception = exception;
+   }
+
+   public Throwable getException()
+   {
+      return exception;
+   }
+
+   /**
+    * @return the errorMessage
+    */
+   public String getErrorMessage()
+   {
+      return errorMessage;
    }
 
 }
