@@ -65,6 +65,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       boolean isFormVisible();
       
       List<Token> getSelectedTokens();
+      
+      void setFocus();
    }
 
    private HandlerManager eventBus;
@@ -86,6 +88,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private TextEditor activeTextEditor;
 
    private boolean outLineFormOpened;
+   
+   private boolean isAfterGotoLine = false;
 
    public OutlinePresenter(HandlerManager bus)
    {
@@ -120,6 +124,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             {
                int line = event.getSelectedItem().getLineNumber();
                int maxLineNumber = activeFile.getContent().split("\n").length;
+               isAfterGotoLine = true;               
                eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
             }
             goToLine = true;
@@ -135,6 +140,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
                currentToken = display.getSelectedTokens().get(0);
                int line = currentToken.getLineNumber();
                int maxLineNumber = activeFile.getContent().split("\n").length;
+               isAfterGotoLine = true;
                eventBus.fireEvent(new EditorGoToLineEvent(line < maxLineNumber ? line : maxLineNumber));
             }
          }
@@ -356,6 +362,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
       selectOutlineTimer.cancel();
+      
+      if (isAfterGotoLine)
+      {
+         isAfterGotoLine = false;
+         display.setFocus();
+      }      
+      
       selectOutlineTimer.schedule(1000);
    }
 

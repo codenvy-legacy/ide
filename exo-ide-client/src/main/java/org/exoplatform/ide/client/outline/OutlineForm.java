@@ -94,5 +94,10 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
    {
       return treeGrid.getSelectedTokens();
    }
+   
+   public void setFocus()
+   {
+      treeGrid.focus();
+   }
 
 }
