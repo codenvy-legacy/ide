@@ -29,7 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ExploringWorkspacePanelTest.class, GeItemUrlTest.class, GoToFolderTest.class, OpeningFilesTest.class,
-   SelectWorkspaceTest.class})
+   SelectWorkspaceTest.class, UsingKeyboardTest.class})
 public class BrowseTestSuite
 {
 

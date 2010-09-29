@@ -367,6 +367,17 @@ public abstract class BaseTest
    }
 
    /**
+    * Select the item in the outline tree. 
+    * 
+    * @param name item's name
+    * @throws Exception
+    */
+   protected void selectItemInOutlineTree(String name) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
+   }   
+   
+   /**
     * Select the root workspace item in workspace tree.
     * 
     * @param name
@@ -426,6 +437,31 @@ public abstract class BaseTest
          + name + "]/col[0]"));
    }
 
+
+   /**
+    * Check item is shown in outline tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   protected void assertElementPresentOutlineTree(String name) throws Exception
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name="
+         + name + "]/col[0]"));
+   }
+
+   /**
+    * Check item is not shown in outline tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   protected void assertElementNotPresentOutlineTree(String name) throws Exception
+   {
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name="
+         + name + "]/col[0]"));
+   }   
+   
    /**
     * Get name of item in workspace tree by it's index.
     * 
@@ -1181,7 +1217,7 @@ public abstract class BaseTest
    /**
     * Check is node in Outline tree is selected
     * 
-    * @param rowNumber number of item in treegrid
+    * @param rowNumber number of item in treegrid starting from 0
     * @param name name of item
     * @param isSelected is node selected
     */
