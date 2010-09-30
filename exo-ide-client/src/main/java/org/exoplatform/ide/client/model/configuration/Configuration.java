@@ -91,13 +91,16 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
+      // TODO [IDE-307] handle absence of appConfig["entryPoint"] property in the configuration (case 1) 
       if (jsonConfiguration.containsKey(ENTRY_POINT))
+      {
          configuration.setDefaultEntryPoint(jsonConfiguration.get(Configuration.ENTRY_POINT).isString().stringValue());
-      //      else
-      //      {
-      //         sendErrorMessage(ENTRY_POINT);
-      //         return;
-      //      }
+      }      
+      else
+      {
+         showErrorMessage(ENTRY_POINT);
+         return;
+      }
 
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host
@@ -120,7 +123,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private void showErrorMessage(String message)
    {
-      String m = "Invalid configuration missing : " + message + " item";
+      String m = "Invalid configuration:  missing " + message + " item";
       Dialogs.getInstance().showError("Invalid configuration", m);
    }
 
