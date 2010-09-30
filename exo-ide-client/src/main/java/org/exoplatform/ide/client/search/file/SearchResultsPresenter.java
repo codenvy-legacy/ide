@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.search.file;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -65,7 +67,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
 
    private List<Item> selectedItems;
 
-   private Folder searchresult;
+   private Folder searchResult;
 
    private Handlers handlers;
 
@@ -73,7 +75,7 @@ public class SearchResultsPresenter implements PanelSelectedHandler
    {
       this.eventBus = eventBus;
       this.context = context;
-      this.searchresult = searchResult;
+      this.searchResult = searchResult;
 
       handlers = new Handlers(eventBus);
    }
@@ -99,15 +101,26 @@ public class SearchResultsPresenter implements PanelSelectedHandler
          }
       });
 
-      searchresult.setIcon(Images.FileTypes.WORKSPACE);
-      if (searchresult.getChildren() != null && !searchresult.getChildren().isEmpty())
+      searchResult.setIcon(Images.FileTypes.WORKSPACE);
+            
+      if (searchResult.getChildren() != null && !searchResult.getChildren().isEmpty())
       {
-         display.getSearchResultTree().setValue(searchresult);
-         display.selectItem(searchresult.getHref());
+         // sort items in search result list
+         Collections.sort(searchResult.getChildren(), new Comparator<Item>()
+            {
+               public int compare(Item item1, Item item2)
+               {
+                  return item1.getName().compareTo(item2.getName());
+               }
+            }
+         );
+
+         display.getSearchResultTree().setValue(searchResult);
+         display.selectItem(searchResult.getHref());
       }
       else
       {
-         display.getSearchResultTree().setValue(searchresult);
+         display.getSearchResultTree().setValue(searchResult);
          display.deselectAllItems();
       }
 
