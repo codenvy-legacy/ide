@@ -41,7 +41,7 @@ public class FileTemplates
       addEmptyTXT();
       //addTXTContent();
       addGadgetContent();
-
+      addGtmplTemplate();
       //      addUWAWidgetContent();
    }
 
@@ -54,6 +54,20 @@ public class FileTemplates
       }
 
       return content;
+   }
+
+   private static void addGtmplTemplate()
+   {
+      String content =
+         "<html>\n" + "   <head>\n" + "     <%\n" + "       import org.exoplatform.services.security.Identity;\n"
+            + "       import org.exoplatform.services.security.ConversationState;\n" + "     %>\n" + "   </head>\n"
+            + "   <body>\n" + "     <%\n" + "       ConversationState curentState = ConversationState.getCurrent();\n"
+            + "       if (curentState != null)\n" + "       {\n"
+            + "         Identity identity = curentState.getIdentity();\n" + "         3.times\n" + "         {\n"
+            + "           println \"Hello \" + identity.getUserId();\n" + "         }\n" + "       }\n" + "     %>\n"
+            + "   </body>\n" + "</html>";
+
+      templates.put(MimeType.GROOVY_TEMPLATE, content);
    }
 
    private static void addXMLFileContent()

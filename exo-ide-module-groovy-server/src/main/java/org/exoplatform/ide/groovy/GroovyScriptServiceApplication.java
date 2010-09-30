@@ -41,7 +41,7 @@ public class GroovyScriptServiceApplication extends Application
    public GroovyScriptServiceApplication()
    {
       objects.add(new DevelopmentResourceMethodFilter());
-//      classes.add(GroovyScriptService.class);
+      classes.add(GroovyTemplateService.class);
    }
 
    public Set<Class<?>> getClasses()

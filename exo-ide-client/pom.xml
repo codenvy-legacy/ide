@@ -182,7 +182,7 @@
                <artifactId>exo.jcr.framework.web</artifactId>
                <scope>runtime</scope>
             </dependency>
-             <dependency>
+            <dependency>
                <groupId>org.exoplatform</groupId>
                <artifactId>exo-jcr-services</artifactId>
             </dependency>
@@ -196,7 +196,7 @@
                <artifactId>exo-ide-module-groovy-server</artifactId>
                <scope>runtime</scope>
             </dependency>
-            
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-gadget-server</artifactId>
@@ -293,6 +293,11 @@
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
+               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.codehaus.groovy</groupId>
+               <artifactId>groovy-all</artifactId>
                <scope>runtime</scope>
             </dependency>
          </dependencies>

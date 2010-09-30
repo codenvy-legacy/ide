@@ -68,7 +68,8 @@ public class ShowPreviewCommand extends IDEControl implements EditorActiveFileCh
 
       if (MimeType.TEXT_HTML.equals(event.getFile().getContentType())
          || MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType())
-         || MimeType.UWA_WIDGET.equals(event.getFile().getContentType()))
+         || MimeType.UWA_WIDGET.equals(event.getFile().getContentType())
+         || MimeType.GROOVY_TEMPLATE.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          if (event.getFile().isNewFile())

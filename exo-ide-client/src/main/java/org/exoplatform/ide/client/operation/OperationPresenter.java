@@ -162,6 +162,10 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       {
          previewUWAWidget(activeFile);
       }
+      else if (MimeType.GROOVY_TEMPLATE.equals(activeFile.getContentType()))
+      {
+         previewGroovyTemplate(activeFile);
+      }
       else
       {
          display.showPreview(activeFile.getHref());
@@ -173,6 +177,11 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
       String href = file.getHref();
       href = href.replace("jcr", "ideall/netvibes");
       display.showPreview(href);
+   }
+   
+   private void previewGroovyTemplate(File file)
+   {
+      display.showPreview(applicationConfiguration.getContext() + "/ide/gtmpl/render?url=" + file.getHref());
    }
 
    private void previewGadget()

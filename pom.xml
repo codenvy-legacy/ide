@@ -38,6 +38,7 @@
       <version.chromattic>1.0.3</version.chromattic>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
+      <groovy.version>1.6.9</groovy.version>
    </properties>
    <dependencyManagement>
       <dependencies>
@@ -388,6 +389,11 @@
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
          </dependency>
+         <dependency>
+           <groupId>org.codehaus.groovy</groupId>
+           <artifactId>groovy-all</artifactId>
+           <version>${groovy.version}</version>
+        </dependency>
       </dependencies>
    </dependencyManagement>
    <build>

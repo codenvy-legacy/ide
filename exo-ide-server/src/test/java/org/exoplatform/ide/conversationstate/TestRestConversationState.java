@@ -39,6 +39,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.jcr.Node;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
@@ -87,7 +88,6 @@ public class TestRestConversationState extends TestCase
       id.setRoles(roles);
       ConversationState s = new ConversationState(id);                                                                                                                                                     
       ConversationState.setCurrent(s);
-
    }
    
    @Test
