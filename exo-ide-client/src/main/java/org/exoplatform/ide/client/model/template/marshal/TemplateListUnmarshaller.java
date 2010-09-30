@@ -19,17 +19,22 @@
  */
 package org.exoplatform.ide.client.model.template.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateList;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -76,6 +81,24 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 
    private void parseTemplate(Node templateNode)
    {
+      Node node = getChildNode(templateNode, TEMPLATE);
+      Node templateTypeNode = getChildNode(node, TEMPLATE_TYPE);
+      
+      String templateType = templateTypeNode.getChildNodes().item(0).getNodeValue();
+      
+      if (Const.TemplateType.FILE.equals(templateType))
+      {
+         parseFileTemplate(templateNode);
+      }
+      else if (Const.TemplateType.PROJECT.equals(templateType))
+      {
+         parseProjectTemplate(templateNode);
+      }
+
+   }
+
+   private void parseFileTemplate(Node templateNode)
+   {
       String nodeName = templateNode.getNodeName();
 
       Node node = getChildNode(templateNode, TEMPLATE);
@@ -96,8 +119,39 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 
       Node contentNode = getChildNode(node, CONTENT);
       String content = javaScriptDecodeURIComponent(getNodeText(contentNode));
+
+      Template template = new FileTemplate(mimeType, name, description, content, nodeName);
+      templateList.getTemplates().add(template);
+   }
+
+   private void parseProjectTemplate(Node templateNode)
+   {
+      String nodeName = templateNode.getNodeName();
+      Node node = getChildNode(templateNode, TEMPLATE);
       
-      Template template = new Template(mimeType, name, description, content, nodeName);
+      Node nameNode = getChildNode(node, NAME);
+      String name = javaScriptDecodeURIComponent(nameNode.getChildNodes().item(0).getNodeValue());
+
+      Node descriptionNode = getChildNode(node, DESCRIPTION);
+      String description = "";
+      if (descriptionNode.getChildNodes().getLength() != 0)
+      {
+         description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
+      }
+      List<String> fileTemplateNames = new ArrayList<String>();
+      
+      Node fileTemplatesNode = getChildNode(node, TEMPLATE_FILE_LIST);
+      if (fileTemplatesNode != null)
+      {
+         for (int i = 0; i < fileTemplatesNode.getChildNodes().getLength(); i++)
+         {
+            Node fileTemplate = fileTemplatesNode.getChildNodes().item(i);
+            String fileTemplateName = javaScriptDecodeURIComponent(fileTemplate.getFirstChild().getNodeValue());
+            fileTemplateNames.add(fileTemplateName);
+         }
+      }
+
+      Template template = new ProjectTemplate(name, description, nodeName, fileTemplateNames);
       templateList.getTemplates().add(template);
    }
 

@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.TestResponse;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
@@ -56,7 +57,7 @@ public class GwtTestTemplateTransformers extends AbstractGwtTest
       String name = "new css template";
       String description = "temaplte for css";
       String content = ".header {height : 30px;}";
-      Template template = new Template(mimeType, name, description, content, null);
+      Template template = new FileTemplate(mimeType, name, description, content, null);
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       try
       {
@@ -84,11 +85,11 @@ public class GwtTestTemplateTransformers extends AbstractGwtTest
          Template template = templateList.getTemplates().get(0);
          assertEquals("xml template", template.getName());
          assertEquals("new xml template", template.getDescription());
-         assertEquals("text/xml", template.getMimeType());
+         assertEquals("text/xml", ((FileTemplate)template).getMimeType());
          template = templateList.getTemplates().get(1);
          assertEquals("css template", template.getName());
          assertEquals("title in css", template.getDescription());
-         assertEquals("text/css", template.getMimeType());
+         assertEquals("text/css", ((FileTemplate)template).getMimeType());
       }
       catch (UnmarshallerException e)
       {

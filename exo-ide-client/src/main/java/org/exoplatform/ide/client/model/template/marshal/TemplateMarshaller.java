@@ -20,6 +20,8 @@
 package org.exoplatform.ide.client.model.template.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
 /**
@@ -48,12 +50,42 @@ public class TemplateMarshaller implements Marshallable, Const
       String xml = "<" + TEMPLATE + ">";
 
       xml += "<" + NAME + ">" + javaScriptEncodeURIComponent(template.getName()) + "</" + NAME + ">";
-      xml +=
-         "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
-      xml += "<" + MIME_TYPE + ">" + javaScriptEncodeURIComponent(template.getMimeType()) + "</" + MIME_TYPE + ">";
-      xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(template.getContent()) + "</" + CONTENT + ">";
-
+      xml += "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
+      
+      if (template instanceof FileTemplate)
+      {
+         xml += getFileTemplate((FileTemplate)template);
+      }
+      else if (template instanceof ProjectTemplate)
+      {
+         xml += getProjectTemplate((ProjectTemplate)template);
+      }
+      
       xml += "</" + TEMPLATE + ">";
+
+      return xml;
+   }
+   
+   private String getFileTemplate(FileTemplate fileTemplate)
+   {
+      String xml = "<" + TEMPLATE_TYPE + ">" + Const.TemplateType.FILE + "</" + TEMPLATE_TYPE + ">";
+      xml += "<" + MIME_TYPE + ">" + javaScriptEncodeURIComponent(fileTemplate.getMimeType()) + "</" + MIME_TYPE + ">";
+      xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(fileTemplate.getContent()) + "</" + CONTENT + ">";
+      return xml;
+   }
+   
+   private String getProjectTemplate(ProjectTemplate projectTemplate)
+   {
+      String xml = "<" + TEMPLATE_TYPE + ">" + Const.TemplateType.PROJECT + "</" + TEMPLATE_TYPE + ">";
+      if (projectTemplate.getFileTemplates() != null && projectTemplate.getFileTemplates().size() > 0)
+      {
+         xml += "<" + TEMPLATE_FILE_LIST + ">";
+         for (String fileTemplateName : projectTemplate.getFileTemplates())
+         {
+            xml += "<" + TEMPLATE_FILE + ">" + javaScriptEncodeURIComponent(fileTemplateName) + "</" + TEMPLATE_FILE + ">";
+         }
+         xml += "</" + TEMPLATE_FILE_LIST + ">";
+      }
       return xml;
    }
 

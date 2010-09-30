@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.client.module.navigation;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -78,6 +75,7 @@ import org.exoplatform.ide.client.module.navigation.control.download.DownloadFil
 import org.exoplatform.ide.client.module.navigation.control.download.DownloadZippedFolderCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
@@ -109,20 +107,23 @@ import org.exoplatform.ide.client.module.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.ProjectTemplateControlHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewItemVersionsControlHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplateForm;
 import org.exoplatform.ide.client.upload.UploadForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -199,6 +200,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new ViewItemVersionsControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl(eventBus)));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -219,6 +221,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new PasteItemsCommandThread(eventBus, context);
       new FileClosedHandler(eventBus);
       new ViewItemVersionsControlHandler(eventBus);
+      new ProjectTemplateControlHandler(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

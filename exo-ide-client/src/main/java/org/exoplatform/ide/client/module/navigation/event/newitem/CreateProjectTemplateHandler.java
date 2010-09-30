@@ -17,7 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.model.template.marshal;
+package org.exoplatform.ide.client.module.navigation.event.newitem;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,32 +28,9 @@ package org.exoplatform.ide.client.model.template.marshal;
  * @version $
  */
 
-public interface Const
+public interface CreateProjectTemplateHandler extends EventHandler
 {
-   
-   public interface TemplateType
-   {
-      static final String FILE = "file";
-      
-      static final String PROJECT = "project";
-   }
-   
-   public static final String DESCRIPTION = "description";
-   
-   public static final String MIME_TYPE = "mime-type";
-   
-   public static final String TEMPLATE_TYPE = "template-type";
-   
-   public static final String TEMPLATE_FILE = "template-file";
-   
-   public static final String TEMPLATE_FILE_LIST = "template-file-list";
-   
-   public static final String CONTENT = "content";
-   
-   public static final String TEMPLATE = "template";
-   
-   public static final String TEMPLATES = "templates";
-   
-   public static final String NAME = "name";
+
+   void onCreateProjectTemplate(CreateProjectTemplateEvent event);
 
 }

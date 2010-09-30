@@ -18,26 +18,30 @@
  */
 package org.exoplatform.ide.client.template;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   $
  *
  */
-public class SaveAsTemplatePresenter implements TemplateCreatedHandler
+public class SaveAsTemplatePresenter implements TemplateCreatedHandler, TemplateListReceivedHandler
 {
    public interface Display
    {
@@ -61,6 +65,8 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
    private Handlers handlers;
 
    private File file;
+   
+   private Template templateToCreate;
 
    public SaveAsTemplatePresenter(HandlerManager eventBus, File file)
    {
@@ -123,9 +129,30 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler
       {
          description = display.getDescriptionField().getValue();
       }
+      
+      templateToCreate = new FileTemplate(file.getContentType(), name, description, file.getContent(), null);
+      
+      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
+      TemplateServiceImpl.getInstance().getTemplates();
+   }
 
-      Template template = new Template(file.getContentType(), name, description, file.getContent(), null);
-      TemplateServiceImpl.getInstance().createTemplate(template);
+   /**
+    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
+    */
+   public void onTemplateListReceived(TemplateListReceivedEvent event)
+   {
+      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
+      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+      
+      for (Template template : event.getTemplateList().getTemplates())
+      {
+         if (template instanceof FileTemplate && templateToCreate.getName().equals(template.getName()))
+         {
+            Dialogs.getInstance().showError("Template with such name already exists!");
+            return;
+         }
+      }
+      TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
    }
 
 }

@@ -206,7 +206,13 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource createFromTemplate();
 
    @Source("../public/images/bundled/file/create_from_template_Disabled.png")
-   ImageResource createFromTemplateDisabled();   
+   ImageResource createFromTemplateDisabled();
+   
+   @Source("../public/images/bundled/file/create_project_template.png")
+   ImageResource createProjectTemplate();
+   
+   @Source("../public/images/bundled/file/create_project_template_Disabled.png")
+   ImageResource createProjectTemplateDisabled();  
 
    /*
     * GADGET

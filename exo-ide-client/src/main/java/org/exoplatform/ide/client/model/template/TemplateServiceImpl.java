@@ -63,7 +63,7 @@ public class TemplateServiceImpl extends TemplateService
    @Override
    public void createTemplate(Template template)
    {
-      String url =  restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";   
+      String url =  restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
 
@@ -96,23 +96,23 @@ public class TemplateServiceImpl extends TemplateService
       TemplateList templateList = new TemplateList();
 
       templateList.getTemplates().add(
-         new Template(MimeType.TEXT_XML, "Empty XML", "Create empty XML file.", FileTemplates
+         new FileTemplate(MimeType.TEXT_XML, "Empty XML", "Create empty XML file.", FileTemplates
             .getTemplateFor(MimeType.TEXT_XML), null));
 
       templateList.getTemplates().add(
-         new Template(MimeType.TEXT_HTML, "Empty HTML", "Create empty HTML file.", FileTemplates
+         new FileTemplate(MimeType.TEXT_HTML, "Empty HTML", "Create empty HTML file.", FileTemplates
             .getTemplateFor(MimeType.TEXT_HTML), null));
 
       templateList.getTemplates().add(
-         new Template(MimeType.TEXT_PLAIN, "Empty TEXT", "Create empty TEXT file.", FileTemplates
+         new FileTemplate(MimeType.TEXT_PLAIN, "Empty TEXT", "Create empty TEXT file.", FileTemplates
             .getTemplateFor(MimeType.TEXT_PLAIN), null));
 
       templateList.getTemplates().add(
-         new Template(MimeType.GOOGLE_GADGET, "Google Gadget", "Sample of Google Gadget", FileTemplates
+         new FileTemplate(MimeType.GOOGLE_GADGET, "Google Gadget", "Sample of Google Gadget", FileTemplates
             .getTemplateFor(MimeType.GOOGLE_GADGET), null));
 
       templateList.getTemplates().add(
-         new Template(MimeType.GROOVY_SERVICE, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
+         new FileTemplate(MimeType.GROOVY_SERVICE, "Groovy REST Service", "Sample of Groovy REST service.", FileTemplates
             .getTemplateFor(MimeType.GROOVY_SERVICE), null));
 
 //      templateList.getTemplates().add(

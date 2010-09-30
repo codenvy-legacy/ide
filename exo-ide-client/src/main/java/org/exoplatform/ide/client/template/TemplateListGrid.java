@@ -16,14 +16,18 @@
  */
 package org.exoplatform.ide.client.template;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.util.ImageUtil;
-
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -62,19 +66,52 @@ public class TemplateListGrid extends ListGrid<Template>
    {
       if (item.getNodeName() == null)
       {
-         String icon = ImageUtil.getIcon(item.getMimeType());
-         record.setAttribute("icon", icon);
+         record.setAttribute("icon", getItemIcon(item));
          record.setAttribute("name", "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName() + "</font></span>");
          record.setAttribute("description", "<span title=\"" + item.getDescription() + "\"><font color=\"#FF0000\">" + item.getDescription()
             + "</font></span>");
          return;
       }
       
-      String icon = ImageUtil.getIcon(item.getMimeType());
-      record.setAttribute("icon", icon);
+      record.setAttribute("icon", getItemIcon(item));
       record.setAttribute("name", "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>");
       record.setAttribute("description", "<span title=\"" + item.getDescription() + "\">" + item.getDescription()
          + "</span>");
+   }
+   
+   /**
+    * Get selected templates.
+    * 
+    * @return selected templates
+    */
+   public List<Template> getSelectedItems()
+   {
+      List<Template> selectedItems = new ArrayList<Template>();
+
+      for (ListGridRecord record : getSelection())
+      {
+         selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
+      }
+
+      return selectedItems;
+   }
+   
+   /**
+    * Return URL to icon of template according to type of template:
+    * FileTemplate or ProjectTemplate and according to mime type if FileTemplate.
+    * 
+    * @param template
+    * @return String
+    */
+   private String getItemIcon(Template template)
+   {
+      if (template instanceof FileTemplate)
+      {
+         System.out.println(">>>>>>>>> " + template.getName() + " " + String.valueOf(template instanceof FileTemplate));
+         return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
+      }
+      
+      return null;
    }
 
 }

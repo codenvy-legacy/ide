@@ -18,11 +18,16 @@
  */
 package org.exoplatform.ide.client.template;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Window;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
@@ -32,10 +37,6 @@ import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -119,7 +120,7 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.APPLICATION_JAVASCRIPT;
       String name = "templateJS";
       String description = "This is text js hello template.";
-      Template template = new Template(contentType, name, description, content, null);
+      Template template = new FileTemplate(contentType, name, description, content, null);
 
       eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
       {
@@ -155,16 +156,16 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.TEXT_PLAIN;
       String name = "template1";
       String description = "This is text file template.";
-      final Template template = new Template(contentType, name, description, content, null);
+      final Template template = new FileTemplate(contentType, name, description, content, null);
 
       eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
       {
          public void onTemplateCreated(TemplateCreatedEvent event)
          {
             assertEquals(event.getTemplate().getName(), template.getName());
-            assertEquals(event.getTemplate().getContent(), template.getContent());
+            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
             assertEquals(event.getTemplate().getDescription(), template.getDescription());
-            assertEquals(event.getTemplate().getMimeType(), template.getMimeType());
+            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
             finishTest();
          }
       });
@@ -192,15 +193,15 @@ public class GwtTestTemplateService extends GWTTestCase
       String name = "Новый тестовый файл";
       String description = "New test file.";
 
-      final Template template = new Template(contentType, name, description, content, null);
+      final Template template = new FileTemplate(contentType, name, description, content, null);
       eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
       {
          public void onTemplateCreated(TemplateCreatedEvent event)
          {
             assertEquals(event.getTemplate().getName(), template.getName());
-            assertEquals(event.getTemplate().getContent(), template.getContent());
+            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
             assertEquals(event.getTemplate().getDescription(), template.getDescription());
-            assertEquals(event.getTemplate().getMimeType(), template.getMimeType());
+            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
             finishTest();
          }
       });
@@ -228,7 +229,7 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.TEXT_CSS;
       String name = "templateCss";
       String description = "This is css file template.";
-      final Template template = new Template(contentType, name, description, content, null);
+      final Template template = new FileTemplate(contentType, name, description, content, null);
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -253,7 +254,7 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.TEXT_PLAIN;
       String name = "templateForDelete";
       String description = "This is text file template.";
-      final Template template = new Template(contentType, name, description, content, null);
+      final Template template = new FileTemplate(contentType, name, description, content, null);
 
       eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
       {
@@ -306,7 +307,7 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.TEXT_PLAIN;
       String name = "no such";
       String description = "This is text file template.";
-      final Template template = new Template(contentType, name, description, "", null);
+      final Template template = new FileTemplate(contentType, name, description, "", null);
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {

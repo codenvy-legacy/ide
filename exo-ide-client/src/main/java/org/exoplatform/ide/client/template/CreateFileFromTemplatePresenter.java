@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ide.client.template;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -23,6 +24,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
@@ -86,20 +88,26 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
 
    private Display display;
 
-   private Template selectedTemplate;
+   private FileTemplate selectedTemplate;
 
    private String previousExtension;
    
    private List<Item> selectedItems;
    
-   private List<Template> templateList;
+   private List<Template> templateList = new ArrayList<Template>();
 
    public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       this.eventBus = eventBus;
       
       this.selectedItems = selectedItems;
-      this.templateList = templateList;
+      for (Template template : templateList)
+      {
+         if (template instanceof FileTemplate)
+         {
+            this.templateList.add(template);
+         }
+      }
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(TemplateDeletedEvent.TYPE, this);
@@ -196,7 +204,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
       {
          return;
       }
-      selectedTemplate = template;
+      selectedTemplate = (FileTemplate)template;
       display.enableCreateButton();
       
       if (template.getNodeName() == null)
@@ -208,7 +216,7 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
          display.setDeleteButtonDisabled(false);
       }
 
-      String extension = IDEMimeTypes.getExtensionsMap().get(template.getMimeType());
+      String extension = IDEMimeTypes.getExtensionsMap().get(((FileTemplate)template).getMimeType());
       if (previousExtension != null)
       {
          String fName = display.getFileNameField().getValue();

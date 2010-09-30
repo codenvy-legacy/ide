@@ -23,30 +23,24 @@ package org.exoplatform.ide.client.model.template;
  * @version @version $Id: $
  */
 
-public class Template
+public abstract class Template
 {
    
-   private String nodeName;
-
-   private String mimeType;
-
    private String name;
-
+   
    private String description;
-
-   private String content;
+   
+   private String nodeName;
 
    public Template()
    {
 
    }
 
-   public Template(String mimeType, String name, String description, String content, String nodeName)
+   public Template(String name, String description, String nodeName)
    {
-      this.mimeType = mimeType;
       this.name = name;
       this.description = description;
-      this.content = content;
       this.nodeName = nodeName;
    }
 
@@ -80,38 +74,6 @@ public class Template
    public void setDescription(String description)
    {
       this.description = description;
-   }
-
-   /**
-    * @return the content
-    */
-   public String getContent()
-   {
-      return content;
-   }
-
-   /**
-    * @param content the content to set
-    */
-   public void setContent(String content)
-   {
-      this.content = content;
-   }
-
-   /**
-    * @return the mimeType
-    */
-   public String getMimeType()
-   {
-      return mimeType;
-   }
-
-   /**
-    * @param mimeType the mimeType to set
-    */
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
    }
 
    /**
