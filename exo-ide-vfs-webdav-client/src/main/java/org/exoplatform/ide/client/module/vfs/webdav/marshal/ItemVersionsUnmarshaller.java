@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +98,7 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
          version .getProperties().clear();
          version .getProperties().addAll(ver.getProperties());
          
+         version.setItemHref(item.getHref());
          String contentType = getProperty(version, ItemProperty.GETCONTENTTYPE).getValue();
          version.setContentType(contentType);
          String jcrNodeType = NodeTypeUtil.getContentNodeType(contentType);
@@ -111,6 +113,16 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
          version.setContentLength(length);
         
          versions.add(version);
+      }
+
+      try
+      {
+         //Sort versions by date
+         Collections.sort(versions, new VersionsByDateComparator());
+      }
+      catch (Exception e)
+      {
+         //TODO versions were not sorted by date
       }
 
    }

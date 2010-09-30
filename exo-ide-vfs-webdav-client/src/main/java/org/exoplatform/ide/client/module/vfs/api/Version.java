@@ -40,6 +40,11 @@ public class Version extends File
     *  Version name
     */
    private String displayName;
+   
+   /**
+    * Version's owner href.
+    */
+   private String itemHref;
 
    /**
     * @param path
@@ -97,4 +102,28 @@ public class Version extends File
       this.displayName = displayName;
    }
 
+   public String getItemHref()
+   {
+      return itemHref;
+   }
+
+   public void setItemHref(String itemHref)
+   {
+      this.itemHref = itemHref;
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.Item#getName()
+    */
+   @Override
+   public String getName()
+   {
+      String name = itemHref;
+      if (name.endsWith("/"))
+      {
+         name = name.substring(0, name.length() - 1);
+      }
+      name = name.substring(name.lastIndexOf("/") + 1);
+      return name;
+   }
 }
