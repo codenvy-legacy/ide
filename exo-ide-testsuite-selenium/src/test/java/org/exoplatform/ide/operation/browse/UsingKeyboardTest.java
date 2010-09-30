@@ -39,7 +39,7 @@ import org.junit.Test;
 /**
  * Created by The eXo Platform SAS.
  *	
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id:   ${date} ${time}
  *
  */

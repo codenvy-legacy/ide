@@ -493,7 +493,7 @@ public abstract class BaseTest
    /**
     * Get name of item in workspace tree by it's index.
     * 
-    * @param index
+    * @param index starting from 0
     * @return {@link String} name
     */
    protected String getItemNameFromWorkspaceTree(int index)
@@ -501,6 +501,17 @@ public abstract class BaseTest
       return selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[" + index + "]/col[0]");
    }
 
+   /**
+    * Get name of item in search tree by it's index.
+    * 
+    * @param index starting from 0
+    * @return {@link String} name
+    */
+   protected String getItemNameFromSearchResultsTree(int index)
+   {
+      return selenium.getText("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[" + index + "]/col[0]");
+   }   
+   
    /**
     * Delete selected item in navigation tree.
     * 
