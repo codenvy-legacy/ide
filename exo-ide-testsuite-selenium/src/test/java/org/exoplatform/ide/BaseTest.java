@@ -142,6 +142,34 @@ public abstract class BaseTest
             selenium.selectFrame("relative=top");
          }
       }
+      else
+      {
+         standaloneLogin();
+         
+      }
+   }
+
+   private static void standaloneLogin() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_T);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_TAB);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_G);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_T);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_N);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+//      selenium.type("//input[@name='password']", "gtn");
    }
 
    private static void loginInPortal() throws Exception
@@ -1388,7 +1416,7 @@ public abstract class BaseTest
       try
       {
          url = new URL(BASE_URL + repositoryUrl);
-         connection = new HTTPConnection(url);
+         connection = Utils.getConnection(url);
          HTTPResponse response = connection.PropfindAllprop(BASE_URL + repositoryUrl, 1);
          ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getData());
          Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
@@ -1399,7 +1427,7 @@ public abstract class BaseTest
             String href = node.getFirstChild().getNodeValue();
             if (!href.equals(repositoryUrl))
             {
-               connection = new HTTPConnection(url);
+               connection = Utils.getConnection(url);
                response = connection.Delete(href);
             }
 
@@ -1442,7 +1470,7 @@ public abstract class BaseTest
       try
       {
          url = new URL(BASE_URL);
-         connection = new HTTPConnection(url);
+         connection = Utils.getConnection(url);
          connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/"+USER_NAME+"/IDE");
          connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications");
       }

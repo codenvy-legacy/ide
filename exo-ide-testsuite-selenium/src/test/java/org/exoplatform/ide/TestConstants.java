@@ -47,7 +47,7 @@ public interface TestConstants
    /**
     *Realm for GateIn gatein-domain
     */
-   public static final String REALM_GATEIN_DOMAIN = "gatein-domain";
+   public static final String REALM_GATEIN_DOMAIN = "exo-domain";
    
    /**
     * root

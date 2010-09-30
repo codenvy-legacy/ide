@@ -108,7 +108,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       assertParameters();
 
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-
+      Thread.sleep(TestConstants.SLEEP_SHORT);  
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
 
       assertTrue(mess.contains("PathParam:тест"));

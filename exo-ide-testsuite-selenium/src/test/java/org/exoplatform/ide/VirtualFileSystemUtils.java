@@ -16,12 +16,10 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.common.http.client.CookieModule;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.NVPair;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 
 import java.io.IOException;
@@ -35,20 +33,10 @@ import java.net.URL;
 public class VirtualFileSystemUtils
 {
    
-   
-   
-   private static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
-   {
-      HTTPConnection connection = new HTTPConnection(url);
-      connection.removeModule(CookieModule.class);
-      connection.addBasicAuthorization(TestConstants.REALM_GATEIN_DOMAIN, TestConstants.USER, TestConstants.PASSWD);
-      return connection;
-   }
-   
    public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = getConnection(url);
+      HTTPConnection connection = Utils.getConnection(url);
       String data = Utils.readFileAsString(filePath);
       NVPair[] headers = new NVPair[3];
       headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, mimeType);
@@ -62,7 +50,7 @@ public class VirtualFileSystemUtils
    public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = getConnection(url);
+      HTTPConnection connection = Utils.getConnection(url);
       NVPair[] headers = new NVPair[3];
       headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, mimeType);
       headers[1] = new NVPair(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length));
@@ -106,7 +94,7 @@ public class VirtualFileSystemUtils
    public static int delete(String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = getConnection(url);
+      HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.Delete(url.getFile());
       return response.getStatusCode();
    }
@@ -120,7 +108,7 @@ public class VirtualFileSystemUtils
    public static HTTPResponse get(String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = getConnection(url);
+      HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.Get(url.getFile());
       return response;
    }
@@ -135,7 +123,7 @@ public class VirtualFileSystemUtils
    public static int mkcol(String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = getConnection(url);
+      HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.MkCol(url.getFile());
       return response.getStatusCode();
    }

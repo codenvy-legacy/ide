@@ -47,11 +47,12 @@ public class Utils
    
    public static final String COMMAND =  "/services/groovy/load?state=";
    
-   private static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
+   public static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
    {
       HTTPConnection connection = new HTTPConnection(url);
+      connection.setAllowUserInteraction(false);
       connection.removeModule(CookieModule.class);
-      connection.addBasicAuthorization(REALM, USER, PASSWD);
+      connection.addBasicAuthorization(null, USER, PASSWD);
       return connection;
    }
    
