@@ -36,6 +36,8 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    
    private String editor;
    
+   private int ignoreErrorsCount = 0; 
+   
    /**
     * Check is lock file.
     */
@@ -50,6 +52,13 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       this.file = file;
       this.lockFile = lockFile;
+   }
+   
+   public OpenFileEvent(File file, boolean lockFile, int ignoreErrorsCount)
+   {
+      this.file = file;
+      this.lockFile = lockFile;
+      this.ignoreErrorsCount = ignoreErrorsCount;
    }
    
    public OpenFileEvent(String href)
@@ -102,4 +111,9 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
       return TYPE;
    }
 
+   public int getIgnoreErrorsCount()
+   {
+      return ignoreErrorsCount;
+   }
+   
 }
