@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
@@ -86,7 +87,7 @@ public class SetAutoloadCommand extends IDEControl implements EditorActiveFileCh
    {
       activeFile = event.getFile();
 
-      if (event.getFile() == null)
+      if (event.getFile() == null || (event.getFile() instanceof Version))
       {
          hideAutoload();
          return;

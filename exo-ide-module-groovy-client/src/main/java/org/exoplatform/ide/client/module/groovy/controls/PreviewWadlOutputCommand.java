@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -52,7 +53,7 @@ public class PreviewWadlOutputCommand extends IDEControl implements EditorActive
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || (event.getFile() instanceof Version))
       {
          setEnabled(false);
          setVisible(false);

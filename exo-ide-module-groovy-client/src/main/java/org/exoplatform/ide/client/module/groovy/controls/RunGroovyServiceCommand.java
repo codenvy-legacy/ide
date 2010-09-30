@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -59,7 +60,7 @@ public class RunGroovyServiceCommand extends IDEControl implements EditorActiveF
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()))
+      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()) || (event.getFile() instanceof Version))
       {
          setEnabled(false);
          setVisible(false);

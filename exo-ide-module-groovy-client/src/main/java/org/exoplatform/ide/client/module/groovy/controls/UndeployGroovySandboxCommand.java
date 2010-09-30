@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandboxEvent;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -58,7 +59,7 @@ public class UndeployGroovySandboxCommand extends IDEControl implements EditorAc
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || (event.getFile() instanceof Version))
       {
          setEnabled(false);
          setVisible(false);
