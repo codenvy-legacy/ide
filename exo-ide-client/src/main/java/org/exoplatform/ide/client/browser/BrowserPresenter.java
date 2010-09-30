@@ -372,7 +372,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          {
             return 1;
          }
-         return item1.getHref().compareToIgnoreCase(item2.getHref());
+         return item1.getName().compareToIgnoreCase(item2.getName());
       }
    };
 
