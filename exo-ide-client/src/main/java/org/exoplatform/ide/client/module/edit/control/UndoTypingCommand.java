@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
 
@@ -66,7 +67,7 @@ public class UndoTypingCommand extends IDEControl implements EditorActiveFileCha
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || (event.getFile() instanceof Version))
       {
          setVisible(false);
          setEnabled(false);

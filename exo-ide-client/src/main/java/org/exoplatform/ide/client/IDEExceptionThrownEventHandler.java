@@ -34,16 +34,10 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
 {
 
-   /* 
-    * Handler of any errors which throws by application
-    * 
-    * (non-Javadoc)
-    * @see org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler#onError(org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
+   public static void handlerEvent(ExceptionThrownEvent event)
    {
       Throwable error = event.getError();
-      
+
       if (error instanceof ServerException)
       {
          ServerException serverException = (ServerException)error;
@@ -70,6 +64,17 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       {
          Dialogs.getInstance().showError(error.getMessage());
       }
+   }
+
+   /* 
+    * Handler of any errors which throws by application
+    * 
+    * (non-Javadoc)
+    * @see org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler#onError(org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent)
+    */
+   public void onError(ExceptionThrownEvent event)
+   {
+      handlerEvent(event);
    }
 
 }

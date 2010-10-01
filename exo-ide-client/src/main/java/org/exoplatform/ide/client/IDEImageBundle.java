@@ -348,6 +348,24 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/versioning/view_versions_Disabled.png")
    ImageResource viewVersionsDisabled();
    
+   @Source("../public/images/bundled/versioning/restore_version.png")
+   ImageResource restoreVersion();
+   
+   @Source("../public/images/bundled/versioning/restore_version_Disabled.png")
+   ImageResource restoreVersionDisabled();
+   
+   @Source("../public/images/bundled/versioning/older_version.png")
+   ImageResource viewOlderVersion();
+   
+   @Source("../public/images/bundled/versioning/older_version_Disabled.png")
+   ImageResource viewOlderVersionDisabled();
+   
+   @Source("../public/images/bundled/versioning/newer_version.png")
+   ImageResource viewNewerVersion();
+   
+   @Source("../public/images/bundled/versioning/newer_version_Disabled.png")
+   ImageResource viewNewerVersionDisabled();
+   
 
    /*
     * WINDOW

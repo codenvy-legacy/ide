@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.control;
+package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -52,6 +52,7 @@ public class ViewItemVersionsControl extends IDEControl implements EditorActiveF
       setPrompt(PROMPT);
       setEvent(new ViewItemVersionsEvent());
       setImages(IDEImageBundle.INSTANCE.viewVersions(), IDEImageBundle.INSTANCE.viewVersionsDisabled());
+      setDelimiterBefore(true);
    }
 
    @Override

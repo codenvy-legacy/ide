@@ -16,10 +16,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -29,8 +27,8 @@ import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
-import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
 import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
@@ -56,8 +54,10 @@ import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -287,7 +287,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
                      }
                      else
                      {
-                        ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+                        eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
                      }
                   }
                });

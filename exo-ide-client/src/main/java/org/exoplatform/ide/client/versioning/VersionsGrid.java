@@ -44,11 +44,12 @@ public class VersionsGrid extends ListGrid<Version>
 
    public VersionsGrid()
    {
-      setCanSort(false);
+      setCanSort(true);
       setCanGroupBy(false);
       setCanFocus(false);
       setSelectionType(SelectionStyle.SINGLE);
       setCanFreezeFields(false);
+      setCanPickFields(false);
 
       ListGridField fieldName = new ListGridField(NAME, NAME);
       fieldName.setAlign(Alignment.LEFT);

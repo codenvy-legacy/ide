@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -68,7 +69,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      if (event.getFile() == null || (event.getFile() instanceof Version))
       {
          activeFileSelected = false;
          updateEnabling();

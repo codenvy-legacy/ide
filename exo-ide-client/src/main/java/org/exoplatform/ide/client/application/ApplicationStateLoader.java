@@ -19,15 +19,13 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -39,8 +37,10 @@ import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandle
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -69,7 +69,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
       this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
 
-      ExceptionThrownEventHandlerInitializer.clear();
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
@@ -126,8 +126,7 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
             fileToLoad = null;
             handlers.removeHandlers();
 
-            ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
             initializeApplication();
             return;
          }

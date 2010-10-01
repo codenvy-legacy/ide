@@ -19,11 +19,13 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -31,8 +33,6 @@ import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +59,7 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
 
-      ExceptionThrownEventHandlerInitializer.clear();
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
 
@@ -71,19 +71,18 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
    {
       event.getError().printStackTrace();
 
-//      ServerException e = (ServerException)event.getError();
+      //      ServerException e = (ServerException)event.getError();
 
       handlers.removeHandlers();
 
-      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
-
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       Dialogs.getInstance().showError("Entry point <b>" + entryPoint + "</b> not found!");
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
-      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       applicationSettings.setValue("entry-point", event.getItem().getHref(), Store.COOKIES);
       eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
       new ApplicationStateLoader(eventBus, applicationSettings);

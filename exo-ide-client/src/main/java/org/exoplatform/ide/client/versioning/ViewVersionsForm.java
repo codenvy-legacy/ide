@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import com.smartgwt.client.types.Alignment;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -54,8 +56,6 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
 
    private final String ID_OPEN_VERSION_BUTTON = "ideViewVersionsFormOpenVersionButton";
 
-   private final String ID_RESTORE_BUTTON = "ideViewVersionsFormRestoreButton";
-
    private final String ID_CLOSE_BUTTON = "ideViewVersionsFormCloseButton";
 
    private final String TITLE = "Version history";
@@ -63,8 +63,6 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    private IButton openVersionButton;
 
    private IButton closeButton;
-
-   private IButton restoreButton;
 
    private VersionsGrid versionsGrid;
 
@@ -111,7 +109,7 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
          }
       });
 
-      presenter = new ViewVersionsPresenter(eventBus);
+      presenter = new ViewVersionsPresenter(eventBus, versions);
       presenter.bindDisplay(this);
 
       show();
@@ -120,20 +118,14 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    private HLayout createButtonsLayout()
    {
       HLayout hLayout = new HLayout();
-      hLayout.setWidth100();
+      hLayout.setLayoutBottomMargin(10);
+      hLayout.setAutoWidth();
+      hLayout.setLayoutAlign(Alignment.CENTER);
       hLayout.setHeight(BUTTON_HEIGHT);
       hLayout.setMembersMargin(10);
 
       openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, Images.Buttons.OK);
-      restoreButton = createButton("Restore", ID_RESTORE_BUTTON, Images.Versioning.RESTORE_VERSION);
       closeButton = createButton("Close", ID_CLOSE_BUTTON, Images.Buttons.CANCEL);
-
-      hLayout.addMember(restoreButton);
-
-      HLayout delimeter = new HLayout();
-      delimeter.setWidth100();
-      delimeter.setHeight100();
-      hLayout.addMember(delimeter);
 
       hLayout.addMember(openVersionButton);
       hLayout.addMember(closeButton);
@@ -156,14 +148,6 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    public HasClickHandlers getOpenVersionButton()
    {
       return openVersionButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#getRestoreButton()
-    */
-   public HasClickHandlers getRestoreButton()
-   {
-      return restoreButton;
    }
 
    /**
@@ -222,20 +206,5 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
          openVersionButton.disable();
       }
 
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#enableRestoreButton(boolean)
-    */
-   public void enableRestoreButton(boolean enable)
-   {
-      if (enable)
-      {
-         restoreButton.enable();
-      }
-      else
-      {
-         restoreButton.disable();
-      }
    }
 }

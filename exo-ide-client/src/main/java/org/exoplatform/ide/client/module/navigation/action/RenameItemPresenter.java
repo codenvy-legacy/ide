@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
@@ -210,7 +210,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesR
 
             openedFiles.remove(key);
             openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
       }
    }
@@ -236,7 +236,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesR
             openedFiles.remove(event.getSourceHref());
             openedFiles.put(openedFile.getHref(), openedFile);
 
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
 
          VirtualFileSystem.getInstance().getProperties(event.getItem());

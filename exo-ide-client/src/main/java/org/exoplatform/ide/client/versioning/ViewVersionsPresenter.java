@@ -29,10 +29,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -50,8 +51,6 @@ public class ViewVersionsPresenter
    {
       HasClickHandlers getOpenVersionButton();
 
-      HasClickHandlers getRestoreButton();
-
       HasClickHandlers getCloseButton();
 
       ListGridItem<Version> getVersionsGrid();
@@ -62,16 +61,18 @@ public class ViewVersionsPresenter
 
       void enableOpenVersionButton(boolean enable);
 
-      void enableRestoreButton(boolean enable);
    }
 
    private HandlerManager eventBus;
 
    private Handlers handlers;
 
-   public ViewVersionsPresenter(HandlerManager eventBus)
+   private List<Version> versions;
+
+   public ViewVersionsPresenter(HandlerManager eventBus, List<Version> versions)
    {
       this.eventBus = eventBus;
+      this.versions = versions;
       handlers = new Handlers(eventBus);
    }
 
@@ -87,15 +88,6 @@ public class ViewVersionsPresenter
          public void onClick(ClickEvent event)
          {
             openVersion();
-         }
-      });
-
-      display.getRestoreButton().addClickHandler(new ClickHandler()
-      {
-
-         public void onClick(ClickEvent event)
-         {
-            Dialogs.getInstance().showInfo("Restore");
          }
       });
 
@@ -115,7 +107,6 @@ public class ViewVersionsPresenter
          {
             boolean enableButtons = (display.getSelectedVersion() != null);
             display.enableOpenVersionButton(enableButtons);
-            display.enableRestoreButton(enableButtons);
          }
       });
 
@@ -129,7 +120,6 @@ public class ViewVersionsPresenter
       });
 
       display.enableOpenVersionButton(false);
-      display.enableRestoreButton(false);
    }
 
    /**
@@ -148,7 +138,14 @@ public class ViewVersionsPresenter
       Version selectedVersion = display.getSelectedVersion();
       if (selectedVersion != null)
       {
-         eventBus.fireEvent(new OpenFileEvent(selectedVersion, false));
+         if (selectedVersion.equals(versions.get(0)))
+         {
+            eventBus.fireEvent(new OpenFileEvent(selectedVersion.getItemHref()));
+         }
+         else
+         {
+            eventBus.fireEvent(new OpenFileEvent(selectedVersion, false, 3));
+         }
       }
       display.closeForm();
    }

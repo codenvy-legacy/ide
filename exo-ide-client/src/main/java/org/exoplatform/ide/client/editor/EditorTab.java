@@ -16,13 +16,15 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.module.vfs.api.File;
-
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
+
+import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 /**
  * Created by The eXo Platform SAS .
@@ -91,12 +93,22 @@ public class EditorTab extends Tab
    public String getTabTitle()
    {
       boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
+      boolean version = (file instanceof Version);
+      
       String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+      
+      String mainHint = file.getHref();
+      mainHint = (version) ? mainHint+" [version:"+((Version)file).getDisplayName()+"]" : mainHint;
+      
       String hint = "File opened in read only mode. Use SaveAs command.";
-      String readTitle = readOnly ? "&nbsp;<font color=\"#aa2233\" title=\"" + hint + "\">[ Read only ]</font>" : "";
+      String readTitle = (readOnly && !version) ? "&nbsp;<font color=\"#acacac\" title=\"" + hint + "\">[ Read only ]</font>" : "";
+      readTitle = (version) ? "&nbsp;<font color=\"#acacac\" >[Version:"+((Version)file).getDisplayName()+"]</font>" : readTitle;
+      
+      
+      String icon = /*(version) ? Images.Versioning.OPEN_VERSION : */file.getIcon();
+      
       String title =
-         "<span title=\"" + file.getHref() + "\">" + Canvas.imgHTML(file.getIcon()) + "&nbsp;" + fileName + readTitle
-            + "</span>";
+         "<span title=\"" + mainHint + "\">" + Canvas.imgHTML(icon) + "&nbsp;" + fileName + readTitle+  "</span>";
       return title;
    }
 

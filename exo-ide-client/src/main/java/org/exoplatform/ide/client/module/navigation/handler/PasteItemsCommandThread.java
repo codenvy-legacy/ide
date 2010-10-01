@@ -27,7 +27,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -305,7 +305,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
             openedFiles.remove(key);
             openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
       }
    }
@@ -324,7 +324,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
             openedFiles.remove(event.getSourceHref());
             openedFiles.put(openedFle.getHref(), openedFle);
 
-            eventBus.fireEvent(new EditorUpdateFileStateEvent(file));
+            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
       }
       else

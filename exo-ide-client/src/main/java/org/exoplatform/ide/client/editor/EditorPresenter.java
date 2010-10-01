@@ -37,8 +37,8 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
 import org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
@@ -87,6 +87,7 @@ import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -103,7 +104,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoTypingHandler,
    RedoTypingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorUpdateFileStateHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
+   EditorReplaceFileHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorReplaceTextHandler, EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
    ApplicationSettingsReceivedHandler
 {
@@ -113,7 +114,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly);
 
-      void relocateFile(File oldFile, File newFile);
+      void replaceFile(File oldFile, File newFile);
 
       void closeTab(String href);
 
@@ -187,7 +188,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
 
-      handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
+      handlers.addHandler(EditorReplaceFileEvent.TYPE, this);
 
       handlers.addHandler(RefreshHotKeysEvent.TYPE, this);
 
@@ -596,7 +597,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
       {
          File openedFile = openedFiles.get(file.getHref());
+         ignoreContentChangedList.add(file.getHref());
          display.selectTab(openedFile.getHref());
+         display.setTabContent(file.getHref(), file.getContent());
          return;
       }
 
@@ -632,12 +635,18 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    private boolean isReadOnly(File file)
    {
-      if(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (file instanceof Version)
+      {
+         return true;
+      }
+
+      if (file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
       {
          return !(lockTokens.containsKey(file.getHref()));
       }
-      else return false;
-//      return !(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null && !lockTokens.containsKey(file.getHref()));
+      else
+         return false;
+      //      return !(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null && !lockTokens.containsKey(file.getHref()));
    }
 
    public void onFileSaved(FileSavedEvent event)
@@ -662,16 +671,27 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
             activeFile = savedFile;
 
             openedFiles.put(savedFile.getHref(), savedFile);
-            display.relocateFile(currentOpenedFile, savedFile);
+            replaceFile(currentOpenedFile, savedFile);
          }
 
          updateTabTitle(savedFile.getHref());
       }
    }
 
-   public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
+   public void onEditorReplaceFile(EditorReplaceFileEvent event)
    {
-      display.updateTabTitle(event.getFile().getHref());
+      replaceFile(event.getFile(), event.getNewFile());
+   }
+   
+   private void replaceFile(File oldFile, File newFile){
+      if (newFile == null){
+         display.updateTabTitle(oldFile.getHref());
+         return;
+      }
+      ignoreContentChangedList.add(newFile.getHref());
+      display.replaceFile(oldFile, newFile);
+      
+      display.updateTabTitle(newFile.getHref());
    }
 
    /**

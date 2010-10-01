@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -64,7 +65,7 @@ public class DeleteLineControl extends IDEControl implements EditorActiveFileCha
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
 
-      if (event.getFile() == null || event.getEditor() == null)
+      if (event.getFile() == null || event.getEditor() == null || (event.getFile() instanceof Version))
       {
          setVisible(false);
          setEnabled(false);

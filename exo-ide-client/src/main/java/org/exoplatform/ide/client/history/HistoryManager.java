@@ -19,11 +19,16 @@
  */
 package org.exoplatform.ide.client.history;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.ExceptionThrownEventHandlerInitializer;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
@@ -35,11 +40,6 @@ import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
 
 /**
  * Created by The eXo Platform SAS .
@@ -149,7 +149,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
    private void stopHandling()
    {
       handlers.removeHandlers();
-      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 
 }

@@ -31,7 +31,7 @@ public class IDE extends VerticalPanel
       HandlerManager eventBus = new HandlerManager(null);
       ApplicationContext context = new ApplicationContext();
 
-      ExceptionThrownEventHandlerInitializer.initialize(eventBus);
+      new ExceptionThrownEventHandler(eventBus);
 
       //new CookieManager(eventBus);
 

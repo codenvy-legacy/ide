@@ -18,7 +18,6 @@ package org.exoplatform.ide.client.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.Editor;
@@ -37,6 +36,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -159,6 +159,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly)
    {
       EditorTab tab = getEditorTab(file.getHref());
+      
       boolean addTab = false;
       if (tab == null)
       {
@@ -173,12 +174,16 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
+      // Set "read only" mode for editor
+      if (file instanceof Version)
+      {
+         configuration.setReadOnly(true);
+      }
 
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
 
-      List<String> hotKeyList =
-         new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
+      List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
       tab.setTextEditor(smartGwtTextEditor);
@@ -284,7 +289,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       getEditorTab(path).getTextEditor().formatSource();
    }
 
-   public void relocateFile(File oldFile, File newFile)
+   public void replaceFile(File oldFile, File newFile)
    {
       for (Tab tab : tabSet.getTabs())
       {
@@ -292,6 +297,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          if (editorTab.getFile().equals(oldFile))
          {
             editorTab.setFile(newFile);
+            
+            if (!oldFile.getContent().equals(newFile.getContent())){
+               editorTab.getTextEditor().setText(newFile.getContent());
+            }
+            
             //String newFilePath = newFile.getHref();
             //            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
             //               hasRedoChanges(newFilePath)));
@@ -372,7 +382,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          }
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#getEditor(java.lang.String)
     */

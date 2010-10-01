@@ -16,19 +16,50 @@
  */
 package org.exoplatform.ide.client.editor.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.module.vfs.api.File;
 
-
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface EditorUpdateFileStateHandler extends EventHandler
+public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler>
 {
-   
-   void onEditorUdateFileState(EditorUpdateFileStateEvent event);
-   
-}
 
+   public static final GwtEvent.Type<EditorReplaceFileHandler> TYPE = new GwtEvent.Type<EditorReplaceFileHandler>();
+
+   private File file;
+   
+   private File newFile;
+
+   public EditorReplaceFileEvent(File file, File newFile)
+   {
+      this.file = file;
+      this.newFile = newFile;
+   }
+
+   public File getFile()
+   {
+      return file;
+   }
+
+   public File getNewFile()
+   {
+      return newFile;
+   }
+
+   @Override
+   protected void dispatch(EditorReplaceFileHandler handler)
+   {
+      handler.onEditorReplaceFile(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorReplaceFileHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+}

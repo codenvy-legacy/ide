@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent;
-import org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -60,7 +60,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler,
-   EditorUpdateFileStateHandler, ItemLockResultReceivedHandler, ItemUnlockedHandler, ItemDeletedHandler,
+   EditorReplaceFileHandler, ItemLockResultReceivedHandler, ItemUnlockedHandler, ItemDeletedHandler,
    MoveCompleteHandler
 {
 
@@ -85,7 +85,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       handlers.addHandler(EditorFileClosedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-      handlers.addHandler(EditorUpdateFileStateEvent.TYPE, this);
+      handlers.addHandler(EditorReplaceFileEvent.TYPE, this);
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
       handlers.addHandler(ItemDeletedEvent.TYPE, this);
@@ -160,9 +160,9 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.editor.event.EditorUpdateFileStateHandler#onEditorUdateFileState(org.exoplatform.ide.client.editor.event.EditorUpdateFileStateEvent)
+    * @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent)
     */
-   public void onEditorUdateFileState(EditorUpdateFileStateEvent event)
+   public void onEditorReplaceFile(EditorReplaceFileEvent event)
    {
       storeOpenedFiles();
    }

@@ -17,8 +17,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -29,6 +28,7 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -52,14 +52,15 @@ import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEve
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandThread implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
+public class OpenFileCommandHandler implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
    ItemPropertiesReceivedHandler, ItemLockResultReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler, UserInfoReceivedHandler
 {
@@ -72,10 +73,14 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
    private ApplicationSettings applicationSettings;
 
    private UserInfo userInfo;
+   
+   private int ignoreErrorsCount = 0;
+   
+   private File fileToOpenOnError;
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   public OpenFileCommandThread(HandlerManager eventBus)
+   public OpenFileCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
@@ -90,6 +95,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onOpenFile(OpenFileEvent event)
    {
+      ignoreErrorsCount = event.getIgnoreErrorsCount();
       selectedEditor = event.getEditor();
 
       File file = event.getFile();
@@ -104,6 +110,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          //TODO Check opened file!!!
          if (openedFiles.containsKey(file.getHref()))
          {
+            System.out.println("OpenFileCommandHandler.onOpenFile()");
             openFile(file);
             return;
          }
@@ -124,7 +131,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
       }
       else
       {
-         VirtualFileSystem.getInstance().getContent(file);
+         getFileContent(file);
       }
    }
 
@@ -136,7 +143,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          if (ItemProperty.Namespace.JCR.equals(p.getName().getNamespaceURI())
             && ItemProperty.JCR_LOCKOWNER.getLocalName().equalsIgnoreCase(p.getName().getLocalName()))
          {
-            VirtualFileSystem.getInstance().getContent((File)event.getItem());
+            getFileContent((File)event.getItem());
             return;
          }
       }
@@ -157,7 +164,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
             openFile(file);
             return;
          }
-         VirtualFileSystem.getInstance().getContent((File)event.getItem());
+         getFileContent((File)event.getItem());
       }
       else
       {
@@ -168,7 +175,7 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
             {
                      if(value)
                      {
-                        VirtualFileSystem.getInstance().getContent((File)event.getItem());
+                        getFileContent((File)event.getItem());
                      }
                      else
                      {
@@ -179,10 +186,18 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
          
       }
    }
+   
+   
+   private void getFileContent(File file){
+      fileToOpenOnError = file;
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      VirtualFileSystem.getInstance().getContent(file);
+   }
 
    public void onFileContentReceived(FileContentReceivedEvent event)
    {
       handlers.removeHandlers();
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       openFile(event.getFile());
    }
 
@@ -212,7 +227,15 @@ public class OpenFileCommandThread implements OpenFileHandler, FileContentReceiv
 
    public void onError(ExceptionThrownEvent event)
    {
+      if (fileToOpenOnError != null && ignoreErrorsCount > 0)
+      {
+         ignoreErrorsCount--;
+         getFileContent(fileToOpenOnError);
+         return;
+      }
+      
       handlers.removeHandlers();
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 
    /**
