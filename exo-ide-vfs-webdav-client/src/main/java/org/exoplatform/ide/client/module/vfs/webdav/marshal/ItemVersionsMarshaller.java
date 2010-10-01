@@ -52,6 +52,7 @@ public class ItemVersionsMarshaller implements Marshallable
       Element versionNameElement = doc.createElement("D:version-name");
 //      Element creatorElement = doc.createElement("D:creator-displayname");
       Element successorElement = doc.createElement("D:successor-set");
+      Element predecessorElement = doc.createElement("D:predecessor-set");
       
       Element creationElement = doc.createElement("D:creationdate");
       Element contentNodTypeElement = doc.createElement("D:getcontenttype");
@@ -61,6 +62,7 @@ public class ItemVersionsMarshaller implements Marshallable
       propElement.appendChild(versionNameElement);
 //      propElement.appendChild(creatorElement);
       propElement.appendChild(successorElement);
+      propElement.appendChild(predecessorElement);
       propElement.appendChild(creationElement);
       propElement.appendChild(contentNodTypeElement);
       propElement.appendChild(contentLengthElement);

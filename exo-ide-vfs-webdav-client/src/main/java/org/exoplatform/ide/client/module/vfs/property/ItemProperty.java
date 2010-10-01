@@ -57,6 +57,10 @@ public class ItemProperty
    public static final QName GETCONTENTLENGTH = new QName("getcontentlength", Namespace.DAV);
 
    public static final QName RESOURCETYPE = new QName("resourcetype", Namespace.DAV);
+   
+   public static final QName SUCCESSOR_SET = new QName("successor-set", Namespace.DAV);
+   
+   public static final QName PREDECESSOR_SET = new QName("predecessor-set", Namespace.DAV);
 
    /*
     * JCR_PROPERTIES
