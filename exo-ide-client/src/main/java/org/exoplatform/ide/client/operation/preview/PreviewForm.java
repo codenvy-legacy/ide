@@ -73,7 +73,7 @@ public class PreviewForm extends TabPanel
 
       //String fileURL = Configuration.getInstance().getContext() + "/jcr" + path;
       String iframe =
-         "<iframe src=\"" + href + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
+         "<iframe name=\"eXo-IDE-preview-frame\" src=\"" + href + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
       iframe += "<p>Your browser does not support iframes.</p>";
       iframe += "</iframe>";
       htmlPane.setContents(iframe);
