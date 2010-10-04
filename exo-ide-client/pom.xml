@@ -34,11 +34,6 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
@@ -143,6 +138,41 @@
                <scope>runtime</scope>
             </dependency>
             <dependency>
+               <groupId>org.exoplatform.core</groupId>
+               <artifactId>exo.core.component.security.core</artifactId>
+               <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+              <dependency>
+               <groupId>org.exoplatform.core</groupId>
+               <artifactId>exo.core.component.document</artifactId>
+               <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xml-apis</groupId>
+                     <artifactId>xml-apis</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+            
+            <dependency>
+               <groupId>org.exoplatform.core</groupId>
+               <artifactId>exo.core.component.organization.api</artifactId>
+               <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+
+            <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.container</artifactId>
                <scope>runtime</scope>
@@ -156,16 +186,34 @@
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.core</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.frameworks.servlet</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.ext</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
@@ -176,6 +224,12 @@
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
@@ -185,6 +239,20 @@
             <dependency>
                <groupId>org.exoplatform</groupId>
                <artifactId>exo-jcr-services</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+                  <exclusion>
+                     <groupId>org.codehaus.woodstox</groupId>
+                     <artifactId>wstx-asl</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -204,6 +272,14 @@
                   <exclusion>
                      <groupId>pull-parser</groupId>
                      <artifactId>pull-parser</artifactId>
+                  </exclusion>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+                   <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
                   </exclusion>
                </exclusions>
                <scope>runtime</scope>
@@ -350,18 +426,24 @@
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-war-plugin</artifactId>
                   <configuration>
-                     <webXml>src/main/webapp/application/web.xml</webXml>
+                     <webXml>src/main/webapp/application/WEB-INF/web.xml</webXml>
                      <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
                      <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
                         **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                         **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
-                        **/preloadIDE.js,**/init_smartgwt_for_gadget.js</packagingExcludes>
+                        **/preloadIDE.js,**/init_smartgwt_for_gadget.js,**/smartgwt-*.jar,
+                        **/exo-gwtframework-commons*.jar,**/exo-gwtframework-editor*.jar,
+                        **/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/gwt-servlet*.jar</packagingExcludes>
                      <classifier>application</classifier>
                      <warName>IDE</warName>
                      <webResources>
                         <resource>
-                           <directory>src/main/webapp/application</directory>
+                           <directory>src/main/webapp/application/WEB-INF</directory>
                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                        <resource>
+                           <directory>src/main/webapp/application/META-INF</directory>
+                           <targetPath>META-INF</targetPath>
                         </resource>
                      </webResources>
                   </configuration>

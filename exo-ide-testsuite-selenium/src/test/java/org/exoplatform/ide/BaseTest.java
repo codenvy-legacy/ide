@@ -22,18 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
@@ -49,6 +37,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -149,27 +149,13 @@ public abstract class BaseTest
       }
    }
 
-   private static void standaloneLogin() throws Exception
+   private static void standaloneLogin() throws InterruptedException 
    {
       Thread.sleep(TestConstants.SLEEP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_T);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_TAB);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_G);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_T);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_N);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-//      selenium.type("//input[@name='password']", "gtn");
+      selenium.type("//input[@name='j_username']", "root");
+      selenium.type("//input[@name='j_password']", "gtn");
+      selenium.click("//input[@value='Log In']");
+      selenium.waitForPageToLoad("10000");
    }
 
    private static void loginInPortal() throws Exception
@@ -493,7 +479,7 @@ public abstract class BaseTest
    /**
     * Get name of item in workspace tree by it's index.
     * 
-    * @param index starting from 0
+    * @param index
     * @return {@link String} name
     */
    protected String getItemNameFromWorkspaceTree(int index)
@@ -501,17 +487,6 @@ public abstract class BaseTest
       return selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[" + index + "]/col[0]");
    }
 
-   /**
-    * Get name of item in search tree by it's index.
-    * 
-    * @param index starting from 0
-    * @return {@link String} name
-    */
-   protected String getItemNameFromSearchResultsTree(int index)
-   {
-      return selenium.getText("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[" + index + "]/col[0]");
-   }   
-   
    /**
     * Delete selected item in navigation tree.
     * 
@@ -1524,7 +1499,7 @@ public abstract class BaseTest
    {
       SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/org.exoplatform.ide.IDEShell/IDEShell.html?gwt.codesvr=127.0.0.1:9997"), 
       PORTAL("http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/classic/" + PAGE_NAME), 
-      STANDALONE("http://127.0.0.1:8080/IDE-application/", "http://127.0.0.1:8080/IDE-application/IDE/IDEApplication.html");
+      STANDALONE("http://127.0.0.1:8080/", "http://127.0.0.1:8080/IDE-application/IDE/IDEApplication.html");
 
       private String baseUrl;
       private String applicationUrl;

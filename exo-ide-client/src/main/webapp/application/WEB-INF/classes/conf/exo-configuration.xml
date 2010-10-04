@@ -244,7 +244,7 @@
                <name>ref-addresses</name>
                <description>ref-addresses</description>
                <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal" />
+               <property name="url" value="jdbc:hsqldb:file:../temp/data/portal" />
                <property name="username" value="sa" />
                <property name="password" value="" />
             </properties-param>
