@@ -28,6 +28,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface AddFileTemplateToProjectTemplateHandler extends EventHandler
 {
 
-   void onAddFileTemplateToProjectTemplate(AddFileTemplateToProjectTemplateEvent event);
+   void onAddFileToProjectTemplate(AddFileTemplateToProjectTemplateEvent event);
 
 }

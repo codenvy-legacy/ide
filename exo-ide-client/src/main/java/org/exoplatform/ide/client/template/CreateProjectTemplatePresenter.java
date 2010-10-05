@@ -40,6 +40,8 @@ import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
+import org.exoplatform.ide.client.module.navigation.action.AbstractCreateFolderForm;
+import org.exoplatform.ide.client.module.navigation.action.CreateFolderDisplay;
 import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent;
 import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler;
 
@@ -184,17 +186,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
    {
       public void onClick(ClickEvent event)
       {
-         Dialogs.getInstance().askForValue("Add folder", "Enter folder's name", "New Folder", new StringValueReceivedCallback()
-         {
-            public void execute(String value)
-            {
-               if (value == null || value.length() == 0)
-               {
-                  return;
-               }
-               addFolder(value);
-            }
-         });
+         callAddFolderForm();
       }
    };
    
@@ -255,22 +247,71 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
       }
    };
    
-   private void addFolder(String name)
+   private void callAddFolderForm()
+   {
+      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus)
+      {
+      };
+      
+      createFolderDisplay.getCreateButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            createFolderDisplay.closeForm();
+            
+            final String folderName = createFolderDisplay.getFolderNameField().getValue();
+            validateAndAddFolder(folderName);
+           
+         }
+      });
+      
+      createFolderDisplay.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
+      {
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+            {
+               createFolderDisplay.closeForm();
+               
+               final String folderName = createFolderDisplay.getFolderNameField().getValue();
+               validateAndAddFolder(folderName);
+            }
+         }
+      });
+      
+      createFolderDisplay.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            createFolderDisplay.closeForm();
+         }
+      });
+   }
+   
+   private void validateAndAddFolder(String folderName)
    {
       ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
+      
+      //validate
+      if (folderName == null || folderName.length() == 0)
+      {
+         Dialogs.getInstance().showError("Value can't be empty");
+         return;
+      }
       
       if (selectedFolder.getChildren() != null)
       {
          for (Template template : selectedFolder.getChildren())
          {
-            if (template instanceof ProjectTemplate && name.equals(template.getName()))
+            if (template instanceof ProjectTemplate && folderName.equals(template.getName()))
             {
                Dialogs.getInstance().showError("Folder with such name already exists");
                return;
             }
          }
       }
-      Template newFolder = new ProjectTemplate(name);
+      
+      Template newFolder = new ProjectTemplate(folderName);
       if (selectedFolder.getChildren() == null)
       {
          selectedFolder.setChildren(new ArrayList<Template>());
@@ -339,9 +380,9 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
    }
 
    /**
-    * @see org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler#onAddFileTemplateToProjectTemplate(org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent)
+    * @see org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler#onAddFileToProjectTemplate(org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent)
     */
-   public void onAddFileTemplateToProjectTemplate(AddFileTemplateToProjectTemplateEvent event)
+   public void onAddFileToProjectTemplate(AddFileTemplateToProjectTemplateEvent event)
    {
       ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
       FileTemplate newFile = event.getFileTemplate();

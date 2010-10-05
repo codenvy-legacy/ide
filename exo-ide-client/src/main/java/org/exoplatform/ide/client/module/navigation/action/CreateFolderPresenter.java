@@ -45,22 +45,7 @@ import com.google.gwt.user.client.ui.HasValue;
 public class CreateFolderPresenter implements FolderCreatedHandler
 {
 
-   public interface Display
-   {
-
-      HasValue<String> getFolderNameField();
-
-      HasClickHandlers getCreateButton();
-
-      HasClickHandlers getCancelButton();
-
-      HasKeyPressHandlers getFolderNameFiledKeyPressed();
-
-      void closeForm();
-
-   }
-
-   private Display display;
+   private CreateFolderDisplay display;
 
    private HandlerManager eventBus;
 
@@ -78,7 +63,7 @@ public class CreateFolderPresenter implements FolderCreatedHandler
       handlers = new Handlers(eventBus);
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay(CreateFolderDisplay d)
    {
       display = d;
 

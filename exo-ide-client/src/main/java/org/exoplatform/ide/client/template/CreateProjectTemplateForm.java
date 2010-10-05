@@ -69,6 +69,8 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    
    private static final String ID_DELETE_BUTTON = "ideCreateProjectTemplateFormDeleteButton";
    
+   private static final String ID_NAME_FIELDS_FORM = "ideCreateProjectTemplateFormNameFieldsForm";
+   
    private static final String TEMPLATE_NAME_FIELD = "ideCreateProjectTemplateFormNameField";
    
    private static final String DESCRIPTION_FIELD = "ideCreateProjectTemplateFormDescriptionField";
@@ -152,6 +154,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       fieldsLayout.setWidth100();
 
       DynamicForm form = new DynamicForm();
+      form.setID(ID_NAME_FIELDS_FORM);
       templateNameField = new TextField("TemplateName","Name");
       templateNameField.setName(TEMPLATE_NAME_FIELD);
       templateNameField.setWidth(TEXT_FIELD_WIDTH);

@@ -47,7 +47,7 @@ public class AddFileTemplateToProjectTemplateEvent extends GwtEvent<AddFileTempl
    @Override
    protected void dispatch(AddFileTemplateToProjectTemplateHandler handler)
    {
-      handler.onAddFileTemplateToProjectTemplate(this);
+      handler.onAddFileToProjectTemplate(this);
    }
 
    @Override
