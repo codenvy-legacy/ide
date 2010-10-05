@@ -121,6 +121,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    public static final String DEFAULT_CHARSET = "charset=UTF-8";
 
+   private static final String MIXINS = "exo:privilegeable,exo:owneable";
+
    private HandlerManager eventBus;
 
    private Loader loader;
@@ -203,7 +205,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.CREATE_FOLDER);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
-         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+         .header(HTTPHeader.CONTENT_LENGTH, "0").header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS).send(callback);
    }
 
    @Override
@@ -260,22 +262,15 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
-
-         //         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-         //            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-         //            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-         //            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken.getLockToken() + ">").data(marshaller).send(callback);
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS)
+            .data(marshaller).send(callback);
       }
       else
       {
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
-            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
-
-         //         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
-         //            .header(HTTPHeader.CONTENT_TYPE, file.getContentType())
-         //            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
+            .header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS).data(marshaller).send(callback);
       }
    }
 
