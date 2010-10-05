@@ -85,11 +85,11 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
       if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
          configuration.setPublicContext(jsonConfiguration.get(Configuration.PUBLIC_CONTEXT).isString().stringValue());
-      else
-      {
-         showErrorMessage(PUBLIC_CONTEXT);
-         return;
-      }
+//      else
+//      {
+//         showErrorMessage(PUBLIC_CONTEXT);
+//         return;
+//      }
 
       // TODO [IDE-307] handle absence of appConfig["entryPoint"] property in the configuration (case 1) 
       if (jsonConfiguration.containsKey(ENTRY_POINT))
