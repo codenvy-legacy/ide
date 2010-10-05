@@ -16,8 +16,10 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -28,7 +30,6 @@ import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMen
 import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
@@ -54,10 +55,8 @@ import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -275,23 +274,19 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       }
       else
       {
-         // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value in the applicationInitializer.js (case 1)
+         // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
          Dialogs
             .getInstance()
-            .ask(
-               "Working workspace",
-               "Workspace is not set. Goto <strong>Window->Select workspace</strong> in main menu for set working workspace?",
+            .showError(
+               "Workspace was not set!",
+               "Workspace was not set. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
                new BooleanValueReceivedCallback()
                {
                   public void execute(Boolean value)
-                  {
+                  {                     
                      if (value)
                      {
                         eventBus.fireEvent(new SelectWorkspaceEvent());
-                     }
-                     else
-                     {
-                        eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
                      }
                   }
                });

@@ -19,20 +19,22 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -62,26 +64,41 @@ public class WorkspaceChecker implements ExceptionThrownHandler, ItemPropertiesR
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);     
 
+      // TODO [IDE-307] check appConfig["entryPoint"] property
       Folder rootFolder = new Folder(entryPoint);
-      VirtualFileSystem.getInstance().getProperties(rootFolder);
+      VirtualFileSystem.getInstance().getProperties(rootFolder);    
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      event.getError().printStackTrace();
-
-      //      ServerException e = (ServerException)event.getError();
-
+      // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
       handlers.removeHandlers();
-
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-      Dialogs.getInstance().showError("Entry point <b>" + entryPoint + "</b> not found!");
+      Dialogs
+      .getInstance()
+      .showError(
+         "Workspace hasn't been found!",
+         "Workspace <b>" + entryPoint + "</b> hasn't been found. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
+         new BooleanValueReceivedCallback()
+         {
+            public void execute(Boolean value)
+            {               
+               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+               
+               if (value)
+               {
+                  eventBus.fireEvent(new SelectWorkspaceEvent());
+               }
+            }
+         }
+      );
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
+      
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       applicationSettings.setValue("entry-point", event.getItem().getHref(), Store.COOKIES);
       eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));

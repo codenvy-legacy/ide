@@ -91,7 +91,6 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
-      // TODO [IDE-307] handle absence of appConfig["entryPoint"] property in the configuration (case 1) 
       if (jsonConfiguration.containsKey(ENTRY_POINT))
          configuration.setDefaultEntryPoint(jsonConfiguration.get(Configuration.ENTRY_POINT).isString().stringValue());    
 //      else
