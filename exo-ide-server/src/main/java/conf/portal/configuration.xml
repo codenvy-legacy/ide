@@ -23,4 +23,8 @@
       <type>org.exoplatform.ide.conversationstate.RestConversationState</type>
    </component>
 
+   <component>
+      <type>org.exoplatform.ide.permissions.PermissionsApplication</type>
+   </component>
+
 </configuration>
