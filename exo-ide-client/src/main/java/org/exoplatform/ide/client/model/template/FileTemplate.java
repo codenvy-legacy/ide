@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import org.exoplatform.ide.client.model.util.ImageUtil;
+
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
@@ -28,12 +30,27 @@ public class FileTemplate extends Template
    private String mimeType;
 
    private String content;
+   
+   private String fileName;
 
    public FileTemplate(String mimeType, String name, String description, String content, String nodeName)
    {
       super(name, description, nodeName);
       this.mimeType = mimeType;
       this.content = content;
+   }
+   
+   public FileTemplate(String name, String fileName, String mimeType)
+   {
+      super(name);
+      this.fileName = fileName;
+      this.mimeType = mimeType;
+   }
+   
+   public FileTemplate(String name, String fileName)
+   {
+      super(name);
+      this.fileName = fileName;
    }
    
    /**
@@ -67,7 +84,30 @@ public class FileTemplate extends Template
    {
       this.mimeType = mimeType;
    }
+   
+   /**
+    * @return the fileName
+    */
+   public String getFileName()
+   {
+      return fileName;
+   }
+   
+   /**
+    * @param fileName the fileName to set
+    */
+   public void setFileName(String fileName)
+   {
+      this.fileName = fileName;
+   }
 
-
+   /**
+    * @see org.exoplatform.ide.client.model.template.Template#getIcon()
+    */
+   @Override
+   public String getIcon()
+   {
+      return ImageUtil.getIcon(getMimeType());
+   }
 
 }

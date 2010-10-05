@@ -21,21 +21,27 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.commons.dialogs.callback.StringValueReceivedCallback;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
+import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent;
+import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +51,59 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, TemplateListReceivedHandler
+public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, AddFileTemplateToProjectTemplateHandler
 {
+   
+   public interface Display
+   {
+      TreeGridItem<Template> getTemplateTreeGrid();
+
+      HasValue<String> getNameField();
+      
+      HasKeyPressHandlers getNameFieldKeyPressed();
+      
+      HasValue<String> getDescriptionField();
+
+      HasClickHandlers getCreateButton();
+
+      HasClickHandlers getCancelButton();
+      
+      HasClickHandlers getAddFolderButton();
+
+      HasClickHandlers getAddFileButton();
+      
+      HasClickHandlers getDeleteButton();
+      
+      List<Template> getTreeGridSelection();
+
+      void closeForm();
+
+      void enableCreateButton();
+
+      void disableCreateButton();
+      
+      void enableAddFolderButton();
+
+      void disableAddFolderButton();      
+      
+      void enableAddFileButton();
+
+      void disableAddFileButton();
+      
+      void enableDeleteButton();
+
+      void disableDeleteButton();
+      
+      void selectTemplate(Template template);
+      
+      void updateTree();
+      
+      void setRootNodeName(String name);
+
+   }
+   
+   private static final String DEFAULT_PROJECT_NAME = "New Project";
+   
    private HandlerManager eventBus;
    
    private Handlers handlers;
@@ -57,41 +114,15 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, T
    
    private Template templateToCreate;
    
-   public interface Display
-   {
-      ListGridItem<Template> getTemplateListGrid();
-
-      HasValue<String> getNameField();
-      
-      HasValue<String> getDescriptionField();
-
-      HasClickHandlers getCreateButton();
-
-      HasClickHandlers getCancelButton();
-      
-      List<Template> getFileTemplatesSelected();
-
-      void closeForm();
-
-      void enableCreateButton();
-
-      void disableCreateButton();
-      
-
-   }
+   private Template selectedTemplate;
    
    public CreateProjectTemplatePresenter(HandlerManager eventBus, List<Template> templateList)
    {
       this.eventBus = eventBus;
-      for (Template template : templateList)
-      {
-         if (template instanceof FileTemplate)
-         {
-            this.templateList.add(template);
-         }
-      }
+      this.templateList = templateList;
       
       handlers = new Handlers(eventBus);
+      handlers.addHandler(AddFileTemplateToProjectTemplateEvent.TYPE, this);
    }
    
    public void bindDisplay(Display d)
@@ -100,83 +131,202 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, T
       
       handlers.addHandler(TemplateCreatedEvent.TYPE, this);
       
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            display.closeForm();
-         }
-      });
+      display.getNameFieldKeyPressed().addKeyPressHandler(nameFieldKeyPressedHandler);
+      
+      display.getCancelButton().addClickHandler(closeFormHandler);
 
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            createTemplate();
-         }
-      });
+      display.getCreateButton().addClickHandler(createTemplateHandler);
+      
+      display.getAddFolderButton().addClickHandler(addFolderHandler);
+      
+      display.getAddFileButton().addClickHandler(addFileHandler);
+      
+      display.getDeleteButton().addClickHandler(deleteTemplateHandler);
+      
+      display.getTemplateTreeGrid().addSelectionHandler(templateSelectedHandler);
 
-      display.getTemplateListGrid().setValue(templateList);
+      ProjectTemplate projectTemplate = new ProjectTemplate(DEFAULT_PROJECT_NAME);
+      display.getTemplateTreeGrid().setValue(projectTemplate);
+   }
+   
+   private KeyPressHandler nameFieldKeyPressedHandler = new KeyPressHandler()
+   {
+      
+      public void onKeyPress(KeyPressEvent event)
+      {
+         if (event.getCharCode() == KeyCodes.KEY_ENTER)
+         {
+            final String nameValue = display.getNameField().getValue();
+            final String projectName = nameValue == null || nameValue.length() < 1 ? DEFAULT_PROJECT_NAME : nameValue;
+            display.getTemplateTreeGrid().getValue().setName(projectName);
+            display.setRootNodeName(projectName);
+         }
+      }
+   };
+   
+   private ClickHandler closeFormHandler  = new ClickHandler()
+   {
+      public void onClick(ClickEvent event)
+      {
+         display.closeForm();
+      }
+   };
+   
+   private ClickHandler createTemplateHandler = new ClickHandler()
+   {
+      public void onClick(ClickEvent event)
+      {
+         createTemplate();
+      }
+   };
+   
+   private ClickHandler addFolderHandler = new ClickHandler()
+   {
+      public void onClick(ClickEvent event)
+      {
+         Dialogs.getInstance().askForValue("Add folder", "Enter folder's name", "New Folder", new StringValueReceivedCallback()
+         {
+            public void execute(String value)
+            {
+               if (value == null || value.length() == 0)
+               {
+                  return;
+               }
+               addFolder(value);
+            }
+         });
+      }
+   };
+   
+   private ClickHandler addFileHandler = new ClickHandler()
+   {
+      public void onClick(ClickEvent event)
+      {
+         new CreateFileFromTemplateForm(eventBus, null, templateList, "Add file template", "Add", false);
+      }
+   };
+   
+   private ClickHandler deleteTemplateHandler = new ClickHandler()
+   {
+      public void onClick(ClickEvent event)
+      {
+         Template value = display.getTemplateTreeGrid().getValue();
+         deleteTemplate(((ProjectTemplate)value).getChildren());
+         display.getTemplateTreeGrid().setValue(value);
+         display.selectTemplate(value);
+      }
+   };
+   
+   private SelectionHandler<Template> templateSelectedHandler = new SelectionHandler<Template>()
+   {
+      public void onSelection(SelectionEvent<Template> event)
+      {
+         //in no selection - disable all buttons
+         if (display.getTreeGridSelection() == null || display.getTreeGridSelection().size() != 1)
+         {
+            display.disableAddFolderButton();
+            display.disableAddFileButton();
+            display.disableDeleteButton();
+            return;
+         }
+         //if selected one item
+         selectedTemplate = display.getTreeGridSelection().get(0);
+         //if root selected
+         if (selectedTemplate == display.getTemplateTreeGrid().getValue())
+         {
+            //can't delete root folder
+            display.disableDeleteButton();
+         }
+         else
+         {
+            display.enableDeleteButton();
+         }
+         if (selectedTemplate instanceof ProjectTemplate)
+         {
+            display.enableAddFolderButton();
+            display.enableAddFileButton();
+         }
+         else
+         {
+            display.disableAddFolderButton();
+            display.disableAddFileButton();
+         }
+         
+      }
+   };
+   
+   private void addFolder(String name)
+   {
+      ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
+      
+      if (selectedFolder.getChildren() != null)
+      {
+         for (Template template : selectedFolder.getChildren())
+         {
+            if (template instanceof ProjectTemplate && name.equals(template.getName()))
+            {
+               Dialogs.getInstance().showError("Folder with such name already exists");
+               return;
+            }
+         }
+      }
+      Template newFolder = new ProjectTemplate(name);
+      if (selectedFolder.getChildren() == null)
+      {
+         selectedFolder.setChildren(new ArrayList<Template>());
+      }
+      selectedFolder.getChildren().add(newFolder);
+      display.updateTree();
+      display.selectTemplate(newFolder);
+   }
+   
+   private void deleteTemplate(List<Template> templates)
+   {
+      if (templates == null)
+      {
+         return;
+      }
+      
+      for (Template template : templates)
+      {
+         if (selectedTemplate == template)
+         {
+            templates.remove(template);
+            return;
+         }
+         if (template instanceof ProjectTemplate)
+         {
+            deleteTemplate(((ProjectTemplate)template).getChildren());
+         }
+      }
+      
    }
    
    private void createTemplate()
    {
-      String name = display.getNameField().getValue().trim();
-      if ("".equals(name))
-      {
-         Dialogs.getInstance().showError("You should specify the name of template!");
-         return;
-      }
-
       String description = "";
       if (display.getDescriptionField().getValue() != null)
       {
          description = display.getDescriptionField().getValue();
       }
       
-      List<String> fileTemplates = new ArrayList<String>();
+      templateToCreate = display.getTemplateTreeGrid().getValue();
+      templateToCreate.setDescription(description);
       
-      for (Template template : display.getFileTemplatesSelected())
-      {
-         if (template instanceof FileTemplate)
-         {
-            fileTemplates.add(((FileTemplate)template).getName());
-         }
-      }
-      
-      templateToCreate = new ProjectTemplate(name, description, null, fileTemplates);
-//      TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
-      
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      TemplateServiceImpl.getInstance().getTemplates();
-   }
-   
-   public void destroy()
-   {
-      handlers.removeHandlers();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
-    */
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      System.out.println("CreateProjectTemplatePresenter.onTemplateListReceived()");
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      
-      System.out.println("CreateProjectTemplatePresenter.onTemplateListReceived() " + event.getTemplateList().getTemplates().size());
-      
-      for (Template template : event.getTemplateList().getTemplates())
+      for (Template template : templateList)
       {
          if (template instanceof ProjectTemplate && templateToCreate.getName().equals(template.getName()))
          {
-            System.out.println("CreateProjectTemplatePresenter.onTemplateListReceived() " + template.getName());
             Dialogs.getInstance().showError("Project template with such name already exists!");
             return;
          }
       }
       TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
+   }
+   
+   public void destroy()
+   {
+      handlers.removeHandlers();
    }
 
    /**
@@ -186,6 +336,35 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, T
    {
       display.closeForm();
       Dialogs.getInstance().showInfo("Template created successfully!");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler#onAddFileTemplateToProjectTemplate(org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent)
+    */
+   public void onAddFileTemplateToProjectTemplate(AddFileTemplateToProjectTemplateEvent event)
+   {
+      ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
+      FileTemplate newFile = event.getFileTemplate();
+      
+      if (selectedFolder.getChildren() != null)
+      {
+         for (Template template : selectedFolder.getChildren())
+         {
+            if (template instanceof FileTemplate && newFile.getFileName().equals(((FileTemplate)template).getFileName()))
+            {
+               Dialogs.getInstance().showError("File with such name already exists");
+               return;
+            }
+         }
+      }
+      
+      if (selectedFolder.getChildren() == null)
+      {
+         selectedFolder.setChildren(new ArrayList<Template>());
+      }
+      selectedFolder.getChildren().add(newFile);
+      display.updateTree();
+      display.selectTemplate(newFile);
    }
 
 }

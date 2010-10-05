@@ -36,6 +36,11 @@ public abstract class Template
    {
 
    }
+   
+   public Template (String name)
+   {
+      this.name = name;
+   }
 
    public Template(String name, String description, String nodeName)
    {
@@ -91,5 +96,7 @@ public abstract class Template
    {
       this.nodeName = nodeName;
    }
+   
+   public abstract String getIcon();
    
 }

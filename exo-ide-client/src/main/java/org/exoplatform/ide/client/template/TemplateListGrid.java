@@ -107,7 +107,6 @@ public class TemplateListGrid extends ListGrid<Template>
    {
       if (template instanceof FileTemplate)
       {
-         System.out.println(">>>>>>>>> " + template.getName() + " " + String.valueOf(template instanceof FileTemplate));
          return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
       }
       

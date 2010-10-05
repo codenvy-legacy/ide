@@ -138,23 +138,54 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       {
          description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
       }
-      List<String> fileTemplateNames = new ArrayList<String>();
       
-      Node fileTemplatesNode = getChildNode(node, TEMPLATE_FILE_LIST);
-      if (fileTemplatesNode != null)
-      {
-         for (int i = 0; i < fileTemplatesNode.getChildNodes().getLength(); i++)
-         {
-            Node fileTemplate = fileTemplatesNode.getChildNodes().item(i);
-            String fileTemplateName = javaScriptDecodeURIComponent(fileTemplate.getFirstChild().getNodeValue());
-            fileTemplateNames.add(fileTemplateName);
-         }
-      }
+      ProjectTemplate template = new ProjectTemplate(name, description, nodeName, null);
+      appendProjectChildren(template, getChildNode(node, ITEMS));
 
-      Template template = new ProjectTemplate(name, description, nodeName, fileTemplateNames);
       templateList.getTemplates().add(template);
    }
+   
+   private void appendProjectChildren(ProjectTemplate projectTemplate, Node itemsNode)
+   {
+      if (itemsNode == null)
+      {
+         return;
+      }
+      List<Template> children = new ArrayList<Template>();
+      
+      for (int i = 0; i < itemsNode.getChildNodes().getLength(); i++)
+      {
+         Node itemNode = itemsNode.getChildNodes().item(i);
+         
+         if (FILE.equals(itemNode.getNodeName()))
+         {
+            Node fileTemplateNameNode = getChildNode(itemNode, TEMPLATE_FILE_NAME);
+            Node fileNameNode = getChildNode(itemNode, FILE_NAME);
 
+            String fileTemplateName = javaScriptDecodeURIComponent(fileTemplateNameNode.getFirstChild().getNodeValue());
+            String fileName = javaScriptDecodeURIComponent(fileNameNode.getFirstChild().getNodeValue());
+
+            children.add(new FileTemplate(fileTemplateName, fileName));
+         }
+         else if (FOLDER.equals(itemNode.getNodeName()))
+         {
+            Node folderNameNode = getChildNode(itemNode, NAME);
+
+            String folderName = javaScriptDecodeURIComponent(folderNameNode.getFirstChild().getNodeValue());
+
+            ProjectTemplate folder = new ProjectTemplate(folderName);
+            children.add(folder);
+
+            appendProjectChildren(folder, getChildNode(itemNode, ITEMS));
+         }
+      }
+      
+      if (children.size() > 0)
+      {
+         projectTemplate.setChildren(children);
+      }
+   }
+   
    private Node getChildNode(Node node, String name)
    {
       for (int i = 0; i < node.getChildNodes().getLength(); i++)

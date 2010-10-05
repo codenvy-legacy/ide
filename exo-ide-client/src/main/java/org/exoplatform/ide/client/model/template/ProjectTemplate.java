@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import java.util.ArrayList;
+import org.exoplatform.ide.client.Images;
+
 import java.util.List;
 
 /**
@@ -28,36 +29,43 @@ import java.util.List;
  */
 public class ProjectTemplate extends Template
 {
-   private List<String> fileTemplateNames;
+   private List<Template> children;
    
    public ProjectTemplate()
    {
    }
    
-   public ProjectTemplate(String name, String description, String nodeName, List<String> fileTemplates)
+   public ProjectTemplate(String name)
+   {
+      super(name);
+   }
+   
+   public ProjectTemplate(String name, String description, String nodeName, List<Template> children)
    {
       super(name, description, nodeName);
-      this.fileTemplateNames = fileTemplates;
+      this.children = children;
    }
    
    /**
-    * @return the fileTemplates
+    * @return children on template
     */
-   public List<String> getFileTemplates()
+   public List<Template> getChildren()
    {
-      if (fileTemplateNames == null)
-      {
-         fileTemplateNames = new ArrayList<String>();
-      }
-      return fileTemplateNames;
+      return children;
+   }
+   
+   public void setChildren(List<Template>children)
+   {
+      this.children = children;
    }
    
    /**
-    * @param fileTemplates the fileTemplates to set
+    * @see org.exoplatform.ide.client.model.template.Template#getIcon()
     */
-   public void setFileTemplates(List<String> fileTemplates)
+   @Override
+   public String getIcon()
    {
-      this.fileTemplateNames = fileTemplates;
+      return Images.FileTypes.FOLDER;
    }
 
 }

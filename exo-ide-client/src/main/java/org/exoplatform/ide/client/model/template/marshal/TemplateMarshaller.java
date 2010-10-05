@@ -19,10 +19,16 @@
  */
 package org.exoplatform.ide.client.model.template.marshal;
 
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.XMLParser;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,46 +53,95 @@ public class TemplateMarshaller implements Marshallable, Const
 
    public String marshal()
    {
-      String xml = "<" + TEMPLATE + ">";
-
-      xml += "<" + NAME + ">" + javaScriptEncodeURIComponent(template.getName()) + "</" + NAME + ">";
-      xml += "<" + DESCRIPTION + ">" + javaScriptEncodeURIComponent(template.getDescription()) + "</" + DESCRIPTION + ">";
+      Document doc = XMLParser.createDocument();
+      
+      Element templateElement = doc.createElement(TEMPLATE);
+      doc.appendChild(templateElement);
+      
+      Element templateNameElement = doc.createElement(NAME);
+      templateNameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(template.getName())));
+      templateElement.appendChild(templateNameElement);
+      
+      Element templateDescriptionElement = doc.createElement(DESCRIPTION);
+      templateDescriptionElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(template.getDescription())));
+      templateElement.appendChild(templateDescriptionElement);
       
       if (template instanceof FileTemplate)
       {
-         xml += getFileTemplate((FileTemplate)template);
+         buildFileElement(doc, templateElement, (FileTemplate)template);
       }
       else if (template instanceof ProjectTemplate)
       {
-         xml += getProjectTemplate((ProjectTemplate)template);
+         Element typeElement = doc.createElement(TEMPLATE_TYPE);
+         typeElement.appendChild(doc.createTextNode(TemplateType.PROJECT));
+         templateElement.appendChild(typeElement);
+         
+         ProjectTemplate projectTemplate = (ProjectTemplate)template;
+         buildProjectElement(doc, templateElement, projectTemplate.getChildren());
       }
       
-      xml += "</" + TEMPLATE + ">";
-
-      return xml;
+      return doc.toString();
    }
    
-   private String getFileTemplate(FileTemplate fileTemplate)
+   private void buildProjectElement(Document doc, Element parentElement, List<Template>templates)
    {
-      String xml = "<" + TEMPLATE_TYPE + ">" + Const.TemplateType.FILE + "</" + TEMPLATE_TYPE + ">";
-      xml += "<" + MIME_TYPE + ">" + javaScriptEncodeURIComponent(fileTemplate.getMimeType()) + "</" + MIME_TYPE + ">";
-      xml += "<" + CONTENT + ">" + javaScriptEncodeURIComponent(fileTemplate.getContent()) + "</" + CONTENT + ">";
-      return xml;
-   }
-   
-   private String getProjectTemplate(ProjectTemplate projectTemplate)
-   {
-      String xml = "<" + TEMPLATE_TYPE + ">" + Const.TemplateType.PROJECT + "</" + TEMPLATE_TYPE + ">";
-      if (projectTemplate.getFileTemplates() != null && projectTemplate.getFileTemplates().size() > 0)
+      if (templates == null)
       {
-         xml += "<" + TEMPLATE_FILE_LIST + ">";
-         for (String fileTemplateName : projectTemplate.getFileTemplates())
-         {
-            xml += "<" + TEMPLATE_FILE + ">" + javaScriptEncodeURIComponent(fileTemplateName) + "</" + TEMPLATE_FILE + ">";
-         }
-         xml += "</" + TEMPLATE_FILE_LIST + ">";
+         return;
       }
-      return xml;
+      
+      Element itemsListElement = doc.createElement(ITEMS);
+      
+      for (Template child : templates)
+      {
+         if (child instanceof FileTemplate)
+         {
+            Element fileElement = doc.createElement(FILE);
+            
+            Element nameElement = doc.createElement(TEMPLATE_FILE_NAME);
+            nameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(child.getName())));
+            
+            Element fileNameElement = doc.createElement(FILE_NAME);
+            fileNameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(((FileTemplate)child).getFileName())));
+            
+            fileElement.appendChild(nameElement);
+            fileElement.appendChild(fileNameElement);
+            
+            itemsListElement.appendChild(fileElement);
+         }
+         else if (child instanceof ProjectTemplate)
+         {
+            Element folderElement = doc.createElement(FOLDER);
+            
+            Element nameElement = doc.createElement(NAME);
+            nameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(child.getName())));
+            folderElement.appendChild(nameElement);
+            
+            itemsListElement.appendChild(folderElement);
+            
+            buildProjectElement(doc, folderElement, ((ProjectTemplate)child).getChildren());
+         }
+      }
+      
+      if (itemsListElement.getChildNodes() != null && itemsListElement.getChildNodes().getLength() > 0)
+      {
+         parentElement.appendChild(itemsListElement);
+      }
    }
-
+   
+   private void buildFileElement(Document doc, Element templateElement, FileTemplate fileTemplate)
+   {
+      Element typeElement = doc.createElement(TEMPLATE_TYPE);
+      typeElement.appendChild(doc.createTextNode(TemplateType.FILE));
+      templateElement.appendChild(typeElement);
+      
+      Element mimeTypeElement = doc.createElement(MIME_TYPE);
+      mimeTypeElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(fileTemplate.getMimeType())));
+      templateElement.appendChild(mimeTypeElement);
+      
+      Element contentElement = doc.createElement(CONTENT);
+      contentElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(fileTemplate.getContent())));
+      templateElement.appendChild(contentElement);
+   }
+   
 }

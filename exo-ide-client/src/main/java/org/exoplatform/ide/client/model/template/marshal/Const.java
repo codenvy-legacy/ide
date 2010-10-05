@@ -36,22 +36,31 @@ public interface Const
       static final String PROJECT = "project";
    }
    
-   public static final String DESCRIPTION = "description";
-   
-   public static final String MIME_TYPE = "mime-type";
-   
-   public static final String TEMPLATE_TYPE = "template-type";
-   
-   public static final String TEMPLATE_FILE = "template-file";
-   
-   public static final String TEMPLATE_FILE_LIST = "template-file-list";
-   
-   public static final String CONTENT = "content";
-   
    public static final String TEMPLATE = "template";
    
    public static final String TEMPLATES = "templates";
-   
+
+   //common nodes
    public static final String NAME = "name";
+   
+   public static final String DESCRIPTION = "description";
+   
+   public static final String TEMPLATE_TYPE = "template-type";
+   
+   //file template nodes
+   public static final String MIME_TYPE = "mime-type";
+   
+   public static final String CONTENT = "content";
+   
+   //project template nodes
+   public static final String FILE = "file";
+   
+   public static final String FOLDER = "folder";
+   
+   public static final String ITEMS = "items";
+   
+   public static final String TEMPLATE_FILE_NAME = "template-file-name";
+   
+   public static final String FILE_NAME = "file-name";
 
 }

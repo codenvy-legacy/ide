@@ -19,20 +19,22 @@
 package org.exoplatform.ide.client.template;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
@@ -61,17 +63,39 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    
    private static final String ID_CANCEL_BUTTON = "ideCreateProjectTemplateFormCancelButton";
    
+   private static final String ID_ADD_FOLDER_BUTTON = "ideCreateProjectTemplateFormAddFolderButton";
+   
+   private static final String ID_ADD_FILE_BUTTON = "ideCreateProjectTemplateFormAddFileButton";
+   
+   private static final String ID_DELETE_BUTTON = "ideCreateProjectTemplateFormDeleteButton";
+   
    private static final String TEMPLATE_NAME_FIELD = "ideCreateProjectTemplateFormNameField";
    
    private static final String DESCRIPTION_FIELD = "ideCreateProjectTemplateFormDescriptionField";
+   
+   private static final String ADD_FOLDER_BUTTON = "Add Folder";
+   
+   private static final String ADD_FILE_BUTTON = "Add File";
+   
+   private static final String DELETE_BUTTON = "Delete";
+   
+   private static final int BUTTONS_WIDTH = 120;
+   
+   private static final int BUTTONS_HEIGHT = 22;
    
    private VLayout windowLayout;
 
    private IButton createButton;
 
    private IButton cancelButton;
+   
+   private IButton addFolderButton;
 
-   private TemplateListGrid fileTemplateListGrid;
+   private IButton addFileButton;
+   
+   private IButton deleteButton;
+
+   private TemplateTreeGrid<Template> templateTreeGrid;
 
    private TextField templateNameField;
    
@@ -95,7 +119,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       createFieldsForm();
 
       Layout l = new Layout();
-      l.setHeight(3);
+      l.setHeight(15);
       windowLayout.addMember(l);
       
       createFileTemplateListLayout();
@@ -150,17 +174,63 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    
    private void createFileTemplateListLayout()
    {
-      Label label = new Label();  
-      label.setHeight(10);  
-      label.setWidth100();
-      label.setMargin(5);
-      label.setContents("Select files, that will be included to project template");
-      label.setAlign(Alignment.CENTER);
+      HLayout projectLayout = new HLayout();
       
-      windowLayout.addMember(label);  
       
-      fileTemplateListGrid = new TemplateListGrid();
-      windowLayout.addMember(fileTemplateListGrid);
+      templateTreeGrid = new TemplateTreeGrid<Template>();
+      templateTreeGrid.setShowHeader(false);
+      templateTreeGrid.setLeaveScrollbarGap(false);
+      templateTreeGrid.setShowOpenIcons(true);
+      templateTreeGrid.setEmptyMessage("Enter name of project template!");
+
+      templateTreeGrid.setHeight100();
+      templateTreeGrid.setWidth100();
+      
+      projectLayout.addMember(templateTreeGrid);
+      
+      Layout l = new Layout();
+      l.setWidth(10);
+      projectLayout.addMember(l);
+      
+      projectLayout.addMember(getActionsButtons());
+
+      windowLayout.addMember(projectLayout);
+   }
+   
+   private VLayout getActionsButtons()
+   {
+      VLayout buttonsLayout = new VLayout();
+      buttonsLayout.setWidth(BUTTONS_WIDTH);
+      buttonsLayout.setHeight100();
+
+      buttonsLayout.setAlign(Alignment.CENTER);
+      buttonsLayout.setAlign(VerticalAlignment.TOP);
+
+      buttonsLayout.setMembersMargin(15);
+
+      addFolderButton = new IButton(ADD_FOLDER_BUTTON);
+      addFolderButton.setID(ID_ADD_FOLDER_BUTTON);
+      addFolderButton.setWidth(BUTTONS_WIDTH);
+      addFolderButton.setHeight(BUTTONS_HEIGHT);
+      addFolderButton.setIcon(Images.Buttons.ADD);
+
+      addFileButton = new IButton(ADD_FILE_BUTTON);
+      addFileButton.setID(ID_ADD_FILE_BUTTON);
+      addFileButton.setWidth(BUTTONS_WIDTH);
+      addFileButton.setHeight(BUTTONS_HEIGHT);
+      addFileButton.setIcon(Images.Buttons.ADD);
+
+      deleteButton = new IButton(DELETE_BUTTON);
+      deleteButton.setID(ID_DELETE_BUTTON);
+      deleteButton.setWidth(BUTTONS_WIDTH);
+      deleteButton.setHeight(BUTTONS_HEIGHT);
+      deleteButton.setIcon(Images.Buttons.DELETE);
+
+      buttonsLayout.addMember(addFolderButton);
+      buttonsLayout.addMember(addFileButton);
+      buttonsLayout.addMember(deleteButton);
+
+      return buttonsLayout;
    }
 
    private void createButtonsForm()
@@ -190,6 +260,10 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       buttonsForm.setAutoWidth();
       
       windowLayout.addMember(buttonsForm);
+      
+      Layout buttonsBottomLayout = new Layout();
+      buttonsBottomLayout.setHeight(15);
+      windowLayout.addMember(buttonsBottomLayout);
    }
    
    @Override
@@ -197,14 +271,6 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    {
       presenter.destroy();
       super.onDestroy();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getTemplateListGrid()
-    */
-   public ListGridItem<Template> getTemplateListGrid()
-   {
-      return fileTemplateListGrid;
    }
 
    /**
@@ -264,11 +330,123 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    }
 
    /**
-    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getFileTemplatesSelected()
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getTemplateTreeGrid()
     */
-   public List<Template> getFileTemplatesSelected()
+   public TreeGridItem<Template> getTemplateTreeGrid()
    {
-      return fileTemplateListGrid.getSelectedItems();
+      return templateTreeGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getAddFolderButton()
+    */
+   public HasClickHandlers getAddFolderButton()
+   {
+      return addFolderButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getAddFileButton()
+    */
+   public HasClickHandlers getAddFileButton()
+   {
+      return addFileButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getDeleteButton()
+    */
+   public HasClickHandlers getDeleteButton()
+   {
+      return deleteButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getTreeGridSelection()
+    */
+   public List<Template> getTreeGridSelection()
+   {
+      return templateTreeGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#enableAddFolderButton()
+    */
+   public void enableAddFolderButton()
+   {
+      addFolderButton.setDisabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#disableAddFolderButton()
+    */
+   public void disableAddFolderButton()
+   {
+      addFolderButton.setDisabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#enableAddFileButton()
+    */
+   public void enableAddFileButton()
+   {
+      addFileButton.setDisabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#disableAddFileButton()
+    */
+   public void disableAddFileButton()
+   {
+      addFileButton.setDisabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#enableDeleteButton()
+    */
+   public void enableDeleteButton()
+   {
+      deleteButton.setDisabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#disableDeleteButton()
+    */
+   public void disableDeleteButton()
+   {
+      deleteButton.setDisabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#selectTemplate(org.exoplatform.ide.client.model.template.Template)
+    */
+   public void selectTemplate(Template template)
+   {
+      templateTreeGrid.selectTemplate(template);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getNameFieldKeyPressed()
+    */
+   public HasKeyPressHandlers getNameFieldKeyPressed()
+   {
+      return (HasKeyPressHandlers)templateNameField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#updateTree()
+    */
+   public void updateTree()
+   {
+      templateTreeGrid.updateTree();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#setRootNodeName(java.lang.String)
+    */
+   public void setRootNodeName(String name)
+   {
+      templateTreeGrid.setRootNodeName(name);
    }
 
 }

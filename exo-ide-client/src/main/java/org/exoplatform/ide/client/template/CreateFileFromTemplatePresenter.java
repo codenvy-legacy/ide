@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -95,10 +96,13 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
    private List<Item> selectedItems;
    
    private List<Template> templateList = new ArrayList<Template>();
+   
+   private boolean createFile;
 
-   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
+   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, boolean createFile)
    {
       this.eventBus = eventBus;
+      this.createFile = createFile;
       
       this.selectedItems = selectedItems;
       for (Template template : templateList)
@@ -122,6 +126,43 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
    {
       display = d;
 
+      if (createFile)
+      {
+         display.getCreateButton().addClickHandler(new ClickHandler()
+         {
+            public void onClick(ClickEvent event)
+            {
+               createFile();
+            }
+         });
+
+         display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
+         {
+            public void onDoubleClick(DoubleClickEvent event)
+            {
+               createFile();
+            }
+         });
+      }
+      else
+      {
+         display.getCreateButton().addClickHandler(new ClickHandler()
+         {
+            public void onClick(ClickEvent event)
+            {
+               addFileToProjectTemplate();
+            }
+         });
+
+         display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
+         {
+            public void onDoubleClick(DoubleClickEvent event)
+            {
+               addFileToProjectTemplate();
+            }
+         });
+      }
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -130,27 +171,11 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
          }
       });
 
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            createFile();
-         }
-      });
-
       display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<Template>()
       {
          public void onSelection(SelectionEvent<Template> event)
          {
             templateSelected(event.getSelectedItem());
-         }
-      });
-
-      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
-      {
-         public void onDoubleClick(DoubleClickEvent event)
-         {
-            createFile();
          }
       });
 
@@ -272,6 +297,20 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
 
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
+      display.closeForm();
+   }
+   
+   private void addFileToProjectTemplate()
+   {
+      final String fileName = display.getFileNameField().getValue().trim();
+      if ("".equals(fileName))
+      {
+         Dialogs.getInstance().showError("You must enter file name the first!");
+         return;
+      }
+
+      eventBus.fireEvent(new AddFileTemplateToProjectTemplateEvent(
+         new FileTemplate(selectedTemplate.getName(), fileName, selectedTemplate.getMimeType())));
       display.closeForm();
    }
 

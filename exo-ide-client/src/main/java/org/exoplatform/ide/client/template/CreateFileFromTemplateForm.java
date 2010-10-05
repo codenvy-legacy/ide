@@ -65,6 +65,10 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
    
+   private static final String DEFAULT_TITLE = "Create file";
+   
+   private static final String CREATE_BUTTON_DEFAULT_TITLE = "Create";
+   
    private CreateFileFromTemplatePresenter presenter;
 
    private VLayout windowLayout;
@@ -78,14 +82,29 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    private TemplateListGrid templateListGrid;
 
    private TextField fileNameField;
-
+   
+   private String createButtonTitle;
+   
    public CreateFileFromTemplateForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-
+      initForm(eventBus, selectedItems, templateList, DEFAULT_TITLE, CREATE_BUTTON_DEFAULT_TITLE, true);
+   }
+   
+   public CreateFileFromTemplateForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, 
+      String formTitle, String createButtonTitle, boolean createFile)
+   {
+      super(eventBus, WIDTH, HEIGHT, ID);
+      initForm(eventBus, selectedItems, templateList, formTitle, createButtonTitle, createFile);
+   }
+   
+   private void initForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, 
+      String formTitle, String createButtonTitle, boolean createFile)
+   {
       this.eventBus = eventBus;
+      this.createButtonTitle = createButtonTitle;
 
-      setTitle("Create file");
+      setTitle(formTitle);
       setCanDragResize(true);
       setShowMaximizeButton(true);
 
@@ -103,7 +122,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
 
       show();
 
-      presenter = new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList);
+      presenter = new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList, createFile);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()
@@ -151,7 +170,7 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
       DynamicForm buttonsForm = new DynamicForm();
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      createButton = new IButton("Create");
+      createButton = new IButton(createButtonTitle);
       createButton.setID(ID_CREATE_BUTTON);
       createButton.setWidth(75);
       createButton.setHeight(22);
@@ -246,6 +265,14 @@ public class CreateFileFromTemplateForm extends DialogWindow implements CreateFi
    public void selectLastTemplate()
    {
       templateListGrid.selectRecord(templateListGrid.getRecords().length - 1);
+   }
+   
+   /**
+    * @param createButtonTitle the createButtonTitle to set
+    */
+   public void setCreateButtonTitle(String createButtonTitle)
+   {
+      this.createButtonTitle = createButtonTitle;
    }
 
 }
