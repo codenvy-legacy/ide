@@ -168,13 +168,16 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
        */
       if (applicationSettings.getValueAsString("entry-point") == null)
       {
-         String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
-         if (!defaultEntryPoint.endsWith("/"))
+         if (applicationConfiguration.getDefaultEntryPoint() != null)
          {
-            defaultEntryPoint += "/";
+            String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
+            if (!defaultEntryPoint.endsWith("/"))
+            {
+               defaultEntryPoint += "/";
+            }
+   
+            applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
          }
-
-         applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
       }
 
       /*
@@ -262,6 +265,8 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls));
       eventBus.fireEvent(new UpdateStatusBarEvent(statusBarItems, controls));
 
+      initializeApplication();      
+      
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
@@ -270,8 +275,7 @@ public class IDEConfigurationLoader implements ConfigurationReceivedSuccessfully
       }
       else
       {
-         initializeApplication();
-
+         // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value in the applicationInitializer.js (case 1)
          Dialogs
             .getInstance()
             .ask(
