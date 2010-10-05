@@ -34,7 +34,7 @@ public class CreateFolderForm extends AbstractCreateFolderForm
 
    public CreateFolderForm(HandlerManager eventBus, Item selectedItem, String href)
    {
-      super(eventBus);
+      super(eventBus, "Create folder", "Create");
       
       presenter = new CreateFolderPresenter(eventBus, selectedItem, href);
       presenter.bindDisplay(this);

@@ -66,11 +66,15 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
    private IButton createButton;
 
    private IButton cancelButton;
+   
+   private String submitButtonTitle;
 
-   public AbstractCreateFolderForm(HandlerManager eventBus)
+   public AbstractCreateFolderForm(HandlerManager eventBus, String title, String submitButtonTitle)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      setTitle("Create folder");
+      setTitle(title);
+      
+      this.submitButtonTitle = submitButtonTitle;
 
       vLayout = new VLayout();
       addItem(vLayout);
@@ -127,7 +131,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      createButton = new IButton("Create");
+      createButton = new IButton(submitButtonTitle);
       createButton.setID(ID_CREATE_BUTTON);
       createButton.setWidth(90);
       createButton.setHeight(22);

@@ -249,7 +249,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
    
    private void callAddFolderForm()
    {
-      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus)
+      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus, "Add folder", "Add")
       {
       };
       
