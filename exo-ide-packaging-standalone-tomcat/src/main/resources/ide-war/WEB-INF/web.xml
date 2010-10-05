@@ -249,8 +249,12 @@
   </security-constraint>
 
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>FORM</auth-method>
     <realm-name>exo-domain</realm-name>
+    <form-login-config>
+      <form-login-page>/login/login.jsp</form-login-page>
+      <form-error-page>/login/login.jsp</form-error-page>
+    </form-login-config>
   </login-config>
 
 

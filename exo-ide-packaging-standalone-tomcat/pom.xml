@@ -82,7 +82,7 @@
                            <tasks>
                               <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war"/>
                               <copy todir="${project.build.directory}/tomcat-ide">
-                                 <fileset dir="${basedir}/src/main/resources/" />
+                                 <fileset dir="${basedir}/src/main/resources/tomcat" />
                               </copy>
                            </tasks>
                         </configuration>
@@ -110,7 +110,8 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" dest="${project.build.directory}/packager-conf/unwar" />
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" 
+                              dest="${project.build.directory}/packager-conf/unwar" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -122,12 +123,12 @@
                         <phase>install</phase>
                         <configuration>
                            <tasks>
-                              <copy todir="${project.build.directory}/tomcat-ide/conf">
-                                 <fileset dir="${basedir}/src/main/resources/conf" />
+                              <copy todir="${project.build.directory}/packager-conf/unwar/WEB-INF" overwrite="true" >
+                                 <fileset dir="${basedir}/src/main/resources/ide-war/WEB-INF" />
                                </copy>
-                               <copy todir="${project.build.directory}/tomcat-ide/bin">  
-                                 <fileset dir="${basedir}/src/main/resources/bin" />
-                              </copy>
+                               <copy todir="${project.build.directory}/tomcat-ide">
+                                 <fileset dir="${basedir}/src/main/resources/tomcat" />
+                               </copy>
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
