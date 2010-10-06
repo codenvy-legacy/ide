@@ -38,27 +38,26 @@ import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.CopyCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.UpdateToVersionCompleteEvent;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyResponseUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentUnmarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsMarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FolderContentUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesUnmarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsMarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.MoveResponseUnmarshaller;
@@ -66,8 +65,6 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchRequestMarshal
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemUnmarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.UpdateItemMarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.UpdateItemUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -138,8 +135,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    public static native String javaScriptEncodeURI(String text) /*-{
-                                                                return encodeURI(text);
-                                                                }-*/;
+	return encodeURI(text);
+	}-*/;
 
    private ExceptionThrownEvent getErrorEvent(String message)
    {
@@ -594,30 +591,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.REPORT)
          .data(marshaller).send(callback);
 
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#updateToVersion(org.exoplatform.ide.client.module.vfs.api.Item)
-    */
-   @Override
-   public void updateToVersion(Item item, Version version)
-   {
-      String url = javaScriptEncodeURI(item.getHref());
-
-      UpdateItemMarshaller marshaller = new UpdateItemMarshaller(version);
-      UpdateItemUnmarshaller unmarshaller = new UpdateItemUnmarshaller();
-
-      UpdateToVersionCompleteEvent event = new UpdateToVersionCompleteEvent(item);
-
-      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-
-      String errorMessage = "Can't update to version";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UPDATE)
-         .data(marshaller).send(callback);
    }
 
 }

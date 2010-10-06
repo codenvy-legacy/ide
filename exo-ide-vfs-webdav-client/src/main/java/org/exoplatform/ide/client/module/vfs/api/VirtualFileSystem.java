@@ -143,10 +143,4 @@ public abstract class VirtualFileSystem
     */
    public abstract void getVersions(Item item);
    
-   /**
-    * @param item main item
-    * @param version version
-    */
-   public abstract void updateToVersion(Item item, Version version);
-
 }
