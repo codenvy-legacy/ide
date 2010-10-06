@@ -111,6 +111,8 @@ public class RestGadgetRegistryService implements ResourceContainer
       try
       {
          Gadget gadget = createGadget(name, urlEncoded, false, uriInfo);
+         if (gadget == null) 
+            throw new WebApplicationException(new DeployGadgetException("Gadget not deployed. Possible reason GadgetRegistryService not found"), 404);
          ExoContainer container = ExoContainerContext.getCurrentContainer();
          RequestLifeCycle.begin(container, true);
          try
@@ -171,6 +173,8 @@ public class RestGadgetRegistryService implements ResourceContainer
          {
             GadgetRegistryService gadgetService =
                (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
+            if (gadgetService == null) 
+               throw new WebApplicationException(new DeployGadgetException("Can not undeployed. Possible reason GadgetRegistryService not found"), 404);
             gadgetService.removeGadget(name);
             return Response.noContent().build();
          }
@@ -213,7 +217,8 @@ public class RestGadgetRegistryService implements ResourceContainer
       gadget.setUrl(path);
       gadget.setLocal(isLocal);
       Map<String, String> metaData = getMapMetadata(path, uriInfo);
-
+      if (metaData == null)
+         return null;
       if (metaData.containsKey("errors"))
          throw new DeployGadgetException("error on the server: " + metaData.get("errors"));
 
@@ -241,6 +246,8 @@ public class RestGadgetRegistryService implements ResourceContainer
    {
       Map<String, String> mapMetaData = new HashMap<String, String>();
       String metadata = fetchGagdetMetadata(url, uriInfo);
+      if (metadata == null)
+         return null;
       metadata = metadata.substring(metadata.indexOf("[") + 1, metadata.lastIndexOf("]"));
       JSONObject jsonObj = new JSONObject(metadata);
       Iterator<String> iter = jsonObj.keys();
@@ -273,6 +280,8 @@ public class RestGadgetRegistryService implements ResourceContainer
       {
          GadgetRegistryService gadgetService =
             (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
+         if (gadgetService == null)
+            return null;
          country = gadgetService.getCountry();
          language = gadgetService.getLanguage();
          moduleId = gadgetService.getModuleId();
