@@ -28,7 +28,8 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({CreateFileFromTemplateTest.class, RemoveNonDefaultFileTemplatesTest.class, SaveFileAsTemplateTest.class,BigTemplateTest.class})
+@SuiteClasses({CreateFileFromTemplateTest.class, RemoveNonDefaultFileTemplatesTest.class, SaveFileAsTemplateTest.class,
+   BigTemplateTest.class, CreateProjectTemplateTest.class})
 public class TemplatesTestSuite
 {
 
