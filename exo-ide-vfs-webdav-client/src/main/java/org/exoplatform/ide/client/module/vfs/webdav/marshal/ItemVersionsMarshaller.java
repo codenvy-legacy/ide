@@ -37,7 +37,6 @@ public class ItemVersionsMarshaller implements Marshallable
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
-   @Override
    public String marshal()
    {
       Document doc = XMLParser.createDocument();
