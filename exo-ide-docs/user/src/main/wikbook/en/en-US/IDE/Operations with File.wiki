@@ -153,6 +153,19 @@ h2. Remove non-default file templates
 
 If you want to remove non-default file template, you can use *"Create file"* dialog  window from previous paragraph. To call this dialog window, click on *"New"* button on _Toolbar_ and then choose *"From template..."* (or use *"Ctrl+N"* hotkeys), select  needed template and click *"Delete"* button. Asking dialog will appear to confirm your action.
 
+h2. Create project template.
+
+If you want to create project template, you can use *"Create project template"* dialog window. To call this dialog use File->Create project template top-menu command. 
+
+!ide_create_project_template.png! 
+*Picture 12.1. Create project template*
+
+After *"Create project template"* dialog window appears, you can set project template name and description, edit project template structure (using actions buttons). To add folder, select folder in tree, in which new folder will be created. Than click on button *"Add Folder"*. *"Add folder"* dialog window will appear. Enter name of new folder and click Ok. New folder is created. 
+
+To add new file to project, select folder in tree, than click on button *"Add file"*. *"Add file template"* dialog window appears. This window is looks like *"Create file"* from template window, except of *"Create"* button, there is *"Add"* button. To add file, select file template, enter file name to name field and click *"Add"* button.
+
+To delete some element from project template tree, select item (folder or file) and click delete button.
+
 h1. Edit File
 
 When file is created or opened, its content will be displayed in the separate tab of _Content Panel_ (see pic.1 for details) in default _Code Editor_. This is eXo GWT implementation of Codemirror application from [http://marijn.haverbeke.nl/codemirror/|http://marijn.haverbeke.nl/codemirror/]. - a JavaScript library that is used to create a relatively pleasant editor interface for _Groovy_, _JavaScript_, _XML_, _Google Gadget_, _CSS_, _text_ and _HTML_ MIME types of content. Such code will be colored, and the editor will help you with indentation.
