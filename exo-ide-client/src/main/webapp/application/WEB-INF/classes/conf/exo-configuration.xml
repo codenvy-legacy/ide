@@ -108,12 +108,6 @@
 
    <component>
       <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
-      <init-params>
-         <value-param>
-            <name>keyFile</name>
-            <value>src/main/resources/conf/key.txt</value>
-         </value-param>
-      </init-params>
    </component>
 
 

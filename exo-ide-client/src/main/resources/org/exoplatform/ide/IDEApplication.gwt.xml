@@ -1,5 +1,6 @@
 <module rename-to="IDE">
-   <!-- Inherit the core Web Toolkit stuff.                        -->
+   <!-- Inherit the core Web Toolkit stuff. -->
+   <inherits name="com.google.gwt.core.Core"/>
    <inherits name='com.google.gwt.user.User' />
    <inherits name='com.google.gwt.user.theme.standard.Standard' />
    <inherits name="com.google.gwt.http.HTTP" />
@@ -8,7 +9,7 @@
    <inherits name="com.google.gwt.i18n.I18N" />
    <inherits name='com.google.gwt.user.RemoteService' />
 
-   <!--  Inherit the SmartGWT Toolkit library configuration. -->
+   <!-- Inherit the SmartGWT Toolkit library configuration. -->
    <inherits name="com.smartgwt.SmartGwt" />
    <inherits name='com.smartgwt.tools.SmartGwtTools' />
 
@@ -32,7 +33,7 @@
    <script src="codemirror/js/codemirror.js" />
 
    <!-- Load FCKEditor files. -->
-   <!--    <stylesheet src='fckeditor/content.css' /> -->
+   <!-- <stylesheet src='fckeditor/content.css' /> -->
    <script src="fckeditor/ckeditor.js" />
    <script src="fckeditor/config.js" />
 
@@ -43,6 +44,10 @@
    <script src="token/html_tokens.js" />
 
    <!-- Specify the application specific style sheet. -->
-   <stylesheet src='IDE.css' />
+   <stylesheet src="IDE.css" />
+
+   <generate-with class="org.exoplatform.ide.rebind.RolesGenerator">
+      <when-type-assignable class="org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler" />
+   </generate-with>
 
 </module>

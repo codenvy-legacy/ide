@@ -121,7 +121,7 @@ public class FileTemplates
    {
       String content =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
-            + "<Content type=\"html\">\n" + "<![CDATA[\n" + "Hello, world!\n" + "]]>" + "</Content>" + "</Module>";
+            + "<Content type=\"html\">\n" + "<![CDATA[Hello, world!]]>" + "</Content>" + "</Module>";
 
       templates.put(MimeType.GOOGLE_GADGET, content);
    }

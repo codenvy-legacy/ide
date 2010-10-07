@@ -236,7 +236,7 @@
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>IDE-Application</web-resource-name>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>/rest/private/*</url-pattern>
       <http-method>POST</http-method>
       <http-method>GET</http-method>
     </web-resource-collection>

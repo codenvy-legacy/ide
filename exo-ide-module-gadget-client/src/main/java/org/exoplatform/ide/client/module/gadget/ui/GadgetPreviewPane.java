@@ -22,10 +22,13 @@ import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ide.client.module.gadget.service.GadgetService;
 import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 
 /**
@@ -105,7 +108,7 @@ public class GadgetPreviewPane extends TabPanel
  }-*/;
    
    private native boolean isGadget()/*-{
-       return (typeof(gadgets) !== "undefined" ||  typeof(gadgets) !== "null");
+       return (typeof(gadgets) !== "undefined" &&  typeof(gadgets) !== "null");
    }-*/;
    
    
@@ -128,7 +131,7 @@ public class GadgetPreviewPane extends TabPanel
       }
       else
       {
-         url = url + "&nocache=1";
+         url = url + "&parent=" + Location.getHref() + "&nocache=1";
       }
       Frame frame = new Frame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
@@ -136,16 +139,6 @@ public class GadgetPreviewPane extends TabPanel
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
-
-      //      return frame;
-
-      //      Frame frame = new Frame(GWT.getModuleBaseURL() + "gadgets/gadgetcontainer.html#" +meta);
-      //      frame.setWidth("100%");
-      //      frame.setHeight("100%");
-      //      addMember(frame);
-      //      DOM.setElementAttribute(frame.getElement(), "id", "framegadget");
-      //      DOM.setElementAttribute(frame.getElement(), "name", "framegadget");
-      //      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
    }
 
    @Override
