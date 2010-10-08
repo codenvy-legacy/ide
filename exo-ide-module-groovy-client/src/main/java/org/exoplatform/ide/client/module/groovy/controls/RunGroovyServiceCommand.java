@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
@@ -35,24 +35,19 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RunGroovyServiceCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class RunGroovyServiceCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/Run Groovy Service...";
 
    public RunGroovyServiceCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Run Groovy Service...");
       setPrompt("Run Groovy Service...");
       setIcon(Images.Controls.RUN_GROOVY_SERVICE);
       setEvent(new RunGroovyServiceEvent());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -60,7 +55,8 @@ public class RunGroovyServiceCommand extends IDEControl implements EditorActiveF
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()) || (event.getFile() instanceof Version))
+      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType())
+         || (event.getFile() instanceof Version))
       {
          setEnabled(false);
          setVisible(false);

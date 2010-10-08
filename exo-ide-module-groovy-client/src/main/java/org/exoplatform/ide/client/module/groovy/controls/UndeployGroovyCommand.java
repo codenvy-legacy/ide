@@ -20,12 +20,12 @@
 package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
-import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,25 +36,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class UndeployGroovyCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class UndeployGroovyCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Undeploy";
 
    public UndeployGroovyCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Undeploy");
       setPrompt("Undeploy REST Service");
       setIcon(Images.Controls.UNDEPLOY);
       //setImages(GroovyPluginImageBundle.INSTANCE.undeployGroovy(), GroovyPluginImageBundle.INSTANCE.undeployGroovyDisabled());
       setEvent(new UndeployGroovyScriptEvent());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

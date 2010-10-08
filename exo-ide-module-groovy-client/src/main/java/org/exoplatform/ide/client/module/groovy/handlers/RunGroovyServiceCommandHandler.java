@@ -18,19 +18,14 @@
  */
 package org.exoplatform.ide.client.module.groovy.handlers;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
-import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent;
@@ -42,6 +37,8 @@ import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValid
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -49,7 +46,7 @@ import org.exoplatform.ide.client.module.vfs.api.File;
  * @version $
  */
 
-public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHandler, RunGroovyServiceHandler,
+public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
    EditorActiveFileChangedHandler, FileSavedHandler, ExceptionThrownHandler, GroovyDeployResultReceivedHandler,
    GroovyValidateResultReceivedHandler
 {
@@ -65,17 +62,9 @@ public class RunGroovyServiceCommandHandler implements RegisterEventHandlersHand
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(RunGroovyServiceEvent.TYPE, this);
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent)
-    */
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */

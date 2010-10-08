@@ -20,7 +20,7 @@
 package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
@@ -36,25 +36,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class DeployGroovySandboxCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class DeployGroovySandboxCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/Deploy Sandbox";
 
    public DeployGroovySandboxCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Deploy Sandbox");
       setPrompt("Deploy REST Service Sandbox");
       setIcon(Images.Controls.DEPLOY_SANDBOX);
       //setImages(GroovyPluginImageBundle.INSTANCE.deployGroovy(), GroovyPluginImageBundle.INSTANCE.deployGroovyDisabled());
       setEvent(new DeployGroovyScriptSandboxEvent());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

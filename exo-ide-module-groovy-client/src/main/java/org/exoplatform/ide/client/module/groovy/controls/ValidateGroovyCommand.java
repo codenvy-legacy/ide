@@ -20,11 +20,11 @@
 package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.module.groovy.Images;
-import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.module.groovy.Images;
+import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,26 +35,21 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ValidateGroovyCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class ValidateGroovyCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Validate";
 
    public ValidateGroovyCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Validate");
       setPrompt("Validate REST Service");
       setIcon(Images.Controls.VALIDATE);
       //setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
       setEvent(new ValidateGroovyScriptEvent());
       setDelimiterBefore(true);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
