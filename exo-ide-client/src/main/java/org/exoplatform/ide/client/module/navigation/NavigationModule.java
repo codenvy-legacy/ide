@@ -75,6 +75,7 @@ import org.exoplatform.ide.client.module.navigation.control.download.DownloadFil
 import org.exoplatform.ide.client.module.navigation.control.download.DownloadZippedFolderCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
@@ -168,6 +169,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
       eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, true));
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File",

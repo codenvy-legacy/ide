@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 
@@ -46,233 +47,42 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @version @version $Id: $
  */
 
-public class CreateFileFromTemplateForm extends DialogWindow implements CreateFileFromTemplatePresenter.Display
+public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<FileTemplate>
 {
 
-   public static final int WIDTH = 550;
-
-   public static final int HEIGHT = 350;
-   
-   private static final String ID = "ideCreateFileFromTemplateForm";
-   
-   private static final String ID_CREATE_BUTTON = "ideCreateFileFromTemplateFormCreateButton";
-   
-   private static final String ID_CANCEL_BUTTON = "ideCreateFileFromTemplateFormCancelButton";
-   
-   private static final String ID_DELETE_BUTTON = "ideCreateFileFromTemplateFormDeleteButton";
-   
-   private static final String ID_DYNAMIC_FORM = "ideCreateFileFromTemplateFormDynamicForm";
-   
-   private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
-   
-   private static final String DEFAULT_TITLE = "Create file";
-   
-   private static final String CREATE_BUTTON_DEFAULT_TITLE = "Create";
-   
-   private CreateFileFromTemplatePresenter presenter;
-
-   private VLayout windowLayout;
-
-   private IButton createButton;
-
-   private IButton cancelButton;
-
-   private IButton deleteButton;
-
-   private TemplateListGrid templateListGrid;
-
-   private TextField fileNameField;
-   
-   private String createButtonTitle;
-   
-   public CreateFileFromTemplateForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
+   public CreateFileFromTemplateForm(HandlerManager eventBus, List<Template> templateList, 
+      AbstractCreateFromTemplatePresenter<FileTemplate> presenter)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
-      initForm(eventBus, selectedItems, templateList, DEFAULT_TITLE, CREATE_BUTTON_DEFAULT_TITLE, true);
-   }
-   
-   public CreateFileFromTemplateForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, 
-      String formTitle, String createButtonTitle, boolean createFile)
-   {
-      super(eventBus, WIDTH, HEIGHT, ID);
-      initForm(eventBus, selectedItems, templateList, formTitle, createButtonTitle, createFile);
-   }
-   
-   private void initForm(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, 
-      String formTitle, String createButtonTitle, boolean createFile)
-   {
-      this.eventBus = eventBus;
-      this.createButtonTitle = createButtonTitle;
-
-      setTitle(formTitle);
-      setCanDragResize(true);
-      setShowMaximizeButton(true);
-
-      windowLayout = new VLayout();
-      windowLayout.setMargin(10);
-      addItem(windowLayout);
-
-      createTypeLayout();
-
-      Layout l = new Layout();
-      l.setHeight(10);
-      windowLayout.addMember(l);
-
-      windowLayout.addMember(getActionsForm());
-
-      show();
-
-      presenter = new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList, createFile);
-      presenter.bindDisplay(this);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
+      super(eventBus, presenter);
    }
 
-   private void createTypeLayout()
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#createTypeLayout()
+    */
+   @Override
+   void createTypeLayout()
    {
-      templateListGrid = new TemplateListGrid();
+      templateListGrid = new TemplateListGrid<FileTemplate>();
       // templateListGrid.setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
       windowLayout.addMember(templateListGrid);
    }
 
-   private HLayout getActionsForm()
-   {
-      HLayout actionsLayout = new HLayout();
-      actionsLayout.setHeight(35);
-      actionsLayout.setWidth100();
-
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
-      fileNameField = new TextField("Name","File Name");
-      fileNameField.setName(FILE_NAME_FIELD);
-      fileNameField.setWidth(200);
-      fileNameField.setWrapTitle(false);
-      form.setColWidths("*", "195");
-      form.setItems(fileNameField);
-      actionsLayout.addMember(form);
-
-      Layout l = new Layout();
-      l.setWidth100();
-      actionsLayout.addMember(l);
-
-      actionsLayout.addMember(getButtonsForm());
-      return actionsLayout;
-   }
-
-   private DynamicForm getButtonsForm()
-   {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
-
-      createButton = new IButton(createButtonTitle);
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(75);
-      createButton.setHeight(22);
-      createButton.setIcon(Images.Buttons.YES);
-
-      cancelButton = new IButton("Cancel");
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(75);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
-
-      deleteButton = new IButton("Delete");
-      deleteButton.setID(ID_DELETE_BUTTON);
-      deleteButton.setWidth(75);
-      deleteButton.setHeight(22);
-      deleteButton.setIcon(Images.Buttons.DELETE);
-
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(2);
-
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(2);
-
-      tbi.setButtons(deleteButton, delimiter1, createButton, delimiter2, cancelButton);
-      buttonsForm.setFields(tbi);
-      buttonsForm.setAutoWidth();
-      return buttonsForm;
-   }
-
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getCreateButtonTitle()
+    */
    @Override
-   protected void onDestroy()
+   String getCreateButtonTitle()
    {
-      presenter.destroy();
-      super.onDestroy();
-   }
-
-   public ListGridItem<Template> getTemplateListGrid()
-   {
-      return templateListGrid;
-   }
-
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
-
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
-
-   public void closeForm()
-   {
-      destroy();
-   }
-
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
-
-   public void disableCreateButton()
-   {
-      createButton.disable();
-   }
-
-   public void enableCreateButton()
-   {
-      createButton.enable();
+      return "Create";
    }
 
    /**
-    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#getDeleteButton()
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getFormTitle()
     */
-   public HasClickHandlers getDeleteButton()
+   @Override
+   String getFormTitle()
    {
-      return deleteButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#setEnabledDeleteButton(boolean)
-    */
-   public void setDeleteButtonDisabled(boolean value)
-   {
-      deleteButton.setDisabled(value);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#selectLastTemplate()
-    */
-   public void selectLastTemplate()
-   {
-      templateListGrid.selectRecord(templateListGrid.getRecords().length - 1);
-   }
-   
-   /**
-    * @param createButtonTitle the createButtonTitle to set
-    */
-   public void setCreateButtonTitle(String createButtonTitle)
-   {
-      this.createButtonTitle = createButtonTitle;
+      return "Create file";
    }
 
 }

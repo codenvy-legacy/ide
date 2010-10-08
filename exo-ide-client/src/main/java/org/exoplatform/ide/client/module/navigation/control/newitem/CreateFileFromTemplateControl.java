@@ -38,9 +38,8 @@ public class CreateFileFromTemplateControl extends NewFileCommand
 
    public CreateFileFromTemplateControl(HandlerManager eventBus)
    {
-      super(ID, eventBus, "From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+      super(ID, eventBus, "File From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
-      setDelimiterBefore(true);
    }
 
 }

@@ -35,7 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FileTemplates;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
@@ -46,12 +48,18 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFrom
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileHandler;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
+import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
+import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
+import org.exoplatform.ide.client.template.CreateProjectFromTemplateForm;
+import org.exoplatform.ide.client.template.CreateProjectFromTemplatePresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -62,7 +70,7 @@ import com.google.gwt.event.shared.HandlerManager;
 */
 public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
    TemplateListReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   EditorFileClosedHandler, ApplicationSettingsReceivedHandler, CreateProjectFromTemplateHandler
 {
    private HandlerManager eventBus;
 
@@ -73,6 +81,8 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
    private ApplicationSettings applicationSettings;
+   
+   private boolean createFile;
 
    public CreateFileCommandThread(HandlerManager eventBus)
    {
@@ -85,6 +95,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(CreateNewFileEvent.TYPE, this);
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
+      eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);      
    }
 
@@ -153,6 +164,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
       handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
+      createFile = true;
       TemplateService.getInstance().getTemplates();
    }
 
@@ -163,7 +175,23 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    {
       handlers.removeHandler(TemplateListReceivedEvent.TYPE);
       TemplateList templateList = event.getTemplateList();
-      new CreateFileFromTemplateForm(eventBus, selectedItems, templateList.getTemplates());
+      if (createFile)
+      {
+         CreateFileFromTemplatePresenter createFilePresenter =
+            new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates());
+         CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+            new CreateFileFromTemplateForm(eventBus, templateList.getTemplates(), createFilePresenter);
+         createFilePresenter.bindDisplay(createFileDisplay);
+      }
+      else
+      {
+         CreateProjectFromTemplatePresenter createProjectPresenter =
+            new CreateProjectFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates());
+         CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
+            new CreateProjectFromTemplateForm(eventBus, templateList.getTemplates(), createProjectPresenter);
+         createProjectPresenter.bindDisplay(createProjectDisplay);
+      }
+
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -180,5 +208,24 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    {
       applicationSettings = event.getApplicationSettings();
    }
+
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler#onCreateProjectFromTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent)
+    */
+   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
+   {
+      try
+      {
+         handlers.removeHandler(TemplateListReceivedEvent.TYPE);
+      }
+      catch (Exception e)
+      {
+         // TODO: handle exception
+      }
+      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
+      createFile = false;
+      TemplateService.getInstance().getTemplates();
+   }
+
 
 }

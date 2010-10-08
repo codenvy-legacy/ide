@@ -19,16 +19,13 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,10 +34,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class CreateProjectTemplateControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class CreateProjectTemplateControl extends SimpleControl implements EntryPointChangedHandler
 {
-
-   private boolean browserPanelSelected = true;
 
    public final static String ID = "File/Create Project Template...";
 
@@ -50,28 +45,26 @@ public class CreateProjectTemplateControl extends SimpleControl implements Items
       setTitle("Create Project Template...");
       setPrompt("Create Project Template...");
       setDelimiterBefore(true);
+      setEnabled(true);
       setImages(IDEImageBundle.INSTANCE.createProjectTemplate(), IDEImageBundle.INSTANCE.createProjectTemplateDisabled());
       setEvent(new CreateProjectTemplateEvent());
+      
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
-   private void updateEnabling()
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
+   public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      if (browserPanelSelected)
+      if (event.getEntryPoint() != null)
       {
-         setEnabled(true);
+         setVisible(true);
       }
       else
       {
-         setEnabled(false);
+         setVisible(false);
       }
    }
-
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
-   }
-
-   public void onItemsSelected(ItemsSelectedEvent event){}
 
 }

@@ -16,37 +16,20 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
-import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -55,239 +38,96 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, TemplateListReceivedHandler
+public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<FileTemplate>
 {
 
-   public interface Display
+private String previousExtension;
+   
+   private String baseHref;
+   
+   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
-
-      ListGridItem<Template> getTemplateListGrid();
-
-      HasValue<String> getFileNameField();
-
-      HasClickHandlers getCancelButton();
-
-      HasClickHandlers getCreateButton();
-
-      HasClickHandlers getDeleteButton();
-
-      void closeForm();
-
-      void enableCreateButton();
-
-      void disableCreateButton();
+      super(eventBus, selectedItems);
       
-      void setDeleteButtonDisabled(boolean value);
+      this.templateList = new ArrayList<FileTemplate>();
       
-      void selectLastTemplate();
-
-   }
-
-   private HandlerManager eventBus;
-
-   private Handlers handlers;
-
-   private Display display;
-
-   private FileTemplate selectedTemplate;
-
-   private String previousExtension;
-   
-   private List<Item> selectedItems;
-   
-   private List<Template> templateList = new ArrayList<Template>();
-   
-   private boolean createFile;
-
-   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, boolean createFile)
-   {
-      this.eventBus = eventBus;
-      this.createFile = createFile;
-      
-      this.selectedItems = selectedItems;
-      for (Template template : templateList)
+      if (selectedItems != null && selectedItems.size() != 0)
       {
-         if (template instanceof FileTemplate)
+         Item item = selectedItems.get(0);
+
+         baseHref = item.getHref();
+         if (item instanceof File)
          {
-            this.templateList.add(template);
+            baseHref = baseHref.substring(0, baseHref.lastIndexOf("/") + 1);
          }
       }
-
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(TemplateDeletedEvent.TYPE, this);
-   }
-
-   public void destroy()
-   {
-      handlers.removeHandlers();
-   }
-
-   public void bindDisplay(Display d)
-   {
-      display = d;
-
-      if (createFile)
-      {
-         display.getCreateButton().addClickHandler(new ClickHandler()
-         {
-            public void onClick(ClickEvent event)
-            {
-               createFile();
-            }
-         });
-
-         display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
-         {
-            public void onDoubleClick(DoubleClickEvent event)
-            {
-               createFile();
-            }
-         });
-      }
-      else
-      {
-         display.getCreateButton().addClickHandler(new ClickHandler()
-         {
-            public void onClick(ClickEvent event)
-            {
-               addFileToProjectTemplate();
-            }
-         });
-
-         display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
-         {
-            public void onDoubleClick(DoubleClickEvent event)
-            {
-               addFileToProjectTemplate();
-            }
-         });
-      }
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            display.closeForm();
-         }
-      });
-
-      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<Template>()
-      {
-         public void onSelection(SelectionEvent<Template> event)
-         {
-            templateSelected(event.getSelectedItem());
-         }
-      });
-
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-
-         public void onClick(ClickEvent event)
-         {
-            deleteTemplate();
-         }
-      });
-
-      display.getFileNameField().setValue("Untitled file");
-
-      display.getTemplateListGrid().setValue(templateList);
-
-      display.disableCreateButton();
       
-      display.setDeleteButtonDisabled(true);
+      updateTemplateList(templateList);
    }
 
    /**
-    * Delete selected template
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
     */
-   private void deleteTemplate()
+   @Override
+   void updateTemplateList(List<Template> templates)
    {
-
-      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
-      Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedCallback()
+      templateList.clear();
+      
+      for (Template template : templates)
       {
-
-         public void execute(Boolean value)
+         if (template instanceof FileTemplate)
          {
-            if (value == null)
-            {
-               return;
-            }
-            if (value)
-            {
-               TemplateService.getInstance().deleteTemplate(selectedTemplate);
-            }
+            templateList.add((FileTemplate)template);
          }
-
-      });
-
+      }
    }
 
-   protected void templateSelected(Template template)
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#setNewInstanceName()
+    */
+   @Override
+   void setNewInstanceName()
    {
-      if (selectedTemplate == template)
-      {
-         return;
-      }
-      selectedTemplate = (FileTemplate)template;
-      display.enableCreateButton();
-      
-      if (template.getNodeName() == null)
-      {
-         display.setDeleteButtonDisabled(true);
-      }
-      else
-      {
-         display.setDeleteButtonDisabled(false);
-      }
-
-      String extension = IDEMimeTypes.getExtensionsMap().get(((FileTemplate)template).getMimeType());
+      String extension = IDEMimeTypes.getExtensionsMap().get(selectedTemplate.getMimeType());
       if (previousExtension != null)
       {
-         String fName = display.getFileNameField().getValue();
+         String fName = display.getNameField().getValue();
          if (fName.endsWith("." + previousExtension))
          {
             fName = fName.substring(0, fName.length() - previousExtension.length() - 1);
          }
          fName += "." + extension;
-         display.getFileNameField().setValue(fName);
+         display.getNameField().setValue(fName);
       }
       else
       {
-         display.getFileNameField().setValue(display.getFileNameField().getValue() + "." + extension);
+         display.getNameField().setValue(display.getNameField().getValue() + "." + extension);
       }
       previousExtension = extension;
    }
 
-   protected void createFile()
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#submitTemplate()
+    */
+   @Override
+   void submitTemplate()
    {
-      String fileName = display.getFileNameField().getValue();
+      String fileName = display.getNameField().getValue();
+
       if ("".equals(fileName.trim()))
       {
          Dialogs.getInstance().showError("You must enter file name the first!");
          return;
       }
-
-      String href;
-           
-      if (selectedItems != null && selectedItems.size() != 0)
+      
+      if (baseHref == null)
       {
-         Item item = selectedItems.get(0);
-
-         href = item.getHref();
-         if (item instanceof File)
-         {
-            href = href.substring(0, href.lastIndexOf("/") + 1);
-         }
-      }
-      else
-      {
-         href = "";
+         baseHref = "";
       }
 
       String contentType = selectedTemplate.getMimeType();
 
-      File newFile = new File(href + fileName);
+      File newFile = new File(baseHref + fileName);
       newFile.setContentType(contentType);
       newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
       newFile.setIcon(ImageUtil.getIcon(contentType));
@@ -298,51 +138,6 @@ public class CreateFileFromTemplatePresenter implements TemplateDeletedHandler, 
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       display.closeForm();
-   }
-   
-   private void addFileToProjectTemplate()
-   {
-      final String fileName = display.getFileNameField().getValue().trim();
-      if ("".equals(fileName))
-      {
-         Dialogs.getInstance().showError("You must enter file name the first!");
-         return;
-      }
-
-      eventBus.fireEvent(new AddFileTemplateToProjectTemplateEvent(
-         new FileTemplate(selectedTemplate.getName(), fileName, selectedTemplate.getMimeType())));
-      display.closeForm();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler#onTemplateDeleted(org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent)
-    */
-   public void onTemplateDeleted(TemplateDeletedEvent event)
-   {
-      refreshTemplateList();
-      String message = "Template <b>" + event.getTemplateName() + "</b> deleted.";
-      Dialogs.getInstance().showInfo("IDEall", message);
-   }
-
-   /**
-    * Refresh List of the templates, after deleting
-    */
-   private void refreshTemplateList()
-   {
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      TemplateService.getInstance().getTemplates();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
-    */
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);      
-      templateList.clear();
-      templateList.addAll(event.getTemplateList().getTemplates());
-      display.getTemplateListGrid().setValue(templateList);
-      display.selectLastTemplate();
    }
 
 }

@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.StringValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
@@ -42,8 +41,6 @@ import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
 import org.exoplatform.ide.client.module.navigation.action.AbstractCreateFolderForm;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderDisplay;
-import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent;
-import org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, AddFileTemplateToProjectTemplateHandler
+public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
 {
    
    public interface Display
@@ -124,7 +121,6 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
       this.templateList = templateList;
       
       handlers = new Handlers(eventBus);
-      handlers.addHandler(AddFileTemplateToProjectTemplateEvent.TYPE, this);
    }
    
    public void bindDisplay(Display d)
@@ -194,7 +190,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
    {
       public void onClick(ClickEvent event)
       {
-         new CreateFileFromTemplateForm(eventBus, null, templateList, "Add file template", "Add", false);
+         addFileToTemplate();
       }
    };
    
@@ -246,6 +242,45 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
          
       }
    };
+   
+   private void addFileToTemplate()
+   {
+      AbstractCreateFromTemplatePresenter<FileTemplate> addFilePresenter = new CreateFileFromTemplatePresenter(eventBus, null, templateList)
+      {
+         @Override
+         void submitTemplate()
+         {
+            final String fileName = display.getNameField().getValue().trim();
+            if ("".equals(fileName))
+            {
+               Dialogs.getInstance().showError("You must enter file name the first!");
+               return;
+            }
+
+            FileTemplate fileTemplate = new FileTemplate(selectedTemplate.getName(), fileName, selectedTemplate.getMimeType());
+            addFileToProjectTemplate(fileTemplate);
+            display.closeForm();
+
+         }
+      };
+      
+      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+         new CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
+      {
+         @Override
+         String getCreateButtonTitle()
+         {
+            return "Add";
+         }
+         
+         @Override
+         String getFormTitle()
+         {
+            return "Add file";
+         }
+      };
+      addFilePresenter.bindDisplay(createFileDisplay);
+   }
    
    private void callAddFolderForm()
    {
@@ -378,20 +413,16 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
       display.closeForm();
       Dialogs.getInstance().showInfo("Template created successfully!");
    }
-
-   /**
-    * @see org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateHandler#onAddFileToProjectTemplate(org.exoplatform.ide.client.template.event.AddFileTemplateToProjectTemplateEvent)
-    */
-   public void onAddFileToProjectTemplate(AddFileTemplateToProjectTemplateEvent event)
+   
+   private void addFileToProjectTemplate(FileTemplate fileTemplate)
    {
       ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
-      FileTemplate newFile = event.getFileTemplate();
       
       if (selectedFolder.getChildren() != null)
       {
          for (Template template : selectedFolder.getChildren())
          {
-            if (template instanceof FileTemplate && newFile.getFileName().equals(((FileTemplate)template).getFileName()))
+            if (template instanceof FileTemplate && fileTemplate.getFileName().equals(((FileTemplate)template).getFileName()))
             {
                Dialogs.getInstance().showError("File with such name already exists");
                return;
@@ -403,9 +434,9 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler, A
       {
          selectedFolder.setChildren(new ArrayList<Template>());
       }
-      selectedFolder.getChildren().add(newFile);
+      selectedFolder.getChildren().add(fileTemplate);
       display.updateTree();
-      display.selectTemplate(newFile);
+      display.selectTemplate(fileTemplate);
    }
 
 }

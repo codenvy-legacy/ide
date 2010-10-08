@@ -36,7 +36,7 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public class TemplateListGrid extends ListGrid<Template>
+public class TemplateListGrid<T extends Template> extends ListGrid<T>
 {
    private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
    
