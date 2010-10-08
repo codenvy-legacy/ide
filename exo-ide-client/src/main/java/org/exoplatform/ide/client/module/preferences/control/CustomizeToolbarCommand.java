@@ -19,11 +19,9 @@
  */
 package org.exoplatform.ide.client.module.preferences.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,25 +30,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class CustomizeToolbarCommand extends IDEControl
+public class CustomizeToolbarCommand extends SimpleControl
 {
 
    public static final String ID = "Window/Customize Toolbar...";
 
    public static final String TITLE = "Customize Toolbar...";
 
-   public CustomizeToolbarCommand(HandlerManager eventBus)
+   public CustomizeToolbarCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
       setEvent(new CustomizeToolbarEvent());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
       setVisible(true);
       setEnabled(true);
    }

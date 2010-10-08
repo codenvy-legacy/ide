@@ -20,8 +20,8 @@
 package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
@@ -38,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFileChangedHandler,
+public class ShowLineNumbersCommand extends SimpleControl implements EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler
 {
 
@@ -56,24 +56,13 @@ public class ShowLineNumbersCommand extends IDEControl implements EditorActiveFi
 
    public ShowLineNumbersCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE_HIDE);
       setPrompt(TITLE_HIDE);
       setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      //addHandler(BrowserCookiesUpdatedEvent.TYPE, this);
-      addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      updateState();
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
    }
 
    private void updateState()

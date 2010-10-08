@@ -19,10 +19,10 @@ package org.exoplatform.ide.client.module.navigation.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -35,23 +35,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends IDEControl implements PanelSelectedHandler, EntryPointChangedHandler
+public abstract class MultipleSelectionItemsCommand extends SimpleControl implements PanelSelectedHandler,
+   EntryPointChangedHandler
 {
 
    protected boolean browserSelected = true;
-   
+
    private String entryPoint;
 
    public MultipleSelectionItemsCommand(String id, HandlerManager eventBus)
    {
-      super(id, eventBus);
-   }
+      super(id);
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public boolean isItemsInSameFolder(List<Item> items)
@@ -100,6 +97,15 @@ public abstract class MultipleSelectionItemsCommand extends IDEControl implement
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       this.entryPoint = event.getEntryPoint();
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
+
    }
-   
+
 }

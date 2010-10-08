@@ -19,11 +19,9 @@
  */
 package org.exoplatform.ide.client.module.preferences.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.preferences.event.CustomizeHotKeysEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,16 +30,16 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class CustomizeHotKeysCommand extends IDEControl
+public class CustomizeHotKeysCommand extends SimpleControl
 {
 
    public static final String ID = "Window/HotKeys...";
 
    public static final String TITLE = "Customize Hotkeys...";
 
-   public CustomizeHotKeysCommand(HandlerManager eventBus)
+   public CustomizeHotKeysCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setEnabled(true);

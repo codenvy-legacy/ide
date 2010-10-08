@@ -19,8 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAsTemplateEvent;
@@ -34,7 +36,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class SaveFileAsTemplateCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+   EntryPointChangedHandler
 {
 
    public static final String ID = "File/Save As Template...";
@@ -43,19 +46,14 @@ public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiv
 
    public SaveFileAsTemplateCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
       setEvent(new SaveAsTemplateEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      setVisible(true);
-
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -67,6 +65,18 @@ public class SaveFileAsTemplateCommand extends IDEControl implements EditorActiv
       }
 
       setEnabled(true);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

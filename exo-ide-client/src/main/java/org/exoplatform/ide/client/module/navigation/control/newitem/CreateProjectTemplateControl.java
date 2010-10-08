@@ -19,16 +19,16 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class CreateProjectTemplateControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class CreateProjectTemplateControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -46,19 +46,12 @@ public class CreateProjectTemplateControl extends IDEControl implements ItemsSel
 
    public CreateProjectTemplateControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Create Project Template...");
       setPrompt("Create Project Template...");
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.createProjectTemplate(), IDEImageBundle.INSTANCE.createProjectTemplateDisabled());
       setEvent(new CreateProjectTemplateEvent());
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      updateEnabling();
    }
 
    private void updateEnabling()

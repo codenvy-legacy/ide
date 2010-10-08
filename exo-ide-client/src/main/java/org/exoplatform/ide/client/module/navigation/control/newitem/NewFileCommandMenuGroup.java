@@ -19,8 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -31,7 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NewFileCommandMenuGroup extends IDEControl
+public class NewFileCommandMenuGroup extends SimpleControl implements EntryPointChangedHandler
 {
 
    public static final String ID = "File/New";
@@ -40,17 +42,25 @@ public class NewFileCommandMenuGroup extends IDEControl
 
    public NewFileCommandMenuGroup(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+      setEnabled(true);
+
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
-   @Override
-   protected void onRegisterHandlers()
+   public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      setVisible(true);
-      setEnabled(true);
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

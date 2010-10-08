@@ -33,6 +33,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 
 public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
 {
+   
 
    public static void handlerEvent(ExceptionThrownEvent event)
    {

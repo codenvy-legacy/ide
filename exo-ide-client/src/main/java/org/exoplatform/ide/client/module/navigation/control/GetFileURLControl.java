@@ -19,9 +19,11 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -38,7 +40,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GetFileURLControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class GetFileURLControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+   EntryPointChangedHandler
 {
 
    private static final String ID = "View/Get URL...";
@@ -53,25 +56,15 @@ public class GetFileURLControl extends IDEControl implements ItemsSelectedHandle
 
    public GetFileURLControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
       setEvent(new GetFileURLEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(PanelSelectedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -107,6 +100,19 @@ public class GetFileURLControl extends IDEControl implements ItemsSelectedHandle
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
+
    }
 
 }

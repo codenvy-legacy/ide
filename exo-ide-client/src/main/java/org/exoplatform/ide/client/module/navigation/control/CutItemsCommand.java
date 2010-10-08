@@ -46,20 +46,8 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
       setEvent(new CutItemsEvent());
-   }
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      super.onRegisterHandlers();
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override

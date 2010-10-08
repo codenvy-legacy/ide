@@ -19,15 +19,16 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.vfs.api.File;
@@ -37,12 +38,12 @@ import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandle
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -94,7 +95,8 @@ public class ApplicationStateLoader implements ItemPropertiesReceivedHandler, Fi
          @Override
          public void run()
          {
-            eventBus.fireEvent(new RegisterEventHandlersEvent());
+            Window.alert("Here!!!!!!1");
+            //eventBus.fireEvent(new RegisterEventHandlersEvent());
 
             new Timer()
             {

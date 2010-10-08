@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
@@ -38,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends IDEControl implements EditorActiveFileChangedHandler, FormOpenedHandler,
+public class FindTextCommand extends SimpleControl implements EditorActiveFileChangedHandler, FormOpenedHandler,
    FormClosedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
@@ -50,23 +50,16 @@ public class FindTextCommand extends IDEControl implements EditorActiveFileChang
 
    public FindTextCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.application.component.IDECommand#onRegisterHandlers()
-    */
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(FormOpenedEvent.TYPE, this);
-      addHandler(FormClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(FormOpenedEvent.TYPE, this);
+      eventBus.addHandler(FormClosedEvent.TYPE, this);
    }
 
    /**

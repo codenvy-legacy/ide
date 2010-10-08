@@ -18,22 +18,22 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 29, 2010 $
  *
  */
-public class RestoreVersionControl extends IDEControl implements EditorActiveFileChangedHandler
+public class RestoreVersionControl extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "File/Restore Version";
@@ -48,30 +48,13 @@ public class RestoreVersionControl extends IDEControl implements EditorActiveFil
     */
    public RestoreVersionControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new RestoreVersionEvent());
       setImages(IDEImageBundle.INSTANCE.restoreVersion(), IDEImageBundle.INSTANCE.restoreVersionDisabled());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#onRegisterHandlers()
-    */
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#onInitializeApplication()
-    */
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(false);
-      setEnabled(false);
+      
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

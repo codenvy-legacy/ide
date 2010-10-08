@@ -18,6 +18,10 @@ package org.exoplatform.ide.client.module.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -25,19 +29,32 @@ import org.exoplatform.ide.client.IDEImageBundle;
  * @version $Id: $
  */
 
-public class NewFilePopupMenuControl extends PopupMenuControl
+public class NewFilePopupMenuControl extends PopupMenuControl implements EntryPointChangedHandler
 {
 
    public static final String ID = "File/New *";
 
-   public NewFilePopupMenuControl()
+   public NewFilePopupMenuControl(HandlerManager eventBus)
    {
       super(ID);
       setPrompt("New");
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setDelimiterBefore(true);
       setEnabled(true);
-      setVisible(true);
+
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

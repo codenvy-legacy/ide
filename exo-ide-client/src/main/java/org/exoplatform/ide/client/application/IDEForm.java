@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.application;
 
-import org.exoplatform.gwtframework.ui.client.event.WindowResizeEvent;
+import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.ide.client.application.perspective.DefaultPerspective;
 import org.exoplatform.ide.client.component.ClearFocusForm;
 import org.exoplatform.ide.client.download.DownloadForm;
@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -43,36 +44,50 @@ public class IDEForm extends Layout implements IDEPresenter.Display
 
    private HandlerManager eventBus;
 
+   private IDEPresenter.Display display;
+   
    private ApplicationContext context;
+   
+   private ControlsRegistration controlsRegistration;
 
-   public IDEForm(final HandlerManager eventBus, ApplicationContext context)
+   public IDEForm(final HandlerManager eventBus, ApplicationContext context, final ControlsRegistration controlsRegistration)
    {
       this.eventBus = eventBus;
       this.context = context;
+      this.controlsRegistration = controlsRegistration;
+      display = this;
 
       setWidth100();
       setHeight100();
       setOverflow(Overflow.HIDDEN);
+      
+      draw();
 
       new ClearFocusForm(eventBus);
       new DownloadForm(eventBus);
 
-      draw();
       Window.addResizeHandler(new ResizeHandler()
       {
          public void onResize(ResizeEvent event)
          {
-            eventBus.fireEvent(new WindowResizeEvent());
+            eventBus.fireEvent(new WindowResizedEvent());
          }
       });
 
-      presenter = new IDEPresenter(eventBus, context);
-      presenter.bindDisplay(this);
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            presenter = new IDEPresenter(eventBus, controlsRegistration);
+            presenter.bindDisplay(display);
+         }
+      }.schedule(200);
    }
 
    public void showDefaultPerspective()
    {
-      addMember(new DefaultPerspective(eventBus, context));
+      addMember(new DefaultPerspective(eventBus, context));         
    }
 
 }

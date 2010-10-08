@@ -55,16 +55,9 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
       setEvent(new SaveFileAsEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      super.onRegisterHandlers();
-      setVisible(true);
-      setEnabled(false);
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

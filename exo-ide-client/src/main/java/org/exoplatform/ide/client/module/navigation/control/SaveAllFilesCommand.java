@@ -22,8 +22,10 @@ package org.exoplatform.ide.client.module.navigation.control;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -46,35 +48,31 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveAllFilesCommand extends IDEControl implements EditorFileContentChangedHandler,
-   FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+public class SaveAllFilesCommand extends SimpleControl implements EditorFileContentChangedHandler,
+   FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   EntryPointChangedHandler
 {
 
    public static final String ID = "File/Save All";
 
    public static final String TITLE = "Save All";
-   
+
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    public SaveAllFilesCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAll(), IDEImageBundle.INSTANCE.saveAllDisabled());
       setEvent(new SaveAllFilesEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      setVisible(true);
-
-      addHandler(EditorFileContentChangedEvent.TYPE, this);
-      addHandler(FileContentSavedEvent.TYPE, this);
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(EditorFileClosedEvent.TYPE, this);
-      addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      eventBus.addHandler(FileContentSavedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    private void checkItemEnabling()
@@ -115,6 +113,18 @@ public class SaveAllFilesCommand extends IDEControl implements EditorFileContent
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

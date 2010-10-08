@@ -19,9 +19,11 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -37,7 +39,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RefreshBrowserControl extends IDEControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class RefreshBrowserControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+   EntryPointChangedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";
@@ -52,25 +55,15 @@ public class RefreshBrowserControl extends IDEControl implements ItemsSelectedHa
 
    public RefreshBrowserControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
       setEvent(new RefreshBrowserEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(PanelSelectedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      updateEnabling();
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -105,6 +98,18 @@ public class RefreshBrowserControl extends IDEControl implements ItemsSelectedHa
    {
       browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
       updateEnabling();
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

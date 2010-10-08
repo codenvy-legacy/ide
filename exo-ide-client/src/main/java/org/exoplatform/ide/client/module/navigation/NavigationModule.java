@@ -34,8 +34,6 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedE
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -136,9 +134,9 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
-   GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, RegisterEventHandlersHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
-   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler
+   GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler,
+   EditorActiveFileChangedHandler, InitializeServicesHandler
 {
    private HandlerManager eventBus;
 
@@ -166,7 +164,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       this.context = context;
       handlers = new Handlers(eventBus);
 
-      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
+      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl(eventBus);
 
       eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, true));
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup(eventBus)));
@@ -208,16 +206,30 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl(eventBus)));
-      
+
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-//      handlers.addHandler(ItemLockedEvent.TYPE, this);
-//      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
+      handlers.addHandler(OpenFileWithEvent.TYPE, this);
+      handlers.addHandler(UploadFileEvent.TYPE, this);
+      handlers.addHandler(SaveAsTemplateEvent.TYPE, this);
+      handlers.addHandler(CreateFolderEvent.TYPE, this);
+      handlers.addHandler(CopyItemsEvent.TYPE, this);
+      handlers.addHandler(CutItemsEvent.TYPE, this);
+
+      handlers.addHandler(DeleteItemEvent.TYPE, this);
+      handlers.addHandler(RenameItemEvent.TYPE, this);
+      handlers.addHandler(SearchFileEvent.TYPE, this);
+      handlers.addHandler(GetFileURLEvent.TYPE, this);
+
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
+
+      //      handlers.addHandler(ItemLockedEvent.TYPE, this);
+      //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
       new CreateFileCommandThread(eventBus);
       new OpenFileCommandHandler(eventBus);
@@ -236,12 +248,11 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    {
       applicationSettings = event.getApplicationSettings();
 
-   
       if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
@@ -249,24 +260,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    {
       new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event
          .getApplicationConfiguration().getContext());
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.addHandler(OpenFileWithEvent.TYPE, this);
-      handlers.addHandler(UploadFileEvent.TYPE, this);
-      handlers.addHandler(SaveAsTemplateEvent.TYPE, this);
-      handlers.addHandler(CreateFolderEvent.TYPE, this);
-      handlers.addHandler(CopyItemsEvent.TYPE, this);
-      handlers.addHandler(CutItemsEvent.TYPE, this);
-
-      handlers.addHandler(DeleteItemEvent.TYPE, this);
-      handlers.addHandler(RenameItemEvent.TYPE, this);
-      handlers.addHandler(SearchFileEvent.TYPE, this);
-      handlers.addHandler(GetFileURLEvent.TYPE, this);
-
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)

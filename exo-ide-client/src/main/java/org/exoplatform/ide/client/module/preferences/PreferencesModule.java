@@ -28,8 +28,6 @@ import org.exoplatform.ide.client.component.AboutForm;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
@@ -73,9 +71,8 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PreferencesModule implements IDEModule, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
-   ControlsUpdatedHandler, EntryPointsReceivedHandler, RegisterEventHandlersHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler,
-   ShowAboutDialogHandler
+   ControlsUpdatedHandler, EntryPointsReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler, ShowAboutDialogHandler
 {
 
    private HandlerManager eventBus;
@@ -100,15 +97,20 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
 
-      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
 
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
       handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
+      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
+      handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
+      handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
+      handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -119,7 +121,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
@@ -133,16 +135,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    public void onControlsUpdated(ControlsUpdatedEvent event)
    {
       controls = event.getControls();
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
-      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
-      handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
-      handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
-      handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -184,6 +176,5 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
    {
       new AboutForm(eventBus);
    }
-
 
 }

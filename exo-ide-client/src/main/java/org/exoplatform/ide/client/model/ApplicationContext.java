@@ -42,11 +42,6 @@ public class ApplicationContext
     */
    private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
 
-   /**
-    * List of available templates
-    */
-   private TemplateList templateList;
-
    /*
     * Last entered value in Groovy script output form
     */
@@ -116,22 +111,6 @@ public class ApplicationContext
    public void setSelectedNavigationPanel(String selectedNavigationPanel)
    {
       this.selectedNavigationPanel = selectedNavigationPanel;
-   }
-
-   /**
-    * @return the templateList
-    */
-   public TemplateList getTemplateList()
-   {
-      return templateList;
-   }
-
-   /**
-    * @param templateList the templateList to set
-    */
-   public void setTemplateList(TemplateList templateList)
-   {
-      this.templateList = templateList;
    }
 
    /**

@@ -19,11 +19,6 @@
  */
 package org.exoplatform.ide.client.history;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -31,8 +26,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -41,6 +34,11 @@ import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -48,7 +46,7 @@ import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHan
  * @version $
  */
 
-public class HistoryManager implements RegisterEventHandlersHandler, EditorActiveFileChangedHandler,
+public class HistoryManager implements EditorActiveFileChangedHandler,
    ValueChangeHandler<String>, ItemPropertiesReceivedHandler, InitializeApplicationHandler,
    ExceptionThrownHandler
 {
@@ -66,12 +64,7 @@ public class HistoryManager implements RegisterEventHandlersHandler, EditorActiv
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
 
-      this.eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
       this.eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 

@@ -19,8 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SearchFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -34,7 +36,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SearchFilesCommand extends IDEControl implements ItemsSelectedHandler
+public class SearchFilesCommand extends SimpleControl implements ItemsSelectedHandler, EntryPointChangedHandler
 {
 
    public static final String ID = "File/Search...";
@@ -43,19 +45,14 @@ public class SearchFilesCommand extends IDEControl implements ItemsSelectedHandl
 
    public SearchFilesCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
       setEvent(new SearchFileEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      setVisible(true);
-      setEnabled(true);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -67,6 +64,18 @@ public class SearchFilesCommand extends IDEControl implements ItemsSelectedHandl
       else
       {
          setEnabled(true);
+      }
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
       }
    }
 

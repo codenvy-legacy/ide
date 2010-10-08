@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ide.client.module.preferences.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ShowAboutCommand extends IDEControl
+public class ShowAboutCommand extends SimpleControl
 {
 
    public static final String ID = "Help/About...";
@@ -41,7 +41,7 @@ public class ShowAboutCommand extends IDEControl
 
    public ShowAboutCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setEnabled(true);

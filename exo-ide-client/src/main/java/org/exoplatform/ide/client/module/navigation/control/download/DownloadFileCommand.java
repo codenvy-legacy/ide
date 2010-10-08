@@ -49,20 +49,8 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
       setPrompt("Download File...");
       setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());
       setEvent(new DownloadFileEvent());
-   }
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      super.onRegisterHandlers();
-      addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

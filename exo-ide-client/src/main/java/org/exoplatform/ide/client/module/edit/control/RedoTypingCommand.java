@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -39,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RedoTypingCommand extends IDEControl implements EditorActiveFileChangedHandler,
+public class RedoTypingCommand extends SimpleControl implements EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileContentReceivedHandler
 {
 
@@ -49,19 +49,15 @@ public class RedoTypingCommand extends IDEControl implements EditorActiveFileCha
 
    public RedoTypingCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.redo(), IDEImageBundle.INSTANCE.redoDisabled());
       setEvent(new RedoTypingEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(EditorFileContentChangedEvent.TYPE, this);
-      addHandler(FileContentReceivedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      eventBus.addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

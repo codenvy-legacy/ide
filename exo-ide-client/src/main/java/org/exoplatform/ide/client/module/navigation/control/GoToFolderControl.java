@@ -19,8 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
@@ -34,7 +36,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GoToFolderControl extends IDEControl implements EditorActiveFileChangedHandler
+public class GoToFolderControl extends SimpleControl implements EditorActiveFileChangedHandler,
+   EntryPointChangedHandler
 {
 
    private static final String ID = "View/Go to Folder";
@@ -43,24 +46,14 @@ public class GoToFolderControl extends IDEControl implements EditorActiveFileCha
 
    public GoToFolderControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
       setEvent(new GoToFolderEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -70,8 +63,20 @@ public class GoToFolderControl extends IDEControl implements EditorActiveFileCha
          setEnabled(false);
          return;
       }
-      
+
       setEnabled(true);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.control;
+package org.exoplatform.ide.client.module.edit.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.vfs.api.Version;
@@ -32,31 +32,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class DeleteLineControl extends IDEControl implements EditorActiveFileChangedHandler
+public class DeleteCurrentLineControl extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Edit/Delete Current Line";
 
-   public DeleteLineControl(HandlerManager eventBus)
+   public DeleteCurrentLineControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Delete Current Line");
       setPrompt("Delete Current Line");
       setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
-      setEvent(new DeleteCurrentLineEvent());
-   }
+      setEvent(new EditorDeleteCurrentLineEvent());
 
-   @Override
-   protected void onInitializeApplication()
-   {
-
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

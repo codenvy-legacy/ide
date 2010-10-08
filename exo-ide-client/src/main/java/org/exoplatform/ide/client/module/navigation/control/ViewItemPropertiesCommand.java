@@ -19,8 +19,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
@@ -34,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ViewItemPropertiesCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class ViewItemPropertiesCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    public static final String ID = "View/Properties";
@@ -45,17 +45,13 @@ public class ViewItemPropertiesCommand extends IDEControl implements EditorActiv
 
    public ViewItemPropertiesCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPropertiesEvent());
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

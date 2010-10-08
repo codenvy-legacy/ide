@@ -18,21 +18,21 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewItemVersionsEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewItemVersionsControl extends IDEControl implements EditorActiveFileChangedHandler
+public class ViewItemVersionsControl extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "File/Version History...";
@@ -47,25 +47,14 @@ public class ViewItemVersionsControl extends IDEControl implements EditorActiveF
     */
    public ViewItemVersionsControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new ViewItemVersionsEvent());
       setImages(IDEImageBundle.INSTANCE.viewVersions(), IDEImageBundle.INSTANCE.viewVersionsDisabled());
       setDelimiterBefore(true);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
+      
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

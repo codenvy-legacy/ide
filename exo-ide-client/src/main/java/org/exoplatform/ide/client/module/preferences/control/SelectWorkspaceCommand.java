@@ -19,11 +19,9 @@
  */
 package org.exoplatform.ide.client.module.preferences.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,16 +30,16 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SelectWorkspaceCommand extends IDEControl
+public class SelectWorkspaceCommand extends SimpleControl
 {
 
    public static final String ID = "Window/Workspace...";
 
    public static final String TITLE = "Select Workspace...";
 
-   public SelectWorkspaceCommand(HandlerManager eventBus)
+   public SelectWorkspaceCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());

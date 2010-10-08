@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileEvent;
@@ -45,7 +43,7 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version $
  */
 
-public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileHandler, DownloadZippedFolderHandler,
+public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler,
    ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
@@ -62,20 +60,15 @@ public class DownloadForm implements RegisterEventHandlersHandler, DownloadFileH
    public DownloadForm(HandlerManager eventBus)
    {
       handlers = new Handlers(eventBus);
-      eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      handlers.addHandler(DownloadFileEvent.TYPE, this);
+      handlers.addHandler(DownloadZippedFolderEvent.TYPE, this);
+      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
 
       htmlPane = new HTMLPane();
       htmlPane.setWidth(1);
       htmlPane.setHeight(1);
       RootPanel.get().add(htmlPane, -100, -100);
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.addHandler(DownloadFileEvent.TYPE, this);
-      handlers.addHandler(DownloadZippedFolderEvent.TYPE, this);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    private void downloadResource()

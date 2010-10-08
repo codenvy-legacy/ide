@@ -56,22 +56,9 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       setEvent(new DeleteItemEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(ItemDeletedEvent.TYPE, this);
-
-      super.onRegisterHandlers();
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      updateEnabling();
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -86,7 +73,7 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       {
          selectedItem = event.getSelectedItems().get(0);
          updateEnabling();
-      } 
+      }
       else
       {
          setEnabled(false);

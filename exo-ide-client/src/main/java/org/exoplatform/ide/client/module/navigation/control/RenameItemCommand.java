@@ -19,11 +19,11 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -42,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RenameItemCommand extends IDEControl implements ItemsSelectedHandler, ItemDeletedHandler,
+public class RenameItemCommand extends SimpleControl implements ItemsSelectedHandler, ItemDeletedHandler,
    PanelSelectedHandler, EntryPointChangedHandler
 {
 
@@ -56,29 +56,17 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
 
    public RenameItemCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Rename...");
       setPrompt("Rename Item");
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());
-   }
 
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      addHandler(ItemDeletedEvent.TYPE, this);
-
-      addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(EntryPointChangedEvent.TYPE, this);
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      updateEnabling();
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -88,14 +76,6 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
          setEnabled(false);
          return;
       }
-
-      //      ApplicationContext applicationContext = (ApplicationContext)context;
-      //
-      //      if (applicationContext.getSelectedItems(applicationContext.getSelectedNavigationPanel()).size() != 1)
-      //      {
-      //         setEnabled(false);
-      //         return;
-      //      }
 
       selectedItem = event.getSelectedItems().get(0);
       updateEnabling();
@@ -140,6 +120,14 @@ public class RenameItemCommand extends IDEControl implements ItemsSelectedHandle
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

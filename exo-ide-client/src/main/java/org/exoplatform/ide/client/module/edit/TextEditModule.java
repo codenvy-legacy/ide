@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -32,6 +30,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
+import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
@@ -44,7 +43,6 @@ import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.module.edit.event.GoToLineHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.module.navigation.control.DeleteLineControl;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
@@ -56,7 +54,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class TextEditModule implements IDEModule, RegisterEventHandlersHandler, FindTextHandler, GoToLineHandler,
+public class TextEditModule implements IDEModule, FindTextHandler, GoToLineHandler,
    ShowLineNumbersHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
    private HandlerManager eventBus;
@@ -77,19 +75,14 @@ public class TextEditModule implements IDEModule, RegisterEventHandlersHandler, 
 
       eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(eventBus), true));
       eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteLineControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl(eventBus)));
 
       eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(eventBus)));
 
       handlers = new Handlers(eventBus);
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.removeHandler(RegisterEventHandlersEvent.TYPE);
+      
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
       handlers.addHandler(FindTextEvent.TYPE, this);
       handlers.addHandler(GoToLineEvent.TYPE, this);

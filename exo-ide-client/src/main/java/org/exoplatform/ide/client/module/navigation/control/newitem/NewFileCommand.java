@@ -17,30 +17,27 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
+
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 
-/**
- * Created by The eXo Platform SAS .
- * 
+/* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class NewFileCommand extends IDEControl implements PanelSelectedHandler, SwitchEntryPointHandler,
-   EntryPointChangedHandler
+public class NewFileCommand extends SimpleControl implements PanelSelectedHandler, EntryPointChangedHandler
 {
 
    private boolean browserSelected = false;
@@ -49,35 +46,32 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
 
    public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, String icon, GwtEvent<?> event)
    {
-      super(id, eventBus);
+      super(id);
       setTitle(title);
       setPrompt(prompt);
       setIcon(icon);
       setEvent(event);
+
+      init(eventBus);
    }
 
    public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, ImageResource normalIcon,
       ImageResource disabledIcon, GwtEvent<?> event)
    {
-      super(id, eventBus);
+      super(id);
       setTitle(title);
       setPrompt(prompt);
       setImages(normalIcon, disabledIcon);
       setEvent(event);
+
+      init(eventBus);
    }
 
-   @Override
-   protected void onRegisterHandlers()
+   private void init(HandlerManager eventBus)
    {
-      addHandler(PanelSelectedEvent.TYPE, this);
-      addHandler(SwitchEntryPointEvent.TYPE, this);
-      addHandler(EntryPointChangedEvent.TYPE, this);
-   }
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
       updateEnabling();
    }
 
@@ -85,10 +79,13 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
    {
       if (entryPoint == null)
       {
+         setVisible(false);
          setEnabled(false);
          return;
       }
-
+      
+      setVisible(true);
+      
       if (browserSelected)
       {
          setEnabled(true);
@@ -105,14 +102,10 @@ public class NewFileCommand extends IDEControl implements PanelSelectedHandler, 
       updateEnabling();
    }
 
-   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
-   {
-      updateEnabling();
-   }
-
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
+      updateEnabling();
    }
 
 }

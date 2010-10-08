@@ -157,6 +157,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
    }
 
    /**

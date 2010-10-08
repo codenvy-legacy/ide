@@ -16,20 +16,17 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
+import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
+import org.exoplatform.ide.client.application.phases.Phase;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHandler
+public class IDEPresenter implements ExceptionThrownHandler
 {
 
    public interface Display
@@ -54,80 +51,38 @@ public class IDEPresenter implements ExceptionThrownHandler, RegisterControlHand
 
    private Display display;
 
-   private ApplicationContext context;
+   private ControlsRegistration controlsRegistration;
 
-   private List<Control> controls = new ArrayList<Control>();
-
-   private List<String> toolbarDefaultItems = new ArrayList<String>();
-
-   private List<String> statusBarItems = new ArrayList<String>();
-
-   public IDEPresenter(HandlerManager eventBus, ApplicationContext context)
+   public IDEPresenter(HandlerManager eventBus, ControlsRegistration controlsRegistration)
    {
       this.eventBus = eventBus;
-      this.context = context;
-
-      toolbarDefaultItems.add("");
+      this.controlsRegistration = controlsRegistration;
 
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(RegisterControlEvent.TYPE, this);
+      //handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
       display.showDefaultPerspective();
-      new IDEConfigurationLoader(eventBus, context, controls, toolbarDefaultItems, statusBarItems);
+
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            new ControlsFormatter(eventBus).format(controlsRegistration.getRegisteredControls());
+            eventBus.fireEvent(new ControlsUpdatedEvent(controlsRegistration.getRegisteredControls()));
+            new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
+         }
+      }.schedule(Phase.DELAY_BETWEEN_PHASES);
+
    }
 
    public void onError(ExceptionThrownEvent event)
    {
       eventBus.fireEvent(new ClearFocusEvent());
-   }
-
-   public void onRegisterControl(RegisterControlEvent event)
-   {
-      addControl(event.getControl(), event.isDockOnToolbar(), event.isRightDocking());
-
-      if (event.getControl() instanceof StatusTextControl)
-      {
-         statusBarItems.add(event.getControl().getId());
-      }
-   }
-
-   protected void addControl(Control control, boolean dockOnToolbar, boolean rightDocking)
-   {
-      controls.add(control);
-      if (!dockOnToolbar)
-      {
-         return;
-      }
-
-      if (rightDocking)
-      {
-         toolbarDefaultItems.add(control.getId());
-      }
-      else
-      {
-         int position = 0;
-         for (String curId : toolbarDefaultItems)
-         {
-            if ("".equals(curId))
-            {
-               break;
-            }
-            position++;
-         }
-
-         if (control.hasDelimiterBefore())
-         {
-            toolbarDefaultItems.add(position, "---");
-            position++;
-         }
-
-         toolbarDefaultItems.add(position, control.getId());
-      }
    }
 
 }

@@ -27,14 +27,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
@@ -50,6 +46,8 @@ import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
@@ -67,6 +65,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -77,8 +76,8 @@ import com.google.gwt.user.client.Timer;
  * @version $Id: $
 */
 public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
-   RegisterEventHandlersHandler, InitializeApplicationHandler, SelectItemHandler, ExceptionThrownHandler,
-   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler
+   SelectItemHandler, ExceptionThrownHandler, PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
+   ItemLockResultReceivedHandler, ItemPropertiesReceivedHandler
 {
 
    interface Display
@@ -110,18 +109,21 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
    private String entryPoint;
 
+   private boolean changingEntryPoint = false;
+
    public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
-      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
       //handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
+      handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
+      handlers.addHandler(SelectItemEvent.TYPE, this);
+      handlers.addHandler(PanelSelectedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -271,14 +273,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0));
    }
 
-   public void onError(ExceptionThrownEvent event)
-   {
-      itemToSelect = null;
-      foldersToRefresh.clear();
-      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-   }
-
    /**
     * Handling folder content receiving.
     * Browser subtree should be refreshed and browser panel should be selected.
@@ -286,6 +280,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
+      //      Window.alert("Children received!!!!!!1");
+      //      Window.alert("event.getFolder().getHref() " + event.getFolder().getHref());
+
       handlers.removeHandler(ChildrenReceivedEvent.TYPE);
       handlers.removeHandler(ExceptionThrownEvent.TYPE);
       foldersToRefresh.remove(event.getFolder());
@@ -293,6 +290,12 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       Collections.sort(event.getFolder().getChildren(), comparator);
 
       display.getBrowserTree().setValue(event.getFolder());
+
+      //      if (switchingWorkspace)
+      //      {
+      //         eventBus.fireEvent(new EntryPointChangedEvent(event.getFolder().getHref()));
+      //         switchingWorkspace = false;
+      //      }
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
       eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
@@ -307,54 +310,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       {
          refreshNextFolder();
       }
-   }
 
-   /**
-    * Switching active workspace
-    */
-   private void switchWorkspace(String entryPoint)
-   {
-      Folder rootFolder = new Folder(entryPoint);
-      rootFolder.setIcon(Images.FileTypes.WORKSPACE);
-
-      selectedItems.clear();
-      selectedItems.add(rootFolder);
-
-      selectedItems.clear();
-      selectedItems.add(rootFolder);
-
-      display.getBrowserTree().setValue(rootFolder);
-
-      eventBus.fireEvent(new EntryPointChangedEvent(entryPoint));
-      this.entryPoint = entryPoint;
-
-      try
-      {
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
-      }
-      catch (Throwable e)
-      {
-         e.printStackTrace();
-      }
-
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getChildren(rootFolder);
-   }
-
-   /**
-    * Switching active workspace by Switch Workspace Event
-    * 
-    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent)
-    */
-   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
-   {
-      //applicationSettings.setEntryPoint(event.getEntryPoint());
-      //context.setEntryPoint(event.getEntryPoint());
-      //CookieManager.getInstance().storeEntryPoint(event.getEntryPoint());
-      entryPoint = event.getEntryPoint();
-      display.getBrowserTree().setValue(null);
-      switchWorkspace(event.getEntryPoint());
    }
 
    /**
@@ -376,45 +332,31 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
    };
 
-   /**
-   * Registering handlers
-   * 
-   * @see org.exoplatform.ide.client.application.event.RegisterEventHandlersHandler#onRegisterEventHandlers(org.exoplatform.ide.client.application.event.RegisterEventHandlersEvent)
-   */
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
-
-      handlers.addHandler(SelectItemEvent.TYPE, this);
-
-      handlers.addHandler(PanelSelectedEvent.TYPE, this);
-   }
-
-   /**
-    * Initializing application
-    * 
-    * @see org.exoplatform.ide.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ide.client.application.event.InitializeApplicationEvent)
-    */
-   public void onInitializeApplication(InitializeApplicationEvent event)
-   {
-      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-
-      if (entryPoint == null)
-      {
-         return;
-      }
-
-      switchWorkspace(entryPoint);
-
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-         }
-      }.schedule(500);
-   }
+   //   /**
+   //    * Initializing application
+   //    * 
+   //    * @see org.exoplatform.ide.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ide.client.application.event.InitializeApplicationEvent)
+   //    */
+   //   public void onInitializeApplication(InitializeApplicationEvent event)
+   //   {
+   //      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+   //
+   //      if (entryPoint == null)
+   //      {
+   //         return;
+   //      }
+   //
+   //      switchWorkspace(entryPoint);
+   //
+   //      new Timer()
+   //      {
+   //         @Override
+   //         public void run()
+   //         {
+   //            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
+   //         }
+   //      }.schedule(500);
+   //   }
 
    /**
     * Select chosen item in browser.
@@ -483,6 +425,98 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
             display.updateItemState(file);
          }
       }
+   }
+
+   //   /**
+   //    * Switching active workspace
+   //    */
+   //   private void switchWorkspace(String entryPoint)
+   //   {
+   //
+   //      //handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
+   //      //handlers.addHandler(type, handler)
+   //      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+   //
+   //      Folder rootFolder = new Folder(entryPoint);
+   //      rootFolder.setIcon(Images.FileTypes.WORKSPACE);
+   //      VirtualFileSystem.getInstance().getChildren(rootFolder);
+   //   }
+
+   /**
+    * Switching active workspace by Switch Workspace Event
+    * 
+    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent)
+    */
+   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
+   {
+      entryPoint = null;
+
+      display.getBrowserTree().setValue(null);
+      selectedItems.clear();
+      selectedItems.clear();
+      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
+
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+
+      changingEntryPoint = true;
+
+      // TODO [IDE-307] check appConfig["entryPoint"] property
+      Folder rootFolder = new Folder(event.getEntryPoint());
+      VirtualFileSystem.getInstance().getProperties(rootFolder);
+   }
+
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      changingEntryPoint = false;
+
+      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
+      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
+      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+
+      entryPoint = event.getItem().getHref();
+
+      eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
+      
+      eventBus.fireEvent(new SelectPanelEvent(BrowserForm.ID));
+      eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
+
+      display.getBrowserTree().setValue(event.getItem());
+      display.selectItem(event.getItem().getHref());
+      selectedItems = display.getSelectedItems();
+
+      try
+      {
+         onRefreshBrowser(new RefreshBrowserEvent());
+      }
+      catch (Exception e)
+      {
+         Window.alert("Error!");
+         e.printStackTrace();
+      }
+
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      itemToSelect = null;
+      foldersToRefresh.clear();
+
+      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
+      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
+      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+
+      if (changingEntryPoint)
+      {
+         changingEntryPoint = false;
+         eventBus.fireEvent(new EntryPointChangedEvent(null));
+      }
+
+      //Window.alert("YA ERROR!!!!!!");
    }
 
 }

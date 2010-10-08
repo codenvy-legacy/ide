@@ -44,21 +44,8 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       setTitle("Copy Item(s)");
       setPrompt("Copy Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
-      setEvent(new CopyItemsEvent());
-   }
-
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      super.onRegisterHandlers();
+      setEvent(new CopyItemsEvent());      
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

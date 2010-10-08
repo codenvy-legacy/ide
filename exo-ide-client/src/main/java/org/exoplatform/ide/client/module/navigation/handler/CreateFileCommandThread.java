@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -63,7 +61,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, RegisterEventHandlersHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
+   TemplateListReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
@@ -82,17 +80,12 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
 
       handlers = new Handlers(eventBus);
 
-      eventBus.addHandler(RegisterEventHandlersEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
-
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
       eventBus.addHandler(CreateNewFileEvent.TYPE, this);
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);      
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

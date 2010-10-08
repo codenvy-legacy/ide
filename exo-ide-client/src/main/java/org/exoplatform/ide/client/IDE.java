@@ -2,6 +2,7 @@ package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
+import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -37,11 +38,13 @@ public class IDE extends VerticalPanel
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
-      new IDEForm(eventBus, context);
+      ControlsRegistration controlsRegistration = new ControlsRegistration(eventBus);
+      
+      new IDEForm(eventBus, context, controlsRegistration);
       
       new AutoCompletionManager(eventBus);
 
-      new ApplicationStateSnapshotListener(eventBus);
+      new ApplicationStateSnapshotListener(eventBus);         
       
       /*
        * MODULES INITIALIZATION

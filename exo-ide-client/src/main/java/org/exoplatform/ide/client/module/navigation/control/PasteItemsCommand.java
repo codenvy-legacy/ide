@@ -46,22 +46,10 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       setPrompt("Paste Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
       setEvent(new PasteItemsEvent());
-   }
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsToPasteSelectedEvent.TYPE, this);
-      addHandler(PasteItemsCompleteEvent.TYPE, this);
-      addHandler(ItemsSelectedEvent.TYPE, this);
-      super.onRegisterHandlers();
+      eventBus.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
+      eventBus.addHandler(PasteItemsCompleteEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)

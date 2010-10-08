@@ -57,14 +57,20 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
    private HandlerManager eventBus;
    
    private ApplicationConfiguration configuration;
+   
+   private Loader loader;
 
    public Configuration(HandlerManager eventBus, Loader loader)
    {
-      this.eventBus = eventBus;      
+      this.eventBus = eventBus;
+      this.loader = loader;
       eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
       configuration = new ApplicationConfiguration(getRegistryURL());
+   }
+   
+   public void loadConfiguration() {
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
+      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);      
    }
 
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)

@@ -18,34 +18,16 @@
  */
 package org.exoplatform.ide.client.event.edit;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class DeleteCurrentLineEvent extends GwtEvent<DeleteCurrentLineHandler>
+public interface EditorDeleteCurrentLineHandler extends EventHandler
 {
    
-   public static final GwtEvent.Type<DeleteCurrentLineHandler> TYPE = new GwtEvent.Type<DeleteCurrentLineHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeleteCurrentLineHandler handler)
-   {
-      handler.onDeleteCurrentLine(this); 
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteCurrentLineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event);
+   
 }

@@ -19,8 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -35,6 +37,7 @@ import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChang
 import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,8 +46,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileCommand extends IDEControl implements EditorActiveFileChangedHandler, ItemPropertiesSavedHandler,
-   EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler
+public class SaveFileCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+   ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler,
+   EntryPointChangedHandler
 {
 
    public static final String ID = "File/Save";
@@ -55,25 +59,32 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
 
    public SaveFileCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.save(), IDEImageBundle.INSTANCE.saveDisabled());
       setEvent(new SaveFileEvent());
       setIgnoreDisable(true);
+
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      eventBus.addHandler(FilePropertiesChangedEvent.TYPE, this);
+      eventBus.addHandler(FileContentSavedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
-   @Override
-   protected void onRegisterHandlers()
+   public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      setVisible(true);
-
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      addHandler(EditorFileContentChangedEvent.TYPE, this);
-      addHandler(FilePropertiesChangedEvent.TYPE, this);
-      addHandler(FileContentSavedEvent.TYPE, this);
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -82,6 +93,7 @@ public class SaveFileCommand extends IDEControl implements EditorActiveFileChang
 
       if (activeFile == null)
       {
+         setVisible(false);
          setEnabled(false);
          return;
       }

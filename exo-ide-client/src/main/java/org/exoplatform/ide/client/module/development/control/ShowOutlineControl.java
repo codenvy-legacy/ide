@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.module.development.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
@@ -41,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class ShowOutlineControl extends IDEControl implements EditorActiveFileChangedHandler,
+public class ShowOutlineControl extends SimpleControl implements EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler, FormOpenedHandler, FormClosedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -61,22 +61,18 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
 
    public ShowOutlineControl(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
       setEvent(new ShowOutlineEvent(true));
       setEnabled(true);
       setDelimiterBefore(true);
       setCanBeSelected(true);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-      addHandler(FormOpenedEvent.TYPE, this);
-      addHandler(FormClosedEvent.TYPE, this);
+      
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      eventBus.addHandler(FormOpenedEvent.TYPE, this);
+      eventBus.addHandler(FormClosedEvent.TYPE, this);      
    }
 
    /**
@@ -142,6 +138,7 @@ public class ShowOutlineControl extends IDEControl implements EditorActiveFileCh
       {
          showOutLine = true;
       }
+
       update();
    }
 

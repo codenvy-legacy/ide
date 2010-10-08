@@ -39,12 +39,10 @@ import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler;
-import org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent;
-import org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler;
+import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersEvent;
-import org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
@@ -102,9 +100,9 @@ import com.google.gwt.user.client.Timer;
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoTypingHandler,
-   RedoTypingHandler, FormatFileHandler, RegisterEventHandlersHandler, InitializeApplicationHandler,
+   RedoTypingHandler, FormatFileHandler, InitializeApplicationHandler,
    ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorReplaceFileHandler, DeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
+   EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorReplaceTextHandler, EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
    ApplicationSettingsReceivedHandler
 {
@@ -183,7 +181,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(RegisterEventHandlersEvent.TYPE, this);
       handlers.addHandler(InitializeApplicationEvent.TYPE, this);
 
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
@@ -195,65 +192,28 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorFindTextEvent.TYPE, this);
       handlers.addHandler(EditorReplaceTextEvent.TYPE, this);
       handlers.addHandler(EditorFindAndReplaceTextEvent.TYPE, this);
+      
+      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
+      handlers.addHandler(EditorInitializedEvent.TYPE, this);
+      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorSaveContentEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
+      handlers.addHandler(UndoTypingEvent.TYPE, this);
+      handlers.addHandler(RedoTypingEvent.TYPE, this);
+      handlers.addHandler(FileSavedEvent.TYPE, this);
+      handlers.addHandler(FormatFileEvent.TYPE, this);
+      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
+      handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
+      handlers.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
+      handlers.addHandler(EditorGoToLineEvent.TYPE, this);      
+      handlers.addHandler(EditorSetFocusEvent.TYPE, this);
+      
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
-   }
-
-   /**
-    * Registration event handlers
-    * 
-    */
-   public void onRegisterEventHandlers(RegisterEventHandlersEvent event)
-   {
-      //      for (File file : openedFiles.values())
-      //      {
-      //         ignoreContentChangedList.add(file.getHref());
-      //         try
-      //         {
-      //            Editor editor = EditorUtil.getEditor(file.getContentType(), context);
-      //            context.getOpenedEditors().put(file.getHref(), editor.getDescription());
-      //            
-      //            boolean lineNumbers = true;
-      //            if (applicationSettings.getValue("line-numbers") != null) {
-      //               lineNumbers = (Boolean)applicationSettings.getValue("line-numbers");
-      //            }
-      //            
-      //            display.openTab(file, lineNumbers, editor, false);
-      //         }
-      //         catch (EditorNotFoundException e)
-      //         {
-      //            e.printStackTrace();
-      //         }
-      //      }
-
-      handlers.addHandler(EditorContentChangedEvent.TYPE, this);
-      handlers.addHandler(EditorInitializedEvent.TYPE, this);
-      handlers.addHandler(EditorActivityEvent.TYPE, this);
-      handlers.addHandler(EditorSaveContentEvent.TYPE, this);
-
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
-
-      handlers.addHandler(UndoTypingEvent.TYPE, this);
-      handlers.addHandler(RedoTypingEvent.TYPE, this);
-
-      handlers.addHandler(FileSavedEvent.TYPE, this);
-
-      handlers.addHandler(FormatFileEvent.TYPE, this);
-
-      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
-
-      handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
-
-      handlers.addHandler(DeleteCurrentLineEvent.TYPE, this);
-
-      handlers.addHandler(EditorGoToLineEvent.TYPE, this);
-      
-      handlers.addHandler(EditorSetFocusEvent.TYPE, this);
    }
 
    /**
@@ -695,9 +655,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.ide.client.event.edit.DeleteCurrentLineHandler#onDeleteCurrentLine(org.exoplatform.ide.client.event.edit.DeleteCurrentLineEvent)
+    * @see org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler#onEditorDeleteCurrentLine(org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent)
     */
-   public void onDeleteCurrentLine(DeleteCurrentLineEvent event)
+   public void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event)
    {
       display.deleteCurrentLune(activeFile.getHref());
    }

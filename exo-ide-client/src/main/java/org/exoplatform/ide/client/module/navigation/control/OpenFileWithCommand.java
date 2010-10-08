@@ -16,8 +16,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.OpenFileWithEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -30,7 +32,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends IDEControl implements ItemsSelectedHandler
+public class OpenFileWithCommand extends SimpleControl implements ItemsSelectedHandler, EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";
 
@@ -38,24 +40,14 @@ public class OpenFileWithCommand extends IDEControl implements ItemsSelectedHand
 
    public OpenFileWithCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Open With...");
       setPrompt("Open File With...");
       setImages(IDEImageBundle.INSTANCE.openWith(), IDEImageBundle.INSTANCE.openWithDisabled());
       setEvent(new OpenFileWithEvent());
-   }
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -71,6 +63,15 @@ public class OpenFileWithCommand extends IDEControl implements ItemsSelectedHand
          return;
       }
       setEnabled(true);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null) {
+         setVisible(true);
+      } else {
+         setVisible(false);
+      }
    }
 
 }

@@ -49,20 +49,8 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
       setPrompt("Download Zipped Folder...");
       setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
       setEvent(new DownloadZippedFolderEvent());
-   }
 
-   @Override
-   protected void onInitializeApplication()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
-
-   @Override
-   protected void onRegisterHandlers()
-   {
-      super.onRegisterHandlers();
-      addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
