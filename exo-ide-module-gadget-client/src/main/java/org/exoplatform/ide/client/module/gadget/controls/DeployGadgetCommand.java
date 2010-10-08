@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.module.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.gadget.Images;
@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DeployGadgetCommand extends IDEControl implements EditorActiveFileChangedHandler
+public class DeployGadgetCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/Deploy Gadget";
@@ -39,20 +39,16 @@ public class DeployGadgetCommand extends IDEControl implements EditorActiveFileC
 
    public DeployGadgetCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);
-//      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
-//         .deployGadgetDisabled());
+      //      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
+      //         .deployGadgetDisabled());
       setIcon(Images.DEPLOY_GADGET);
       setEvent(new DeployGadgetEvent());
-   }
 
-
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

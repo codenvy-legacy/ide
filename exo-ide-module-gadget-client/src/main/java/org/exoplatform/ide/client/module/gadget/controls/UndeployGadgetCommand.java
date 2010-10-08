@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.module.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.gadget.Images;
@@ -25,13 +25,13 @@ import org.exoplatform.ide.client.module.gadget.event.UndeployGadgetEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class UndeployGadgetCommand extends IDEControl implements EditorActiveFileChangedHandler
+ */
+public class UndeployGadgetCommand extends SimpleControl implements EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/UnDeploy Gadget";
@@ -40,19 +40,15 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
 
    public UndeployGadgetCommand(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-//      setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(), GadgetPluginImageBundle.INSTANCE
-//         .undeployGadgetDisabled());
+      // setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(),
+      // GadgetPluginImageBundle.INSTANCE
+      // .undeployGadgetDisabled());
       setIcon(Images.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
-   }
-
-
-   protected void onRegisterHandlers()
-   {
-      addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -64,7 +60,7 @@ public class UndeployGadgetCommand extends IDEControl implements EditorActiveFil
          return;
       }
 
-//      setVisible(true);
+      // setVisible(true);
 
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {
