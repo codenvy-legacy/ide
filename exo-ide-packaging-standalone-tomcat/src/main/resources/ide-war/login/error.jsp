@@ -1,8 +1,16 @@
 <html>
 <head>
-<title>Login Page for Examples</title>
+<title>eXo IDE Login Page</title>
 <body bgcolor="white">
-<form method="POST" action='<%= response.encodeURL("j_security_check") %>' >
+<table width="100%" height="100%">
+   <tr align="center" valign="bottom">
+   <td>
+   <img alt="ide" src="../../eXo-IDE-Logo.png">
+   </td>
+   </tr>
+   <tr align="center" valign="top">
+   <td> 
+  <form method="POST" action='<%=response.encodeURL("j_security_check")%>'>
   <table border="0" cellspacing="5">
     <tr>
       <th align="right">Username:</th>
@@ -16,7 +24,13 @@
       <td align="right"><input type="submit" value="Log In"></td>
       <td align="left"><input type="reset"></td>
     </tr>
+    <tr>
+    <td colspan="2"><font color="red">Invalid username and/or password, please try</font></td>
+    </tr>
   </table>
-</form>
+  </form>
+  </td>
+  </tr>
+</table>
 </body>
 </html>

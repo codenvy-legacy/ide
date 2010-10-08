@@ -45,7 +45,7 @@ public class Utils
    
    public static final String PASSWD = "gtn";
    
-   public static final String COMMAND =  "/services/groovy/load?state=";
+   public static final String COMMAND =  "/ide/groovy/";
    
    public static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
    {
@@ -56,12 +56,13 @@ public class Utils
       return connection;
    }
    
-   private static int changeServiceState(String baseUrl, String restContext, String location, boolean state) throws IOException, ModuleException
+   private static int changeServiceState(String baseUrl, String restContext, String location, String state) throws IOException, ModuleException
    {
-      URL url = new URL(baseUrl + restContext + COMMAND + String.valueOf(state));
+      URL url = new URL(baseUrl + restContext + COMMAND + state);
       HTTPConnection connection = getConnection(url);
-      NVPair[] headers = new NVPair[1];
-      headers[0] = new NVPair("location", location);
+      NVPair[] headers = new NVPair[2];
+      headers[0] = new NVPair("Location", location);
+      headers[1] = new NVPair(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED);
       HTTPResponse response = connection.Post(url.getFile(),"", headers);
       return response.getStatusCode();
    }
@@ -76,7 +77,7 @@ public class Utils
     */
    public static int undeployService(String baseUrl, String restContext, String location) throws IOException, ModuleException
    {
-      return changeServiceState(baseUrl, restContext, location, false);
+      return changeServiceState(baseUrl, restContext, location, "undeploy");
    }
    
    /**
@@ -89,7 +90,7 @@ public class Utils
     */
    public static int deployService(String baseUrl, String restContext, String location) throws IOException, ModuleException
    {
-     return changeServiceState(baseUrl, restContext, location, true);
+     return changeServiceState(baseUrl, restContext, location, "deploy");
    }
    
    public static String readFileAsString(String filePath) throws java.io.IOException
@@ -107,8 +108,5 @@ public class Utils
       reader.close();
       return fileData.toString();
    }
-   
-   
-   
 
 }

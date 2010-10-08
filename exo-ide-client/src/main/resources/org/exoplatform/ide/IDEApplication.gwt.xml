@@ -46,8 +46,4 @@
    <!-- Specify the application specific style sheet. -->
    <stylesheet src="IDE.css" />
 
-   <generate-with class="org.exoplatform.ide.rebind.RolesGenerator">
-      <when-type-assignable class="org.exoplatform.ide.client.framework.application.event.RegisterEventHandlersHandler" />
-   </generate-with>
-
 </module>

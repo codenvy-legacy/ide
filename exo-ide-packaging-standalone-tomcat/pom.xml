@@ -123,10 +123,10 @@
                         <phase>install</phase>
                         <configuration>
                            <tasks>
-                              <copy todir="${project.build.directory}/packager-conf/unwar/WEB-INF" overwrite="true" >
-                                 <fileset dir="${basedir}/src/main/resources/ide-war/WEB-INF" />
+                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true" >
+                                 <fileset dir="${basedir}/src/main/resources/ide-war" />
                                </copy>
-                               <copy todir="${project.build.directory}/tomcat-ide">
+                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
                                </copy>
                               <move todir="${project.build.directory}/tomcat-ide/lib">
@@ -134,7 +134,6 @@
                               </move>
                               <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" needxmlfile="false">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                                 <fileset dir="${basedir}/src/main/resources/security" />
                               </war>
                                <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
                                  <fileset dir="${basedir}/src/main/resources/rest-war" />
