@@ -26,6 +26,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,9 +48,11 @@ public class RunRestServiceCommandTest extends BaseTest
 
    private final static String FILE_FOR_CHANGE_CONTENT_NAME = "RestServiceChangeContent.groovy";
 
-   private final static String NEW_FILE_NAME = "NewRestService.groovy";
+   private final static String NEW_FILE_NAME = "NewRestService";
+   
+   private final static String FOLDER_NAME = "RunRestServiceCommandTest";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -59,6 +62,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       try
       {
+         VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath + SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, URL + SIMPLE_FILE_NAME);
          VirtualFileSystemUtils.put(filePath + NON_VALID_FILE_NAME, MimeType.GROOVY_SERVICE, URL + NON_VALID_FILE_NAME);
          VirtualFileSystemUtils.put(filePath + FILE_FOR_CHANGE_CONTENT_NAME, MimeType.GROOVY_SERVICE, URL
@@ -79,10 +83,11 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.delete(URL + NON_VALID_FILE_NAME);
-         VirtualFileSystemUtils.delete(URL + FILE_FOR_CHANGE_CONTENT_NAME);
-         VirtualFileSystemUtils.delete(URL + NEW_FILE_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NEW_FILE_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NON_VALID_FILE_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_FOR_CHANGE_CONTENT_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);
+         VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
       {
@@ -103,6 +108,9 @@ public class RunRestServiceCommandTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
 
       //---- 2 -----------------
@@ -131,7 +139,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + SIMPLE_FILE_NAME
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + SIMPLE_FILE_NAME
             + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
@@ -164,6 +172,8 @@ public class RunRestServiceCommandTest extends BaseTest
       //open file
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
 
@@ -219,6 +229,8 @@ public class RunRestServiceCommandTest extends BaseTest
       //open file
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
 
@@ -252,7 +264,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/"
             + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
@@ -270,6 +282,8 @@ public class RunRestServiceCommandTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP);
       createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
 
       //---- 2 -----------------
@@ -278,21 +292,11 @@ public class RunRestServiceCommandTest extends BaseTest
       checkToolbarButtonState(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
+      selectItemInWorkspaceTree(FOLDER_NAME);
       //---- 3 -----------------
       //call Run Groovy Service command
       runToolbarButton(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
-
-      //---- 4 -----------------
-      //check warning dialo appears:
-      //Do you want to save file
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-
-      //click ok button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //---- 5 -----------------
       //save as dialog appears
@@ -314,7 +318,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + NEW_FILE_NAME
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + NEW_FILE_NAME
             + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));

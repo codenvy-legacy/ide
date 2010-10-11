@@ -16,20 +16,19 @@
  */
 package org.exoplatform.ide;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-
 import org.exoplatform.common.http.client.CookieModule;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.NVPair;
-import org.exoplatform.common.http.client.ParseException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,8 +37,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 */
 public class Utils
 {
-   
-   public static final String REALM = "gatein-domain";
    
    public static final String USER = "root";
    
