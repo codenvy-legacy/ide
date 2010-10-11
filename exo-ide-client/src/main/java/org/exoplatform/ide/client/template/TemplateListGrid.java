@@ -22,7 +22,9 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
+import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 
@@ -108,6 +110,10 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       if (template instanceof FileTemplate)
       {
          return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
+      }
+      else if (template instanceof ProjectTemplate)
+      {
+         return Images.FileTypes.FOLDER;
       }
       
       return null;

@@ -64,6 +64,16 @@ private String previousExtension;
       
       updateTemplateList(templateList);
    }
+   
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#bindDisplay(org.exoplatform.ide.client.template.CreateFromTemplateDisplay)
+    */
+   @Override
+   public void bindDisplay(CreateFromTemplateDisplay<FileTemplate>d)
+   {
+      super.bindDisplay(d);
+      display.getNameField().setValue("Untitled file");
+   }
 
    /**
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)

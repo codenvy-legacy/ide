@@ -115,8 +115,6 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
          }
       });
 
-      display.getNameField().setValue("Untitled");
-
       display.getTemplateListGrid().setValue(templateList);
 
       display.disableCreateButton();

@@ -57,6 +57,8 @@ implements FolderCreatedHandler, FileContentSavedHandler
    
    private String baseHref;
    
+   private Folder projectFolder;
+   
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       super(eventBus, selectedItems);
@@ -75,6 +77,16 @@ implements FolderCreatedHandler, FileContentSavedHandler
       }
       
       initFileAndProjectTemplates(templateList);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#bindDisplay(org.exoplatform.ide.client.template.CreateFromTemplateDisplay)
+    */
+   @Override
+   public void bindDisplay(CreateFromTemplateDisplay<ProjectTemplate>d)
+   {
+      super.bindDisplay(d);
+      display.getNameField().setValue("Untitled project");
    }
 
    /**
@@ -166,37 +178,39 @@ implements FolderCreatedHandler, FileContentSavedHandler
          Dialogs.getInstance().showError("Select root folder for project!");
          return;
       }
-      selectedTemplate.setName(projectName);
-      buildItemsList(selectedTemplate, baseHref);
+      
+      build(selectedTemplate.getChildren(), baseHref + projectName + "/");
+      projectFolder = new Folder(baseHref + projectName + "/");
       
       handlers.addHandler(FolderCreatedEvent.TYPE, this);
       
-      VirtualFileSystem.getInstance().createFolder(folderList.get(0));
-      itemsCreated = 1;
+      VirtualFileSystem.getInstance().createFolder(projectFolder);
    }
    
-   private void buildItemsList(Template template, String href)
+   private void build(List<Template>templates, String href)
    {
-      if (template instanceof ProjectTemplate)
+      if (templates == null || templates.size() == 0)
       {
-         ProjectTemplate projectTemplate = (ProjectTemplate)template;
-         
-         folderList.add(new Folder(href + projectTemplate.getName() + "/"));
-         if (projectTemplate.getChildren() != null)
-         {
-            for (Template t : projectTemplate.getChildren())
-            {
-               buildItemsList(t, href + projectTemplate.getName() + "/");
-            }
-         }
+         return;
       }
-      else if (template instanceof FileTemplate)
+      
+      for (Template template : templates)
       {
-         FileTemplate fileTemplate = (FileTemplate)template;
-         File file = createFileFromTemplate(fileTemplate, href);
-         if (file != null)
+         if (template instanceof ProjectTemplate)
          {
-            fileList.add(file);
+            ProjectTemplate projectTemplate = (ProjectTemplate)template;
+            
+            folderList.add(new Folder(href + projectTemplate.getName() + "/"));
+            build(projectTemplate.getChildren(), href + projectTemplate.getName() + "/");
+         }
+         else if (template instanceof FileTemplate)
+         {
+            FileTemplate fileTemplate = (FileTemplate)template;
+            File file = createFileFromTemplate(fileTemplate, href);
+            if (file != null)
+            {
+               fileList.add(file);
+            }
          }
       }
    }
@@ -231,7 +245,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
          return;
       }
       handlers.removeHandler(FileContentSavedEvent.TYPE);
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), folderList.get(0)));
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       display.closeForm();
    }
 
