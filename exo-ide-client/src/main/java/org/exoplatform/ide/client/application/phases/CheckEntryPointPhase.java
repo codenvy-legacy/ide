@@ -56,7 +56,7 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       this.eventBus = eventBus;
       this.applicationConfiguration = applicationConfiguration;
       this.applicationSettings = applicationSettings;
-      
+
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
@@ -69,18 +69,13 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       {
          if (applicationConfiguration.getDefaultEntryPoint() != null)
          {
-            String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();            
+            String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
             if (!defaultEntryPoint.endsWith("/"))
             {
                defaultEntryPoint += "/";
             }
-            
-            Window.alert("Default entry point [" + defaultEntryPoint + "]");            
-
             applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
-         }         
-      } else {
-         Window.alert("entry point is not null!!!!!!1");
+         }
       }
 
       if (applicationSettings.getValueAsString("entry-point") != null)
@@ -97,29 +92,28 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      if (event.getEntryPoint() == null) {
+      if (event.getEntryPoint() == null)
+      {
          promptToSelectEntryPoint();
       }
    }
-   
-   protected void promptToSelectEntryPoint() {
+
+   protected void promptToSelectEntryPoint()
+   {
       // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
-      Dialogs
-         .getInstance()
-         .showError(
-            "Workspace was not set!",
-            //"Workspace was not set. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
-            "Workspace was not set. Please, select another workspace manually from the next dialog!",
-            new BooleanValueReceivedCallback()
+      Dialogs.getInstance().showError("Workspace was not set!",
+         //"Workspace was not set. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
+         "Workspace was not set. Please, select another workspace manually from the next dialog!",
+         new BooleanValueReceivedCallback()
+         {
+            public void execute(Boolean value)
             {
-               public void execute(Boolean value)
+               if (value)
                {
-                  if (value)
-                  {
-                     eventBus.fireEvent(new SelectWorkspaceEvent());
-                  }
+                  eventBus.fireEvent(new SelectWorkspaceEvent());
                }
-            });      
+            }
+         });
    }
 
 }

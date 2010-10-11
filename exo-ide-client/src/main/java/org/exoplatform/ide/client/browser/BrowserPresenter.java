@@ -65,7 +65,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -280,9 +279,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onChildrenReceived(ChildrenReceivedEvent event)
    {
-      //      Window.alert("Children received!!!!!!1");
-      //      Window.alert("event.getFolder().getHref() " + event.getFolder().getHref());
-
       handlers.removeHandler(ChildrenReceivedEvent.TYPE);
       handlers.removeHandler(ExceptionThrownEvent.TYPE);
       foldersToRefresh.remove(event.getFolder());
@@ -479,7 +475,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       entryPoint = event.getItem().getHref();
 
       eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
-      
+
       eventBus.fireEvent(new SelectPanelEvent(BrowserForm.ID));
       eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
 
@@ -493,7 +489,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
       catch (Exception e)
       {
-         Window.alert("Error!");
          e.printStackTrace();
       }
 
@@ -515,8 +510,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          changingEntryPoint = false;
          eventBus.fireEvent(new EntryPointChangedEvent(null));
       }
-
-      //Window.alert("YA ERROR!!!!!!");
    }
 
 }

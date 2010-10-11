@@ -90,6 +90,7 @@ import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -100,11 +101,10 @@ import com.google.gwt.user.client.Timer;
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoTypingHandler,
-   RedoTypingHandler, FormatFileHandler, InitializeApplicationHandler,
-   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
-   EditorReplaceTextHandler, EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler,
-   ApplicationSettingsReceivedHandler
+   RedoTypingHandler, FormatFileHandler, InitializeApplicationHandler, ShowLineNumbersHandler,
+   EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
+   EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler,
+   EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler
 {
 
    public interface Display
@@ -143,7 +143,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       void deleteCurrentLune(String path);
 
       void goToLine(String path, int lineNumber, int columnNumber);
-      
+
       boolean findText(String findText, boolean caseSensitive, String path);
 
       boolean findReplaceText(String findText, String replace, boolean caseSensitive, String path);
@@ -173,7 +173,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
    private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
-   
+
    private Map<String, String> lockTokens;
 
    public EditorPresenter(HandlerManager eventBus, ApplicationContext context)
@@ -181,7 +181,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(InitializeApplicationEvent.TYPE, this);
+      //handlers.addHandler(InitializeApplicationEvent.TYPE, this);
 
       handlers.addHandler(EditorOpenFileEvent.TYPE, this);
 
@@ -192,7 +192,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorFindTextEvent.TYPE, this);
       handlers.addHandler(EditorReplaceTextEvent.TYPE, this);
       handlers.addHandler(EditorFindAndReplaceTextEvent.TYPE, this);
-      
+
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorInitializedEvent.TYPE, this);
       handlers.addHandler(EditorActivityEvent.TYPE, this);
@@ -206,14 +206,29 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
       handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
       handlers.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
-      handlers.addHandler(EditorGoToLineEvent.TYPE, this);      
+      handlers.addHandler(EditorGoToLineEvent.TYPE, this);
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
-      
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
+      {
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
+
+      if (applicationSettings.getValueAsMap("default-editors") == null)
+      {
+         applicationSettings.setValue("default-editors", new LinkedHashMap<String, String>(), Store.REGISTRY);
+      }
    }
 
    /**
@@ -236,12 +251,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
-      if (applicationSettings.getValueAsMap("lock-tokens") == null)
-      {
-         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
-      
       for (File file : openedFiles.values())
       {
          ignoreContentChangedList.add(file.getHref());
@@ -547,7 +556,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       File file = event.getFile();
-      
+
       if (file == null)
       {
          return;
@@ -583,8 +592,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          e.printStackTrace();
       }
 
-//      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-//      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
+      //      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+      //      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));
    }
 
    /**
@@ -642,15 +651,17 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       replaceFile(event.getFile(), event.getNewFile());
    }
-   
-   private void replaceFile(File oldFile, File newFile){
-      if (newFile == null){
+
+   private void replaceFile(File oldFile, File newFile)
+   {
+      if (newFile == null)
+      {
          display.updateTabTitle(oldFile.getHref());
          return;
       }
       ignoreContentChangedList.add(newFile.getHref());
       display.replaceFile(oldFile, newFile);
-      
+
       display.updateTabTitle(newFile.getHref());
    }
 
@@ -669,7 +680,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       display.goToLine(activeFile.getHref(), event.getLineNumber(), event.getColumnNumber());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
     */
@@ -722,11 +733,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          String file = it.next();
          display.getEditor(file).setHotKeyList(hotKeyList);
       }
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
    }
 
 }
