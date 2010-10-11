@@ -1,13 +1,27 @@
-The template file is a combination of HTML code and groovy code blocks. The usage of eXo IDE gives the possibility to create and edit those files in editor.
+The _Groove Template_ file is a combination of HTML code and groovy code blocks. The usage of eXo IDE gives the possibility to create and edit those files in editors.
 
-h1. Creation and editing templates
+h1. Create and Edit Groovy Template
 
-To create new groovy template, click on _Toolbar_ *"New->Groovy Template"* button or select *"File->New->Groovy Template"* in top menu. The editor will open new empty file; add content there and the code will be highlighted. Save file using "Save As" in "File" on top menu or _Toolbar_ button. With groovy template file _Outline Panel_ and autocomplete, but only in HTML tags by now, can be used.
+To create a new groovy template, do as follows:
+* *Step 1:* Go to *New > Groovy Template* on the _Toolbar_; or select *File > New > Groovy Template* on the top menu. The editor will open a new empty file.
+* *Step 2:* Add content and the code will be highlighted. 
+* *Step 3:* Save the file selecting *File > Save As* on  the top menu or clicking the *Save As* icon on the _Toolbar_. With groovy template file _Outline Panel_ and autocomplete, but only in HTML tags by now, can be used.
 
 !groovy_template.png|border=1!
 
-*Picture 27. Operations with groovy templates*
+*Illustration 27. Operations with groovy templates*
 
 h1. View properties
 
-To view properties of the groovy template click "Show Properties" button on the right corner of the _Toolbar_.
+To view properties of the _Groovy Template_, click the *Show Properties* button on the right corner of the _Toolbar_.
+
+h1. Preview Groovy Template
+
+To preview Groovy Template you should do as follows:
+* *Step 1:* Open saved earlier Groovy Template file
+* *Step 2:* Click the *Show Preview* button on the _Toolbar_; or go to *Run->Show Preview* on top menu.
+   Groovy Template will be opened in the _Gadget Container_ of _Preview Tab_, as it is figured out at the illustration *"Groovy templates preview"* below:
+
+!gtmpl_operations.png|border=1!
+
+*Illustration 27.1. Groovy templates preview*

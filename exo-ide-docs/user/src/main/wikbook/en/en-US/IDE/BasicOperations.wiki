@@ -1,64 +1,66 @@
-When you access to the eXo IDE you will get the window like this:
+When you access the eXo IDE, a window will appear:
 
 !main.png!
 
-*Picture 2. eXo IDE interface with main parts*
+*Illustration 2. The eXo IDE interface with main parts*
 
-IDE gadget operates with so called Virtual File System which provides known folders / files model. At a given time an IDE user can operate with some one representation of VFS, which is represented as a _Workspace_. Current Workspace is displayed in _Workspace Panel_ which is displayed in the left side panel as a tree of folders and files. _Outline Panel_ for quick access to variables and functions (only for JavaScript, HTML, XML and Gadget files), and _Content Panel_, which consists of two horizontal panels:
-* _Top Panel_ represents files in several file tabs with content;
-* _Bottom Panel_ may contain several tabs with list of file properties, REST Service or Google Gadget output messages, HTML or Gadget files preview. To view this tabs, just use special buttons at the right part of the _Toolbar_ or select *View* or *Run* from the top menu.
-These panels are divided by _Horizontal Resize Bar_. Also _Workspace Panel_ and _Content Panel_ are divided by _Vertical Resize Bar_.
-You can maximize or minimize one of the file tabs or action tabs from bottom part of _Content Panel_ or _Outline Panel_ by clicking on the special button at the top right corner of the panel.
-Basic operations include browsing, creating, editing, coping, renaming, uploading, downloading, moving, deleting the files and folders.
+The IDE gadget operates with so-called _Virtual File System_ which provides known folders/files model. At a given time, the IDE user can operate with VFS, which is represented as a _Workspace_. The current _Workspace_ is displayed in the _Workspace Panel_ in the left panel as a tree of folders and files. The _Outline Panel_ is to do quick access to variables and functions (only for JavaScript, HTML, XML and Gadget files). The _Content Panel_ consists of two horizontal panels:
+* The _Top Panel_ shows files in several file tabs with content.
+* The _Bottom Panel_ may contain several tabs with the list of file properties, REST Service, or Google Gadget output messages, HTML or Gadget files preview. To view these tabs, just use special buttons at the right part of the _Toolbar_, or select *View* or *Run* from the top menu.
+These panels are divided by _Horizontal Resize Bar_. Also, _Workspace Panel_ and _Content Panel_ are divided by _Vertical Resize Bar_.
+You can maximize or minimize one of the file tabs or action tabs from the bottom part of _Content Panel_ or _Outline Panel_ by clicking the special button at the top right corner of the panel.
+You can do some basic actions, such as browsing, creating, editing, coping, renaming, uploading, downloading, moving, deleting files and folders.
 
-h1. Browse File and Folders
-
-You can open, remove, rename, copy/cut/paste folders and files from the _Workspace Panel_.
 
 h1. Select Repository/Workspace
 
-IDE is able to work with one Workspace (Virtual File System) provided by server side. To choose it do as follows:
-# Select *"Window->Workspace..."* from the top menu.
-# Select appropriate _Workspace_ and click *"OK"*, or simply double click on the selected item:
+IDE can work with one workspace (_Virtual File System_) provided by the server side. To select a repository and/or workspace, do as follows:
+* *Step 1:* Go to *Window > Select Workspace...* from the top menu.
+* *Step 2:* Select an appropriate workspace.
+* *Step 3:* Click *OK*, or simply double-click the selected item:
 
 !select_workspace.png!
 
-*Picture 3. Select current workspace dialog window*
+*Illustration 3. Select the current workspace dialog window*
 
-If you open eXo IDE and when you don't have any current workspace, the dialog asking to go to *"Window->Select Workspace..."* will appear. If you click *"Yes"*, then the *"Workspace"* dialog window will be shown.
+If you open the eXo IDE without any current workspaces, the dialog asking you to go to *Window > Select Workspace...* will appear. If you click *Yes*, the *Workspace* dialog window will appear.
 
 !no_current_workspace.png!
 
-*Picture 4. Dialog window in case workspace is not set*
+*Illustration 4. The dialog window in case workspace is not set*
 
 h1. Open Folder
 
-There are two ways to open folder from the _Workspace Panel_:
-# Click on plus image at the left of the folder name.
-# Double click on folder item in the _Workspace Panel_.
+There are two ways to open a folder from the _Workspace Panel_:
+* *The first way:* Click the plus icon at the left of the folder name.
+* *The second way:* Double-click the folder item in the _Workspace Panel_.
 
-Path to the current folder is displayed under the _Workspace Panel_ in the _Status Bar_.
+The path to the current folder is displayed under the _Workspace Panel_ in the _Status Bar_.
 
 h1. Open File
 
-To open file in the _Content Panel_ , double click on the file item in the _Workspace Panel_. Gadget saves opened files history in browser cookies, so after refreshing browser window you will see all the file tabs created and opened before refreshing.
+To open a file in the _Content Panel_, double-click the file item in the _Workspace Panel_. The eXo IDE saves the history of opened files in browser cookies, so you can see all the file tabs created and opened even after refreshing the browser window.
 
 h1. Refresh Browser
 
-To refresh selected folder content in the _Workspace Panel_ click on *"Refresh Selected Folder"* button at the _Toolbar_, or use top menu command *"File->Refresh"*.
+To refresh the selected folder content in the _Workspace Panel_, click the *Refresh Selected Folder* button on the _Toolbar_, or go to *File > Refresh*.
 
-h1. Obtaining and copying to clipboard file's URL
+h1. Obtain and Copy File's URL to Clipboard 
 
-To view and copy some file/folder's absolute URL to clipboard , select item in the _Workspace Panel_ and then select *"View->Get URL..."* from the top menu. After this, gadget will display *"Item's URL"* dialog which enables you to copy target URL into clipboard.
+To view and copy some absolute URLs of file/folder to clipboard, do as follows:
+* *Step 1:* Select the appropriate item in the _Workspace Panel_.
+* *Step 2:* Go to *View > Get URL...* from the top menu.  
+The *Item's URL* dialog will be displayed that enables you to copy the target URL to the clipboard.
 
 h1. Copy / Cut / Paste Folders and Files
 
-There are three commands *"Copy / Cut / Paste Item(s)"*, which can be selected from _Toolbar_ or *"Edit"* on top menu. Just when you select the *"Copy"/"Cut"* command, *"Paste"* command will become available and you will be able to paste selected files or folders from one folder to another using *"Paste"* command:
+You can copy, cut, or paste an item by selecting corresponding icons from the _Toolbar_, or select *Edit* on the top menu. 
+Only after you have selected to copy or cut the item, the *Paste* function will be enabled. You will be able to paste selected files or folders from one folder to another using the *Paste* function:
 
 !cut_copy_paste_menu.png! !cut_copy_paste_toolbar.png!
 
-*Picture 5. Cut/Copy/Paste Item(s) in top menu and on Toolbar*
+*Illustration 5. Cut/Copy/Paste Items on the top menu and on the Toolbar*
 
 {note}
-eXo IDE does not support "Copy/Cut" operations for folders/files placed in the different folders. So if there are items selected on different levels, those commands will be disabled.
+The eXo IDE does not support "Copy" and "Cut" functions for folders and/or files placed in the different folders; so if any items selected on different levels, those functions will be disabled.
 {note}

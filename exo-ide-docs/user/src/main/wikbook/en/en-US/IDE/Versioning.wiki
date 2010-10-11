@@ -1,0 +1,45 @@
+Versioning, that is represented in IDE, gives an opportunity to work with the version history of the document: view the list of file's versions and their content in editor and restore the concrete version. A new version of the file is created each time, when content is saved ("Save" button). There are no versions in version history just after the file had been created.
+
+h1. View Version History
+
+To view the version history of the active file (opened in editor and selected), do as follows:
+* *Step 1:* Go to *File > Version History...* on top menu
+* *Step 2:* View the list of versions with the latest one on top as below:
+
+!viewVersions.png|border=1!
+
+*Illustration 28. View version history of active file*
+
+{note}
+If active file is version or new unsaved one, then menu item *"File > Version History..."* will be disabled.
+{note}
+
+h1. Open Version's Content
+
+To open file's version in editor, do as follows:
+* *Step 1:* Go to *File > Version History..." on top menu to open file's version history.
+* *Step 2:* Select the version in the list and double-click the selected item, or click the *Open* button.
+   The editor's tab with version has the title, which consists of the file's (version owner) name and the version's display name in brañkets.
+
+!openVersion.png|border=1!
+
+*Illustration 29. Open version in editor*
+
+{note}
+Opened version in editor is in read only mode, so you can not edit and save this version.
+{note}
+
+When version is opened in editor, it is possible to view the older or newer version relatively active one, just clicking *"View Older Version"* (*"View->Older Version"* in top menu) or *"View Newer Version"* (*"View->Newer Version"* in top menu) accordingly(pic. 30). In this case tab with opened version will display another one : older or newer (depends on your choice). When there is no newer version, than corresponding command is disabled, the same thing when there is no older version.
+
+!versionButtons.png|border=1!
+
+*Illustration 30. Navigate versions' controls*
+
+h1. Restore Version
+
+To restore version, click the *Restore Version* button at the right part of _Toolbar_, or go to "File > Restore Version" on top menu. 
+Then file content will be restored:
+
+!restoreVersion.png|border=1!
+
+*Illustration 31. Restore version*

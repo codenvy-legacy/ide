@@ -1,39 +1,60 @@
 h1. Create Folder
 
-To create folder, find and select target folder and click on popup *"New"* button in the _Toolbar_ and select *"Folder..."* or select *"File->New->Folder..."* from top menu, type new folder name in the *"Create Folder"* dialog and click on *"Create"* button.
-If _Workspace Panel_ has selected file, then folder will be created in the target folder of this file, if folder is selected - new folder will be it's child.
-In case there is no selected item in the _Workspace Panel_, then the folder will be created in the root folder.
-In case of selection create folder command will be disabled.
+To create a folder, do as follows:
+* *Step 1:* Find and select the target folder.
+* *Step 2:* Click the *New* button on the _Toolbar_, then select *Folder...* from the drop-down menu; or go to *File > New > Folder...* from the top menu.  
+* *Step 3:* Type the new folder name in the *Create folder* form.
+* *Step 4:* Click *Create* if you accept the new folder, or *Cancel* to discard without creating the new folder.
+
+If a file is selected in the _Workspace Panel_, there will be a folder created in the parent folder of this file. If a folder is selected, there will be a folder created under this folder.
+In case of no selected item in the _Workspace Panel_, the folder will be created in the root folder.
+In case of multiple selections, the command to create folders will be disabled.
 
 h1. Delete Folder
 
-To delete some folder(s), please, select folder item(s) in _Workspace Panel_, click on *"Delete Item(s)..."* button at the _Toolbar_ or call the *"File->Delete..."* from top menu and then confirm deletion in the *"Delete Item(s) "* dialog.
-Files opened in _Content Panel_ will be closed after removing the folder, which contains them.
+To delete a folder, do as follows:
+* *Step 1:* Select the folder item in the _Workspace Panel_.
+* *Step 2:* Click the *Delete Item(s)...* icon on the _Toolbar_, or go to *File > Delete...* from the top menu.
+* *Step 3:* Confirm the deletion in the *Delete Item(s)* dialog.
+Files opened in the _Content Panel_ will be closed after the folder containing them has been removed.
+
 {note}
-It is impossible to remove:
+You cannot remove:
 * workspace root folder;
 * multiple items from different hierarchic levels at the same time.
 
-So, the "Delete Item(s)" button will be disabled if the root item is selected or multiple selection on different levels in Workspace Panel.
+So, the "Delete Item(s)" button will be disabled if the root item is selected, or there are multiple selections on different levels in the "Workspace Panel".
 {note}
 
 h1. Rename Folder
 
-To rename folder, firstly, select folder to rename in _Workspace Panel_ then click *"File->Rename..."* from top menu. Rename dialog will appear, where you can change the current folder name by entering the new name in *"Rename item to:"* field. Then, click on *"Rename"* button to rename the folder.
-If there are some opened and unsaved files from renaming folder or sub folder in the _Content Panel_, you will be able to save those files after folder had been renamed.
-If there is a folder with the same name in the target folder, you will receive this error message.
+To rename a folder, do as follows:
+* *Step 1:* Select the folder you want to rename in the _Workspace Panel_.
+* *Step 2:* Go to *File > Rename...* from the top menu. 
+   The *Rename* dialog will appear.
+* *Step 3:* Enter the new name in the *Rename item to:* field. 
+* *Step 4:* Click *Rename* to accept.
+If there are any opened and unsaved files from the folder which is being renamed or its sub-folder in the _Content Panel_, you can save those files after renaming the folder.
+If there is a folder with the same name in the target folder, you will receive the error message.
+
+!ide-rename-folder-error.png!
 
 {note}
-It is impossible to rename workspace root folder.
+You cannot rename the workspace root folder.
 {note}
+
 {warning}
-Don't forget to undeploy all earlier deployed REST Service within the moved folder or sub folder before the folder would be renamed.
+Do not forget to undeploy all earlier deployed REST Services within the moved folder or sub-folder before the folder is renamed.
 {warning}
 
 h1. Download Zipped Folder
 
-If you want to download some folders from _JCR Repository_, you can use this special command: *"Download Zipped Folder...*". Simply select a target folder and call *"File->Download Zipped Folder..."* from top menu. After that, zip-archive with folder content will be prepared on the server and server will sent it to the client. So, the browser will propose to save archive on local computer.
+If you want to download some folders from the _JCR Repository_, do as follows:
+* *Step 1:* Highlight the target folder.
+* *Step 2:* Go to *File > Download Zipped Folder...* from the top menu.
+   The zip-archive with folder content will be prepared on the server and sent to the client. So, the browser will suggest you save the archive on the local computer.
+
 
 {note}
-The archive uses UTF-8 encoding in entry names. Be sure that your zip extractor supports UTF-8 in file names. Windows Explorer doesn't support it, you may use 7zip to unzip the archive. In Linux unzip(6.0 and older) command also doesn't support UTF-8 (depends on distributive), if you use KDE 4 as DE you may configure Dolphin to use archive as folder(in Dolphin go to "Settings->Configure Dolphin..->Navigation" and set "Open archive as folder" checkbox).
+The archive uses UTF-8 encoding in entry names. Be sure that your zip extractor supports UTF-8 in file names. The Windows Explorer does not support it, you may use 7zip to unzip the archive. In Linux, the unzip (6.0 and older) command also does not support UTF-8 (depending on distributive). If you use KDE 4 as DE, you may configure Dolphin to use archive as folder (in Dolphin, go to "Settings > Configure Dolphin.. > Navigation", then select the "Open archive as folder" checkbox).
 {note}

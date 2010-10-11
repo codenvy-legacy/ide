@@ -1,11 +1,11 @@
-h1. How to access and enable IDE
+h1. How to access and enable the eXo IDE
 
-Before working with eXo IDE gadget, make sure that you are logged in portal. 
-Then, select *"Group->Developers Page->IDE"* in top menu (see pic. 1) to open eXo IDE gadget.
+Before working with the eXo IDE gadget, make sure that you are logged in the portal. 
+Then, select *Group > Developers Page > IDE* on the top menu (see Illustration 1) to open the eXo IDE gadget.
 
 !eXo_IDE_gadget_in_platform.png!
 
-*Picture 1. Access eXo IDE gadget in eXo Platform 3.0*
+*Illustration 1. Access the eXo IDE gadget in eXo Platform 3.0*
 
 h1. Requirements
 
