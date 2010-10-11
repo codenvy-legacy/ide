@@ -1468,8 +1468,10 @@ public abstract class BaseTest
       {
          url = new URL(BASE_URL);
          connection = Utils.getConnection(url);
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/"+USER_NAME+"/IDE");
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications");
+         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");                                                                                          
+         connection = Utils.getConnection(url);                                                                                                                                                                
+         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications/IDE");    
+         
       }
       catch (MalformedURLException e)
       {
