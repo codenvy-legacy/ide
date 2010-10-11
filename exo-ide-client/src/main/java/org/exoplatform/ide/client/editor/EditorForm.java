@@ -175,7 +175,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
       // Set "read only" mode for editor
-      if (file instanceof Version)
+      if (file instanceof Version || readOnly)
       {
          configuration.setReadOnly(true);
       }
