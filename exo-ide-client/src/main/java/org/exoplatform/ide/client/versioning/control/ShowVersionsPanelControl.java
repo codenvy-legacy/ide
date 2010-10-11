@@ -47,8 +47,6 @@ public class ShowVersionsPanelControl extends SimpleControl
    {
       super(ID);
 
-      Window.alert("OGOGO!!!!!");
-
       setTitle(TITLE);
       setPrompt(PROMPT);
       setVisible(true);
