@@ -48,7 +48,9 @@ public interface MenuCommands
 
       public static final String GROOVY_TEMPLATE_FILE = "Groovy Template";
 
-      public static final String FROM_TEMPLATE = "From Template...";
+      public static final String FILE_FROM_TEMPLATE = "File From Template...";
+      
+      public static final String PROJECT_FROM_TEMPLATE = "Project From Template...";
 
       public static final String FOLDER = "Folder...";
       

@@ -125,7 +125,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       
       // --------6--------
       //Click on "File->New->From Template..." topmenu item.
-      createFileFromToolbar(MenuCommands.New.FROM_TEMPLATE);
+      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check "Create file" dialog window

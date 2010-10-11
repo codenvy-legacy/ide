@@ -46,7 +46,7 @@ public class GadgetDevelopmentTest extends BaseTest
    {
 
       //      Click on "New->From Template" button.
-      createFileFromToolbar(MenuCommands.New.FROM_TEMPLATE);
+      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/headerLabel/"));

@@ -128,7 +128,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       
       //------------ 3 ----------
       //Click on "New->From Template" button and then click on "test groovy template" item.
-      createFileFromToolbar(MenuCommands.New.FROM_TEMPLATE);
+      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check create "Create file dialog window"

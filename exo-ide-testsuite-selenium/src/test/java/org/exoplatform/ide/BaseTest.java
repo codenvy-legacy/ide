@@ -1321,7 +1321,7 @@ public abstract class BaseTest
     */
    protected void createFileFromTemplate(String templateName, String fileName) throws Exception
    {
-      createFileFromToolbar(MenuCommands.New.FROM_TEMPLATE);
+      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       useTemplateForm(templateName, fileName);
    }

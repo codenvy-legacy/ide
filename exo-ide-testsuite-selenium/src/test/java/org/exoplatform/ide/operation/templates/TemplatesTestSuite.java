@@ -29,7 +29,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CreateFileFromTemplateTest.class, RemoveNonDefaultFileTemplatesTest.class, SaveFileAsTemplateTest.class,
-   BigTemplateTest.class, CreateProjectTemplateTest.class})
+   BigTemplateTest.class, CreateProjectTemplateTest.class, CreateProjectFromTemplateTest.class, DeleteProjectTemplateTest.class,
+   CreateProjectFromTemplateWithUnexistingFileTemplateTest.class})
 public class TemplatesTestSuite
 {
 

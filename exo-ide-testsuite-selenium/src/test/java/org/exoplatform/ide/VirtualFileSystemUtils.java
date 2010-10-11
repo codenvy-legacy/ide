@@ -59,6 +59,17 @@ public class VirtualFileSystemUtils
       return response.getStatusCode();
    }
    
+   public static int put(byte[] data, String storageUrl) throws IOException, ModuleException
+   {
+      URL url = new URL(storageUrl);
+      HTTPConnection connection = Utils.getConnection(url);
+      NVPair[] headers = new NVPair[1];
+      headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, "application/xml");
+      HTTPResponse response = connection.Put(url.getFile(), data, headers);
+      return response.getStatusCode();
+      
+   }
+   
    
    /**
     * @param filePath
