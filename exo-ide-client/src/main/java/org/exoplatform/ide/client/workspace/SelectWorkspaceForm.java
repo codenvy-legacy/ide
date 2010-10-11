@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
+
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -83,6 +86,15 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
       createButtonsForm();
 
+      addCloseClickHandler(new CloseClickHandler()
+      {
+
+         public void onCloseClick(CloseClientEvent event)
+         {
+            destroy();
+         }
+      });
+      
       show();
 
       presenter = new SelectWorkspacePresenter(eventBus, applicationSettings, entryPointList, openedFiles, lockTokens);
