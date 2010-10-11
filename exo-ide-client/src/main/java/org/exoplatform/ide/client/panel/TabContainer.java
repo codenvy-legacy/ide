@@ -52,11 +52,11 @@ public class TabContainer extends TabSet implements SelectPanelHandler
 
    private Handlers handlers;
    
-   private final String ID = "ideNavigationTabSet";
+  // private final String ID = "ideNavigationTabSet";
 
-   public TabContainer(HandlerManager eventBus)
+   public TabContainer(HandlerManager eventBus, String id)
    {
-      setID(ID);
+      setID(id);
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
 

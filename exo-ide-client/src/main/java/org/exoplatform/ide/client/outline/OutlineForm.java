@@ -19,14 +19,11 @@
 package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.tab.Tab;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
 import java.util.List;
 
@@ -36,9 +33,11 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineForm extends Tab implements OutlinePresenter.Display
+public class OutlineForm extends SimpleTabPanel implements OutlinePresenter.Display
 {
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
+   
+   private static final String ID = "ideOutlineForm";
 
    private HandlerManager eventBus;
 
@@ -48,12 +47,8 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
    public OutlineForm(HandlerManager bus)
    {
+      super(ID);
       eventBus = bus;
-
-      Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
-      String imageHTML = ImageUtil.getHTML(tabIcon);
-      setTitle("<span>" + imageHTML + "&nbsp;" + "Outline" + "</span>");
-      setCanClose(true);
 
       treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
       treeGrid.setShowHeader(false);
@@ -65,8 +60,8 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
       treeGrid.setHeight100();
       treeGrid.setWidth100();
-      setPane(treeGrid);
-
+      
+      addMember(treeGrid);
       presenter = new OutlinePresenter(eventBus);
       presenter.bindDisplay(this);
 
@@ -87,7 +82,7 @@ public class OutlineForm extends Tab implements OutlinePresenter.Display
 
    public boolean isFormVisible()
    {
-      return getTabSet().isVisible();
+      return isVisible();
    }
    
    public List<Token> getSelectedTokens()

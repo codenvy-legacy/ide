@@ -41,6 +41,8 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
    private ApplicationContext context;
 
    private TabContainer tabContainer;
+   
+   private final String ID = "ideNavigationTabSet";
 
    /**
     * @param eventBus
@@ -52,7 +54,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
       setHeight100();
       setWidth100();
-      tabContainer = new TabContainer(eventBus);
+      tabContainer = new TabContainer(eventBus, ID);
       showBrowser();
 
       addMember(tabContainer);

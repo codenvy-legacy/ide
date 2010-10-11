@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.MinMaxControlButton;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredHandler;
@@ -27,11 +30,11 @@ import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
+import org.exoplatform.ide.client.panel.TabContainer;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 
@@ -51,25 +54,26 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
    private CodeHelperPresenter presenter;
 
-   private TabSet tabSet;
+   private TabContainer tabSet;
 
-   private OutlineForm outlineTab;
+  // private OutlineForm outlineTab;
 
    private Layout tabBarColtrols;
 
    protected MinMaxControlButton minMaxControlButton;
 
-   public CodeHelperForm(HandlerManager bus)
+   public CodeHelperForm(HandlerManager eventBus)
    {
-      eventBus = bus;
+      setID(ID);
+
+      this.eventBus = eventBus;
       new Handlers(eventBus);
 
-      tabSet = new TabSet();
-      tabSet.setID(TAB_SET_ID);
+      tabSet = new TabContainer(eventBus, TAB_SET_ID);
       createButtons();
-      outlineTab = new OutlineForm(eventBus);
-      outlineTab.setCanClose(true);
-      tabSet.addTab(outlineTab);
+      OutlineForm outlineForm= new OutlineForm(eventBus);
+      Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
+      tabSet.addTabPanel(outlineForm, "Outline", tabIcon, true);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
 
