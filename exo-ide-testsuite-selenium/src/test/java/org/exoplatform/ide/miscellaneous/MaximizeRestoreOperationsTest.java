@@ -295,7 +295,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //open new xml file
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //check content panel is visible, outline is visible,

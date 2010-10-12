@@ -146,7 +146,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ----------------
       //open create project from template form
-      createFileFromToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkCreateProjectFromTemplateForm();
       

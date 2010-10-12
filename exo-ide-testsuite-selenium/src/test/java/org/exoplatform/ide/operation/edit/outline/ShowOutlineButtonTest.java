@@ -43,47 +43,47 @@ public class ShowOutlineButtonTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 ------
       //open JavaScript file
-      createFileFromToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 2 ------
       //open xml file
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 3 ------
       //open html file
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 4 ------
       //open google gadget file
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 5 ------
       //open text file
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 6 ------
       //open css file
-      createFileFromToolbar(MenuCommands.New.CSS_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.CSS_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 7 ------
       //open rest service file
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 8 ------
       //open groovy script file
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 9 ------
       //open groovy template file
-      createFileFromToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 10 ------

@@ -91,7 +91,7 @@ public class PreviewHtmlFileTest extends BaseTest
       //---- 1 -----------------
       //open html file
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //---- 2 -----------------

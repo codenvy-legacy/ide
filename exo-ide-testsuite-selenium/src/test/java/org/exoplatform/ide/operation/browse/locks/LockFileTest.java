@@ -49,7 +49,7 @@ public class LockFileTest extends LockFileAbstract
       Thread.sleep(TestConstants.SLEEP);
       createFolder(FOLDER_NAME);
 
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
 
       saveAsByTopMenu(FILE_NAME);
 

@@ -111,7 +111,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(100);
       
       //create txt file
-      createFileFromToolbar("Text File");
+      runCommandFromMenuNewOnToolbar("Text File");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(textFile);
       Thread.sleep(TestConstants.SLEEP);
@@ -120,19 +120,19 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(100);
       
       //create html file
-      createFileFromToolbar("HTML File");
+      runCommandFromMenuNewOnToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(htmlFile);
       Thread.sleep(TestConstants.SLEEP);
       
       //create google gadget file
-      createFileFromToolbar("Google Gadget");
+      runCommandFromMenuNewOnToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(gadgetFile);
       Thread.sleep(TestConstants.SLEEP);
       
       //create groovy script file
-      createFileFromToolbar("Groovy Script");
+      runCommandFromMenuNewOnToolbar("Groovy Script");
       Thread.sleep(TestConstants.SLEEP);
       
       //closing all files

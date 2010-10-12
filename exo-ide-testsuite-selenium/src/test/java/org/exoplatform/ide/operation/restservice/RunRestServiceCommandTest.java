@@ -284,7 +284,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu

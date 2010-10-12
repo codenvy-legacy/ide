@@ -90,7 +90,7 @@ public class SaveAllFilesTest extends BaseTest
       selectItemInWorkspaceTree(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //create new xml file
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //check Save All command is disabled
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
@@ -104,7 +104,7 @@ public class SaveAllFilesTest extends BaseTest
       //create new groovy file
       selectItemInWorkspaceTree(FOLDER_NAME_2);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //Save All command is disabled
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);

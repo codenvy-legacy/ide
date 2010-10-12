@@ -51,7 +51,7 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
@@ -125,7 +125,7 @@ public class SearchLoadFileTest extends BaseTest
 
       closeTab("0");
 
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(7);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);

@@ -119,7 +119,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       //----- 2 ------------
       //Click "New -> XML File" button.
-      createFileFromToolbar("XML File");
+      runCommandFromMenuNewOnToolbar("XML File");
       Thread.sleep(TestConstants.SLEEP);
       
       //You will see default XML content  in the new file tab of "Content" panel.

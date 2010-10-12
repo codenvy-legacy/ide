@@ -49,7 +49,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
    public void testAutoload() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);

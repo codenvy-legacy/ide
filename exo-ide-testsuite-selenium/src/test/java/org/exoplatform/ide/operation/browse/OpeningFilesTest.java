@@ -51,14 +51,14 @@ public class OpeningFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folderName);
 
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
 
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
       closeTab("0");

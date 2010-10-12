@@ -51,7 +51,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
    public void testDeployExistPath() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsUsingToolbarButton(FIRST_NAME);

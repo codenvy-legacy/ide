@@ -46,7 +46,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 10; i++)

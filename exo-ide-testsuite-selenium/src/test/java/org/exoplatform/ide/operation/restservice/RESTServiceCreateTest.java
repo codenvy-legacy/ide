@@ -51,7 +51,7 @@ public class RESTServiceCreateTest extends BaseTest
    public void testCreatingRESTService() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsUsingToolbarButton(FIRST_NAME);

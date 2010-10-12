@@ -102,7 +102,7 @@ public class UsingKeyboardTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title=folder-1-2]/col[fieldName=title]"));
       
       // test keyboard with opened Content Panel
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       selectItemInWorkspaceTree(TEST_SUBFOLDER);

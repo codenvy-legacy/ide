@@ -166,7 +166,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //file newHtmlFile.html and new HTML-file should be opened only in the WYSYWYG editor.
       checkCkEditorOpened(0);

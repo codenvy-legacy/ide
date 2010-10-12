@@ -40,10 +40,10 @@ public class GoToLineTest extends BaseTest
    public void goToLine() throws Exception
    {
       //      Open new Groovy file in editor.
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //     Open new HTML file in editor.
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //      Select Groovy file.
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]");

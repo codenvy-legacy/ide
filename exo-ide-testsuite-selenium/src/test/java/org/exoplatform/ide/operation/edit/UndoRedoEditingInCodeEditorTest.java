@@ -55,7 +55,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
 	   public void testUndoRedoEditingInCodeEditor() throws Exception {
 			
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("Text File");
+      runCommandFromMenuNewOnToolbar("Text File");
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsByTopMenu(UNDO_REDO_TXT);
@@ -218,7 +218,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
       
-      createFileFromToolbar("XML File");
+      runCommandFromMenuNewOnToolbar("XML File");
       Thread.sleep(TestConstants.SLEEP);
       checkToolbarButtonState(ToolbarCommands.Editor.REDO, false);
       checkToolbarButtonState(ToolbarCommands.Editor.UNDO, false);

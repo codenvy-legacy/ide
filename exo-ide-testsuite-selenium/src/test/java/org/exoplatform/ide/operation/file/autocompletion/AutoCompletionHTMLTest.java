@@ -36,7 +36,7 @@ public class AutoCompletionHTMLTest extends BaseTest
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("HTML File");
+      runCommandFromMenuNewOnToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -60,7 +60,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("Google Gadget");
+      runCommandFromMenuNewOnToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -79,7 +79,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("Groovy Template");
+      runCommandFromMenuNewOnToolbar("Groovy Template");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");

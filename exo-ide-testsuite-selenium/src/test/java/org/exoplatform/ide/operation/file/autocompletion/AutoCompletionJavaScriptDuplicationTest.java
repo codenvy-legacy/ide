@@ -36,7 +36,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    public void testDuplication() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("JavaScript File");
+      runCommandFromMenuNewOnToolbar("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "var a;\n \n function a() {\n}");

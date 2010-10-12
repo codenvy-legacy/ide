@@ -81,7 +81,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Check adding folder ====================
       //----- 1 ----------------
       //open Create Project Template Form
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.CREATE_PROJECT_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       checkTreeNodeSelected(DEFAULT_PROJECT_NAME);
       
@@ -167,7 +167,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //check cancel button
       Thread.sleep(TestConstants.SLEEP);
       //call create project template form
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.CREATE_PROJECT_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       
       //click cancel button
@@ -180,7 +180,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Create project template with existing name ====================
       Thread.sleep(TestConstants.SLEEP);
       //----- 11 ----------------
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.CREATE_PROJECT_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       
       //type new project name to name field and press Enter

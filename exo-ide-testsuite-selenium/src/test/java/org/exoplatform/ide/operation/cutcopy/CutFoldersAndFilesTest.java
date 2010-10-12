@@ -60,7 +60,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       //      "test 2/test 1.1" folder
       createFolder(FOLDER_1);
 
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[0]");
@@ -71,7 +71,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       String oldText = getTextFromCodeEditor(0);
       closeTab("0");
 
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       saveAsUsingToolbarButton("testgroovy");
@@ -92,7 +92,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       createFolder("test 1-1");
 
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       selectItemInWorkspaceTree(FOLDER_2);

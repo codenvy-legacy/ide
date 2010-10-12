@@ -54,7 +54,7 @@ public class GeItemUrlTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       //Create first file
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(7);
       assertEquals("", getTextFromCodeEditor(0));
@@ -65,7 +65,7 @@ public class GeItemUrlTest extends BaseTest
       assertElementPresentInWorkspaceTree(file1Name);
 
       createFolder(folderName);
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("", getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);

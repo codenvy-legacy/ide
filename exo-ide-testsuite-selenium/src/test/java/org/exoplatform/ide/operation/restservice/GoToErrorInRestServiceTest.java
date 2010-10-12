@@ -114,7 +114,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //---- 3 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
@@ -130,7 +130,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //open another tab
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       
       //---- 2 -----------------
       //click on validation message to go to error
@@ -147,7 +147,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       closeTabIgnoreChanges("1");
       
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
@@ -187,7 +187,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //---- 5 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }

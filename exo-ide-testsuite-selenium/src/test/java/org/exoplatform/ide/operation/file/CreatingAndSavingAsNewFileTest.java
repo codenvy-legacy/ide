@@ -118,10 +118,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private void testFileSaveAs(String menuTitle, String fileExtention, String fileName) throws InterruptedException,
       Exception
    {
-      createFileFromToolbar(menuTitle);
+      runCommandFromMenuNewOnToolbar(menuTitle);
 
       assertTrue(selenium.isTextPresent("Untitled file." + fileExtention));
-      createFileFromToolbar(menuTitle);
+      runCommandFromMenuNewOnToolbar(menuTitle);
 
       Thread.sleep(TestConstants.SLEEP);
 

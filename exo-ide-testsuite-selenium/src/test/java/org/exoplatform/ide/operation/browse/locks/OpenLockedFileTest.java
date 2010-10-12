@@ -51,7 +51,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       Thread.sleep(TestConstants.SLEEP);
       createFolder(FOLDER_NAME);
 
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       saveAsByTopMenu(FILE_NAME);
       

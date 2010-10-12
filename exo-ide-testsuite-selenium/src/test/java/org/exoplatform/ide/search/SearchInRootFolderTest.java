@@ -67,7 +67,7 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folder1Name);
       //Create and save 
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(14);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);

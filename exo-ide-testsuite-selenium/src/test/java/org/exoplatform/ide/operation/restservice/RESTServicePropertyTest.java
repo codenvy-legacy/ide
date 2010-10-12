@@ -45,7 +45,7 @@ public class RESTServicePropertyTest extends BaseTest
    public void testProperty() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       
       checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES, false);

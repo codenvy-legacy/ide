@@ -66,7 +66,7 @@ public class SearchByMimeTypeTest extends BaseTest
       createFolder(folder1Name);
 
       //Create and save 
-      createFileFromToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);

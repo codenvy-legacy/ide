@@ -90,7 +90,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(FOLDER_NAME);
 //      selectItemInWorkspaceTree(WS_NAME);
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isTextPresent("Untitled file.xml"));
       assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));

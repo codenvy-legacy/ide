@@ -96,7 +96,7 @@ public class BigTemplateTest extends BaseTest
 
       closeTab("0");
 
-      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // check "Create file" dialog window

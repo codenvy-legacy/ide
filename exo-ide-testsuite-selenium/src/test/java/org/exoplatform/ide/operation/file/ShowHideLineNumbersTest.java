@@ -70,7 +70,7 @@ public class ShowHideLineNumbersTest extends BaseTest
          + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
       //------- 2 ---------------
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
 
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -94,7 +94,7 @@ public class ShowHideLineNumbersTest extends BaseTest
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 6 ---------------
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       checkLineNumbersVisible(false);
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 

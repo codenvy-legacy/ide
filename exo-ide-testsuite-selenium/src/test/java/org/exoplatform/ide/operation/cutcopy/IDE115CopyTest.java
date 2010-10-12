@@ -88,7 +88,7 @@ public class IDE115CopyTest extends BaseTest
       /*
        * Create Groovy Script file
        */
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       /*

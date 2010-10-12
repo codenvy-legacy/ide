@@ -75,7 +75,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectRootOfWorkspaceTree();
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isTextPresent("Untitled file.xml"));
       checkToolbarButtonState(ToolbarCommands.File.SAVE, false);

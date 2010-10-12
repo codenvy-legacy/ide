@@ -96,7 +96,7 @@ public class IDE113CopyTest extends BaseTest
       /*
        * create gadget
        */
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       /*
        * select item in tree
@@ -120,7 +120,7 @@ public class IDE113CopyTest extends BaseTest
       /*
        * create groovy file
        */
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
 
       /*
        * select element in tree

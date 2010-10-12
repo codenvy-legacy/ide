@@ -559,7 +559,7 @@ public abstract class BaseTest
     */
    protected void createFolder(String folderName) throws Exception
    {
-      createFileFromToolbar(MenuCommands.New.FOLDER);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FOLDER);
 
       //      runToolbarButton("New");
       //      
@@ -720,7 +720,7 @@ public abstract class BaseTest
     * menuName from list
     * @param menuName
     */
-   protected void createFileFromToolbar(String menuName) throws Exception
+   protected void runCommandFromMenuNewOnToolbar(String menuName) throws Exception
    {
       runToolbarButton("New");
 
@@ -1102,7 +1102,7 @@ public abstract class BaseTest
     */
    protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
    {
-      createFileFromToolbar(menuCommand);
+      runCommandFromMenuNewOnToolbar(menuCommand);
       Thread.sleep(1000);
 
       saveAsUsingToolbarButton(fileName);
@@ -1321,7 +1321,7 @@ public abstract class BaseTest
     */
    protected void createFileFromTemplate(String templateName, String fileName) throws Exception
    {
-      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       useTemplateForm(templateName, fileName);
    }

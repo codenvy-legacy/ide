@@ -36,7 +36,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    public void testPlainJS() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("JavaScript File");
+      runCommandFromMenuNewOnToolbar("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
 
       javaScriptTestVar();
@@ -50,7 +50,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      createFileFromToolbar("Google Gadget");
+      runCommandFromMenuNewOnToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -77,7 +77,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      createFileFromToolbar("HTML File");
+      runCommandFromMenuNewOnToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -132,7 +132,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
-      createFileFromToolbar("Groovy Template");
+      runCommandFromMenuNewOnToolbar("Groovy Template");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", " <script>");

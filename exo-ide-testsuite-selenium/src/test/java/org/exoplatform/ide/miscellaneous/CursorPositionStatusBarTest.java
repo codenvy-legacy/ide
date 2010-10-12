@@ -38,7 +38,7 @@ public class CursorPositionStatusBarTest extends BaseTest
    public void testCursorPositionInStatusBar() throws Exception
    {
 
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton("Untitled File.html");
 
@@ -79,7 +79,7 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
 
       //	Create Css
-      createFileFromToolbar(MenuCommands.New.CSS_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.CSS_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
 //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]");

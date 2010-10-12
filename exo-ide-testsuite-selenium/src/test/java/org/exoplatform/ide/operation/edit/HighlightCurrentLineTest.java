@@ -136,7 +136,7 @@ public class HighlightCurrentLineTest extends BaseTest
       lineHighlighterTest(8, 0);
 
       // Click in menu "File>New->REST Service".
-      createFileFromToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(1, 1);
       

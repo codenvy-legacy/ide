@@ -74,7 +74,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       createFolder(FOLDER_NAME);
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //--------- 2,3 -------------------
@@ -96,7 +96,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //--------- 4 -------------------
       //Click on "File->New->XML File" top menu command to open new file on Content Panel
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //check is file opened
@@ -144,7 +144,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       changeFileContent();
       
       //open javascript file
-      createFileFromToolbar("JavaScript File");
+      runCommandFromMenuNewOnToolbar("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
       
       //--------- 8 -------------------

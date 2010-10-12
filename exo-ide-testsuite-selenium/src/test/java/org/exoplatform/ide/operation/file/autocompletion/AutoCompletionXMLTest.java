@@ -36,7 +36,7 @@ public class AutoCompletionXMLTest extends BaseTest
    public void openForm() throws Throwable
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("XML File");
+      runCommandFromMenuNewOnToolbar("XML File");
       Thread.sleep(TestConstants.SLEEP);
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));

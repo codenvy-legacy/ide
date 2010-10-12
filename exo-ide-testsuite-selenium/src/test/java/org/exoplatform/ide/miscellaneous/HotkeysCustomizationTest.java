@@ -140,7 +140,7 @@ public class HotkeysCustomizationTest extends BaseTest
       //----- 2 ------------
       //Check Ctrl+S
       //open new file
-      createFileFromToolbar(MenuCommands.New.XML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
       selenium.controlKeyDown();
@@ -255,7 +255,7 @@ public class HotkeysCustomizationTest extends BaseTest
    {
     //----- 6 ------------
       //Create new text file
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       //type text to editor
       
       
@@ -613,7 +613,7 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       //----- 14 ------------
       //Create JavaScript file and press Ctrl+Space
-      createFileFromToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       runHotkeyWithinEditor(0, true, false, 32);
@@ -642,11 +642,11 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       //----- 15 ------------
       //Open several tabs (open existed documents and create some new)
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(GOOGLE_GADGET_FILE, false);
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       
       //----- 16 ------------
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)

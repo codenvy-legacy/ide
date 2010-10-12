@@ -55,6 +55,8 @@ public interface MenuCommands
       public static final String FOLDER = "Folder...";
       
       public static final String CHROMATTIC = "Chromattic Data Object";
+      
+      public static final String PROJECT_TEMPLATE = "Project Template...";
    }
 
    public interface Run
@@ -126,8 +128,6 @@ public interface MenuCommands
       public static final String REFRESH = "Refresh";
       
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
-      
-      public static final String CREATE_PROJECT_TEMPLATE = "Create Project Template...";
    }
 
    public interface Edit

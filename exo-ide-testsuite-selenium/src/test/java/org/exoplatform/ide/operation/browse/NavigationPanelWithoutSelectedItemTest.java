@@ -140,7 +140,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       checkToolbarButtonState(ToolbarCommands.File.SEARCH, false);        
       
       // create file when there is no selected item in the navigation panel
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       
       // check command accessibility in top menu and main toolbar and there is no selected item in the Navigation Panel
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);

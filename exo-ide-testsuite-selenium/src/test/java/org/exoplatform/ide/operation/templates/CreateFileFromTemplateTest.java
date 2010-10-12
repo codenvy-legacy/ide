@@ -120,7 +120,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       // -------- 7 ----------
       //Click on "File->New->From Template" top menu command.
-      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       //we will see the "Create file" dialog window.
@@ -141,7 +141,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // ---------2--------
       //Click on "New->From Template" button.
-      createFileFromToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       // -------3-------

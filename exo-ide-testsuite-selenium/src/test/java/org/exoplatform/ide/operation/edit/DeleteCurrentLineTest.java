@@ -42,7 +42,7 @@ public class DeleteCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       createFolder("test");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       String text1 = selenium.getText("//body[@class='editbox']");
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -118,7 +118,7 @@ public class DeleteCurrentLineTest extends BaseTest
       assertEquals("3 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //      Create empty "test1.txt" file end open this one in another tab.
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       saveAsUsingToolbarButton("test1.txt");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       Thread.sleep(TestConstants.SLEEP);

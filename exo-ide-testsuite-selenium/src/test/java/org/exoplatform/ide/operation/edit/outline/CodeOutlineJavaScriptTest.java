@@ -42,7 +42,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 2 -----------------
       //Create new JavaScript file and click on Show Outline button
-      createFileFromToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -180,7 +180,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //---- 8 -----------------
       //Create new text file.
       //new text file is active, Outline panel is hidden, Show Outline buttons on toolbar disappears
-      createFileFromToolbar(MenuCommands.New.TEXT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       checkOutlineVisibility(false);
       checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
 
@@ -243,7 +243,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //---- 12 -----------------
       //Create new Google Gadget file
-      createFileFromToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       //Gadget file is active. Outline panel is shown
       assertEquals("Untitled file.xml *", getTabTitle(2));
       checkOutlineVisibility(true);

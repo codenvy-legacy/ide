@@ -48,7 +48,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("REST Service");
+      runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsUsingToolbarButton(FILE_NAME);

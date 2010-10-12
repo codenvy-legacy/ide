@@ -55,7 +55,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 --------------
       //open new javascript file
-      createFileFromToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //no outline panel
       assertFalse(selenium
@@ -74,7 +74,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
 
       //---- 3 --------------
       //open new html file
-      createFileFromToolbar(MenuCommands.New.HTML_FILE);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //check outline present
       assertTrue(selenium

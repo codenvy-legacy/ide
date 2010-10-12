@@ -37,7 +37,7 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testPlainCSS() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("CSS File");
+      runCommandFromMenuNewOnToolbar("CSS File");
       Thread.sleep(TestConstants.SLEEP);
 
       cssTest();
@@ -52,7 +52,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("Google Gadget");
+      runCommandFromMenuNewOnToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -81,7 +81,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      createFileFromToolbar("HTML File");
+      runCommandFromMenuNewOnToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
