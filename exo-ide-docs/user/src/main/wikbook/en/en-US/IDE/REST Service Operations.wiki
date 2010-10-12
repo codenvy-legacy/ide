@@ -2,7 +2,7 @@ The eXo IDE application provides the original approach to operate with _REST Ser
 
 !ide-groovy_script_operations.PNG!
 
-*Illustration 23. REST Service operations*
+*Illustration 24. REST Service operations*
 
 All _REST Service_ commands are placed at the right part of the _Toolbar_ and in the *Run* on the top menu.
 
@@ -87,7 +87,7 @@ The _REST Service_ will be deployed automatically on the server after being save
 
 !ide_change_autoload_property.png!
 
-*Illustration 24. Change Autoload service property*
+*Illustration 25. Change Autoload service property*
 
 h1. Launch REST Service with set parameters and Preview Server Console Messages in the _Output Tab_
 

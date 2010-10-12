@@ -7,7 +7,7 @@ The found results will be displayed in the _Search Panel_ on the left of gadget:
 
 !ide-search.PNG!
 
-*Illustration 22. Search files*
+*Illustration 23. Search files*
 
 Within the _Search Panel_, you can only open found files, edit, save, save as template, or perform some specific operations like deploying for services, and going to the parent folder in the _Workspace Panel_.
 

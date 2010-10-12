@@ -8,7 +8,7 @@ To view the version history of the active file (opened in editor and selected), 
 
 !viewVersions.png|border=1!
 
-*Illustration 28. View version history of active file*
+*Illustration 29. View version history of active file*
 
 {note}
 If active file is version or new unsaved one, then menu item *"File > Version History..."* will be disabled.
@@ -19,11 +19,11 @@ h1. Open Version's Content
 To open file's version in editor, do as follows:
 * *Step 1:* Go to *File > Version History..." on top menu to open file's version history.
 * *Step 2:* Select the version in the list and double-click the selected item, or click the *Open* button.
-   The editor's tab with version has the title, which consists of the file's (version owner) name and the version's display name in brañkets.
+   The editor's tab with version has the title, which consists of the file's (version owner) name and the version's display name in braï¿½kets.
 
 !openVersion.png|border=1!
 
-*Illustration 29. Open version in editor*
+*Illustration 30. Open version in editor*
 
 {note}
 Opened version in editor is in read only mode, so you can not edit and save this version.
@@ -33,7 +33,7 @@ When version is opened in editor, it is possible to view the older or newer vers
 
 !versionButtons.png|border=1!
 
-*Illustration 30. Navigate versions' controls*
+*Illustration 31. Navigate versions' controls*
 
 h1. Restore Version
 
@@ -42,4 +42,4 @@ Then file content will be restored:
 
 !restoreVersion.png|border=1!
 
-*Illustration 31. Restore version*
+*Illustration 32. Restore version*

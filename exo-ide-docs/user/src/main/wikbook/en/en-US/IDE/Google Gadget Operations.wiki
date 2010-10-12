@@ -11,7 +11,7 @@ For the second and third ways, do not forget to select the MIME type as _"applic
 
 !ide-gadget_operations.png!
 
-*Illustration 25. Google Gadget Operations*
+*Illustration 26. Google Gadget Operations*
 
 h1. Deploy/Undeploy Google Gadgets in the Portal
 
@@ -32,7 +32,7 @@ It means that gadget was deployed to the portal with title set in the gadget's '
 
 !ide-deploy_gadget.png!
 
-*Illustration 26. Deploy Gadget*
+*Illustration 27. Deploy Gadget*
 
 Otherwise, the error message will be displayed in the _Output Tab_.
 
