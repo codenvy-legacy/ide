@@ -37,12 +37,12 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectT
 public class CreateProjectTemplateControl extends SimpleControl implements EntryPointChangedHandler
 {
 
-   public final static String ID = "File/Create Project Template...";
+   public final static String ID = "File/New/Project Template...";
 
    public CreateProjectTemplateControl(HandlerManager eventBus)
    {
       super(ID);
-      setTitle("Create Project Template...");
+      setTitle("Project Template...");
       setPrompt("Create Project Template...");
       setDelimiterBefore(true);
       setEnabled(true);

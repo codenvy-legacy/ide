@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectFromTemplateControl;
+import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
@@ -97,6 +98,14 @@ public class ControlsFormatter
          {
             return 1;
          }
+         if (control1 instanceof CreateProjectTemplateControl && control2 instanceof CreateFileFromTemplateControl)
+         {
+            return -1;
+         }
+         if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateProjectTemplateControl)
+         {
+            return 1;
+         }
          if (control1 instanceof CreateProjectFromTemplateControl && control2 instanceof CreateFileFromTemplateControl)
          {
             return -1;
@@ -124,6 +133,11 @@ public class ControlsFormatter
          }
          else if (control1 instanceof CreateProjectFromTemplateControl
             && !(control2 instanceof CreateProjectFromTemplateControl))
+         {
+            return 1;
+         }
+         else if (control1 instanceof CreateProjectTemplateControl
+            && !(control2 instanceof CreateProjectTemplateControl))
          {
             return 1;
          }

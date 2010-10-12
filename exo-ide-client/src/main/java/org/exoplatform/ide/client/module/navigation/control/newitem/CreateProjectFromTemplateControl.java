@@ -40,7 +40,6 @@ public class CreateProjectFromTemplateControl extends NewFileCommand
    {
       super(ID, eventBus, "Project From Template...", "Create Project From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateProjectFromTemplateEvent());
-      setDelimiterBefore(true);
    }
 
 }
