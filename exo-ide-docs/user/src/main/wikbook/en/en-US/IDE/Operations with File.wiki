@@ -161,7 +161,7 @@ h2. Create File from Template
 
 If you want to use some of predefined file template, you can use the *Create file* function. For example, to create simple gadget XML file, do as follows:
 
-* *Step 1:* Click the *New* button on the _Toolbar_, or press *Ctrl + New* keys to select *From Template...* from the pop-up window to open the dialog.
+* *Step 1:* Click the *New* button on the _Toolbar_ and select *File From Template...* from the pop-up window to open the dialog (or press *Ctrl + N* hotkeys).
 * *Step 2:* Select the needed file type and template.
 * *Step 3:* Verify the file name and click *Create* to accept.
 
@@ -173,7 +173,7 @@ h2. Remove Non-default File Template
 
 To remove the non-default file template, do as follows:
 * *Step 1:* Click the *New* button on the _Toolbar_.
-* *Step 2:* Select *From template...*; or press *Ctrl + N* hotkeys.
+* *Step 2:* Select *File From template...*; or press *Ctrl + N* hotkeys.
 * *Step 3:* Select the needed template and click *Delete*. 
   The dialog will appear to ask you to confirm the action. 
 
@@ -181,7 +181,7 @@ h1. Use Project Template
 
 h2.Create Project Template
 
-To create project template, go to *File > Create project template* on top menu:
+To create project template, go to *File > New > Project template...* on top menu or click *New* button on the _Toolbar_ and select *Project Template...*:
 
 !ide_create_project_template.png! 
 
