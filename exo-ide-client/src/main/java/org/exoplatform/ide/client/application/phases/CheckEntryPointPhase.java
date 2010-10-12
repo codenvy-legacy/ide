@@ -95,6 +95,8 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       if (event.getEntryPoint() == null)
       {
          promptToSelectEntryPoint();
+      } else {
+         new RestoreOpenedFilesPhase(eventBus, applicationSettings);
       }
    }
 

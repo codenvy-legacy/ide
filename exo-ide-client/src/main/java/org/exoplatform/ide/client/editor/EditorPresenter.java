@@ -90,7 +90,6 @@ import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
