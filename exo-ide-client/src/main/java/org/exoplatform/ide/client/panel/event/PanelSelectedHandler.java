@@ -18,8 +18,6 @@ package org.exoplatform.ide.client.panel.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -27,8 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
 */
 public interface PanelSelectedHandler extends EventHandler
 {
-   
+
    void onPanelSelected(PanelSelectedEvent event);
 
 }
-
