@@ -19,23 +19,19 @@
 package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by The eXo Platform SAS.
@@ -49,6 +45,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
    private static final String CREATE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/";
    
    private static final String DELETE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/";
+   
+   private static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/";
    
    private static final String PROJECT_NAME = "Sample Project";
    
@@ -75,8 +73,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
       + "<file-name>Main.groovy</file-name></file><file><template-file-name>Empty%20HTML</template-file-name>"
       + "<file-name>Index.html</file-name></file></items></folder></items></folder></items></template>";
    
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       templateUrl = URL + "template-" + System.currentTimeMillis();
       try
@@ -93,8 +91,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
       }
    }
    
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
@@ -109,33 +107,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
          e.printStackTrace();
       }
       
-//      cleanRegistry();
+      cleanRegistry();
       
-      
-      HTTPConnection connection;
-      URL url;
-      try
-      {
-         url = new URL(BASE_URL);
-         connection = Utils.getConnection(url);
-         connection.Delete(templateUrl);
-      }
-      catch (MalformedURLException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ProtocolNotSuppException e)
-      {
-         e.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
    
    @Test
@@ -171,6 +144,61 @@ public class CreateProjectFromTemplateTest extends BaseTest
       assertElementPresentInWorkspaceTree(FILE_HTML);
    }
    
+   @Test
+   public void testDeleteProjectTemplate() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      //----- 1 ----------------
+      //open create project from template form
+      createFileFromToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      
+      checkCreateProjectFromTemplateForm();
+      
+      //----- 2 ----------------
+      //select project template from list, type project name, click Create button
+      selectProjectTemplate(PROJECT_TEMPLATE_NAME);
+      
+      //----- 3 ----------------
+      //delete project template
+      selenium.click(DELETE_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //confirm deletion
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      assertEquals("Do you want to delete template " + PROJECT_TEMPLATE_NAME + "?", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      assertEquals("Template " + PROJECT_TEMPLATE_NAME + " deleted.", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   
+      
+      //----- 4 ----------------
+      //check template deleted
+      checkElementPresentInListGrid(PROJECT_TEMPLATE_NAME, false);
+      
+      //close
+      selenium.click(CANCEL_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+
+   private void checkElementPresentInListGrid(String projectTemplateName, boolean isPresent) throws Exception
+   {
+      if (isPresent)
+      {
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='"
+               + projectTemplateName + "']"));
+      }
+      else
+      {
+         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='" 
+            + projectTemplateName + "']"));
+      }
+   }
+   
    private void clickOpenIconOfFolder(String folderName) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
@@ -192,7 +220,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       assertEquals("Create project", selenium.getText("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/"));
       assertTrue(selenium.isElementPresent(DELETE_BUTTON_LOCATOR));
       assertTrue(selenium.isElementPresent(CREATE_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/"));
+      assertTrue(selenium.isElementPresent(CANCEL_BUTTON_LOCATOR));
       assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element"));
    }
    
