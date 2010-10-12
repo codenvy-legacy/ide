@@ -101,8 +101,6 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
 
    }
    
-   private static final String DEFAULT_PROJECT_NAME = "New Project";
-   
    private HandlerManager eventBus;
    
    private Handlers handlers;
@@ -129,8 +127,6 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       
       handlers.addHandler(TemplateCreatedEvent.TYPE, this);
       
-      display.getNameFieldKeyPressed().addKeyPressHandler(nameFieldKeyPressedHandler);
-      
       display.getCancelButton().addClickHandler(closeFormHandler);
 
       display.getCreateButton().addClickHandler(createTemplateHandler);
@@ -143,24 +139,9 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       
       display.getTemplateTreeGrid().addSelectionHandler(templateSelectedHandler);
 
-      ProjectTemplate projectTemplate = new ProjectTemplate(DEFAULT_PROJECT_NAME);
+      ProjectTemplate projectTemplate = new ProjectTemplate("/");
       display.getTemplateTreeGrid().setValue(projectTemplate);
    }
-   
-   private KeyPressHandler nameFieldKeyPressedHandler = new KeyPressHandler()
-   {
-      
-      public void onKeyPress(KeyPressEvent event)
-      {
-         if (event.getCharCode() == KeyCodes.KEY_ENTER)
-         {
-            final String nameValue = display.getNameField().getValue();
-            final String projectName = nameValue == null || nameValue.length() < 1 ? DEFAULT_PROJECT_NAME : nameValue;
-            display.getTemplateTreeGrid().getValue().setName(projectName);
-            display.setRootNodeName(projectName);
-         }
-      }
-   };
    
    private ClickHandler closeFormHandler  = new ClickHandler()
    {
@@ -380,6 +361,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
    
    private void createTemplate()
    {
+      String templateName = display.getNameField().getValue().trim();
+
+      if ("".equals(templateName))
+      {
+         Dialogs.getInstance().showError("You must enter project template name the first!");
+         return;
+      }
+      
       String description = "";
       if (display.getDescriptionField().getValue() != null)
       {
@@ -387,6 +376,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       }
       
       templateToCreate = display.getTemplateTreeGrid().getValue();
+      templateToCreate.setName(templateName);
       templateToCreate.setDescription(description);
       
       for (Template template : templateList)
