@@ -68,4 +68,13 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
       return "Create project";
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getNameFieldLabel()
+    */
+   @Override
+   String getNameFieldLabel()
+   {
+      return "Project name";
+   }
+
 }

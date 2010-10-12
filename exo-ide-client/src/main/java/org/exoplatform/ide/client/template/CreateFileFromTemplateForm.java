@@ -16,29 +16,12 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.module.vfs.api.Item;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -83,6 +66,15 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
    String getFormTitle()
    {
       return "Create file";
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getNameFieldLabel()
+    */
+   @Override
+   String getNameFieldLabel()
+   {
+      return "File Name";
    }
 
 }

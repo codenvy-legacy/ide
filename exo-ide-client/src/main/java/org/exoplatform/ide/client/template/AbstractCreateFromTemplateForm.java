@@ -132,7 +132,7 @@ implements CreateFromTemplateDisplay<T>
 
       DynamicForm form = new DynamicForm();
       form.setID(ID_DYNAMIC_FORM);
-      fileNameField = new TextField("Name","File Name");
+      fileNameField = new TextField("Name", getNameFieldLabel());
       fileNameField.setName(FILE_NAME_FIELD);
       fileNameField.setWidth(200);
       fileNameField.setWrapTitle(false);
@@ -149,6 +149,8 @@ implements CreateFromTemplateDisplay<T>
    }
    
    abstract String getCreateButtonTitle();
+   
+   abstract String getNameFieldLabel();
    
    abstract String getFormTitle();
    
