@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -60,7 +62,7 @@ public class CreateProjectTemplateTest extends BaseTest
    
    private static final String CANCEL_BUTTON_TITLE = "Cancel";
    
-   private static final String DEFAULT_PROJECT_NAME = "New Project";
+   private static final String ROOT_NODE_NAME = "/";
    
    private String myFolder = "myFolder";
    
@@ -68,8 +70,8 @@ public class CreateProjectTemplateTest extends BaseTest
    
    private String gadgetFileName = "SampleGadget.xml";
    
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       cleanRegistry();
    }
@@ -83,7 +85,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //open Create Project Template Form
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
-      checkTreeNodeSelected(DEFAULT_PROJECT_NAME);
+      checkTreeNodeSelected(ROOT_NODE_NAME);
       
       //----- 2 ----------------
       //add folder
@@ -96,7 +98,7 @@ public class CreateProjectTemplateTest extends BaseTest
       
       //----- 3 ----------------
       //select root of tree
-      clickOnTreeNode(DEFAULT_PROJECT_NAME);
+      selectRootNode();
       
       //try to add folder with the same name
       addFolder(myFolder);
@@ -119,7 +121,7 @@ public class CreateProjectTemplateTest extends BaseTest
       
       //----- 5 ----------------
       //select root node
-      clickOnTreeNode(DEFAULT_PROJECT_NAME);
+      selectRootNode();
       
       //----- 6 ----------------
       //try to add file with existing name
@@ -132,15 +134,9 @@ public class CreateProjectTemplateTest extends BaseTest
       
       //=================== Change project name ====================
       //----- 7 ----------------
-      //type new project name to name field and press Enter
+      //type new project name to name field
       selenium.type(NAME_FIELD, newProjectName);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPress(NAME_FIELD, "13");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //check project name changed
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideProjectTemplateTreeGrid\"]/body/row[0][name=" 
-         + newProjectName + "]/col[fieldName=name||0]"));
       
       //----- 8 ----------------
       //type description to description field
@@ -183,11 +179,9 @@ public class CreateProjectTemplateTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       
-      //type new project name to name field and press Enter
+      //type new project name to name field
       selenium.type(NAME_FIELD, newProjectName);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPress(NAME_FIELD, "13");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //click create button
       selenium.click(CREATE_BUTTON);
@@ -204,6 +198,36 @@ public class CreateProjectTemplateTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
       
       //----- 12 ----------------
+      //close
+      //click cancel button
+      selenium.click(CANCEL_BUTTON);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //check template form disappears
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      
+      //=================== Create project template with empty name ====================
+      //----- 13 ----------------
+      Thread.sleep(TestConstants.SLEEP);
+      //----- 11 ----------------
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
+      checkCreateProjectTemplateForm();
+      
+      //click create button
+      selenium.click(CREATE_BUTTON);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //check warn dialog appears
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      assertEquals("Error", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
+      //click ok button and close
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //check template form
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      
+      //----- 14 ----------------
       //close
       //click cancel button
       selenium.click(CANCEL_BUTTON);
@@ -233,12 +257,6 @@ public class CreateProjectTemplateTest extends BaseTest
 
    }
    
-   private void clickOnTreeNode(String name) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideProjectTemplateTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-   
    private void addFolder(String folderName) throws Exception
    {
       selenium.click(ADD_FOLDER_BUTTON);
@@ -249,6 +267,12 @@ public class CreateProjectTemplateTest extends BaseTest
          folderName);
       //click ok button
       selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   private void selectRootNode() throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideProjectTemplateTreeGrid\"]/body/row[0]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
@@ -298,7 +322,7 @@ public class CreateProjectTemplateTest extends BaseTest
       checkButtonEnabled(CANCEL_BUTTON_TITLE);
       
       //check first element selected
-      checkTreeNodeSelected("New Project");
+      checkTreeNodeSelected(ROOT_NODE_NAME);
    }
 
 }
