@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChang
 import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -93,7 +92,7 @@ public class SaveFileCommand extends SimpleControl implements EditorActiveFileCh
 
       if (activeFile == null)
       {
-         setVisible(false);
+//         setVisible(false);
          setEnabled(false);
          return;
       }
