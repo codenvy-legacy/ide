@@ -62,8 +62,19 @@ public class OpenLockedFileTest extends LockFileAbstract
       selenium.refresh();
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
-      
+     
+//      System.out.println(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"));
+//      if(!selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"))
+//      {
+//         selectItemInWorkspaceTree(FOLDER_NAME);
+//         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//         Thread.sleep(TestConstants.SLEEP);
+//         
+//         selectItemInWorkspaceTree(FILE_NAME);
+//         openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+//      }
       checkCantSaveLockedFile();
+     
       
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(TestConstants.SLEEP);

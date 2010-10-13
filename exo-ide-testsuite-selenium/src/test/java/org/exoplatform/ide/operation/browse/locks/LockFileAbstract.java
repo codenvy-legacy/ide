@@ -49,11 +49,14 @@ public abstract class LockFileAbstract extends BaseTest
    {
       if (isLocked)
       {
-         assertTrue(selenium.isTextPresent(fileName + "   [ Locked ]"));
+         assertTrue(selenium.isElementPresent("//nobr[contains(text(),\""+fileName+"\")]/img[@id='resourceLocked']"));
+//         assertTrue(selenium.isTextPresent(fileName + "   [ Locked ]"));
       }
       else
+         //assertTrue(selenium.isElementPresent("//img[@id='resourceLocked']"));
       {
-         assertFalse(selenium.isTextPresent(fileName + "   [ Locked ]"));
+         assertFalse(selenium.isElementPresent("//nobr[contains(text(),\""+fileName+"\")]/img[@id='resourceLocked']"));
+//         assertFalse(selenium.isTextPresent(fileName + "   [ Locked ]"));
       }
    }
 

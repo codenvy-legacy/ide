@@ -53,7 +53,7 @@ public class LockFileTest extends LockFileAbstract
 
       saveAsByTopMenu(FILE_NAME);
 
-      checkFileLocking(FILE_NAME, true);
+      checkFileLocking(FILE_NAME, false);
 
       assertElementPresentInWorkspaceTree(FILE_NAME);
 
@@ -63,7 +63,7 @@ public class LockFileTest extends LockFileAbstract
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      checkFileLocking(FILE_NAME, true);
+      checkFileLocking(FILE_NAME, false);
       
       typeTextIntoEditor(0, "Test test test");
       
@@ -85,7 +85,7 @@ public class LockFileTest extends LockFileAbstract
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
             
-      checkFileLocking(FILE_NAME, true);
+      checkFileLocking(FILE_NAME, false);
       
       typeTextIntoEditor(0, "go go go test");
       
@@ -93,7 +93,7 @@ public class LockFileTest extends LockFileAbstract
       
       closeTab("0");
       
-      checkFileLocking(FILE_NAME, true);
+      checkFileLocking(FILE_NAME, false);
       
    }
 
