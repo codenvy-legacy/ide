@@ -18,20 +18,21 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by The eXo Platform SAS.
@@ -44,13 +45,13 @@ import org.junit.Test;
 public class SavingPreviouslyEditedFileTest extends BaseTest
 {
    
-   private static final String FOLDER_NAME = String.valueOf(System.currentTimeMillis());
+   private static String FOLDER_NAME;// = UUID.randomUUID().toString();
    
-   private static final String FILE_NAME = "RepoFile.xml";
+   private static final String FILE_NAME = UUID.randomUUID().toString();
    
    private static final String DEFAULT_XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>";
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String XML_TEXT = "<test>\n"
       + "<settings>param</settings>\n"
@@ -67,13 +68,14 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       + "  </bean>\n"
       + "</test>";
    
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         FOLDER_NAME = UUID.randomUUID().toString();
+         VirtualFileSystemUtils.mkcol(URL +  FOLDER_NAME + "/");
       }
       catch (IOException e)
       {
@@ -85,12 +87,12 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       }
    }
    
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME + "/");
       }
       catch (IOException e)
       {
@@ -186,6 +188,36 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+   }
+   
+   
+   
+   @Test
+   //Bug http://jira.exoplatform.org/browse/IDE-342
+   public void editAndSaveJustCreatedFile() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      Thread.sleep(TestConstants.SLEEP);
+      selectItemInWorkspaceTree(WS_NAME);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
+      selectItemInWorkspaceTree(WS_NAME);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
+      assertElementPresentInWorkspaceTree(FOLDER_NAME);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      saveAsUsingToolbarButton(FILE_NAME);
+      Thread.sleep(TestConstants.SLEEP);
+      typeTextIntoEditor(0, "X");
+      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(FILE_NAME + " *", getTabTitle(0));
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
    }
    
    
