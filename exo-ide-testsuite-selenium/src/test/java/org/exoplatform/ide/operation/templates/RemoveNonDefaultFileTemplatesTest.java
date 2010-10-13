@@ -162,7 +162,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isTextPresent("Selected file template is used"));
+      assertTrue(selenium.isTextPresent("File template " + FILE_TEMPLATE_NAME_2 + " is used"));
       
       //Click on button "Yes".
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
