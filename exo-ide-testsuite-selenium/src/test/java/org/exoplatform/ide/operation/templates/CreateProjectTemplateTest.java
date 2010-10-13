@@ -206,6 +206,11 @@ public class CreateProjectTemplateTest extends BaseTest
       //check template form disappears
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
       
+   }
+   
+   @Test
+   public void createProjectTemplateWithEmptyName() throws Exception
+   {
       //=================== Create project template with empty name ====================
       //----- 13 ----------------
       Thread.sleep(TestConstants.SLEEP);

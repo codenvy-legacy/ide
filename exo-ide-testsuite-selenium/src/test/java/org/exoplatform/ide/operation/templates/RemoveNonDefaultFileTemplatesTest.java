@@ -22,13 +22,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,47 +40,37 @@ import java.io.IOException;
  */
 public class RemoveNonDefaultFileTemplatesTest extends BaseTest
 {
-   private final static String FILE_NAME = "HtmlTemplate.html";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private static final String FILE_TEMPLATE_NAME_1 = "test template";
    
-   private static final String TEMPLATE_NAME = "test template";
+   private static final String FILE_TEMPLATE_NAME_2 = "Sample Template";
    
-   @BeforeClass
-   public static void setUp()
-   {
-      
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/HtmlTemplate.html";
-      try
-      {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+   private static final String TEMPLATE_URL = BASE_URL + "rest/private/registry/repository/exo:applications/IDE/templates/";
    
-   @AfterClass
-   public static void tearDown()
+   private static String templateUrl;
+   
+   private static String fileTemplateUrl;
+   
+   private static final String FILE_TEMPLATE_XML_1 = "<template><name>test%20template</name>" 
+      + "<description>test%20template</description><template-type>file</template-type>" 
+      + "<mime-type>text%2Fxml</mime-type><content>%3C%3Fxml%20version%3D'1.0'%20encoding%3D'UTF-8'%3F%3E%0A</content>"
+      + "</template>";
+   
+   private static final String FILE_TEMPLATE_XML_2 = "<template><name>Sample%20Template</name>" 
+      + "<description>Sample%20template</description><template-type>file</template-type>" 
+      + "<mime-type>text%2Fxml</mime-type><content>%3C%3Fxml%20version%3D'1.0'%20encoding%3D'UTF-8'%3F%3E%0A</content>"
+      + "</template>";
+   
+   private static final String PROJECT_TEMPLATE_XML = "<template><name>Test%20Project%20Template</name>"
+      + "<description>Project%20template%20for%20test%20purposes</description>"
+      + "<template-type>project</template-type><items><folder><name>org</name><items><folder><name>exoplatform</name>"
+      + "<items><file><template-file-name>Groovy%20REST%20Service</template-file-name>"
+      + "<file-name>Main.groovy</file-name></file><file><template-file-name>Sample%20Template</template-file-name>"
+      + "<file-name>Index.html</file-name></file></items></folder></items></folder></items></template>";
+   
+   @After
+   public void tearDown()
    {
       cleanRegistry();
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
    
    
@@ -90,40 +78,10 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    @Test
    public void testRemoveNonDefaultFileTemplates() throws Exception
    {
-      //---- 1-3 -----------------
-      //open file with text
-      Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      putFileTemplateToRegistry();
       Thread.sleep(TestConstants.SLEEP);
       
-      // -------3--------
-      //Click on "File -> Save As Template..." on topmenu item. 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
-      Thread.sleep(TestConstants.SLEEP);
-      // check Save As Template window
-      TemplateUtils.checkSaveAsTemplateWindow(selenium);
-      
-      // --------4-------------------
-      //Type "test template" in name field, and click on button "Save".
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[name=ideSaveAsTemplateFormNameField||title=ideSaveAsTemplateFormNameField||index=3||Class=TextItem]/element",
-            TEMPLATE_NAME);
-      selenium.click("scLocator=//IButton[ID=\"ideSaveAsTemplateFormSaveButton\"]");
-      // check template created dialog window
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
-      assertTrue(selenium.isTextPresent("Info"));
-      assertTrue(selenium.isTextPresent("Template created successfully!"));
-      
-      // --------5-------------
-      //Click "OK" button in info dialog.
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      // --------6--------
+      //------ 1 ----------
       //Click on "File->New->From Template..." topmenu item.
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
@@ -131,9 +89,9 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       // check "Create file" dialog window
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       
-      // --------7--------
+      //------ 2 ----------
       // In "Create file"  window select "test template", then click "Delete" button.
-      TemplateUtils.selectItemInTemplateList(selenium, TEMPLATE_NAME);
+      TemplateUtils.selectItemInTemplateList(selenium, FILE_TEMPLATE_NAME_1);
       
       //click Delete button
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/");
@@ -142,7 +100,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
       
-      // ------8-------
+      //------ 3 ----------
       //Click on button "Yes".
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
       
@@ -152,19 +110,117 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/"));
       assertTrue(selenium.isTextPresent("Template test template deleted."));
       
-      // -------9---------
+      //------ 4 ----------
       // Click on button "Ok".
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
       
       //"Create file" window should contain only default("red") templates.
-      assertFalse(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[text()='" + TEMPLATE_NAME + "']"));
+      assertFalse(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[text()='" + FILE_TEMPLATE_NAME_1 + "']"));
       
-      // -------10-------
+      //------ 5 ----------
       // Close "Create file" window, and all opened tabs in content panel.
       selenium
          .click("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/member[Class=Canvas||index=0||length=3||classIndex=0||classLength=1]/");
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/");
       closeTab("0");
       Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   @Test
+   public void testDeleteFileTemplateWhichUsedInProjectTemplate() throws Exception
+   {
+      putFileTemplateWithProjectTemplateToRegistry();
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //------ 1 --------
+      //Click on "File->New->From Template..." topmenu item.
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      // check "Create file" dialog window
+      TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
+      
+      //------ 2 --------
+      // In "Create file"  window select "test template", then click "Delete" button.
+      TemplateUtils.selectItemInTemplateList(selenium, FILE_TEMPLATE_NAME_2);
+      
+      //click Delete button
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      // check warning dialog appeared
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      
+      //------ 3 --------
+      //Click on button "Yes".
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //------ 4 --------
+      //check warn dialog, that this template is used in project template
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      assertTrue(selenium.isTextPresent("Selected file template is used"));
+      
+      //Click on button "Yes".
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      // must shown dialog that informs that template was deleted.
+      Thread.sleep(TestConstants.SLEEP);
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/"));
+      assertTrue(selenium.isTextPresent("Template " + FILE_TEMPLATE_NAME_2 + " deleted"));
+      
+      //------ 5 --------
+      // Click on button "Ok".
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //"Create file" window should contain only default("red") templates.
+      assertFalse(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[text()='" + FILE_TEMPLATE_NAME_2 + "']"));
+      
+      //------ 6 --------
+      // Close "Create file" window, and all opened tabs in content panel.
+      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/");
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   private void putFileTemplateToRegistry()
+   {
+      fileTemplateUrl = TEMPLATE_URL + "template-" + System.currentTimeMillis();
+      try
+      {
+         VirtualFileSystemUtils.put(FILE_TEMPLATE_XML_1.getBytes(), fileTemplateUrl + "/?createIfNotExist=true");
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   private void putFileTemplateWithProjectTemplateToRegistry()
+   {
+      templateUrl = TEMPLATE_URL + "template-" + System.currentTimeMillis();
+      fileTemplateUrl = TEMPLATE_URL + "template-" + System.currentTimeMillis() + 5;
+      try
+      {
+         VirtualFileSystemUtils.put(FILE_TEMPLATE_XML_2.getBytes(), fileTemplateUrl + "/?createIfNotExist=true");
+         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML.getBytes(), templateUrl + "/?createIfNotExist=true");
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 }
