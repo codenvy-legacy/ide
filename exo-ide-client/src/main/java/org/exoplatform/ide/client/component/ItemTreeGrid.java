@@ -18,12 +18,15 @@ package org.exoplatform.ide.client.component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
@@ -51,6 +54,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    private static final String NAME = "name";
 
    private static final String TITLE = "title";
+
+   private Map<String, String> locktokens;
 
    public ItemTreeGrid(String id)
    {
@@ -124,7 +129,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       }
 
       Folder rootFolder = (Folder)rootNode.getAttributeAsObject(getValuePropertyName());
-      
+
       String rootFolderHref = rootFolder.getHref();
       if (!getValue().getHref().startsWith(rootFolderHref))
       {
@@ -251,7 +256,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
             {
                TreeNode newNode = getNode(item);
                tree.remove(existedNode);
-               tree.add(newNode, parentNode, position);               
+               tree.add(newNode, parentNode, position);
                continue;
             }
          }
@@ -283,17 +288,23 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
    private String getTitle(Item item)
    {
-      String title = item.getName();
+      String title = "";
 
-      for (Property p : item.getProperties())
+      if (locktokens == null)
       {
-         if ("http://www.jcp.org/jcr/1.0".equals(p.getName().getNamespaceURI())
-            && "lockowner".equalsIgnoreCase(p.getName().getLocalName()))
+         return item.getName();
+      }
+
+      if (item.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      {
+         if (!locktokens.containsKey(item.getHref()))
          {
-            title += "&nbsp;&nbsp;&nbsp;<font color=\"#AA1111\">[ Locked ]</font>";
-            break;
+            title +=
+               "<img id=\"resourceLocked\" style=\"margin-left:-4px; margin-bottom:-5px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;";
          }
       }
+      title += item.getName();
 
       return title;
    }
@@ -321,18 +332,28 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       return selectedItems;
    }
-   
-   public void updateFileState(File file) {
+
+   public void updateFileState(File file)
+   {
       TreeNode fileNode = getNodeByHref(file.getHref());
-      if (fileNode == null) {
+      if (fileNode == null)
+      {
          return;
       }
-      
+
       fileNode.setAttribute(NAME, file.getName());
       fileNode.setAttribute(TITLE, getTitle(file));
-      fileNode.setAttribute(getValuePropertyName(), file);      
-      
+      fileNode.setAttribute(getValuePropertyName(), file);
+
       tree.openFolder(fileNode);
+   }
+
+   /**
+    * @param locktokens the locktokens to set
+    */
+   public void setLocktokens(Map<String, String> locktokens)
+   {
+      this.locktokens = locktokens;
    }
 
 }

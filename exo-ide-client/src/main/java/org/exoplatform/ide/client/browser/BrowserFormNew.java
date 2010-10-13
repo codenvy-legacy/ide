@@ -18,6 +18,7 @@
 package org.exoplatform.ide.client.browser;
 
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -83,6 +84,15 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
     * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#updateItemState(org.exoplatform.ide.client.module.vfs.api.File)
     */
    public void updateItemState(File file)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#setLockTokens(java.util.Map)
+    */
+   public void setLockTokens(Map<String, String> locktokens)
    {
       // TODO Auto-generated method stub
       

@@ -106,8 +106,6 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
-      Window.alert("Files to preload: " + filesToLoad.size());
-
       preloadNextFile();
    }
 

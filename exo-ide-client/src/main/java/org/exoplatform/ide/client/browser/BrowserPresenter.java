@@ -20,7 +20,9 @@ package org.exoplatform.ide.client.browser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -32,6 +34,9 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserHandler;
@@ -76,7 +81,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
    SelectItemHandler, ExceptionThrownHandler, PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
-   ItemLockResultReceivedHandler, ItemPropertiesReceivedHandler
+   ItemLockResultReceivedHandler, ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
 {
 
    interface Display
@@ -89,6 +94,8 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       void selectItem(String path);
 
       void updateItemState(File file);
+      
+      void setLockTokens(Map<String, String> locktokens);
 
    }
 
@@ -123,6 +130,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
       handlers.addHandler(SelectItemEvent.TYPE, this);
       handlers.addHandler(PanelSelectedEvent.TYPE, this);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -510,6 +518,22 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          changingEntryPoint = false;
          eventBus.fireEvent(new EntryPointChangedEvent(null));
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+//      applicationSettings = event.getApplicationSettings();
+
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+
+      display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
+      
    }
 
 }

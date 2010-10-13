@@ -18,6 +18,7 @@
 package org.exoplatform.ide.client.browser;
 
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
@@ -99,4 +100,12 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
       treeGrid.updateFileState(file);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#setLockTokens(java.util.Map)
+    */
+   public void setLockTokens(Map<String, String> locktokens)
+   {
+      treeGrid.setLocktokens(locktokens);
+   }
+   
 }
