@@ -202,7 +202,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
          return;
       }
       
-      String msg = "Selected file template is used in ";
+      String msg = "File template <b>" + selectedTemplate.getName() + "</b> is used in <b>";
       
       for (ProjectTemplate template : usedProjectTemplates)
       {
@@ -210,9 +210,9 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       }
       
       msg = msg.substring(0, msg.length() - 2);
-      msg += " project template(s). Are your sure you want to delete this template?";
+      msg += "</b> project template(s). Are your sure you want to delete this template?";
       
-      Dialogs.getInstance().ask("eXo IDE", msg, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("IDE", msg, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
          {
