@@ -16,10 +16,6 @@
  */
 package org.exoplatform.ide.client.module.groovy;
 
-import com.google.gwt.user.client.Timer;
-
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -43,12 +39,10 @@ import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
-import org.exoplatform.ide.client.module.groovy.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.client.module.groovy.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.client.module.groovy.controls.SetAutoloadCommand;
 import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovyCommand;
-import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.ValidateGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptHandler;
@@ -88,6 +82,9 @@ import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -99,6 +96,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
    WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ExceptionThrownHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler, UndeployGroovyScriptSandboxHandler
+   
 {
 
    private HandlerManager eventBus;
@@ -166,8 +164,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(eventBus), true, true));
 
