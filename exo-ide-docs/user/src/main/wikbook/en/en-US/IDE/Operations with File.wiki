@@ -176,6 +176,10 @@ To remove the non-default file template, do as follows:
 * *Step 2:* Select *File From template...*; or press *Ctrl + N* hotkeys.
 * *Step 3:* Select the needed template and click *Delete*. 
   The dialog will appear to ask you to confirm the action. 
+  
+{warning:title=Delete file template, that is used in project template}
+If file template is used in project template, confirmation deleting dialog will be shown. After deleting file template, project management will create project without this file.
+{warning}
 
 h1. Use Project Template
 
