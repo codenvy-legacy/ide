@@ -19,9 +19,12 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.vfs.api.File;
@@ -41,15 +44,21 @@ import java.util.List;
 public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<FileTemplate>
 {
 
-private String previousExtension;
+   private String previousExtension;
    
    private String baseHref;
+   
+   private List<ProjectTemplate> projectTemplateList;
+   
+   private List<ProjectTemplate> usedProjectTemplates;
    
    public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
       super(eventBus, selectedItems);
       
       this.templateList = new ArrayList<FileTemplate>();
+      
+      projectTemplateList = new ArrayList<ProjectTemplate>();
       
       if (selectedItems != null && selectedItems.size() != 0)
       {
@@ -82,12 +91,17 @@ private String previousExtension;
    void updateTemplateList(List<Template> templates)
    {
       templateList.clear();
+      projectTemplateList.clear();
       
       for (Template template : templates)
       {
          if (template instanceof FileTemplate)
          {
             templateList.add((FileTemplate)template);
+         }
+         else if (template instanceof ProjectTemplate)
+         {
+            projectTemplateList.add((ProjectTemplate)template);
          }
       }
    }
@@ -148,6 +162,91 @@ private String previousExtension;
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       display.closeForm();
+   }
+   
+   @Override
+   protected void deleteTemplate()
+   {
+      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
+      Dialogs.getInstance().ask("eXo IDE", message, new BooleanValueReceivedCallback()
+      {
+         public void execute(Boolean value)
+         {
+            if (value == null)
+            {
+               return;
+            }
+            if (value)
+            {
+               checkTemplateUsedInProjectTemplate();
+            }
+         }
+      });
+   }
+   
+   private void checkTemplateUsedInProjectTemplate()
+   {
+      usedProjectTemplates = new ArrayList<ProjectTemplate>();
+      
+      for (ProjectTemplate projectTemplate : projectTemplateList)
+      {
+         if (isPresentInProjectTemplate(projectTemplate))
+         {
+            usedProjectTemplates.add(projectTemplate);
+         }
+      }
+      
+      if (usedProjectTemplates.size() == 0)
+      {
+         TemplateService.getInstance().deleteTemplate(selectedTemplate);
+         return;
+      }
+      
+      String msg = "Selected file template is used in ";
+      
+      for (ProjectTemplate template : usedProjectTemplates)
+      {
+         msg += template.getName() + ", ";
+      }
+      
+      msg = msg.substring(0, msg.length() - 2);
+      msg += " project template(s). Are your sure you want to delete this template?";
+      
+      Dialogs.getInstance().ask("eXo IDE", msg, new BooleanValueReceivedCallback()
+      {
+         public void execute(Boolean value)
+         {
+            if (value == null)
+            {
+               return;
+            }
+            if (value)
+            {
+               TemplateService.getInstance().deleteTemplate(selectedTemplate);
+            }
+         }
+      });
+      
+   }
+   
+   private boolean isPresentInProjectTemplate(ProjectTemplate projectTemplate)
+   {
+      if (projectTemplate.getChildren() == null)
+      {
+         return false;
+      }
+      for (Template template : projectTemplate.getChildren())
+      {
+         if (template instanceof FileTemplate && template.getName().equals(selectedTemplate.getName()))
+         {
+            return true;
+         }
+         else if (template instanceof ProjectTemplate)
+         {
+            return isPresentInProjectTemplate((ProjectTemplate)template);
+         }
+      }
+      return false;
    }
 
 }

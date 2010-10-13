@@ -125,10 +125,10 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
    /**
     * Delete selected template
     */
-   private void deleteTemplate()
+   protected void deleteTemplate()
    {
       String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
-      Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
          {

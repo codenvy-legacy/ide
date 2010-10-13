@@ -227,6 +227,12 @@ implements FolderCreatedHandler, FileContentSavedHandler
          return;
       }
       handlers.removeHandler(FolderCreatedEvent.TYPE);
+      if (fileList.size() == 0)
+      {
+         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
+         display.closeForm();
+         return;
+      }
       
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       VirtualFileSystem.getInstance().saveContent(fileList.get(0));
