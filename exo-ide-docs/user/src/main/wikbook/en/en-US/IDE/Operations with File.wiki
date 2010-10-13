@@ -187,7 +187,9 @@ To create project template, go to *File > New > Project template...* on top menu
 
 *Illustration 12.1. Create project template*
 
-After *"Create project template"* dialog window appears, you can set project template name and description, edit project template structure (using actions buttons). To add folder into project template, do as follows:
+After *"Create project template"* dialog window appears, you can set project template name and description, edit project template structure (using buttons to the right of the tree). 
+
+To add folder into project template, do as follows:
 * *Step 1:* Select folder in tree, in which new folder will be created. 
 * *Step 2:* Click the *Add Folder* button. 
 * *Step 3:* Type name of new folder in the *Add folder* dialog window and click *Ok*. 
