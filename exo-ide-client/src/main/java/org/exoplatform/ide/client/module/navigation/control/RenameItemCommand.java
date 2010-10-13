@@ -30,6 +30,8 @@ import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelecte
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
@@ -43,7 +45,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class RenameItemCommand extends SimpleControl implements ItemsSelectedHandler, ItemDeletedHandler,
-   PanelSelectedHandler, EntryPointChangedHandler
+   PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    private static final String ID = "File/Rename...";
@@ -67,6 +69,7 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -113,8 +116,11 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
@@ -127,6 +133,18 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
       else
       {
          setVisible(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    */
+   public void onPanelDeselected(PanelDeselectedEvent event)
+   {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
+         browserPanelSelected = false;
+         updateEnabling();
       }
    }
 

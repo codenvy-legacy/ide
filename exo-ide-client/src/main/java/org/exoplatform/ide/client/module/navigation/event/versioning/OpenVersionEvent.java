@@ -18,25 +18,36 @@
  */
 package org.exoplatform.ide.client.module.navigation.event.versioning;
 
+import org.exoplatform.ide.client.module.vfs.api.Version;
+
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when user asks to view the version history of concrete item.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 27, 2010 $
+ * @version $Id: Oct 12, 2010 $
  *
  */
-public class ViewItemVersionsEvent extends GwtEvent<ViewItemVersionsHandler>
+public class OpenVersionEvent extends GwtEvent<OpenVersionHandler>
 {
-
-   public static final GwtEvent.Type<ViewItemVersionsHandler> TYPE = new GwtEvent.Type<ViewItemVersionsHandler>();
+   public static final GwtEvent.Type<OpenVersionHandler> TYPE = new GwtEvent.Type<OpenVersionHandler>();
    
+   private Version version;
+   
+   private List<Version> versionHistory;
+   
+   public OpenVersionEvent(Version version, List<Version> versionHistory)
+   {
+      this.version = version;
+      this.versionHistory = versionHistory;
+    }
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewItemVersionsHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<OpenVersionHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -45,9 +56,18 @@ public class ViewItemVersionsEvent extends GwtEvent<ViewItemVersionsHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ViewItemVersionsHandler handler)
+   protected void dispatch(OpenVersionHandler handler)
    {
-      handler.onViewItemVersions(this);
+      handler.onOpenVersion(this);
    }
 
+   public Version getVersion()
+   {
+      return version;
+   }
+
+   public List<Version> getVersionHistory()
+   {
+      return versionHistory;
+   }
 }

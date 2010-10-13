@@ -18,22 +18,21 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
 import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 29, 2010 $
  *
  */
-public class RestoreVersionControl extends SimpleControl implements EditorActiveFileChangedHandler
+public class RestoreVersionControl extends VersionControl implements ShowVersionHandler
 {
 
    private static final String ID = "File/Restore Version";
@@ -42,36 +41,33 @@ public class RestoreVersionControl extends SimpleControl implements EditorActive
 
    private final String PROMPT = "Restore Version";
 
+   private Version version;
+
    /**
     * @param id
     * @param eventBus
     */
    public RestoreVersionControl(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID, eventBus);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new RestoreVersionEvent());
       setImages(IDEImageBundle.INSTANCE.restoreVersion(), IDEImageBundle.INSTANCE.restoreVersionDisabled());
-      
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
+      eventBus.addHandler(ShowVersionEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
     */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   public void onShowVersion(ShowVersionEvent event)
    {
-      boolean isShow = (event.getFile() != null && event.getFile() instanceof Version);
-      setVisible(isShow);
-      if (isShow)
-      {
-         Version version = (Version)event.getFile();
-         boolean isEnabled =
-            (version.getProperty(ItemProperty.SUCCESSOR_SET) != null && version.getProperty(ItemProperty.SUCCESSOR_SET)
-               .getChildProperties().size() > 0);
-         setEnabled(isEnabled);
-      }
+      version = event.getVersion();
+      boolean isEnabled =
+         (version.getProperty(ItemProperty.SUCCESSOR_SET) != null && version.getProperty(ItemProperty.SUCCESSOR_SET)
+            .getChildProperties().size() > 0);
+      setEnabled(isEnabled);
    }
 
 }

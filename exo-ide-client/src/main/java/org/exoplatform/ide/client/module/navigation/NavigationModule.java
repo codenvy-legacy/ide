@@ -82,9 +82,10 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopup
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreVersionControl;
-import org.exoplatform.ide.client.module.navigation.control.versioning.ViewItemVersionsControl;
+import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionHistoryControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewNextVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewPreviousVersionControl;
+import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionListControl;
 import org.exoplatform.ide.client.module.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.DeleteItemHandler;
 import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
@@ -117,7 +118,8 @@ import org.exoplatform.ide.client.module.navigation.handler.RestoreVersionComman
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.ViewItemVersionsControlHandler;
+import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.ViewVersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
@@ -184,11 +186,13 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
          "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewItemVersionsControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreVersionControl(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
+     
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand(eventBus)));
@@ -241,7 +245,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new GoToFolderCommandThread(eventBus);
       new PasteItemsCommandThread(eventBus, context);
       new FileClosedHandler(eventBus);
-      new ViewItemVersionsControlHandler(eventBus);
+      new ViewVersionListCommandHandler(eventBus);
+      new ViewVersionHistoryCommandHandler(eventBus);
       new RestoreVersionCommandHandler(eventBus);
       new ProjectTemplateControlHandler(eventBus);
    }

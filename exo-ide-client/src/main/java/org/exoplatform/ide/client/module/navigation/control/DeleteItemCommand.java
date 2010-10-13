@@ -26,6 +26,8 @@ import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelecte
 import org.exoplatform.ide.client.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -93,6 +95,8 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       super.onPanelSelected(event);
       updateEnabling();
    }
+   
+   
 
    @Override
    protected void updateEnabling()

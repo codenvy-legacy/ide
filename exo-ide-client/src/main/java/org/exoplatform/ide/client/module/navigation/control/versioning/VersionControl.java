@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.client.module.navigation.control.versioning;
+
+import com.google.gwt.event.shared.HandlerManager;
+
+import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
+import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
+import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
+import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.versioning.VersionContentForm;
+
+/**
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Oct 13, 2010 $
+ *
+ */
+public class VersionControl extends SimpleControl implements PanelClosedHandler, PanelOpenedHandler,
+   PanelDeselectedHandler, PanelSelectedHandler
+{
+
+   /**
+    * @param id
+    */
+   public VersionControl(String id, HandlerManager eventBus)
+   {
+      super(id);
+      eventBus.addHandler(PanelClosedEvent.TYPE, this);
+      eventBus.addHandler(PanelOpenedEvent.TYPE, this);
+      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
+      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelSelectedHandler#onPanelSelected(org.exoplatform.ide.client.panel.event.PanelSelectedEvent)
+    */
+   public void onPanelSelected(PanelSelectedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getPanelId()))
+      {
+         setVisible(true);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    */
+   public void onPanelDeselected(PanelDeselectedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getPanelId()))
+      {
+         setVisible(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelOpenedHandler#onPanelOpened(org.exoplatform.ide.client.panel.event.PanelOpenedEvent)
+    */
+   public void onPanelOpened(PanelOpenedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getPanelId()))
+      {
+         setVisible(true);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    */
+   public void onPanelClosed(PanelClosedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getPanelId()))
+      {
+         setVisible(false);
+      }
+   }
+
+}

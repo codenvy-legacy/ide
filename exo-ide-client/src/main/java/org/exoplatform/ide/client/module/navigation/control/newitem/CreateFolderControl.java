@@ -19,16 +19,18 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class CreateFolderControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler
+public class CreateFolderControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler, PanelDeselectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -57,6 +59,7 @@ public class CreateFolderControl extends SimpleControl implements ItemsSelectedH
 
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -92,8 +95,21 @@ public class CreateFolderControl extends SimpleControl implements ItemsSelectedH
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    */
+   public void onPanelDeselected(PanelDeselectedEvent event)
+   {
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserPanelSelected = false;
+         updateEnabling();
+      }
    }
 
 }

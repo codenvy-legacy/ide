@@ -62,7 +62,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || (event.getFile() instanceof Version))
+      if (event.getFile() == null)
       {
          activeFileSelected = false;
          updateEnabling();

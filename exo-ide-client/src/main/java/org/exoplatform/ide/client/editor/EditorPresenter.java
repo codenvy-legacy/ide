@@ -326,6 +326,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          String editorId = event.getEditorId();
          String path = display.getPathByEditorId(editorId);
          final File file = openedFiles.get(path);
+         if (file == null) return;
          display.setTabContent(file.getHref(), file.getContent());
 
          new Timer()

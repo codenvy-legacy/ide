@@ -52,8 +52,6 @@ public class TabContainer extends TabSet implements SelectPanelHandler
 
    private Handlers handlers;
    
-  // private final String ID = "ideNavigationTabSet";
-
    public TabContainer(HandlerManager eventBus, String id)
    {
       setID(id);
@@ -94,6 +92,7 @@ public class TabContainer extends TabSet implements SelectPanelHandler
       if (isTabPanelExist(tabId))
       {
          removeTab(tabId);
+         eventBus.fireEvent(new PanelClosedEvent(tabId));
       }
    }
 
@@ -135,7 +134,6 @@ public class TabContainer extends TabSet implements SelectPanelHandler
       {
          return;
       }
-
       selectTab(event.getPanelId());
    }
 

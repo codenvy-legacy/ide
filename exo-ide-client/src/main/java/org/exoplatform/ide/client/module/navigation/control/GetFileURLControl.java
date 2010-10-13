@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
@@ -28,10 +30,10 @@ import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class GetFileURLControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
-   EntryPointChangedHandler
+   EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    private static final String ID = "View/Get URL...";
@@ -65,6 +67,7 @@ public class GetFileURLControl extends SimpleControl implements ItemsSelectedHan
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -98,8 +101,10 @@ public class GetFileURLControl extends SimpleControl implements ItemsSelectedHan
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      browserPanelSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserPanelSelected = true;
+         updateEnabling();
+      }
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
@@ -113,6 +118,17 @@ public class GetFileURLControl extends SimpleControl implements ItemsSelectedHan
          setVisible(false);
       }
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    */
+   public void onPanelDeselected(PanelDeselectedEvent event)
+   {
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserPanelSelected = false;
+         updateEnabling();
+      }
    }
 
 }

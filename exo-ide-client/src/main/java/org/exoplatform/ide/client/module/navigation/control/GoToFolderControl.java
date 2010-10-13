@@ -51,6 +51,7 @@ public class GoToFolderControl extends SimpleControl implements EditorActiveFile
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
       setEvent(new GoToFolderEvent());
+      setDelimiterBefore(true);
 
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);

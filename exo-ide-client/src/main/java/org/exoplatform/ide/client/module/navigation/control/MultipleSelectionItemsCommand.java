@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedE
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.module.vfs.api.Folder;
 import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
@@ -36,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 public abstract class MultipleSelectionItemsCommand extends SimpleControl implements PanelSelectedHandler,
-   EntryPointChangedHandler
+   EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    protected boolean browserSelected = true;
@@ -49,6 +51,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    public boolean isItemsInSameFolder(List<Item> items)
@@ -90,8 +93,11 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      browserSelected = BrowserPanel.ID.equals(event.getPanelId()) ? true : false;
-      updateEnabling();
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserSelected = true;
+         updateEnabling();
+      }
+      
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
@@ -107,5 +113,16 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
       }
 
    }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    */
+   public void onPanelDeselected(PanelDeselectedEvent event)
+   {
+      if (BrowserPanel.ID.equals(event.getPanelId())) {
+         browserSelected = false;
+         updateEnabling();
+      }
+    }
 
 }

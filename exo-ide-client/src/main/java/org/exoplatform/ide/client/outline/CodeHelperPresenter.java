@@ -25,6 +25,11 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
+import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
+import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
+import org.exoplatform.ide.client.panel.event.OpenPanelHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -34,14 +39,17 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:
  *
  */
-public class CodeHelperPresenter implements EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
+public class CodeHelperPresenter implements EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, OpenPanelHandler, ClosePanelHandler
 {
    interface Display
    {
       void show();
 
       void hide();
-
+      
+      void addPanel(SimpleTabPanel panel);
+      
+      void closePanel(String panelId);
    }
 
    private HandlerManager eventBus;
@@ -58,6 +66,8 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(OpenPanelEvent.TYPE, this);
+      handlers.addHandler(ClosePanelEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -84,6 +94,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
       {
          boolean show =
             applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
+         System.out.println("CodeHelperPresenter.onEditorActiveFileChanged()"+show);
          if (show)
          {
             display.show();
@@ -102,6 +113,24 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.OpenPanelHandler#onOpenPanel(org.exoplatform.ide.client.panel.event.OpenPanelEvent)
+    */
+   public void onOpenPanel(OpenPanelEvent event)
+   {
+      System.out.println("CodeHelperPresenter.onOpenPanel()");
+      display.show();
+      display.addPanel(event.getPanel());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.ClosePanelHandler#onClosePanel(org.exoplatform.ide.client.panel.event.ClosePanelEvent)
+    */
+   public void onClosePanel(ClosePanelEvent event)
+   {
+      display.closePanel(event.getPanelId());
    }
 
 }

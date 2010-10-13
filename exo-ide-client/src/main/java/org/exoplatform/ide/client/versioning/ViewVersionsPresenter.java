@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -30,16 +29,11 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.module.vfs.api.Version;
 
 import java.util.List;
 
-/**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 27, 2010 $
- *
- */
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2010 $
@@ -66,13 +60,13 @@ public class ViewVersionsPresenter
    private HandlerManager eventBus;
 
    private Handlers handlers;
+   
+   private List<Version> versionHistory;
 
-   private List<Version> versions;
-
-   public ViewVersionsPresenter(HandlerManager eventBus, List<Version> versions)
+   public ViewVersionsPresenter(HandlerManager eventBus, List<Version> versionHistory)
    {
       this.eventBus = eventBus;
-      this.versions = versions;
+      this.versionHistory = versionHistory;
       handlers = new Handlers(eventBus);
    }
 
@@ -138,14 +132,7 @@ public class ViewVersionsPresenter
       Version selectedVersion = display.getSelectedVersion();
       if (selectedVersion != null)
       {
-         if (selectedVersion.equals(versions.get(0)))
-         {
-            eventBus.fireEvent(new OpenFileEvent(selectedVersion.getItemHref()));
-         }
-         else
-         {
-            eventBus.fireEvent(new OpenFileEvent(selectedVersion, false, 3));
-         }
+         eventBus.fireEvent(new OpenVersionEvent(selectedVersion, versionHistory));
       }
       display.closeForm();
    }
