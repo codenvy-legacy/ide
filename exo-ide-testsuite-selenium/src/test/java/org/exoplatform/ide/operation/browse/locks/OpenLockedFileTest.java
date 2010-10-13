@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -28,7 +26,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,11 +37,11 @@ import org.junit.Test;
 public class OpenLockedFileTest extends LockFileAbstract
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+
    private static final String FOLDER_NAME = "lockedFiles";
-   
+
    private static final String FILE_NAME = "aldfnlaksfdbgjksdbkhgs";
-   
+
    @Test
    public void testOpenLockedFile() throws Exception
    {
@@ -54,39 +51,29 @@ public class OpenLockedFileTest extends LockFileAbstract
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       saveAsByTopMenu(FILE_NAME);
-      
-      checkFileLocking(FILE_NAME, true);
-      
+
+      checkFileLocking(FILE_NAME, false);
+
       deleteLockTokensCookies();
-      
+
       selenium.refresh();
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
-     
-//      System.out.println(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"));
-//      if(!selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/"))
-//      {
-//         selectItemInWorkspaceTree(FOLDER_NAME);
-//         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//         Thread.sleep(TestConstants.SLEEP);
-//         
-//         selectItemInWorkspaceTree(FILE_NAME);
-//         openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-//      }
+
       checkCantSaveLockedFile();
-     
-      
+      Thread.sleep(TestConstants.SLEEP);
+
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       
-      closeUnsavedFileAndDoNotSave("0");
-      
+      checkFileLocking(FILE_NAME, true);
+
+      closeTab("0");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
+
       checkCantSaveLockedFile();
-      
-      closeUnsavedFileAndDoNotSave("0");
-      
+
+      closeTab("0");
    }
 
    /**
@@ -96,17 +83,12 @@ public class OpenLockedFileTest extends LockFileAbstract
    private void checkCantSaveLockedFile() throws Exception, InterruptedException
    {
       checkIsFileReadOnlyInEditorTab(FILE_NAME);
-      
-      typeTextIntoEditor(0, "change content !!11");
-      
-      saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
-      
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+
+      typeTextIntoEditor(0, "change dasda111");
+
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }
-   
+
    @AfterClass
    public static void tierDown()
    {
@@ -123,5 +105,5 @@ public class OpenLockedFileTest extends LockFileAbstract
          e.printStackTrace();
       }
    }
-   
+
 }
