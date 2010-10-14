@@ -78,9 +78,9 @@ public abstract class BaseTest
 
    protected static final String WS_NAME = "dev-monit";
    
-   protected static final String USER_NAME = "__anonim";
+//   protected static final String USER_NAME = "__anonim";
    // For portal 
-//   protected static final String USER_NAME = "root";
+   protected static final String USER_NAME = "root";
    
    // For portal: 
    //protected static final String BASE_URL = "http://192.168.0.3:8080/";
