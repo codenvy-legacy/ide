@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.model.settings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -62,11 +63,18 @@ import com.google.gwt.user.client.Timer;
 public class SettingsService implements SaveApplicationSettingsHandler, GetApplicationSettingsHandler
 {
 
+   /**
+    * 
+    */
+   private static final String USER_NAME_DELIMITER = "-";
+
    private static final String LIST_ITEMS_DELIMITER = "#";
 
    private static final String MAP_ITEMS_DELIMETER = LIST_ITEMS_DELIMITER;
 
    private static final String MAP_KEYS_DELIMETER = "@";
+
+   private static final String COOKIE_PREFIX = "eXo-IDE-";
 
    private HandlerManager eventBus;
 
@@ -75,7 +83,7 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
    private String registryServiceURL;
 
    private String userName;
-   
+
    private ApplicationSettings applicationSettings = new ApplicationSettings();
 
    public SettingsService(HandlerManager eventBus, String registryServiceURL, String userName, Loader loader)
@@ -219,22 +227,22 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
 
       }
 
-      Cookies.setCookie(key + "_map", lockTokens, new Date(System.currentTimeMillis() + 86400000));
+      setCookie(key + "_map", lockTokens, new Date(System.currentTimeMillis() + 3600000));
    }
 
    private void storeString(String key, String value)
    {
-      Cookies.setCookie(key + "_str", value);
+      setCookie(key + "_str", value);
    }
 
    private void storeInteger(String key, Integer value)
    {
-      Cookies.setCookie(key, "_int" + value);
+      setCookie(key, "_int" + value);
    }
 
    private void storeBoolean(String key, Boolean value)
    {
-      Cookies.setCookie(key + "_bool", "" + value);
+      setCookie(key + "_bool", "" + value);
    }
 
    @SuppressWarnings("unchecked")
@@ -253,12 +261,40 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
          listItems += javaScriptEncodeURIComponent(item);
       }
 
-      Cookies.setCookie(key + "_list", listItems);
+      setCookie(key + "_list", listItems);
+   }
+
+   private void setCookie(String name, String value)
+   {
+      Cookies.setCookie(COOKIE_PREFIX + userName + USER_NAME_DELIMITER + name, value);
+   }
+
+   private void setCookie(String name, String value, Date expires)
+   {
+      Cookies.setCookie(COOKIE_PREFIX + userName + USER_NAME_DELIMITER + name, value, expires);
+   }
+
+   private Collection<String> getCookieNames()
+   {
+      List<String> cookies = new ArrayList<String>();
+
+      String prefix = COOKIE_PREFIX + userName + USER_NAME_DELIMITER;
+
+      for (String name : Cookies.getCookieNames())
+      {
+         if (name.startsWith(prefix))
+         {
+            
+            cookies.add(name.substring(prefix.length()));
+         }
+      }
+
+      return cookies;
    }
 
    private void restoreFromCookies(ApplicationSettings applicationSettings)
    {
-      for (String name : Cookies.getCookieNames())
+      for (String name : getCookieNames())
       {
          if (name.endsWith("_str"))
          {
@@ -282,6 +318,12 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
       }
    }
 
+   private String getCookie(String name)
+   {
+      return Cookies.getCookie(COOKIE_PREFIX + userName + USER_NAME_DELIMITER + name);
+
+   }
+
    /**
     * @param applicationSettings
     * @param name
@@ -290,7 +332,7 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
    {
       String n = getName(name, "_map");
 
-      String value = Cookies.getCookie(name);
+      String value = getCookie(name);
 
       Map<String, String> map = new LinkedHashMap<String, String>();
 
@@ -317,21 +359,21 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
    private void readStringValue(ApplicationSettings applicationSettings, String name)
    {
       String n = getName(name, "_str");
-      String value = Cookies.getCookie(name);
+      String value = getCookie(name);
       applicationSettings.setValue(n, value, Store.COOKIES);
    }
 
    private void restoreBooleanValue(ApplicationSettings applicationSettings, String name)
    {
       String n = getName(name, "_bool");
-      String value = Cookies.getCookie(name);
+      String value = getCookie(name);
       applicationSettings.setValue(n, new Boolean(value), Store.COOKIES);
    }
 
    private void restoreListValue(ApplicationSettings applicationSettings, String name)
    {
       String n = getName(name, "_list");
-      String value = Cookies.getCookie(name);
+      String value = getCookie(name);
       List<String> list = new ArrayList<String>();
 
       String[] items = value.split(LIST_ITEMS_DELIMITER);
