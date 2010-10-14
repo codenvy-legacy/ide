@@ -92,5 +92,17 @@ public class IDEMimeTypes
    {
       return extensions;
    }
+   
+   public static List<String> getSupportedMimeTypes()
+   {
+      List<String> supportedMimeTypes = new ArrayList<String>();
+      
+      for (List<String> mimeTypeList : mimeTypes.values())
+      {
+         supportedMimeTypes.addAll(mimeTypeList);
+      }
+      
+      return supportedMimeTypes;
+   }
 
 }

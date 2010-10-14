@@ -16,35 +16,33 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
-import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
-import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -236,17 +234,8 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.enableUploadButton();
       display.enableMimeTypeSelect();
 
-      List<String> mimeTypes = new ArrayList<String>();
-      mimeTypes.add(MimeType.TEXT_PLAIN);
-      mimeTypes.add(MimeType.TEXT_XML);
-      mimeTypes.add(MimeType.TEXT_HTML);
-      mimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-      mimeTypes.add(MimeType.TEXT_CSS);
-      mimeTypes.add(MimeType.APPLICATION_GROOVY);
-      mimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-      mimeTypes.add(MimeType.APPLICATION_XML);
-      mimeTypes.add(MimeType.GOOGLE_GADGET);
-
+      List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
+      
       List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(fileName);
 
       String[] valueMap = new String[mimeTypes.size()];
