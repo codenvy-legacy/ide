@@ -67,6 +67,7 @@
    </build>
    <profiles>
       <profile>
+      <id>base</id>
       <activation>
       <activeByDefault>true</activeByDefault>
       </activation>
@@ -98,7 +99,7 @@
       <profile>
          <id>selenium-test</id>
          <activation>
-            <activeByDefault>false</activeByDefault>
+            <activeByDefault>true</activeByDefault>
          </activation>
          <build>
             <plugins>
