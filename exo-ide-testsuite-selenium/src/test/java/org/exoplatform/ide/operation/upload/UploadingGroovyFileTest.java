@@ -19,9 +19,8 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -31,6 +30,9 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -76,6 +78,59 @@ public class UploadingGroovyFileTest extends BaseTest
 
       selectItemInWorkspaceTree(GROOVY_NAME);
       deleteSelectedItems();
+   }
+   
+   //IDE-322 Issue
+   @Test
+   public void testAllMimeTypesArePresent() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      
+      String formName = MenuCommands.File.UPLOAD;
+      
+      //----- 1 --------------
+      //open upload form
+      runTopMenuCommand(MenuCommands.File.FILE, formName);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
+      assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));
+
+      //----- 2 --------------
+      //type path to file on local system to upload
+      try
+      {
+         File file = new File(filePath);
+         selenium.type("//input[@type='file']", file.getCanonicalPath());
+      }
+      catch (Exception e)
+      {
+      }
+      Thread.sleep(TestConstants.SLEEP);
+
+      assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
+         selenium.getValue(
+            "scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
+      
+      //----- 2 --------------
+      //click to open mime types list
+      selenium.click("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]"
+         + "/item[name=ideUploadFormMimeTypeField]/[icon='picker']");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //check, all mime types for groovy extention are present
+      assertTrue(selenium.isElementPresent("//nobr[text()='script/groovy']"));
+      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-groovy']"));
+      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-jaxrs+groovy']"));
+      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-groovy+html']"));
+      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-chromattic+groovy']"));
+      
+      //close form
+      selenium.click("scLocator=//Window[ID=\"ideUploadForm\"]/closeButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/"));
+      Thread.sleep(TestConstants.SLEEP);
    }
    
    @AfterClass
