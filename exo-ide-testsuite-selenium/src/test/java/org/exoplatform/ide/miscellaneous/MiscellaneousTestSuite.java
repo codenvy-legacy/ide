@@ -35,7 +35,8 @@ import org.junit.runners.Suite.SuiteClasses;
                DialogAboutTest.class, CustomizeToolbarTest.class, 
                HotkeysCustomizationTest.class,
                DownloadFileToLocalDriveTest.class,
-               DownloadZIPedFoldeToLocalDriveTest.class})
+               DownloadZIPedFoldeToLocalDriveTest.class,
+               CookiesTest.class})
 public class MiscellaneousTestSuite
 {
 

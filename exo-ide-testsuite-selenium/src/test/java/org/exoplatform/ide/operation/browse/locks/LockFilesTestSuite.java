@@ -30,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({LockFileTest.class, OpenLockedFileTest.class})
+@SuiteClasses({LockFileTest.class, OpenLockedFileTest.class, LocksByUserTest.class})
 public class LockFilesTestSuite
 {
 }

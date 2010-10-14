@@ -144,15 +144,15 @@ public abstract class BaseTest
       }
       else
       {
-         standaloneLogin();
+         standaloneLogin(USER_NAME);
          
       }
    }
 
-   private static void standaloneLogin() throws InterruptedException 
+   protected static void standaloneLogin(String userName) throws InterruptedException 
    {
       Thread.sleep(TestConstants.SLEEP);
-      selenium.type("//input[@name='j_username']", "root");
+      selenium.type("//input[@name='j_username']", userName);
       selenium.type("//input[@name='j_password']", "gtn");
       selenium.click("//input[@value='Log In']");
       selenium.waitForPageToLoad("10000");

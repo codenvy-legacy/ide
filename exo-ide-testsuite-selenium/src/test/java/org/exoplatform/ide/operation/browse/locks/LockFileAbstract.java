@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.browse.locks;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.junit.BeforeClass;
 
 import static org.junit.Assert.*;
@@ -76,6 +77,19 @@ public abstract class LockFileAbstract extends BaseTest
    {
       assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
          + fileName + "')]/font[contains(text(),'[ Read only ]')]"));
+   }
+
+   /**
+    * @throws Exception
+    * @throws InterruptedException
+    */
+   protected void checkCantSaveLockedFile(String fileName) throws Exception, InterruptedException
+   {
+      checkIsFileReadOnlyInEditorTab(fileName);
+   
+      typeTextIntoEditor(0, "change dasda111");
+   
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }
 
 }

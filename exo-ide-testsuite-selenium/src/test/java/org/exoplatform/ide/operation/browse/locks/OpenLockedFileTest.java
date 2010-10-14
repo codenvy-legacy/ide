@@ -40,7 +40,7 @@ public class OpenLockedFileTest extends LockFileAbstract
 
    private static final String FOLDER_NAME = "lockedFiles";
 
-   private static final String FILE_NAME = "aldfnlaksfdbgjksdbkhgs";
+   static final String FILE_NAME = "aldfnlaksfdbgjksdbkhgs";
 
    @Test
    public void testOpenLockedFile() throws Exception
@@ -60,7 +60,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
 
-      checkCantSaveLockedFile();
+      checkCantSaveLockedFile(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
@@ -71,22 +71,9 @@ public class OpenLockedFileTest extends LockFileAbstract
       closeTab("0");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
-      checkCantSaveLockedFile();
+      checkCantSaveLockedFile(FILE_NAME);
 
       closeTab("0");
-   }
-
-   /**
-    * @throws Exception
-    * @throws InterruptedException
-    */
-   private void checkCantSaveLockedFile() throws Exception, InterruptedException
-   {
-      checkIsFileReadOnlyInEditorTab(FILE_NAME);
-
-      typeTextIntoEditor(0, "change dasda111");
-
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }
 
    @AfterClass
