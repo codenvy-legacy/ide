@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
@@ -81,7 +81,7 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.VersionContentPresenter.Display#showVersion(org.exoplatform.ide.client.module.vfs.api.Version)
+    * @see org.exoplatform.ide.client.versioning.VersionContentPresenter.Display#showVersion(org.exoplatform.ide.client.framework.module.vfs.api.Version)
     */
    public void showVersion(Version version)
    {

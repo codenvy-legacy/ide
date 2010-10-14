@@ -44,20 +44,20 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -234,7 +234,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent)
     */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
@@ -250,7 +250,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent)
     */
    public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {

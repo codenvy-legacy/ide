@@ -26,9 +26,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.RedoTypingEvent;
-import org.exoplatform.ide.client.module.vfs.api.Version;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

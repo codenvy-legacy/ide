@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

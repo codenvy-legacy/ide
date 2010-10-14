@@ -84,9 +84,9 @@ import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
 import org.exoplatform.ide.client.module.edit.event.UndoTypingHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Version;
-import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

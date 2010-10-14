@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.operation.properties;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.operation.properties.propertyeditor.PropertyEditor;
 
 import com.google.gwt.event.shared.HandlerManager;

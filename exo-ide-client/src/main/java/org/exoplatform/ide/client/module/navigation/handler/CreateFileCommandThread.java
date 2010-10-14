@@ -52,9 +52,9 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectF
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;

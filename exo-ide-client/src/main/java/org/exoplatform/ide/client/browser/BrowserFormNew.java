@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -81,7 +81,7 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
    }
 
    /**
-    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#updateItemState(org.exoplatform.ide.client.module.vfs.api.File)
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#updateItemState(org.exoplatform.ide.client.framework.module.vfs.api.File)
     */
    public void updateItemState(File file)
    {

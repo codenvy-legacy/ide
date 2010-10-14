@@ -36,12 +36,12 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

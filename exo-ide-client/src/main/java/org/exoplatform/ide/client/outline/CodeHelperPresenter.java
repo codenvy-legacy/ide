@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
 import org.exoplatform.ide.client.panel.event.ClosePanelHandler;

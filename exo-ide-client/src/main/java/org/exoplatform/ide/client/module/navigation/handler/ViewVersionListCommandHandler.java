@@ -29,11 +29,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Version;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.versioning.ViewVersionsForm;
 
 /**
@@ -83,7 +83,7 @@ public class ViewVersionListCommandHandler implements ViewVersionListHandler, Ex
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent)
     */
    public void onItemVersionsReceived(final ItemVersionsReceivedEvent event)
    {

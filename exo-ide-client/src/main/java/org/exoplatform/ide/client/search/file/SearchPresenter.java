@@ -21,10 +21,10 @@ package org.exoplatform.ide.client.search.file;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

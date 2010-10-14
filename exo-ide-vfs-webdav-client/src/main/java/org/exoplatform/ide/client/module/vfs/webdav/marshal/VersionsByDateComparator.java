@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 
 import java.util.Comparator;
 import java.util.Date;

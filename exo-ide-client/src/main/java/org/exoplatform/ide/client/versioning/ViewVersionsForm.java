@@ -31,8 +31,8 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 
 import java.util.List;
 

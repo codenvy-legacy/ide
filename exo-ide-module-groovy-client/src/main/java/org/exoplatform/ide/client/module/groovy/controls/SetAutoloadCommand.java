@@ -23,13 +23,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Version;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -43,7 +43,7 @@ import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.module.edit.event.GoToLineHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 

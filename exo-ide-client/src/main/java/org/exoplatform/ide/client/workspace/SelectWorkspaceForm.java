@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;

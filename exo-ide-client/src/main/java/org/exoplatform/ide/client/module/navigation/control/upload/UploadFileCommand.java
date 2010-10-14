@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
-import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;

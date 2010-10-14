@@ -120,8 +120,8 @@ import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThr
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewVersionHistoryCommandHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;

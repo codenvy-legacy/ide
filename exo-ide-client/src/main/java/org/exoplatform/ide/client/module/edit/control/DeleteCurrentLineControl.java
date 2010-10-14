@@ -23,7 +23,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
 

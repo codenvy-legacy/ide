@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.module.vfs.api.LockToken;
+import org.exoplatform.ide.client.framework.module.vfs.api.LockToken;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;

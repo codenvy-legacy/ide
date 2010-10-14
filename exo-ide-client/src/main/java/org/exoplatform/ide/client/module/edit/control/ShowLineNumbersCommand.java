@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 

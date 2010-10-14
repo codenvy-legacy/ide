@@ -29,10 +29,10 @@ import org.exoplatform.ide.client.framework.application.event.InitializeApplicat
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

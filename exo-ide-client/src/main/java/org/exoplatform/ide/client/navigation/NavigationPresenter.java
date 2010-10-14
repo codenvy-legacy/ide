@@ -17,9 +17,9 @@
 package org.exoplatform.ide.client.navigation;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.SearchResultReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.SearchResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

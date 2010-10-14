@@ -27,10 +27,10 @@ import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
 import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
 import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
 

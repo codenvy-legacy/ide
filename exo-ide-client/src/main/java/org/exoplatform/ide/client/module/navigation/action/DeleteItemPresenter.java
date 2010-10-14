@@ -28,14 +28,14 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -291,7 +291,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent)
     */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {

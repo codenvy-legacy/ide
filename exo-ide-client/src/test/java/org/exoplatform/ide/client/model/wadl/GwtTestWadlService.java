@@ -37,11 +37,11 @@ import org.exoplatform.ide.client.module.groovy.service.wadl.WadlService;
 import org.exoplatform.ide.client.module.groovy.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler;
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;

@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaReciev
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesHandler;
 

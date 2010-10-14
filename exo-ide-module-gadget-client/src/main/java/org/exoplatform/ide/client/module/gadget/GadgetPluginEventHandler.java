@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.module.gadget.event.DeployGadgetEvent;
@@ -33,7 +34,6 @@ import org.exoplatform.ide.client.module.gadget.service.event.GadgetDeployResult
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetDeployResultHandler;
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResultEvent;
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResultHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 

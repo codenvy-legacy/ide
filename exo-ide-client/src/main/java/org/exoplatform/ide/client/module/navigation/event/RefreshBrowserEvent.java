@@ -19,8 +19,8 @@ package org.exoplatform.ide.client.module.navigation.event;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 

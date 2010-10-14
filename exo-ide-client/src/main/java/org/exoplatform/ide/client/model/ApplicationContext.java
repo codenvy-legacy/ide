@@ -16,14 +16,13 @@
  */
 package org.exoplatform.ide.client.model;
 
+import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Item;
 
 /**
  * Created by The eXo Platform SAS .

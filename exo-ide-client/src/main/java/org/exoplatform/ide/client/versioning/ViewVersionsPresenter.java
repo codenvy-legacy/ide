@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 
 import java.util.List;
 

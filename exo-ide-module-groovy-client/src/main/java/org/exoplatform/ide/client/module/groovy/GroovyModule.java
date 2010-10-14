@@ -36,6 +36,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
@@ -75,9 +78,6 @@ import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOu
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
 
 import java.util.HashMap;
 import java.util.Map;

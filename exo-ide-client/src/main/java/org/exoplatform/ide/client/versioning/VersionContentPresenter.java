@@ -23,7 +23,7 @@ package org.exoplatform.ide.client.versioning;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
 import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;

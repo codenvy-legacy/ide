@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.versioning.event;
 
-import org.exoplatform.ide.client.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 
 import com.google.gwt.event.shared.GwtEvent;
 

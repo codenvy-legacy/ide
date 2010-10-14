@@ -56,7 +56,7 @@ import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogEvent;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.toolbar.customize.CustomizeToolbarForm;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;

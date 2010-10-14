@@ -35,9 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -43,19 +43,19 @@ import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemHandler;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ChildrenReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ChildrenReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
@@ -386,7 +386,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    }
 
    //   /**
-   //    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent)
+   //    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent)
    //    */
    //   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    //   {
@@ -398,7 +398,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    //   }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.module.vfs.api.event.ItemUnlockedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent)
     */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
@@ -413,7 +413,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemLockResultReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent)
     */
    public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {

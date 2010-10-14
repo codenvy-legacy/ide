@@ -20,10 +20,6 @@
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-webdav-client</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-editor</artifactId>
       </dependency>

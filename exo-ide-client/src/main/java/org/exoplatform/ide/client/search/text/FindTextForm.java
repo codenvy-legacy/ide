@@ -25,7 +25,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.search.Search;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;

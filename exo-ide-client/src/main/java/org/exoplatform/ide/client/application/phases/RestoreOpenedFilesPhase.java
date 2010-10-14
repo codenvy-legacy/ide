@@ -20,10 +20,7 @@
 
 package org.exoplatform.ide.client.application.phases;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -36,17 +33,19 @@ import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileE
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 

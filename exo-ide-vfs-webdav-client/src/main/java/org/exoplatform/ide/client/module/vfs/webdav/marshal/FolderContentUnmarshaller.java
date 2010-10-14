@@ -26,11 +26,11 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.property.ItemProperty;
-import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
 
 import com.google.gwt.http.client.Response;
 

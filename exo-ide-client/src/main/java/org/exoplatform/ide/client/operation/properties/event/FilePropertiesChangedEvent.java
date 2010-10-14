@@ -17,7 +17,7 @@
 
 package org.exoplatform.ide.client.operation.properties.event;
 
-import org.exoplatform.ide.client.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

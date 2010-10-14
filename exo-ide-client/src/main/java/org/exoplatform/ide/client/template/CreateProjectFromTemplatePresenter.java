@@ -24,15 +24,15 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.vfs.api.File;
-import org.exoplatform.ide.client.module.vfs.api.Folder;
-import org.exoplatform.ide.client.module.vfs.api.Item;
-import org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedHandler;
-import org.exoplatform.ide.client.module.vfs.webdav.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,7 +216,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
    }
    
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ide.client.module.vfs.api.event.FolderCreatedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedEvent)
     */
    public void onFolderCreated(FolderCreatedEvent event)
    {
@@ -240,7 +240,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent)
+    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent)
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {
