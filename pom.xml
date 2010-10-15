@@ -179,16 +179,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-packaging-gatein-extension-webapp</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-packaging-gatein-extension-config</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-testframework</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -432,8 +422,5 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-
-      <module>exo-ide-packaging-gatein-extension-config</module>
-      <module>exo-ide-packaging-gatein-extension-webapp</module>
    </modules>
 </project>
