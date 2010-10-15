@@ -77,7 +77,13 @@ public class FindTextCommand extends SimpleControl implements EditorActiveFileCh
       {
          setVisible(true);
       }
-
+      
+      if (event.getEditor().isReadOnly())
+      {
+         setEnabled(false);
+         return;
+      }
+      
       boolean canFindReplace = event.getEditor().canFindAndReplace();
       //boolean isOpened = openedForms.contains(FindTextForm.ID); 
       boolean enableSearch = canFindReplace && !findTextFormOpened;

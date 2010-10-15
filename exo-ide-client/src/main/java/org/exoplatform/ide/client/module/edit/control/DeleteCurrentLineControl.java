@@ -60,7 +60,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements EditorAct
          setEnabled(false);
          return;
       }
-
+      
       if (event.getEditor().canDeleteCurrentLine())
       {
          setVisible(true);
@@ -70,6 +70,12 @@ public class DeleteCurrentLineControl extends SimpleControl implements EditorAct
       {
          setVisible(false);
          setEnabled(false);
+      }
+      
+      if (event.getEditor().isReadOnly())
+      {
+         setEnabled(false);
+         return;
       }
    }
 

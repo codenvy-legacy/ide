@@ -447,6 +447,16 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          return;
       }
       final File file = event.getFile();
+      
+      if(file.getProperty(ItemProperty.JCR_LOCKOWNER)!= null)
+      {
+         if(!lockTokens.containsKey(file.getHref()))
+         {
+            closeFile(file);
+            return;
+         }
+      }
+      
       if (!file.isContentChanged() && !file.isPropertiesChanged())
       {
          closeFile(file);
