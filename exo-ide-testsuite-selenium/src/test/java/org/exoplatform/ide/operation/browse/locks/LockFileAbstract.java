@@ -63,9 +63,10 @@ public abstract class LockFileAbstract extends BaseTest
 
    protected void deleteLockTokensCookies()
    {
-      if (selenium.isCookiePresent("lock-tokens_map"))
+      String cookieName= "eXo-IDE-" + USER_NAME + "-lock-tokens_map";
+      if (selenium.isCookiePresent(cookieName))
       {
-         selenium.deleteCookie("lock-tokens_map", "path=/, recurse=true");
+         selenium.deleteCookie(cookieName, "path=/, recurse=true");
       }
       else
       {

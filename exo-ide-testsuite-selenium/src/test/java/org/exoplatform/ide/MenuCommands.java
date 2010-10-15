@@ -159,6 +159,8 @@ public interface MenuCommands
       public static final String GO_TO_LINE = "Go to Line...";
       
       public static final String DELETE_CURRENT_LINE = "Delete Current Line";
+      
+      public static final String FIND_REPLACE = "Find/Replace...";
    }
 
    public interface CodeEditors

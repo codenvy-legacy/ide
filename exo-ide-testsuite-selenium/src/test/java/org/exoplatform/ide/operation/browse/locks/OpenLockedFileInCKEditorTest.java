@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 2010 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.operation.browse.locks;
+
+import static org.junit.Assert.assertFalse;
+
+import java.io.IOException;
+
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.junit.AfterClass;
+import org.junit.Test;
+
+/**
+ * Created by The eXo Platform SAS .
+ *
+ * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Oct 15, 2010 $
+ *
+ */
+public class OpenLockedFileInCKEditorTest extends LockFileAbstract
+{
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private static final String FOLDER_NAME = "ekrgjbalsgblsgsgn";
+
+   private static final String FILE_NAME = "lghnlskabfgkgbhglhsdnsgdnb";
+
+   @Test
+   public void testOpenLockedFile() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      createFolder(FOLDER_NAME);
+
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+
+      saveAsByTopMenu(FILE_NAME);
+
+      checkFileLocking(FILE_NAME, false);
+
+      deleteLockTokensCookies();
+
+      selenium.refresh();
+      selenium.waitForPageToLoad("10000");
+      Thread.sleep(TestConstants.SLEEP);
+      
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      selectItemInWorkspaceTree(FILE_NAME);
+      
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
+      
+      closeTab("0");
+      
+      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
+      
+//      checkCantSaveLockedFile(FILE_NAME);
+      checkFileLocking(FILE_NAME, true);
+      
+      selectIFrameWithEditor(0);
+      
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, "Test editor");
+      selectMainFrame();
+      
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      closeTab("0");
+      
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      
+   }
+   
+   @AfterClass
+   public static void tierDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+}
