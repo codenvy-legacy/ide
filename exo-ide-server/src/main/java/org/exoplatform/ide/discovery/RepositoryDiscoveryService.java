@@ -31,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
@@ -48,6 +50,8 @@ public class RepositoryDiscoveryService implements ResourceContainer
 {
 
    private final String WEBDAV_CONTEXT = "jcr";
+   
+   private String defaultEntryPoint;
 
    /**
     * To disable cache control.
@@ -63,11 +67,22 @@ public class RepositoryDiscoveryService implements ResourceContainer
 
    private RepositoryService repositoryService;
 
-   public RepositoryDiscoveryService(RepositoryService repositoryService)
+   public RepositoryDiscoveryService(RepositoryService repositoryService, InitParams initParams)
    {
       this.repositoryService = repositoryService;
+      
+      if (initParams != null) 
+      {
+         ValueParam param = initParams.getValueParam("defaultEntryPoint");
+         if (param != null)
+            defaultEntryPoint = param.getValue();
+         else
+            defaultEntryPoint = "";
+      }
+      else 
+         defaultEntryPoint = "";
    }
-
+   
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
@@ -96,6 +111,14 @@ public class RepositoryDiscoveryService implements ResourceContainer
       }
 
       return Response.ok(entryPointList).cacheControl(noCache).build();
+   }
+   
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/defaultEntrypoint/")
+   public Response getDefaultEntryPoint(@Context UriInfo uriInfo)
+   {
+      return Response.ok(defaultEntryPoint).cacheControl(noCache).build();
    }
 
 }
