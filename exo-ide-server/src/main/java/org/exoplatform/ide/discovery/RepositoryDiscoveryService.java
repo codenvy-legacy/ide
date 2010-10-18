@@ -114,9 +114,8 @@ public class RepositoryDiscoveryService implements ResourceContainer
    }
    
    @GET
-   @Produces(MediaType.APPLICATION_JSON)
    @Path("/defaultEntrypoint/")
-   public Response getDefaultEntryPoint(@Context UriInfo uriInfo)
+   public Response getDefaultEntryPoint()
    {
       return Response.ok(defaultEntryPoint).cacheControl(noCache).build();
    }
