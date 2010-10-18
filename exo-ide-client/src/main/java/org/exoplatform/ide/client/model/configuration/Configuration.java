@@ -42,8 +42,6 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private final static String CONTEXT = "context";
 
-   private final static String ENTRY_POINT = "entryPoint";
-
    private final static String GADGET_SERVER = "gadgetServer";
 
    private final static String PUBLIC_CONTEXT = "publicContext";
@@ -97,13 +95,6 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
          return;
       }
 
-      if (jsonConfiguration.containsKey(ENTRY_POINT))
-         configuration.setDefaultEntryPoint(jsonConfiguration.get(Configuration.ENTRY_POINT).isString().stringValue());    
-//      else
-//      {
-//         showErrorMessage(ENTRY_POINT);
-//         return;
-//      }
 
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host

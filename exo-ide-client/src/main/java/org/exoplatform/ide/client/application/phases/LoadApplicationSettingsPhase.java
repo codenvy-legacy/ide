@@ -139,7 +139,8 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
             eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
                .getRegisteredControls()));
 
-            new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+//            new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+            new LoadDefaultEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
 
          }
       }.schedule(Phase.DELAY_BETWEEN_PHASES);
