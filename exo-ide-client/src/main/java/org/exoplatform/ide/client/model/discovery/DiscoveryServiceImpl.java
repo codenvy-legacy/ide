@@ -20,7 +20,9 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.model.discovery.marshal.DefaultEntryPointUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -61,6 +63,24 @@ public class DiscoveryServiceImpl extends DiscoveryService
    {
       EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
+      
+      String errorMessage = "Service is not deployed.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.discovery.DiscoveryService#getDefaultEntryPoint()
+    */
+   @Override
+   public void getDefaultEntryPoint()
+   {
+      String url = restServiceContext + "/services/discovery/defaultEntrypoint";
+      
+      DefaultEntryPointReceivedEvent event = new DefaultEntryPointReceivedEvent();
+      DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(event);
       
       String errorMessage = "Service is not deployed.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);

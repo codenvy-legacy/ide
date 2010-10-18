@@ -19,11 +19,11 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
-
-import com.google.gwt.http.client.Response;
+import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,20 +32,19 @@ import com.google.gwt.http.client.Response;
  * @version $
  */
 
-public class EntryPointListUnmarshaller implements Unmarshallable
+public class DefaultEntryPointUnmarshaller implements Unmarshallable
 {
    
-   private EntryPointsReceivedEvent event;
+   private DefaultEntryPointReceivedEvent event;
    
-   public EntryPointListUnmarshaller(EntryPointsReceivedEvent event)
+   public DefaultEntryPointUnmarshaller(DefaultEntryPointReceivedEvent event)
    {
       this.event = event;
    }
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      EntryPointList entryPointList = EntryPointList.build(response.getText());
-      event.setEntryPointList(entryPointList);
+      event.setDefaultEntryPoint(response.getText());
    }
 
 }

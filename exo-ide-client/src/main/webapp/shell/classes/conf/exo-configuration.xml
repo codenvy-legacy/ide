@@ -72,6 +72,12 @@
 
    <component>
       <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService</type>
+      <init-params>
+         <value-param>
+            <name>defaultEntryPoint</name>
+            <value>/rest/private/jcr/repository/dev-monit</value>
+         </value-param>
+      </init-params>
    </component>
 
 
