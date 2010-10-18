@@ -94,6 +94,14 @@ public interface MenuCommands
       public static final String GET_URL = "Get URL...";
 
       public static final String SHOW_PROPERTIES = "Properties";
+      
+      public static final String VERSION_HISTORY = "Version History...";
+      
+      public static final String VERSION_LIST = "Version...";
+      
+      public static final String NEWER_VERSION = "Newer Version";
+      
+      public static final String OLDER_VERSION = "Older Version";
 
    }
 
@@ -126,6 +134,8 @@ public interface MenuCommands
       public static final String SEARCH = "Search...";
 
       public static final String REFRESH = "Refresh";
+      
+      public static final String RESTORE_VERSION = "Restore Version";
       
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
    }

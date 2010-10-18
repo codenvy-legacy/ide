@@ -65,6 +65,17 @@ public interface ToolbarCommands
       public static final String HIDE_OUTLINE = "Hide Outline";
       
       public static final String SHOW_PROPERTIES = "Show Properties";
+      
+      public static final String VIEW_VERSION_HISTORY = "View Item Version History";
+      
+      public static final String HIDE_VERSION_HISTORY = "Hide Item Version History";
+      
+      public static final String VIEW_VERSION = "View Item Version...";
+      
+      public static final String VIEW_NEWER_VERSION = "View Newer Version";
+      
+      public static final String VIEW_OLDER_VERSION = "View Older Version";
+      
    }
    
    public interface Run

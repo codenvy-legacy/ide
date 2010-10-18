@@ -85,8 +85,7 @@ public class TextUtil extends AbstractTextUtil
          {
             selenium.typeKeys(locator, String.valueOf(symbol));
          }
-         
-         //Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       
       Thread.sleep(TestConstants.REDRAW_PERIOD);
