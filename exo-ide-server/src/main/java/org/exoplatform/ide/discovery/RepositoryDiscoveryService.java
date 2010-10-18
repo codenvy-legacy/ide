@@ -28,7 +28,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.exoplatform.container.xml.InitParams;
@@ -45,7 +44,7 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
  * @version $
  */
 
-@Path("/services/discovery")
+@Path("/ide/discovery")
 public class RepositoryDiscoveryService implements ResourceContainer
 {
 
@@ -86,7 +85,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
-   public Response getEntryPoints(@Context UriInfo uriInfo)
+   public EntryPointList getEntryPoints(@Context UriInfo uriInfo)
    {
       List<String> entryPoints = new ArrayList<String>();
 
@@ -110,14 +109,14 @@ public class RepositoryDiscoveryService implements ResourceContainer
          entryPointList.getEntryPoints().add(new EntryPoint(Scheme.WEBDAV, entryPoints.get(i)));
       }
 
-      return Response.ok(entryPointList).cacheControl(noCache).build();
+      return entryPointList;
    }
    
    @GET
    @Path("/defaultEntrypoint/")
-   public Response getDefaultEntryPoint()
+   public String getDefaultEntryPoint()
    {
-      return Response.ok(defaultEntryPoint).cacheControl(noCache).build();
+      return defaultEntryPoint;
    }
 
 }

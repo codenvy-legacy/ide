@@ -26,6 +26,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -47,7 +48,7 @@ public class RestConversationState implements ResourceContainer
    @Path("/whoami")
    @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
-   public Response whoami()
+   public IdeUser whoami()
    {
       ConversationState curentState = ConversationState.getCurrent();
       if (curentState != null)
@@ -56,9 +57,9 @@ public class RestConversationState implements ResourceContainer
          IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
          if (log.isDebugEnabled())
             log.info("Getting user identity: " + identity.getUserId());
-         return Response.ok(user, MediaType.APPLICATION_JSON).build();
+         return user;
       }
-      return Response.status(Status.UNAUTHORIZED).build();
+      else throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).build());
    }
 
 }

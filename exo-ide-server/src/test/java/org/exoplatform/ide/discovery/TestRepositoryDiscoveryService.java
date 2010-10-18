@@ -16,18 +16,11 @@
  */
 package org.exoplatform.ide.discovery;
 
-import junit.framework.TestCase;
-
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -37,29 +30,8 @@ import javax.ws.rs.core.MultivaluedMap;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestRepositoryDiscoveryService extends TestCase
+public class TestRepositoryDiscoveryService extends BaseTest
 {
-   /**
-     * Class logger.
-     */
-   private final Log log = ExoLogger.getLogger(TestRepositoryDiscoveryService.class);
-
-   protected StandaloneContainer container;
-   
-   public ResourceLauncher launcher;
-   
-   @Before
-   public void setUp() throws Exception
-   {
-      String containerConf = TestRepositoryDiscoveryService.class.getResource("/conf/standalone/test-configuration.xml").toString();
-
-      StandaloneContainer.addConfigurationURL(containerConf);
-
-      container = StandaloneContainer.getInstance();
-
-      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      launcher = new ResourceLauncher(handler);
-   }
    
    @Test
    public void testDefaultEntryPoint() throws Exception
@@ -68,12 +40,28 @@ public class TestRepositoryDiscoveryService extends TestCase
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       
       ContainerResponse cres =
-         launcher.service("GET", "/services/discovery/defaultEntrypoint", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/discovery/defaultEntrypoint", "", headers, null, null, ctx);
       
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
       assertTrue(cres.getEntity() instanceof String);
       String defaultEntryPoint = (String)cres.getEntity();
       assertEquals("/rest/private/jcr/repository/dev-monit", defaultEntryPoint);
+   }
+   
+   @Test
+   public void testEntryPoints() throws Exception
+   {
+      EnvironmentContext ctx = new EnvironmentContext();
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/discovery/entrypoints", "", headers, null, null, ctx);
+      
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertNotNull(cres.getEntity());
+      assertTrue(cres.getEntity() instanceof EntryPointList);
+      EntryPointList list= (EntryPointList)cres.getEntity();
+      assertEquals(list.getEntryPoints().size(), 2);    
    }
 }

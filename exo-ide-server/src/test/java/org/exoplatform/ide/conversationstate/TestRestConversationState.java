@@ -17,15 +17,11 @@
 package org.exoplatform.ide.conversationstate;
 
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.rest.tools.DummySecurityContext;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
@@ -39,45 +35,23 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.jcr.Node;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
-
-import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestRestConversationState extends TestCase
+public class TestRestConversationState extends BaseTest
 {
-   /**
-     * Class logger.
-     */
-   private final Log log = ExoLogger.getLogger(TestRestConversationState.class);
-
-   protected StandaloneContainer container;
-   
-   public ResourceLauncher launcher;
    
    private SecurityContext securityContext;
    
    @Before
    public void setUp() throws Exception
    {
-      String containerConf = TestRestConversationState.class.getResource("/conf/standalone/test-configuration.xml").toString();
-
-      StandaloneContainer.addConfigurationURL(containerConf);
-
-      container = StandaloneContainer.getInstance();
-
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
-
-      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      launcher = new ResourceLauncher(handler);
+      super.setUp();
       Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);                                                                                                      
       String validUser =                                                                                                                                                                                   
          authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});                                                                                             

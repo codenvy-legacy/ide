@@ -20,12 +20,12 @@
 -->
 <repository-service default-repository="db1">
    <repositories>
-      <repository name="db1" system-workspace="ws" default-workspace="ws">
+      <repository name="db1" system-workspace="dev-monit" default-workspace="dev-monit">
          <security-domain>exo-domain</security-domain>
          <access-control>optional</access-control>
          <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
          <workspaces>
-            <workspace name="ws">
+            <workspace name="dev-monit">
                <!-- for system storage -->
                <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
                   <properties>
@@ -34,7 +34,7 @@
                      <property name="multi-db" value="true" />
                      <property name="update-storage" value="true" />
                      <property name="max-buffer-size" value="200k" />
-                     <property name="swap-directory" value="target/temp/swap/ws" />
+                     <property name="swap-directory" value="target/temp/swap/dev-monit" />
                   </properties>
                </container>
                <cache enabled="true">
@@ -45,11 +45,34 @@
                </cache>
                <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
                   <properties>
-                     <property name="index-dir" value="target/temp/index/ws" />
+                     <property name="index-dir" value="target/temp/index/dev-monit" />
                   </properties>
                </query-handler>
             </workspace>
-          </workspaces>
+            <workspace name="ws2">
+               <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
+                  <properties>
+                     <property name="source-name" value="jdbcjcr" />
+                     <property name="dialect" value="hsqldb" />
+                     <property name="multi-db" value="true" />
+                     <property name="update-storage" value="true" />
+                     <property name="max-buffer-size" value="200k" />
+                     <property name="swap-directory" value="target/temp/swap/ws2" />
+                  </properties>
+               </container>
+               <cache enabled="true">
+                  <properties>
+                     <property name="max-size" value="5k" />
+                     <property name="live-time" value="1h" />
+                  </properties>
+               </cache>
+               <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+                  <properties>
+                     <property name="index-dir" value="target/temp/index/ws2" />
+                  </properties>
+               </query-handler>
+            </workspace>
+            </workspaces>
       </repository>
    </repositories>
 </repository-service>

@@ -17,7 +17,6 @@
 package org.exoplatform.ide.conversationstate;
 
 import java.util.Collection;
-import java.util.List;
 
 
 /**

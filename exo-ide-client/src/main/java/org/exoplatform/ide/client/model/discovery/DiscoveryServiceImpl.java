@@ -36,7 +36,7 @@ import com.google.gwt.http.client.RequestBuilder;
 public class DiscoveryServiceImpl extends DiscoveryService
 {
 
-   private static final String DISCOVERY_SERVICE_CONTEXT = "/services/discovery/entrypoints";
+   private static final String DISCOVERY_SERVICE_CONTEXT = "/ide/discovery/entrypoints";
 
    private HandlerManager eventBus;
 
