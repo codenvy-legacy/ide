@@ -42,15 +42,15 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,7 +152,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
     */
    public void onItemLockResultReceived(final ItemLockResultReceivedEvent event)
    {

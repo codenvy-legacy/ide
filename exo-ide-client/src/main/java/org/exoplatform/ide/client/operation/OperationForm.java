@@ -27,9 +27,9 @@ import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandle
 import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.preview.PreviewForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;

@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;

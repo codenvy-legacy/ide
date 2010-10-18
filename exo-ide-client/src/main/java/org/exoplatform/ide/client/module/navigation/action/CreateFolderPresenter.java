@@ -18,12 +18,12 @@ package org.exoplatform.ide.client.module.navigation.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

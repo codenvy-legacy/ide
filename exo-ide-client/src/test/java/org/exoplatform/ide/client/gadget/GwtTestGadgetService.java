@@ -36,11 +36,11 @@ import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResu
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetUndeployResultHandler;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;

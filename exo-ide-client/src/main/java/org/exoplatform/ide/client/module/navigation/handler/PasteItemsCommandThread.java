@@ -36,24 +36,24 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
+import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteHandler;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
+import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.CopyCompleteEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.CopyCompleteHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

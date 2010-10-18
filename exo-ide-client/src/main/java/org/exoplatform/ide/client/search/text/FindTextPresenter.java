@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundHandler;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.search.Search;
 
 import com.google.gwt.event.dom.client.ClickEvent;

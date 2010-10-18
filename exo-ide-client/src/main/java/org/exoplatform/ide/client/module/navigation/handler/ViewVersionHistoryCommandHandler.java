@@ -38,15 +38,15 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviou
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
 import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
@@ -147,7 +147,7 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.framework.vfs.event.event.ItemVersionsReceivedEvent)
     */
    public void onItemVersionsReceived(final ItemVersionsReceivedEvent event)
    {
@@ -225,7 +225,7 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.framework.vfs.event.event.FileContentReceivedEvent)
     */
    public void onFileContentReceived(final FileContentReceivedEvent event)
    {
@@ -316,7 +316,7 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.event.FileContentSavedEvent)
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {

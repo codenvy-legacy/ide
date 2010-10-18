@@ -22,8 +22,8 @@ import com.smartgwt.client.widgets.tab.Tab;
 
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Version;
 
 /**
  * Created by The eXo Platform SAS .

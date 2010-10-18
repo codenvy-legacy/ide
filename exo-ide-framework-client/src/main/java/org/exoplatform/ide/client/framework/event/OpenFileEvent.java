@@ -18,7 +18,7 @@ package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * Created by The eXo Platform SAS.

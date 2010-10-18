@@ -17,8 +17,8 @@
 package org.exoplatform.ide.client.model;
 
 import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

@@ -33,14 +33,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileE
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

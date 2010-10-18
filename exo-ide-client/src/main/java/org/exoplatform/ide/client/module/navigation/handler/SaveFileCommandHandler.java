@@ -34,14 +34,14 @@ import org.exoplatform.ide.client.framework.event.SaveFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -126,7 +126,7 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
    }
 
    /**
-    * @see org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ideall.vfs.api.event.ItemPropertiesSavedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.ItemPropertiesSavedEvent)
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {

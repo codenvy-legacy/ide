@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.navigation;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserForm;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.panel.TabContainer;
 import org.exoplatform.ide.client.search.file.SearchResultPanel;
 import org.exoplatform.ide.client.search.file.SearchResultsForm;

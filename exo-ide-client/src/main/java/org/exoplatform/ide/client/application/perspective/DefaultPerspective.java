@@ -47,12 +47,12 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.SearchResultReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.SearchResultReceivedHandler;
 import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
@@ -547,7 +547,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    }
 
    /**
-    * @see org.exoplatform.ideall.vfs.api.event.SearchResultReceivedHandler#onSearchResultReceived(org.exoplatform.ideall.vfs.api.event.SearchResultReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.SearchResultReceivedHandler#onSearchResultReceived(org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.SearchResultReceivedEvent)
     */
    public void onSearchResultReceived(SearchResultReceivedEvent event)
    {

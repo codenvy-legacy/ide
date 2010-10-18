@@ -19,11 +19,11 @@ package org.exoplatform.ide.client.operation.properties;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

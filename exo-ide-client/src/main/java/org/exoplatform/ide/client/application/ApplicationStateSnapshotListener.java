@@ -39,16 +39,16 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
+import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -169,7 +169,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
     */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
@@ -178,7 +178,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
     */
    public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
    {
@@ -198,7 +198,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent)
     */
    public void onItemDeleted(ItemDeletedEvent event)
    {
@@ -210,7 +210,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent)
     */
    public void onMoveComplete(MoveCompleteEvent event)
    {

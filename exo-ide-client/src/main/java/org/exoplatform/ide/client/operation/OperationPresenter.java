@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
@@ -37,7 +38,6 @@ import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaReciev
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesHandler;
 

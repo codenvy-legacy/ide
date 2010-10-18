@@ -24,10 +24,10 @@ import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
-import org.exoplatform.ide.client.framework.module.vfs.property.ItemProperty;
-import org.exoplatform.ide.client.framework.module.vfs.api.NodeTypeUtil;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
 import com.google.gwt.http.client.Response;
 

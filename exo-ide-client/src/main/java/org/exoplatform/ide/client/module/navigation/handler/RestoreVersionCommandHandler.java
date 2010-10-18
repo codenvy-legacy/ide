@@ -27,15 +27,15 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
@@ -83,7 +83,7 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
     */
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
@@ -118,7 +118,7 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent)
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {

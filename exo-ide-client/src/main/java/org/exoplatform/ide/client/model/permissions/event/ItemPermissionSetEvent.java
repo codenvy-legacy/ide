@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.model.permissions.event;
 
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 

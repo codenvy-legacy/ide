@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.shared.GwtEvent;
 

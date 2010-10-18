@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.event.versioning;
 
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
+import org.exoplatform.ide.client.framework.vfs.Version;
 
 import java.util.List;
 

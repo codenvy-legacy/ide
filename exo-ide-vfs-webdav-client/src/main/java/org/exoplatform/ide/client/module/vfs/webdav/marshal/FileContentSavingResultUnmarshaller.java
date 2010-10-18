@@ -20,7 +20,7 @@
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.http.client.Response;
 

@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.model.permissions.event.ItemPermissionsResived
 import org.exoplatform.ide.client.model.permissions.marshal.ItemPermissionsUnmarshaller;
 import org.exoplatform.ide.client.model.permissions.marshal.PermissionsMarshaller;
 import org.exoplatform.ide.client.model.permissions.marshal.PermissionsUnmarshaller;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;

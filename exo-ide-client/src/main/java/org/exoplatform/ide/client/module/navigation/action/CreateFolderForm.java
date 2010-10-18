@@ -18,7 +18,7 @@ package org.exoplatform.ide.client.module.navigation.action;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 /**
  * Created by The eXo Platform SAS .

@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import java.util.List;
 

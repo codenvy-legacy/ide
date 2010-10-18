@@ -32,10 +32,10 @@ import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

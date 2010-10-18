@@ -28,25 +28,25 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.module.vfs.api.File;
-import org.exoplatform.ide.client.framework.module.vfs.api.Folder;
-import org.exoplatform.ide.client.framework.module.vfs.api.Item;
-import org.exoplatform.ide.client.framework.module.vfs.api.LockToken;
-import org.exoplatform.ide.client.framework.module.vfs.api.Version;
-import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.CopyCompleteEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.module.vfs.api.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.LockToken;
+import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyResponseUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshaller;
@@ -236,7 +236,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#saveContent(org.exoplatform.ide.client.module.vfs.api.File, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveContent(org.exoplatform.ide.client.framework.vfs.File, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
    @Override
    public void saveContent(File file, String lockToken)
@@ -313,7 +313,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.module.vfs.api.Item, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
    @Override
    public void saveProperties(Item item, String lockToken)
@@ -412,7 +412,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#move(org.exoplatform.ide.client.module.vfs.api.Item, java.lang.String, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#move(org.exoplatform.ide.client.framework.vfs.Item, java.lang.String, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
    @Override
    public void move(Item item, String destination, String lockToken)
@@ -542,7 +542,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#unlock(org.exoplatform.ide.client.module.vfs.api.Item, org.exoplatform.ide.client.module.vfs.api.LockToken)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#unlock(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
    @Override
    public void unlock(Item item, String lockToken)
@@ -567,7 +567,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.vfs.api.VirtualFileSystem#getVersions(org.exoplatform.ide.client.module.vfs.api.Item)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getVersions(org.exoplatform.ide.client.framework.vfs.Item)
     */
    @Override
    public void getVersions(Item item)
