@@ -61,6 +61,8 @@ public class HighlightCurrentLineTest extends BaseTest
    private static final int EDITOR_LEFT_OFFSET_POSITION = 13;
 
    private Number linePositionLeft;
+    
+   private static final String scrollTopLocator = "document.getElementsByClassName('CodeMirror-wrapping')[0].childNodes[1].CodeMirror.editor.container.scrollTop";
    
    @BeforeClass
    public static void setUp()
@@ -94,7 +96,7 @@ public class HighlightCurrentLineTest extends BaseTest
       // get line Position Left
       int contentPanelPositionLeft = selenium.getElementPositionLeft(getContentPanelLocator(0)).intValue();
       linePositionLeft = contentPanelPositionLeft + EDITOR_LEFT_OFFSET_POSITION;
-            
+           
       // test that new HTML file is opened in editor, first line is highlighted
       lineHighlighterTest(1, 0);
       
@@ -125,8 +127,8 @@ public class HighlightCurrentLineTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       lineHighlighterTest(8, 0);      
 
-      // remove last line by clicking on "Ctrl+D" hotkey
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      // remove last line
+      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(8, 0);
 
@@ -207,8 +209,7 @@ public class HighlightCurrentLineTest extends BaseTest
     */
    private void goToLine(int lineNumber) throws Exception
    {
-      // click on "Ctrl+L" hotkey
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_L);
+      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       // Type line number
@@ -248,15 +249,14 @@ public class HighlightCurrentLineTest extends BaseTest
     * Return editor container scroll top. Method return <b>null</b> in Internet Explorer, because this browser doesn't support window.document.getElementsByClassName() method still. 
     * @return editor container scroll top.
     */
-   private Integer getEditorScrollTop() {
+   private Integer getEditorScrollTop() 
+   {
       Integer scrollTop = null;
-
-      System.out.println(selenium.getEval("window.document.getElementsByClassName('CodeMirror-wrapping')[0].childNodes[1].CodeMirror.editor.container.scrollTop"));
-      
+          
       try 
       {
-         // trying to read the property from Firefox
-         scrollTop = Integer.parseInt(selenium.getEval("window.document.getElementsByClassName('CodeMirror-wrapping')[0].childNodes[1].CodeMirror.editor.container.scrollTop"));
+         // trying to read the property from Firefox         
+         scrollTop = Integer.parseInt(selenium.getEval("var win = selenium.browserbot.getCurrentWindow(); win." + scrollTopLocator + ";"));
       }
       catch (NumberFormatException e)
       {
@@ -269,6 +269,7 @@ public class HighlightCurrentLineTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
+      closeUnsavedFileAndDoNotSave("1");
       closeUnsavedFileAndDoNotSave("0");      
       cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
    }   

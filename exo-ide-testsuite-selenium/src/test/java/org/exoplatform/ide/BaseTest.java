@@ -120,15 +120,15 @@ public abstract class BaseTest
       selenium.start();
       selenium.windowFocus();
       selenium.open(APPLICATION_URL);
-      selenium.waitForPageToLoad("10000");
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       selenium.windowMaximize();
       
       if (isRunIdeUnderPortal())
       {
          loginInPortal();
          selenium.open(APPLICATION_URL);
-         selenium.waitForPageToLoad("10000");
-         Thread.sleep(10000);
+         selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
+         Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
          // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
          // selenium.selectFrame("remote_iframe_0");
 
@@ -155,7 +155,7 @@ public abstract class BaseTest
       selenium.type("//input[@name='j_username']", userName);
       selenium.type("//input[@name='j_password']", "gtn");
       selenium.click("//input[@value='Log In']");
-      selenium.waitForPageToLoad("10000");
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
    }
 
    private static void loginInPortal() throws Exception
@@ -165,7 +165,7 @@ public abstract class BaseTest
       selenium.type("//input[@name='username']", "root");
       selenium.type("//input[@name='password']", "gtn");
       selenium.click("//div[@id='UIPortalLoginFormAction']");
-      selenium.waitForPageToLoad("10000");
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
    }
 
    /**
@@ -1103,7 +1103,7 @@ public abstract class BaseTest
    protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
    {
       runCommandFromMenuNewOnToolbar(menuCommand);
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       saveAsUsingToolbarButton(fileName);
       Thread.sleep(TestConstants.SLEEP);
@@ -1511,7 +1511,7 @@ public abstract class BaseTest
    public enum IdeAddress 
    {
       SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/org.exoplatform.ide.IDEShell/IDEShell.html?gwt.codesvr=127.0.0.1:9997"), 
-      PORTAL("http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/classic/" + PAGE_NAME), 
+      PORTAL("http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"),      
       STANDALONE("http://127.0.0.1:8080/", "http://127.0.0.1:8080/IDE-application/IDE/IDEApplication.html");
 
       private String baseUrl;
