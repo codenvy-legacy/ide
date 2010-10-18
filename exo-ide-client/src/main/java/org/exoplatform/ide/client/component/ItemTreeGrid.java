@@ -67,6 +67,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       tree.setRoot(new TreeNode("root"));
       setData(tree);
 
+      setFixedFieldWidths(false);
       setSelectionType(SelectionStyle.SINGLE);
 
       setSeparateFolders(true);

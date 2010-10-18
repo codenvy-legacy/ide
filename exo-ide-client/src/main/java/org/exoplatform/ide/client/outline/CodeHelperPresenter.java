@@ -120,7 +120,6 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
     */
    public void onOpenPanel(OpenPanelEvent event)
    {
-      System.out.println("CodeHelperPresenter.onOpenPanel()");
       display.show();
       display.addPanel(event.getPanel());
    }

@@ -74,7 +74,6 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
       tabSet.addTabPanel(outlineForm, "Outline", tabIcon, true);
       addMember(tabSet);
-//TODO
       tabSet.addCloseClickHandler(closeClickHandler);
 
       presenter = new CodeHelperPresenter(eventBus);

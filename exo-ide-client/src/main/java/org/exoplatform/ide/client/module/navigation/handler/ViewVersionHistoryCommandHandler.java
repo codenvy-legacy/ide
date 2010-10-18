@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
+import com.google.gwt.user.client.Timer;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -41,6 +43,8 @@ import org.exoplatform.ide.client.framework.module.vfs.api.Version;
 import org.exoplatform.ide.client.framework.module.vfs.api.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedEvent;
+import org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
@@ -62,7 +66,7 @@ import java.util.List;
  */
 public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandler, ExceptionThrownHandler,
    ItemVersionsReceivedHandler, EditorActiveFileChangedHandler, ViewPreviousVersionHandler, ViewNextVersionHandler,
-   FileContentReceivedHandler, OpenVersionHandler, PanelClosedHandler, PanelOpenedHandler
+   FileContentReceivedHandler, OpenVersionHandler, PanelClosedHandler, PanelOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
@@ -143,7 +147,7 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemVersionsReceivedEvent)
+    * @see org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.module.vfs.api.event.ItemVersionsReceivedEvent)
     */
    public void onItemVersionsReceived(final ItemVersionsReceivedEvent event)
    {
@@ -152,7 +156,13 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
       if (event.getVersions() != null && event.getVersions().size() > 0)
       {
          versionHistory = event.getVersions();
-         openVersion(event.getVersions().get(0));
+         int index = 0;
+         if (version != null)
+         {
+            index = getVersionIndexInList(version.getHref());
+            index = (index > 0) ? index : 0;
+         }
+         openVersion(event.getVersions().get(index));
       }
       else
       {
@@ -215,16 +225,31 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.FileContentReceivedEvent)
+    * @see org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.module.vfs.api.event.FileContentReceivedEvent)
     */
-   public void onFileContentReceived(FileContentReceivedEvent event)
+   public void onFileContentReceived(final FileContentReceivedEvent event)
    {
       if (event.getFile() instanceof Version)
       {
          handlers.removeHandler(FileContentReceivedEvent.TYPE);
          handlers.removeHandler(ExceptionThrownEvent.TYPE);
          version = (Version)event.getFile();
-         eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+         if (!isVersionPanelOpened)
+         {
+            eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version)));
+            Timer timer = new Timer()
+            {
+               @Override
+               public void run()
+               {
+                  eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+               }
+            };
+            timer.schedule(500);
+         } else {
+            eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+         }
+        
          eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       }
    }
@@ -248,10 +273,6 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
 
    private void openVersion(Version version)
    {
-      if (!isVersionPanelOpened)
-      {
-         eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus)));
-      }
       getVersionContent(version);
    }
 
@@ -277,6 +298,8 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
       if (VersionContentForm.ID.equals(event.getPanelId()))
       {
          isVersionPanelOpened = false;
+         version = null;
+         handlers.removeHandler(FileContentSavedEvent.TYPE);
       }
    }
 
@@ -288,6 +311,18 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
       if (VersionContentForm.ID.equals(event.getPanelId()))
       {
          isVersionPanelOpened = true;
+         handlers.addHandler(FileContentSavedEvent.TYPE, this);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.module.vfs.api.event.FileContentSavedEvent)
+    */
+   public void onFileContentSaved(FileContentSavedEvent event)
+   {
+      if (version != null && event.getFile().getHref().equals(version.getItemHref()))
+      {
+         getVersionHistory();
       }
    }
 }

@@ -43,7 +43,9 @@ import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
 public class VersionContentForm extends SimpleTabPanel implements VersionContentPresenter.Display
 {
-   public static final String ID = "ideVersionContentForm";
+   public static final String ID = "ideVersionContentPanel";
+   
+   public static final String FORM_ID = "ideVersionContentForm";
 
    private HandlerManager eventBus;
 
@@ -51,40 +53,17 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
    
    private VersionContentPresenter presenter;
 
-   public VersionContentForm(HandlerManager eventBus)
+   public VersionContentForm(HandlerManager eventBus, Version version)
    {
       super(ID);
-
+      setID(FORM_ID);
       this.eventBus = eventBus;
+      createEditor(version);
       presenter = new VersionContentPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
-   /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
-    */
-   @Override
-   protected void onDraw()
-   {
-      eventBus.fireEvent(new PanelOpenedEvent(ID));   
-      super.onDraw();
-   }
-
-   /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
-    */
-   @Override
-   protected void onDestroy()
-   {
-      presenter.destroy();
-      super.onDestroy();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.versioning.VersionContentPresenter.Display#showVersion(org.exoplatform.ide.client.framework.module.vfs.api.Version)
-    */
-   public void showVersion(Version version)
-   {
+   private void createEditor(Version version){
       if (smartGWTTextEditor != null){
          removeMember(smartGWTTextEditor);
       }
@@ -106,6 +85,26 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       smartGWTTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
       addMember(smartGWTTextEditor);
+   }
+   
+   /**
+    * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
+    */
+   @Override
+   protected void onDraw()
+   {
+      eventBus.fireEvent(new PanelOpenedEvent(ID));   
+      super.onDraw();
+   }
+
+   /**
+    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    */
+   @Override
+   protected void onDestroy()
+   {
+      presenter.destroy();
+      super.onDestroy();
    }
 
    /**

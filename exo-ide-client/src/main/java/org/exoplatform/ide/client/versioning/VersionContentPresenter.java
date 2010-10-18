@@ -20,12 +20,13 @@
 
 package org.exoplatform.ide.client.versioning;
 
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
-import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.module.vfs.api.Version;
-import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
-import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
+import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
@@ -39,24 +40,21 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class VersionContentPresenter implements ShowVersionHandler, EditorInitializedHandler, ClosePanelHandler
+public class VersionContentPresenter implements ShowVersionHandler
 {
 
    public interface Display
    {
-      void showVersion(Version version);
-
       String getEditorId();
-      
+
       void setVersionContent(String content);
-      
+
       void closeForm();
    }
 
    private HandlerManager eventBus;
 
    private Display display;
-   
 
    private Handlers handlers;
 
@@ -66,13 +64,12 @@ public class VersionContentPresenter implements ShowVersionHandler, EditorInitia
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ShowVersionEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
-      handlers.addHandler(ShowVersionEvent.TYPE, this);
-      handlers.addHandler(ClosePanelEvent.TYPE, this);
    }
 
    public void destroy()
@@ -85,32 +82,17 @@ public class VersionContentPresenter implements ShowVersionHandler, EditorInitia
     */
    public void onShowVersion(ShowVersionEvent event)
    {
-      System.out.println("VersionContentPresenter.onShowVersion()");
       version = event.getVersion();
-      handlers.addHandler(EditorInitializedEvent.TYPE, this);
-      display.showVersion(version);
+      eventBus.fireEvent(new ChangePanelTitleEvent(VersionContentForm.ID, getTitle()));
+      display.setVersionContent(event.getVersion().getContent());
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorInitializedHandler#onEditorInitialized(org.exoplatform.gwtframework.editor.event.EditorInitializedEvent)
-    */
-   public void onEditorInitialized(EditorInitializedEvent event)
+   private String getTitle()
    {
-      if (display.getEditorId().equals(event.getEditorId()))
-      {
-         handlers.removeHandler(EditorInitializedEvent.TYPE);
-         display.setVersionContent(version.getContent());
-      }
+      Image image = new Image(IDEImageBundle.INSTANCE.viewVersions());
+      String imageHTML = ImageUtil.getHTML(image);
+      String hint = "title=\"" + version.getHref() + "\"";
+      String title = "<span " + hint + ">" + imageHTML + "&nbsp;" + "Version " + version.getDisplayName();
+      return title;
    }
-
-   /**
-    * @see org.exoplatform.ide.client.panel.event.ClosePanelHandler#onClosePanel(org.exoplatform.ide.client.panel.event.ClosePanelEvent)
-    */
-   public void onClosePanel(ClosePanelEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getPanelId())){
-         display.closeForm();
-      }
-   }
-
 }

@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.panel;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
+import org.exoplatform.ide.client.panel.event.ChangePanelTitleHandler;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -45,7 +47,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version $
  */
 
-public class TabContainer extends TabSet implements SelectPanelHandler
+public class TabContainer extends TabSet implements SelectPanelHandler, ChangePanelTitleHandler
 {
 
    private HandlerManager eventBus;
@@ -59,6 +61,7 @@ public class TabContainer extends TabSet implements SelectPanelHandler
       handlers = new Handlers(eventBus);
 
       handlers.addHandler(SelectPanelEvent.TYPE, this);
+      handlers.addHandler(ChangePanelTitleEvent.TYPE, this);
       
       addTabSelectedHandler(tabSelectedHandler);
       addTabDeselectedHandler(tabDeselectedHandler);
@@ -124,6 +127,7 @@ public class TabContainer extends TabSet implements SelectPanelHandler
       public void onCloseClick(TabCloseClickEvent event)
       {
          SimpleTabPanel tabPanel = (SimpleTabPanel)event.getTab().getPane();
+         removeTab(event.getTab());
          eventBus.fireEvent(new PanelClosedEvent(tabPanel.getPanelId()));
       }
    };
@@ -135,6 +139,16 @@ public class TabContainer extends TabSet implements SelectPanelHandler
          return;
       }
       selectTab(event.getPanelId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.panel.event.ChangePanelTitleHandler#onChangePanelTitle(org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent)
+    */
+   public void onChangePanelTitle(ChangePanelTitleEvent event)
+   {
+      if (isTabPanelExist(event.getPanelId())){
+         setTabTitle(event.getPanelId(), event.getTitle());
+      }
    }
 
 }
