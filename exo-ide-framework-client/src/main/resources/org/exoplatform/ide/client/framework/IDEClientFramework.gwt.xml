@@ -16,4 +16,5 @@
    <source path="model" />
    <source path="plugin" />
    <source path="ui" />
+   <source path="vfs" />
 </module>

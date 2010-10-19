@@ -170,7 +170,7 @@
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.client.module.IDEVirtualFileSystem</module>
-                     <logLevel>SPAM</logLevel>
+                     <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
                      <manualMode>${manualMode}</manualMode>

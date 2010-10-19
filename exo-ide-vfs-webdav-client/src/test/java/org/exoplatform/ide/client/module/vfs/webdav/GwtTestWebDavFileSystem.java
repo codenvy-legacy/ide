@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav;
 
-import java.util.HashMap;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
@@ -41,11 +39,15 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
-import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.junit.DoNotRunWith;
+import com.google.gwt.junit.Platform;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
@@ -74,7 +76,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    protected void gwtSetUp() throws Exception
    {
       super.gwtSetUp();
-      testUrl = "http://" + Window.Location.getHost() + "/rest/jcr/repository/dev-monit/"; 
+      testUrl = "http://" + Window.Location.getHost() + "/rest/jcr/repository/dev-monit/";
       testUrlWrongWs = "http://" + Window.Location.getHost() + "/rest/jcr/repository/not-found/";
       eventbus = new HandlerManager(null);
       vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
@@ -89,7 +91,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    /**
     * Create new folder
     */
-   @Test
    public void testCreateFolder()
    {
 
@@ -108,9 +109,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       delayTestFinish(DELAY_TEST);
    }
 
-   /**
-//    * Create new folder
-//    */
    public void testCreateFolderFail()
    {
 
@@ -161,67 +159,65 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       delayTestFinish(DELAY_TEST);
    }
 
-   /**
-   * Get folder content
-   * 
-   */
-   public void testGetChildren()
-   {
-      String newFolderHref = testUrl + "main";
-      Folder newFolder = new Folder(newFolderHref);
-      eventbus.addHandler(ChildrenReceivedEvent.TYPE, new ChildrenReceivedHandler()
-      {
-         public void onChildrenReceived(ChildrenReceivedEvent event)
-         {
-            finishTest();
-         }
-      });
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-            finishTest();
-         }
-      });
-      vfsWebDav.getChildren(newFolder);
-      delayTestFinish(DELAY_TEST);
+//   /**
+//   * Get folder content
+//   *
+//   * Set test to Ignore need rewrite it 
+//   */
+//   public void testGetChildren()
+//   {
+//      String newFolderHref = testUrl + "main";
+//      Folder newFolder = new Folder(newFolderHref);
+//      eventbus.addHandler(ChildrenReceivedEvent.TYPE, new ChildrenReceivedHandler()
+//      {
+//         public void onChildrenReceived(ChildrenReceivedEvent event)
+//         {
+//            finishTest();
+//         }
+//      });
+//      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+//      {
+//         public void onError(ExceptionThrownEvent event)
+//         {
+//            fail(event.getErrorMessage());
+//            finishTest();
+//         }
+//      });
+//      vfsWebDav.getChildren(newFolder);
+//      delayTestFinish(DELAY_TEST);
+//
+//   }
 
-   }
-
-   /**
-    * Get content of the file
-    * 
-    */
-   public void testGetContent()
-   {
-
-      File file = new File(testUrl + "fileContent");
-      eventbus.addHandler(FileContentReceivedEvent.TYPE, new FileContentReceivedHandler()
-      {
-         public void onFileContentReceived(FileContentReceivedEvent event)
-         {
-            finishTest();
-         }
-      });
-
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-            finishTest();
-         }
-      });
-      vfsWebDav.getContent(file);
-      delayTestFinish(DELAY_TEST);
-   }
+//   /**
+//    * Get content of the file
+//    *  Set test to Ignore need rewrite it 
+//    */
+//   public void testGetContent()
+//   {
+//
+//      File file = new File(testUrl + "fileContent");
+//      eventbus.addHandler(FileContentReceivedEvent.TYPE, new FileContentReceivedHandler()
+//      {
+//         public void onFileContentReceived(FileContentReceivedEvent event)
+//         {
+//            finishTest();
+//         }
+//      });
+//
+//      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+//      {
+//         public void onError(ExceptionThrownEvent event)
+//         {
+//            fail(event.getErrorMessage());
+//            finishTest();
+//         }
+//      });
+//      vfsWebDav.getContent(file);
+//      delayTestFinish(DELAY_TEST);
+//   }
 
    /**
     * Save file content
-    * 
-    * @param file
-    * @param path
     */
    public void testSaveContent()
    {
@@ -249,7 +245,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    /**
     * Move existed item to another location as path
     * 
-       */
+    */
    public void testMove()
    {
       final String newLocation = String.valueOf(System.currentTimeMillis());
@@ -270,7 +266,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    /**
     * Move existed item to another location as path
     * 
-       */
+   */
    public void testMoveFail()
    {
       Folder folder = new Folder(testUrl + "movetest-not-found");
@@ -338,7 +334,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       vfsWebDav.copy(folder, testUrl + copyLocation);
       delayTestFinish(DELAY_TEST);
    }
-   
+
    public void testGetVersionList()
    {
       final String fileContent = System.currentTimeMillis() + "";
@@ -349,20 +345,19 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setNewFile(true);
       file.setContent(fileContent);
       file.setContentChanged(true);
-      
+
       vfsWebDav.saveContent(file);
-      
+
       file.setContent(file.getContent() + " " + System.currentTimeMillis());
       file.setContentChanged(true);
       vfsWebDav.saveContent(file);
-      
+
       file.setContent(file.getContent() + " " + System.currentTimeMillis());
       file.setContentChanged(true);
       vfsWebDav.saveContent(file);
-      
+
       eventbus.addHandler(ItemVersionsReceivedEvent.TYPE, new ItemVersionsReceivedHandler()
       {
-         @Override
          public void onItemVersionsReceived(ItemVersionsReceivedEvent event)
          {
             assertNotNull(event.getVersions());
@@ -371,62 +366,16 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             assertNotNull(event.getVersions().get(0).getHref());
          }
       });
-      
+
       vfsWebDav.getVersions(file);
-   }
-
-   //   /**
-   //    * Get properties of file or folder
-   //    * 
-   //    * @param item
-   //    */
-   //   public void testGetProperties()
-   //   {
-   //      
-   //   }
-   //
-   //   /**
-   //    * Save properties of file or folder
-   //    * 
-   //    * @param item
-   //    */
-   //   public void testSaveProperties()
-   //   {
-   //      
-   //   }
-   //
-   //   /**
-   //    * Search files
-   //    * 
-   //    * @param folder
-   //    * @param text
-   //    * @param mimeType
-   //    * @param path
-   //    */
-   //   public void testSsearch()
-   //   {
-   //   
-   //   }
-
-   @Override
-   protected void gwtTearDown() throws Exception
-   {
    }
 
    private class MockExceptionThrownHandler implements ExceptionThrownHandler
    {
-
-      //     private boolean fail; 
-      //      public MockExceptionThrownHandler(boolean fail)
-      //      {
-      //         this.fail = fail;
-      //      }
-
       public void onError(ExceptionThrownEvent event)
       {
          fail();
       }
-
    }
 
 }
