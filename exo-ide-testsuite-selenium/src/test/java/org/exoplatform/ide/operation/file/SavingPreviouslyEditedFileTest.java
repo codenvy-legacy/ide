@@ -106,7 +106,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    
    
    @Test
-   public void savePreviouslyEditedFile() throws Exception
+   public void testSavePreviouslyEditedFile() throws Exception
    {
       //----- 1 ------------
       //Create and select "Test" in "Workspace" panel.
@@ -192,18 +192,22 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    
    
    
+   /**
+    * Bug http://jira.exoplatform.org/browse/IDE-342.
+    * 
+    * Type one letter to just created and saved file.
+    * @throws Exception
+    */
    @Test
-   //Bug http://jira.exoplatform.org/browse/IDE-342
-   public void editAndSaveJustCreatedFile() throws Exception
+   public void testEditAndSaveJustCreatedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       
       assertElementPresentInWorkspaceTree(FOLDER_NAME);
       selectItemInWorkspaceTree(FOLDER_NAME);
@@ -213,6 +217,41 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
+      typeTextIntoEditor(0, "X");
+      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(FILE_NAME + " *", getTabTitle(0));
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
+   }
+   
+   /**
+    * Bug http://jira.exoplatform.org/browse/IDE-342.
+    * 
+    * Create, save and close file. Than open file and type one letter.
+    * @throws Exception
+    */
+   @Test
+   public void testOpenEditAndSaveJustCreatedFile() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      selectItemInWorkspaceTree(WS_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
+      assertElementPresentInWorkspaceTree(FOLDER_NAME);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      saveAsUsingToolbarButton(FILE_NAME);
+      Thread.sleep(TestConstants.SLEEP);
+      closeTab("0");
+      selectItemInWorkspaceTree(FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(FILE_NAME + " *", getTabTitle(0));
