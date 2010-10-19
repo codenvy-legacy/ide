@@ -18,6 +18,7 @@ package org.exoplatform.ide.discovery;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.vfs.EntryPointList;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
