@@ -77,7 +77,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
    @Override
    public void getDefaultEntryPoint()
    {
-      String url = restServiceContext + "/services/discovery/defaultEntrypoint";
+      String url = restServiceContext + "/ide/discovery/defaultEntrypoint";
       
       DefaultEntryPointReceivedEvent event = new DefaultEntryPointReceivedEvent();
       DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(event);
