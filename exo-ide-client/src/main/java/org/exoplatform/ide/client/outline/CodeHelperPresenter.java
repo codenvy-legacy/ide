@@ -94,7 +94,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
       {
          boolean show =
             applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
-         System.out.println("CodeHelperPresenter.onEditorActiveFileChanged()"+show);
+//         System.out.println("CodeHelperPresenter.onEditorActiveFileChanged()"+show);
          if (show)
          {
             display.show();

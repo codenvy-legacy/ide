@@ -67,7 +67,7 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
          return;
       }
       
-      System.out.println("entry point [" + entryPoint + "]");
+//      System.out.println("entry point [" + entryPoint + "]");
 
       String statusMessage = null;
 

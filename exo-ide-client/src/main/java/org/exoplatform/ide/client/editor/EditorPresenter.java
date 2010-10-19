@@ -428,6 +428,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       file.setContentChanged(false);
 
       openedFiles.remove(file.getHref());
+      if (ignoreContentChangedList.contains(file.getHref()))
+      {
+         ignoreContentChangedList.remove(file.getHref());
+      }
 
       try
       {
@@ -669,7 +673,11 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          display.updateTabTitle(oldFile.getHref());
          return;
       }
-      ignoreContentChangedList.add(newFile.getHref());
+      if (ignoreContentChangedList.contains(oldFile.getHref()))
+      {
+         ignoreContentChangedList.remove(oldFile.getHref());
+         ignoreContentChangedList.add(newFile.getHref());
+      }
       display.replaceFile(oldFile, newFile);
 
       display.updateTabTitle(newFile.getHref());
