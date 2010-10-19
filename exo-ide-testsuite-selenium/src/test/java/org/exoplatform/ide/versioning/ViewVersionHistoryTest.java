@@ -19,14 +19,12 @@
 package org.exoplatform.ide.versioning;
 
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -38,7 +36,7 @@ import java.io.IOException;
  * @version $Id: Oct 14, 2010 $
  *
  */
-public class ViewVersionHistoryTest extends BaseTest
+public class ViewVersionHistoryTest extends VersioningTest
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
 
@@ -87,16 +85,12 @@ public class ViewVersionHistoryTest extends BaseTest
       selectItemInWorkspaceTree(TEST_FOLDER);
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
 
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
 
       //Open version panel
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -129,9 +123,7 @@ public class ViewVersionHistoryTest extends BaseTest
       openOrCloseFolder(TEST_FOLDER);
       //Open file
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
       //Go to end of document
       selenium.keyPressNative("" + KeyEvent.VK_END);
       //Edit file and save:
@@ -187,9 +179,7 @@ public class ViewVersionHistoryTest extends BaseTest
       openOrCloseFolder(TEST_FOLDER);
       //Open file
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
       
       //Open new file:
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
@@ -198,9 +188,7 @@ public class ViewVersionHistoryTest extends BaseTest
       
       //Select tab with saved file
       selectEditorTab(0);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
       
       //Select tab with unsaved file
       selectEditorTab(1);
@@ -208,9 +196,7 @@ public class ViewVersionHistoryTest extends BaseTest
       checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
       //Edit second file and save
       typeTextIntoEditor(1, version1Text);
       saveCurrentFile();
@@ -255,9 +241,7 @@ public class ViewVersionHistoryTest extends BaseTest
       checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
       
       saveAsByTopMenu(FILE_3);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkViewVersionHistoryButtonPresent();
       
       typeTextIntoEditor(2, version1Text);
       saveCurrentFile();
@@ -290,59 +274,5 @@ public class ViewVersionHistoryTest extends BaseTest
       {
          e.printStackTrace();
       }
-   }
-
-   private void checkVersionPanelState(boolean isOpened)
-   {
-      if (isOpened)
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
-            + ToolbarCommands.View.HIDE_VERSION_HISTORY
-            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
-         assertTrue(selenium
-            .isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]"));
-         assertTrue(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
-         // View version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION, true);
-         //Restore button
-         checkToolbarButtonPresentOnRightSide(MenuCommands.File.RESTORE_VERSION, true);
-         checkToolbarButtonState(MenuCommands.File.RESTORE_VERSION, false);
-         //Newer version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
-         //Older version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
-      }
-      else
-      {
-         assertFalse(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
-            + ToolbarCommands.View.HIDE_VERSION_HISTORY
-            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
-         assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
-         // View version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION, false);
-         //Restore button
-         checkToolbarButtonPresentOnRightSide(MenuCommands.File.RESTORE_VERSION, false);
-         //Newer version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
-         //Older version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
-      }
-   }
-
-   private void checkTextOnVersionPanel(String text) throws Exception
-   {
-      selenium.selectFrame("//div[@eventproxy='ideVersionContentForm']//iframe");
-      String content = selenium.getText("//body[@class='editbox']");
-      assertEquals(text, content);
-      selectMainFrame();
-   }
-
-   private void closeVersionPanel()
-   {
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]/icon");
    }
 }

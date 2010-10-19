@@ -18,12 +18,277 @@
  */
 package org.exoplatform.ide.versioning;
 
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 14, 2010 $
  *
  */
-public class RestoreVersionTest
+public class RestoreVersionTest extends VersioningTest
 {
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
 
+   private final static String TEST_FOLDER = "testFolder";
+
+   private final static String FILE_1 = "Test File 1";
+
+   private final static String FILE_2 = "Test File 2";
+
+   private String version1Text = "1++";
+
+   private String version2Text = "2+";
+
+   private String version3Text = "3+";
+
+   private String version4Text = "4+";
+
+   private String version5Text = "5";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   @Test
+   @Ignore
+   public void testRestoreVersion() throws Exception
+   {
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      //Open new file
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+
+      deleteFileContent();
+      saveAsUsingToolbarButton(FILE_1);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent();
+
+      typeTextIntoEditor(0, version1Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version2Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version3Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version4Text);
+      saveCurrentFile();
+
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
+      checkVersionPanelState(true);
+      //View older version button is enabled: 
+      checkOlderVersionButtonState(true);
+      //View newer version button is disabled because current version is opened:
+      checkNewerVersionButtonState(false);
+      //Restore version button is disabled because current version is opened:
+      checkRestoreVersionButtonState(false);
+      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+
+      //View older version:
+      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+
+      //Restore version and check opened file has restored content
+      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      Thread.sleep(5000);
+      assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+
+      //Reopen file to check content:
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
+
+      //Open version panel
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
+      checkVersionPanelState(true);
+      //View older version button is enabled: 
+      checkOlderVersionButtonState(true);
+      //View newer version button is disabled because current version is opened:
+      checkNewerVersionButtonState(false);
+      //Restore version button is disabled because current version is opened:
+      checkRestoreVersionButtonState(false);
+      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+
+      //View older version:
+      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
+
+      //View older version:
+      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+
+      //View older version:
+      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text);
+
+      //Restore version and check opened file has restored content
+      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
+      assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text);
+
+      //View newer version:
+      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+
+      //View newer version:
+      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
+
+      //View newer version:
+      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+
+      //View newer version:
+      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkOlderVersionButtonState(true);
+      checkRestoreVersionButtonState(false);
+      checkNewerVersionButtonState(false);
+      checkTextOnVersionPanel(version1Text + version2Text);
+
+      closeTab("0");
+   }
+
+   @Test
+   public void testRestoreVersionAndEditFile() throws Exception
+   {
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      //Open new file
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+
+      deleteFileContent();
+      saveAsUsingToolbarButton(FILE_2);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent();
+
+      typeTextIntoEditor(0, version1Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version2Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version3Text);
+      saveCurrentFile();
+      typeTextIntoEditor(0, version4Text);
+      saveCurrentFile();
+
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 3);
+      checkVersionPanelState(true);
+      //View older version button is enabled: 
+      checkOlderVersionButtonState(true);
+      //View newer version button is disabled because current version is opened:
+      checkNewerVersionButtonState(false);
+      //Restore version button is disabled because current version is opened:
+      checkRestoreVersionButtonState(false);
+      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      checkVersionListSize(5);
+      clickCloseVersionListPanelButton();
+      checkOpenVersion(2, version1Text + version2Text);
+
+      //Restore version and check opened file has restored content
+      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
+      assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
+      checkOlderVersionButtonState(true);
+      checkNewerVersionButtonState(true);
+      checkRestoreVersionButtonState(true);
+      checkTextOnVersionPanel(version1Text + version2Text);
+
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      checkVersionListSize(6);
+      clickCloseVersionListPanelButton();
+      
+      selectIFrameWithEditor(0);
+      selenium.clickAt("//body[@class='editbox']", "5,5");
+      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selectMainFrame();
+      Thread.sleep(5000);
+      typeTextIntoEditor(0, version5Text);
+      Thread.sleep(5000);
+      saveCurrentFile();
+      Thread.sleep(5000);
+      
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      checkVersionListSize(7);
+      clickCloseVersionListPanelButton();
+      
+      closeTab("0");
+   }
+
+   @After
+   public void cleanResults() throws Exception
+   {
+      closeTab("0");
+   }
 }
