@@ -8,7 +8,7 @@ If you want to customize the _Toolbar_, such as adding or removing some buttons,
 
 !ide-customize_toolbar.png!
 
-*Illustration 33. Customize _Toolbar_*
+*Illustration 35. Customize _Toolbar_*
 
 h1. Customize Hotkeys
 
@@ -20,7 +20,7 @@ You can customize hotkeys in the *Customize hotkeys* dialog window selecting *Wi
 
 !customize-hotkeys.png!
 
-*Illustration 34. Customize hotkeys*
+*Illustration 36. Customize hotkeys*
 
 The *Customize hotkeys* dialog window consists of list grid with all commands divided to groups and their hotkeys, binding to them.
 If you want to assign your own hotkeys, do as follows:
@@ -34,7 +34,7 @@ If you entered the invalid hotkeys combination, an error message will be shown a
 
 !customize-hotkeys-error.png!
 
-*Illustration 35. Error message*
+*Illustration 37. Error message*
 
 If you want to unbind hotkeys for some commands, do as follows:
 

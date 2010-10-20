@@ -217,11 +217,35 @@ h2. Create Project from Template
 
 To create Project from Template, follow these steps
 
-* *Step 1:* Select in navigation tree folder, in which new project will be created.
+* *Step 1:* Select folder in navigation tree (parent for new project)
 * *Step 2:* Click on the "New" button on the left of the Toolbar or select "File->New" from top menu and then choose "Project From Template".
 * *Step 3:* Select project template from list
 * *Step 4:* Set name to project in appropriate field
 * *Step 5:* Click "Create" button
+
+h3. Create project from Sample Project Template
+
+There is default project template, which marked by red color in project template list.
+
+!ide-create-sample-project.png!
+
+*Illustration 14. Create project from Sample project template*
+
+You can create project from default template, as written above.
+
+New sample project will contain two folders: client, server and two files: Greeting Google Gadget.xml (Google Gadget) in client folder and Greeting REST Service.groovy (REST Service) in server folder.
+
+To run this sample, do as follows:
+* *Step 1:* Open and deploy Greeting REST Service.groovy
+* *Step 2:* Open Greeting Google Gadget.xml and click *Show Preview* button
+* *Step 3:* Preview of gadget will appear in Preview tab: form with input field and *Ok* button
+* *Step 4:* Enter name to input field and click *Ok* button
+
+!ide-run-sample-project.png!
+
+*Illustration 15. Run sample project*
+
+Google Gadget will send request to Greeting REST Service. When response will be received, gadget will display it under input field.
 
 h2. Remove Project Template
 
@@ -247,7 +271,7 @@ There are several useful commands represented with special buttons at the center
 
 !edit.png!
 
-*Illustration 14. Undo/Redo, Format and Show/Hide Line Numbers on _Toolbar_ and in top menu*
+*Illustration 16. Undo/Redo, Format and Show/Hide Line Numbers on _Toolbar_ and in top menu*
 
 h1. Undo/Redo Editing
 
@@ -275,7 +299,7 @@ You can quickly move to the specific line in the editor using the *Go to line* d
 
 !goToLine.png!
 
-*Illustration 15. Go to lines*
+*Illustration 17. Go to lines*
 
 To go to a line, simply click *View > Go to Line...* from the top menu, or double-click the label that shows the current cursor position in the _Status Bar_.
 
@@ -304,7 +328,7 @@ This function is commonly used in text files as follows:
 
 !findText.png!
 
-*Illustration 16. Find and replace operations with file's content*
+*Illustration 18. Find and replace operations with file's content*
 
 To open the dialog window for finding and replacing the text, do as follows:
 * *Step 1:* Open at least one file.
@@ -326,7 +350,7 @@ This feature enables you to autocomplete word including keywords, statements, de
 
 !code-autocomplete.png!
 
-*Illustration 17. Autocomplete form*
+*Illustration 19. Autocomplete form*
 
 In the Google Gadget, the HTML and Groovy Template files autocomplete the list of content, depending on the cursor position within the file. If the cursor is put between <script> tags, or between <style> tags, there will be the autocomplete list for JavaScript content, or for CSS content respectively. In the other places, there will be the autocomplete list for HTML content.
 
@@ -342,7 +366,7 @@ To close the *Autocomplete* form, you may also click the outside of form.
 
 !autocomplete2.png!
 
-*Illustration 18. Autocomplete form with description*
+*Illustration 20. Autocomplete form with description*
 
 h3. JavaScript specific autocomplete items
 
@@ -357,13 +381,13 @@ Tokens of different types are marked by different colors:
 * Green token is a function which will be inserted name of function.
 * Red token is variable which will be inserted name of variable.
 * Grey token is keyword of JavaScript.
-* Templates have special icon (see *Illustration 17. Autocomplete form* above)
+* Templates have special icon (see *Illustration 19. Autocomplete form* above)
 
 h3. CSS specific autocomplete items
 
 !ide-autocomplete-css.png!
 
-*Illustration 19. CSS autocomplete*
+*Illustration 21. CSS autocomplete*
 
 In the CSS file, the autocomplete list contains all the properties of Cascading Style Sheets. They are marked with yellow token picture.
 
@@ -373,7 +397,7 @@ There are two HTML autocomplete lists: one of all HTML tags, the other of all pr
 
 !ide-autocomplete-html.png! !ide-autocomplete-html-tag.png!
 
-*Illustration 20. HTML autocomplete form*
+*Illustration 22. HTML autocomplete form*
 
 Also, you can call CSS properties and JavaScript autocomplete list if your current cursor position is inside <style> or <script> tags respectively.
 
@@ -391,7 +415,7 @@ The code outline can be used to create codes productively. The outline is availa
 
 !outline.png!
 
-*Illustration 21. Code outline*
+*Illustration 23. Code outline*
 
 When you create a file with the type from the above list, the _Outline Panel_ will appear on right. When you open a file of other types (or select other tabs), this panel will be hidden. You can close the _Outline Panel_ by clicking the *Close* button on the tab header. Also, you can show/hide the _Outline Panel_ by pressing *Show/Hide Outline* button on the _Toolbar_ or going to *View > Show Outline* on the top menu.
 
@@ -417,7 +441,7 @@ Connected with the JCR repository node, file properties are displayed in the _Pr
 
 !ide_change_file_property.png!
 
-*Illustration 22. View file's properties*
+*Illustration 24. View file's properties*
 
 {note}
 It is impossible to view the properties of just created and non-saved files.

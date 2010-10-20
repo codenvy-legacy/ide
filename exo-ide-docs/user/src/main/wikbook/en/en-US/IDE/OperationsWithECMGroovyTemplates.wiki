@@ -9,7 +9,7 @@ To create a new groovy template, do as follows:
 
 !groovy_template.png|border=1!
 
-*Illustration 28. Operations with groovy templates*
+*Illustration 30. Operations with groovy templates*
 
 h1. View properties
 
@@ -24,4 +24,4 @@ To preview Groovy Template you should do as follows:
 
 !gtmpl_operations.png|border=1!
 
-*Illustration 28.1. Groovy templates preview*
+*Illustration 30.1. Groovy templates preview*
