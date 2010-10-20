@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -154,6 +156,24 @@ public class UploadPresenter implements UploadFileSelectedHandler
             submitComplete(event.getResults());
          }
       });
+      
+      if (openLocalFile)
+      {
+         display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
+         {
+            public void onValueChange(ValueChangeEvent<String> event)
+            {
+               if (display.getMimeType().getValue() != null && display.getMimeType().getValue().length() > 0)
+               {
+                  display.enableUploadButton();
+               }
+               else
+               {
+                  display.disableUploadButton();
+               }
+            }
+         });
+      }
 
       display.disableUploadButton();
       display.disableMimeTypeSelect();
@@ -231,7 +251,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
       }
 
       display.getFileNameField().setValue(file);
-      display.enableUploadButton();
       display.enableMimeTypeSelect();
 
       List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
@@ -250,6 +269,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       {
          String mimeTYpe = proposalMimeTypes.get(0);
          display.setDefaultMimeType(mimeTYpe);
+         display.enableUploadButton();
       }
    }
 
