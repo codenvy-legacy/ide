@@ -48,9 +48,13 @@ public class CreateProjectFromTemplateTest extends BaseTest
    
    private static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/";
    
-   private static final String PROJECT_NAME = "Sample Project";
+   private static final String PROJECT_NAME = "My Project";
    
    private static final String PROJECT_TEMPLATE_NAME = "Test Project Template";
+   
+   private static final String PROJECT_FROM_DEFAULT_TEMPLATE = "Greeting Project";
+   
+   private static final String DEFAULT_PROJECT_TEMPLATE_NAME = "Sample project";
    
    private static final String FOLDER_ORG = "org";
    
@@ -97,6 +101,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(PROJECT_FOLDER_URL);
+         VirtualFileSystemUtils.delete(PROJECT_FROM_DEFAULT_TEMPLATE);
       }
       catch (IOException e)
       {
@@ -148,6 +153,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
    public void testDeleteProjectTemplate() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       //----- 1 ----------------
       //open create project from template form
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
@@ -181,6 +189,48 @@ public class CreateProjectFromTemplateTest extends BaseTest
       //close
       selenium.click(CANCEL_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Issue IDE-352
+    * @throws Exception
+    */
+   @Test
+   public void createDefaultSampleProject() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+      //----- 1 ----------------
+      //open create project from template form
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      
+      checkCreateProjectFromTemplateForm();
+      
+      //----- 2 ----------------
+      //select project template from list, type project name, click Create button
+      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP);
+      selectProjectTemplate(DEFAULT_PROJECT_TEMPLATE_NAME);
+      typeProjectName(PROJECT_FROM_DEFAULT_TEMPLATE);
+      
+      selenium.click(CREATE_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //----- 3 ----------------
+      //check sample project created
+      assertElementPresentInWorkspaceTree(PROJECT_FROM_DEFAULT_TEMPLATE);
+      
+      clickOpenIconOfFolder(PROJECT_FROM_DEFAULT_TEMPLATE);
+      assertElementPresentInWorkspaceTree("server");
+      assertElementPresentInWorkspaceTree("client");
+      
+      clickOpenIconOfFolder("server");
+      assertElementPresentInWorkspaceTree("Greeting REST Service.groovy");
+      
+      clickOpenIconOfFolder("client");
+      assertElementPresentInWorkspaceTree("Greeting Google Gadget.xml");
    }
    
 
@@ -226,9 +276,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
    
    private void selectProjectTemplate(String projectTemplateName) throws Exception
    {
-      selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='" 
+      selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='" 
          + projectTemplateName + "']", "");
-      selenium.mouseUpAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='"
+      selenium.mouseUpAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='"
          + projectTemplateName + "']", "");
       
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
