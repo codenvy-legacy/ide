@@ -42,7 +42,7 @@ public class FileTemplates
       //addTXTContent();
       addGadgetContent();
       addGtmplTemplate();
-      //      addUWAWidgetContent();
+      addUWAWidgetContent();
    }
 
    public static String getTemplateFor(String mimeType)

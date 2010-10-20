@@ -37,13 +37,13 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
  * @version $Id: $
  *
  */
-@Path("/ideall/netvibes")
-public class NetvibesWidgetPreview implements ResourceContainer
+@Path("/ide/netvibes")
+public class NetvibesWidgetPreviewService implements ResourceContainer
 {
 
    private WebDavService webDavService;
 
-   public NetvibesWidgetPreview(WebDavService webDavService)
+   public NetvibesWidgetPreviewService(WebDavService webDavService)
    {
       this.webDavService = webDavService;
    }

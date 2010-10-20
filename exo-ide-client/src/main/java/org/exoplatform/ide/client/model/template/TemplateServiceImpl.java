@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import java.util.ArrayList;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -27,8 +29,6 @@ import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
-
-import java.util.ArrayList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -43,28 +43,28 @@ import com.google.gwt.user.client.Random;
 
 public class TemplateServiceImpl extends TemplateService
 {
-   
+
    private interface DefaultFileTemplates
    {
       public static final String EMPTY_XML = "Empty XML";
-      
+
       public static final String EMPTY_HTML = "Empty HTML";
-      
+
       public static final String EMPTY_TEXT = "Empty TEXT";
-      
+
       public static final String GOOGLE_GADGET = "Google Gadget";
-      
+
       public static final String GREETING_GOOGLE_GADGET = "Greeting Google Gadget";
-      
+
       public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
-      
+
       public static final String GROOVY_TEMPLATE = "Groovy Template";
    }
-   
+
    private static final String CONTEXT = "/templates";
 
    private static final String TEMPLATE = "template-";
-   
+
    private String restContext;
 
    private HandlerManager eventBus;
@@ -76,13 +76,13 @@ public class TemplateServiceImpl extends TemplateService
       this.eventBus = eventBus;
       this.loader = loader;
       this.restContext = restContext;
-      
+
    }
 
    @Override
    public void createTemplate(Template template)
    {
-      String url =  restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
+      String url = restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       TemplateCreatedEvent event = new TemplateCreatedEvent(template);
 
@@ -90,8 +90,8 @@ public class TemplateServiceImpl extends TemplateService
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT").header(
-         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }
 
    @Override
@@ -103,8 +103,8 @@ public class TemplateServiceImpl extends TemplateService
       TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE").header(
-         HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
 
    }
 
@@ -123,27 +123,27 @@ public class TemplateServiceImpl extends TemplateService
             .getTemplateFor(MimeType.TEXT_HTML), null));
 
       templateList.getTemplates().add(
-         new FileTemplate(MimeType.TEXT_PLAIN, DefaultFileTemplates.EMPTY_TEXT, "Create empty TEXT file.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_PLAIN), null));
+         new FileTemplate(MimeType.TEXT_PLAIN, DefaultFileTemplates.EMPTY_TEXT, "Create empty TEXT file.",
+            FileTemplates.getTemplateFor(MimeType.TEXT_PLAIN), null));
 
       templateList.getTemplates().add(
-         new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GOOGLE_GADGET, "Sample of Google Gadget", FileTemplates
-            .getTemplateFor(MimeType.GOOGLE_GADGET), null));
+         new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GOOGLE_GADGET, "Sample of Google Gadget",
+            FileTemplates.getTemplateFor(MimeType.GOOGLE_GADGET), null));
 
       templateList.getTemplates().add(
-         new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GROOVY_REST_SERVICE, "Sample of Groovy REST service.", FileTemplates
-            .getTemplateFor(MimeType.GROOVY_SERVICE), null));
-      
-      templateList.getTemplates().add(
-         new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE, "Sample of Groovy Template.", FileTemplates
-            .getTemplateFor(MimeType.GROOVY_TEMPLATE), null));
+         new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GROOVY_REST_SERVICE,
+            "Sample of Groovy REST service.", FileTemplates.getTemplateFor(MimeType.GROOVY_SERVICE), null));
 
-//      templateList.getTemplates().add(
-//         new Template(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
-//            .getTemplateFor(MimeType.UWA_WIDGET), null));
-      
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE, "Sample of Groovy Template.",
+            FileTemplates.getTemplateFor(MimeType.GROOVY_TEMPLATE), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
+            .getTemplateFor(MimeType.UWA_WIDGET), null));
+
       templateList.getTemplates().add(createFileTemplateForSampleProject());
-      
+
       templateList.getTemplates().add(getSampleProject());
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
@@ -152,77 +152,75 @@ public class TemplateServiceImpl extends TemplateService
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-   
+
    private ProjectTemplate getSampleProject()
    {
       ProjectTemplate sampleProject = new ProjectTemplate("Sample project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
-      
+
       ProjectTemplate serverFolder = new ProjectTemplate("server");
       serverFolder.setChildren(new ArrayList<Template>());
-      FileTemplate restScriptTemplate = new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "Greeting REST Service.groovy");
+      FileTemplate restScriptTemplate =
+         new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "Greeting REST Service.groovy");
       serverFolder.getChildren().add(restScriptTemplate);
-      
+
       ProjectTemplate clientFolder = new ProjectTemplate("client");
       clientFolder.setChildren(new ArrayList<Template>());
-      FileTemplate gadgetFileTemplate = new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, 
-         "Greeting Google Gadget.xml");
+      FileTemplate gadgetFileTemplate =
+         new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "Greeting Google Gadget.xml");
       clientFolder.getChildren().add(gadgetFileTemplate);
-      
+
       sampleProject.setChildren(new ArrayList<Template>());
       sampleProject.getChildren().add(serverFolder);
       sampleProject.getChildren().add(clientFolder);
-      
+
       return sampleProject;
    }
-   
+
    private FileTemplate createFileTemplateForSampleProject()
    {
-      final String gadgetContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-      +"<Module>\n"
-      +"  <ModulePrefs title=\"Hello World!\" />\n"
-      +"  <Content type=\"html\">\n"
-      +"    <![CDATA[\n"
-      +"    <div id=\"content_div\">\n"
-      +"      <form name=\"sample\">\n"
-      +"        Enter your name:<br>\n"
-      +"        <input type=\"text\" name=\"user\">\n"
-      +"        <input type=\"button\" name=\"button1\" value=\"Ok\" onClick=\"hello(this.form)\">\n"
-      +"      </form>\n"
-      +"      <span id=\"response\"></span>\n"
-      +"    </div>\n"
-      +"    <script type=\"text/javascript\">\n\n"
-      +"      function hello(form) {\n"
-      +"        if (form.user.value == \"\")\n"
-      +"          document.getElementById('response').innerHTML=\"Please enter name!\";\n"
-      +"        else {\n"
-      +"          getGreeting(form.user.value);\n"
-      +"        }\n"
-      +"      }\n\n"
-      +"      function getGreeting(userName) {\n"
-      +"        var params = {};\n"
-      +"        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;\n"
-      +"        var url = '/my-service/helloworld/' + userName;\n"
-      +"        gadgets.io.makeRequest(url, response, params);\n"
-      +"      }\n"
-      +"      // Callback function to process the response\n"
-      +"      function response(obj) {\n"
-      +"        var responseText = obj.text;\n\n"
-      +"        var html = \"<div style='padding: 5px;background-color: #FFFFBF;font-family:Arial, Helvetica;\"\n"
-      +"            + \"text-align:left;font-size:90%'>\";\n\n"
-      +"        html += responseText;\n"
-      +"        html += \"</div>\";\n"
-      +"        // Output html in div.\n"
-      +"        document.getElementById('response').innerHTML = html;\n"
-      +"      }\n\n"
-      +"    </script>\n"
-      +"    ]]></Content></Module>\n";
+      final String gadgetContent =
+         "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+            + "<Module>\n"
+            + "  <ModulePrefs title=\"Hello World!\" />\n"
+            + "  <Content type=\"html\">\n"
+            + "    <![CDATA[\n"
+            + "    <div id=\"content_div\">\n"
+            + "      <form name=\"sample\">\n"
+            + "        Enter your name:<br>\n"
+            + "        <input type=\"text\" name=\"user\">\n"
+            + "        <input type=\"button\" name=\"button1\" value=\"Ok\" onClick=\"hello(this.form)\">\n"
+            + "      </form>\n"
+            + "      <span id=\"response\"></span>\n"
+            + "    </div>\n"
+            + "    <script type=\"text/javascript\">\n\n"
+            + "      function hello(form) {\n"
+            + "        if (form.user.value == \"\")\n"
+            + "          document.getElementById('response').innerHTML=\"Please enter name!\";\n"
+            + "        else {\n"
+            + "          getGreeting(form.user.value);\n"
+            + "        }\n"
+            + "      }\n\n"
+            + "      function getGreeting(userName) {\n"
+            + "        var params = {};\n"
+            + "        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;\n"
+            + "        var url = '/my-service/helloworld/' + userName;\n"
+            + "        gadgets.io.makeRequest(url, response, params);\n"
+            + "      }\n"
+            + "      // Callback function to process the response\n"
+            + "      function response(obj) {\n"
+            + "        var responseText = obj.text;\n\n"
+            + "        var html = \"<div style='padding: 5px;background-color: #FFFFBF;font-family:Arial, Helvetica;\"\n"
+            + "            + \"text-align:left;font-size:90%'>\";\n\n" + "        html += responseText;\n"
+            + "        html += \"</div>\";\n" + "        // Output html in div.\n"
+            + "        document.getElementById('response').innerHTML = html;\n" + "      }\n\n" + "    </script>\n"
+            + "    ]]></Content></Module>\n";
 
-      
-      FileTemplate gadgetFileTemplate = new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GREETING_GOOGLE_GADGET, 
-         "Google Gadget with request to service", gadgetContent, null);
+      FileTemplate gadgetFileTemplate =
+         new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GREETING_GOOGLE_GADGET,
+            "Google Gadget with request to service", gadgetContent, null);
       gadgetFileTemplate.setFileName("Greeting Google Gadget.xml");
-      
+
       return gadgetFileTemplate;
    }
 }

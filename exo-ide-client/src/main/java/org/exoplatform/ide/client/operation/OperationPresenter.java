@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesHandl
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -175,7 +176,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    private void previewUWAWidget(File file)
    {
       String href = file.getHref();
-      href = href.replace("jcr", "ideall/netvibes");
+      href = href.replace("jcr", "ide/netvibes");
       display.showPreview(href);
    }
    

@@ -65,6 +65,10 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-module-netvibes-client</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-module-chromattic-client</artifactId>
       </dependency>
       <dependency>
@@ -535,6 +539,10 @@
                   </exclusion>
                </exclusions>
             </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-module-netvibes-server</artifactId>
+      </dependency>
             <dependency>
                <groupId>hsqldb</groupId>
                <artifactId>hsqldb</artifactId>
