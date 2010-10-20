@@ -44,8 +44,9 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 {
 
    private final static String FILE_NAME = "ResponseHeaders.groovy";
+   private final static String FOLDER_NAME = "ResponseHeaders";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
    
    @BeforeClass
@@ -55,7 +56,10 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ResponseHeaders.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+         //***************change******************
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+         //*************change*********************
       }
       catch (IOException e)
       {
@@ -74,13 +78,16 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      selectFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals("[INFO] " + BASE_URL + "rest/private/jcr/repository/dev-monit/" + FILE_NAME
+          
+    
+      assertEquals("[INFO] " + BASE_URL + "rest/private/jcr/repository/dev-monit/"+FOLDER_NAME+"/"+ FILE_NAME
          + " deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
 
       launchRestService();
@@ -108,6 +115,16 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       assertTrue(mess.contains("- -Text - - - - - - - - -"));
       assertTrue(mess.contains("Hello Evgen"));
    }
+   
+   
+   
+   protected void selectFolder(String folderName) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
+         + "]/col[1]/open");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+   
    
    @AfterClass
    public static void tearDown()

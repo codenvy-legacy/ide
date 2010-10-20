@@ -42,14 +42,19 @@ public class RESTServiceGetURLTest extends BaseTest
 {
 
    private static final String FILE_NAME = "RESTServiceGetURL.groovy";
+   
+   private final static String TEST_FOLDER = "URLTemplate";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
-         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy", MimeType.GROOVY_SERVICE, url);
+         //*****************change**************
+         String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+         VirtualFileSystemUtils.mkcol(url);
+         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy", MimeType.GROOVY_SERVICE, url + FILE_NAME);
+         //**********************
       }
       catch (IOException e)
       {
@@ -69,6 +74,10 @@ public class RESTServiceGetURLTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      //**********change************
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
+      //****************************
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);

@@ -45,7 +45,9 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
    private final static String FILE_NAME = "OutputErrorTest.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String TEST_FOLDER = "Outputerror";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
    
    
    @BeforeClass
@@ -55,7 +57,10 @@ public class RESTServiceOutputErrorTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/restservice/OutputError.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL);
+        //**************change**********
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
+        //*****************************
       }
       catch (IOException e)
       {
@@ -73,6 +78,9 @@ public class RESTServiceOutputErrorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);

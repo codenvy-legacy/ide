@@ -44,7 +44,10 @@ public class RESTServiceFilterParametersTest extends BaseTest
 
    private final static String FILE_NAME = "FilterParametersTest.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+  //*************change*********
+   private final static String TEST_FOLDER ="GroovyFolder";
+  //***************************** 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER+ "/" ;
 
    @BeforeClass
    public static void setUp()
@@ -53,9 +56,12 @@ public class RESTServiceFilterParametersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultValues.groovy";
       try
       {
+       //*************change*********
+         VirtualFileSystemUtils.mkcol(URL);
+       //*************************  
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,
-            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL);
+            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
+         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -73,7 +79,11 @@ public class RESTServiceFilterParametersTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //*************change
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
+      //*************change
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       launchRestService();

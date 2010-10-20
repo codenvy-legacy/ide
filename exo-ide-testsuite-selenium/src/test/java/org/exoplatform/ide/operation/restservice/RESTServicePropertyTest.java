@@ -55,6 +55,10 @@ public class RESTServicePropertyTest extends BaseTest
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, false);
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, false);
       
+      //*********change********
+      createFolder("TempFolder");
+      Thread.sleep(TestConstants.SLEEP);
+      //*************************
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       

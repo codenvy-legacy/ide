@@ -46,7 +46,9 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 {
    private final static String FILE_NAME = "AnnotationInheritance.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String FOLDER = "AnnotationInheritance";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER+ "/";
    
    @BeforeClass
    public static void setUp()
@@ -55,7 +57,8 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,"exo:groovyResourceContainer", URL);
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,"exo:groovyResourceContainer", URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -72,8 +75,11 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    public void testAnnotationInheritance() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
@@ -102,7 +108,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       selenium.click("//nobr[contains(text(), '/testAnnotationInheritance/InnerPath/{pathParam}')]");
 
       selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "/testAnnotationInheritance/InnerPath/тест");
+         "/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
       Thread.sleep(TestConstants.SLEEP);
 
       assertParameters();
@@ -111,7 +117,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);  
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
 
-      assertTrue(mess.contains("PathParam:тест"));
+      assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
       
    }
 

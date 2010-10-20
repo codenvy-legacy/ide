@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -42,7 +43,7 @@ public class RESTServiceCreateTest extends BaseTest
 {
 
    private static final String FIRST_NAME = System.currentTimeMillis() + "test.groovy";
-
+   
    private static final String SECOND_NAME = System.currentTimeMillis() + "новий.groovy";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
@@ -51,8 +52,14 @@ public class RESTServiceCreateTest extends BaseTest
    public void testCreatingRESTService() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("REST Service");
+     //*************fixed*****************
+      createFolder("Test");
       Thread.sleep(TestConstants.SLEEP);
+      selectFolder("Test");
+     //**********************************
+      runCommandFromMenuNewOnToolbar("REST Service");
+      //createFileFromToolbar("REST Service");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       saveAsUsingToolbarButton(FIRST_NAME);
 
@@ -118,6 +125,21 @@ public class RESTServiceCreateTest extends BaseTest
          selenium
             .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextFileNodeType||title=%3Cb%3EFile%20Node%20Type%3C%24fs%24b%3E||value=nt%3Afile||index=6||Class=StaticTextItem]/textbox"));
    }
+   
+   
+   
+   protected void selectFolder(String folderName) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
+         + "]/col[1]/open");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+   
+   
+   
+   
+   
+   
    
    @AfterClass
    public static void tearDown()

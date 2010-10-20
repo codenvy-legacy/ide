@@ -44,9 +44,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
 {
    private final static String FILE_WITH_ERROR = "RestServiceWithError.groovy";
    
+   private final static String TEST_FOLDER = "GoToError";
+   
    private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
    
    @BeforeClass
    public static void setUp()
@@ -56,6 +58,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       try
       {
+         VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR, MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR);
          VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR_FOR_CHANGING, MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR_FOR_CHANGING);
       }
@@ -76,6 +79,9 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
+      
+     
+ 
       
       openAndValidateRestService();
       
@@ -205,6 +211,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -224,6 +231,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //fix validation error
       selectIFrameWithEditor(0);
+      //click on editor
+      
+      //******************fix**************************
+      selenium.clickAt("//body[@class='editbox']", "5,5");
+      
       //go to error
       for (int i = 0; i < 6; i++)
       {
@@ -238,6 +250,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //---- 4 -----------------
       //press validate button
+      Thread.sleep(TestConstants.SLEEP);
       runToolbarButton(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       
       //check, validation fails
@@ -246,6 +259,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //---- 5 -----------------
       //click on validation message to go to error
+      Thread.sleep(TestConstants.SLEEP);
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
       
@@ -268,6 +282,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       selectIFrameWithEditor(0);
+      //click on editor
+      
+      //******************fix****************************
+      selenium.clickAt("//body[@class='editbox']", "5,5");
+      //*************************************************
       //select all
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
@@ -325,7 +344,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //open file
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
+     //****************change*********
       Thread.sleep(TestConstants.SLEEP);
+    //****************change*********
+      openOrCloseFolder(TEST_FOLDER);
+    //****************change*********  
+      Thread.sleep(TestConstants.SLEEP);
+    //****************change*********
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
       

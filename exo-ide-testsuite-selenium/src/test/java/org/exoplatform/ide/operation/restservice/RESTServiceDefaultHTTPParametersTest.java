@@ -42,8 +42,10 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 {
 
    private final static String FILE_NAME = "DefaultHTTPParameters.groovy";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   
+   private final static String TEST_FOLDER="DefaultHTTPParameters";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
    
    @BeforeClass
    public static void setUp()
@@ -52,9 +54,10 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultHTTPParameters.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
          Thread.sleep(TestConstants.SLEEP_SHORT);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL);
+         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -79,6 +82,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       launchRestService();

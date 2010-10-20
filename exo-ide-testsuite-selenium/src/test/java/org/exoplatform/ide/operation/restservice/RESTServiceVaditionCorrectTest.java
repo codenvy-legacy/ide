@@ -44,7 +44,9 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 {
    private final static String FILE_NAME = "VaditionCorrectTest.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String FOLDER = "VaditionCorrect";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
    private static final String VALID_SCRIPT =
       "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
@@ -58,8 +60,9 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 
       try
       {
+         VirtualFileSystemUtils.mkcol(URL);   
          VirtualFileSystemUtils.put(VALID_SCRIPT.getBytes(), MimeType.GROOVY_SERVICE,
-            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL);
+            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -71,12 +74,14 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       }
    }
 
-   @Test
+  @Test
    public void testValidaton() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      selectFolder(FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
@@ -86,7 +91,19 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       assertEquals("[INFO] " + FILE_NAME + " validated successfully.", selenium.getText("//font[@color='#007700']"));
    }
 
-   @AfterClass
+ 
+  
+  protected void selectFolder(String folderName) throws Exception
+  {
+     selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
+        + "]/col[1]/open");
+     Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+  }
+  
+   
+  
+  
+  @AfterClass
    public static void tearDown()
    {
       try

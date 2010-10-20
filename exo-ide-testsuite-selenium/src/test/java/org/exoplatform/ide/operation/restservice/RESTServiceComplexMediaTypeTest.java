@@ -45,7 +45,10 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
    private final static String FILE_NAME = "ComplexMediaType.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String FOLDER_NAME="Test";
+   
+ //**************
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
    
    @BeforeClass
    public static void setUp()
@@ -54,8 +57,11 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ComplexMediaTypes.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL);
+         //*******change***************
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL+FILE_NAME);
+         //**********************
+         Utils.deployService(BASE_URL, REST_CONTEXT, URL+FILE_NAME);
       }
       catch (IOException e)
       {
@@ -74,6 +80,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 

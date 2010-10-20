@@ -48,6 +48,10 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      //*******************change add folder for locked file
+      createFolder("Test");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      //*****************************
       runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -71,18 +75,23 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals("[INFO] http://127.0.0.1:8080/IDE-application/rest/private/jcr/repository/dev-monit/" + FILE_NAME
-         + " undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
 
+    //**********fix TODO static string message 
+      assertEquals("[INFO] http://127.0.0.1:8080/rest/private/jcr/repository/dev-monit/Test/" + FILE_NAME
+         + " undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
+   
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
+      Thread.sleep(10000);
+      
+      //**********fix TODO static string message
       assertTrue(mess
-         .contains("Can't unbind script " + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
-
+         .contains("Can't unbind script Test"+ "/" + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
+      //****************************************
       closeTab("0");
 
       selectItemInWorkspaceTree(FILE_NAME);

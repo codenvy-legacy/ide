@@ -45,7 +45,9 @@ public class RESTServiceOutputTest extends BaseTest
 
    private final static String FILE_NAME = "RESTServiceOutputTest.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String TEST_FOLDER = "Outputfolder";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -54,7 +56,10 @@ public class RESTServiceOutputTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceOutput.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+       //***********change************
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+      //*************************
       }
       catch (IOException e)
       {
@@ -65,14 +70,18 @@ public class RESTServiceOutputTest extends BaseTest
          e.printStackTrace();
       }
    }
-
+   
    @Test
    public void testOutput() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //***********change************
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
+      //****************************
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -270,7 +279,7 @@ public class RESTServiceOutputTest extends BaseTest
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element");
       selenium.type(
          "scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element",
-         "приклад повідомлення");
+         "Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
 
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
 
@@ -280,7 +289,7 @@ public class RESTServiceOutputTest extends BaseTest
       mess = selenium.getText("//div[contains(@eventproxy,'Record_3')]");
 
       assertTrue(mess
-         .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:приклад повідомлення"));
+         .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
 
       runToolbarButton(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
