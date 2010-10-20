@@ -1,6 +1,6 @@
 The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the portal, or installing additional programs. With this application, you can validate REST Service before saving, deploying, launching or undeploying the service. Feedback from server is displayed in the _Output Tab_:
 
-!ide-groovy_script_operations.PNG!
+!ide-groovy_script_operations.png!
 
 *Illustration 24. REST Service operations*
 

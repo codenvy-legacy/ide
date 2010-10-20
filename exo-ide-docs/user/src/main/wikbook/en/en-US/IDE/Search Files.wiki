@@ -5,7 +5,7 @@ The eXo IDE enables users to search by file content and MIME type. Taking into c
 * *Step 4:* Click *Search*.
 The found results will be displayed in the _Search Panel_ on the left of gadget:
 
-!ide-search.PNG!
+!ide-search.png!
 
 *Illustration 23. Search files*
 
