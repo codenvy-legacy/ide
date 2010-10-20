@@ -192,6 +192,19 @@
             <artifactId>exo-ide-client-module-gadget</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-module-netvibes-client</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-module-netvibes-server</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client-framework</artifactId>
@@ -417,6 +430,7 @@
       
       <module>exo-ide-module-netvibes-server</module>
       <module>exo-ide-module-netvibes-client</module>
+      
       <module>exo-ide-module-chromattic-client</module>
   
       <module>exo-ide-docs</module>
