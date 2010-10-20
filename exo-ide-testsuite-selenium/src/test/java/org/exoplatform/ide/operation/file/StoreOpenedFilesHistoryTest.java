@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,16 +40,18 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    private static final String TEST_FOLDER = "Test Folder";
    
    private static final String TEST_FOLDER_TO_DELETE = "Test Folder to Delete";
+
+   private static String SECOND_WORKSPACE_URL;
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + "production" + "/";
+   private String secondWorkspaceName;
    
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER_TO_DELETE);
+         VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE);
       }
       catch (IOException e)
       {
@@ -74,34 +75,20 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
+    
+      secondWorkspaceName = getNonActiveWorkspaceName();
+      SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + secondWorkspaceName + "/";
       
       //select another workspace
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Select Workspace')]", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      assertTrue(selenium.isTextPresent("Workspace"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/production"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/dev-monit"));
-      selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[0]/col[fieldName=entryPoint||0]\"");
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isTextPresent("production"));
-      assertTrue(selenium.isTextPresent("exo:registry"));
-      assertTrue(selenium.isTextPresent("jcr:system"));
-      Thread.sleep(TestConstants.SLEEP);
+      selectWorkspace(secondWorkspaceName);
       
-      selectItemInWorkspaceTree("production");
+      selectItemInWorkspaceTree(secondWorkspaceName);
       Thread.sleep(TestConstants.SLEEP);
       
       createFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree("production");
+      selectItemInWorkspaceTree(secondWorkspaceName);
       Thread.sleep(TestConstants.SLEEP);
       
       createFolder(TEST_FOLDER_TO_DELETE);
@@ -156,12 +143,12 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       selenium.open("http://www.google.com.ua/");
-      selenium.waitForPageToLoad("10000");
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
       
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP*5);
+      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
       checkCkEditorOpened(1);
       
@@ -173,34 +160,24 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       //open folder to select html file
       openOrCloseFolder(TEST_FOLDER);
-      //return init configuration
-      //make code mirror as default editor for html files
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      returnCodeEditorAsDefault(htmlFile);
       
-      closeTab("0");
-      
+      // restore configuration - make code mirror as default editor for html files
+
+//      selectItemInWorkspaceTree(htmlFile);
+//      openFileFromNavigationTreeWithCodeEditor(htmlFile, true);      
+//      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+//      closeTab("0");
+            
       //delete test folder
       selectItemInWorkspaceTree(TEST_FOLDER);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
       //return init configuration
-      //select another workspace
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Select Workspace')]", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      assertTrue(selenium.isTextPresent("Workspace"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/production"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/dev-monit"));
-      selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[1]/col[fieldName=entryPoint||0]\"");
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isTextPresent("dev-monit"));
+      //select initial workspace
+      selectWorkspace(WS_NAME);
+      assertTrue(selenium.isTextPresent(WS_NAME));
       Thread.sleep(TestConstants.SLEEP);
    }
    
@@ -231,32 +208,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    }
    
    /**
-    * Open file with code editor and set this editor as default.
-    * 
-    * Used for returning initial settings for IDE.
-    * 
-    * @param fileName
-    * @throws Exception
-    */
-   private void returnCodeEditorAsDefault(String fileName) throws Exception
-   {
-      //TODO add check form
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
-      //select editor
-      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
-      //click on checkbox Use as default editor
-      selenium.click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      //TODO add check that editor opened
-   }
-   
-   /**
     * Close file tab.
     * 
     * If file is not saved and warning dialog appears,
@@ -281,5 +232,5 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP);
       }
    }
-
+   
 }

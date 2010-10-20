@@ -120,14 +120,14 @@ public abstract class BaseTest
       selenium.start();
       selenium.windowFocus();
       selenium.open(APPLICATION_URL);
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       selenium.windowMaximize();
       
       if (isRunIdeUnderPortal())
       {
          loginInPortal();
          selenium.open(APPLICATION_URL);
-         selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
+         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
          Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
          // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
          // selenium.selectFrame("remote_iframe_0");
@@ -155,7 +155,7 @@ public abstract class BaseTest
       selenium.type("//input[@name='j_username']", userName);
       selenium.type("//input[@name='j_password']", "gtn");
       selenium.click("//input[@value='Log In']");
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    private static void loginInPortal() throws Exception
@@ -165,7 +165,7 @@ public abstract class BaseTest
       selenium.type("//input[@name='username']", "root");
       selenium.type("//input[@name='password']", "gtn");
       selenium.click("//div[@id='UIPortalLoginFormAction']");
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    /**
@@ -1615,5 +1615,89 @@ public abstract class BaseTest
       {
          selenium.deleteCookie("lock-tokens_map", "/");
       }
+   }
+   
+   private static final String SELECTED_WORKSPACE_LOCATOR = "//td[@class='cellSelected']//span";
+   
+   /**
+    * 
+    * @return non-active workspace name from "Select Workspace" form
+    * @throws Exception 
+    */
+   public String getNonActiveWorkspaceName() throws Exception
+   {
+      String secondWorkspaceUrl = null;
+      
+      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
+   
+      // click "UP" to go to previous workspace in the list
+      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+       
+      // test if "Ok" button is enabled
+      if (selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
+      {
+         secondWorkspaceUrl = selenium.getText(SELECTED_WORKSPACE_LOCATOR);
+      }
+      else
+      {
+         // click "DOWN" to go to next workspace in the list
+         selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
+         
+         // test if "Ok" button is enabled
+         if (selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
+         {
+            secondWorkspaceUrl = selenium.getText(SELECTED_WORKSPACE_LOCATOR);
+         }
+      }
+       
+      if ((secondWorkspaceUrl == null) || (secondWorkspaceUrl.isEmpty()))
+      {
+         System.out.println("Error. It is impossible to recognise second workspace!");       
+      }
+      
+      // click the "Cancel" button
+      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
+      
+      // remove text before workspace name
+      String secondWorkspaceName = secondWorkspaceUrl.toLowerCase().replace((BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/").toLowerCase(), "");     
+      // remove ended '/'
+      secondWorkspaceName = secondWorkspaceName.replace("/", "");
+       
+      return secondWorkspaceName;
+   }
+
+   /**
+    * Select workspace from "Select Workspace" form by workspaceName 
+    * @param workspaceName
+    * @throws Exception
+    * @throws InterruptedException
+    */
+   public void selectWorkspace(String workspaceName) throws Exception, InterruptedException
+   {
+      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      Thread.sleep(TestConstants.SLEEP);
+
+      // selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
+      
+      selenium.mouseDownAt("//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/" + workspaceName + "/')]", "");
+      selenium.mouseUpAt("//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/" + workspaceName + "/')]", "");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);      
+
+      // test is "Ok" button enabled
+      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"));
+      
+      // click the "Ok" button 
+      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
+      Thread.sleep(TestConstants.SLEEP);
+      
+      // test is workspace opened
+      assertTrue(selenium.isTextPresent(workspaceName));
+      Thread.sleep(TestConstants.SLEEP);
    }
 }
