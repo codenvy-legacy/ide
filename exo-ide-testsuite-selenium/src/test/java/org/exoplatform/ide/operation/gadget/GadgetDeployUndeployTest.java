@@ -51,6 +51,13 @@ public class GadgetDeployUndeployTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //open gadget with required text
       String filePath = "src/test/resources/org/exoplatform/ide/operation/gadget/gadgetDeployUndeployTest/GoogleMapsGadget.xml";
+      
+      //*****change*****
+      createFolder("Test");
+      //*****************
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
 

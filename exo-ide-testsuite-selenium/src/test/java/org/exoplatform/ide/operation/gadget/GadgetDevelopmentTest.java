@@ -46,6 +46,13 @@ public class GadgetDevelopmentTest extends BaseTest
    {
 
       //      Click on "New->From Template" button.
+     
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+     
+      //*******change*****
+      createFolder("Test");
+      //*******************
+      Thread.sleep(TestConstants.SLEEP);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -94,6 +101,10 @@ public class GadgetDevelopmentTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       closeTab("0");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //*****change**********
+      openOrCloseFolder("Test");
+      //************************
       Thread.sleep(TestConstants.SLEEP_SHORT);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);

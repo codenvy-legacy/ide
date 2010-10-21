@@ -43,8 +43,8 @@ public class GoogleGadgetPreviewTest extends BaseTest
 
    
    private final static String FILE_NAME = "Calculator.xml";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String FOLDER = "FolderCalculator";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -53,7 +53,10 @@ public class GoogleGadgetPreviewTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL);
+         //*******change*****
+         VirtualFileSystemUtils.mkcol(URL);
+         //******************
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -71,6 +74,10 @@ public class GoogleGadgetPreviewTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //*********change****
+      openOrCloseFolder(FOLDER);
+      //*********************
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
            
