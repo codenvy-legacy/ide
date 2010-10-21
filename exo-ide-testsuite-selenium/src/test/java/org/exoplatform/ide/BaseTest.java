@@ -142,10 +142,10 @@ public abstract class BaseTest
             selenium.selectFrame("relative=top");
          }
       }
-      else
+      
+      else if (isRunIdeAsStandalone())
       {
          standaloneLogin(USER_NAME);
-         
       }
    }
 
@@ -1468,7 +1468,7 @@ public abstract class BaseTest
       {
          url = new URL(BASE_URL);
          connection = Utils.getConnection(url);
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");                                                                                          
+         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");
          connection = Utils.getConnection(url);                                                                                                                                                                
          connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications/IDE");    
          
@@ -1538,7 +1538,12 @@ public abstract class BaseTest
    {
       return APPLICATION_URL.equals(IdeAddress.PORTAL.getApplicationUrl());
    }     
- 
+
+   protected static boolean isRunIdeAsStandalone()
+   {
+      return APPLICATION_URL.equals(IdeAddress.STANDALONE.getApplicationUrl());
+   }
+   
    protected static boolean isRunTestUnderWindowsOS()
    {
       return selenium.getEval("/Win/.test(navigator.platform)").equals("true");
