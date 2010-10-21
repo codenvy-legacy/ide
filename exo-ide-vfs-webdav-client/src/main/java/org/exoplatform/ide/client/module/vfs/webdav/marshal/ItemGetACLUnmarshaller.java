@@ -92,7 +92,7 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
     */
    private void parseItemACL(String body) throws Exception
    {
-      PropfindResponse propfindResponse = PropfindResponse.parse(ItemGetACLUnmarshaller.body);
+      PropfindResponse propfindResponse = PropfindResponse.parse(body);
       Resource resource = propfindResponse.getResource();
 
       Property acl = resource.getProperty(ItemProperty.ACL.ACL);
@@ -156,8 +156,8 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
                {
                   permissions.add(Permissions.READ);
                }
-               else if (per.getName().getLocalName().equals(Permissions.WRITE.toString()))
-                  permissions.add(Permissions.WRITE);
+               else if (per.getName().getLocalName().equals(Permissions.ALL.toString()))
+                  permissions.add(Permissions.ALL);
             }
          }
       }
