@@ -35,10 +35,8 @@ import org.junit.Test;
  *
  */
 public class WorkspaceTest extends BaseTest
-{
-   private static final String DEV_MONIT = "dev-monit";
-   
-   private static final String PRODUCTION = "production";
+{  
+   private String secondWorkspace;
    
    @AfterClass
    public static void tearDown()
@@ -50,14 +48,15 @@ public class WorkspaceTest extends BaseTest
    public void testDefaultEntryPoint() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      //check dev-monit is root of navigation tree
-      assertElementPresentInWorkspaceTree(DEV_MONIT);
-      checkCurrentWorkspace(DEV_MONIT);
+      //check default workspace is root of navigation tree
+      assertElementPresentInWorkspaceTree(WS_NAME);
+      checkCurrentWorkspace(WS_NAME);
    }
    
    @Test
    public void testSelectWorkspace() throws Exception
    {
+      secondWorkspace = getNonActiveWorkspaceName();
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window
@@ -68,34 +67,29 @@ public class WorkspaceTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/production"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/dev-monit"));
+      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/" + secondWorkspace + "/"));
+      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/" + WS_NAME + "/"));
       
       //check Ok button is disabled
       assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitleDisabled' and text()='OK']"));
       //check Cancel button is enabled
       assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormCancelButton']//td[@class='buttonTitle' and text()='Cancel']"));
-      //click Cancel button and check form dissapeared
+      //click Cancel button and check form disappeared
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      //check workspace doesn't chanched
-      checkCurrentWorkspace(DEV_MONIT);
+      //check workspace doesn't changed
+      checkCurrentWorkspace(WS_NAME);
       
       //----- 2 ---------------
       //check changing of workspace
-      //call select workspace window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      //select second workspace
+      selectWorkspace(secondWorkspace);
+      checkCurrentWorkspace(secondWorkspace);
       
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      //select production workspace
-      selectWorkspaceFromListGrid(PRODUCTION);
-      //click ok button
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //check production workspace is selected
-      checkCurrentWorkspace(PRODUCTION);
+      // return to initial workspace
+      selectWorkspace(WS_NAME);
+      checkCurrentWorkspace(WS_NAME);
    }
    
    private void checkCurrentWorkspace(String workspaceName)
@@ -103,13 +97,4 @@ public class WorkspaceTest extends BaseTest
       assertEquals(workspaceName, selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[0]"));
    }
    
-   private void selectWorkspaceFromListGrid(String workspaceName) throws Exception
-   {
-      selenium.mouseDownAt("//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '"
-         + workspaceName + "/')]", "");
-      selenium.mouseUpAt("//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '" 
-         + workspaceName + "/')]", "");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
 }
