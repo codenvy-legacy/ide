@@ -143,4 +143,18 @@ public abstract class VirtualFileSystem
     */
    public abstract void getVersions(Item item);
    
+   /**
+    * Get ACL of item
+    * 
+    * @param item
+    */
+   public abstract void getACL(Item item);
+   
+   
+   /**
+    * Save ACL of item
+    * 
+    * @param item
+    */
+   public abstract void saveACL(Item item);
 }

@@ -57,9 +57,9 @@ public class ItemProperty
    public static final QName GETCONTENTLENGTH = new QName("getcontentlength", Namespace.DAV);
 
    public static final QName RESOURCETYPE = new QName("resourcetype", Namespace.DAV);
-   
+
    public static final QName SUCCESSOR_SET = new QName("successor-set", Namespace.DAV);
-   
+
    public static final QName PREDECESSOR_SET = new QName("predecessor-set", Namespace.DAV);
 
    /*
@@ -73,7 +73,7 @@ public class ItemProperty
    public static final QName JCR_PRIMARYTYPE = new QName("primaryType", Namespace.JCR);
 
    public static final QName JCR_ISCHECKEDOUT = new QName("isCheckedOut", Namespace.JCR);
-   
+
    public static final QName JCR_LOCKOWNER = new QName("lockOwner", Namespace.JCR);
 
    /*
@@ -82,4 +82,24 @@ public class ItemProperty
 
    public static final QName EXO_AUTOLOAD = new QName("autoload", Namespace.EXO);
 
+   /*
+    * ACL Properties
+    */
+
+   
+   public interface ACL
+   {
+      public static final QName ACL = new QName("acl", Namespace.DAV);
+      
+      public static final QName ACE = new QName("ace", Namespace.DAV);
+      
+      public static final QName PRINCIPAL = new QName("principal", Namespace.DAV);
+      
+      public static final QName GRANT = new QName("grant", Namespace.DAV);
+      
+      public static final QName PRIVILEGE = new QName("privilege", Namespace.DAV);
+      
+      public static final QName DENY = new QName("deny", Namespace.DAV);
+      
+   }
 }
