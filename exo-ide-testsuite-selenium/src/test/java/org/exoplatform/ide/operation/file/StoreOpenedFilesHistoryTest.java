@@ -50,6 +50,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    {
       try
       {
+         cleanRegistry();
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER);
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE);
       }
