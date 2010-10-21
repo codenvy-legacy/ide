@@ -84,9 +84,9 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopup
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreVersionControl;
-import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionHistoryControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewNextVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewPreviousVersionControl;
+import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionHistoryControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionListControl;
 import org.exoplatform.ide.client.module.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.DeleteItemHandler;
@@ -120,9 +120,11 @@ import org.exoplatform.ide.client.module.navigation.handler.RestoreVersionComman
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewVersionHistoryCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.client.permissions.ShowPermissionsCommandHandler;
+import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplateForm;
@@ -212,6 +214,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowPermissionsControl(eventBus)));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -233,7 +236,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
-
+      
       //      handlers.addHandler(ItemLockedEvent.TYPE, this);
       //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
@@ -249,6 +252,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new ViewVersionHistoryCommandHandler(eventBus);
       new RestoreVersionCommandHandler(eventBus);
       new ProjectTemplateControlHandler(eventBus);
+      new ShowPermissionsCommandHandler(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
