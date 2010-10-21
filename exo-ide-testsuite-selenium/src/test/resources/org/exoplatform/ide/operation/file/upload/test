@@ -1,0 +1,19 @@
+ <html>
+<head>
+<script>
+function appendText(node,txt)
+{
+node.appendChild(document.createTextNode(txt));
+}
+
+</script>
+</head>
+<body>
+<h1>HunBug DOM Append Text and Element Functions</h1>
+<input type="button" value="Append Text" 
+	onclick="appendText(document.getElementById('d2'), '... Appended Text');"/> 
+
+<div id="d2">text</div>
+
+</body>
+</html>  

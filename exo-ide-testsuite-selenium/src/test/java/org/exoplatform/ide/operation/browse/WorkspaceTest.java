@@ -89,7 +89,7 @@ public class WorkspaceTest extends BaseTest
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       //select production workspace
-      selectWorkspace(PRODUCTION);
+      selectWorkspaceFromListGrid(PRODUCTION);
       //click ok button
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -103,7 +103,7 @@ public class WorkspaceTest extends BaseTest
       assertEquals(workspaceName, selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[0]"));
    }
    
-   private void selectWorkspace(String workspaceName) throws Exception
+   private void selectWorkspaceFromListGrid(String workspaceName) throws Exception
    {
       selenium.mouseDownAt("//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '"
          + workspaceName + "/')]", "");
