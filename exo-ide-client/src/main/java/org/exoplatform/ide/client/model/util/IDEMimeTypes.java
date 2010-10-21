@@ -99,7 +99,13 @@ public class IDEMimeTypes
       
       for (List<String> mimeTypeList : mimeTypes.values())
       {
-         supportedMimeTypes.addAll(mimeTypeList);
+         for (String mimeType : mimeTypeList)
+         {
+            if (!supportedMimeTypes.contains(mimeType))
+            {
+               supportedMimeTypes.add(mimeType);
+            }
+         }
       }
       
       return supportedMimeTypes;
