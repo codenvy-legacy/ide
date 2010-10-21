@@ -96,7 +96,7 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
       {
          switch (p)
          {
-            case WRITE :
+            case ALL :
                record.setAttribute(WRITE, p.toString());
                break;
             case READ :
@@ -129,11 +129,11 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
       {
          if(Boolean.parseBoolean(event.getNewValues().get(WRITE).toString()))
          {
-            entry.addPermission(Permissions.WRITE);
+            entry.addPermission(Permissions.ALL);
          }
          else
          {
-            entry.removePermission(Permissions.WRITE);
+            entry.removePermission(Permissions.ALL);
          }
       }
    }
