@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
 import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
@@ -33,6 +34,8 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
@@ -44,6 +47,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.junit.DoNotRunWith;
@@ -335,8 +339,44 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       delayTestFinish(DELAY_TEST);
    }
 
-   public void testGetVersionList()
+//   public void testGetVersionList()
+//   {
+//      final String fileContent = System.currentTimeMillis() + "";
+//      File file = new File(testUrl + "versionFile");
+//      file.setContentType("text/plain");
+//      file.setJcrContentNodeType(NodeTypeUtil.getContentNodeType("text/plain"));
+//      //     newFile.setIcon(ImageUtil.getIcon(contentType));
+//      file.setNewFile(true);
+//      file.setContent(fileContent);
+//      file.setContentChanged(true);
+//
+//      vfsWebDav.saveContent(file);
+//
+//      file.setContent(file.getContent() + " " + System.currentTimeMillis());
+//      file.setContentChanged(true);
+//      vfsWebDav.saveContent(file);
+//
+//      file.setContent(file.getContent() + " " + System.currentTimeMillis());
+//      file.setContentChanged(true);
+//      vfsWebDav.saveContent(file);
+//
+//      eventbus.addHandler(ItemVersionsReceivedEvent.TYPE, new ItemVersionsReceivedHandler()
+//      {
+//         public void onItemVersionsReceived(ItemVersionsReceivedEvent event)
+//         {
+//            assertNotNull(event.getVersions());
+//            assertNotNull(event.getItem());
+//            assertEquals(3, event.getVersions().size());
+//            assertNotNull(event.getVersions().get(0).getHref());
+//         }
+//      });
+//
+//      vfsWebDav.getVersions(file);
+//   }
+//
+   public void testGetACL()
    {
+      System.out.println("GwtTestWebDavFileSystem.testGetACL()");
       final String fileContent = System.currentTimeMillis() + "";
       File file = new File(testUrl + "versionFile");
       file.setContentType("text/plain");
@@ -345,31 +385,27 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setNewFile(true);
       file.setContent(fileContent);
       file.setContentChanged(true);
-
-      vfsWebDav.saveContent(file);
-
-      file.setContent(file.getContent() + " " + System.currentTimeMillis());
-      file.setContentChanged(true);
-      vfsWebDav.saveContent(file);
-
-      file.setContent(file.getContent() + " " + System.currentTimeMillis());
-      file.setContentChanged(true);
-      vfsWebDav.saveContent(file);
-
-      eventbus.addHandler(ItemVersionsReceivedEvent.TYPE, new ItemVersionsReceivedHandler()
+            
+      eventbus.addHandler(ItemACLReceivedEvent.TYPE, new ItemACLReceivedHandler()
       {
-         public void onItemVersionsReceived(ItemVersionsReceivedEvent event)
+         
+         public void onItemACLReceived(ItemACLReceivedEvent event)
          {
-            assertNotNull(event.getVersions());
-            assertNotNull(event.getItem());
-            assertEquals(3, event.getVersions().size());
-            assertNotNull(event.getVersions().get(0).getHref());
+            System.out
+               .println("GwtTestWebDavFileSystem.testGetACL().new ItemACLReceivedHandler() {...}.onItemACLReceived()");
+            for (AccessControlEntry e :  event.getItem().getAcl().getPermissionsList())
+            {
+               System.out.println("User name = " + e.getIdentity() + " , permissions - " + e.getPermissionsList());
+            }       
+            fail();
          }
       });
-
-      vfsWebDav.getVersions(file);
+      vfsWebDav.saveContent(file);
+      
+      vfsWebDav.getACL(file);
+      
    }
-
+   
    private class MockExceptionThrownHandler implements ExceptionThrownHandler
    {
       public void onError(ExceptionThrownEvent event)

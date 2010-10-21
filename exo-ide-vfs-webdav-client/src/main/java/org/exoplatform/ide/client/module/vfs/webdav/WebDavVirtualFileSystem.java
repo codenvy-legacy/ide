@@ -39,6 +39,8 @@ import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
@@ -53,9 +55,13 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshalle
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FolderContentUnmarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemGetACLMarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemGetACLUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesUnmarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemSetACLMarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemSetACLUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemMarshaller;
@@ -135,8 +141,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    public static native String javaScriptEncodeURI(String text) /*-{
-	return encodeURI(text);
-	}-*/;
+      return encodeURI(text);
+   }-*/;
 
    private ExceptionThrownEvent getErrorEvent(String message)
    {
@@ -591,6 +597,55 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.REPORT)
          .data(marshaller).send(callback);
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getACL(org.exoplatform.ide.client.framework.vfs.Item)
+    */
+   @Override
+   public void getACL(Item item)
+   {
+      String url = javaScriptEncodeURI(item.getHref());
+
+      ItemGetACLMarshaller marshaller = new ItemGetACLMarshaller();
+      ItemGetACLUnmarshaller unmarshaller = new ItemGetACLUnmarshaller(item);
+
+      ItemACLReceivedEvent event = new ItemACLReceivedEvent(item);
+
+      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+
+      String errorMessage = "Service is not deployed.<br>Resource not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveACL(org.exoplatform.ide.client.framework.vfs.Item)
+    */
+   @Override
+   public void saveACL(Item item)
+   {
+      String url = javaScriptEncodeURI(item.getHref());
+
+      ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(item);
+      ItemSetACLUnmarshaller unmarshaller = new ItemSetACLUnmarshaller();
+
+      ItemACLSavedEvent event = new ItemACLSavedEvent(item);
+
+      int[] acceptStatus = new int[]{HTTPStatus.OK};
+
+      String errorMessage = "Service is not deployed.<br>Resource not found.<br /> Resource locked.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
+         .data(marshaller).send(callback);
    }
 
 }
