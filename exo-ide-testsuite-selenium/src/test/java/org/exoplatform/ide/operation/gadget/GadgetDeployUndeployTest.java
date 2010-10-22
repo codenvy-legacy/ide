@@ -42,8 +42,8 @@ public class GadgetDeployUndeployTest extends BaseTest
 {
 
    private static final String FILE_NAME = "GoogleMapsGadget.xml";
-   private static final String FILE_DEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/deploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
-   private static final String FILE_UNDEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/undeploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";   
+   private static final String FILE_DEPLOY_URL = "/" + REST_CONTEXT + "/ide/gadget/deploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
+   private static final String FILE_UNDEPLOY_URL = "/" + REST_CONTEXT + "/ide/gadget/undeploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";   
    
    @Test
    public void testGadgetDeployUndeploy() throws Exception

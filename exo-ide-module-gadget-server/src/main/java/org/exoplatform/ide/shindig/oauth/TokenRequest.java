@@ -92,12 +92,12 @@ public class TokenRequest
    }
 
    /**
-    * @param gadgetURL
-    * @param owner
-    * @param viewer
-    * @param moduleId
-    * @param container
-    * @param domain
+    * @param gadgetURL the gadget URL
+    * @param owner gadget owner
+    * @param viewer gadget viewer
+    * @param moduleId moduleId
+    * @param container container that is issuing the token
+    * @param domain domain to use for signed fetch with default signed fetch key.
     */
    public TokenRequest(String gadgetURL, String owner, String viewer, Long moduleId, String container, String domain)
    {

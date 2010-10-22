@@ -32,18 +32,14 @@ public class IdeUser
    
    private Collection<String> roles;
    
-   /**
-    * 
-    */
    public IdeUser()
    {
    }
    
    /**
-    * @param userId
-    * @param groups
-    * @param memberships
-    * @param roles
+    * @param userId the userId to set
+    * @param groups the groups to set
+    * @param roles the roles to set
     */
    public IdeUser(String userId, Collection<String> groups, Collection<String> roles)
    {

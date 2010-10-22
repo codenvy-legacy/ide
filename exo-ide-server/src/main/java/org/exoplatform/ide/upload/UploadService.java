@@ -33,6 +33,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.services.jcr.webdav.WebDavService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,8 +46,25 @@ import org.exoplatform.services.jcr.webdav.WebDavService;
 @Path("/services/upload")
 public class UploadService
 {
+   
+   interface FormFields
+   {
+      
+      public static final String FILE = "file";
+
+      public static final String LOCATION = "location";
+      
+      public static final String MIME_TYPE = "mimeType";
+      
+      public static final String NODE_TYPE = "nodeType";
+      
+      public static final String JCR_CONTENT_NODE_TYPE = "jcrContentNodeType";
+      
+   }
 
    private static final String WEBDAV_CONTEXT = "jcr";
+   
+   private static Log log = ExoLogger.getLogger(UploadService.class);
 
    private WebDavService webDavService;
 
@@ -67,7 +86,7 @@ public class UploadService
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         return Response.serverError().build();
+         return Response.serverError().entity("Can't find input file").build();
       }
 
       try
@@ -79,11 +98,11 @@ public class UploadService
          
          location = URLDecoder.decode(location, "UTF-8");
 
-         String prefix = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
+         String prefix = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
 
          if (!location.startsWith(prefix))
          {
-            return Response.serverError().build();
+            return Response.serverError().entity("Invalid path").build();
          }
 
          location = location.substring(prefix.length());
@@ -119,7 +138,7 @@ public class UploadService
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
+         log.error(exc.getMessage(), exc);
          return Response.serverError().entity(exc.getMessage()).build();
       }
 

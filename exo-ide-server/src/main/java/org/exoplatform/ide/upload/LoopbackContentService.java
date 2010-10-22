@@ -31,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
@@ -43,6 +45,8 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 @Path("/services/loopbackcontent")
 public class LoopbackContentService implements ResourceContainer
 {
+   
+   private static Log log = ExoLogger.getLogger(LoopbackContentService.class);
 
    /**
     * POST method that gets the request body and returns it wrapped in the
@@ -67,8 +71,8 @@ public class LoopbackContentService implements ResourceContainer
             }
             catch (IOException ioe)
             {
-               ioe.printStackTrace();
-               return Response.serverError().build();
+               log.error(ioe.getMessage(), ioe);
+               return Response.serverError().entity(ioe.getMessage()).build();
             }
          }
       }
@@ -88,8 +92,8 @@ public class LoopbackContentService implements ResourceContainer
       }
       catch (IOException ioe)
       {
-         ioe.printStackTrace();
-         return Response.serverError().build();
+         log.error(ioe.getMessage(), ioe);
+         return Response.serverError().entity(ioe.getMessage()).build();
       }
 
       String bodyString = sb.toString();

@@ -29,8 +29,19 @@ import javax.jcr.RepositoryException;
  * @version $
  */
 
-public class NodeTypeUtil implements Const
+public class NodeTypeUtil
 {
+   static final String NT_FILE = "nt:file";
+
+   static final String NT_RESOURCE = "nt:resource";
+
+   static final String JCR_CONTENT = "jcr:content";
+
+   static final String JCR_DATA = "jcr:data";
+
+   static final String JCR_MIMETYPE = "jcr:mimeType";
+
+   static final String JCR_LASTMODIFIED = "jcr:lastModified";
 
    /**
     * If the node is file.

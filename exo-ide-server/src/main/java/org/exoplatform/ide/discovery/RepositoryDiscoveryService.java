@@ -97,9 +97,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
          {
             String workspaceName = workspaceEntry.getName();
 
-            String href =
-               uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/" + repositoryName + "/" + workspaceName
-                  + "/";
+            String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repositoryName, workspaceName, "/").build().toString();
             entryPoints.add(href);
          }
       }

@@ -46,6 +46,8 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.uri.UriComponent;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +63,8 @@ public class GadgetListingService implements Startable
    /**
      * Class logger.
      */
-   //   private final Log log = ExoLogger.getLogger(GadgetListingService.class);
+   private final Log log = ExoLogger.getLogger(GadgetListingService.class);
+   
    public static final String GADGET_MIME_TYPE = "application/x-google-gadget";
 
    private final String workspaceName;
@@ -239,11 +242,11 @@ public class GadgetListingService implements Startable
                }
                catch (RepositoryException e)
                {
-                  e.printStackTrace();
+                  log.error(e.getMessage(), e);
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
+                  log.error(e.getMessage(), e);
                }
 
             }
@@ -289,11 +292,11 @@ public class GadgetListingService implements Startable
                }
                catch (RepositoryException e)
                {
-                  e.printStackTrace();
+                  log.error(e.getMessage(), e);
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
+                  log.error(e.getMessage(), e);
                }
 
             }
@@ -311,15 +314,15 @@ public class GadgetListingService implements Startable
       }
       catch (UnsupportedRepositoryOperationException e)
       {
-         e.printStackTrace();
+         log.error(e.getMessage(), e);
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         log.error(e.getMessage(), e);
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         log.error(e.getMessage(), e);
       }
    }
 

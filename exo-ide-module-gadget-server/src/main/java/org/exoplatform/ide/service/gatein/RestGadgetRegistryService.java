@@ -51,7 +51,7 @@ import org.json.JSONObject;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-@Path("/ideall/gadget")
+@Path("/ide/gadget")
 public class RestGadgetRegistryService implements ResourceContainer
 {
    
@@ -88,10 +88,10 @@ public class RestGadgetRegistryService implements ResourceContainer
    private static final String DEFAULT_GADGET_HOST = "eXoGadgetServer/gadgets";
 
    /**
-    * @param uriInfo
-    * @param gadgetUrl
-    * @param publicContext
-    * @param privateContext
+    * @param uriInfo URI information
+    * @param gadgetUrl the gadget URL
+    * @param publicContext public context
+    * @param privateContext private context
     * @return
     */
    @POST
@@ -99,7 +99,7 @@ public class RestGadgetRegistryService implements ResourceContainer
    public Response addGadget(@Context UriInfo uriInfo, @QueryParam(QueryParams.GADGET_URL) String gadgetUrl,
       @QueryParam(QueryParams.PUBLIC_CONTEXT) String publicContext, @QueryParam(QueryParams.PRIVATE_CONTEXT) String privateContext)
    {
-      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);      
+      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);
       String publicContextEncoded = UriComponent.encode(publicContext, UriComponent.PATH, false);
       String privateContextEncoded = UriComponent.encode(privateContext, UriComponent.PATH, false);
       
@@ -146,10 +146,10 @@ public class RestGadgetRegistryService implements ResourceContainer
 
 
    /**
-    * @param gadgetUrl
-    * @param publicContext
-    * @param privateContext
-    * @return
+    * @param gadgetUrl the gadget URL
+    * @param publicContext public context
+    * @param privateContext private context
+    * @return {@link Response}
     */
    @POST
    @Path("/undeploy")
@@ -201,11 +201,11 @@ public class RestGadgetRegistryService implements ResourceContainer
    }
 
    /**
-    * @param name
-    * @param path
-    * @param isLocal
-    * @param uriInfo
-    * @return
+    * @param name gadget naem
+    * @param path gadget path
+    * @param isLocal gadget is local
+    * @param uriInfo URI information
+    * @return {@link Gadget}
     * @throws JSONException
     * @throws DeployGadgetException
     */

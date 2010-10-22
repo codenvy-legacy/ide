@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -39,7 +38,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
  * @version $
  */
 
-public class DirectoryContentEntity implements StreamingOutput, Const
+public class DirectoryContentEntity implements StreamingOutput
 {
 
    private String pathPrefix;
@@ -80,8 +79,8 @@ public class DirectoryContentEntity implements StreamingOutput, Const
     * Recursively packing node's content.
     *  
     * 
-    * @param node
-    * @param zipOutputStream
+    * @param node node to get content
+    * @param zipOutputStream output stream
     * @throws RepositoryException
     * @throws IOException
     */
@@ -92,7 +91,7 @@ public class DirectoryContentEntity implements StreamingOutput, Const
 
       if (NodeTypeUtil.isFile(node))
       {
-         InputStream inputStream = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getStream();
+         InputStream inputStream = node.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_DATA).getStream();
 
          ZipArchiveEntry zipEntry = new ZipArchiveEntry(path);
          zipOutputStream.putArchiveEntry(zipEntry);
@@ -124,8 +123,8 @@ public class DirectoryContentEntity implements StreamingOutput, Const
    /**
     * Writing jcr:data property value to zip output.
     * 
-    * @param inputStream
-    * @param zipOutputStream
+    * @param inputStream input stream
+    * @param zipOutputStream output stream
     * @throws IOException
     */
    private void flushJCRData(InputStream inputStream, ZipArchiveOutputStream zipOutputStream) throws IOException

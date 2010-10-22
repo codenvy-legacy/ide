@@ -42,7 +42,7 @@ import com.google.gwt.http.client.URL;
 public class GadgetServiceImpl extends GadgetService
 {
 
-   private static final String CONTEXT = "/ideall/gadget";
+   private static final String CONTEXT = "/ide/gadget";
 
    private static final String DEPLOY = "/deploy";
 

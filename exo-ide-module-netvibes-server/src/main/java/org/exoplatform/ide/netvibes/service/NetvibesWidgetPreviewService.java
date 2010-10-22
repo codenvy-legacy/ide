@@ -54,20 +54,17 @@ public class NetvibesWidgetPreviewService implements ResourceContainer
       @HeaderParam(ExtHttpHeaders.RANGE) String rangeHeader,
       @HeaderParam(ExtHttpHeaders.IF_MODIFIED_SINCE) String ifModifiedSince, @QueryParam("version") String version,
       @Context UriInfo uriInfo)
-   {//, @HeaderParam("MimeType-Override") String overrideHeader
+   {
+
       Response response = webDavService.get(repoName, repoPath, rangeHeader, ifModifiedSince, version, uriInfo);
       
-      if (response.getStatus() == HTTPStatus.NOT_FOUND)
+      if(response.getStatus() != HTTPStatus.OK)
       {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(response.getEntity()).build();
+         return response;
       }
+      
+      return Response.fromResponse(response).type("text/html").build();
 
-      if (response.getStatus() == HTTPStatus.INTERNAL_ERROR)
-      {
-         return Response.status(HTTPStatus.INTERNAL_ERROR).entity(response.getEntity()).build();
-      }
-
-      return Response.ok(response.getEntity(), "text/html").build();
    }
 
 }

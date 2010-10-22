@@ -77,16 +77,6 @@ public class GroovyTemplateService implements ResourceContainer
       this.sessionProviderService = sessionProviderService;
    }
 
-   /**
-    * @param context
-    * @param request
-    * @param response
-    * @param gtmplSrc
-    * @return
-    * @throws CompilationFailedException
-    * @throws ClassNotFoundException
-    * @throws IOException
-    */
    @POST
    @Path("/render-source")
    @Produces(MediaType.TEXT_HTML)
@@ -100,21 +90,6 @@ public class GroovyTemplateService implements ResourceContainer
       return Response.ok(render, MediaType.TEXT_HTML).build();
    }
 
-   /**
-    * @param context
-    * @param request
-    * @param response
-    * @param uriInfo
-    * @param gtmplUrl
-    * @return
-    * @throws CompilationFailedException
-    * @throws ClassNotFoundException
-    * @throws IOException
-    * @throws LoginException
-    * @throws NoSuchWorkspaceException
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    */
    @GET
    @Path("/render")
    @Produces(MediaType.TEXT_HTML)

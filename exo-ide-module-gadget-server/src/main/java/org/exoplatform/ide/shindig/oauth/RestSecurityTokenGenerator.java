@@ -24,7 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.shindig.common.crypto.BlobCrypterException;
 import org.exoplatform.container.xml.InitParams;
@@ -68,22 +67,22 @@ public class RestSecurityTokenGenerator implements ResourceContainer
    @Path("/createToken")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response createToken(TokenRequest tokenRequest)  
+   public TokenResponse createToken(TokenRequest tokenRequest)  
    {
       try
       {
-         return Response.ok(SecurityTokenGenerator.createToken(tokenRequest,keyFile)).build();
+         return SecurityTokenGenerator.createToken(tokenRequest,keyFile);
       }
       catch (IOException e)
       {
          if (log.isDebugEnabled())
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
          throw new WebApplicationException(e);
       }
       catch (BlobCrypterException e)
       {
          if (log.isDebugEnabled())
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
          throw new WebApplicationException(e);
       } 
       

@@ -109,9 +109,11 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    
    
    /**
-    * @param location
-    * @param inputStream
-    * @return
+    * Validate groovy script.
+    * 
+    * @param location location of groovy script
+    * @param inputStream script for validation
+    * @return {@link Response}
     */
    @POST
    @Path("/validate")
@@ -121,12 +123,11 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    }
    
    /**
-    * @param uriInfo
-    * @param location
-    * @param state
-    * @param security
-    * @param properties
-    * @return
+    * @param uriInfo URI information
+    * @param location location of groovy script
+    * @param security security context
+    * @param properties optional properties to be applied to loaded resource
+    * @return {@link Response}
     */
    @POST
    @Path("/deploy-sandbox")
@@ -139,12 +140,11 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    
    
    /**
-    * @param uriInfo
-    * @param location
-    * @param state
-    * @param security
-    * @param properties
-    * @return
+    * @param uriInfo URI information
+    * @param location location of groovy script
+    * @param security security context
+    * @param properties optional properties to be applied to loaded resource
+    * @return {@link Response}
     */
    @POST
    @Path("/undeploy-sandbox")
@@ -158,11 +158,12 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    
    
    /**
-    * @param uriInfo
-    * @param location
-    * @param state
-    * @param properties
-    * @return
+    * Deploy groovy script as REST service. 
+    * 
+    * @param uriInfo URI information
+    * @param location location of groovy script to be deployed
+    * @param properties optional properties to be applied to loaded resource
+    * @return {@link Response}
     */
    @POST
    @Path("/deploy")
@@ -180,11 +181,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    }
    
    /**
-    * @param uriInfo
-    * @param location
-    * @param state
-    * @param properties
-    * @return
+    * @param uriInfo URI information
+    * @param location location of groovy script
+    * @param properties optional properties to be applied to loaded resource
+    * @return {@link Response}
     */
    @POST
    @Path("/undeploy")
@@ -205,14 +205,14 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    
    
    /**
-    * @param uriInfo
-    * @param location
-    * @param state
-    * @param security
-    * @param properties
-    * @return
+    * @param uriInfo URI information
+    * @param location location of groovy script
+    * @param state if true - deploy, false - undeploy
+    * @param security security context
+    * @param properties optional properties to be applied to loaded resource
+    * @return {@link Response}
     */
-   private Response sandboxLoader(UriInfo uriInfo, String location,boolean state,SecurityContext security, MultivaluedMap<String, String> properties)
+   private Response sandboxLoader(UriInfo uriInfo, String location,boolean state, SecurityContext security, MultivaluedMap<String, String> properties)
    {
       String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (jcrLocation == null)
@@ -304,9 +304,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    
 
    /**
-    * @param baseUri
-    * @param location
-    * @return
+    * @param baseUri base URI
+    * @param location location of groovy script
+    * @return array of {@link String}, which elements contain repository name, workspace name and 
+    * path the path to JCR node that contains groovy script to be deployed
     */
    private String[] parseJcrLocation(String baseUri, String location)
    {

@@ -59,7 +59,7 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
  */
 
 @Path("/services/downloadcontent")
-public class DownloadContentService implements Const, ResourceContainer
+public class DownloadContentService implements ResourceContainer
 {
 
    private static final String MODIFICATION_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
@@ -186,17 +186,19 @@ public class DownloadContentService implements Const, ResourceContainer
    }
 
    /**
-    * @param uriInfo
-    * @param fileName
-    * @param repoPath
-    * @return
+    * Download resource.
+    * 
+    * @param uriInfo URI information
+    * @param fileName name of file to save
+    * @param repoPath path to resource
+    * @return {@link Response}
     */
    @GET
    @Path("/{fileName:.*}/")
    public Response download(@Context UriInfo uriInfo, @PathParam("fileName") String fileName,
       @QueryParam("repoPath") String repoPath)
    {
-      String href = uriInfo.getBaseUri().toASCIIString() + "/" + WEBDAV_CONTEXT + "/";
+      String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
 
       if (!repoPath.startsWith(href))
       {
@@ -246,21 +248,21 @@ public class DownloadContentService implements Const, ResourceContainer
    /**
     * Download resource as file.
     * 
-    * @param node
-    * @return
+    * @param node node
+    * @return {@link Response}
     * @throws RepositoryException
     */
    private Response getFile(Node node) throws RepositoryException, UnsupportedEncodingException, URISyntaxException
    {
-      long contentLength = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getLength();
-      String contentType = node.getNode(JCR_CONTENT).getProperty(JCR_MIMETYPE).getString();
-      Calendar modified = node.getNode(JCR_CONTENT).getProperty(JCR_LASTMODIFIED).getDate();
+      long contentLength = node.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_DATA).getLength();
+      String contentType = node.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_MIMETYPE).getString();
+      Calendar modified = node.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_LASTMODIFIED).getDate();
 
       SimpleDateFormat dateFormat = new SimpleDateFormat(MODIFICATION_PATTERN, Locale.ENGLISH);
       dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
       String modifiedValue = dateFormat.format(modified.getTime());
 
-      InputStream inputStream = node.getNode(JCR_CONTENT).getProperty(JCR_DATA).getStream();
+      InputStream inputStream = node.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_DATA).getStream();
 
       String contentDisposition = "attachment";
 
@@ -272,9 +274,9 @@ public class DownloadContentService implements Const, ResourceContainer
    /**
     * Download resource as zipped folder.
     * 
-    * @param node
-    * @param repoPath
-    * @return
+    * @param node node
+    * @param repoPath path to resource
+    * @return {@link Response}
     * @throws RepositoryException
     */
    private Response getFolder(Node node, String repoPath) throws RepositoryException

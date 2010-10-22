@@ -80,7 +80,7 @@ public class GwtTestGadgetService extends AbstractGwtTest
       eventBus = new HandlerManager(null);
       fileURL = "http://" + Window.Location.getHost() + "/ideall/jcr/repository/dev-monit/";
       context = "http://" + Window.Location.getHost() + "/ideall/rest/private";
-      gadgetServer = "http://" + Window.Location.getHost() + "/ideall/gadgets/";
+      gadgetServer = "http://" + Window.Location.getHost() + "/ide/gadgets/";
       new GadgetServiceImpl(eventBus, loader, context, gadgetServer, publicContext);
    }
 
