@@ -66,11 +66,13 @@ import javax.ws.rs.core.UriInfo;
 @Path("/ide/groovy/")
 public class GroovyScriptService extends GroovyScript2RestLoader
 {
-
+   
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(GroovyScriptService.class);
 
    public static final String DEVELOPER_ID = "ide.developer.id";
+   
+   public static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
 
    /**
     * Resource live time. Resource will be expired after this if it is deployed
@@ -308,7 +310,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     */
    private String[] parseJcrLocation(String baseUri, String location)
    {
-      baseUri += "/jcr/";
+      baseUri += WEBDAV_CONTEXT;
       if (!location.startsWith(baseUri))
       {
          return null;

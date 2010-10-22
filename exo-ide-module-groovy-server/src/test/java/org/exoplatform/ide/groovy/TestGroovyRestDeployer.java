@@ -97,7 +97,7 @@ public class TestGroovyRestDeployer extends Base
       assertEquals(resourceNumber + 1, binder.getSize());
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy", "", headers, null, null, ctx);
@@ -113,7 +113,7 @@ public class TestGroovyRestDeployer extends Base
       assertEquals(resourceNumber + 1, binder.getSize());
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy", "", headers, null, null, ctx);
@@ -126,7 +126,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
@@ -139,7 +139,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
@@ -152,7 +152,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       Set<String> roles = new HashSet<String>();
       roles.add("developers");
       EnvironmentContext ctx = new EnvironmentContext();
@@ -168,7 +168,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres =
@@ -182,7 +182,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
       ContainerResponse cres =
@@ -203,7 +203,7 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", "/jcr/db1/ws/testRoot/script");
+      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres =

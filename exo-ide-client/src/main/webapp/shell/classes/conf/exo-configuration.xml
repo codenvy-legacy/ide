@@ -75,7 +75,7 @@
       <init-params>
          <value-param>
             <name>defaultEntryPoint</name>
-            <value>/rest/private/jcr/repository/dev-monit</value>
+            <value>/rest/private/ide-vfs-webdav/repository/dev-monit</value>
          </value-param>
       </init-params>
    </component>
@@ -163,8 +163,11 @@
 
 
    <component>
-      <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
-      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
+   <!-- 
+      <key>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</key>
+       -->
+       
+      <type>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</type>
       <init-params>
 
          <value-param>

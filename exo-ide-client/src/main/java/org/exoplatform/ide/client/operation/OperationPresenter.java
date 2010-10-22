@@ -176,7 +176,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    private void previewUWAWidget(File file)
    {
       String href = file.getHref();
-      href = href.replace("jcr", "ide/netvibes");
+      href = href.replace("ide-vfs-webdav", "ide/netvibes");
       display.showPreview(href);
    }
    
