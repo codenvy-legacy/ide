@@ -46,7 +46,6 @@ public class ItemSetACLMarshaller implements Marshallable
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
-   @Override
    public String marshal()
    {
       //remove ace with empty permissions 

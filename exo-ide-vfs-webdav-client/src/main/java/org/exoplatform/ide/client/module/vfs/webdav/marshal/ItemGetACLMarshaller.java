@@ -33,7 +33,6 @@ public class ItemGetACLMarshaller implements Marshallable
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
-   @Override
    public String marshal()
    {
       String xml = "<?xml version='1.0' encoding='UTF-8' ?>";
