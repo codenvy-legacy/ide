@@ -20,6 +20,9 @@
 
 package org.exoplatform.ide.vfs.webdav;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -27,7 +30,9 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.exoplatform.ide.vfs.webdav.command.propfind.PropFindResponseEntity;
 import org.exoplatform.services.jcr.webdav.util.TextUtil;
+import org.exoplatform.services.rest.impl.ContainerResponse;
 
 /**
  * 
@@ -39,7 +44,7 @@ import org.exoplatform.services.jcr.webdav.util.TextUtil;
 
 public class Utils
 {
-   
+
    public static Node createNTFile(Session session, String path, InputStream inputStream, String nodeType,
       String contentType, String mimeType) throws RepositoryException
    {
@@ -51,6 +56,36 @@ public class Utils
       content.setProperty("jcr:data", inputStream);
       session.save();
       return node;
-   }   
+   }
+
+   public static void printMultistatusResponse(ContainerResponse response) throws IOException
+   {
+      System.out.println("STATUS: " + response.getStatus());
+
+      if (response.getEntity() instanceof PropFindResponseEntity)
+      {
+         printPropFindResponseEntity((PropFindResponseEntity)response.getEntity());
+      }
+   }
+
+   public static void printPropFindResponseEntity(PropFindResponseEntity entity) throws IOException
+   {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      entity.write(outputStream);
+
+      String s = new String(outputStream.toByteArray());
+      //s = s.replaceAll(">", ">\r\n");
+      System.out.println(s);
+   }
+   
+   public static InputStream getResponseAsStream(ContainerResponse response) throws IOException {
+      if (response.getEntity() instanceof PropFindResponseEntity) {
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+         ((PropFindResponseEntity)response.getEntity()).write(outputStream);
+         return new ByteArrayInputStream(outputStream.toByteArray());
+      }
+      
+      return null;
+   }
 
 }

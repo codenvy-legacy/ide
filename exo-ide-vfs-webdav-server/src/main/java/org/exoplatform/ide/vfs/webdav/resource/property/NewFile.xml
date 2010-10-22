@@ -2,10 +2,12 @@
 <D:multistatus xmlns:D="DAV:"
 	xmlns:b="urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/">
 	<D:response>
-		<D:href>
-			/ide-vfs-webdav/db1/ws/webdav-test/</D:href>
+		<D:href>/ide-vfs-webdav/db1/ws/</D:href>
 		<D:propstat>
 			<D:prop>
+				<D:owner>
+					<D:href>__system</D:href>
+				</D:owner>
 				<D:acl>
 					<D:ace>
 						<D:principal>
@@ -21,53 +23,8 @@
 						</D:grand>
 					</D:ace>
 				</D:acl>
-				<D:owner>
-					<D:href>
-						__system</D:href>
-				</D:owner>
 			</D:prop>
-			<D:status>
-				HTTP/1.1 200 OK</D:status>
-		</D:propstat>
-	</D:response>
-	<D:response>
-		<D:href>
-			/ide-vfs-webdav/db1/ws/webdav-test/TestPropFind/</D:href>
-		<D:propstat>
-			<D:prop>
-				<D:acl>
-					<D:ace>
-						<D:principal>
-							<D:href>
-								vetal</D:href>
-						</D:principal>
-						<D:grand>
-							<D:privilege>
-								<D:write />
-							</D:privilege>
-						</D:grand>
-					</D:ace>
-					<D:ace>
-						<D:principal>
-							<D:all />
-						</D:principal>
-						<D:grand>
-							<D:privilege>
-								<D:write />
-							</D:privilege>
-							<D:privilege>
-								<D:read />
-							</D:privilege>
-						</D:grand>
-					</D:ace>
-				</D:acl>
-				<D:owner>
-					<D:href>
-						root</D:href>
-				</D:owner>
-			</D:prop>
-			<D:status>
-				HTTP/1.1 200 OK</D:status>
+			<D:status>HTTP/1.1 200 OK</D:status>
 		</D:propstat>
 	</D:response>
 </D:multistatus>

@@ -32,15 +32,17 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.util.HierarchicalProperty;
+import org.exoplatform.ide.vfs.webdav.command.PropFindCommand;
 import org.exoplatform.ide.vfs.webdav.command.propfind.PropFindResponseEntity;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
 import org.exoplatform.services.jcr.webdav.Depth;
-import org.exoplatform.services.jcr.webdav.command.PropFindCommand;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
@@ -71,28 +73,89 @@ public class TestVFSWebDavServer extends BaseStandaloneTest
    {
       super.setUp();
 
-      System.out.println("root node >>> " + root);
-
-      testPropFind = root.addNode("TestPropFind", "nt:folder");
-      testPropFind.getSession().save();
-      testPropFind.addMixin("exo:privilegeable");
-      testPropFind.getSession().save();
-      testPropFind.addMixin("exo:owneable");
-      testPropFind.getSession().save();
-      
-      NodeImpl node = (NodeImpl)testPropFind;
-      node.setPermission("vetal", new String []{"read"});
-      node.setPermission("vetal", new String []{"add_node"});
-      node.setPermission("vetal", new String []{"set_property"});
-      node.setPermission("vetal", new String []{"remove"});
-      node.getSession().save();
-      
+      //      System.out.println("root node >>> " + root);
+      //
+      //      testPropFind = root.addNode("TestPropFind", "nt:folder");
+      //      testPropFind.getSession().save();
+      //      testPropFind.addMixin("exo:privilegeable");
+      //      testPropFind.getSession().save();
+      //      testPropFind.addMixin("exo:owneable");
+      //      testPropFind.getSession().save();
+      //      
+      //      NodeImpl node = (NodeImpl)testPropFind;
+      //      node.setPermission("vetal", new String []{"read"});
+      //      node.setPermission("vetal", new String []{"add_node"});
+      //      node.setPermission("vetal", new String []{"set_property"});
+      //      node.setPermission("vetal", new String []{"remove"});
+      //      node.getSession().save();
    }
 
    @Test
-   public void testTest() throws Exception
+   public void testPermissionsOnRoot() throws Exception
    {
+      NodeImpl rootNode = (NodeImpl)session.getRootNode();
+
+      AccessControlList acl = rootNode.getACL();
+      for (AccessControlEntry accessControlEntry : acl.getPermissionEntries())
+      {
+         System.out.println("> " + accessControlEntry.getIdentity() + " : " + accessControlEntry.getPermission());
+      }
+
+      //      // test
+      //      HierarchicalProperty body = new HierarchicalProperty("D:propfind", null, "DAV:");
+      //
+      //      HierarchicalProperty prop = new HierarchicalProperty("D:prop", null, "DAV:");
+      //      body.addChild(prop);
+      //
+      //      prop.addChild(new HierarchicalProperty("D:owner", null, "DAV:"));
+      //      prop.addChild(new HierarchicalProperty("D:displayname", null, "DAV:"));
+      //      prop.addChild(new HierarchicalProperty("D:resourcetype", null, "DAV:"));
+      //      prop.addChild(new HierarchicalProperty("D:acl", null, "DAV:"));
+      //
+      //      Response response = new PropFindCommand().propfind(session, "/", body, 0, "http://localhost");
+      //
+      //      assertEquals(HTTPStatus.MULTISTATUS, response.getStatus());      
+      //      assertNotNull(response.getEntity());
+      //      
+      //      PropFindResponseEntity propFindResponse = (PropFindResponseEntity)response.getEntity();
+      //      
+      //      propFindResponse.
+
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.putSingle("Depth", "0");
+      EnvironmentContext ctx = new EnvironmentContext();
+
+      Set<String> adminRoles = new HashSet<String>();
+      adminRoles.add("administrators");
+
+      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+
+      ctx.put(SecurityContext.class, adminSecurityContext);
+
+      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
+      ResourceLauncher launcher = new ResourceLauncher(handler);
+
+      String request =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<D:propfind xmlns:D=\"DAV:\">" + "<D:prop>" + "<D:owner/>"
+            + "<D:acl/>" + "</D:prop>" + "</D:propfind>";
+
+      ContainerResponse response =
+         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/", "", headers, request.getBytes(), null, ctx);
       
+      assertEquals(HTTPStatus.MULTISTATUS, response.getStatus());
+      assertNotNull(response.getEntity());
+
+      Utils.printMultistatusResponse(response);
+      
+//      HierarchicalPropertyEntityProvider provider = new HierarchicalPropertyEntityProvider();
+//      HierarchicalProperty multistatus = provider.readFrom(null, null, null, null, null, response.get);
+      
+   }
+
+   //@Test
+   public void atestTest() throws Exception
+   {
+
       NodeImpl node = (NodeImpl)testPropFind;
 
       System.out.println("--------------------------------");
@@ -102,11 +165,11 @@ public class TestVFSWebDavServer extends BaseStandaloneTest
          Property p = pi.nextProperty();
          System.out.println("property >> " + p.getName());
       }
-      
-      for (String m : node.getMixinTypeNames()) {
+
+      for (String m : node.getMixinTypeNames())
+      {
          System.out.println("mixin > " + m);
       }
-      
 
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("Depth", "1");
@@ -124,27 +187,26 @@ public class TestVFSWebDavServer extends BaseStandaloneTest
       RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
       ResourceLauncher launcher = new ResourceLauncher(handler);
 
-      String request = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" +
-      		"<D:propfind xmlns:D=\"DAV:\">" +
-      		   "<D:prop>" +
-      		      "<D:owner/>" +
-      		      "<D:acl/>" +
-      		   "</D:prop>" +
-      		"</D:propfind>";
-      
-      ContainerResponse cres = launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/" + root.getName(), "", headers, request.getBytes(), null, ctx);
+      String request =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<D:propfind xmlns:D=\"DAV:\">" + "<D:prop>" + "<D:owner/>"
+            + "<D:acl/>" + "</D:prop>" + "</D:propfind>";
+
+      ContainerResponse cres =
+         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/" + root.getName(), "", headers, request.getBytes(),
+            null, ctx);
 
       System.out.println("RESPONSE STATUS >>>>> " + cres.getStatus());
       System.out.println("RESPONSE > " + cres.getEntity().toString());
-      
+
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      if (cres.getEntity() instanceof PropFindResponseEntity) {
+      if (cres.getEntity() instanceof PropFindResponseEntity)
+      {
          PropFindResponseEntity propFindResponse = (PropFindResponseEntity)cres.getEntity();
          propFindResponse.write(outputStream);
-         
+
          String s = new String(outputStream.toByteArray());
-         s = s.replaceAll(">", ">\r\n");
-         System.out.println("> " + s);
+         //s = s.replaceAll(">", ">\r\n");
+         System.out.println(s);
       }
 
       ///assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());

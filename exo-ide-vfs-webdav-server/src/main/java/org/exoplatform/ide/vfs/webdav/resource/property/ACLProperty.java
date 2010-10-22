@@ -56,13 +56,13 @@ public class ACLProperty
    public static QName ALL = new QName("DAV:", "all");
 
    public static QName HREF = new QName("DAV:", "href");
-   
+
    public static QName PRIVILEGE = new QName("DAV:", "privilege");
-   
-   public static QName GRAND = new QName("DAV:", "grand");
-   
+
+   public static QName GRANT = new QName("DAV:", "grant");
+
    public static QName WRITE = new QName("DAV:", "write");
-   
+
    public static QName READ = new QName("DAV:", "read");
 
    //private static HashMap<String, QName>
@@ -87,18 +87,18 @@ public class ACLProperty
       for (AccessControlEntry entry : entryList)
       {
          String principal = entry.getIdentity();
-         String grand = entry.getPermission();
+         String grant = entry.getPermission();
          System.out.println("principal > " + principal);
-         System.out.println("grand > " + grand);
+         System.out.println("grant > " + grant);
 
-         List<String> grandList = principals.get(principal);
-         if (grandList == null)
+         List<String> grantList = principals.get(principal);
+         if (grantList == null)
          {
-            grandList = new ArrayList<String>();
-            principals.put(principal, grandList);
+            grantList = new ArrayList<String>();
+            principals.put(principal, grantList);
          }
 
-         grandList.add(grand);
+         grantList.add(grant);
       }
 
       Iterator<String> principalIter = principals.keySet().iterator();
@@ -109,8 +109,8 @@ public class ACLProperty
          String curPrincipal = principalIter.next();
 
          aceProperty.addChild(getPrincipalProperty(curPrincipal));
-         
-         aceProperty.addChild(getGrandProperty(principals.get(curPrincipal)));
+
+         aceProperty.addChild(getGrantProperty(principals.get(curPrincipal)));
 
          property.addChild(aceProperty);
       }
@@ -136,26 +136,27 @@ public class ACLProperty
 
       return principalProperty;
    }
-   
-   private static HierarchicalProperty getGrandProperty(List<String> grandList) {
-      HierarchicalProperty grand = new HierarchicalProperty(GRAND);
-      
-      if (grandList.contains("add_node") ||
-               grandList.contains("set_property") ||
-               grandList.contains("remove")) {
-         
+
+   private static HierarchicalProperty getGrantProperty(List<String> grantList)
+   {
+      HierarchicalProperty grant = new HierarchicalProperty(GRANT);
+
+      if (grantList.contains("add_node") || grantList.contains("set_property") || grantList.contains("remove"))
+      {
+
          HierarchicalProperty privilege = new HierarchicalProperty(PRIVILEGE);
          privilege.addChild(new HierarchicalProperty(WRITE));
-         grand.addChild(privilege);
+         grant.addChild(privilege);
       }
-      
-      if (grandList.contains("read")) {
+
+      if (grantList.contains("read"))
+      {
          HierarchicalProperty privilege = new HierarchicalProperty(PRIVILEGE);
          privilege.addChild(new HierarchicalProperty(READ));
-         grand.addChild(privilege);         
+         grant.addChild(privilege);
       }
-      
-      return grand;
+
+      return grant;
    }
 
 }
