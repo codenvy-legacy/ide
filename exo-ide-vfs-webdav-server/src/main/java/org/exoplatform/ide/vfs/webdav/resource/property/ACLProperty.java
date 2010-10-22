@@ -31,6 +31,7 @@ import javax.xml.namespace.QName;
 import org.exoplatform.common.util.HierarchicalProperty;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
+import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
 
 /**
@@ -75,8 +76,6 @@ public class ACLProperty
 
    public static HierarchicalProperty getACL(NodeImpl node) throws RepositoryException
    {
-      System.out.println("get ACL for " + node.getPath());
-
       HierarchicalProperty property = new HierarchicalProperty(NAME);
 
       AccessControlList acl = node.getACL();
@@ -88,8 +87,6 @@ public class ACLProperty
       {
          String principal = entry.getIdentity();
          String grant = entry.getPermission();
-         System.out.println("principal > " + principal);
-         System.out.println("grant > " + grant);
 
          List<String> grantList = principals.get(principal);
          if (grantList == null)
@@ -141,15 +138,15 @@ public class ACLProperty
    {
       HierarchicalProperty grant = new HierarchicalProperty(GRANT);
 
-      if (grantList.contains("add_node") || grantList.contains("set_property") || grantList.contains("remove"))
+      if (grantList.contains(PermissionType.ADD_NODE) || grantList.contains(PermissionType.SET_PROPERTY)
+         || grantList.contains(PermissionType.REMOVE))
       {
-
          HierarchicalProperty privilege = new HierarchicalProperty(PRIVILEGE);
          privilege.addChild(new HierarchicalProperty(WRITE));
          grant.addChild(privilege);
       }
 
-      if (grantList.contains("read"))
+      if (grantList.contains(PermissionType.READ))
       {
          HierarchicalProperty privilege = new HierarchicalProperty(PRIVILEGE);
          privilege.addChild(new HierarchicalProperty(READ));

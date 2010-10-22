@@ -193,13 +193,6 @@ public class FileResource extends GenericResource
          props.add(jcrContentProp);
       }
 
-      System.out.println("File properties ----------------------------");
-
-      for (HierarchicalProperty p : props)
-      {
-         System.out.println(">> " + p.getName());
-      }
-
       return props;
    }
 

@@ -161,9 +161,6 @@ public class CollectionResource extends GenericResource
    {
       super(type, identifier, new WebDavNamespaceContext(node.getSession()));
       this.node = node;
-      
-      System.out.println("collection " + identifier);
-      
    }
 
    /**
@@ -194,12 +191,6 @@ public class CollectionResource extends GenericResource
             }
          }
       }
-      
-      System.out.println("Collection properties ----------------------------");
-      
-      for (HierarchicalProperty p : props) {
-         System.out.println(">> " + p.getName());
-      }      
 
       return props;
    }
@@ -330,11 +321,11 @@ public class CollectionResource extends GenericResource
       else if (name.equals(ACLProperty.NAME))
       {
          return ACLProperty.getACL((NodeImpl)node);
-      }    
+      }
       else if (name.equals(OWNER))
       {
          return OwnerProperty.getOwner((NodeImpl)node);
-      }          
+      }
       else
       {
 

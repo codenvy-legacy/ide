@@ -20,26 +20,21 @@
 
 package org.exoplatform.ide.vfs.webdav;
 
-import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.xml.namespace.QName;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.util.HierarchicalProperty;
-import org.exoplatform.ide.vfs.webdav.command.PropFindCommand;
-import org.exoplatform.ide.vfs.webdav.command.propfind.PropFindResponseEntity;
+import org.exoplatform.ide.vfs.webdav.resource.property.ACLProperty;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
-import org.exoplatform.services.jcr.webdav.Depth;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider;
@@ -93,13 +88,13 @@ public class TestVFSWebDavServer extends BaseStandaloneTest
    @Test
    public void testPermissionsOnRoot() throws Exception
    {
-      NodeImpl rootNode = (NodeImpl)session.getRootNode();
-
-      AccessControlList acl = rootNode.getACL();
-      for (AccessControlEntry accessControlEntry : acl.getPermissionEntries())
-      {
-         System.out.println("> " + accessControlEntry.getIdentity() + " : " + accessControlEntry.getPermission());
-      }
+//      NodeImpl rootNode = (NodeImpl)session.getRootNode();
+//
+//      AccessControlList acl = rootNode.getACL();
+//      for (AccessControlEntry accessControlEntry : acl.getPermissionEntries())
+//      {
+//         System.out.println("> " + accessControlEntry.getIdentity() + " : " + accessControlEntry.getPermission());
+//      }
 
       //      // test
       //      HierarchicalProperty body = new HierarchicalProperty("D:propfind", null, "DAV:");
@@ -140,140 +135,177 @@ public class TestVFSWebDavServer extends BaseStandaloneTest
             + "<D:acl/>" + "</D:prop>" + "</D:propfind>";
 
       ContainerResponse response =
-         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/", "", headers, request.getBytes(), null, ctx);
+         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/", "http://localhost", headers, request.getBytes(), null, ctx);
       
       assertEquals(HTTPStatus.MULTISTATUS, response.getStatus());
       assertNotNull(response.getEntity());
 
-      Utils.printMultistatusResponse(response);
+      HierarchicalPropertyEntityProvider provider = new HierarchicalPropertyEntityProvider();
+      InputStream inputStream = Utils.getResponseAsStream(response);
+      HierarchicalProperty multistatus = provider.readFrom(null, null, null, null, null, inputStream);
       
-//      HierarchicalPropertyEntityProvider provider = new HierarchicalPropertyEntityProvider();
-//      HierarchicalProperty multistatus = provider.readFrom(null, null, null, null, null, response.get);
+      assertEquals(new QName("DAV:", "multistatus"), multistatus.getName());
+      assertEquals(1, multistatus.getChildren().size());
       
+      // test href <D:href>http://localhost/ide-vfs-webdav/db1/ws/</D:href>
+      
+      HierarchicalProperty resourceProp = multistatus.getChildren().get(0);
+      
+      HierarchicalProperty resourceHref = resourceProp.getChild(new QName("DAV:", "href"));
+      assertNotNull(resourceHref);
+      assertEquals("http://localhost/ide-vfs-webdav/db1/ws/", resourceHref.getValue());
+
+      HierarchicalProperty propstatProp = resourceProp.getChild(new QName("DAV:", "propstat"));
+      HierarchicalProperty propProp = propstatProp.getChild(new QName("DAV:", "prop"));
+      
+      HierarchicalProperty ownerProp = propProp.getChild(new QName("DAV:", "owner"));      
+      HierarchicalProperty ownerHrefProp = ownerProp.getChild(new QName("DAV:", "href"));
+      
+      assertEquals("__system", ownerHrefProp.getValue());
+      
+      HierarchicalProperty aclProp = propProp.getChild(ACLProperty.NAME);
+      assertEquals(1, aclProp.getChildren().size());
+      
+      HierarchicalProperty aceProp = aclProp.getChild(ACLProperty.ACE);
+      assertEquals(2, aceProp.getChildren().size());
+      
+      HierarchicalProperty principalProp = aceProp.getChild(ACLProperty.PRINCIPAL);
+      assertEquals(1, principalProp.getChildren().size());
+      
+      HierarchicalProperty allProp = principalProp.getChild(ACLProperty.ALL);
+      assertNotNull(allProp);
+      
+      HierarchicalProperty grantProp = aceProp.getChild(ACLProperty.GRANT);
+      assertEquals(2, grantProp.getChildren().size());
+      
+      HierarchicalProperty writeProp = grantProp.getChild(0).getChild(ACLProperty.WRITE);
+      assertNotNull(writeProp);
+      HierarchicalProperty readProp = grantProp.getChild(1).getChild(ACLProperty.READ);
+      assertNotNull(readProp);
    }
 
-   //@Test
-   public void atestTest() throws Exception
-   {
-
-      NodeImpl node = (NodeImpl)testPropFind;
-
-      System.out.println("--------------------------------");
-      PropertyIterator pi = node.getProperties();
-      while (pi.hasNext())
-      {
-         Property p = pi.nextProperty();
-         System.out.println("property >> " + p.getName());
-      }
-
-      for (String m : node.getMixinTypeNames())
-      {
-         System.out.println("mixin > " + m);
-      }
-
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Depth", "1");
-      //      headers.putSingle("Content-type", "script/groovy");
-      //      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
-      EnvironmentContext ctx = new EnvironmentContext();
-
-      Set<String> adminRoles = new HashSet<String>();
-      adminRoles.add("administrators");
-
-      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
-
-      ctx.put(SecurityContext.class, adminSecurityContext);
-
-      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
-      ResourceLauncher launcher = new ResourceLauncher(handler);
-
-      String request =
-         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<D:propfind xmlns:D=\"DAV:\">" + "<D:prop>" + "<D:owner/>"
-            + "<D:acl/>" + "</D:prop>" + "</D:propfind>";
-
-      ContainerResponse cres =
-         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/" + root.getName(), "", headers, request.getBytes(),
-            null, ctx);
-
-      System.out.println("RESPONSE STATUS >>>>> " + cres.getStatus());
-      System.out.println("RESPONSE > " + cres.getEntity().toString());
-
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      if (cres.getEntity() instanceof PropFindResponseEntity)
-      {
-         PropFindResponseEntity propFindResponse = (PropFindResponseEntity)cres.getEntity();
-         propFindResponse.write(outputStream);
-
-         String s = new String(outputStream.toByteArray());
-         //s = s.replaceAll(">", ">\r\n");
-         System.out.println(s);
-      }
-
-      ///assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
-      //assertEquals(resourceNumber, binder.getSize());
-
-   }
-
-   public void sstestVFSWebDavServer() throws Exception
-   {
-
-      if (true)
-      {
-         return;
-      }
-
-      log.info("YAYAY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-      //String path = testPropFind.getPath() + "/testPropfindComplexContent";            
-      String path = testPropFind.getPath();
-
-      NodeImpl node = (NodeImpl)testPropFind;
-
-      System.out.println("--------------------------------");
-      PropertyIterator pi = node.getProperties();
-      while (pi.hasNext())
-      {
-         Property p = pi.nextProperty();
-         System.out.println("property >> " + p.getName());
-      }
-
-      for (String s : ((NodeImpl)session.getRootNode()).getMixinTypeNames())
-      {
-         System.out.println("mixin > " + s);
-      }
-
-      System.out.println("node acl > " + node.getACL());
-
-      AccessControlList acl = node.getACL();
-
-      System.out.println("node owner > " + acl.getOwner());
-      List<AccessControlEntry> entries = acl.getPermissionEntries();
-      for (AccessControlEntry entry : entries)
-      {
-         System.out.println("ACL --------------------------");
-         System.out.println("identity > " + entry.getIdentity());
-         System.out.println("permissions > " + entry.getPermission());
-      }
-
-      // test
-      HierarchicalProperty body = new HierarchicalProperty("D:propfind", null, "DAV:");
-
-      HierarchicalProperty prop = new HierarchicalProperty("D:prop", null, "DAV:");
-      body.addChild(prop);
-
-      prop.addChild(new HierarchicalProperty("D:owner", null, "DAV:"));
-      prop.addChild(new HierarchicalProperty("D:displayname", null, "DAV:"));
-      prop.addChild(new HierarchicalProperty("D:resourcetype", null, "DAV:"));
-      prop.addChild(new HierarchicalProperty("D:acl", null, "DAV:"));
-
-      Response resp = new PropFindCommand().propfind(session, path, body, Depth.INFINITY_VALUE, "http://localhost");
-
-      System.out.println("response status >> " + resp.getStatus());
-
-      ByteArrayOutputStream bas = new ByteArrayOutputStream();
-      ((PropFindResponseEntity)resp.getEntity()).write(bas);
-      System.out.println(">>>>>>>>>>RESSSSSSSSSSSP>>>>>>>>>>>>>>> " + new String(bas.toByteArray()));
-   }
+//   //@Test
+//   public void atestTest() throws Exception
+//   {
+//
+//      NodeImpl node = (NodeImpl)testPropFind;
+//
+//      System.out.println("--------------------------------");
+//      PropertyIterator pi = node.getProperties();
+//      while (pi.hasNext())
+//      {
+//         Property p = pi.nextProperty();
+//         System.out.println("property >> " + p.getName());
+//      }
+//
+//      for (String m : node.getMixinTypeNames())
+//      {
+//         System.out.println("mixin > " + m);
+//      }
+//
+//      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+//      headers.putSingle("Depth", "1");
+//      //      headers.putSingle("Content-type", "script/groovy");
+//      //      headers.putSingle("location", "/jcr/db1/ws/testRoot2/scriptFileAutoload");
+//      EnvironmentContext ctx = new EnvironmentContext();
+//
+//      Set<String> adminRoles = new HashSet<String>();
+//      adminRoles.add("administrators");
+//
+//      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+//
+//      ctx.put(SecurityContext.class, adminSecurityContext);
+//
+//      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
+//      ResourceLauncher launcher = new ResourceLauncher(handler);
+//
+//      String request =
+//         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<D:propfind xmlns:D=\"DAV:\">" + "<D:prop>" + "<D:owner/>"
+//            + "<D:acl/>" + "</D:prop>" + "</D:propfind>";
+//
+//      ContainerResponse cres =
+//         launcher.service("PROPFIND", "/ide-vfs-webdav/db1/ws/" + root.getName(), "", headers, request.getBytes(),
+//            null, ctx);
+//
+//      System.out.println("RESPONSE STATUS >>>>> " + cres.getStatus());
+//      System.out.println("RESPONSE > " + cres.getEntity().toString());
+//
+//      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//      if (cres.getEntity() instanceof PropFindResponseEntity)
+//      {
+//         PropFindResponseEntity propFindResponse = (PropFindResponseEntity)cres.getEntity();
+//         propFindResponse.write(outputStream);
+//
+//         String s = new String(outputStream.toByteArray());
+//         //s = s.replaceAll(">", ">\r\n");
+//         System.out.println(s);
+//      }
+//
+//      ///assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+//      //assertEquals(resourceNumber, binder.getSize());
+//
+//   }
+//
+//   public void sstestVFSWebDavServer() throws Exception
+//   {
+//
+//      if (true)
+//      {
+//         return;
+//      }
+//
+//      log.info("YAYAY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//
+//      //String path = testPropFind.getPath() + "/testPropfindComplexContent";            
+//      String path = testPropFind.getPath();
+//
+//      NodeImpl node = (NodeImpl)testPropFind;
+//
+//      System.out.println("--------------------------------");
+//      PropertyIterator pi = node.getProperties();
+//      while (pi.hasNext())
+//      {
+//         Property p = pi.nextProperty();
+//         System.out.println("property >> " + p.getName());
+//      }
+//
+//      for (String s : ((NodeImpl)session.getRootNode()).getMixinTypeNames())
+//      {
+//         System.out.println("mixin > " + s);
+//      }
+//
+//      System.out.println("node acl > " + node.getACL());
+//
+//      AccessControlList acl = node.getACL();
+//
+//      System.out.println("node owner > " + acl.getOwner());
+//      List<AccessControlEntry> entries = acl.getPermissionEntries();
+//      for (AccessControlEntry entry : entries)
+//      {
+//         System.out.println("ACL --------------------------");
+//         System.out.println("identity > " + entry.getIdentity());
+//         System.out.println("permissions > " + entry.getPermission());
+//      }
+//
+//      // test
+//      HierarchicalProperty body = new HierarchicalProperty("D:propfind", null, "DAV:");
+//
+//      HierarchicalProperty prop = new HierarchicalProperty("D:prop", null, "DAV:");
+//      body.addChild(prop);
+//
+//      prop.addChild(new HierarchicalProperty("D:owner", null, "DAV:"));
+//      prop.addChild(new HierarchicalProperty("D:displayname", null, "DAV:"));
+//      prop.addChild(new HierarchicalProperty("D:resourcetype", null, "DAV:"));
+//      prop.addChild(new HierarchicalProperty("D:acl", null, "DAV:"));
+//
+//      Response resp = new PropFindCommand().propfind(session, path, body, Depth.INFINITY_VALUE, "http://localhost");
+//
+//      System.out.println("response status >> " + resp.getStatus());
+//
+//      ByteArrayOutputStream bas = new ByteArrayOutputStream();
+//      ((PropFindResponseEntity)resp.getEntity()).write(bas);
+//      System.out.println(">>>>>>>>>>RESSSSSSSSSSSP>>>>>>>>>>>>>>> " + new String(bas.toByteArray()));
+//   }
 
    @Override
    protected String getRepositoryName()

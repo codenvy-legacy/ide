@@ -74,17 +74,18 @@ public class Utils
       entity.write(outputStream);
 
       String s = new String(outputStream.toByteArray());
-      //s = s.replaceAll(">", ">\r\n");
       System.out.println(s);
    }
-   
-   public static InputStream getResponseAsStream(ContainerResponse response) throws IOException {
-      if (response.getEntity() instanceof PropFindResponseEntity) {
+
+   public static InputStream getResponseAsStream(ContainerResponse response) throws IOException
+   {
+      if (response.getEntity() instanceof PropFindResponseEntity)
+      {
          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
          ((PropFindResponseEntity)response.getEntity()).write(outputStream);
          return new ByteArrayInputStream(outputStream.toByteArray());
       }
-      
+
       return null;
    }
 

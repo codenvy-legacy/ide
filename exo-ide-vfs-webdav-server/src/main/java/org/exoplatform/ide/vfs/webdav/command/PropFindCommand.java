@@ -61,7 +61,7 @@ public class PropFindCommand
    /**
     * logger.
     */
-   private static Log log = ExoLogger.getLogger("exo.jcr.component.webdav.PropFindCommand");
+   private static Log log = ExoLogger.getLogger(PropFindCommand.class);
 
    /**
     * Webdav Propfind method implementation.
@@ -75,9 +75,6 @@ public class PropFindCommand
     */
    public Response propfind(Session session, String path, HierarchicalProperty body, int depth, String baseURI)
    {
-      
-      System.out.println("do propfind");
-      
       Node node;
       try
       {

@@ -130,8 +130,6 @@ public abstract class BaseStandaloneTest extends TestCase
       WebDavVirtualFileSystemService webDavServiceImpl =
          (WebDavVirtualFileSystemService)container.getComponentInstanceOfType(WebDavVirtualFileSystemService.class);
       
-      System.out.println("IDE VFS WEBDAV SERVICE > " + webDavServiceImpl );
-      
       assertNotNull(webDavServiceImpl);
       resourceBinder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
       assertNotNull(resourceBinder);

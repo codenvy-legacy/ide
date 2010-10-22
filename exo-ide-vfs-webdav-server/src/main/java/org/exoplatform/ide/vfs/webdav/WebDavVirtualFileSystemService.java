@@ -45,6 +45,7 @@ import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.util.HierarchicalProperty;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.vfs.webdav.command.AclCommand;
 import org.exoplatform.ide.vfs.webdav.command.PropFindCommand;
 import org.exoplatform.ide.vfs.webdav.command.PutCommand;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -88,7 +89,7 @@ public class WebDavVirtualFileSystemService extends WebDavServiceImpl
     * Logger.
     */
    private static Log log = ExoLogger.getLogger(WebDavVirtualFileSystemService.class);
-   
+
    public WebDavVirtualFileSystemService(InitParams params, RepositoryService repositoryService,
       ThreadLocalSessionProviderService sessionProviderService) throws Exception
    {
@@ -427,7 +428,40 @@ public class WebDavVirtualFileSystemService extends WebDavServiceImpl
    {
       return super.versionControl(repoName, repoPath, lockTokenHeader, ifHeader);
    }
-   
-   
-   
+
+   /**
+    * {@inheritDoc}
+    */
+   @ACL
+   @Path("/{repoName}/{repoPath:.*}/")
+   public Response acl(@PathParam("repoName") String repoName, @PathParam("repoPath") String repoPath,
+      @HeaderParam(ExtHttpHeaders.LOCKTOKEN) String lockTokenHeader, @HeaderParam(ExtHttpHeaders.IF) String ifHeader,
+      HierarchicalProperty body)
+   {
+      if (log.isDebugEnabled())
+      {
+         log.debug("ACL " + repoName + "/" + repoPath);
+      }
+
+      repoPath = normalizePath(repoPath);
+
+      try
+      {
+         List<String> lockTokens = lockTokens(lockTokenHeader, ifHeader);
+         Session session = session(repoName, workspaceName(repoPath), lockTokens);
+         return new AclCommand().acl(session, path(repoPath), body);
+      }
+
+      catch (NoSuchWorkspaceException exc)
+      {
+         log.error("NoSuchWorkspace. " + exc.getMessage());
+         return Response.status(HTTPStatus.NOT_FOUND).entity(exc.getMessage()).build();
+      }
+      catch (Exception exc)
+      {
+         log.error(exc.getMessage(), exc);
+         return Response.serverError().entity(exc.getMessage()).build();
+      }
+   }
+
 }
