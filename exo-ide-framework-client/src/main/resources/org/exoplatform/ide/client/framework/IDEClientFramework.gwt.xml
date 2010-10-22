@@ -8,8 +8,14 @@
    <inherits name='com.google.gwt.user.Debug' />
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name='com.google.gwt.json.JSON' />
+   <inherits name="com.google.gwt.resources.Resources" />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   
+   <generate-with class="org.exoplatform.ide.generator.ControlAnnotationMapGenerator">
+      <when-type-assignable class="org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap" />
+   </generate-with>
 
+   <source path="annotation" />
    <source path="application" />
    <source path="control" />
    <source path="editor" />

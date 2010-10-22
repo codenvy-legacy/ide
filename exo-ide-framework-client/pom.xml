@@ -37,6 +37,11 @@
          <artifactId>gwt-user</artifactId>
       </dependency>
       <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-dev</artifactId>
+          <version>${gwt.version}</version>   
+      </dependency>
+      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
