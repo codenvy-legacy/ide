@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -34,7 +35,7 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectT
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class CreateProjectTemplateControl extends SimpleControl implements IDEControl, EntryPointChangedHandler
 {
 

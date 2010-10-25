@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
@@ -35,7 +36,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements EditorActiveFileChangedHandler,
    ItemsSelectedHandler
 {

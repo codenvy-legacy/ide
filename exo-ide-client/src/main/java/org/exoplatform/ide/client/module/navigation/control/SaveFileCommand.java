@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -52,7 +53,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler,
    EntryPointChangedHandler, ApplicationSettingsReceivedHandler

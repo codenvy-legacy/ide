@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionEvent;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
  * @version $Id: Sep 29, 2010 $
  *
  */
+@RolesAllowed({"administrators", "developers"})
 public class ViewNextVersionControl extends VersionControl implements ShowVersionHandler
 {
 

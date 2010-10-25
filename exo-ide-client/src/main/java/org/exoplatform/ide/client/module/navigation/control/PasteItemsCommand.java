@@ -21,6 +21,7 @@ import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
 import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedHandler;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteHandler;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -32,6 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
+@RolesAllowed({"administrators", "developers"})
 public class PasteItemsCommand extends MultipleSelectionItemsCommand implements ItemsToPasteSelectedHandler,
    PasteItemsCompleteHandler, ItemsSelectedHandler
 {

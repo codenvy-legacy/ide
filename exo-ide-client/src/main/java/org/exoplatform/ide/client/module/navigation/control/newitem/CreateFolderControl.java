@@ -24,6 +24,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
@@ -39,7 +40,7 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler, PanelDeselectedHandler
 {
 

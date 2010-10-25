@@ -20,6 +20,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -29,6 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
+@RolesAllowed({"administrators", "developers"})
 public class CutItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 

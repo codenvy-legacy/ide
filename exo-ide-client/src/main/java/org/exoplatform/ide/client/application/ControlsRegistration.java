@@ -186,6 +186,9 @@ public class ControlsRegistration implements RegisterControlHandler
       {
          allowedIds.add(control.getId());
       }
+      allowedIds.add("---");
+      allowedIds.add("");
+      
       toolbarDefaultControls.retainAll(allowedIds);
       statusBarControls.retainAll(allowedIds);
    }

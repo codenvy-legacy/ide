@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  * @version $Id: Oct 12, 2010 $
  *
  */
+@RolesAllowed({"administrators", "developers"})
 public class ViewVersionListControl extends VersionControl
 {
 

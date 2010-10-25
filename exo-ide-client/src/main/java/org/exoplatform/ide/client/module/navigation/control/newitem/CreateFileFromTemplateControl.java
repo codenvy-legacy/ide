@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 
 /**
@@ -28,7 +29,7 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFrom
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class CreateFileFromTemplateControl extends NewFileCommand
 {
 

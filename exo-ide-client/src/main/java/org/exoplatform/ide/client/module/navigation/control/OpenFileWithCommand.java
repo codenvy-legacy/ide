@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -33,6 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
+@RolesAllowed({"administrators", "developers"})
 public class OpenFileWithCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";

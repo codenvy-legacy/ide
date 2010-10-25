@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.module.navigation.control.MultipleSelectionIte
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -34,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 

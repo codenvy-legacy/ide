@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -35,6 +36,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
+@RolesAllowed({"administrators", "developers"})
 public class EditorCursorPositionControl extends StatusTextControl implements IDEControl, EditorActivityHandler,
    EditorActiveFileChangedHandler
 {

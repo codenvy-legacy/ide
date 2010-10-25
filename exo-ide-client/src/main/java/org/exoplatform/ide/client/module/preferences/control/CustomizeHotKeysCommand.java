@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.preferences.event.CustomizeHotKeysEvent;
 
@@ -32,7 +33,7 @@ import org.exoplatform.ide.client.module.preferences.event.CustomizeHotKeysEvent
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class CustomizeHotKeysCommand extends SimpleControl implements IDEControl
 {
 

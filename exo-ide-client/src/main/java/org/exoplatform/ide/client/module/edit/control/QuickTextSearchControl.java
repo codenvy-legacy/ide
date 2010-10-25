@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,7 +32,8 @@ import org.exoplatform.ide.client.IDEImageBundle;
  * @version $
  */
 
-public class QuickTextSearchControl extends TextInputControl
+@RolesAllowed({"administrators", "developers"})
+public class QuickTextSearchControl extends TextInputControl implements IDEControl
 {
 
    public static final String ID = "Quick search";
@@ -42,6 +47,13 @@ public class QuickTextSearchControl extends TextInputControl
       setEnabled(true);
       setVisible(true);
       setSize(150);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
    }
 
 }
