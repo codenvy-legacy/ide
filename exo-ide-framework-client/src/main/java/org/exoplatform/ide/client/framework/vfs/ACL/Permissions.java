@@ -27,7 +27,7 @@ package org.exoplatform.ide.client.framework.vfs.ACL;
  */
 public enum Permissions {
 
-   READ, ALL;
+   READ, WRITE;
 
    public String toString()
    {
