@@ -22,7 +22,6 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JWildcardType.BoundType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.uibinder.rebind.IndentedWriter;
 
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
@@ -40,21 +39,23 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
     * @see org.exoplatform.ide.generator.ClassAnnotationMapGenerator#writeConstructor(com.google.gwt.uibinder.rebind.IndentedWriter, com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.core.ext.GeneratorContext)
     */
    @Override
-   protected void writeConstructor(IndentedWriter writer, JClassType interfaceType, String implName,
+   protected void writeConstructor(ConsolePrintWriter writer, JClassType interfaceType, String implName,
       GeneratorContext context)
    {
       writer.write("public %s()", implName);
-      writer.newline();
+      writer.println();
       writer.write("{");
-      writer.newline();
+      writer.println();
       JClassType[] subTypes = getSubTypes(className, context);
       if (subTypes != null)
       {
+         writer.write("List<String> values;");
+         writer.println();
          for (JClassType type : subTypes)
          {
             if (type.isAnnotationPresent(RolesAllowed.class))
             {
-               writer.write("List<String> values = new ArrayList<String>();");
+               writer.write("values = new ArrayList<String>();");
                for (String value : type.getAnnotation(RolesAllowed.class).value())
                {
                   writer.write("values.add(\"" + value + "\");");
@@ -65,7 +66,7 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
          }
       }
       writer.write("}");
-      writer.newline();
+      writer.println();
    }
 
    /** 

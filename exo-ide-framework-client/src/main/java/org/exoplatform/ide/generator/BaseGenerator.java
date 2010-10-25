@@ -25,7 +25,6 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.uibinder.rebind.IndentedWriter;
 
 import java.io.PrintWriter;
 
@@ -56,10 +55,10 @@ public abstract class BaseGenerator extends Generator
       PrintWriter printWriter = context.tryCreate(logger, packageName, implName);
       if (printWriter != null)
       {
-         IndentedWriter writer = new IndentedWriter(printWriter);
+         ConsolePrintWriter writer = new ConsolePrintWriter(printWriter);
          //Write package information to generating class
-         writer.write(String.format(PACKAGE, packageName));
-         writer.newline();
+         writer.write(PACKAGE, packageName);
+         writer.println();
          // Generate source of the class
          doGenerate(interfaceType, implName, writer, context);
          context.commit(logger, printWriter);
@@ -90,5 +89,5 @@ public abstract class BaseGenerator extends Generator
     * @param writer source writer
     * @param context generator context
     */
-   abstract protected void doGenerate(JClassType interfaceType, String implName, IndentedWriter writer, GeneratorContext context);
+   abstract protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer, GeneratorContext context);
 }

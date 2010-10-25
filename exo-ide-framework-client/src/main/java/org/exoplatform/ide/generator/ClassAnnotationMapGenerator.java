@@ -21,7 +21,6 @@ package org.exoplatform.ide.generator;
 import com.google.gwt.core.ext.GeneratorContext;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.uibinder.rebind.IndentedWriter;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -34,7 +33,7 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * @see org.exoplatform.ide.generator.BaseGenerator#doGenerate(com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.uibinder.rebind.IndentedWriter, com.google.gwt.core.ext.GeneratorContext)
     */
    @Override
-   protected void doGenerate(JClassType interfaceType, String implName, IndentedWriter writer, GeneratorContext context)
+   protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer, GeneratorContext context)
    {
       writeImports(writer);
       writeClassIntro(interfaceType, implName, writer);
@@ -49,10 +48,10 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * 
     * @param writer source writer
     */
-   private void writeMethodIntro(IndentedWriter writer)
+   private void writeMethodIntro(ConsolePrintWriter writer)
    {
       writer.write("public HashMap<String, List<String>> getClassAnnotation()");
-      writer.newline();
+      writer.println();
       writer.write("{");
       writer.write("return classAnnotations;");
       writer.write("}");
@@ -63,10 +62,10 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * 
     * @param writer source writer
     */
-   private void writeFieldsIntro(IndentedWriter writer)
+   private void writeFieldsIntro(ConsolePrintWriter writer)
    {
       writer.write("private static HashMap<String, List<String>> classAnnotations = new HashMap<String, List<String>>();");
-      writer.newline();
+      writer.println();
    }
 
    /**
@@ -74,14 +73,14 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * 
     * @param writer source writer
     */
-   private void writeImports(IndentedWriter writer)
+   private void writeImports(ConsolePrintWriter writer)
    {
       writer.write(IMPORT, java.util.HashMap.class.getName());
-      writer.newline();
+      writer.println();
       writer.write(IMPORT, java.util.List.class.getName());
-      writer.newline();
+      writer.println();
       writer.write(IMPORT, java.util.ArrayList.class.getName());
-      writer.newline();
+      writer.println();
    }
    
    /**
@@ -91,16 +90,14 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * @param implName class name
     * @param writer source write
     */
-   protected void writeClassIntro(JClassType interfaceType, String implName, IndentedWriter writer)
+   protected void writeClassIntro(JClassType interfaceType, String implName, ConsolePrintWriter writer)
    {
       writer.write("public class %1$s implements %2$s {", implName, interfaceType.getName());
-      writer.indent();
-      writer.newline();
+      writer.println();
    }
    
-   protected void writeOutro(IndentedWriter writer)
+   protected void writeOutro(ConsolePrintWriter writer)
    {
-      writer.outdent();
       writer.write("}");
    }
    
@@ -110,6 +107,6 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     * @param implName class name
     * @param context generator context
     */
-   abstract protected void writeConstructor(IndentedWriter writer, JClassType interfaceType, String implName, GeneratorContext context);
+   abstract protected void writeConstructor(ConsolePrintWriter writer, JClassType interfaceType, String implName, GeneratorContext context);
  
 }

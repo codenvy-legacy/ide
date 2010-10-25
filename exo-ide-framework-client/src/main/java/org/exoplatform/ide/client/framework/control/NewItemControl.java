@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.framework.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -27,7 +29,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: $
  */
 
-public class NewItemControl extends SimpleControl
+public class NewItemControl extends SimpleControl implements IDEControl
 {
 
    private String mimeType;
@@ -42,6 +44,14 @@ public class NewItemControl extends SimpleControl
       setNormalImage(icon);
       setDisabledImage(disabledIcon);
       setEvent(event);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
    }
 
    public NewItemControl(String id, String title, String prompt, String icon, GwtEvent<?> event)
@@ -73,5 +83,4 @@ public class NewItemControl extends SimpleControl
    {
       this.mimeType = mimeType;
    }
-
 }

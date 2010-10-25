@@ -16,6 +16,18 @@ public class ConsolePrintWriter extends PrintWriter {
       this.nativePrintWriter = nativePrintWriter;
    }
    
+   public void write(String s) {
+      System.out.println(s);
+      nativePrintWriter.write(s);
+    }
+   
+   public void write(String format, Object... args) {
+      System.out.println(String.format(format, args));
+      nativePrintWriter.printf(format, args);
+      System.out.println();
+      nativePrintWriter.println();
+    }
+   
    @Override
    public void print(String s) {
       System.out.print(s);
