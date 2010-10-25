@@ -110,15 +110,15 @@ import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelecte
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileHandler;
-import org.exoplatform.ide.client.module.navigation.handler.CreateFileCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.CreateFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.FileClosedHandler;
-import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandThread;
-import org.exoplatform.ide.client.module.navigation.handler.ProjectTemplateControlHandler;
+import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.CreateProjectTemplateCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.RestoreVersionCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandThread;
-import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandThread;
+import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewVersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
@@ -240,18 +240,18 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       //      handlers.addHandler(ItemLockedEvent.TYPE, this);
       //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
-      new CreateFileCommandThread(eventBus);
+      new CreateFileCommandHandler(eventBus);
       new OpenFileCommandHandler(eventBus);
       new SaveFileCommandHandler(eventBus);
-      new SaveFileAsCommandThread(eventBus);
-      new SaveAllFilesCommandThread(eventBus);
-      new GoToFolderCommandThread(eventBus);
-      new PasteItemsCommandThread(eventBus, context);
+      new SaveFileAsCommandHandler(eventBus);
+      new SaveAllFilesCommandHandler(eventBus);
+      new GoToFolderCommandHandler(eventBus);
+      new PasteItemsCommandHandler(eventBus, context);
       new FileClosedHandler(eventBus);
       new ViewVersionListCommandHandler(eventBus);
       new ViewVersionHistoryCommandHandler(eventBus);
       new RestoreVersionCommandHandler(eventBus);
-      new ProjectTemplateControlHandler(eventBus);
+      new CreateProjectTemplateCommandHandler(eventBus);
       new ShowPermissionsCommandHandler(eventBus);
    }
 

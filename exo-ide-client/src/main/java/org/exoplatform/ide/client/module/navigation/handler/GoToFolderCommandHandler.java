@@ -47,7 +47,7 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenReceivedHandler, ExceptionThrownHandler,
+public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenReceivedHandler, ExceptionThrownHandler,
    EntryPointChangedHandler, EditorActiveFileChangedHandler
 {
 
@@ -63,7 +63,7 @@ public class GoToFolderCommandThread implements GoToFolderHandler, ChildrenRecei
 
    private File activeFile;
 
-   public GoToFolderCommandThread(HandlerManager eventBus)
+   public GoToFolderCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);

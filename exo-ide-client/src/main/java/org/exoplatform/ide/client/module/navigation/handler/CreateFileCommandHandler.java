@@ -68,7 +68,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class CreateFileCommandThread implements CreateNewFileHandler, CreateFileFromTemplateHandler,
+public class CreateFileCommandHandler implements CreateNewFileHandler, CreateFileFromTemplateHandler,
    TemplateListReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler, CreateProjectFromTemplateHandler
 {
@@ -84,7 +84,7 @@ public class CreateFileCommandThread implements CreateNewFileHandler, CreateFile
    
    private boolean createFile;
 
-   public CreateFileCommandThread(HandlerManager eventBus)
+   public CreateFileCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 

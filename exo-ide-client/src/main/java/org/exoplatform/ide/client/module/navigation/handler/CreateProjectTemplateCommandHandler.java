@@ -36,14 +36,14 @@ import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ProjectTemplateControlHandler implements CreateProjectTemplateHandler, TemplateListReceivedHandler, 
+public class CreateProjectTemplateCommandHandler implements CreateProjectTemplateHandler, TemplateListReceivedHandler, 
 ExceptionThrownHandler
 {
    private HandlerManager eventBus;
 
    private Handlers handlers;
 
-   public ProjectTemplateControlHandler(HandlerManager eventBus)
+   public CreateProjectTemplateCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);

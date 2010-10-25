@@ -62,7 +62,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
+public class PasteItemsCommandHandler implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
    ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
@@ -84,7 +84,7 @@ public class PasteItemsCommandThread implements PasteItemsHandler, CopyCompleteH
 
    private Map<String, String> lockTokens;
 
-   public PasteItemsCommandThread(HandlerManager eventBus, ApplicationContext context)
+   public PasteItemsCommandHandler(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
       this.context = context;

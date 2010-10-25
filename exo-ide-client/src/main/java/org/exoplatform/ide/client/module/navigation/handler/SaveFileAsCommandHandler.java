@@ -68,7 +68,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPropertiesSavedHandler,
+public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler,
    EditorActiveFileChangedHandler, ItemUnlockedHandler, UserInfoReceivedHandler, ItemLockResultReceivedHandler,
    ApplicationSettingsReceivedHandler
@@ -92,7 +92,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
 
    private File newFile;
 
-   public SaveFileAsCommandThread(HandlerManager eventBus)
+   public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
@@ -168,7 +168,7 @@ public class SaveFileAsCommandThread implements FileContentSavedHandler, ItemPro
             newFile.setIcon(file.getIcon());
 
             oldFile = file;
-            SaveFileAsCommandThread.this.newFile = newFile;
+            SaveFileAsCommandHandler.this.newFile = newFile;
 
             //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
             VirtualFileSystem.getInstance().saveContent(newFile);
