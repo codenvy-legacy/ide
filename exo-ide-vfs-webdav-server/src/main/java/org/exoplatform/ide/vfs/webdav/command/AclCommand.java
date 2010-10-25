@@ -97,7 +97,18 @@ public class AclCommand
       }
       catch (AccessControlException exc)
       {
+         log.error(exc.getMessage(), exc);
+         return Response.status(HTTPStatus.FORBIDDEN).entity(exc.getMessage()).build();
+      }
+      catch (IllegalArgumentException exc)
+      {
+         log.error(exc.getMessage(), exc);
          return Response.status(HTTPStatus.BAD_REQUEST).entity(exc.getMessage()).build();
+      }
+      catch (Exception exc)
+      {
+         log.error(exc.getMessage(), exc);
+         return Response.status(HTTPStatus.BAD_REQUEST).build();
       }
 
       return Response.ok().build();
@@ -137,6 +148,10 @@ public class AclCommand
                throw new AccessControlException("Can not set permissions for " + node.getPath());
             }
 
+            if (privilegeProperty.getChildren().size() > 1)
+            {
+               throw new IllegalArgumentException("Element grant must contains only one element privilege");
+            }
             HierarchicalProperty permissionProperty = privilegeProperty.getChild(0);
 
             if (ACLProperty.READ.equals(permissionProperty.getName()))
