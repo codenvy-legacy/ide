@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.framework.control;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -28,7 +29,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
-
+@RolesAllowed({"administrators", "developers"})
 public class NewItemControl extends SimpleControl implements IDEControl
 {
 
