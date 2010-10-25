@@ -229,9 +229,20 @@
                <artifactId>exo.jcr.component.ext</artifactId>
                <scope>runtime</scope>
             </dependency>
-            <dependency>
+         <!--   <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
+               <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>javax.servlet</groupId>
+                     <artifactId>servlet-api</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>  --> 
+            <dependency>
+              <groupId>org.exoplatform.ide</groupId>
+	         <artifactId>exo-ide-vfs-webdav-server</artifactId>
                <scope>runtime</scope>
                <exclusions>
                   <exclusion>

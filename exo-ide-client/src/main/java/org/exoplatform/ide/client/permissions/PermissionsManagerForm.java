@@ -49,9 +49,9 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private static final String ID_CANCEL = "ideCancelACL";
    
-   private static int WIDTH = 320;
+   private static int WIDTH = 350;
 
-   private static int HEIGTH = 500;
+   private static int HEIGTH = 400;
 
    private static String ID = "idePermissionManager";
    
@@ -119,7 +119,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      addEntityButton = new IButton("Add entity");
+      addEntityButton = new IButton("Add");
       addEntityButton.setWidth(90);
       addEntityButton.setHeight(22);
       addEntityButton.setID(ID_ADD_ENTITY);

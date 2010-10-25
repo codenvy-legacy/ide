@@ -20,12 +20,16 @@ package org.exoplatform.ide.client.permissions;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.StringValueReceivedCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.ACL.Permissions;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,7 +48,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class PermissionsManagerPresenter
+public class PermissionsManagerPresenter implements ItemACLSavedHandler, ExceptionThrownHandler
 {
 
    public interface Dispaly
@@ -68,6 +72,8 @@ public class PermissionsManagerPresenter
    private Item item;
 
    private Dispaly dispaly;
+   
+   private Handlers handlers;
 
    /**
     * @param eventBus
@@ -77,6 +83,8 @@ public class PermissionsManagerPresenter
    {
       this.eventBus = eventBus;
       this.item = item;
+      
+      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Dispaly d)
@@ -103,7 +111,7 @@ public class PermissionsManagerPresenter
                
                public void execute(String value)
                {
-                 if(!"".equals(value))
+                 if(value != null && !"".equals(value))
                  {
                     addEntity(value);
                  }
@@ -141,6 +149,7 @@ public class PermissionsManagerPresenter
          }
       });
       
+      handlers.addHandler(ItemACLSavedEvent.TYPE, this);
    }
 
    private void addEntity(String identity)
@@ -159,7 +168,23 @@ public class PermissionsManagerPresenter
     */
    public void destroy()
    {
+      handlers.removeHandlers();      
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedHandler#onItemACLSaved(org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent)
+    */
+   public void onItemACLSaved(ItemACLSavedEvent event)
+   {
+      dispaly.closeForm();
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
+    */
+   public void onError(ExceptionThrownEvent event)
+   {
+      dispaly.closeForm();
    }
 
 }
