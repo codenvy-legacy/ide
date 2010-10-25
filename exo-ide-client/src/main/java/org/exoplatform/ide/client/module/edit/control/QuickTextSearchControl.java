@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.module.edit.control;
 import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -35,7 +33,7 @@ public class QuickTextSearchControl extends TextInputControl
 
    public static final String ID = "Quick search";
    
-   public QuickTextSearchControl(HandlerManager eventBus)
+   public QuickTextSearchControl()
    {
       super(ID);
       setPrompt("Quick search");

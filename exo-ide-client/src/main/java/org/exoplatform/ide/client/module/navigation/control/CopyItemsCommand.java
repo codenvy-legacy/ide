@@ -29,6 +29,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
+
 public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
@@ -38,14 +39,24 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    private boolean copyReady = false;
 
-   public CopyItemsCommand(HandlerManager eventBus)
+   public CopyItemsCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Copy Item(s)");
       setPrompt("Copy Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
       setEvent(new CopyItemsEvent());      
+      
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

@@ -39,17 +39,25 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    private boolean pastePrepared = false;
 
-   public PasteItemsCommand(HandlerManager eventBus)
+   public PasteItemsCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Paste Item(s)");
       setPrompt("Paste Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
       setEvent(new PasteItemsEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
       eventBus.addHandler(PasteItemsCompleteEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)

@@ -21,6 +21,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
@@ -36,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenLocalFileCommand extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+public class OpenLocalFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
    EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -48,7 +49,7 @@ public class OpenLocalFileCommand extends SimpleControl implements ItemsSelected
 
    private boolean browserPanelSelected = true;
 
-   public OpenLocalFileCommand(HandlerManager eventBus)
+   public OpenLocalFileCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -56,13 +57,19 @@ public class OpenLocalFileCommand extends SimpleControl implements ItemsSelected
       //setIcon(Images.MainMenu.UPLOAD_FILE);
       setImages(IDEImageBundle.INSTANCE.openLocalFile(), IDEImageBundle.INSTANCE.openLocalFileDisabled());
       setEvent(new UploadFileEvent(true));
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    private void updateEnabling()
    {
       if (browserPanelSelected)
@@ -111,5 +118,4 @@ public class OpenLocalFileCommand extends SimpleControl implements ItemsSelected
          updateEnabling();
       }
    }
-
 }

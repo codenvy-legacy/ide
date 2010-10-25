@@ -69,16 +69,16 @@ public class TextEditModule implements IDEModule, FindTextHandler, GoToLineHandl
    {
       this.eventBus = eventBus;
 
-      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(eventBus), true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(), true));
 
-      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl()));
 
-      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl()));
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);

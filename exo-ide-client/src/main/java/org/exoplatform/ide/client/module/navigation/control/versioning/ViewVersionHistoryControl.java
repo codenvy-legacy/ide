@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent;
@@ -37,7 +38,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewVersionHistoryControl extends SimpleControl implements EditorActiveFileChangedHandler, PanelClosedHandler, PanelOpenedHandler
+public class ViewVersionHistoryControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, PanelClosedHandler, PanelOpenedHandler
 {
 
    private static final String ID = "View/Version History...";
@@ -54,7 +55,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements EditorAc
     * @param id
     * @param eventBus
     */
-   public ViewVersionHistoryControl(HandlerManager eventBus)
+   public ViewVersionHistoryControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -63,7 +64,13 @@ public class ViewVersionHistoryControl extends SimpleControl implements EditorAc
       setImages(IDEImageBundle.INSTANCE.viewVersionContent(), IDEImageBundle.INSTANCE.viewVersionContentDisabled());
       setDelimiterBefore(true);
       setCanBeSelected(true);
-      
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(PanelClosedEvent.TYPE, this);
       eventBus.addHandler(PanelOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);

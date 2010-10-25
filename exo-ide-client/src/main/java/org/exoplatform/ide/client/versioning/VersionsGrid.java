@@ -35,15 +35,17 @@ import org.exoplatform.ide.client.framework.vfs.Version;
  */
 public class VersionsGrid extends ListGrid<Version>
 {
-
+   private final String ID = "ideViewVersionsGrid";
+   
    private final String NAME = "Name";
 
-   private final String DATE = "Creation date";
+   private final String DATE = "Created";
 
-   private final String LENGTH = "Content lenght";
+   private final String LENGTH = "Size";
 
    public VersionsGrid()
    {
+      setID(ID);
       setCanSort(true);
       setCanGroupBy(false);
       setCanFocus(false);

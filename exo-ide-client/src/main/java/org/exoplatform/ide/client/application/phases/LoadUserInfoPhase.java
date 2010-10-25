@@ -20,7 +20,9 @@
 
 package org.exoplatform.ide.client.application.phases;
 
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
@@ -72,7 +74,14 @@ public class LoadUserInfoPhase extends Phase implements UserInfoReceivedHandler
     */
    public void onUserInfoReceived(final UserInfoReceivedEvent event)
    {
-      new LoadApplicationSettingsPhase(eventBus, applicationConfiguration, event.getUserInfo(), controls);
+      if (event.getUserInfo().getRoles() != null && event.getUserInfo().getRoles().size() > 0)
+      {
+         controls.initControls(event.getUserInfo().getRoles());
+         new LoadApplicationSettingsPhase(eventBus, applicationConfiguration, event.getUserInfo(), controls);
+      }
+      else
+      {
+         Dialogs.getInstance().showError("User has no roles defined.");
+      }
    }
-
 }

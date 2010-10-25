@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
@@ -44,9 +42,9 @@ public class ViewVersionListControl extends VersionControl
     * @param id
     * @param eventBus
     */
-   public ViewVersionListControl(HandlerManager eventBus)
+   public ViewVersionListControl()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new ViewVersionListEvent());

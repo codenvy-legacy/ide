@@ -19,8 +19,6 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
 
@@ -36,9 +34,9 @@ public class CreateProjectFromTemplateControl extends NewFileCommand
 
    public final static String ID = "File/New/Create Project From Template...";
 
-   public CreateProjectFromTemplateControl(HandlerManager eventBus)
+   public CreateProjectFromTemplateControl()
    {
-      super(ID, eventBus, "Project From Template...", "Create Project From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+      super(ID, "Project From Template...", "Create Project From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateProjectFromTemplateEvent());
    }
 

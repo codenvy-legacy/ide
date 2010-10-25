@@ -169,13 +169,13 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       this.context = context;
       handlers = new Handlers(eventBus);
 
-      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl(eventBus);
+      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
 
       eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, true));
-      eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup()));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File",
          "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML File", "HTML File",
@@ -187,34 +187,34 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
             Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
          "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
-      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RestoreVersionControl(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RestoreVersionControl(), true, true));
      
-      eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveAllFilesCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsTemplateCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowPermissionsControl(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveAllFilesCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsTemplateCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowPermissionsControl()));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);

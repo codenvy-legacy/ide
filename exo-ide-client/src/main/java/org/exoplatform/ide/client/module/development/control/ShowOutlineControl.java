@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.development.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
@@ -41,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class ShowOutlineControl extends SimpleControl implements EditorActiveFileChangedHandler,
+public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler, FormOpenedHandler, FormClosedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -59,7 +60,7 @@ public class ShowOutlineControl extends SimpleControl implements EditorActiveFil
 
    private boolean outLineFormOpened = false;
 
-   public ShowOutlineControl(HandlerManager eventBus)
+   public ShowOutlineControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -68,13 +69,19 @@ public class ShowOutlineControl extends SimpleControl implements EditorActiveFil
       setEnabled(true);
       setDelimiterBefore(true);
       setCanBeSelected(true);
-      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
       eventBus.addHandler(FormOpenedEvent.TYPE, this);
       eventBus.addHandler(FormClosedEvent.TYPE, this);      
    }
-
+   
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
@@ -145,5 +152,4 @@ public class ShowOutlineControl extends SimpleControl implements EditorActiveFil
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
    }
-
 }

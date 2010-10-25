@@ -162,13 +162,13 @@ public class ControlsFormatter
          if (control.getMimeType() == null)
          {
             command =
-               new NewFileCommand(control.getId(), eventBus, control.getTitle(), control.getPrompt(),
+               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
                   control.getIcon(), control.getEvent());
          }
          else
          {
             command =
-               new NewFileCommand(control.getId(), eventBus, control.getTitle(), control.getPrompt(),
+               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
                   control.getIcon(), new CreateNewFileEvent(control.getMimeType()));
          }
 

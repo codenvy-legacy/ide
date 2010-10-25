@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelecte
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -51,16 +49,24 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 
    private Item selectedItem;
 
-   public DeleteItemCommand(HandlerManager eventBus)
+   public DeleteItemCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       setEvent(new DeleteItemEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -95,8 +101,6 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       super.onPanelSelected(event);
       updateEnabling();
    }
-   
-   
 
    @Override
    protected void updateEnabling()

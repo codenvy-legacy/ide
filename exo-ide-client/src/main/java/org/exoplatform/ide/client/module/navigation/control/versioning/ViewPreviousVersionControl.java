@@ -46,17 +46,25 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
     * @param id
     * @param eventBus
     */
-   public ViewPreviousVersionControl(HandlerManager eventBus)
+   public ViewPreviousVersionControl()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new ViewPreviousVersionEvent());
       setImages(IDEImageBundle.INSTANCE.viewOlderVersion(), IDEImageBundle.INSTANCE.viewOlderVersionDisabled());
-
-      eventBus.addHandler(ShowVersionEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.versioning.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      super.initialize(eventBus);
+   }
+   
    /**
     * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
     */

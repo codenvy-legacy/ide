@@ -136,6 +136,7 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    private IButton createButton(String title, String id, String image)
    {
       IButton button = new IButton(title);
+      button.setID(id);
       button.setHeight(BUTTON_HEIGHT);
       button.setWidth(BUTTON_WIDTH);
       button.setIcon(image);

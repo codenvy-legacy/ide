@@ -22,6 +22,7 @@ package org.exoplatform.ide.client.module.edit.control;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
@@ -36,21 +37,27 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class FormatSourceCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class FormatSourceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Edit/Format";
 
    private static final String TITLE = "Format";
 
-   public FormatSourceCommand(HandlerManager eventBus)
+   public FormatSourceCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
       setEvent(new FormatFileEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -82,5 +89,4 @@ public class FormatSourceCommand extends SimpleControl implements EditorActiveFi
          setEnabled(false);
       }
    }
-
 }

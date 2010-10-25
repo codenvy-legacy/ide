@@ -19,8 +19,11 @@
  */
 package org.exoplatform.ide.client.module.preferences.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.preferences.event.CustomizeHotKeysEvent;
 
 /**
@@ -30,7 +33,7 @@ import org.exoplatform.ide.client.module.preferences.event.CustomizeHotKeysEvent
  * @version $
  */
 
-public class CustomizeHotKeysCommand extends SimpleControl
+public class CustomizeHotKeysCommand extends SimpleControl implements IDEControl
 {
 
    public static final String ID = "Window/HotKeys...";
@@ -46,6 +49,13 @@ public class CustomizeHotKeysCommand extends SimpleControl
       setVisible(true);
       setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
       setEvent(new CustomizeHotKeysEvent());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
    }
 
 }

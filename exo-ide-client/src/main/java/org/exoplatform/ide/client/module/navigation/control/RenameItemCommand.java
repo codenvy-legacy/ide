@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -44,7 +45,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RenameItemCommand extends SimpleControl implements ItemsSelectedHandler, ItemDeletedHandler,
+public class RenameItemCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ItemDeletedHandler,
    PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -56,7 +57,7 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
 
    private String entryPoint;
 
-   public RenameItemCommand(HandlerManager eventBus)
+   public RenameItemCommand()
    {
       super(ID);
       setTitle("Rename...");
@@ -64,14 +65,20 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -147,5 +154,4 @@ public class RenameItemCommand extends SimpleControl implements ItemsSelectedHan
          updateEnabling();
       }
    }
-
 }

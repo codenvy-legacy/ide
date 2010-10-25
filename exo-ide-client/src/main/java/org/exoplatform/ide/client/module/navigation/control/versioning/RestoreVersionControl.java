@@ -47,15 +47,23 @@ public class RestoreVersionControl extends VersionControl implements ShowVersion
     * @param id
     * @param eventBus
     */
-   public RestoreVersionControl(HandlerManager eventBus)
+   public RestoreVersionControl()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new RestoreVersionEvent());
       setImages(IDEImageBundle.INSTANCE.restoreVersion(), IDEImageBundle.INSTANCE.restoreVersionDisabled());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.versioning.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    /**

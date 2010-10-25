@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
@@ -34,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ViewItemPropertiesCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class ViewItemPropertiesCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "View/Properties";
@@ -43,17 +44,23 @@ public class ViewItemPropertiesCommand extends SimpleControl implements EditorAc
 
    public static final String PROMPT = "Show Properties";
 
-   public ViewItemPropertiesCommand(HandlerManager eventBus)
+   public ViewItemPropertiesCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPropertiesEvent());
-      
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+   
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -74,5 +81,4 @@ public class ViewItemPropertiesCommand extends SimpleControl implements EditorAc
          setEnabled(true);
       }
    }
-
 }

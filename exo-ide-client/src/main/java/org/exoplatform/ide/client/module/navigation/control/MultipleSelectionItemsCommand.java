@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
@@ -37,7 +38,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends SimpleControl implements PanelSelectedHandler,
+public abstract class MultipleSelectionItemsCommand extends SimpleControl implements IDEControl, PanelSelectedHandler,
    EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -45,15 +46,21 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    private String entryPoint;
 
-   public MultipleSelectionItemsCommand(String id, HandlerManager eventBus)
+   public MultipleSelectionItemsCommand(String id)
    {
       super(id);
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    public boolean isItemsInSameFolder(List<Item> items)
    {
       List<String> hrefs = new ArrayList<String>();
@@ -124,5 +131,4 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
          updateEnabling();
       }
     }
-
 }

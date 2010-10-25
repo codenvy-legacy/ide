@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.permissions.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -34,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class ShowPermissionsControl extends SimpleControl implements ItemsSelectedHandler
+public class ShowPermissionsControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    public static final String ID = "View/Permissions";
 
@@ -43,7 +44,7 @@ public class ShowPermissionsControl extends SimpleControl implements ItemsSelect
    public static final String PROMPT = "Show Permissions";
 
   
-   public ShowPermissionsControl(HandlerManager eventBus)
+   public ShowPermissionsControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -51,10 +52,16 @@ public class ShowPermissionsControl extends SimpleControl implements ItemsSelect
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPermissionsEvent());
       setVisible(true);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
-
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+   }
+   
    /**
     * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
     */
@@ -67,5 +74,4 @@ public class ShowPermissionsControl extends SimpleControl implements ItemsSelect
       }
       setEnabled(true);
    }
-
 }

@@ -38,18 +38,26 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
 
    private Item selectedItem;
 
-   public CutItemsCommand(HandlerManager eventBus)
+   public CutItemsCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Cut Item(s)");
       setPrompt("Cut Selected Item(s)");
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
       setEvent(new CutItemsEvent());
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize(eventBus);
+   }
+   
    @Override
    protected void updateEnabling()
    {

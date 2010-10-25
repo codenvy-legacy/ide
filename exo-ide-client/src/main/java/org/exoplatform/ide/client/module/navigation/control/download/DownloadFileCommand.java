@@ -42,17 +42,25 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
 
    private boolean oneItemSelected = true;
 
-   public DownloadFileCommand(HandlerManager eventBus)
+   public DownloadFileCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Download...");
       setPrompt("Download File...");
       setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());
       setEvent(new DownloadFileEvent());
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize(eventBus);
+   }
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))

@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -48,7 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveAllFilesCommand extends SimpleControl implements EditorFileContentChangedHandler,
+public class SaveAllFilesCommand extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
    FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    EntryPointChangedHandler
 {
@@ -59,14 +60,20 @@ public class SaveAllFilesCommand extends SimpleControl implements EditorFileCont
 
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
-   public SaveAllFilesCommand(HandlerManager eventBus)
+   public SaveAllFilesCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAll(), IDEImageBundle.INSTANCE.saveAllDisabled());
       setEvent(new SaveAllFilesEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
       eventBus.addHandler(FileContentSavedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);

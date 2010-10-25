@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,21 +34,27 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NewFileCommandMenuGroup extends SimpleControl implements EntryPointChangedHandler
+public class NewFileCommandMenuGroup extends SimpleControl implements IDEControl, EntryPointChangedHandler
 {
 
    public static final String ID = "File/New";
 
    public static final String TITLE = "New";
 
-   public NewFileCommandMenuGroup(HandlerManager eventBus)
+   public NewFileCommandMenuGroup()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setEnabled(true);
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
@@ -62,5 +69,4 @@ public class NewFileCommandMenuGroup extends SimpleControl implements EntryPoint
          setVisible(false);
       }
    }
-
 }

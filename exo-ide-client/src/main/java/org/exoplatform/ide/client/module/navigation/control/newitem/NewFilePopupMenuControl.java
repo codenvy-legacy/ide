@@ -20,6 +20,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -29,22 +30,28 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class NewFilePopupMenuControl extends PopupMenuControl implements EntryPointChangedHandler
+public class NewFilePopupMenuControl extends PopupMenuControl implements IDEControl, EntryPointChangedHandler
 {
 
    public static final String ID = "File/New *";
 
-   public NewFilePopupMenuControl(HandlerManager eventBus)
+   public NewFilePopupMenuControl()
    {
       super(ID);
       setPrompt("New");
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setDelimiterBefore(true);
       setEnabled(true);
-
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+   }
+   
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       if (event.getEntryPoint() != null)
@@ -56,5 +63,4 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements EntryPo
          setVisible(false);
       }
    }
-
 }

@@ -22,6 +22,7 @@ package org.exoplatform.ide.client.module.edit.control;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
@@ -38,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ShowLineNumbersCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+public class ShowLineNumbersCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler
 {
 
@@ -54,13 +55,19 @@ public class ShowLineNumbersCommand extends SimpleControl implements EditorActiv
 
    private boolean showLineNumbers = true;
 
-   public ShowLineNumbersCommand(HandlerManager eventBus)
+   public ShowLineNumbersCommand()
    {
       super(ID);
       setTitle(TITLE_HIDE);
       setPrompt(TITLE_HIDE);
       setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
    }
@@ -117,5 +124,4 @@ public class ShowLineNumbersCommand extends SimpleControl implements EditorActiv
 
       updateState();
    }
-
 }

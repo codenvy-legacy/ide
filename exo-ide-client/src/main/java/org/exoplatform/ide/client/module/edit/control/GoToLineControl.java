@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
@@ -31,21 +32,28 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class GoToLineControl extends SimpleControl implements EditorActiveFileChangedHandler
+public class GoToLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Edit/Go to Line...";
 
-   public GoToLineControl(HandlerManager eventBus)
+   public GoToLineControl()
    {
       super(ID);
       setTitle("Go to Line...");
       setPrompt("Go to Line");
       setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
       setEvent(new GoToLineEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
+   
 
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
@@ -71,5 +79,4 @@ public class GoToLineControl extends SimpleControl implements EditorActiveFileCh
       }
 
    }
-
 }

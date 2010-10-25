@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
@@ -45,7 +46,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class UploadFileCommand extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+public class UploadFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
    EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -59,7 +60,7 @@ public class UploadFileCommand extends SimpleControl implements ItemsSelectedHan
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public UploadFileCommand(HandlerManager eventBus)
+   public UploadFileCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -68,13 +69,19 @@ public class UploadFileCommand extends SimpleControl implements ItemsSelectedHan
       //setIcon(Images.MainMenu.UPLOAD);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       setEvent(new UploadFileEvent(false));
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    private void updateEnabling()
    {
       if (browserPanelSelected)
@@ -131,4 +138,7 @@ public class UploadFileCommand extends SimpleControl implements ItemsSelectedHan
       }
    }
 
+
+
+   
 }

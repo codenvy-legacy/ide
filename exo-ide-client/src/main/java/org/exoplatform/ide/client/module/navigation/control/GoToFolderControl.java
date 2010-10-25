@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
@@ -36,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class GoToFolderControl extends SimpleControl implements EditorActiveFileChangedHandler,
+public class GoToFolderControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EntryPointChangedHandler
 {
 
@@ -44,7 +45,7 @@ public class GoToFolderControl extends SimpleControl implements EditorActiveFile
 
    private static final String TITLE = "Go to Folder";
 
-   public GoToFolderControl(HandlerManager eventBus)
+   public GoToFolderControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -52,11 +53,17 @@ public class GoToFolderControl extends SimpleControl implements EditorActiveFile
       setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
       setEvent(new GoToFolderEvent());
       setDelimiterBefore(true);
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
+   
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null || event.getFile().isNewFile())
@@ -79,5 +86,4 @@ public class GoToFolderControl extends SimpleControl implements EditorActiveFile
          setVisible(false);
       }
    }
-
 }

@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -39,7 +40,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class UndoTypingCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+public class UndoTypingCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileContentReceivedHandler
 {
 
@@ -47,7 +48,7 @@ public class UndoTypingCommand extends SimpleControl implements EditorActiveFile
 
    public static final String TITLE = "Undo Typing";
 
-   public UndoTypingCommand(HandlerManager eventBus)
+   public UndoTypingCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -55,7 +56,13 @@ public class UndoTypingCommand extends SimpleControl implements EditorActiveFile
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
       setEvent(new UndoTypingEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
       eventBus.addHandler(FileContentReceivedEvent.TYPE, this);
@@ -91,5 +98,4 @@ public class UndoTypingCommand extends SimpleControl implements EditorActiveFile
       setVisible(true);
       setEnabled(false);
    }
-
 }

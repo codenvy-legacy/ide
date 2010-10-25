@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -41,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RefreshBrowserControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
    EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -55,19 +56,26 @@ public class RefreshBrowserControl extends SimpleControl implements ItemsSelecte
 
    private boolean oneItemSelected = true;
 
-   public RefreshBrowserControl(HandlerManager eventBus)
+   public RefreshBrowserControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
       setEvent(new RefreshBrowserEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
+
 
    private void updateEnabling()
    {
@@ -128,5 +136,4 @@ public class RefreshBrowserControl extends SimpleControl implements ItemsSelecte
          updateEnabling();
       }
    }
-
 }

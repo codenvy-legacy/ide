@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.SearchFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -36,25 +37,31 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SearchFilesCommand extends SimpleControl implements ItemsSelectedHandler, EntryPointChangedHandler
+public class SearchFilesCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
 {
 
    public static final String ID = "File/Search...";
 
    public static final String TITLE = "Search...";
 
-   public SearchFilesCommand(HandlerManager eventBus)
+   public SearchFilesCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
       setEvent(new SearchFileEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -78,5 +85,4 @@ public class SearchFilesCommand extends SimpleControl implements ItemsSelectedHa
          setVisible(false);
       }
    }
-
 }

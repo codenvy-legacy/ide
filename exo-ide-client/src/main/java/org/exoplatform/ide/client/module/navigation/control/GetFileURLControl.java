@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -42,7 +43,7 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class GetFileURLControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler,
+public class GetFileURLControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
    EntryPointChangedHandler, PanelDeselectedHandler
 {
 
@@ -56,20 +57,26 @@ public class GetFileURLControl extends SimpleControl implements ItemsSelectedHan
 
    private Item selectedItem;
 
-   public GetFileURLControl(HandlerManager eventBus)
+   public GetFileURLControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
       setEvent(new GetFileURLEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -130,5 +137,4 @@ public class GetFileURLControl extends SimpleControl implements ItemsSelectedHan
          updateEnabling();
       }
    }
-
 }

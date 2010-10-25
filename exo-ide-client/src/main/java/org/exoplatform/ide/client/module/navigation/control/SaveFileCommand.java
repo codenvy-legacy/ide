@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -44,7 +45,6 @@ import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChang
 import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -53,7 +53,7 @@ import com.google.gwt.user.client.Window;
  * @version $
  */
 
-public class SaveFileCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler,
    EntryPointChangedHandler, ApplicationSettingsReceivedHandler
 {
@@ -66,7 +66,7 @@ public class SaveFileCommand extends SimpleControl implements EditorActiveFileCh
 
    private Map<String, String> lockTokens;
 
-   public SaveFileCommand(HandlerManager eventBus)
+   public SaveFileCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -75,7 +75,13 @@ public class SaveFileCommand extends SimpleControl implements EditorActiveFileCh
       setImages(IDEImageBundle.INSTANCE.save(), IDEImageBundle.INSTANCE.saveDisabled());
       setEvent(new SaveFileEvent());
       setIgnoreDisable(true);
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
@@ -218,5 +224,4 @@ public class SaveFileCommand extends SimpleControl implements EditorActiveFileCh
       }
       lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
-
 }

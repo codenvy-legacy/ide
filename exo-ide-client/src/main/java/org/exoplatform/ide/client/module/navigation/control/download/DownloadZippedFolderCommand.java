@@ -42,15 +42,23 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
 
    private boolean oneItemSelected = true;
 
-   public DownloadZippedFolderCommand(HandlerManager eventBus)
+   public DownloadZippedFolderCommand()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle("Download Zipped Folder...");
       setPrompt("Download Zipped Folder...");
       setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
       setEvent(new DownloadZippedFolderEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -38,25 +39,23 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class NewFileCommand extends SimpleControl implements PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
+public class NewFileCommand extends SimpleControl implements IDEControl, PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    private boolean browserSelected = false;
 
    private String entryPoint;
 
-   public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, String icon, GwtEvent<?> event)
+   public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
       super(id);
       setTitle(title);
       setPrompt(prompt);
       setIcon(icon);
       setEvent(event);
-
-      init(eventBus);
    }
 
-   public NewFileCommand(String id, HandlerManager eventBus, String title, String prompt, ImageResource normalIcon,
+   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
       ImageResource disabledIcon, GwtEvent<?> event)
    {
       super(id);
@@ -64,16 +63,17 @@ public class NewFileCommand extends SimpleControl implements PanelSelectedHandle
       setPrompt(prompt);
       setImages(normalIcon, disabledIcon);
       setEvent(event);
-
-      init(eventBus);
    }
-
-   private void init(HandlerManager eventBus)
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
-
+      
       updateEnabling();
    }
 

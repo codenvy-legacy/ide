@@ -20,6 +20,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.OpenFileWithEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -32,24 +33,30 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithCommand extends SimpleControl implements ItemsSelectedHandler, EntryPointChangedHandler
+public class OpenFileWithCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";
 
    private boolean browserPanelSelected = true;
 
-   public OpenFileWithCommand(HandlerManager eventBus)
+   public OpenFileWithCommand()
    {
       super(ID);
       setTitle("Open With...");
       setPrompt("Open File With...");
       setImages(IDEImageBundle.INSTANCE.openWith(), IDEImageBundle.INSTANCE.openWithDisabled());
       setEvent(new OpenFileWithEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (!browserPanelSelected)
@@ -73,5 +80,4 @@ public class OpenFileWithCommand extends SimpleControl implements ItemsSelectedH
          setVisible(false);
       }
    }
-
 }

@@ -47,15 +47,23 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
     * @param id
     * @param eventBus
     */
-   public ViewNextVersionControl(HandlerManager eventBus)
+   public ViewNextVersionControl()
    {
-      super(ID, eventBus);
+      super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new ViewNextVersionEvent());
       setImages(IDEImageBundle.INSTANCE.viewNewerVersion(), IDEImageBundle.INSTANCE.viewNewerVersionDisabled());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.versioning.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      super.initialize(eventBus);
    }
 
    /**

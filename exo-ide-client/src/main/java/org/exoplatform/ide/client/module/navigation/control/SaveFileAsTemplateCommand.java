@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.SaveAsTemplateEvent;
@@ -36,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileAsTemplateCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+public class SaveFileAsTemplateCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EntryPointChangedHandler
 {
 
@@ -44,18 +45,24 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements EditorAc
 
    public static final String TITLE = "Save As Template...";
 
-   public SaveFileAsTemplateCommand(HandlerManager eventBus)
+   public SaveFileAsTemplateCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
       setEvent(new SaveAsTemplateEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
+   
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -78,5 +85,4 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements EditorAc
          setVisible(false);
       }
    }
-
 }

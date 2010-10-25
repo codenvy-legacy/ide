@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
 
 /**
@@ -34,12 +35,12 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectT
  * @version $
  */
 
-public class CreateProjectTemplateControl extends SimpleControl implements EntryPointChangedHandler
+public class CreateProjectTemplateControl extends SimpleControl implements IDEControl, EntryPointChangedHandler
 {
 
    public final static String ID = "File/New/Project Template...";
 
-   public CreateProjectTemplateControl(HandlerManager eventBus)
+   public CreateProjectTemplateControl()
    {
       super(ID);
       setTitle("Project Template...");
@@ -47,8 +48,14 @@ public class CreateProjectTemplateControl extends SimpleControl implements Entry
       setDelimiterBefore(true);
       setEnabled(true);
       setImages(IDEImageBundle.INSTANCE.createProjectTemplate(), IDEImageBundle.INSTANCE.createProjectTemplateDisabled());
-      setEvent(new CreateProjectTemplateEvent());
-      
+      setEvent(new CreateProjectTemplateEvent());      
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
    

@@ -22,6 +22,7 @@ package org.exoplatform.ide.client.module.development.control;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
@@ -35,21 +36,27 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ShowPreviewCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class ShowPreviewCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Show Preview";
 
    public static final String TITLE = "Show Preview";
 
-   public ShowPreviewCommand(HandlerManager eventBus)
+   public ShowPreviewCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
       setEvent(new PreviewFileEvent());
-      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -83,5 +90,4 @@ public class ShowPreviewCommand extends SimpleControl implements EditorActiveFil
          setEnabled(false);
       }
    }
-
 }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
@@ -38,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextCommand extends SimpleControl implements EditorActiveFileChangedHandler, FormOpenedHandler,
+public class FindTextCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, FormOpenedHandler,
    FormClosedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
@@ -48,7 +49,7 @@ public class FindTextCommand extends SimpleControl implements EditorActiveFileCh
 
    private boolean findTextFormOpened = false;
 
-   public FindTextCommand(HandlerManager eventBus)
+   public FindTextCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -56,7 +57,13 @@ public class FindTextCommand extends SimpleControl implements EditorActiveFileCh
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(FormOpenedEvent.TYPE, this);
       eventBus.addHandler(FormClosedEvent.TYPE, this);
@@ -107,5 +114,4 @@ public class FindTextCommand extends SimpleControl implements EditorActiveFileCh
          setEnabled(true);
       }
    }
-
 }

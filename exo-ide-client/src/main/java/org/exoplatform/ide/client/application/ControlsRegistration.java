@@ -20,12 +20,17 @@
 
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.core.client.GWT;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 
@@ -78,6 +83,12 @@ public class ControlsRegistration implements RegisterControlHandler
 
    public void onRegisterControl(RegisterControlEvent event)
    {
+      if (!(event.getControl() instanceof IDEControl))
+      {
+         Dialogs.getInstance().showError("Only IDE controls can be registered!" + event.getControl().getClass());
+         return;
+      }
+
       addControl(event.getControl(), event.isDockOnToolbar(), event.isRightDocking());
 
       if (event.getControl() instanceof StatusTextControl)
@@ -119,6 +130,64 @@ public class ControlsRegistration implements RegisterControlHandler
 
          toolbarDefaultControls.add(position, control.getId());
       }
+   }
+
+   public void initControls(List<String> userRoles)
+   {
+      ClassAnnotationMap annotationMap = GWT.create(ClassAnnotationMap.class);
+      if (annotationMap.getClassAnnotation() != null && annotationMap.getClassAnnotation().size() > 0)
+      {
+         List<Control> allowedControls = getAllowedControlsForUser(registeredControls, userRoles, annotationMap);
+         registeredControls.retainAll(allowedControls);
+         removeNotAllowedControls(registeredControls);
+      }
+
+      for (Control control : registeredControls)
+      {
+         if (control instanceof IDEControl)
+         {
+            ((IDEControl)control).initialize(eventBus);
+         }
+      }
+   }
+
+   private List<Control> getAllowedControlsForUser(List<Control> controls, List<String> userRoles,
+      ClassAnnotationMap annotationMap)
+   {
+      List<Control> allowedControls = new ArrayList<Control>();
+      for (Control control : controls)
+      {
+         String className = control.getClass().getName();
+         List<String> rolesAllowed = annotationMap.getClassAnnotation().get(className);
+         if (rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed))
+         {
+            allowedControls.add(control);
+         }
+      }
+      return allowedControls;
+   }
+
+   private boolean checkControlAllowedForUser(List<String> userRoles, List<String> rolesAllowed)
+   {
+      for (String role : rolesAllowed)
+      {
+         if (userRoles.contains(role))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   private void removeNotAllowedControls(List<Control> allowedControls)
+   {
+      List<String> allowedIds = new ArrayList<String>();
+      for (Control control : allowedControls)
+      {
+         allowedIds.add(control.getId());
+      }
+      toolbarDefaultControls.retainAll(allowedIds);
+      statusBarControls.retainAll(allowedIds);
    }
 
 }

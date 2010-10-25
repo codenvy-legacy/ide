@@ -34,8 +34,8 @@ public class DevelopmentModule implements IDEModule
    
    public DevelopmentModule(HandlerManager eventBus)
    {
-      eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(eventBus), true));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowPreviewCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowPreviewCommand(), true, true));
       
       new DevelopmentModuleEventHandler(eventBus);
    }

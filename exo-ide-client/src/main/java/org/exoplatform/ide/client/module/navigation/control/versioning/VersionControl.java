@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
@@ -36,22 +37,30 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  * @version $Id: Oct 13, 2010 $
  *
  */
-public class VersionControl extends SimpleControl implements PanelClosedHandler, PanelOpenedHandler,
+public class VersionControl extends SimpleControl implements IDEControl, PanelClosedHandler, PanelOpenedHandler,
    PanelDeselectedHandler, PanelSelectedHandler
 {
 
    /**
     * @param id
     */
-   public VersionControl(String id, HandlerManager eventBus)
+   public VersionControl(String id)
    {
       super(id);
+      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(PanelClosedEvent.TYPE, this);
       eventBus.addHandler(PanelOpenedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
    }
-
+   
    /**
     * @see org.exoplatform.ide.client.panel.event.PanelSelectedHandler#onPanelSelected(org.exoplatform.ide.client.panel.event.PanelSelectedEvent)
     */
@@ -95,5 +104,4 @@ public class VersionControl extends SimpleControl implements PanelClosedHandler,
          setVisible(false);
       }
    }
-
 }

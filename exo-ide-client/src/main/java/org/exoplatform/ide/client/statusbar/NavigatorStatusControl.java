@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.command.StatusTextContro
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -38,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class NavigatorStatusControl extends StatusTextControl implements ItemsSelectedHandler, EntryPointChangedHandler
+public class NavigatorStatusControl extends StatusTextControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
 {
 
    public static final String ID = "__navigator_status";
@@ -47,18 +48,24 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
 
    private Handlers handlers;
 
-   public NavigatorStatusControl(HandlerManager eventBus)
+   public NavigatorStatusControl()
    {
       super(ID);
       setVisible(true);
       setEnabled(true);
       setText("&nbsp;");
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       handlers = new Handlers(eventBus);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-
+   
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (entryPoint == null)
@@ -67,8 +74,6 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
          return;
       }
       
-//      System.out.println("entry point [" + entryPoint + "]");
-
       String statusMessage = null;
 
       if (event.getSelectedItems().size() == 1)
@@ -139,5 +144,4 @@ public class NavigatorStatusControl extends StatusTextControl implements ItemsSe
    {
       entryPoint = event.getEntryPoint();
    }
-
 }

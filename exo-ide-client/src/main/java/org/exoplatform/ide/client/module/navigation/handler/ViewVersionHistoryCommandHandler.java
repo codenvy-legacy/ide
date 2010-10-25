@@ -245,11 +245,13 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
                   eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
                }
             };
-            timer.schedule(500);
-         } else {
+            timer.schedule(1000);
+         }
+         else
+         {
             eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
          }
-        
+
          eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
       }
    }

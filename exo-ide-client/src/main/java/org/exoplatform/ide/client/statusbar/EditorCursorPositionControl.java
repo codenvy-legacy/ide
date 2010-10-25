@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
@@ -34,12 +35,12 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class EditorCursorPositionControl extends StatusTextControl implements EditorActivityHandler,
+public class EditorCursorPositionControl extends StatusTextControl implements IDEControl, EditorActivityHandler,
    EditorActiveFileChangedHandler
 {
    public static final String ID = "__editor_cursor_position";
 
-   public EditorCursorPositionControl(HandlerManager eventBus)
+   public EditorCursorPositionControl()
    {
       super(ID);
 
@@ -47,12 +48,16 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
       setEnabled(true);
       setSize(70);
       setFireEventOnSingleClick(true);
-
       //setText("&nbsp;");
       setTextAlignment(StatusTextAlign.MIDDLE);
-
       //setEvent(new GoToLineEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -103,5 +108,4 @@ public class EditorCursorPositionControl extends StatusTextControl implements Ed
          setText("&nbsp;");
       }
    }
-
 }

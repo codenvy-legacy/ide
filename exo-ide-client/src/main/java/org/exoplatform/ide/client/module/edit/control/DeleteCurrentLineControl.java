@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.edit.control;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -32,19 +33,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class DeleteCurrentLineControl extends SimpleControl implements EditorActiveFileChangedHandler
+public class DeleteCurrentLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Edit/Delete Current Line";
 
-   public DeleteCurrentLineControl(HandlerManager eventBus)
+   public DeleteCurrentLineControl()
    {
       super(ID);
       setTitle("Delete Current Line");
       setPrompt("Delete Current Line");
       setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
       setEvent(new EditorDeleteCurrentLineEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -60,7 +67,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements EditorAct
          setEnabled(false);
          return;
       }
-      
+
       if (event.getEditor().canDeleteCurrentLine())
       {
          setVisible(true);
@@ -71,12 +78,11 @@ public class DeleteCurrentLineControl extends SimpleControl implements EditorAct
          setVisible(false);
          setEnabled(false);
       }
-      
+
       if (event.getEditor().isReadOnly())
       {
          setEnabled(false);
          return;
       }
    }
-
 }

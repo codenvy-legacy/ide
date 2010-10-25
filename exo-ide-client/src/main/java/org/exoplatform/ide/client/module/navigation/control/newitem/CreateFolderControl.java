@@ -24,6 +24,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
@@ -39,7 +40,7 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 
-public class CreateFolderControl extends SimpleControl implements ItemsSelectedHandler, PanelSelectedHandler, PanelDeselectedHandler
+public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler, PanelDeselectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -48,7 +49,7 @@ public class CreateFolderControl extends SimpleControl implements ItemsSelectedH
 
    public final static String ID = "File/New/Create Folder...";
 
-   public CreateFolderControl(HandlerManager eventBus)
+   public CreateFolderControl()
    {
       super(ID);
       setTitle("Folder...");
@@ -56,12 +57,18 @@ public class CreateFolderControl extends SimpleControl implements ItemsSelectedH
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
+   
    private void updateEnabling()
    {
       if (!browserPanelSelected)
@@ -111,5 +118,4 @@ public class CreateFolderControl extends SimpleControl implements ItemsSelectedH
          updateEnabling();
       }
    }
-
 }
