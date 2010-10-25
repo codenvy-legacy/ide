@@ -223,13 +223,14 @@ public class CreateProjectFromTemplateTest extends BaseTest
       assertElementPresentInWorkspaceTree(PROJECT_FROM_DEFAULT_TEMPLATE);
       
       clickOpenIconOfFolder(PROJECT_FROM_DEFAULT_TEMPLATE);
-      assertElementPresentInWorkspaceTree("server");
-      assertElementPresentInWorkspaceTree("client");
+      assertElementPresentInWorkspaceTree("data");
+      assertElementPresentInWorkspaceTree("business logic");
+      assertElementPresentInWorkspaceTree("UI");
       
-      clickOpenIconOfFolder("server");
+      clickOpenIconOfFolder("business logic");
       assertElementPresentInWorkspaceTree("Greeting REST Service.groovy");
       
-      clickOpenIconOfFolder("client");
+      clickOpenIconOfFolder("UI");
       assertElementPresentInWorkspaceTree("Greeting Google Gadget.xml");
    }
    
