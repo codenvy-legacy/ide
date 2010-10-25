@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -31,11 +32,11 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PreviewWadlOutputCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class PreviewWadlOutputCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
    private static final String ID = "Run/Launch REST Service";
 
-   public PreviewWadlOutputCommand(HandlerManager eventBus)
+   public PreviewWadlOutputCommand()
    {
       super(ID);
       setTitle("Launch REST Service...");
@@ -43,6 +44,14 @@ public class PreviewWadlOutputCommand extends SimpleControl implements EditorAct
       setIcon(Images.Controls.OUTPUT);
       //setImages(GroovyPluginImageBundle.INSTANCE.groovyOutput(), GroovyPluginImageBundle.INSTANCE.groovyOutputDisabled());
       setEvent(new PreviewWadlOutputEvent());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 

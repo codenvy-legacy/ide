@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
@@ -35,12 +36,12 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ValidateGroovyCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class ValidateGroovyCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Validate";
 
-   public ValidateGroovyCommand(HandlerManager eventBus)
+   public ValidateGroovyCommand()
    {
       super(ID);
       setTitle("Validate");
@@ -49,6 +50,14 @@ public class ValidateGroovyCommand extends SimpleControl implements EditorActive
       //setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
       setEvent(new ValidateGroovyScriptEvent());
       setDelimiterBefore(true);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -73,5 +82,4 @@ public class ValidateGroovyCommand extends SimpleControl implements EditorActive
          setEnabled(false);
       }
    }
-
 }

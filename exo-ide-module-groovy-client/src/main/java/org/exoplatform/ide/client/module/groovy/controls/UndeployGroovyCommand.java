@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -36,12 +37,12 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class UndeployGroovyCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class UndeployGroovyCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Undeploy";
 
-   public UndeployGroovyCommand(HandlerManager eventBus)
+   public UndeployGroovyCommand()
    {
       super(ID);
       setTitle("Undeploy");
@@ -49,6 +50,14 @@ public class UndeployGroovyCommand extends SimpleControl implements EditorActive
       setIcon(Images.Controls.UNDEPLOY);
       //setImages(GroovyPluginImageBundle.INSTANCE.undeployGroovy(), GroovyPluginImageBundle.INSTANCE.undeployGroovyDisabled());
       setEvent(new UndeployGroovyScriptEvent());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -79,5 +88,4 @@ public class UndeployGroovyCommand extends SimpleControl implements EditorActive
          setEnabled(false);
       }
    }
-
 }

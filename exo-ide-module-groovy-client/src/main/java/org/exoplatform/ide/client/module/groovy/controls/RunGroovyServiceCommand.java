@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -35,21 +36,29 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RunGroovyServiceCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class RunGroovyServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/Run Groovy Service...";
 
-   public RunGroovyServiceCommand(HandlerManager eventBus)
+   public RunGroovyServiceCommand()
    {
       super(ID);
       setTitle("Run Groovy Service...");
       setPrompt("Run Groovy Service...");
       setIcon(Images.Controls.RUN_GROOVY_SERVICE);
       setEvent(new RunGroovyServiceEvent());
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+   
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */

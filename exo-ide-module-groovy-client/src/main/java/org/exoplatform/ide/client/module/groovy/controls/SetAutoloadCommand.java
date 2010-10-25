@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.groovy.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -40,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SetAutoloadCommand extends SimpleControl implements EditorActiveFileChangedHandler,
+public class SetAutoloadCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ItemPropertiesSavedHandler
 {
 
@@ -56,7 +57,7 @@ public class SetAutoloadCommand extends SimpleControl implements EditorActiveFil
 
    private File activeFile;
 
-   public SetAutoloadCommand(HandlerManager eventBus)
+   public SetAutoloadCommand()
    {
       super(ID);
       setTitle(TITLE_SET);
@@ -64,10 +65,18 @@ public class SetAutoloadCommand extends SimpleControl implements EditorActiveFil
       setIcon(Images.Controls.SET_AUTOLOAD);
       //setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
    }
-
+   
    /**
     * Handling event Editor active file changed
     * 

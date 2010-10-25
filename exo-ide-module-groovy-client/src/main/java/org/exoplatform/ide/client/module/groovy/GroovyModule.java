@@ -160,12 +160,12 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
 
       
 
-      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), true, true));
 
       handlers.addHandler(ValidateGroovyScriptEvent.TYPE, this);
       handlers.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
