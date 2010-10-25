@@ -158,21 +158,24 @@ public class TemplateServiceImpl extends TemplateService
       ProjectTemplate sampleProject = new ProjectTemplate("Sample project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
 
-      ProjectTemplate serverFolder = new ProjectTemplate("server");
-      serverFolder.setChildren(new ArrayList<Template>());
+      ProjectTemplate businessLogicFolder = new ProjectTemplate("business logic");
+      businessLogicFolder.setChildren(new ArrayList<Template>());
       FileTemplate restScriptTemplate =
          new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "Greeting REST Service.groovy");
-      serverFolder.getChildren().add(restScriptTemplate);
+      businessLogicFolder.getChildren().add(restScriptTemplate);
 
-      ProjectTemplate clientFolder = new ProjectTemplate("client");
-      clientFolder.setChildren(new ArrayList<Template>());
+      ProjectTemplate uiFolder = new ProjectTemplate("UI");
+      uiFolder.setChildren(new ArrayList<Template>());
       FileTemplate gadgetFileTemplate =
          new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "Greeting Google Gadget.xml");
-      clientFolder.getChildren().add(gadgetFileTemplate);
+      uiFolder.getChildren().add(gadgetFileTemplate);
+      
+      ProjectTemplate dataFolder = new ProjectTemplate("data");
 
       sampleProject.setChildren(new ArrayList<Template>());
-      sampleProject.getChildren().add(serverFolder);
-      sampleProject.getChildren().add(clientFolder);
+      sampleProject.getChildren().add(dataFolder);
+      sampleProject.getChildren().add(businessLogicFolder);
+      sampleProject.getChildren().add(uiFolder);
 
       return sampleProject;
    }
