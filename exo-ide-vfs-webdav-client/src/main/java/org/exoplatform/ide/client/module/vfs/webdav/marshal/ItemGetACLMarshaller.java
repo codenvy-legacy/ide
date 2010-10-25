@@ -39,7 +39,7 @@ public class ItemGetACLMarshaller implements Marshallable
 
       xml += "<D:propfind xmlns:D=\"DAV:\">";
          xml += "<D:prop>";
-            xml += "<D:acl>";
+            xml += "<D:acl />";
          xml += "</D:prop>";
       xml += "</D:propfind>";
 

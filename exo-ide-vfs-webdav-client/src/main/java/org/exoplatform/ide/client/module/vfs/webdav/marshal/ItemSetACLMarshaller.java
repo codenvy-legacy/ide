@@ -66,18 +66,18 @@ public class ItemSetACLMarshaller implements Marshallable
          else
             xml += "<D:href>" + e.getIdentity() + "</D:href>";
 
-         xml += "/<D:principal>";
+         xml += "</D:principal>";
          xml += "<D:grant>";
          for (Permissions p : e.getPermissionsList())
          {
-            xml += "<D:privilege>" + "<D:" + p.toString() + ">" + "</D:privilege>";
+            xml += "<D:privilege>" + "<D:" + p.toString() + " />" + "</D:privilege>";
          }
 
          xml += "</D:grant>";
          xml += "</D:ace>";
       }
 
-      xml += "</acl>";
+      xml += "</D:acl>";
       return xml;
    }
 

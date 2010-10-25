@@ -102,7 +102,7 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
       item.getAcl().clear();
       for (Property aceProperty : acl.getChildProperties())
       {
-         
+
          String entity = "";
          List<Permissions> permissionList = new ArrayList<Permissions>();
          //         List<Permissions> deny = new ArrayList<Permissions>();
@@ -125,16 +125,15 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
             //               deny = getPermission(p.getChildProperties());
             //            }
          }
-         
-         
+
          item.getAcl().addPermission(new AccessControlEntry(entity, permissionList));
       }
 
-//      for (String key : item.getAcl().getPermissionsMap().keySet())
-//      {
-//         System.out.println("UserID - " + key + ", per ="
-//            + item.getAcl().getPermisions(key).getPermissionsList());
-//      }
+      //      for (String key : item.getAcl().getPermissionsMap().keySet())
+      //      {
+      //         System.out.println("UserID - " + key + ", per ="
+      //            + item.getAcl().getPermisions(key).getPermissionsList());
+      //      }
    }
 
    /**
@@ -155,8 +154,8 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
                {
                   permissions.add(Permissions.READ);
                }
-               else if (per.getName().getLocalName().equals(Permissions.ALL.toString()))
-                  permissions.add(Permissions.ALL);
+               else if (per.getName().getLocalName().equals(Permissions.WRITE.toString()))
+                  permissions.add(Permissions.WRITE);
             }
          }
       }
@@ -181,19 +180,5 @@ public class ItemGetACLUnmarshaller implements Unmarshallable
       }
       return "";
    }
-
-   private static String body = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<D:multistatus xmlns:D=\"DAV:\">"
-      + "<D:response>" + "<D:href>http://www.example.com/top/container/</D:href>" + "<D:propstat>" + "<D:prop>"
-      + "<D:acl>" + "<D:ace>" + "<D:principal><D:href>http://www.example.com/users/esedlar</D:href></D:principal>"
-      + "<D:grant>" + "<D:privilege><D:read/></D:privilege>" + "<D:privilege><D:write/></D:privilege>"
-      + "<D:privilege><D:read-acl/></D:privilege>" + "</D:grant>" + "</D:ace>" + "<D:ace>"
-      + "<D:principal><D:href>http://www.example.com/groups/mrktng</D:href></D:principal>"
-      + "<D:deny><D:privilege><D:read/></D:privilege></D:deny>" + "</D:ace>" + "<D:ace>"
-      + "<D:principal><D:property><D:owner/></D:property></D:principal>" + "<D:grant>"
-      + "<D:privilege><D:read/></D:privilege>" + "<D:privilege><D:write/></D:privilege>" + "</D:grant>"
-      + "</D:ace>" + "<D:ace>" + "<D:principal><D:all/></D:principal>" + "<D:grant>"
-      + "<D:privilege><D:read/></D:privilege>" + "</D:grant>" + "<D:inherited>"
-      + "<D:href>http://www.example.com/top</D:href>" + "</D:inherited>" + "</D:ace>" + "</D:acl>" + "</D:prop>"
-      + "<D:status>HTTP/1.1 200 OK</D:status>" + "</D:propstat>" + "</D:response>" + "</D:multistatus>";
 
 }
