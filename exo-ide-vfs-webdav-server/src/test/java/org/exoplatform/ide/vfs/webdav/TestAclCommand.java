@@ -20,12 +20,18 @@
 
 package org.exoplatform.ide.vfs.webdav;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.jcr.RepositoryException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
+import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
@@ -54,63 +60,26 @@ public class TestAclCommand extends BaseStandaloneTest
       super.setUp();      
    }
    
-   //@Test
-   public void aaatestSetACLOnNonPrivilegableResource() throws Exception {
-      NodeImpl testNode = (NodeImpl)root.addNode("test_set_acl_node", "nt:folder");
-      session.save();      
+   private void checkPermissionSet(NodeImpl node, String identity, String permission) throws RepositoryException {
+      for (AccessControlEntry entry : node.getACL().getPermissionEntries()) {
+         if (entry.getIdentity().equals(identity) && entry.getPermission().equals(permission)) {
+            return;
+         }
+      }
       
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Depth", "0");
-      headers.putSingle("Content-Type", "text/xml; charset=\"utf-8\"");
-      EnvironmentContext ctx = new EnvironmentContext();
-
-      Set<String> adminRoles = new HashSet<String>();
-      adminRoles.add("administrators");
-
-      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
-
-      ctx.put(SecurityContext.class, adminSecurityContext);
-
-      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
-      ResourceLauncher launcher = new ResourceLauncher(handler);
-
-      String request =
-         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" +
-         "<D:acl xmlns:D=\"DAV:\">" +
-           "<D:ace>" +
-             "<D:principal>" +
-               "<D:href>vetal</D:href>" +
-             "</D:principal>" +
-             "<D:grant>" +
-               "<D:privilege><D:read/></D:privilege>" +
-             "</D:grant>" +
-           "</D:ace>" + 
-           "<D:ace>" +
-             "<D:principal>" +
-               "<D:href>jeka</D:href>" +
-             "</D:principal>" +
-             "<D:grant>" +
-               "<D:privilege><D:write/></D:privilege>" +
-             "</D:grant>" +
-           "</D:ace>" + 
-           "<D:ace>" +
-             "<D:principal>" +
-               "<D:all />" +
-             "</D:principal>" +
-             "<D:grant>" +
-               "<D:privilege><D:all/></D:privilege>" +
-             "</D:grant>" +
-           "</D:ace>" + 
-         "</D:acl>";
-
-      ContainerResponse response =
-         launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + testNode.getPath(), "http://localhost", headers, request.getBytes(), null, ctx);
-      
-      System.out.println("set ACL status > " + response.getStatus());      
+      fail();
    }
    
-   @Test
-   public void testSetACLOnPrivilegableResource() throws Exception {
+   private void checkPermissionRemoved(NodeImpl node, String identity, String permission) throws RepositoryException {
+      for (AccessControlEntry entry : node.getACL().getPermissionEntries()) {
+         if (entry.getIdentity().equals(identity) && entry.getPermission().equals(permission)) {
+            fail();
+         }
+      }
+   }   
+   
+   //@Test
+   public void _testSetACLForTwoUsersOnNonPrivilegableResource() throws Exception {
       NodeImpl testNode = (NodeImpl)root.addNode("test_set_acl_node2", "nt:folder");
       session.save();      
       
@@ -152,8 +121,89 @@ public class TestAclCommand extends BaseStandaloneTest
 
       ContainerResponse response =
          launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + testNode.getPath(), "http://localhost", headers, request.getBytes(), null, ctx);
+
+      assertEquals(HTTPStatus.OK, response.getStatus());
       
-      System.out.println("set ACL status > " + response.getStatus());            
+      session.refresh(false);
+      NodeImpl node = (NodeImpl)root.getNode("test_set_acl_node2");
+      
+      checkPermissionSet(node, "Anya", PermissionType.ADD_NODE);
+      checkPermissionSet(node, "Anya", PermissionType.SET_PROPERTY);
+      checkPermissionSet(node, "Anya", PermissionType.REMOVE);
+      
+      checkPermissionSet(node, "Oksana", PermissionType.ADD_NODE);
+      checkPermissionSet(node, "Oksana", PermissionType.SET_PROPERTY);
+      checkPermissionSet(node, "Oksana", PermissionType.REMOVE);
+      
+      checkPermissionRemoved(node, "any", PermissionType.ADD_NODE);
+      checkPermissionRemoved(node, "any", PermissionType.SET_PROPERTY);
+      checkPermissionRemoved(node, "any", PermissionType.REMOVE);      
+      checkPermissionRemoved(node, "any", PermissionType.READ);
+   }
+      
+   @Test
+   public void testSetAllPermissionsForAllUsersOnNonPrivilegableResource() throws Exception {
+      NodeImpl testNode = (NodeImpl)root.addNode("test_set_acl_node_1", "nt:folder");
+      session.save();
+      
+      testNode.addMixin("exo:owneable");
+      testNode.addMixin("exo:privilegeable");
+      session.save();
+      
+      Map<String, String[]> defaultPermissions = new HashMap<String, String[]>();
+      String []initPermissions = new String[]{PermissionType.ADD_NODE, PermissionType.READ, PermissionType.SET_PROPERTY};
+      defaultPermissions.put("Vetal", initPermissions);
+      testNode.setPermissions(defaultPermissions);
+      session.save();
+      
+      System.out.println("NODE >> " + testNode);
+      
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.putSingle("Depth", "0");
+      headers.putSingle("Content-Type", "text/xml; charset=\"utf-8\"");
+      EnvironmentContext ctx = new EnvironmentContext();
+
+      Set<String> adminRoles = new HashSet<String>();
+      adminRoles.add("administrators");
+
+      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+
+      ctx.put(SecurityContext.class, adminSecurityContext);
+
+      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
+      ResourceLauncher launcher = new ResourceLauncher(handler);
+
+      String request =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" +
+         "<D:acl xmlns:D=\"DAV:\">" +
+           "<D:ace>" +
+             "<D:principal>" +
+               "<D:all />" +
+             "</D:principal>" +
+             "<D:grant>" +
+               "<D:privilege><D:all/></D:privilege>" +
+             "</D:grant>" +
+           "</D:ace>" + 
+         "</D:acl>";
+
+      ContainerResponse response =
+         launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + testNode.getPath(), "http://localhost", headers, request.getBytes(), null, ctx);
+      
+      assertEquals(HTTPStatus.OK, response.getStatus());
+      
+      session.refresh(false);
+      NodeImpl node = (NodeImpl)root.getNode("test_set_acl_node_1");
+      
+      System.out.println("Node after > " + node);
+      
+      checkPermissionSet(node, "any", PermissionType.ADD_NODE);
+      
+      
+      
+//      checkPermissionRemoved(node, "any", PermissionType.ADD_NODE);
+//      checkPermissionRemoved(node, "any", PermissionType.SET_PROPERTY);
+//      checkPermissionRemoved(node, "any", PermissionType.REMOVE);      
+//      checkPermissionRemoved(node, "any", PermissionType.READ);
    }
 
    @Override
