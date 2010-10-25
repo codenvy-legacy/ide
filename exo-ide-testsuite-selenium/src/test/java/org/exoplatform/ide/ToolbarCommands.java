@@ -91,6 +91,8 @@ public interface ToolbarCommands
       public static final String VALIDATE_GROOVY_SERVICE = "Validate REST Service";
       
       public static final String DEPLOY_GROOVY_SERVICE = "Deploy REST Service";
+      
+      public static final String UNDEPLOY_GROOVY_SERVICE = "Undeploy REST Service";
 
    }
 }

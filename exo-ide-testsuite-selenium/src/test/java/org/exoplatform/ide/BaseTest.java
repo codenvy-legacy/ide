@@ -150,6 +150,25 @@ public abstract class BaseTest
          standaloneLogin(USER_NAME);
       }
    }
+   
+   protected void logout() throws Exception
+   {
+      if (isRunIdeUnderPortal())
+      {
+         //TODO
+         //log out from ide
+      }
+      else if (isRunIdeAsStandalone())
+      {
+         standaloneLogout();
+      }
+   }
+   
+   private void standaloneLogout() throws Exception
+   {
+      selenium.clickAt("//a[@href='../login/logout.jsp']", "");
+      selenium.waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
+   }
 
    protected static void standaloneLogin(String userName) throws InterruptedException 
    {
@@ -1534,6 +1553,7 @@ public abstract class BaseTest
       {
          return this.applicationUrl;
       }
+      
    }
 
    protected static boolean isRunIdeUnderPortal()
