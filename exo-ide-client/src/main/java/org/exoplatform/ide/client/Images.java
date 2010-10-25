@@ -51,6 +51,8 @@ public interface Images
       {
 
          public static final String OPEN_LOCAL_FILE = IMAGE_URL + "bundled/file/open_local_file.png";
+         
+         public static final String OPEN_FILE_BY_PATH = IMAGE_URL + "bundled/file/open_file_by_path.png";         
 
          public static final String UPLOAD = IMAGE_URL + "bundled/file/upload.png";
 

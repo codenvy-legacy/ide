@@ -124,6 +124,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/file/open_local_file_Disabled.png")
    ImageResource openLocalFileDisabled();
 
+   @Source("../public/images/bundled/file/open_file_by_path.png")
+   ImageResource openFileByPath();
+
+   @Source("../public/images/bundled/file/open_file_by_path_Disabled.png")
+   ImageResource openFileByPathDisabled();
+   
    @Source("../public/images/bundled/file/download_file.png")
    ImageResource downloadFile();
 

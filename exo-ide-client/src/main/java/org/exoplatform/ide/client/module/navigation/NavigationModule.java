@@ -81,6 +81,7 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjec
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
+import org.exoplatform.ide.client.module.navigation.control.upload.OpenFileByPathCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreVersionControl;
@@ -108,6 +109,8 @@ import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEv
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderHandler;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.module.navigation.event.upload.OpenFileByPathEvent;
+import org.exoplatform.ide.client.module.navigation.event.upload.OpenFileByPathHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileHandler;
 import org.exoplatform.ide.client.module.navigation.handler.CreateFileCommandHandler;
@@ -128,6 +131,7 @@ import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplateForm;
+import org.exoplatform.ide.client.upload.OpenFileByPathForm;
 import org.exoplatform.ide.client.upload.UploadForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -141,7 +145,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler,
-   EditorActiveFileChangedHandler, InitializeServicesHandler
+   EditorActiveFileChangedHandler, InitializeServicesHandler, OpenFileByPathHandler
 {
    private HandlerManager eventBus;
 
@@ -197,6 +201,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
      
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));      
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), true));
@@ -223,6 +228,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       handlers.addHandler(OpenFileWithEvent.TYPE, this);
+      handlers.addHandler(OpenFileByPathEvent.TYPE, this);      
       handlers.addHandler(UploadFileEvent.TYPE, this);
       handlers.addHandler(SaveAsTemplateEvent.TYPE, this);
       handlers.addHandler(CreateFolderEvent.TYPE, this);
@@ -389,6 +395,11 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+
+   public void onOpenFileByPath(OpenFileByPathEvent event)
+   {
+      new OpenFileByPathForm(eventBus);
    }
 
 }

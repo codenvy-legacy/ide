@@ -85,7 +85,7 @@ public class ControlsRegistration implements RegisterControlHandler
    {
       if (!(event.getControl() instanceof IDEControl))
       {
-         Dialogs.getInstance().showError("Only IDE controls can be registered!" + event.getControl().getClass());
+         Dialogs.getInstance().showError("Only IDE controls can be registered! " + event.getControl().getClass());
          return;
       }
 
