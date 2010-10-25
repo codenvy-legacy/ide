@@ -67,8 +67,8 @@ public class WorkspaceTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/" + secondWorkspace + "/"));
-      assertTrue(selenium.isTextPresent("/rest/private/jcr/repository/" + WS_NAME + "/"));
+      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + secondWorkspace + "/"));
+      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME + "/"));
       
       //check Ok button is disabled
       assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitleDisabled' and text()='OK']"));

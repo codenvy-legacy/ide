@@ -74,7 +74,9 @@ public abstract class BaseTest
    
    protected static final String REPO_NAME = "repository";   
    
-   protected static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/";
+   protected static final String WEBDAV_CONTEXT = "ide-vfs-webdav";
+   
+   protected static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    protected static final String WS_NAME = "dev-monit";
    
@@ -1670,7 +1672,8 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
       
       // remove text before workspace name
-      String secondWorkspaceName = secondWorkspaceUrl.toLowerCase().replace((BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/").toLowerCase(), "");     
+      String secondWorkspaceName = secondWorkspaceUrl.toLowerCase().replace((ENTRY_POINT_URL).toLowerCase(), "");
+      
       // remove ended '/'
       secondWorkspaceName = secondWorkspaceName.replace("/", "");
        
