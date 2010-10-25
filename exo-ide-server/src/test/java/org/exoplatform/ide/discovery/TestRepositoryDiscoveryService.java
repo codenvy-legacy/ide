@@ -23,6 +23,8 @@ import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.junit.Test;
 
+import java.util.List;
+
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
@@ -60,8 +62,12 @@ public class TestRepositoryDiscoveryService extends BaseTest
       
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
-      assertTrue(cres.getEntity() instanceof EntryPointList);
-      EntryPointList list= (EntryPointList)cres.getEntity();
-      assertEquals(list.getEntryPoints().size(), 2);    
+      assertTrue(cres.getEntity() instanceof List<?>);
+      List<?>entryPoints = (List<?>)cres.getEntity();
+      assertEquals(2, entryPoints.size());
+      for (Object obj : entryPoints)
+      {
+         assertTrue(obj instanceof EntryPoint);
+      }
    }
 }

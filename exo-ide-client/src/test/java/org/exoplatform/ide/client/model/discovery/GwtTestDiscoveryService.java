@@ -26,7 +26,8 @@ import org.exoplatform.ide.client.Const;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
+
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
@@ -82,12 +83,11 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
       
          public void onEntryPointsReceived(EntryPointsReceivedEvent event)
          {
-            EntryPointList entryPointList = event.getEntryPointList();
+            List<EntryPoint> entryPoints = event.getEntryPointList();
             
-            assertEquals(2, entryPointList.getEntryPoints().length());
-            for (int i = 0; i < entryPointList.getEntryPoints().length(); i++)
+            assertEquals(2, entryPoints.size());
+            for (EntryPoint entryPoint : entryPoints)
             {
-               EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
                assertEquals(Scheme.WEBDAV, entryPoint.getScheme());
                if (entryPoint.getHref().endsWith("production/"))
                {

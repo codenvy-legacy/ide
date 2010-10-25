@@ -39,7 +39,6 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -81,7 +80,7 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
 
    private Handlers handlers;
 
-   private EntryPointList entryPointList;
+   private List<EntryPoint> entryPointList;
 
    private Display display;
 
@@ -98,7 +97,7 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
    private Map<String, String> lockTokens;
 
    public SelectWorkspacePresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
-      EntryPointList entryPointList, Map<String, File> openedFiles, Map<String, String> lockTokens)
+      List<EntryPoint> entryPointList, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.entryPointList = entryPointList;
@@ -145,9 +144,9 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
       });
 
       List<EntryPoint> entryPoints = new ArrayList<EntryPoint>();
-      for (int i = 0; i < entryPointList.getEntryPoints().length(); i++)
+      for (int i = 0; i < entryPointList.size(); i++)
       {
-         EntryPoint entryPoint = entryPointList.getEntryPoints().get(i);
+         EntryPoint entryPoint = entryPointList.get(i);
          if (entryPoint.getScheme().equals(Scheme.WEBDAV))
          {
             entryPoints.add(entryPoint);

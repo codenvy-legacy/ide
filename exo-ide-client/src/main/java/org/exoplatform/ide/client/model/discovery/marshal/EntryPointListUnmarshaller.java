@@ -19,11 +19,17 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONValue;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
 
-import com.google.gwt.http.client.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,8 +50,22 @@ public class EntryPointListUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      EntryPointList entryPointList = EntryPointList.build(response.getText());
+      List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
+      
+      JavaScriptObject json = build(response.getText());
+      JSONArray jsonArray = new JSONArray(json);
+      
+      for (int i = 0; i < jsonArray.size(); i++)
+      {
+         JSONValue value = jsonArray.get(i);
+         entryPointList.add(EntryPoint.build(value.toString()));
+         
+      }
       event.setEntryPointList(entryPointList);
    }
+   
+   public static native JavaScriptObject build(String json) /*-{
+         return eval('(' + json + ')');      
+      }-*/;
 
 }

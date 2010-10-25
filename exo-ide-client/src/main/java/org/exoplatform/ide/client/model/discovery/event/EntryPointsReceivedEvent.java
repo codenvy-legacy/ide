@@ -16,9 +16,11 @@
  */
 package org.exoplatform.ide.client.model.discovery.event;
 
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -30,14 +32,14 @@ public class EntryPointsReceivedEvent extends GwtEvent<EntryPointsReceivedHandle
 
    public static final GwtEvent.Type<EntryPointsReceivedHandler> TYPE = new GwtEvent.Type<EntryPointsReceivedHandler>();
 
-   private EntryPointList entryPointList;
-
-   public EntryPointList getEntryPointList()
+   private List<EntryPoint> entryPointList;
+   
+   public List<EntryPoint> getEntryPointList()
    {
       return entryPointList;
    }
 
-   public void setEntryPointList(EntryPointList entryPointList)
+   public void setEntryPointList(List<EntryPoint> entryPointList)
    {
       this.entryPointList = entryPointList;
    }

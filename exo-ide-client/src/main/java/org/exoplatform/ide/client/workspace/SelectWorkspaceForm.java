@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.workspace;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -28,7 +29,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -69,7 +69,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
    private EntryPointListGrid entryPointListGrid;
 
-   public SelectWorkspaceForm(HandlerManager eventBus, ApplicationSettings applicationSettings, EntryPointList entryPointList,
+   public SelectWorkspaceForm(HandlerManager eventBus, ApplicationSettings applicationSettings, List<EntryPoint> entryPointList,
       Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);

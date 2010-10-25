@@ -86,7 +86,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
-   public EntryPointList getEntryPoints(@Context UriInfo uriInfo)
+   public List<EntryPoint> getEntryPoints(@Context UriInfo uriInfo)
    {
       List<String> entryPoints = new ArrayList<String>();
 
@@ -102,10 +102,10 @@ public class RepositoryDiscoveryService implements ResourceContainer
          }
       }
 
-      EntryPointList entryPointList = new EntryPointList();
+      List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
       for (int i = 0; i < entryPoints.size(); i++)
       {
-         entryPointList.getEntryPoints().add(new EntryPoint(Scheme.WEBDAV, entryPoints.get(i)));
+         entryPointList.add(new EntryPoint(Scheme.WEBDAV, entryPoints.get(i)));
       }
 
       return entryPointList;

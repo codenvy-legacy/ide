@@ -18,9 +18,16 @@
  */
 package org.exoplatform.ide.client.model.discovery;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONValue;
+
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPointList;
+import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,24 +52,34 @@ public class GwtTestEntryPoint extends AbstractGwtTest
     */
    public void testEntryPointUnmarshaller()
    {
-      EntryPointList entryPointList = EntryPointList.build(entryPoints);
-      assertEquals(6, entryPointList.getEntryPoints().length());
-      EntryPoint entryPoint = entryPointList.getEntryPoints().get(0);
+      JavaScriptObject json = EntryPointListUnmarshaller.build(entryPoints);
+      
+      List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
+      
+      JSONArray jsonArray = new JSONArray(json);
+      for (int i = 0; i < jsonArray.size(); i++)
+      {
+         JSONValue value = jsonArray.get(i);
+         entryPointList.add(EntryPoint.build(value.toString()));
+      }
+      
+      assertEquals(6, entryPointList.size());
+      EntryPoint entryPoint = entryPointList.get(0);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/dev-monit/", entryPoint.getHref());
-      entryPoint = entryPointList.getEntryPoints().get(1);
+      entryPoint = entryPointList.get(1);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/system/", entryPoint.getHref());
-      entryPoint = entryPointList.getEntryPoints().get(2);
+      entryPoint = entryPointList.get(2);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-system/", entryPoint.getHref());
-      entryPoint = entryPointList.getEntryPoints().get(3);
+      entryPoint = entryPointList.get(3);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/portal-work/", entryPoint.getHref());
-      entryPoint = entryPointList.getEntryPoints().get(4);
+      entryPoint = entryPointList.get(4);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/wsrp-system/", entryPoint.getHref());
-      entryPoint = entryPointList.getEntryPoints().get(5);
+      entryPoint = entryPointList.get(5);
       assertEquals("jcr-webdav", entryPoint.getScheme());
       assertEquals("http://db2.exoplatform.org:8080/rest/private/jcr/repository/pc-system/", entryPoint.getHref());
    }
