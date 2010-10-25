@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.gadget.Images;
@@ -30,14 +31,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DeployGadgetCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class DeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/Deploy Gadget";
 
    private static final String TITLE = "Deploy Gadget to GateIn";
 
-   public DeployGadgetCommand(HandlerManager eventBus)
+   public DeployGadgetCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -47,7 +48,14 @@ public class DeployGadgetCommand extends SimpleControl implements EditorActiveFi
       //         .deployGadgetDisabled());
       setIcon(Images.DEPLOY_GADGET);
       setEvent(new DeployGadgetEvent());
-
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -80,5 +88,4 @@ public class DeployGadgetCommand extends SimpleControl implements EditorActiveFi
          setEnabled(false);
       }
    }
-
 }

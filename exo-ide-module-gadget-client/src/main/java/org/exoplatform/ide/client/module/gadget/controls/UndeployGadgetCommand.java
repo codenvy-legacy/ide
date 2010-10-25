@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.gadget.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.gadget.Images;
@@ -31,14 +32,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class UndeployGadgetCommand extends SimpleControl implements EditorActiveFileChangedHandler
+public class UndeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Run/UnDeploy Gadget";
 
    private static final String TITLE = "UnDeploy Gadget from GateIn";
 
-   public UndeployGadgetCommand(HandlerManager eventBus)
+   public UndeployGadgetCommand()
    {
       super(ID);
       setTitle(TITLE);
@@ -48,9 +49,18 @@ public class UndeployGadgetCommand extends SimpleControl implements EditorActive
       // .undeployGadgetDisabled());
       setIcon(Images.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+   
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -81,5 +91,4 @@ public class UndeployGadgetCommand extends SimpleControl implements EditorActive
          setEnabled(false);
       }
    }
-
 }

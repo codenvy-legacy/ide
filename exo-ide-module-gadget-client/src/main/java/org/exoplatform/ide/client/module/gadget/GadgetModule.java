@@ -47,8 +47,8 @@ public class GadgetModule implements IDEModule, InitializeServicesHandler
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
          Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET)));
       
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(), true, true));
 
 //      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
 //         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
