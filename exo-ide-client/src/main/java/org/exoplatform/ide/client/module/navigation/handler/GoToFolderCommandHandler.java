@@ -68,9 +68,20 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenRece
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
 
-      eventBus.addHandler(GoToFolderEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
+      eventBus.addHandler(GoToFolderEvent.TYPE, this);
+   }
+
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
    /**
@@ -148,16 +159,6 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenRece
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
-   }
-
-   public void onEntryPointChanged(EntryPointChangedEvent event)
-   {
-      entryPoint = event.getEntryPoint();
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
    }
 
 }

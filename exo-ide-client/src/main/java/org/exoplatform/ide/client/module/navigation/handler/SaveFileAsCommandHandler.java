@@ -59,6 +59,7 @@ import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
 import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -91,17 +92,19 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
    private File oldFile;
 
    private File newFile;
+   
+   private GwtEvent<?> eventFiredOnCancel;
 
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
       handlers = new Handlers(eventBus);
-      this.eventBus.addHandler(SaveFileAsEvent.TYPE, this);
-      this.eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      this.eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      this.eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
-      this.eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(SaveFileAsEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -119,7 +122,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
          return;
       }
 
-      event.isSaveOnly();
+      eventFiredOnCancel = event.getEventFiredOnCancel();
 
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
@@ -129,7 +132,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
-      newFileName(file);
+      askForNewFileName(file);
    }
 
    /**
@@ -137,7 +140,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
     * 
     * @param file
     */
-   private void newFileName(final File file)
+   private void askForNewFileName(final File file)
    {
 
       final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
@@ -149,8 +152,14 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
             if (value == null)
             {
                handlers.removeHandlers();
+               
+               if (eventFiredOnCancel != null) {
+                  eventBus.fireEvent(eventFiredOnCancel);
+               }
+               
                return;
             }
+            
             String pathToSave = getFilePath(selectedItems.get(0)) + value;
             File newFile = new File(pathToSave);
             newFile.setContent(file.getContent());

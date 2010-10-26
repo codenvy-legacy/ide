@@ -29,14 +29,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Oct 11, 2010 $
  *
  */
-public class ShowVersionEvent extends GwtEvent<ShowVersionHandler>
+public class ShowVersionContentEvent extends GwtEvent<ShowVersionHandler>
 {
 
    public static final GwtEvent.Type<ShowVersionHandler> TYPE = new GwtEvent.Type<ShowVersionHandler>();
 
    private Version version;
 
-   public ShowVersionEvent(Version version)
+   public ShowVersionContentEvent(Version version)
    {
       this.version = version;
    }

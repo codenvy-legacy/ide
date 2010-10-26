@@ -27,5 +27,5 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface ShowVersionHandler extends EventHandler
 {
-   void onShowVersion(ShowVersionEvent event);
+   void onShowVersion(ShowVersionContentEvent event);
 }

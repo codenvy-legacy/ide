@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviou
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
 /**
@@ -63,14 +63,14 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
       super.initialize(eventBus);
    }
    
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
-   public void onShowVersion(ShowVersionEvent event)
+   public void onShowVersion(ShowVersionContentEvent event)
    {
       version = event.getVersion();
       boolean isEnabled =

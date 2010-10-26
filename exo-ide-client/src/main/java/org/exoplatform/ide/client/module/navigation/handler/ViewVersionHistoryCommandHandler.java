@@ -54,7 +54,7 @@ import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -242,14 +242,14 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
                @Override
                public void run()
                {
-                  eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+                  eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
                }
             };
             timer.schedule(1000);
          }
          else
          {
-            eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+            eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
          }
 
          eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());

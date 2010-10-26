@@ -47,7 +47,8 @@ ExceptionThrownHandler
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(CreateProjectTemplateEvent.TYPE, this);
+      
+      eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
    }
 
    /**
@@ -55,7 +56,7 @@ ExceptionThrownHandler
     */
    public void onError(ExceptionThrownEvent event)
    {
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+      handlers.removeHandlers();
    }
    
    /**
@@ -64,6 +65,8 @@ ExceptionThrownHandler
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
       handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      
       TemplateService.getInstance().getTemplates();
    }
 
@@ -72,7 +75,8 @@ ExceptionThrownHandler
     */
    public void onTemplateListReceived(TemplateListReceivedEvent event)
    {
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
+      handlers.removeHandlers();
+      
       TemplateList templateList = event.getTemplateList();
       new CreateProjectTemplateForm(eventBus, templateList.getTemplates());
    }

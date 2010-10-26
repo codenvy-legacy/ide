@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -36,11 +37,10 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -57,44 +57,16 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    private Version activeVersion;
 
    private Map<String, String> lockTokens;
-   
-   private Version restoreVersion;
 
    public RestoreVersionCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowVersionEvent.TYPE, this);
-      handlers.addHandler(RestoreVersionEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent)
-    */
-   public void onRestoreToVersion(RestoreVersionEvent event)
-   {
-      if (activeVersion == null)
-         return;
-      restoreVersion = activeVersion;
-      File file = new File(restoreVersion.getItemHref());
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getProperties(file);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
-    */
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      if (event.getItem() != null && event.getItem() instanceof File && restoreVersion != null)
-      {
-         File file = (File)event.getItem();
-         file.setContent(restoreVersion.getContent());
-         handlers.addHandler(FileContentSavedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
-      }
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
+      eventBus.addHandler(RestoreVersionEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -108,13 +80,50 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    }
 
    /**
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
+    */
+   public void onShowVersion(ShowVersionContentEvent event)
+   {
+      activeVersion = event.getVersion();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent)
+    */
+   public void onRestoreToVersion(RestoreVersionEvent event)
+   {
+      if (activeVersion == null)
+      {
+         return;
+      }
+
+      File file = new File(activeVersion.getItemHref());
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      VirtualFileSystem.getInstance().getProperties(file);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
+    */
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   {
+      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
+      if (event.getItem() != null && event.getItem() instanceof File && activeVersion != null)
+      {
+         File file = (File)event.getItem();
+         file.setContent(activeVersion.getContent());
+         handlers.addHandler(FileContentSavedEvent.TYPE, this);
+         VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+      }
+   }
+
+   /**
     * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
     */
    public void onError(ExceptionThrownEvent event)
    {
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      handlers.removeHandler(FileContentSavedEvent.TYPE);
+      handlers.removeHandlers();
    }
 
    /**
@@ -122,15 +131,8 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
     */
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      handlers.removeHandler(FileContentSavedEvent.TYPE);
+      handlers.removeHandlers();
       eventBus.fireEvent(new OpenFileEvent(event.getFile()));
    }
 
-   /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
-    */
-   public void onShowVersion(ShowVersionEvent event)
-   {
-      activeVersion = event.getVersion();
-   }
 }
