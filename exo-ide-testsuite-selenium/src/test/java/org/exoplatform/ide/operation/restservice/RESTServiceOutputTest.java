@@ -47,7 +47,7 @@ public class RESTServiceOutputTest extends BaseTest
 
    private final static String TEST_FOLDER = "Outputfolder";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -56,7 +56,7 @@ public class RESTServiceOutputTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceOutput.groovy";
       try
       {
-       //***********change************
+       //TODO***********change************
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
       //*************************
@@ -77,7 +77,7 @@ public class RESTServiceOutputTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //***********change************
+      //TODO***********change************
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP);

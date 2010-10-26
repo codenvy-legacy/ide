@@ -48,7 +48,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
    private final static String FOLDER = "AnnotationInheritance";
    
-   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER+ "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER+ "/";
    
    @BeforeClass
    public static void setUp()
@@ -57,8 +57,10 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
       try
       {
+        //*********TODO******************
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,"exo:groovyResourceContainer", URL + FILE_NAME);
+        //********************************
       }
       catch (IOException e)
       {

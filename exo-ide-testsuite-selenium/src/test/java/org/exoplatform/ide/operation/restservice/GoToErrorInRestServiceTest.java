@@ -43,13 +43,14 @@ import java.io.IOException;
 public class GoToErrorInRestServiceTest extends BaseTest
 {
    private final static String FILE_WITH_ERROR = "RestServiceWithError.groovy";
-   
+
    private final static String TEST_FOLDER = "GoToError";
-   
+
    private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.groovy";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -58,9 +59,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       try
       {
+         //******TODO change add folder for locked file
          VirtualFileSystemUtils.mkcol(URL);
+         //**********************************************
          VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR, MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR);
-         VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR_FOR_CHANGING, MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR_FOR_CHANGING);
+         VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR_FOR_CHANGING, MimeType.GROOVY_SERVICE, URL
+            + FILE_WITH_ERROR_FOR_CHANGING);
       }
       catch (IOException e)
       {
@@ -79,22 +83,19 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      
-     
- 
-      
+
       openAndValidateRestService();
-      
+
       //---- 1 -----------------
       //click on validation message to go to error
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check, cursor go to position
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
-      
+
    }
-   
+
    @Test
    public void testGoToErrorInClosedFile() throws Exception
    {
@@ -102,29 +103,29 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
       closeTabIgnoreChanges("0");
-      
+
       //---- 2 -----------------
       //click on validation message to go to error
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //file must be opened and cursor must stay on error
       assertEquals(FILE_WITH_ERROR, getTabTitle(0));
-      
+
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
-      
+
       //---- 3 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-      
+
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
-   
+
    @Test
    public void testGoToErrorIfOtherTabSelected() throws Exception
    {
@@ -132,32 +133,32 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       openAndValidateRestService();
       //---- 1 -----------------
       //open another tab
       runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
-      
+
       //---- 2 -----------------
       //click on validation message to go to error
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check, tab with rest service must be opened
       checkIsEditorTabSelected(FILE_WITH_ERROR, true);
-      
+
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
-      
+
       //---- 3 -----------------
       //close file
       closeTabIgnoreChanges("1");
-      
+
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-      
+
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
-   
+
    @Test
    public void testGoToErrorIfFileIsDeleted() throws Exception
    {
@@ -165,39 +166,39 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
       closeTabIgnoreChanges("0");
-      
+
       //---- 2 -----------------
       //delete file
       selectItemInWorkspaceTree(FILE_WITH_ERROR);
       deleteSelectedItems();
-      
+
       //---- 3 -----------------
       //click on validation message to go to error
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check, error dialog appeared
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       final String textFromErrDialog = selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/");
       assertTrue(textFromErrDialog.contains("404"));
-      
+
       //---- 4 -----------------
       //click Ok button
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       //---- 5 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-      
+
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
-   
+
    @Test
    public void testGoToErrorAfterChangingFile() throws Exception
    {
@@ -205,7 +206,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //---- 1 -----------------
       //open file
       selectItemInWorkspaceTree(WS_NAME);
@@ -214,28 +215,29 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //---- 2 -----------------
       //press validate button
       runToolbarButton(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+
       //check, validation fails
-      String validationMsg = selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
+      String validationMsg =
+         selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
-      
+
       //---- 3 -----------------
       //click on validation message to go to error
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //fix validation error
       selectIFrameWithEditor(0);
       //click on editor
-      
-      //******************fix**************************
+
+      //TODO******************fix****************************
       selenium.clickAt("//body[@class='editbox']", "5,5");
-      
+      //**************************************************
       //go to error
       for (int i = 0; i < 6; i++)
       {
@@ -245,46 +247,47 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //delete# unnecessary  space
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      
+
       selectMainFrame();
-      
+
       //---- 4 -----------------
       //press validate button
       Thread.sleep(TestConstants.SLEEP);
       runToolbarButton(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
-      
+
       //check, validation fails
-      validationMsg = selenium.getText("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span");
+      validationMsg =
+         selenium.getText("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
-      
+
       //---- 5 -----------------
       //click on validation message to go to error
       Thread.sleep(TestConstants.SLEEP);
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check cursor went to position
       assertEquals("3 : 3", getCursorPositionUsingStatusBar());
-      
+
       //---- 6 -----------------
       //click on first validation message to check, 
       //that cursor can go to previous error (event, it is already fixed)
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check cursor went to position
       assertEquals("1 : 9", getCursorPositionUsingStatusBar());
-      
+
       //---- 7 -----------------
       //delete some text and check
       //that cursor stays if try to go to nonexistent line
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       selectIFrameWithEditor(0);
       //click on editor
-      
-      //******************fix****************************
+
+      //TODO******************fix****************************
       selenium.clickAt("//body[@class='editbox']", "5,5");
       //*************************************************
       //select all
@@ -294,12 +297,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //delete
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
       selectMainFrame();
-      
+
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //type some text
       typeTextIntoEditor(0, "public void TestClass(){}");
-      
+
       //go to middle
       selectIFrameWithEditor(0);
       //select all
@@ -308,19 +311,19 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selectMainFrame();
-      
+
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
-      
+
       //when 3d line is deleted, try to go to it
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
-      
+
       Thread.sleep(TestConstants.SLEEP);
 
    }
-   
+
    public void closeTabIgnoreChanges(String tabIndex) throws Exception
    {
       //if file is opened, close it
@@ -337,33 +340,34 @@ public class GoToErrorInRestServiceTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP);
       }
    }
-   
+
    private void openAndValidateRestService() throws Exception
    {
       //---- 1 -----------------
       //open file
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
-     //****************change*********
+      //TODO****************change*********
       Thread.sleep(TestConstants.SLEEP);
-    //****************change*********
+      //TODO****************change*********
       openOrCloseFolder(TEST_FOLDER);
-    //****************change*********  
+      //TODO****************change*********  
       Thread.sleep(TestConstants.SLEEP);
-    //****************change*********
+      //TODO****************change*********
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //---- 2 -----------------
       //press validate button
       runToolbarButton(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+
       //check, validation fails
-      final String validationMsg = selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
+      final String validationMsg =
+         selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
    }
-   
+
    @After
    public void afterMethod() throws Exception
    {
@@ -371,7 +375,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       closeTabIgnoreChanges("0");
       closeTabIgnoreChanges("0");
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

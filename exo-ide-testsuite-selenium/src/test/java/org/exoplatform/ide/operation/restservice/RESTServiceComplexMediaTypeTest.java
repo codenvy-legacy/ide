@@ -48,7 +48,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    private final static String FOLDER_NAME="Test";
    
  //**************
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
    
    @BeforeClass
    public static void setUp()
@@ -57,7 +57,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ComplexMediaTypes.groovy";
       try
       {
-         //*******change***************
+         //TODO*******change***************
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL+FILE_NAME);
          //**********************

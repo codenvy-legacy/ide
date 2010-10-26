@@ -48,7 +48,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      //*******************change add folder for locked file
+      //TODO*******************change add folder for locked file
       createFolder("Test");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //*****************************

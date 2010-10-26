@@ -42,7 +42,7 @@ public class RESTServiceGetURLTest extends BaseTest
 {
 
    private static final String FILE_NAME = "RESTServiceGetURL.groovy";
-   
+
    private final static String TEST_FOLDER = "URLTemplate";
 
    @BeforeClass
@@ -50,10 +50,12 @@ public class RESTServiceGetURLTest extends BaseTest
    {
       try
       {
-         //*****************change**************
-         String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+         //TODO*****************change**************change add folder for locked file
+         String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
          VirtualFileSystemUtils.mkcol(url);
-         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy", MimeType.GROOVY_SERVICE, url + FILE_NAME);
+         VirtualFileSystemUtils.put(
+            "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
+            MimeType.GROOVY_SERVICE, url + FILE_NAME);
          //**********************
       }
       catch (IOException e)
@@ -65,8 +67,7 @@ public class RESTServiceGetURLTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
-   
+
    @Test
    public void testGetUrl() throws Exception
    {
@@ -74,10 +75,12 @@ public class RESTServiceGetURLTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      //**********change************
+
+      //TODO**********change************
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
+
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
@@ -122,7 +125,7 @@ public class RESTServiceGetURLTest extends BaseTest
          selenium
             .getValue("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
 
-      assertTrue((BASE_URL+"rest/private/testService/Inner/{pathParam}").equals(url));
+      assertTrue((BASE_URL + "rest/private/testService/Inner/{pathParam}").equals(url));
 
       //Close form
       selenium.click("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]");
@@ -142,20 +145,19 @@ public class RESTServiceGetURLTest extends BaseTest
          selenium
             .getValue("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
 
-      assertTrue((BASE_URL+"rest/private/testService/Inner/{param}/node/{paramList: .+}")
-         .equals(url));
+      assertTrue((BASE_URL + "rest/private/testService/Inner/{param}/node/{paramList: .+}").equals(url));
 
       //Close form
       selenium.click("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]");
-      
+
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]/");
 
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);
@@ -170,6 +172,5 @@ public class RESTServiceGetURLTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
 
 }

@@ -44,23 +44,25 @@ public class RESTServiceOutputErrorTest extends BaseTest
 {
 
    private final static String FILE_NAME = "OutputErrorTest.groovy";
-   
+
    private final static String TEST_FOLDER = "Outputerror";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
-   
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
-      
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/restservice/OutputError.groovy";
+
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/OutputError.groovy";
       try
       {
-        //**************change**********
+
+         //TODO**************change**********
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
-        //*****************************
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,
+            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
+         //*****************************
       }
       catch (IOException e)
       {
@@ -80,18 +82,18 @@ public class RESTServiceOutputErrorTest extends BaseTest
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(TEST_FOLDER);
-      
+
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
-      
+
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      
+
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -107,33 +109,36 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       selenium.click("//nobr[contains(text(), '/outputError')]");
 
-      assertEquals("OPTIONS", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
+      assertEquals("OPTIONS",
+         selenium
+            .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
 
-      assertEquals("", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
+      assertEquals("",
+         selenium
+            .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
 
-      assertEquals("application/vnd.sun.wadl+xml", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
+      assertEquals(
+         "application/vnd.sun.wadl+xml",
+         selenium
+            .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
 
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body"));
+      assertEquals("No items to show.",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body"));
 
       selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body"));
+      assertEquals("No items to show.",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body"));
 
       selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceQueryTab]/");
-
 
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
          "wrong address/outputError");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
 
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
@@ -149,7 +154,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
       selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
          "/outputError/Inner/first/second/node/node1/node2/node3");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/[icon='picker']");
 
@@ -166,11 +171,11 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       assertTrue(mess.contains("First Param:first; Second Param:second; Param List:node1/node2/node3"));
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);

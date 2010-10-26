@@ -46,7 +46,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
    private final static String FILE_NAME = "ResponseHeaders.groovy";
    private final static String FOLDER_NAME = "ResponseHeaders";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
    
    @BeforeClass
@@ -56,10 +56,10 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ResponseHeaders.groovy";
       try
       {
-         //***************change******************
+         //TODO***************change******************
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         //*************change*********************
+         //**********************************
       }
       catch (IOException e)
       {
@@ -87,7 +87,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
           
     
-      assertEquals("[INFO] " + BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/"+FOLDER_NAME+"/"+ FILE_NAME
+      assertEquals("[INFO] " + BASE_URL + "rest/private/jcr/repository/dev-monit/"+FOLDER_NAME+"/"+ FILE_NAME
          + " deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
 
       launchRestService();

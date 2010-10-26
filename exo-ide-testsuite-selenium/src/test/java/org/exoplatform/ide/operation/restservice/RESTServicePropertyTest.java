@@ -55,7 +55,7 @@ public class RESTServicePropertyTest extends BaseTest
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, false);
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, false);
       
-      //*********change********
+      //TODO*********change********
       createFolder("TempFolder");
       Thread.sleep(TestConstants.SLEEP);
       //*************************
@@ -83,7 +83,7 @@ public class RESTServicePropertyTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
       try
       {
          VirtualFileSystemUtils.delete(url);

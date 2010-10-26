@@ -42,19 +42,23 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 {
 
    private final static String FILE_NAME = "DefaultHTTPParameters.groovy";
-   
-   private final static String TEST_FOLDER="DefaultHTTPParameters";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
-   
+
+   private final static String TEST_FOLDER = "DefaultHTTPParameters";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
-      
+
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultHTTPParameters.groovy";
       try
       {
+         //**************TODO***********change add folder for locked file
          VirtualFileSystemUtils.mkcol(URL);
+         //***********************************************************
+
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
          Thread.sleep(TestConstants.SLEEP_SHORT);
          Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
@@ -72,9 +76,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
-  
-   
+
    @Test
    public void testDefaultHTTPParameters() throws Exception
    {
@@ -104,24 +106,24 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
     */
    private void checkParam()
    {
-      assertEquals("TestQueryParam 1", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
+      assertEquals("TestQueryParam 1",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
 
-      assertEquals("boolean", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
+      assertEquals("boolean",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
 
-      assertEquals("true", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
+      assertEquals("true",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
 
       assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[4]"));
 
       selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
 
-      assertEquals("Test-Header", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
+      assertEquals("Test-Header",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
 
-      assertEquals("integer", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
+      assertEquals("integer",
+         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
 
       assertEquals("3", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[3]"));
 
@@ -129,7 +131,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 
       selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceQueryTab]/");
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
