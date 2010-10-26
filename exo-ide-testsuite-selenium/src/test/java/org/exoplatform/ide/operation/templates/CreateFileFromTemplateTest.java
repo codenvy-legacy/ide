@@ -35,6 +35,9 @@ import org.junit.Test;
  */
 public class CreateFileFromTemplateTest extends BaseTest
 {
+   
+   private static final String FOLDER = "Testtemplate";
+   
    private static final String GROOVY_REST_SERVICE = "Groovy REST Service";
    
    private static final String EMPTY_XML = "Empty XML";
@@ -68,6 +71,11 @@ public class CreateFileFromTemplateTest extends BaseTest
       // -------- 1 ----------
       Thread.sleep(TestConstants.SLEEP);
       
+      //TODO*************change******change add folder for locked file
+      createFolder(FOLDER);
+      //*************************
+      
+      Thread.sleep(TestConstants.SLEEP);
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
       
@@ -79,7 +87,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
       
       //test files created on server
-      selenium.open(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME);
+      selenium.open(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/" );
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
       testFileCreatedOnServer(GROOVY_FILE_NAME);
@@ -93,6 +101,12 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       // -------- 6 ----------
       //Remove created files.
+    
+      
+      //******change******
+      openOrCloseFolder(FOLDER);      
+      //****************
+      
       selectItemInWorkspaceTree(GROOVY_FILE_NAME);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
@@ -132,9 +146,12 @@ public class CreateFileFromTemplateTest extends BaseTest
    
    private void testFileCreatedOnServer(String fileName)
    {
+     
+      //TODO********change****change add folder for locked file
       assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL +  REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" 
+         + BASE_URL +  REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/"
          + fileName + "' and text()=' " + fileName + "']"));
+      //*************
    }
    
    private void testTemplate(String templateName, String fileName) throws Exception

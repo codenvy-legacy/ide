@@ -41,7 +41,9 @@ public class BigTemplateTest extends BaseTest
 {
    private final static String FILE_NAME = "Calculator.xml";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String FOLDER = "BigTemplate";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -50,7 +52,11 @@ public class BigTemplateTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL);
+         //******TODO**********************change add folder for locked file
+         VirtualFileSystemUtils.mkcol(URL);
+         //********************************
+
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,11 +75,13 @@ public class BigTemplateTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
-      
+
       TemplateUtils.checkSaveAsTemplateWindow(selenium);
 
       // ----------------------------
@@ -98,7 +106,7 @@ public class BigTemplateTest extends BaseTest
 
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+
       // check "Create file" dialog window
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       TemplateUtils.selectItemInTemplateList(selenium, "Calc");
