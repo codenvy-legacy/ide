@@ -98,6 +98,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @After
    public void tearDown()
    {
+      cleanRegistry();
       try
       {
          VirtualFileSystemUtils.delete(PROJECT_FOLDER_URL);
@@ -112,7 +113,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
          e.printStackTrace();
       }
       
-      cleanRegistry();
+      
       
    }
    
