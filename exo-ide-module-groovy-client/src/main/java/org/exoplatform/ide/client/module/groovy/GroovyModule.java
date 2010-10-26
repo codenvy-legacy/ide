@@ -17,6 +17,7 @@
 package org.exoplatform.ide.client.module.groovy;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -41,6 +42,9 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -95,8 +99,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
    WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ExceptionThrownHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler,
-   UndeployGroovyScriptSandboxHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler, UndeployGroovyScriptSandboxHandler,
+   ApplicationSettingsReceivedHandler
 
 {
 
@@ -109,6 +113,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    private ApplicationConfiguration configuration;
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
+   
+   private Map<String, String> lockTokens;
 
    /**
     * Number of line, which extracts from error message and
@@ -192,6 +198,8 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(EditorFileClosedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       new RunGroovyServiceCommandHandler(eventBus);
    }
@@ -438,7 +446,7 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
          GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
       autoloadProperty.setValue("" + event.isAutoload());
 
-      VirtualFileSystem.getInstance().saveProperties(activeFile);
+      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()));
    }
 
    /**
@@ -530,6 +538,20 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
    {
       GroovyService.getInstance().undeploySandbox(activeFile.getHref());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }
