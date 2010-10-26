@@ -61,6 +61,11 @@ public class VersionsByDateComparator implements Comparator<Version>
          DateTimeFormat dateFormat = DateTimeFormat.getFormat(Z_FORMAT_PATTERN);
          date2 = dateFormat.parse(dateStr2);
       }
+
+      if (date2.compareTo(date1) == 0)
+      {
+         return version2.getDisplayName().compareTo(version1.getDisplayName());
+      }
       return date2.compareTo(date1);
    }
 }
