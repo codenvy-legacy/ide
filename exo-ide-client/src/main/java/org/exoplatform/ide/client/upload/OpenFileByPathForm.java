@@ -21,8 +21,8 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
@@ -57,11 +57,9 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    private TextField filePathField;
 
-   private IButton openFileButton;
+   private IButton openButton;
 
    private IButton closeButton;
-
-   private OpenFileByPathPresenter presenter;
 
    private String title;
 
@@ -76,7 +74,7 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
       title = "Open file by path";
       buttonTitle = "Open";
-      labelTitle = "File path";
+      labelTitle = "File URL";
 
       setTitle(title);
 
@@ -94,7 +92,10 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
       show();
       
-      presenter = new OpenFileByPathPresenter(eventBus);
+      filePathField.focusInItem();
+      disableOpenButton();
+      
+      OpenFileByPathPresenter presenter = new OpenFileByPathPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
@@ -107,21 +108,21 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       StaticTextItem promptItem = new StaticTextItem();
       promptItem.setWidth(250);
       promptItem.setTitleAlign(Alignment.LEFT);
-      promptItem.setValue(labelTitle);
+      promptItem.setValue(this.labelTitle);
       promptItem.setShowTitle(false);
       promptItem.setColSpan(2);
 
       SpacerItem spacer = new SpacerItem();
       spacer.setHeight(2);
       
-      filePathField = new FilePathInput(eventBus);
-      filePathField.setWidth(450);
-      filePathField.setTitleAlign(Alignment.LEFT);
-      filePathField.setShowTitle(false);
-      filePathField.setName(FILE_PATH_FIELD);
-      filePathField.setColSpan(2);
+      this.filePathField = new TextField();
+      this.filePathField.setWidth(450);
+      this.filePathField.setTitleAlign(Alignment.LEFT);
+      this.filePathField.setShowTitle(false);
+      this.filePathField.setName(FILE_PATH_FIELD);
+      this.filePathField.setColSpan(2);
                   
-      openFileByPathForm.setItems(promptItem, spacer, filePathField);
+      openFileByPathForm.setItems(promptItem, spacer, this.filePathField);
 
       openFileByPathForm.setAutoWidth();
 
@@ -136,30 +137,25 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
       uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
 
-      openFileButton = new IButton(buttonTitle);
-      openFileButton.setID(ID_OPEN_BUTTON);
-      openFileButton.setHeight(22);
-      openFileButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
+      this.openButton = new IButton(this.buttonTitle);
+      this.openButton.setID(ID_OPEN_BUTTON);
+      this.openButton.setHeight(22);
+      this.openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
 
       StatefulCanvas buttonSpacer = new StatefulCanvas();
       buttonSpacer.setWidth(5);
 
-      closeButton = new IButton("Cancel");
-      closeButton.setID(ID_CLOSE_BUTTON);
-      closeButton.setHeight(22);
-      closeButton.setIcon(Images.Buttons.CANCEL);
+      this.closeButton = new IButton("Cancel");
+      this.closeButton.setID(ID_CLOSE_BUTTON);
+      this.closeButton.setHeight(22);
+      this.closeButton.setIcon(Images.Buttons.CANCEL);
 
       ToolbarItem buttonToolbar = new ToolbarItem();
-      buttonToolbar.setButtons(openFileButton, buttonSpacer, closeButton);
+      buttonToolbar.setButtons(this.openButton, buttonSpacer, this.closeButton);
 
       uploadWindowButtonsForm.setFields(buttonToolbar);
 
       addItem(uploadWindowButtonsForm);
-   }
-
-   public HasClickHandlers getOpenFileButton()
-   {
-      return this.openFileButton;
    }
 
    public HasClickHandlers getCloseButton()
@@ -167,9 +163,9 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       return this.closeButton;
    }
 
-   public HasValue<String> getFilePathField()
+   public HasKeyPressHandlers getFilePathField()
    {
-      return filePathField;
+      return this.filePathField;
    }
 
    public void closeDisplay()
@@ -180,7 +176,26 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
    @Override
    public void destroy()
    {
-      presenter.destroy();
       super.destroy();
+   }
+
+   public void disableOpenButton()
+   {
+      this.openButton.disable();
+   }
+
+   public void enableOpenButton()
+   {
+      this.openButton.enable();
+   }
+
+   public HasClickHandlers getOpenButton()
+   {
+      return this.openButton;
+   }
+
+   public TextField getFilePathFieldOrigin()
+   {
+      return this.filePathField;
    }
 }

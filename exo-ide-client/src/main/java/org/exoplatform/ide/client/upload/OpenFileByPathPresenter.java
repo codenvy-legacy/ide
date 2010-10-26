@@ -19,46 +19,55 @@ package org.exoplatform.ide.client.upload;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.upload.event.FilePathSelectedEvent;
-import org.exoplatform.ide.client.upload.event.FilePathSelectedHandler;
 
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathPresenter implements FilePathSelectedHandler, ItemPropertiesReceivedHandler,
+public class OpenFileByPathPresenter implements ItemPropertiesReceivedHandler,
 ExceptionThrownHandler
 {
 
    interface Display
    {
-      HasClickHandlers getOpenFileButton();
+      HasClickHandlers getOpenButton();
 
       HasClickHandlers getCloseButton();
+      
+      void enableOpenButton();
+      
+      void disableOpenButton();
 
       void closeDisplay();
 
-      HasValue<String> getFilePathField();
+      HasKeyPressHandlers getFilePathField();
+      
+      // HasValue<String> getFilePathFieldValue(); // getFilePathFieldValue().addValueChangeHandler(new ValueChangeHandler<String>() isn't called by org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField.addValueChangeHandler()
+
+      TextField getFilePathFieldOrigin(); 
    }
 
    private HandlerManager eventBus;
 
    private Display display;
-
-   private HandlerRegistration fileSelectedHandler;
 
    private Handlers handlers;
 
@@ -66,14 +75,13 @@ ExceptionThrownHandler
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      fileSelectedHandler = eventBus.addHandler(FilePathSelectedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
    {
       display = d;
 
-      display.getOpenFileButton().addClickHandler(new ClickHandler()
+      display.getOpenButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
@@ -88,29 +96,51 @@ ExceptionThrownHandler
             display.closeDisplay();
          }
       });
-
-//      display.disableOpenFileButton();
-   }
-
-   void destroy()
-   {
-      if (fileSelectedHandler != null)
+      
+      display.getFilePathField().addKeyPressHandler(new KeyPressHandler()
       {
-         fileSelectedHandler.removeHandler();
+
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+            {
+               openFile();
+            }
+         }
+         
+      });
+      
+      display.getFilePathFieldOrigin().addChangedHandler(new ChangedHandler()
+      {
+
+         public void onChanged(ChangedEvent event)
+         {
+            updateOpenButtonState(event.getValue());
+         }
+         
+      });
+      
+   } 
+
+   private void updateOpenButtonState(Object filePath)
+   {
+      if (filePath == null || filePath.toString().trim().length() == 0)
+      {
+         display.disableOpenButton();
+      }
+      else
+      {
+         display.enableOpenButton();
       }
    }
-
-   public void onFilePathSelected(FilePathSelectedEvent event)
-   {
-      openFile();
-   }
-
+   
    private void openFile()
    {
-      String filePath = display.getFilePathField().getValue();
+      String filePath = display.getFilePathFieldOrigin().getValue();
 
       if (filePath == null || filePath.trim().length() == 0)
       {
+         display.disableOpenButton();
          return;
       }
       
@@ -134,6 +164,7 @@ ExceptionThrownHandler
    public void onError(ExceptionThrownEvent event)
    {
       stopHandling();
+      display.getFilePathFieldOrigin().focusInItem();
    }
 
    private void stopHandling()
