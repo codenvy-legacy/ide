@@ -49,7 +49,7 @@ public class GadgetDevelopmentTest extends BaseTest
      
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
      
-      //*******change*****
+      //TODO*******change*****change add folder for locked file
       createFolder("Test");
       //*******************
       Thread.sleep(TestConstants.SLEEP);
@@ -102,7 +102,7 @@ public class GadgetDevelopmentTest extends BaseTest
 
       closeTab("0");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      //*****change**********
+      //TODO*****change**********
       openOrCloseFolder("Test");
       //************************
       Thread.sleep(TestConstants.SLEEP_SHORT);

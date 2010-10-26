@@ -31,8 +31,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.junit.After;
 import org.junit.Test;
 
-
-
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
@@ -42,22 +40,23 @@ public class GadgetDeployUndeployTest extends BaseTest
 {
 
    private static final String FILE_NAME = "GoogleMapsGadget.xml";
-   private static final String FILE_DEPLOY_URL = "/" + REST_CONTEXT + "/ide/gadget/deploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
-   private static final String FILE_UNDEPLOY_URL = "/" + REST_CONTEXT + "/ide/gadget/undeploy?gadgetURL=" + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";   
-   
+
+   private static final String FILE_DEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/deploy?gadgetURL="
+      + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
+
+   private static final String FILE_UNDEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/undeploy?gadgetURL="
+      + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
+
    @Test
    public void testGadgetDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       //open gadget with required text
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/gadget/gadgetDeployUndeployTest/GoogleMapsGadget.xml";
-      
-      //*****change*****
-      createFolder("Test");
-      //*****************
-      
+      String filePath =
+         "src/test/resources/org/exoplatform/ide/operation/gadget/gadgetDeployUndeployTest/GoogleMapsGadget.xml";
+
       Thread.sleep(TestConstants.SLEEP);
-      
+
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -65,68 +64,79 @@ public class GadgetDeployUndeployTest extends BaseTest
       checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, false);
       checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, false);
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);      
-      
+      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);
+
       // save gadget in the root folder by clicking on "Ctrl+S" hotkey
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
-      
+
       // gadget deploy/undeploy command should become enabled
       checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, true);
       checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
       checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true); 
+      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
 
       if (!isRunIdeUnderPortal())
       {
          return;
-      }      
-      
+      }
+
       // deploy gadget
       runToolbarButton(ToolbarCommands.Run.DEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
       selenium.selectFrame("remote_iframe_0");
-      String outputPanelMessage = java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_0\"]/"), "UTF-8");
-      assertEquals("Verify is the gadget deploy service response is appropriate.", "[INFO] " + FILE_DEPLOY_URL + " deployed successfully.", outputPanelMessage);
-     
-      runTopMenuCommand(MenuCommands.Run.RUN, ToolbarCommands.Run.DEPLOY_GADGET);      
+      String outputPanelMessage =
+         java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_0\"]/"), "UTF-8");
+      assertEquals("Verify is the gadget deploy service response is appropriate.", "[INFO] " + FILE_DEPLOY_URL
+         + " deployed successfully.", outputPanelMessage);
+
+      runTopMenuCommand(MenuCommands.Run.RUN, ToolbarCommands.Run.DEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
-      outputPanelMessage = java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_1\"]/"), "UTF-8");
-      assertEquals("Verify is the gadget redeploy service response is appropriate.", "[INFO] " + FILE_DEPLOY_URL + " deployed successfully.", outputPanelMessage);
-      
+      outputPanelMessage =
+         java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_1\"]/"), "UTF-8");
+      assertEquals("Verify is the gadget redeploy service response is appropriate.", "[INFO] " + FILE_DEPLOY_URL
+         + " deployed successfully.", outputPanelMessage);
+
       // TODO verify gadget presence in the portal
-      
+
       // undeploy gadget
       runToolbarButton(ToolbarCommands.Run.UNDEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
-      outputPanelMessage = java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_2\"]/"), "UTF-8");
-      assertEquals("Verify is the gadget undeploy service response is appropriate.", "[INFO] " + FILE_UNDEPLOY_URL + " undeployed successfully.", outputPanelMessage);
-     
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET);      
+      outputPanelMessage =
+         java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_2\"]/"), "UTF-8");
+      assertEquals("Verify is the gadget undeploy service response is appropriate.", "[INFO] " + FILE_UNDEPLOY_URL
+         + " undeployed successfully.", outputPanelMessage);
+
+      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
-      outputPanelMessage = java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_3\"]/"), "UTF-8");
+      outputPanelMessage =
+         java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_3\"]/"), "UTF-8");
       System.out.println("Was:" + outputPanelMessage);
-      System.out.println("Expected:" + "[ERROR] " + FILE_UNDEPLOY_URL + " undeploy failed. Error (404: Not Found) No such gadget gadget");
-      assertTrue("Verify is the gadget reundeploy service response is appropriate.", outputPanelMessage.contains("[ERROR] " + FILE_UNDEPLOY_URL + " undeploy failed. Error (404: Not Found)\nNo such gadget"));
+      System.out.println("Expected:" + "[ERROR] " + FILE_UNDEPLOY_URL
+         + " undeploy failed. Error (404: Not Found) No such gadget gadget");
+      assertTrue(
+         "Verify is the gadget reundeploy service response is appropriate.",
+         outputPanelMessage.contains("[ERROR] " + FILE_UNDEPLOY_URL
+            + " undeploy failed. Error (404: Not Found)\nNo such gadget"));
 
       // TODO verify gadget absence in the portal
 
    }
-   
-    /**
-    * Clean up cookie, registry, repository after each test of in the each class:<br>
-    *   - selenium.deleteAllVisibleCookies();<br>
-    *   - cleanRegistry();<br>
-    *   - cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");<>
-    * @throws IOException
-    */
+
+   /**
+   * Clean up cookie, registry, repository after each test of in the each class:<br>
+   *   - selenium.deleteAllVisibleCookies();<br>
+   *   - cleanRegistry();<br>
+   *   - cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");<>
+   * @throws IOException
+   */
    @After
    public void testTearDown() throws IOException
    {
       deleteCookies();
       cleanRegistry();
       cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
-   }   
+   }
 }

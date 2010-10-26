@@ -53,7 +53,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         //*******change*****
+         //TODO*******change*****
          VirtualFileSystemUtils.mkcol(URL);
          //******************
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
@@ -75,7 +75,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      //*********change****
+      //TODO*********change****
       openOrCloseFolder(FOLDER);
       //*********************
       Thread.sleep(TestConstants.SLEEP);
