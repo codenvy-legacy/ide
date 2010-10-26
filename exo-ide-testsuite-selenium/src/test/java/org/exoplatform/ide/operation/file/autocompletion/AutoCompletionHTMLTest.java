@@ -32,7 +32,7 @@ import org.junit.Test;
 public class AutoCompletionHTMLTest extends BaseTest
 {
 
-   @Test
+      @Test
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
@@ -68,12 +68,13 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      htmlTest();
-
+      //************fixed
+      GoogleGadgetTest();
+      //***********
       closeUnsavedFileAndDoNotSave("0");
    }
 
-   @Test
+    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
       selenium.refresh();
@@ -109,30 +110,30 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
       selenium.typeKeys("//body[@class='editbox']", "</div>");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      
+
       selenium.keyDown("//body[@class='editbox']", "\\35");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      
+
       openAutoCompleteForm();
       assertTrue(!selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
-   
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      
+
       selenium.keyDown("//body[@class='editbox']", "\\36");
-      
+
       openAutoCompleteForm();
-      
+
       assertTrue(selenium.isElementPresent("//div[contains(text(), '!DOCTYPE')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'acronym')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]"));
-      
+
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
-      
+
       closeUnsavedFileAndDoNotSave("0");
    }
 
@@ -141,9 +142,11 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
+      Thread.sleep(20000);
+
       selenium.typeKeys("//body[@class='editbox']", "<t");
 
-      openAutoCompleteForm();
+      //openAutoCompleteForm();
       openAutoCompleteForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
@@ -175,6 +178,57 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.contains("<p class=\"\"></p>"));
+   }
+
+ //************fixed**********
+   private void GoogleGadgetTest() throws InterruptedException
+   {
+      selenium.keyDown("//body[@class='editbox']", "\\35");
+      selenium.keyDown("//body[@class='editbox']", "\\13");
+
+      Thread.sleep(5000);
+
+      
+      for (int i = 0; i < 16; i++)
+      {
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+         Thread.sleep(500);
+      }
+      selenium.typeKeys("//body[@class='editbox']", "<t");
+
+      //openAutoCompleteForm();
+      openAutoCompleteForm();
+
+      selenium.focus("//input[@class='exo-autocomplete-edit']");
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+
+      String textAfter = selenium.getText("//body[@class='editbox']");
+      assertTrue(textAfter.contains("<textarea></textarea>"));
+
+      selenium.typeKeys("//body[@class='editbox']", "<p ");
+
+      openAutoCompleteForm();
+
+      selenium.focus("//input[@class='exo-autocomplete-edit']");
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+
+      String textA = selenium.getText("//body[@class='editbox']");
+      assertTrue(textA.contains("<p class=\"\""));
+
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+
+      openAutoCompleteForm();
+      selenium.focus("//input[@class='exo-autocomplete-edit']");
+      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+
+      String text = selenium.getText("//body[@class='editbox']");
+      assertTrue(text.contains("<p class=\"\"></p>"));
+      //****************************
    }
 
    /**

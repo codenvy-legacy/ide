@@ -46,6 +46,10 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.SLEEP);
       
+      Thread.sleep(10000);
+      
+      
+      
       openAutoCompleteForm();
       Thread.sleep(TestConstants.SLEEP);
       

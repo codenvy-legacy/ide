@@ -79,8 +79,12 @@ public class AutoCompletionXMLTest extends BaseTest
       
       selenium.keyPressNative("10");
       String textAfter = selenium.getText("//body[@class='editbox']");
-      assertTrue(textAfter.contains("<root></root>"));
-
+      Thread.sleep(20000);
+      
+      //********fixed****
+      assertTrue(textAfter.contains("<root>" + "\n" + "</root>"));
+      //*****************
+      
       closeUnsavedFileAndDoNotSave("0");      
    }
 }
