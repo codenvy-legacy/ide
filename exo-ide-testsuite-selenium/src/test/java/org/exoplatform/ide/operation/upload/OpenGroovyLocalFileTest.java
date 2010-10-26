@@ -41,14 +41,18 @@ public class OpenGroovyLocalFileTest extends BaseTest
 {
 
    private static String GROOVY_NAME = "Приклад.groovy";
-   
+   private static String FOLDER = "OpenGroovyLocalFileTes";
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
    
    @Test
    public void testOpenGroovy() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      Thread.sleep(TestConstants.SLEEP);
+      //******change****
+      createFolder(FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
+      //****************
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 

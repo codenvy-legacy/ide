@@ -50,8 +50,11 @@ public class OpenHtmlLocalFileTest extends BaseTest
    public void testOpenHtml() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      
+      //******change******
       createFolder(FOLDER_NAME);
-
+      //********************
+      
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);

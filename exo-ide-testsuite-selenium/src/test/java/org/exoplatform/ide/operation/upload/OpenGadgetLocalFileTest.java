@@ -50,8 +50,11 @@ public class OpenGadgetLocalFileTest extends BaseTest
    public void testOpenGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      
+      //TODO*********change********change add folder for locked file
       createFolder(FOLDER_NAME);
-
+      //**********************
+      
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);

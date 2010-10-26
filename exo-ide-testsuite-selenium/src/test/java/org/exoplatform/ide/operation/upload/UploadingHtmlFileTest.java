@@ -42,6 +42,8 @@ public class UploadingHtmlFileTest extends BaseTest
 
    private static String HTML_NAME = "Example.html";
    
+   private static String FOLDER="UploadingHtml";
+   
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_NAME;
 
    @Test
@@ -50,12 +52,13 @@ public class UploadingHtmlFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
+      //TODO******change******change add folder for locked file
+      createFolder(FOLDER);
+      //******************
+      Thread.sleep(TestConstants.SLEEP);
       uploadFile(MenuCommands.File.UPLOAD, filePath, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
-
-      
       openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
-      
       checkCodeEditorOpened(0);
 
       
@@ -80,9 +83,9 @@ public class UploadingHtmlFileTest extends BaseTest
          selenium
             .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
 
-      selectItemInWorkspaceTree(HTML_NAME);
+      selectItemInWorkspaceTree(FOLDER);
       deleteSelectedItems();
-
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
    @AfterClass

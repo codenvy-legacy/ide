@@ -43,6 +43,8 @@ public class UploadingGroovyFileTest extends BaseTest
 {
    private static String GROOVY_NAME = "Приклад.groovy";
    
+   private static String FOLDER = "UploadingGroovyFileTest";
+   
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
 
    @Test
@@ -50,6 +52,12 @@ public class UploadingGroovyFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      
+      
+      //TODO*********change****change add folder for locked file
+      createFolder(FOLDER);
+      //******************
+      
       uploadFile(MenuCommands.File.UPLOAD, filePath, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
