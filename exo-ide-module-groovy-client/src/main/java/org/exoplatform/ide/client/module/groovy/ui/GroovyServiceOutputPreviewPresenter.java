@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.client.module.groovy.service.SimpleParameterEntry;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService;
 
@@ -40,8 +41,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -136,12 +135,15 @@ public class GroovyServiceOutputPreviewPresenter
    private String currentResponseMediaType;
 
    private String currentPath;
+   
+   private boolean undeployOnCancel;
 
-   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, WadlApplication wadlApplication, boolean undeloyOnCansel)
    {
       this.eventBus = eventBus;
       this.wadlApplication = wadlApplication;
-
+      this.undeployOnCancel = undeloyOnCansel;
+      
       handlers = new Handlers(eventBus);
    }
 
@@ -166,6 +168,10 @@ public class GroovyServiceOutputPreviewPresenter
       {
          public void onClick(ClickEvent event)
          {
+            if(undeployOnCancel)
+            {
+               eventBus.fireEvent(new UndeployGroovyScriptSandboxEvent());
+            }
             display.closeForm();
          }
       });

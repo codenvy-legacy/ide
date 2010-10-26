@@ -119,7 +119,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private TabSet parametersTabSet;
 
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication)
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication, boolean undeloyOnCansel)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
@@ -140,7 +140,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       show();
 
-      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, wadlApplication);
+      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, wadlApplication, undeloyOnCansel);
       presenter.bindDisplay(this);
 
       addCloseClickHandler(new CloseClickHandler()

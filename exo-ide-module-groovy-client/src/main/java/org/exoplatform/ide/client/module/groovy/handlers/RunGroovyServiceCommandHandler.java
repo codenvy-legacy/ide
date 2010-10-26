@@ -31,11 +31,16 @@ import org.exoplatform.ide.client.module.groovy.event.DeployGroovyScriptSandboxE
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent;
 import org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler;
+import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,9 +51,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
-   EditorActiveFileChangedHandler, FileSavedHandler, ExceptionThrownHandler, GroovyDeployResultReceivedHandler,
-   GroovyValidateResultReceivedHandler
+public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, EditorActiveFileChangedHandler,
+   FileSavedHandler, ExceptionThrownHandler, GroovyDeployResultReceivedHandler, GroovyValidateResultReceivedHandler,
+   RestServiceOutputReceivedHandler, GroovyUndeployResultReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -62,7 +67,9 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(RunGroovyServiceEvent.TYPE, this);
+      handlers.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
    }
 
    /**
@@ -72,7 +79,6 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
    {
       this.activeFile = event.getFile();
    }
-   
 
    /**
     * @see org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler#onRunGroovyService(org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent)
@@ -100,7 +106,7 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.fireEvent(new SaveFileEvent());
    }
-   
+
    public void onFileSaved(FileSavedEvent event)
    {
       handlers.removeHandler(FileSavedEvent.TYPE);
@@ -112,7 +118,7 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
       handlers.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
       eventBus.fireEvent(new ValidateGroovyScriptEvent());
    }
-   
+
    public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
    {
       handlers.removeHandler(GroovyValidateResultReceivedEvent.TYPE);
@@ -121,22 +127,39 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
          reDeployFile();
       }
    }
-   
+
    protected void reDeployFile()
    {
       handlers.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
       eventBus.fireEvent(new DeployGroovyScriptSandboxEvent());
    }
-   
+
    public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
    {
       handlers.removeHandler(GroovyDeployResultReceivedEvent.TYPE);
       if (event.getException() == null)
       {
-         eventBus.fireEvent(new PreviewWadlOutputEvent());
+         handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
+         eventBus.fireEvent(new PreviewWadlOutputEvent(true));
       }
    }
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedHandler#onRestServiceOutputReceived(org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent)
+    */
+   public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
+   {
+      eventBus.fireEvent(new UndeployGroovyScriptSandboxEvent());
+   }
    
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent)
+    */
+   public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
+   {
+      handlers.removeHandler(RestServiceOutputReceivedEvent.TYPE);
+   }
+
    public void onError(ExceptionThrownEvent event)
    {
       //Can occurs while saving file.
@@ -144,7 +167,8 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler,
       //Before saving file, we add FileSavedHandler,
       //remove it
       handlers.removeHandler(FileSavedEvent.TYPE);
-      
+
    }
+
 
 }

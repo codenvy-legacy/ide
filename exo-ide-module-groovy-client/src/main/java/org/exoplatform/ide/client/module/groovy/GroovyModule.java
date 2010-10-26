@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.client.module.groovy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -79,9 +82,6 @@ import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOu
 import org.exoplatform.ide.client.module.groovy.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.client.module.groovy.util.GroovyPropertyUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
@@ -95,8 +95,9 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    UndeployGroovyScriptHandler, GroovyValidateResultReceivedHandler, GroovyDeployResultReceivedHandler,
    GroovyUndeployResultReceivedHandler, RestServiceOutputReceivedHandler, SetAutoloadHandler, PreviewWadlOutputHandler,
    WadlServiceOutputReceiveHandler, EditorActiveFileChangedHandler, InitializeServicesHandler, ExceptionThrownHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler, UndeployGroovyScriptSandboxHandler
-   
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeployGroovyScriptSandboxHandler,
+   UndeployGroovyScriptSandboxHandler
+
 {
 
    private HandlerManager eventBus;
@@ -143,6 +144,10 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
     */
    private String errFileHref = "";
 
+   //need for http://jira.exoplatform.org/browse/IDE-347
+   //undeploy service on cancel 
+   private boolean undeployOnCancel = false;
+
    public GroovyModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -157,8 +162,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Groovy Template", "Groovy Template",
          "Create Groovy Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
-
-      
 
       eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), true, true));
@@ -221,18 +224,18 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-     GroovyService.getInstance().undeploy(activeFile.getHref());
+      GroovyService.getInstance().undeploy(activeFile.getHref());
    }
 
    private native void initGoToErrorFunction() /*-{
-                                               var instance = this;       
-                                               var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
-                                               instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(Ljava/lang/String;II)(
-                                               fileHref, lineNumber, columnNumber);
-                                               };
-                                               
-                                               $wnd.groovyGoToErrorFunction = goToErrorFunction;
-                                               }-*/;
+      var instance = this;       
+      var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
+      instance.@org.exoplatform.ide.client.module.groovy.GroovyModule::goToError(Ljava/lang/String;II)(
+      fileHref, lineNumber, columnNumber);
+      };
+
+      $wnd.groovyGoToErrorFunction = goToErrorFunction;
+   }-*/;
 
    public void goToError(String fileHref, int lineNumber, int columnNumber)
    {
@@ -424,7 +427,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
-  
    /**
     * {@inheritDoc}
     */
@@ -439,12 +441,12 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       VirtualFileSystem.getInstance().saveProperties(activeFile);
    }
 
- 
    /**
     * {@inheritDoc}
     */
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
+      undeployOnCancel  = event.isUndeployOnCansel();
       String content = activeFile.getContent();
       int indStart = content.indexOf("\"");
       int indEnd = content.indexOf("\"", indStart + 1);
@@ -453,18 +455,17 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       {
          path = "/" + path;
       }
-
+      
       String url = configuration.getContext() + path;
       WadlService.getInstance().getWadl(url);
    }
 
-  
    /**
     * {@inheritDoc}
     */
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
-      new GroovyServiceOutputPreviewForm(eventBus, event.getApplication());
+      new GroovyServiceOutputPreviewForm(eventBus, event.getApplication(), undeployOnCancel);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -485,7 +486,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
-   
    /**
     * {@inheritDoc}
     */
@@ -500,7 +500,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       }
    }
 
-  
    /**
     * {@inheritDoc}
     */
@@ -509,7 +508,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
       errFileHref = "";
    }
 
-   
    /**
     * {@inheritDoc}
     */

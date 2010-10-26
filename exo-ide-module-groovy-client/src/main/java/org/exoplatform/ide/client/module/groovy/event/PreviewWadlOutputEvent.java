@@ -25,9 +25,24 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class PreviewWadlOutputEvent extends GwtEvent<PreviewWadlOutputHandler>
 {
-   
+
    public static final GwtEvent.Type<PreviewWadlOutputHandler> TYPE = new GwtEvent.Type<PreviewWadlOutputHandler>();
-   
+
+   //need for undeploy script if GroovyServiceOutputPreviewForm canceled 
+   private boolean undeployOnCansel = false;
+
+   public PreviewWadlOutputEvent()
+   {
+   }
+
+   /**
+    * @param undeployOnCansel
+    */
+   public PreviewWadlOutputEvent(boolean undeployOnCansel)
+   {
+      this.undeployOnCansel = undeployOnCansel;
+   }
+
    @Override
    protected void dispatch(PreviewWadlOutputHandler hendler)
    {
@@ -38,6 +53,14 @@ public class PreviewWadlOutputEvent extends GwtEvent<PreviewWadlOutputHandler>
    public com.google.gwt.event.shared.GwtEvent.Type<PreviewWadlOutputHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   /**
+    * @return the undeployOnCansel
+    */
+   public boolean isUndeployOnCansel()
+   {
+      return undeployOnCansel;
    }
 
 }
