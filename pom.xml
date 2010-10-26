@@ -12,9 +12,10 @@
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
-      <connection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/branches/1.0.x</connection>
-      <developerConnection>scm:svn:http://svn.exoplatform.org/exo-int/ideall/branches/1.0.x</developerConnection>
-      <url>http://fisheye.exoplatform.org/browse/projects/parent/branches/1.0.x</url>
+      <connection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</connection>
+      <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</developerConnection>
+      <url>http://fisheye.exoplatform.org/browse/projects/ide/trunk</url>
+      <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>
       <!-- Repositories URLs -->
