@@ -40,7 +40,7 @@ import org.junit.Test;
 public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 {
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static final String FOLDER_NAME = "ekrgjbalsgblsgsgn";
 

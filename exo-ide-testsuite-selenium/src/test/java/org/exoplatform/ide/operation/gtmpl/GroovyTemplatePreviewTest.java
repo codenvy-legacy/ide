@@ -46,7 +46,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
    
    private final static String TEST_FOLDER = "GroovyTemplate";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
    
    private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"                                                                                                                                                           
       + " import org.exoplatform.services.security.ConversationState\n "

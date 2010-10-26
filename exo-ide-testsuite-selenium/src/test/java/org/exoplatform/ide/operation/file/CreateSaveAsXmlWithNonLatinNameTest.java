@@ -66,7 +66,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    private static final String XML_CONTENT_2 = "<?xml version='1.0' encoding='UTF-8'?>\n"
                                              + "<settings>test</settings>";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    //IDE-47: Creating and "Saving As" new XML file with non-latin name 
    @Test
@@ -149,7 +149,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
    private void checkFileOnWebDav(String fileName) throws Exception
    {
-      selenium.open(BASE_URL + "rest/private/jcr/repository/dev-monit/");
+      selenium.open(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -170,7 +170,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
    private void checkTwoFilesOnWebDav(String fileName1, String fileName2) throws Exception
    {
-      selenium.openWindow(BASE_URL + "rest/private/jcr/repository/dev-monit/", "WEBDAV Browser");
+      selenium.openWindow(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/", "WEBDAV Browser");
       selenium.waitForPopUp("WEBDAV Browser", "10000");
       selenium.selectPopUp("WEBDAV Browser");
 

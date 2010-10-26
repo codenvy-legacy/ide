@@ -61,7 +61,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
    
    //IDE-76:Create File from Template
@@ -87,7 +87,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
       
       //test files created on server
-      selenium.open(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/" );
+      selenium.open(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/" );
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.SLEEP);
       testFileCreatedOnServer(GROOVY_FILE_NAME);
@@ -149,7 +149,7 @@ public class CreateFileFromTemplateTest extends BaseTest
      
       //TODO********change****change add folder for locked file
       assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL +  REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/"
+         + BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/"
          + fileName + "' and text()=' " + fileName + "']"));
       //*************
    }

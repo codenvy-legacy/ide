@@ -45,9 +45,9 @@ public class RenameClosedFileTest extends BaseTest
    
    private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
 
-   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + ORIG_FILE_NAME;
+   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + ORIG_FILE_NAME;
    
-   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + RENAMED_FILE_NAME;
+   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + RENAMED_FILE_NAME;
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
 

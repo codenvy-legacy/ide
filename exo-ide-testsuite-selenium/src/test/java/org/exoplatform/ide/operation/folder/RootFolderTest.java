@@ -38,7 +38,7 @@ public class RootFolderTest extends BaseTest
 {
    
    private final static String URL =
-      BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private static String textFileName;
    

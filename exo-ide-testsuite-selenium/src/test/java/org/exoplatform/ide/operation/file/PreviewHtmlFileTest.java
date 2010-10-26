@@ -43,7 +43,7 @@ public class PreviewHtmlFileTest extends BaseTest
 {
    private final static String FILE_NAME = "PreviewHtmlFile.html";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
    
    @BeforeClass
    public static void setUp()
@@ -162,7 +162,7 @@ public class PreviewHtmlFileTest extends BaseTest
     //is Preview Tab present
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
       
-      selenium.selectFrame("//iframe[@src='" + BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME + "']");
+      selenium.selectFrame("//iframe[@src='" + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME + "']");
       
       assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
       

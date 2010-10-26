@@ -46,7 +46,7 @@ public class CodeOutlineXmlTest extends BaseTest
 {
    private final static String FILE_NAME = "XmlCodeOutline.xml";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
    
    @BeforeClass
    public static void setUp()

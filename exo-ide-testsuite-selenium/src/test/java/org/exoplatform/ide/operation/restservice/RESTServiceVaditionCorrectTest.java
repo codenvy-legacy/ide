@@ -46,7 +46,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 
    private final static String FOLDER = "VaditionCorrect";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
    private static final String VALID_SCRIPT =
       "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"

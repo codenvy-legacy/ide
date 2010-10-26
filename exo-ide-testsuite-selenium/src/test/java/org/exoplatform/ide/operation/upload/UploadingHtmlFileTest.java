@@ -42,7 +42,7 @@ public class UploadingHtmlFileTest extends BaseTest
 
    private static String HTML_NAME = "Example.html";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_NAME;
 
    @Test
    public void testUploadingHtml() throws Exception

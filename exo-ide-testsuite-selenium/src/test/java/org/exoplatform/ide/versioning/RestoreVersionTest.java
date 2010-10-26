@@ -39,7 +39,7 @@ import java.io.IOException;
  */
 public class RestoreVersionTest extends VersioningTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private final static String TEST_FOLDER = "testFolder";
 
@@ -47,15 +47,15 @@ public class RestoreVersionTest extends VersioningTest
 
    private final static String FILE_2 = "Test File 2";
 
-   private String version1Text = "1++";
+   private String version1Text = "1+1+";
 
-   private String version2Text = "2+";
+   private String version2Text = "2+2+";
 
-   private String version3Text = "3+";
+   private String version3Text = "3+3+";
 
-   private String version4Text = "4+";
+   private String version4Text = "4+4+";
 
-   private String version5Text = "5";
+   private String version5Text = "5+5+";
 
    @BeforeClass
    public static void setUp()
@@ -120,7 +120,7 @@ public class RestoreVersionTest extends VersioningTest
 
       //Restore version and check opened file has restored content
       runToolbarButton(MenuCommands.File.RESTORE_VERSION);
-      Thread.sleep(5000);
+      Thread.sleep(50000);
       assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -219,6 +219,9 @@ public class RestoreVersionTest extends VersioningTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(20000);
+      
+      
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -258,7 +261,7 @@ public class RestoreVersionTest extends VersioningTest
 
       //Restore version and check opened file has restored content
       runToolbarButton(MenuCommands.File.RESTORE_VERSION);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
+      Thread.sleep(1000000);
       assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);

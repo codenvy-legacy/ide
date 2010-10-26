@@ -45,8 +45,10 @@ public class CodeOutLineHtmlTest extends BaseTest
 {
    
    private final static String FILE_NAME = "HtmlCodeOutline.html";
+   
+   private final static String FOLDER_NAME = "testOutLineWithGroovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    @BeforeClass
    public static void setUp()
@@ -55,6 +57,9 @@ public class CodeOutLineHtmlTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
       try
       {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_NAME + "/" + FILE_NAME);
+         
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
       }
       catch (IOException e)
@@ -72,7 +77,7 @@ public class CodeOutLineHtmlTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
@@ -91,9 +96,8 @@ public class CodeOutLineHtmlTest extends BaseTest
       //---- 1-3 -----------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //---- 4 ----

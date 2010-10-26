@@ -61,7 +61,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/formating/";
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @BeforeClass
    public static void setUp()

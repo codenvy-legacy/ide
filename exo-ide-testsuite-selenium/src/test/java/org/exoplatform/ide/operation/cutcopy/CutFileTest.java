@@ -59,7 +59,7 @@ public class CutFileTest extends BaseTest
     */
    private static final String FOLDER_NAME_1 = "CutFileTest1";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private static final String RANDOM_CONTENT = UUID.randomUUID().toString();
 

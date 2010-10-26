@@ -43,9 +43,9 @@ public class DeleteFolderTest extends BaseTest
    
    private final static String FOLDER_NAME_MENU = "deleteFolderMenuTest";
 
-   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
+   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
    
-   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_MENU;
+   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_MENU;
    
    @BeforeClass
    public static void setUp()

@@ -290,6 +290,6 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
    {
       // deleteCookies();
       cleanRegistry();
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
 }

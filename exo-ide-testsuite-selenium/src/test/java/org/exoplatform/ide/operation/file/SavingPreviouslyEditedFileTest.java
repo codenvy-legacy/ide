@@ -51,7 +51,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    
    private static final String DEFAULT_XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>";
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String XML_TEXT = "<test>\n"
       + "<settings>param</settings>\n"
@@ -300,18 +300,18 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    
    private void checkFileOnWebDav()
    {
-      selenium.open(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      selenium.open(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       selenium.waitForPageToLoad("10000");
       
       assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" 
+         + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" 
          + FOLDER_NAME + "' and text()=' " + FOLDER_NAME + "']"));
       
       selenium.click("link=" + FOLDER_NAME);
       selenium.waitForPageToLoad("10000");
       
       assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" 
+         + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" 
          + FOLDER_NAME + "/" + FILE_NAME + "' and text()=' " + FILE_NAME + "']"));
       
       selenium.goBack();

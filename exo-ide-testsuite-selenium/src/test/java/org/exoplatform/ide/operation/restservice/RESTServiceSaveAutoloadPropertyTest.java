@@ -43,7 +43,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
 
    private static final String FILE_NAME = System.currentTimeMillis() + ".groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
    
    @Test
    public void testAutoload() throws Exception

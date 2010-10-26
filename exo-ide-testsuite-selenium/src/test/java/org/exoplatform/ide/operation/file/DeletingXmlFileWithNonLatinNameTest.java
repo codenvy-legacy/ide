@@ -48,7 +48,7 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
 {
    private static final String FILE_NAME = System.currentTimeMillis() + "ТестовыйФайл.xml";
 
-   private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static String XML_CONTENT =
       "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n" + "<settings>param</settings>\n" + "<bean>\n"

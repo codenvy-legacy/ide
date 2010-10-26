@@ -49,7 +49,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private static final String FOLDER_NAME = "CreatingAndSavingAsNewFileTest";
 
    private static final String STORAGE_URL =
-      BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
    private static final String REST_SERVICE_FILE_NAME = "TestGroovyRest.groovy";
 

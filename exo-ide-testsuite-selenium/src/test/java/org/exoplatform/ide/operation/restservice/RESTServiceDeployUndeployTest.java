@@ -42,7 +42,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
 
    private static String FILE_NAME = "DeployUndeployTest.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
 
    @Test
    public void testDeployUndeploy() throws Exception
@@ -77,7 +77,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
 
 
     //**********fix TODO static string message 
-      assertEquals("[INFO] http://127.0.0.1:8080/rest/private/jcr/repository/dev-monit/Test/" + FILE_NAME
+      assertEquals("[INFO] http://127.0.0.1:8080/rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/Test/" + FILE_NAME
          + " undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
    
       runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);

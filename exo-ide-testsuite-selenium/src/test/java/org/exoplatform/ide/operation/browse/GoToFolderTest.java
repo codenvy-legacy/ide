@@ -43,7 +43,7 @@ import java.io.IOException;
  */
 public class GoToFolderTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String FOLDER_1 = "GoToFolderTest1";
 

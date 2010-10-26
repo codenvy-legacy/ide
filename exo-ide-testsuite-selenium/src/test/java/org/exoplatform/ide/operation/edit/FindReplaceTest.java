@@ -98,7 +98,7 @@ public class FindReplaceTest extends BaseTest
 
    private final String wordToReplace = "form";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @BeforeClass
    public static void setUp()

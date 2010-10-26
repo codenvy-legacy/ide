@@ -46,7 +46,7 @@ public class HighlightCurrentLineTest extends BaseTest
 {
    private static final String FILE_NAME = "HtmlTemplate.html";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
    
    private static final String LINE_HIGHLIGHTER_LOCATOR = "//div[@class='CodeMirror-line-highlighter']";
    
@@ -271,7 +271,7 @@ public class HighlightCurrentLineTest extends BaseTest
    {
       closeUnsavedFileAndDoNotSave("1");
       closeUnsavedFileAndDoNotSave("0");      
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }   
 
 }

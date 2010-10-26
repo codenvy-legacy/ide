@@ -43,10 +43,10 @@ public class RenameFolderTest extends BaseTest
    private final static String NEW_FOLDER_NAME = "FolderRenamed";
 
    private final static String ORIG_URL =
-      BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
 
    private final static String RENAME_URL =
-      BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + NEW_FOLDER_NAME;
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + NEW_FOLDER_NAME;
 
    @BeforeClass
    public static void setUp()

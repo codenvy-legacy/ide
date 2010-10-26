@@ -165,7 +165,7 @@ public class ShowHideLineNumbersTest extends BaseTest
       {
          selenium.deleteCookie("line-numbers_bool", "/IDE-application/IDE/");
       }
-      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
       try
       {
          VirtualFileSystemUtils.delete(url + FOLDER_NAME);

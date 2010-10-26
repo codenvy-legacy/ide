@@ -43,7 +43,7 @@ public class UploadingGroovyFileTest extends BaseTest
 {
    private static String GROOVY_NAME = "Приклад.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
 
    @Test
    public void testUploadingGroovy() throws Exception

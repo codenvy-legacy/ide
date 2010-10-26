@@ -78,7 +78,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
     
       secondWorkspaceName = getNonActiveWorkspaceName();
-      SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + secondWorkspaceName + "/";
+      SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
       
       //select another workspace
       selectWorkspace(secondWorkspaceName);

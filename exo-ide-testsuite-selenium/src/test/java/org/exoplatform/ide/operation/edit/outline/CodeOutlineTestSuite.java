@@ -35,7 +35,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CodeOutlineGoogleGadgetTest.class, CodeOutLineGroovyTemplateTest.class, CodeOutLineHtmlTest.class,
-   CodeOutlineJavaScriptTest.class, CodeOutlineXmlTest.class, ClosingOutlinePanelTest.class})
+   CodeOutlineJavaScriptTest.class, CodeOutlineXmlTest.class, ClosingOutlinePanelTest.class, CodeOutLineGroovyTest.class})
 public class CodeOutlineTestSuite
 {
 

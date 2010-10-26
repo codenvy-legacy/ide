@@ -48,7 +48,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    
    private static String CUR_TIME = String.valueOf(System.currentTimeMillis());
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
@@ -56,7 +56,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
       try
       {
          VirtualFileSystemUtils.mkcol(url);

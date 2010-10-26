@@ -45,7 +45,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
    private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_FILE;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_FILE;
 
    @Test
    public void editFileInWysiwygEditor() throws Exception

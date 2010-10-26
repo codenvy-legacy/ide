@@ -40,7 +40,7 @@ public class CreateFolderTest extends BaseTest
 
    private static String FOLDER_NAME_TOOLBAR = "CreateFolderToolbar";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    /**
     * Test to create folder using ToolBar button. (TestCase IDE-3)

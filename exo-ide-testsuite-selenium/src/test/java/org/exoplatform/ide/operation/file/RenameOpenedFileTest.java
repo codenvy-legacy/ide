@@ -47,10 +47,10 @@ public class RenameOpenedFileTest extends BaseTest
 
    private final static String FOLDER_NAME = "falkfsdhglesthga";
 
-   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
       + FOLDER_NAME + "/" + ORIG_FILE_NAME;
 
-   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
       + FOLDER_NAME + "/" + RENAMED_FILE_NAME;
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
@@ -61,7 +61,7 @@ public class RenameOpenedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils
-            .mkcol(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
+            .mkcol(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
          VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, ORIG_URL);
       }
       catch (IOException e)
@@ -126,7 +126,7 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/"
+         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
             + FOLDER_NAME);
       }
       catch (IOException e)

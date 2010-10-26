@@ -48,7 +48,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
 {
    private final static String FILE_NAME = "SampleHtmlFile.html";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
             + WS_NAME + "/" + FILE_NAME;
    
    private final static String MAIN_FORM_LOCATOR = "//div[@id='isc_G']";

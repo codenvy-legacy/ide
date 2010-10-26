@@ -47,7 +47,7 @@ public class ClosingOutlinePanelTest extends BaseTest
    
    private final static String TEXT_FILE_NAME = "SampleTextFile.txt";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @BeforeClass
    public static void setUp()

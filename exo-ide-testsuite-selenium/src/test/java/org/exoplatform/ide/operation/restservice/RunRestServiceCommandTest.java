@@ -52,7 +52,7 @@ public class RunRestServiceCommandTest extends BaseTest
    
    private final static String FOLDER_NAME = "RunRestServiceCommandTest";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -139,7 +139,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + SIMPLE_FILE_NAME
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + SIMPLE_FILE_NAME
             + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
@@ -264,7 +264,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/"
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/"
             + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
@@ -318,7 +318,7 @@ public class RunRestServiceCommandTest extends BaseTest
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + "jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + NEW_FILE_NAME
+         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + NEW_FILE_NAME
             + " deployed successfully.",
          selenium
             .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));

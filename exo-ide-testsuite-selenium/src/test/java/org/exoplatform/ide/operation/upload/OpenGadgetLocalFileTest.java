@@ -44,7 +44,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
 
    private static String GADGET_NAME = "gadget.xml";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
 
    @Test
    public void testOpenGadget() throws Exception

@@ -42,7 +42,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
    
    private static final String FILE_NAME = "gadget.xml";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
    @Test
    public void testUploadGoogleGadget() throws Exception
@@ -55,7 +55,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       selectItemInWorkspaceTree(FILE_NAME);
       String url = getItemUrl();
       
-      assertEquals(BASE_URL+"rest/private/jcr/repository/dev-monit/uploads/gadget.xml",url);
+      assertEquals(BASE_URL+"rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/uploads/gadget.xml",url);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       

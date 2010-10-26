@@ -49,7 +49,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
    
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -350,7 +350,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
     * Clean up cookie, registry, repository after each test of in the each class:<br>
     *   - selenium.deleteAllVisibleCookies();<br>
     *   - cleanRegistry();<br>
-    *   - cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");<>
+    *   - cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");<>
     * @throws IOException
     */
    @After
@@ -358,6 +358,6 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    {
       deleteCookies();
       cleanRegistry();
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
 }

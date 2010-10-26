@@ -57,7 +57,7 @@ public class HotkeysCustomizationTest extends BaseTest
    
    private static final String DEFAULT_TEXT_IN_GADGET = "Hello, world!";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + GOOGLE_GADGET_FILE;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GOOGLE_GADGET_FILE;
    
    @BeforeClass
    public static void setUp()

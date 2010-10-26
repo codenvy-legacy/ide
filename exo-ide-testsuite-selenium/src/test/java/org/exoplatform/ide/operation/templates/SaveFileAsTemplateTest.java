@@ -43,7 +43,7 @@ public class SaveFileAsTemplateTest extends BaseTest
 {
    private static final String FILE_NAME = "RestServiceTemplate.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
 
    private static final String REST_SERVICE_TEMPLATE_NAME = "test REST template";
    

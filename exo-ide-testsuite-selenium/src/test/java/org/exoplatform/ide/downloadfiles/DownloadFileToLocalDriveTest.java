@@ -48,7 +48,7 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    
    private static final String FILE_NAME = String.valueOf(System.currentTimeMillis());
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
 
 

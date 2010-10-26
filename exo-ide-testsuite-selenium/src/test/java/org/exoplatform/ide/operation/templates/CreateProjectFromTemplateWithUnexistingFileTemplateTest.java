@@ -66,7 +66,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
    
    private static final String URL = BASE_URL + "rest/private/registry/repository/exo:applications/IDE/templates/";
    
-   private final static String PROJECT_FOLDER_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + PROJECT_NAME;
+   private final static String PROJECT_FOLDER_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + PROJECT_NAME;
    
    private static String templateUrl;
    

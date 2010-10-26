@@ -102,7 +102,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);

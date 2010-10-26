@@ -51,7 +51,7 @@ public class RESTServiceGetURLTest extends BaseTest
       try
       {
          //*****************change**************
-         String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+         String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
          VirtualFileSystemUtils.mkcol(url);
          VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy", MimeType.GROOVY_SERVICE, url + FILE_NAME);
          //**********************
@@ -155,7 +155,7 @@ public class RESTServiceGetURLTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);

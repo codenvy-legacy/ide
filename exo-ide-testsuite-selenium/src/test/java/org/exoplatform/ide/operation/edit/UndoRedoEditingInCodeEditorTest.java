@@ -48,7 +48,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
    
    private static String UNDO_REDO_TXT = "undo-redo.txt"; 
    
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    @Test
    	        

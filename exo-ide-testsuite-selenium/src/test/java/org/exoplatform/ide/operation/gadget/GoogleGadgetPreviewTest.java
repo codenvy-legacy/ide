@@ -44,7 +44,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
    
    private final static String FILE_NAME = "Calculator.xml";
    private final static String FOLDER = "FolderCalculator";
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
    @BeforeClass
    public static void setUp()

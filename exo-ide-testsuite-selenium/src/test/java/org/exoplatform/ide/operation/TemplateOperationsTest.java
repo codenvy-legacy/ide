@@ -253,7 +253,7 @@ public class TemplateOperationsTest extends BaseTest
 		selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||Class=TextItem]/element", "Test TXT File.txt");
 		selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
 		Thread.sleep(2000);
-		selenium.open("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/");
+		selenium.open("http://127.0.0.1:8888/rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
 		Thread.sleep(10000);
 		assertTrue(selenium.isTextPresent("Test XML File.xml"));
 		assertTrue(selenium.isTextPresent("Test Groovy File.groovy"));

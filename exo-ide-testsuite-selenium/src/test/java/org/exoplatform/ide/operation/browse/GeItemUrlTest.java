@@ -47,7 +47,7 @@ public class GeItemUrlTest extends BaseTest
 
    private final String folderName = "TestFolder";
 
-   private final String entrypoint = "jcr/repository/";
+   private final String entrypoint = WEBDAV_CONTEXT+"/repository/";
 
    @Test
    public void testGetFileUrl() throws Exception

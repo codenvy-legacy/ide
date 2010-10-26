@@ -129,7 +129,7 @@ public class GadgetDeployUndeployTest extends BaseTest
    * Clean up cookie, registry, repository after each test of in the each class:<br>
    *   - selenium.deleteAllVisibleCookies();<br>
    *   - cleanRegistry();<br>
-   *   - cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");<>
+   *   - cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");<>
    * @throws IOException
    */
    @After
@@ -137,6 +137,6 @@ public class GadgetDeployUndeployTest extends BaseTest
    {
       deleteCookies();
       cleanRegistry();
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
 }

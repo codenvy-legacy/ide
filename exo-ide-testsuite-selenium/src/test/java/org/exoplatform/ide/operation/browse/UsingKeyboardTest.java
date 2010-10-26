@@ -54,7 +54,7 @@ public class UsingKeyboardTest extends BaseTest
 
    private static final String TEST_FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + TEST_FILE;
    
-   private static final String TEST_FILE_URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FILE;
+   private static final String TEST_FILE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FILE;
 
    @Before
    public void setUp() throws Exception
@@ -229,7 +229,7 @@ public class UsingKeyboardTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      cleanRepository(REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       selectWorkspaceTab();
    }   
 }

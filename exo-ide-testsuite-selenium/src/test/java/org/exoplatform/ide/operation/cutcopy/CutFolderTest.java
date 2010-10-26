@@ -43,7 +43,7 @@ import java.io.IOException;
 public class CutFolderTest extends BaseTest
 {
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String FOLDER_1 = "test 1";
 
@@ -267,7 +267,7 @@ public class CutFolderTest extends BaseTest
 
    private void checkItemsOnWebDav() throws Exception
    {
-      selenium.open(BASE_URL + "rest/private/jcr/repository/dev-monit/");
+      selenium.open(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
 
       assertTrue(selenium.isElementPresent("link=test 1"));

@@ -48,7 +48,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    
    private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
    
    @BeforeClass
    public static void setUp()
