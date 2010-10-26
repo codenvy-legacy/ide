@@ -38,6 +38,9 @@ public class CursorPositionStatusBarTest extends BaseTest
    public void testCursorPositionInStatusBar() throws Exception
    {
 
+      //TODO******change*********
+       Thread.sleep(TestConstants.SLEEP);
+      //**********************
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton("Untitled File.html");
