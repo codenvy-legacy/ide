@@ -14,7 +14,6 @@
    <scm>
       <connection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</connection>
       <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</developerConnection>
-      <url>http://fisheye.exoplatform.org/browse/projects/ide/trunk</url>
       <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>
