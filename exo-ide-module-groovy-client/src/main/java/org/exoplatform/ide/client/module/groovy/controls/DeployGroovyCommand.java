@@ -56,7 +56,6 @@ public class DeployGroovyCommand extends SimpleControl implements IDEControl, Ed
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
-   @Override
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
