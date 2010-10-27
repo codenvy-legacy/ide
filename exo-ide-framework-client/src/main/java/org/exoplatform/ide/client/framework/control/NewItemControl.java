@@ -50,7 +50,6 @@ public class NewItemControl extends SimpleControl implements IDEControl
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
-   @Override
    public void initialize(HandlerManager eventBus)
    {
    }
