@@ -82,8 +82,9 @@ public class LocksByUserTest extends LockFileAbstract
       
       selenium.click("//a[@href='../login/logout.jsp']");
       
-      standaloneLogin("demo");
-      
+     //TODO ***********fix-name-login
+      standaloneLogin("john");
+      //*****************************
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
 //      selectItemInWorkspaceTree(WS_NAME);
