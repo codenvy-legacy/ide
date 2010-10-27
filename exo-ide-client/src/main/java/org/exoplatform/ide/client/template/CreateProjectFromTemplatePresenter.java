@@ -237,7 +237,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
       }
       
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().saveContent(fileList.get(0));
+      VirtualFileSystem.getInstance().saveContent(fileList.get(0), null);
       itemsCreated = 1;
    }
 
@@ -248,7 +248,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
    {
       if (itemsCreated < fileList.size())
       {
-         VirtualFileSystem.getInstance().saveContent(fileList.get(itemsCreated));
+         VirtualFileSystem.getInstance().saveContent(fileList.get(itemsCreated), null);
          itemsCreated++;
          return;
       }

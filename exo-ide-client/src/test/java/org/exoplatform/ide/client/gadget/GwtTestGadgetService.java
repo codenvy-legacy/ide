@@ -129,7 +129,7 @@ public class GwtTestGadgetService extends AbstractGwtTest
             fail(event.getErrorMessage());
          }
       });
-      VirtualFileSystem.getInstance().saveContent(gadget);
+      VirtualFileSystem.getInstance().saveContent(gadget, null);
 
       delayTestFinish(DELAY_TEST);
    }
@@ -221,7 +221,7 @@ public class GwtTestGadgetService extends AbstractGwtTest
          }
       });
 
-      VirtualFileSystem.getInstance().saveContent(gadget);
+      VirtualFileSystem.getInstance().saveContent(gadget, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -265,7 +265,7 @@ public class GwtTestGadgetService extends AbstractGwtTest
          }
       });
 
-      VirtualFileSystem.getInstance().saveContent(gadget);
+      VirtualFileSystem.getInstance().saveContent(gadget, null);
       delayTestFinish(DELAY_TEST);
    }
 

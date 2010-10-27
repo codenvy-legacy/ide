@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
 import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -337,6 +338,9 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       boolean matches = false;
       //check is uploadServiceResponse enclosed in xml tag <pre></pre> (do not case sensitive)
+      
+      System.out.println("uploadServiceResponse > [" + uploadServiceResponse + "]" );
+      
       if (openLocalFile)
       {
          matches =
@@ -362,7 +366,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       }
       else
       {
-         completeUpload();
+         completeUpload(uploadServiceResponse);
       }
 
    }
@@ -408,9 +412,16 @@ public class UploadPresenter implements UploadFileSelectedHandler
       eventBus.fireEvent(new OpenFileEvent(submittedFile));
    }
 
-   private void completeUpload()
+   private void completeUpload(String response)
    {
       display.closeDisplay();
+      
+      if (!"<pre></pre>".equals(response)) {
+         String message = response.substring("<pre>".length());
+         message = message.substring(0, message.length() - "</pre>".length());
+         Dialogs.getInstance().showError("Can't upload file!<br>" + message);
+         return;
+      }
 
       Item item = selectedItems.get(0);
       String href = item.getHref();

@@ -180,7 +180,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
             SaveFileAsCommandHandler.this.newFile = newFile;
 
             //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
-            VirtualFileSystem.getInstance().saveContent(newFile);
+            VirtualFileSystem.getInstance().saveContent(newFile, null);
          }
 
       });

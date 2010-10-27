@@ -103,7 +103,8 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
    {
       if (event.getFile().isPropertiesChanged())
       {
-         VirtualFileSystem.getInstance().saveProperties(event.getFile());
+         String lockToken = lockTokens.get(event.getFile().getHref());
+         VirtualFileSystem.getInstance().saveProperties(event.getFile(), lockToken);
       }
       else
       {

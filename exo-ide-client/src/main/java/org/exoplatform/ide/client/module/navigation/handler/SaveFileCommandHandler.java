@@ -90,17 +90,19 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      
+      String lockToken = lockTokens.get(file.getHref());
 
       if (file.isContentChanged())
       {
-         VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+         VirtualFileSystem.getInstance().saveContent(file, lockToken);
          return;
       }
       else
       {
          if (file.isPropertiesChanged())
          {
-            VirtualFileSystem.getInstance().saveProperties(file);
+            VirtualFileSystem.getInstance().saveProperties(file, lockToken);
             return;
          }
       }

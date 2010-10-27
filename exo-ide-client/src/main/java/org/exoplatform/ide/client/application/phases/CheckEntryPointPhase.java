@@ -20,6 +20,7 @@
 
 package org.exoplatform.ide.client.application.phases;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
@@ -31,7 +32,6 @@ import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * 
@@ -46,6 +46,8 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    private HandlerManager eventBus;
 
+   private Handlers handlers;
+
    private ApplicationConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
@@ -57,7 +59,8 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       this.applicationConfiguration = applicationConfiguration;
       this.applicationSettings = applicationSettings;
 
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlers = new Handlers(eventBus);
+      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    protected void execute()
@@ -92,10 +95,14 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
+      handlers.removeHandlers();
+
       if (event.getEntryPoint() == null)
       {
          promptToSelectEntryPoint();
-      } else {
+      }
+      else
+      {
          new RestoreOpenedFilesPhase(eventBus, applicationSettings);
       }
    }

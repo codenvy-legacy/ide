@@ -256,7 +256,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          }
       });
 
-      vfsWebDav.saveContent(file);
+      vfsWebDav.saveContent(file, null);
       delayTestFinish(DELAY_TEST);
    }
    
@@ -307,7 +307,7 @@ public class GwtTestWadlService extends AbstractGwtTest
          }
       });
 
-      vfsWebDav.saveContent(file);
+      vfsWebDav.saveContent(file, null);
       delayTestFinish(DELAY_TEST);
    }
    
