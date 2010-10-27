@@ -17,11 +17,11 @@
 package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -59,7 +59,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       super.initialize(eventBus);
    }
-   
+
    @Override
    protected void updateEnabling()
    {

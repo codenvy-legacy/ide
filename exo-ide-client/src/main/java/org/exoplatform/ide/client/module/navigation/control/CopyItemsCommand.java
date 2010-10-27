@@ -17,11 +17,11 @@
 package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,10 +46,10 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       setTitle("Copy Item(s)");
       setPrompt("Copy Selected Item(s)");
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
-      setEvent(new CopyItemsEvent());      
-      
+      setEvent(new CopyItemsEvent());
+
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
     */

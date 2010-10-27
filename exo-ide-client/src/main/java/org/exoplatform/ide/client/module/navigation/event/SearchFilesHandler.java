@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SaveAllFilesEvent extends GwtEvent<SaveAllFilesHandler>
+public interface SearchFilesHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<SaveAllFilesHandler> TYPE = new GwtEvent.Type<SaveAllFilesHandler>();
-
-   @Override
-   protected void dispatch(SaveAllFilesHandler handler)
-   {
-      handler.onSaveAllFiles(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SaveAllFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onSearchFiles(SearchFilesEvent event);
 
 }

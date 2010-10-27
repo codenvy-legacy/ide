@@ -26,9 +26,9 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -43,8 +43,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
-   EntryPointChangedHandler, PanelDeselectedHandler
+public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";
@@ -65,7 +65,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
       setEvent(new RefreshBrowserEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -76,7 +76,6 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-
 
    private void updateEnabling()
    {
@@ -132,7 +131,8 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
     */
    public void onPanelDeselected(PanelDeselectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = false;
          updateEnabling();
       }

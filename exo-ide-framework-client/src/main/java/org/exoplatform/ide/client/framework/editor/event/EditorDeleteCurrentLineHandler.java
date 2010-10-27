@@ -16,36 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.event.edit;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class EditorDeleteCurrentLineEvent extends GwtEvent<EditorDeleteCurrentLineHandler>
+public interface EditorDeleteCurrentLineHandler extends EventHandler
 {
    
-   public static final GwtEvent.Type<EditorDeleteCurrentLineHandler> TYPE = new GwtEvent.Type<EditorDeleteCurrentLineHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorDeleteCurrentLineHandler handler)
-   {
-      handler.onEditorDeleteCurrentLine(this); 
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorDeleteCurrentLineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event);
+   
 }

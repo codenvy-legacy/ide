@@ -19,20 +19,20 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,7 +41,8 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler, PanelDeselectedHandler
+public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   PanelSelectedHandler, PanelDeselectedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -69,7 +70,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-   
+
    private void updateEnabling()
    {
       if (!browserPanelSelected)
@@ -103,7 +104,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = true;
          updateEnabling();
       }
@@ -114,7 +116,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
     */
    public void onPanelDeselected(PanelDeselectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = false;
          updateEnabling();
       }

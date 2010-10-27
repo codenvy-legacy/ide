@@ -31,6 +31,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
+import org.exoplatform.ide.client.framework.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -40,8 +42,6 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
-import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesEvent;
-import org.exoplatform.ide.client.module.navigation.event.SaveAllFilesHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -142,7 +142,7 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       lockTokens = (Map<String, String>)event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 

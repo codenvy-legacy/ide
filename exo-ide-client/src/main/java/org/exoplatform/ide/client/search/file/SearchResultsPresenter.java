@@ -24,11 +24,11 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
@@ -152,7 +152,6 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       Item item = selectedItems.get(0);
       if (item instanceof File)
       {
-         context.setSelectedEditorDescription(null);
          eventBus.fireEvent(new OpenFileEvent((File)item));
       }
    }

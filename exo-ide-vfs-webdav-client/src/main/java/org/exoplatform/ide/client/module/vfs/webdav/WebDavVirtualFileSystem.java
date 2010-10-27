@@ -621,7 +621,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       AsyncRequest.build(RequestBuilder.POST, url, loader)
          .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
-
    }
 
    /**

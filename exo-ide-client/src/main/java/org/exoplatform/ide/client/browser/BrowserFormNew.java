@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.panel.SimpleTabPanel;
@@ -39,14 +38,14 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
 
    private BrowserPresenter presenter;
 
-   public BrowserFormNew(HandlerManager eventBus, ApplicationContext context)
+   public BrowserFormNew(HandlerManager eventBus)
    {
       super(ID);
       treeGrid = new GWTItemTreeGrid();
       treeGrid.setEmptyMessage("Root folder not found!");
       addMember(treeGrid);
 
-      presenter = new BrowserPresenter(eventBus, context);
+      presenter = new BrowserPresenter(eventBus);
       presenter.bindDisplay(this);
 
       addMouseDownHandler(new MouseDownHandler()
@@ -86,7 +85,7 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
    public void updateItemState(File file)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -95,7 +94,7 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
    public void setLockTokens(Map<String, String> locktokens)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
 }

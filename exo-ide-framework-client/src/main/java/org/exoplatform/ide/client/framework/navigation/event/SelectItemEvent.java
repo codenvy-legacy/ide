@@ -17,11 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.framework.application.event;
-
-import java.util.Map;
-
-import org.exoplatform.ide.client.framework.vfs.File;
+package org.exoplatform.ide.client.framework.navigation.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -32,40 +28,31 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler>
+public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 {
 
-   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE =
-      new GwtEvent.Type<InitializeApplicationHandler>();
+   public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   private Map<String, File> openedFiles;
+   private String itemHref;
 
-   private String activeFile;
-
-   public InitializeApplicationEvent(Map<String, File> openedFiles, String activeFile)
+   public SelectItemEvent(String itemHref)
    {
-      this.openedFiles = openedFiles;
-      this.activeFile = activeFile;
+      this.itemHref = itemHref;
    }
 
-   public Map<String, File> getOpenedFiles()
+   public String getItemHref()
    {
-      return openedFiles;
-   }
-
-   public String getActiveFile()
-   {
-      return activeFile;
+      return itemHref;
    }
 
    @Override
-   protected void dispatch(InitializeApplicationHandler handler)
+   protected void dispatch(SelectItemHandler handler)
    {
-      handler.onInitializeApplication(this);
+      handler.onSelectItem(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InitializeApplicationHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType()
    {
       return TYPE;
    }

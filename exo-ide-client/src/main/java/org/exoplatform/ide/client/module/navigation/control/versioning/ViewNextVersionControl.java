@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVer
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
 /**
@@ -64,14 +64,14 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionEvent.TYPE, this);
       super.initialize(eventBus);
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
     */
-   public void onShowVersion(ShowVersionContentEvent event)
+   public void onShowVersion(ShowVersionEvent event)
    {
       version = event.getVersion();
       boolean isEnabled =

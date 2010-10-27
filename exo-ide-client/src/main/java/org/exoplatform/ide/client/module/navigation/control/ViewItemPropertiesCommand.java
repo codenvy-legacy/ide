@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
+import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -51,7 +51,7 @@ public class ViewItemPropertiesCommand extends SimpleControl implements IDEContr
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
-      setEvent(new ShowPropertiesEvent());
+      setEvent(new ShowItemPropertiesEvent());
    }
 
    /**

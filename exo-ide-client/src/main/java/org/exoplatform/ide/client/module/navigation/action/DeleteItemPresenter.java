@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceive
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;

@@ -16,13 +16,12 @@
  */
 package org.exoplatform.ide.client.model;
 
-import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,46 +33,6 @@ import java.util.List;
 public class ApplicationContext
 {
 
-   private String selectedNavigationPanel;
-
-   /**
-    * Current active text editor.
-    */
-   private LinkedHashMap<String, File> preloadFiles = new LinkedHashMap<String, File>();
-
-   /*
-    * Last entered value in Groovy script output form
-    */
-   private String testGroovyScriptURL;
-
-   private String searchContent;
-
-   private String searchFileName;
-
-   private String searchContentType;
-
-   private List<IDEModule> modules = new ArrayList<IDEModule>();
-
-   /*
-    * Store status bar control id's here
-    */
-
-   private List<String> statusBarItems = new ArrayList<String>();
-
-   public List<String> getStatusBarItems()
-   {
-      return statusBarItems;
-   }
-
-   public ApplicationContext()
-   {
-      //toolBarItems.add("");
-   }
-
-   public List<IDEModule> getModules()
-   {
-      return modules;
-   }
 
    /**
     * Uses for storing items to need copy
@@ -93,79 +52,6 @@ public class ApplicationContext
    public List<Item> getItemsToCut()
    {
       return itemsToCut;
-   }
-
-   private String selectedEditorDescription;
-
-   public LinkedHashMap<String, File> getPreloadFiles()
-   {
-      return preloadFiles;
-   }
-
-   public String getSelectedNavigationPanel()
-   {
-      return selectedNavigationPanel;
-   }
-
-   public void setSelectedNavigationPanel(String selectedNavigationPanel)
-   {
-      this.selectedNavigationPanel = selectedNavigationPanel;
-   }
-
-   /**
-    * @return
-    */
-   public String getTestGroovyScriptURL()
-   {
-      return testGroovyScriptURL;
-   }
-
-   /**
-    * @param testGroovyScriptURL
-    */
-   public void setTestGroovyScriptURL(String testGroovyScriptURL)
-   {
-      this.testGroovyScriptURL = testGroovyScriptURL;
-   }
-
-   public String getSearchContent()
-   {
-      return searchContent;
-   }
-
-   public void setSearchContent(String searchContent)
-   {
-      this.searchContent = searchContent;
-   }
-
-   public String getSearchFileName()
-   {
-      return searchFileName;
-   }
-
-   public void setSearchFileName(String searchFileName)
-   {
-      this.searchFileName = searchFileName;
-   }
-
-   public String getSearchContentType()
-   {
-      return searchContentType;
-   }
-
-   public void setSearchContentType(String searchContentType)
-   {
-      this.searchContentType = searchContentType;
-   }
-
-   public String getSelectedEditorDescription()
-   {
-      return selectedEditorDescription;
-   }
-
-   public void setSelectedEditorDescription(String selectedEditor)
-   {
-      this.selectedEditorDescription = selectedEditor;
    }
 
 }

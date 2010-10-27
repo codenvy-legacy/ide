@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.SaveAsTemplateEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -52,7 +52,7 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements IDEContr
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
-      setEvent(new SaveAsTemplateEvent());
+      setEvent(new SaveFileAsTemplateEvent());
    }
 
    /**

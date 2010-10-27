@@ -43,6 +43,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -97,28 +99,28 @@ import org.exoplatform.ide.client.module.navigation.event.OpenFileWithEvent;
 import org.exoplatform.ide.client.module.navigation.event.OpenFileWithHandler;
 import org.exoplatform.ide.client.module.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.RenameItemHander;
-import org.exoplatform.ide.client.module.navigation.event.SaveAsTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.SaveAsTemplateHandler;
-import org.exoplatform.ide.client.module.navigation.event.SearchFileEvent;
-import org.exoplatform.ide.client.module.navigation.event.SearchFileHandler;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateEvent;
+import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateHandler;
+import org.exoplatform.ide.client.module.navigation.event.SearchFilesEvent;
+import org.exoplatform.ide.client.module.navigation.event.SearchFilesHandler;
 import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsHandler;
 import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFolderHandler;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.OpenFileByPathEvent;
 import org.exoplatform.ide.client.module.navigation.event.upload.OpenFileByPathHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileHandler;
 import org.exoplatform.ide.client.module.navigation.handler.CreateFileCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.CreateFileFromTemplateCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.CreateProjectFromTemplateCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.CreateProjectTemplateCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.CreateProjectTemplateCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.RestoreVersionCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandHandler;
@@ -141,8 +143,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadFileHandler, SaveAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFileHandler,
+public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadFileHandler, SaveFileAsTemplateHandler,
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFilesHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler,
    EditorActiveFileChangedHandler, InitializeServicesHandler, OpenFileByPathHandler
@@ -198,10 +200,10 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreVersionControl(), true, true));
-     
+
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));      
+      eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), true));
@@ -228,25 +230,27 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       handlers.addHandler(OpenFileWithEvent.TYPE, this);
-      handlers.addHandler(OpenFileByPathEvent.TYPE, this);      
+      handlers.addHandler(OpenFileByPathEvent.TYPE, this);
       handlers.addHandler(UploadFileEvent.TYPE, this);
-      handlers.addHandler(SaveAsTemplateEvent.TYPE, this);
+      handlers.addHandler(SaveFileAsTemplateEvent.TYPE, this);
       handlers.addHandler(CreateFolderEvent.TYPE, this);
       handlers.addHandler(CopyItemsEvent.TYPE, this);
       handlers.addHandler(CutItemsEvent.TYPE, this);
 
       handlers.addHandler(DeleteItemEvent.TYPE, this);
       handlers.addHandler(RenameItemEvent.TYPE, this);
-      handlers.addHandler(SearchFileEvent.TYPE, this);
+      handlers.addHandler(SearchFilesEvent.TYPE, this);
       handlers.addHandler(GetFileURLEvent.TYPE, this);
 
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
-      
+
       //      handlers.addHandler(ItemLockedEvent.TYPE, this);
       //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
       new CreateFileCommandHandler(eventBus);
+      new CreateFileFromTemplateCommandHandler(eventBus);
+      new CreateProjectFromTemplateCommandHandler(eventBus);
       new OpenFileCommandHandler(eventBus);
       new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandHandler(eventBus);
@@ -311,7 +315,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new UploadForm(eventBus, selectedItems, path, event.isOpenFile(), applicationConfiguration);
    }
 
-   public void onSaveAsTemplate(SaveAsTemplateEvent event)
+   public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
    {
       new SaveAsTemplateForm(eventBus, activeFile);
    }
@@ -356,7 +360,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new DeleteItemForm(eventBus, selectedItems, openedFiles, lockTokens);
    }
 
-   public void onSearchFile(SearchFileEvent event)
+   public void onSearchFiles(SearchFilesEvent event)
    {
       new SearchForm(eventBus, selectedItems, entryPoint);
    }

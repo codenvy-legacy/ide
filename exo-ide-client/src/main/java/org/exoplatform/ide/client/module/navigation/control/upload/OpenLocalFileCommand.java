@@ -23,8 +23,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
@@ -39,8 +39,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenLocalFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, PanelSelectedHandler,
-   EntryPointChangedHandler, PanelDeselectedHandler
+public class OpenLocalFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
    private final static String ID = "File/Open Local File...";
@@ -71,7 +71,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-   
+
    private void updateEnabling()
    {
       if (browserPanelSelected)
@@ -86,7 +86,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = true;
          updateEnabling();
       }
@@ -115,7 +116,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
     */
    public void onPanelDeselected(PanelDeselectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = false;
          updateEnabling();
       }

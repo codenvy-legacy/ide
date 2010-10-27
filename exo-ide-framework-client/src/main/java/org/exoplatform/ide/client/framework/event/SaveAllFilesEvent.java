@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.module.navigation.event.selection;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -28,31 +28,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SelectItemEvent extends GwtEvent<SelectItemHandler>
+public class SaveAllFilesEvent extends GwtEvent<SaveAllFilesHandler>
 {
 
-   public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
+   public static final GwtEvent.Type<SaveAllFilesHandler> TYPE = new GwtEvent.Type<SaveAllFilesHandler>();
 
-   private String itemHref;
-
-   public SelectItemEvent(String itemHref)
+   @Override
+   protected void dispatch(SaveAllFilesHandler handler)
    {
-      this.itemHref = itemHref;
-   }
-
-   public String getItemHref()
-   {
-      return itemHref;
+      handler.onSaveAllFiles(this);
    }
 
    @Override
-   protected void dispatch(SelectItemHandler handler)
-   {
-      handler.onSelectItem(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SaveAllFilesHandler> getAssociatedType()
    {
       return TYPE;
    }

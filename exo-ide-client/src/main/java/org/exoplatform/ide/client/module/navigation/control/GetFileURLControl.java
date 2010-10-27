@@ -19,8 +19,6 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
@@ -28,14 +26,16 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.module.navigation.event.GetFileURLEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,7 +77,7 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-   
+
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -109,7 +109,8 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = true;
          updateEnabling();
       }
@@ -133,7 +134,8 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
     */
    public void onPanelDeselected(PanelDeselectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = false;
          updateEnabling();
       }

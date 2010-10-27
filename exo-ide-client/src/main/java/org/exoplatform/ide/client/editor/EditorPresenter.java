@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
@@ -37,18 +36,14 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentHandler;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.editor.event.EditorReplaceFileEvent;
-import org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler;
-import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineEvent;
-import org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -60,6 +55,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
@@ -100,7 +97,7 @@ import com.google.gwt.user.client.Timer;
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoTypingHandler,
-   RedoTypingHandler, FormatFileHandler, InitializeApplicationHandler, ShowLineNumbersHandler,
+   RedoTypingHandler, FormatFileHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler,
    EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler
@@ -228,84 +225,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          applicationSettings.setValue("default-editors", new LinkedHashMap<String, String>(), Store.REGISTRY);
       }
-   }
-
-   /**
-    * Initializing application handler
-    * 
-    */
-   public void onInitializeApplication(InitializeApplicationEvent event)
-   {
-      this.openedFiles = event.getOpenedFiles();
-
-      final File fileToSetAsActive = event.getActiveFile() == null ? null : openedFiles.get(event.getActiveFile());
-      if (event.getActiveFile() != null)
-      {
-         activeFile = openedFiles.get(event.getActiveFile());
-      }
-
-      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-      if (defaultEditors == null)
-      {
-         defaultEditors = new LinkedHashMap<String, String>();
-      }
-
-      for (File file : openedFiles.values())
-      {
-         ignoreContentChangedList.add(file.getHref());
-         try
-         {
-            String editorDescription = defaultEditors.get(file.getContentType());
-            Editor editor = EditorUtil.getEditor(file.getContentType(), editorDescription);
-            openedEditors.put(file.getHref(), editor.getDescription());
-
-            boolean lineNumbers = true;
-            if (applicationSettings.getValueAsBoolean("line-numbers") != null)
-            {
-               lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
-            }
-
-            display.openTab(file, lineNumbers, editor, isReadOnly(file));
-            eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-         }
-         catch (EditorNotFoundException e)
-         {
-            e.printStackTrace();
-         }
-      }
-
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            if (fileToSetAsActive != null)
-            {
-               try
-               {
-                  selectFile(fileToSetAsActive);
-               }
-               catch (Exception exc)
-               {
-                  exc.printStackTrace();
-               }
-            }
-            else
-            {
-               if (openedFiles.size() > 0)
-               {
-                  String fileName = (String)openedFiles.keySet().toArray()[0];
-                  File file = openedFiles.get(fileName);
-
-                  TextEditor textEditor = display.getEditor(file.getHref());
-                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, textEditor));
-                  selectFile(activeFile);
-               }
-            }
-
-         }
-      }.schedule(1000);
-
    }
 
    /**

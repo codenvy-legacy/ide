@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler;
-import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -65,7 +65,7 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionEvent.TYPE, this);
       eventBus.addHandler(RestoreVersionEvent.TYPE, this);
    }
 
@@ -80,9 +80,9 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
     */
-   public void onShowVersion(ShowVersionContentEvent event)
+   public void onShowVersion(ShowVersionEvent event)
    {
       activeVersion = event.getVersion();
    }

@@ -24,9 +24,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -68,7 +67,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       super.initialize(eventBus);
    }
-   
+
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)

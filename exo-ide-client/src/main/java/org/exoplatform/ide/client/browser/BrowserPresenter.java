@@ -34,6 +34,11 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -51,11 +56,6 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHand
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserHandler;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
@@ -94,7 +94,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       void selectItem(String path);
 
       void updateItemState(File file);
-      
+
       void setLockTokens(Map<String, String> locktokens);
 
    }
@@ -104,8 +104,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    private HandlerManager eventBus;
 
    private Handlers handlers;
-
-   private ApplicationContext context;
 
    private String itemToSelect;
 
@@ -117,10 +115,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
    private boolean changingEntryPoint = false;
 
-   public BrowserPresenter(HandlerManager eventBus, ApplicationContext context)
+   public BrowserPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
       handlers = new Handlers(eventBus);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
@@ -205,7 +202,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       if (item instanceof File)
       {
-         context.setSelectedEditorDescription(null);
          eventBus.fireEvent(new OpenFileEvent((File)item));
       }
    }
@@ -525,7 +521,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-//      applicationSettings = event.getApplicationSettings();
+      //      applicationSettings = event.getApplicationSettings();
 
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
@@ -533,7 +529,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       }
 
       display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
-      
+
    }
 
 }

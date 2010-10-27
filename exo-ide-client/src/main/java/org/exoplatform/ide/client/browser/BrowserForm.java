@@ -58,7 +58,7 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
       treeGrid.setWidth100();
       addMember(treeGrid);
 
-      presenter = new BrowserPresenter(eventBus, context);
+      presenter = new BrowserPresenter(eventBus);
       presenter.bindDisplay(this);
 
       addMouseDownHandler(new MouseDownHandler()

@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.module.navigation.event;
+package org.exoplatform.ide.client.framework.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,21 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SearchFileEvent extends GwtEvent<SearchFileHandler>
+public interface SaveAllFilesHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<SearchFileHandler> TYPE = new GwtEvent.Type<SearchFileHandler>();
-
-   @Override
-   protected void dispatch(SearchFileHandler handler)
-   {
-      handler.onSearchFile(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SearchFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onSaveAllFiles(SaveAllFilesEvent event);
 
 }

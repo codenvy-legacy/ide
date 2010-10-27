@@ -28,14 +28,14 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedE
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
-import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.SelectItemEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;

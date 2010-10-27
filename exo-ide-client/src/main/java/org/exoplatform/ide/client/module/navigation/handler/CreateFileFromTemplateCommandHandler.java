@@ -26,6 +26,8 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
@@ -34,8 +36,6 @@ import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
@@ -64,7 +64,7 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      
+
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }

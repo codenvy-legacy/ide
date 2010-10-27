@@ -24,15 +24,13 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeApplicationHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -47,7 +45,7 @@ import com.google.gwt.user.client.History;
  */
 
 public class HistoryManager implements EditorActiveFileChangedHandler,
-   ValueChangeHandler<String>, ItemPropertiesReceivedHandler, InitializeApplicationHandler,
+   ValueChangeHandler<String>, ItemPropertiesReceivedHandler,
    ExceptionThrownHandler
 {
 
@@ -64,7 +62,6 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
 
-      this.eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -125,13 +122,13 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
       VirtualFileSystem.getInstance().getContent((File)event.getItem());
    }
 
-   public void onInitializeApplication(InitializeApplicationEvent event)
-   {
-      // init history state here!
-      currentHistoryToken = History.getToken();
-      History.addValueChangeHandler(this);
-      History.fireCurrentHistoryState();
-   }
+//   public void onInitializeApplication(InitializeApplicationEvent event)
+//   {
+//      // init history state here!
+//      currentHistoryToken = History.getToken();
+//      History.addValueChangeHandler(this);
+//      History.fireCurrentHistoryState();
+//   }
 
    public void onError(ExceptionThrownEvent event)
    {

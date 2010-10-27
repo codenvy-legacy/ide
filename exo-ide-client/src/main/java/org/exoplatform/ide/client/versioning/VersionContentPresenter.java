@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -64,7 +64,7 @@ public class VersionContentPresenter implements ShowVersionHandler
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowVersionContentEvent.TYPE, this);
+      handlers.addHandler(ShowVersionEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -78,9 +78,9 @@ public class VersionContentPresenter implements ShowVersionHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
     */
-   public void onShowVersion(ShowVersionContentEvent event)
+   public void onShowVersion(ShowVersionEvent event)
    {
       version = event.getVersion();
       eventBus.fireEvent(new ChangePanelTitleEvent(VersionContentForm.ID, getTitle()));

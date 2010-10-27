@@ -22,9 +22,9 @@ import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -46,7 +46,6 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
 
    public static final String PROMPT = "Show Permissions";
 
-  
    public ShowPermissionsControl()
    {
       super(ID);
@@ -64,7 +63,7 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
     */

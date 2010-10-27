@@ -22,10 +22,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.OpenFileWithEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.module.navigation.event.OpenFileWithEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,7 +35,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileWithCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
+public class OpenFileWithCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";
 
@@ -58,7 +59,7 @@ public class OpenFileWithCommand extends SimpleControl implements IDEControl, It
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-   
+
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (!browserPanelSelected)
@@ -76,9 +77,12 @@ public class OpenFileWithCommand extends SimpleControl implements IDEControl, It
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      if (event.getEntryPoint() != null) {
+      if (event.getEntryPoint() != null)
+      {
          setVisible(true);
-      } else {
+      }
+      else
+      {
          setVisible(false);
       }
    }

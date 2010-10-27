@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.module.navigation.action;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -27,13 +27,10 @@ import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -52,7 +49,7 @@ public class CreateFolderPresenter implements FolderCreatedHandler
    private String href;
 
    private Handlers handlers;
-   
+
    private Item selectedItem;
 
    public CreateFolderPresenter(HandlerManager eventBus, Item selectedItem, String href)
@@ -117,18 +114,18 @@ public class CreateFolderPresenter implements FolderCreatedHandler
       String folder = selectedItem.getHref();
       if (selectedItem instanceof File)
       {
-         folder = folder.substring(0, folder.lastIndexOf("/")+1);
+         folder = folder.substring(0, folder.lastIndexOf("/") + 1);
       }
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
       display.closeForm();
    }
-//   
-//   public void onItemsSelected(ItemsSelectedEvent event)
-//   {
-//      if(event.getSelectedItems().size() != 0)
-//      {
-//         selectedItem = event.getSelectedItems().get(0);
-//      }
-//   }   
+   //   
+   //   public void onItemsSelected(ItemsSelectedEvent event)
+   //   {
+   //      if(event.getSelectedItems().size() != 0)
+   //      {
+   //         selectedItem = event.getSelectedItems().get(0);
+   //      }
+   //   }   
 
 }

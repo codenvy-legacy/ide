@@ -20,12 +20,12 @@
 package org.exoplatform.ide.client.module.navigation.control.download;
 
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.vfs.Folder;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -51,7 +51,7 @@ public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand i
       setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
       setEvent(new DownloadZippedFolderEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
     */

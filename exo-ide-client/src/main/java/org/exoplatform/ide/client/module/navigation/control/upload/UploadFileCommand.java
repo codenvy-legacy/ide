@@ -29,10 +29,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.module.navigation.event.upload.UploadFileEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
@@ -82,7 +82,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
-   
+
    private void updateEnabling()
    {
       if (browserPanelSelected)
@@ -110,7 +110,8 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
 
    public void onPanelSelected(PanelSelectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = true;
          updateEnabling();
       }
@@ -133,13 +134,11 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
     */
    public void onPanelDeselected(PanelDeselectedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
+      if (BrowserPanel.ID.equals(event.getPanelId()))
+      {
          browserPanelSelected = false;
          updateEnabling();
       }
    }
 
-
-
-   
 }

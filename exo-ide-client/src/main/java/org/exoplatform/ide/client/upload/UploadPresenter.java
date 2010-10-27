@@ -16,6 +16,22 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
+import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
+
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -29,22 +45,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
-import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.module.navigation.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
-
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

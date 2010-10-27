@@ -50,15 +50,15 @@ public class IDE extends VerticalPanel
       /*
        * MODULES INITIALIZATION
        */
-      context.getModules().add(new NavigationModule(eventBus, context));
-      context.getModules().add(new TextEditModule(eventBus));
-      context.getModules().add(new DevelopmentModule(eventBus));
-      context.getModules().add(new PreferencesModule(eventBus));
+      new NavigationModule(eventBus, context);
+      new TextEditModule(eventBus);
+      new DevelopmentModule(eventBus);
+      new PreferencesModule(eventBus);
 
-      context.getModules().add(new GadgetModule(eventBus));
-      context.getModules().add(new GroovyModule(eventBus));
-      context.getModules().add(new ChromatticModule(eventBus));
-      context.getModules().add(new NetvibesModule(eventBus));
+      new GadgetModule(eventBus);
+      new GroovyModule(eventBus);
+      new ChromatticModule(eventBus);
+      new NetvibesModule(eventBus);
    }
 
 }

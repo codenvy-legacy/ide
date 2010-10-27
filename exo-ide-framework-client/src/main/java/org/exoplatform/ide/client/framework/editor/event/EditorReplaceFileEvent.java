@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.editor.event;
+package org.exoplatform.ide.client.framework.editor.event;
 
 import org.exoplatform.ide.client.framework.vfs.File;
 

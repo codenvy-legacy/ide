@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.module.navigation.event;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.EventHandler;
 

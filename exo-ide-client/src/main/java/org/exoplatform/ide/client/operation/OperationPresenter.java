@@ -38,8 +38,8 @@ import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaReciev
 import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
-import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesEvent;
-import org.exoplatform.ide.client.operation.properties.event.ShowPropertiesHandler;
+import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
+import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
@@ -52,7 +52,7 @@ import com.google.gwt.user.client.Window;
  * @version @version $Id: $
  */
 
-public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
+public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
    PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler,
    ConfigurationReceivedSuccessfullyHandler
 {
@@ -104,7 +104,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
    {
       display = d;
 
-      handlers.addHandler(ShowPropertiesEvent.TYPE, this);
+      handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(OutputEvent.TYPE, this);
       handlers.addHandler(PreviewFileEvent.TYPE, this);
@@ -113,7 +113,7 @@ public class OperationPresenter implements ShowPropertiesHandler, EditorActiveFi
 
    }
 
-   public void onShowProperties(ShowPropertiesEvent event)
+   public void onShowItemProperties(ShowItemPropertiesEvent event)
    {
       eventBus.fireEvent(new RestorePerspectiveEvent());
       display.showProperties(activeFile);

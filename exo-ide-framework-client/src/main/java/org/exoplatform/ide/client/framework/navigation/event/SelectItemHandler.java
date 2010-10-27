@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2009 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,37 +15,22 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-package org.exoplatform.ide.client.module.navigation.event;
-
-import com.google.gwt.event.shared.GwtEvent;
-
-/**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
  *
  */
-public class SaveAsTemplateEvent extends GwtEvent<SaveAsTemplateHandler>
+package org.exoplatform.ide.client.framework.navigation.event;
+
+import com.google.gwt.event.shared.EventHandler;
+
+/**
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
+ */
+
+public interface SelectItemHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<SaveAsTemplateHandler> TYPE = new GwtEvent.Type<SaveAsTemplateHandler>();
-   
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(SaveAsTemplateHandler handler)
-   {
-      handler.onSaveAsTemplate(this);
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public Type<SaveAsTemplateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onSelectItem(SelectItemEvent event);
 
 }

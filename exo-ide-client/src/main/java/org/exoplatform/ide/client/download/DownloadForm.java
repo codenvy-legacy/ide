@@ -21,16 +21,16 @@ package org.exoplatform.ide.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileHandler;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderHandler;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent;
-import org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -43,8 +43,8 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version $
  */
 
-public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler,
-   ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
+public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler, ItemsSelectedHandler,
+   ConfigurationReceivedSuccessfullyHandler
 {
 
    private final String CONTEXT_DOWNLOAD = "/services/downloadcontent";
