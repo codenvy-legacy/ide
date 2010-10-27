@@ -543,7 +543,6 @@ public class GroovyModule implements IDEModule, ValidateGroovyScriptHandler, Dep
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
-   @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
