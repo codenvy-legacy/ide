@@ -110,15 +110,15 @@ public class DisplayingWarningMessageTest extends BaseTest
       //--------- 6 -------------------
       //Click on "Yes" button in confirmation dialog and save file with default name.
       
-      //check is warning dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save " 
-         + XML_FILE_NAME + " before closing?')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      //click Yes button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.SLEEP);
+//      //check is warning dialog appears
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save " 
+//         + XML_FILE_NAME + " before closing?')]"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+//      //click Yes button
+//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+//      Thread.sleep(TestConstants.SLEEP);
       //check is Save As dialog appears
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
@@ -211,17 +211,18 @@ public class DisplayingWarningMessageTest extends BaseTest
       closeTab("1");
       
       //close untitled JavaScript file
-      closeTab("0");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      //check is warning dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      
-      //click No button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+//      closeTab("0");
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+//      
+//      //check is warning dialog appears
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+//      
+//      //click No button
+//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      closeUnsavedFileAndDoNotSave("0");
       Thread.sleep(TestConstants.SLEEP);
       
       //-------- 10 ---------------
