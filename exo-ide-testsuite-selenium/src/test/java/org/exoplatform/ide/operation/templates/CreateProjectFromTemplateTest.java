@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -42,12 +40,6 @@ import java.io.IOException;
  */
 public class CreateProjectFromTemplateTest extends BaseTest
 {
-   private static final String CREATE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/";
-   
-   private static final String DELETE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/";
-   
-   private static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/";
-   
    private static final String PROJECT_NAME = "My Project";
    
    private static final String PROJECT_TEMPLATE_NAME = "Test Project Template";
@@ -112,9 +104,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       {
          e.printStackTrace();
       }
-      
-      
-      
+
    }
    
    @Test
@@ -125,11 +115,11 @@ public class CreateProjectFromTemplateTest extends BaseTest
       //open create project from template form
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
-      checkCreateProjectFromTemplateForm();
+      checkCreateProjectFromTemplateForm(selenium);
       
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
-      selectProjectTemplate(PROJECT_TEMPLATE_NAME);
+      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
       typeProjectName(PROJECT_NAME);
       
       selenium.click(CREATE_BUTTON_LOCATOR);
@@ -150,48 +140,6 @@ public class CreateProjectFromTemplateTest extends BaseTest
       assertElementPresentInWorkspaceTree(FILE_HTML);
    }
    
-   @Test
-   public void testDeleteProjectTemplate() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
-      //----- 1 ----------------
-      //open create project from template form
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
-      
-      checkCreateProjectFromTemplateForm();
-      
-      //----- 2 ----------------
-      //select project template from list, type project name, click Create button
-      selectProjectTemplate(PROJECT_TEMPLATE_NAME);
-      
-      //----- 3 ----------------
-      //delete project template
-      selenium.click(DELETE_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //confirm deletion
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Do you want to delete template " + PROJECT_TEMPLATE_NAME + "?", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Template " + PROJECT_TEMPLATE_NAME + " deleted.", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   
-      
-      //----- 4 ----------------
-      //check template deleted
-      checkElementPresentInListGrid(PROJECT_TEMPLATE_NAME, false);
-      
-      //close
-      selenium.click(CANCEL_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
    /**
     * Issue IDE-352
     * @throws Exception
@@ -207,13 +155,12 @@ public class CreateProjectFromTemplateTest extends BaseTest
       //open create project from template form
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
-      checkCreateProjectFromTemplateForm();
+      checkCreateProjectFromTemplateForm(selenium);
+      Thread.sleep(TestConstants.SLEEP);
       
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
-      Thread.sleep(TestConstants.SLEEP);
-      Thread.sleep(TestConstants.SLEEP);
-      selectProjectTemplate(DEFAULT_PROJECT_TEMPLATE_NAME);
+      selectProjectTemplate(selenium, DEFAULT_PROJECT_TEMPLATE_NAME);
       typeProjectName(PROJECT_FROM_DEFAULT_TEMPLATE);
       
       selenium.click(CREATE_BUTTON_LOCATOR);
@@ -236,21 +183,6 @@ public class CreateProjectFromTemplateTest extends BaseTest
    }
    
 
-   private void checkElementPresentInListGrid(String projectTemplateName, boolean isPresent) throws Exception
-   {
-      if (isPresent)
-      {
-         assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='"
-               + projectTemplateName + "']"));
-      }
-      else
-      {
-         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='" 
-            + projectTemplateName + "']"));
-      }
-   }
-   
    private void clickOpenIconOfFolder(String folderName) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
@@ -266,24 +198,4 @@ public class CreateProjectFromTemplateTest extends BaseTest
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
-   private void checkCreateProjectFromTemplateForm()
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
-      assertEquals("Create project", selenium.getText("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/"));
-      assertTrue(selenium.isElementPresent(DELETE_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(CREATE_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(CANCEL_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element"));
-   }
-   
-   private void selectProjectTemplate(String projectTemplateName) throws Exception
-   {
-      selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='" 
-         + projectTemplateName + "']", "");
-      selenium.mouseUpAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='"
-         + projectTemplateName + "']", "");
-      
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
 }

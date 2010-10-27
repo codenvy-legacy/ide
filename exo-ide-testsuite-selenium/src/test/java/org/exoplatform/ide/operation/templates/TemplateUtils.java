@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.templates;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.TestConstants;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -31,12 +33,38 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class TemplateUtils
 {
+   static final String CREATE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/";
+   
+   static final String DELETE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/";
+   
+   static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/";
+   
+   static void checkCreateProjectFromTemplateForm(Selenium selenium)
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
+      assertEquals("Create project", selenium.getText("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/"));
+      assertTrue(selenium.isElementPresent(DELETE_BUTTON_LOCATOR));
+      assertTrue(selenium.isElementPresent(CREATE_BUTTON_LOCATOR));
+      assertTrue(selenium.isElementPresent(CANCEL_BUTTON_LOCATOR));
+      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element"));
+   }
+   
+   static void selectProjectTemplate(Selenium selenium, String projectTemplateName) throws Exception
+   {
+      selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='" 
+         + projectTemplateName + "']", "");
+      selenium.mouseUpAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='"
+         + projectTemplateName + "']", "");
+      
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+   
    static void selectItemInTemplateList(Selenium selenium, String templateName) throws Exception
    {
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
       selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
       selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
-      Thread.sleep(500);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
    static void checkSaveAsTemplateWindow(Selenium selenium)
