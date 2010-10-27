@@ -45,7 +45,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
    private static final String SECOND_NAME = System.currentTimeMillis() + "copy.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/jcr/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @Test
    public void testDeployExistPath() throws Exception
