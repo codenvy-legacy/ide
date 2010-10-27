@@ -326,7 +326,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          String editorId = event.getEditorId();
          String path = display.getPathByEditorId(editorId);
          final File file = openedFiles.get(path);
-         if (file == null) return;
+         if (file == null)
+            return;
          display.setTabContent(file.getHref(), file.getContent());
 
          new Timer()
@@ -451,52 +452,51 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          return;
       }
       final File file = event.getFile();
-      
-      if(file.getProperty(ItemProperty.JCR_LOCKOWNER)!= null)
+
+      if (file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
       {
-         if(!lockTokens.containsKey(file.getHref()))
+         if (!lockTokens.containsKey(file.getHref()))
          {
             closeFile(file);
             return;
          }
       }
-      
+
       if (!file.isContentChanged() && !file.isPropertiesChanged())
       {
          closeFile(file);
          return;
       }
 
-      String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-      Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedCallback()
+      closeFileAfterSaving = true;
+      if (file.isNewFile())
       {
-         public void execute(Boolean value)
+         eventBus.fireEvent(new SaveFileAsEvent(file, new EditorCloseFileEvent(file, true)));
+      }
+      else
+      {
+         String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
+         Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedCallback()
          {
-            if (value == null)
+            public void execute(Boolean value)
             {
-               return;
-            }
-
-            if (value)
-            {
-               closeFileAfterSaving = true;
-
-               if (file.isNewFile())
+               if (value == null)
                {
-                  eventBus.fireEvent(new SaveFileAsEvent(file));
+                  return;
                }
-               else
+
+               if (value)
                {
                   file.setContent(display.getTabContent(file.getHref()));
                   eventBus.fireEvent(new SaveFileEvent());
                }
+               else
+               {
+                  closeFile(file);
+               }
             }
-            else
-            {
-               closeFile(file);
-            }
-         }
-      });
+         });
+      }
    }
 
    public void onUndoTypig(UndoTypingEvent event)
