@@ -36,6 +36,8 @@ import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -224,14 +226,6 @@ implements CreateFromTemplateDisplay<T>
    }
 
    /**
-    * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#setEnabledDeleteButton(boolean)
-    */
-   public void setDeleteButtonDisabled(boolean value)
-   {
-      deleteButton.setDisabled(value);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter.Display#selectLastTemplate()
     */
    public void selectLastTemplate()
@@ -254,4 +248,26 @@ implements CreateFromTemplateDisplay<T>
    {
       return fileNameField;
    }
+   
+   public List<T> getTemplatesSelected()
+   {
+      return templateListGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#enableDeleteButton()
+    */
+   public void enableDeleteButton()
+   {
+      deleteButton.setDisabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#disableDeleteButton()
+    */
+   public void disableDeleteButton()
+   {
+      deleteButton.setDisabled(true);
+   }
+
 }

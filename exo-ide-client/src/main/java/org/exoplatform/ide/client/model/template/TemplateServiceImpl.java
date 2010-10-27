@@ -100,7 +100,7 @@ public class TemplateServiceImpl extends TemplateService
       String url = restContext + CONTEXT + "/" + template.getNodeName();
       String errorMessage = "Registry service is not deployed.<br>Template not found.";
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      TemplateDeletedEvent event = new TemplateDeletedEvent(template.getName());
+      TemplateDeletedEvent event = new TemplateDeletedEvent(template);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")

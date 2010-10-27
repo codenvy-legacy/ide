@@ -86,13 +86,13 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
     * 
     * @return selected templates
     */
-   public List<Template> getSelectedItems()
+   public List<T> getSelectedItems()
    {
-      List<Template> selectedItems = new ArrayList<Template>();
+      List<T> selectedItems = new ArrayList<T>();
 
       for (ListGridRecord record : getSelection())
       {
-         selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
+         selectedItems.add((T)record.getAttributeAsObject(getValuePropertyName()));
       }
 
       return selectedItems;

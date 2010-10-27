@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.model.template.Template;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
@@ -40,14 +42,18 @@ public interface CreateFromTemplateDisplay<T extends Template>
    HasClickHandlers getCreateButton();
 
    HasClickHandlers getDeleteButton();
+   
+   List<T> getTemplatesSelected();
 
    void closeForm();
 
    void enableCreateButton();
 
    void disableCreateButton();
+   
+   void enableDeleteButton();
 
-   void setDeleteButtonDisabled(boolean value);
+   void disableDeleteButton();
 
    void selectLastTemplate();
 

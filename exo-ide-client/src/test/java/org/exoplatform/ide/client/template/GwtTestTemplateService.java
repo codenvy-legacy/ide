@@ -288,7 +288,7 @@ public class GwtTestTemplateService extends GWTTestCase
       {
          public void onTemplateDeleted(TemplateDeletedEvent event)
          {
-            assertEquals(template.getName(), event.getTemplateName());
+            assertEquals(template.getName(), event.getTemplate().getName());
             finishTest();
          }
       });

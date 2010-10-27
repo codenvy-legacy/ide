@@ -238,7 +238,8 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
                return;
             }
 
-            FileTemplate fileTemplate = new FileTemplate(selectedTemplate.getName(), fileName, selectedTemplate.getMimeType());
+            FileTemplate fileTemplate = new FileTemplate(selectedTemplates.get(0).getName(), fileName, 
+               selectedTemplates.get(0).getMimeType());
             addFileToProjectTemplate(fileTemplate);
             display.closeForm();
 

@@ -112,6 +112,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
    @Override
    void setNewInstanceName()
    {
+      FileTemplate selectedTemplate = (FileTemplate)selectedTemplates.get(0);
       String extension = IDEMimeTypes.getExtensionsMap().get(selectedTemplate.getMimeType());
       if (previousExtension != null)
       {
@@ -149,6 +150,8 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
          baseHref = "";
       }
 
+      FileTemplate selectedTemplate = (FileTemplate)selectedTemplates.get(0);
+      
       String contentType = selectedTemplate.getMimeType();
 
       File newFile = new File(baseHref + fileName);
@@ -164,33 +167,17 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       display.closeForm();
    }
    
+   /**
+    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#deleteOneTemplate(org.exoplatform.ide.client.model.template.Template)
+    */
    @Override
-   protected void deleteTemplate()
-   {
-      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
-      Dialogs.getInstance().ask("eXo IDE", message, new BooleanValueReceivedCallback()
-      {
-         public void execute(Boolean value)
-         {
-            if (value == null)
-            {
-               return;
-            }
-            if (value)
-            {
-               checkTemplateUsedInProjectTemplate();
-            }
-         }
-      });
-   }
-   
-   private void checkTemplateUsedInProjectTemplate()
+   protected void deleteOneTemplate(final FileTemplate fileTemplate)
    {
       usedProjectTemplates = new ArrayList<ProjectTemplate>();
       
       for (ProjectTemplate projectTemplate : projectTemplateList)
       {
-         if (isPresentInProjectTemplate(projectTemplate))
+         if (isPresentInProjectTemplate(projectTemplate, fileTemplate))
          {
             usedProjectTemplates.add(projectTemplate);
          }
@@ -198,11 +185,11 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       
       if (usedProjectTemplates.size() == 0)
       {
-         TemplateService.getInstance().deleteTemplate(selectedTemplate);
+         TemplateService.getInstance().deleteTemplate(fileTemplate);
          return;
       }
       
-      String msg = "File template <b>" + selectedTemplate.getName() + "</b> is used in <b>";
+      String msg = "File template <b>" + fileTemplate.getName() + "</b> is used in <b>";
       
       for (ProjectTemplate template : usedProjectTemplates)
       {
@@ -218,18 +205,24 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
          {
             if (value == null)
             {
+               selectedTemplates.remove(fileTemplate);
+               deleteNextTemplate();
                return;
             }
             if (value)
             {
-               TemplateService.getInstance().deleteTemplate(selectedTemplate);
+               TemplateService.getInstance().deleteTemplate(fileTemplate);
+            }
+            else
+            {
+               selectedTemplates.remove(fileTemplate);
+               deleteNextTemplate();
             }
          }
       });
-      
    }
    
-   private boolean isPresentInProjectTemplate(ProjectTemplate projectTemplate)
+   private boolean isPresentInProjectTemplate(ProjectTemplate projectTemplate, FileTemplate fileTemplate)
    {
       if (projectTemplate.getChildren() == null)
       {
@@ -237,13 +230,13 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       }
       for (Template template : projectTemplate.getChildren())
       {
-         if (template instanceof FileTemplate && template.getName().equals(selectedTemplate.getName()))
+         if (template instanceof FileTemplate && template.getName().equals(fileTemplate.getName()))
          {
             return true;
          }
          else if (template instanceof ProjectTemplate)
          {
-            return isPresentInProjectTemplate((ProjectTemplate)template);
+            return isPresentInProjectTemplate((ProjectTemplate)template, fileTemplate);
          }
       }
       return false;

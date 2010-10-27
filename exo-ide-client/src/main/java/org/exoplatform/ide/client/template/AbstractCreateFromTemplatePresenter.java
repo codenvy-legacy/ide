@@ -53,7 +53,7 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
 
    protected CreateFromTemplateDisplay<T> display;
 
-   protected T selectedTemplate;
+   protected List<T> selectedTemplates;
 
    protected List<T> templateList;
    
@@ -102,7 +102,8 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
       {
          public void onSelection(SelectionEvent<T> event)
          {
-            templateSelected(event.getSelectedItem());
+            selectedTemplates = display.getTemplatesSelected();
+            templatesSelected();
          }
       });
 
@@ -119,7 +120,7 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
 
       display.disableCreateButton();
       
-      display.setDeleteButtonDisabled(true);
+      display.disableDeleteButton();
    }
 
    /**
@@ -127,7 +128,21 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
     */
    protected void deleteTemplate()
    {
-      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
+      if (selectedTemplates.size() == 0)
+      {
+         return;
+      }
+      
+      String message = "Do you want to delete template";
+      if (selectedTemplates.size() == 1)
+      {
+         message += " <b>" + selectedTemplates.get(0).getName() + "</b>?";
+      }
+      else if (selectedTemplates.size() > 1)
+      {
+         message += "s?";
+      }
+      
       Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedCallback()
       {
          public void execute(Boolean value)
@@ -138,30 +153,63 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
             }
             if (value)
             {
-               TemplateService.getInstance().deleteTemplate(selectedTemplate);
+               deleteNextTemplate();
             }
          }
       });
    }
-
-   protected void templateSelected(T template)
+   
+   protected void deleteNextTemplate()
    {
-      if (selectedTemplate == template)
+      if (selectedTemplates.size() == 0)
       {
+         refreshTemplateList();
          return;
       }
-      selectedTemplate = template;
-      display.enableCreateButton();
-      
-      if (template.getNodeName() == null)
+      deleteOneTemplate(selectedTemplates.get(0));
+   }
+   
+   protected void deleteOneTemplate(T template)
+   {
+      TemplateService.getInstance().deleteTemplate(template);
+   }
+   
+   protected void templatesSelected()
+   {
+      if (selectedTemplates.size() == 0)
       {
-         display.setDeleteButtonDisabled(true);
+         display.disableCreateButton();
+         display.disableDeleteButton();
+         return;
+      }
+      
+      if (selectedTemplates.size() > 1)
+      {
+         display.disableCreateButton();
+         //check is one of selected templates is default
+         for (Template template : selectedTemplates)
+         {
+            if (template.getNodeName() == null)
+            {
+               display.disableDeleteButton();
+               return;
+            }
+         }
+         
+         display.enableDeleteButton();
+         return;
+      }
+      
+      display.enableCreateButton();
+      if (selectedTemplates.get(0).getNodeName() == null)
+      {
+         display.disableDeleteButton();
       }
       else
       {
-         display.setDeleteButtonDisabled(false);
+         display.enableDeleteButton();
       }
-
+      
       setNewInstanceName();
    }
    
@@ -170,9 +218,8 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
     */
    public void onTemplateDeleted(TemplateDeletedEvent event)
    {
-      refreshTemplateList();
-      String message = "Template <b>" + event.getTemplateName() + "</b> deleted.";
-      Dialogs.getInstance().showInfo("IDEall", message);
+      selectedTemplates.remove(event.getTemplate());
+      deleteNextTemplate();
    }
 
    /**

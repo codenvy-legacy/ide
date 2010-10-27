@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.model.template.event;
 
+import org.exoplatform.ide.client.model.template.Template;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -30,11 +32,11 @@ public class TemplateDeletedEvent extends GwtEvent<TemplateDeletedHandler>
 
    public static final GwtEvent.Type<TemplateDeletedHandler> TYPE = new GwtEvent.Type<TemplateDeletedHandler>();
 
-   private String templateName;
+   private Template template;
 
-   public TemplateDeletedEvent(String templateName)
+   public TemplateDeletedEvent(Template template)
    {
-      this.templateName = templateName;
+      this.template= template;
    }
 
    @Override
@@ -48,13 +50,10 @@ public class TemplateDeletedEvent extends GwtEvent<TemplateDeletedHandler>
    {
       return TYPE;
    }
-
-   /**
-    * @return the templateName
-    */
-   public String getTemplateName()
+   
+   public Template getTemplate()
    {
-      return templateName;
+      return template;
    }
 
 }

@@ -156,7 +156,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
    @Override
    void setNewInstanceName()
    {
-      display.getNameField().setValue(selectedTemplate.getName());
+      display.getNameField().setValue(selectedTemplates.get(0).getName());
    }
 
    /**
@@ -178,6 +178,8 @@ implements FolderCreatedHandler, FileContentSavedHandler
          Dialogs.getInstance().showError("Select root folder for project!");
          return;
       }
+      
+      ProjectTemplate selectedTemplate = selectedTemplates.get(0);
       
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");
       projectFolder = new Folder(baseHref + projectName + "/");
