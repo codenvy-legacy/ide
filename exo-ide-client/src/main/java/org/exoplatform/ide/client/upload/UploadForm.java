@@ -46,6 +46,7 @@ import com.smartgwt.client.widgets.form.fields.CanvasItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class UploadForm extends DialogWindow implements UploadPresenter.Display
@@ -170,7 +171,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       mimeTypesField.setWidth(334);
       mimeTypesField.setShowTitle(false);
       mimeTypesField.setColSpan(2);
-
+      mimeTypesField.setCompleteOnTab(true);
+      mimeTypesField.setPickListHeight(100);
+      
       uploadForm.setItems(promptItem, spacer, canvasItem, spacer2, mimeTypePromptItem, spacer3, mimeTypesField);
 
       uploadForm.setAutoWidth();
@@ -283,6 +286,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       else
       {
          uploadForm.setAction(applicationConfiguration.getUploadServiceContext() + "/");
+         
       }
 
       uploadForm.setWidget(postFieldsPanel);
@@ -347,7 +351,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    public void setMimeTypes(String[] mimeTypes)
    {
-      mimeTypesField.clearValue();
+//      mimeTypesField.clearValue();
       mimeTypesField.setValueMap(mimeTypes);
    }
 

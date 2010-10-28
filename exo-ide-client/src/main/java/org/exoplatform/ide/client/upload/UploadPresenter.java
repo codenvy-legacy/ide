@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -100,6 +102,10 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private List<Item> selectedItems;
 
+   private String fileType;
+
+   private boolean isSetAll = false;
+   
    public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
@@ -157,7 +163,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
             submitComplete(event.getResults());
          }
       });
-      
+
       if (openLocalFile)
       {
          display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
@@ -175,6 +181,23 @@ public class UploadPresenter implements UploadFileSelectedHandler
             }
          });
       }
+      else
+      {
+         display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
+         {
+
+            public void onValueChange(ValueChangeEvent<String> event)
+            {
+               if(!isSetAll)
+               {
+                  String[] allMimeTypes = MimeTypeResolver.getAllMimeTypes().toArray(new String[0]);
+                  Arrays.sort(allMimeTypes);
+                  display.setMimeTypes(allMimeTypes);
+                  isSetAll = true;
+               }
+            }
+         });
+      }
 
       display.disableUploadButton();
       display.disableMimeTypeSelect();
@@ -185,8 +208,8 @@ public class UploadPresenter implements UploadFileSelectedHandler
     * @return result of javaScript function <code>encodeURI(url)</code>
     */
    public static native String encodeURI(String url) /*-{
-        return encodeURI(url);
-     }-*/;
+      return encodeURI(url);
+   }-*/;
 
    private void uploadFile()
    {
@@ -237,7 +260,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       //5 - index of letter, that follows after tag <pre>
       //6 - number of letters in </pre> closing tag
       String content = uploadServiceResponse.substring(5, uploadServiceResponse.length() - 6);
-      
+
       return Utils.urlDecode_decode(content); // to unescape end of lines
    }
 
@@ -255,15 +278,12 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.enableMimeTypeSelect();
 
       List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
+      Collections.sort(mimeTypes);
       
       List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(fileName);
 
-      String[] valueMap = new String[mimeTypes.size()];
-      int i = 0;
-      for (String mimeType : mimeTypes)
-      {
-         valueMap[i++] = mimeType;
-      }
+      String[] valueMap = mimeTypes.toArray(new String[0]);
+      
       display.setMimeTypes(valueMap);
 
       if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
@@ -283,7 +303,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       }
 
       uploadFileToServer(event.getFileName());
-
+      isSetAll = false;
    }
 
    private void uploadFileToServer(String fileName)
@@ -300,16 +320,16 @@ public class UploadPresenter implements UploadFileSelectedHandler
       display.enableUploadButton();
       display.enableMimeTypeSelect();
 
-      String fileType = file.substring(file.lastIndexOf(".") + 1).toLowerCase();
+      fileType = file.substring(file.lastIndexOf(".") + 1).toLowerCase();
 
       List<String> mimeTypes = MimeTypeResolver.getMimeTypes(fileType);
 
-      String[] valueMap = new String[mimeTypes.size()];
-      int i = 0;
-      for (String mimeType : mimeTypes)
-      {
-         valueMap[i++] = mimeType;
-      }
+      String[] valueMap = mimeTypes.toArray(new String[mimeTypes.size()]);
+      //      int i = 0;
+      //      for (String mimeType : mimeTypes)
+      //      {
+      //         valueMap[i++] = mimeType;
+      //      }
       display.setMimeTypes(valueMap);
 
       if (mimeTypes != null && mimeTypes.size() > 0)
@@ -406,9 +426,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
       submittedFile.setContent(submittedFileContent);
       submittedFile.setContentType(mimeType);
       submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
-      
-      
-      
+
       eventBus.fireEvent(new OpenFileEvent(submittedFile));
    }
 
