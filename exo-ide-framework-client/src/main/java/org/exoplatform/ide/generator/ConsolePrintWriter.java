@@ -3,64 +3,95 @@ package org.exoplatform.ide.generator;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
-/*
- * Author Vitaliy Gulyy <mailto:gavrikvetal@gmail.com>
+/**
+ * Used for debuging the class generation.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Oct 28, 2010 $
+ *
  */
+public class ConsolePrintWriter extends PrintWriter
+{
 
-public class ConsolePrintWriter extends PrintWriter {
-   
    private PrintWriter nativePrintWriter;
-   
-   public ConsolePrintWriter(PrintWriter nativePrintWriter) {
-      super(new ByteArrayOutputStream());
+
+   /**
+    * @param nativePrintWriter
+    */
+   public ConsolePrintWriter(PrintWriter nativePrintWriter)
+   {
+      //super(System.out, true);
+      super(new ByteArrayOutputStream(), true);
       this.nativePrintWriter = nativePrintWriter;
    }
-   
-   public void write(String s) {
-      System.out.println(s);
+
+   /**
+    * @see java.io.PrintWriter#write(java.lang.String)
+    */
+   public void write(String s)
+   {
       nativePrintWriter.write(s);
-    }
-   
-   public void write(String format, Object... args) {
-      System.out.println(String.format(format, args));
+      super.write(s);
+   }
+
+   /**
+    * @param format
+    * @param args
+    */
+   public void write(String format, Object... args)
+   {
       nativePrintWriter.printf(format, args);
-      System.out.println();
       nativePrintWriter.println();
-    }
-   
+      super.write(String.format(format, args));
+      super.println();
+   }
+
+   /**
+    * @see java.io.PrintWriter#print(java.lang.String)
+    */
    @Override
-   public void print(String s) {
-      System.out.print(s);
+   public void print(String s)
+   {
       nativePrintWriter.print(s);
+      super.println(s);
    }
-   
+
+   /**
+    * @see java.io.PrintWriter#println()
+    */
    @Override
-   public void println() {
-      System.out.println();
+   public void println()
+   {
       nativePrintWriter.println();
+      super.println();
    }
-   
+
+   /**
+    * @see java.io.PrintWriter#flush()
+    */
    @Override
-   public void println(String s) {
-      System.out.println(s);
-      nativePrintWriter.println(s);
-   }
-   
-   @Override
-   public void flush() {
+   public void flush()
+   {
       nativePrintWriter.flush();
       super.flush();
    }
-   
+
+   /**
+    * @see java.io.PrintWriter#close()
+    */
    @Override
-   public void close() {
+   public void close()
+   {
       nativePrintWriter.close();
       super.close();
    }
-   
+
+   /**
+    * @see java.io.PrintWriter#checkError()
+    */
    @Override
-   public boolean checkError() {
+   public boolean checkError()
+   {
       return nativePrintWriter.checkError();
    }
-
 }

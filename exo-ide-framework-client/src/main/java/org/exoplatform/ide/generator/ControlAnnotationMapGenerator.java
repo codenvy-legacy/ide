@@ -56,11 +56,14 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
             if (type.isAnnotationPresent(RolesAllowed.class))
             {
                writer.write("values = new ArrayList<String>();");
+               writer.println();
                for (String value : type.getAnnotation(RolesAllowed.class).value())
                {
                   writer.write("values.add(\"" + value + "\");");
+                  writer.println();
                }
                writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+               writer.println();
             }
             
          }

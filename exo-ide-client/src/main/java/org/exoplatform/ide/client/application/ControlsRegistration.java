@@ -135,7 +135,7 @@ public class ControlsRegistration implements RegisterControlHandler
    public void initControls(List<String> userRoles)
    {
       ClassAnnotationMap annotationMap = GWT.create(ClassAnnotationMap.class);
-      if (annotationMap.getClassAnnotation() != null && annotationMap.getClassAnnotation().size() > 0)
+      if (annotationMap.getClassAnnotations() != null && annotationMap.getClassAnnotations().size() > 0)
       {
          List<Control> allowedControls = getAllowedControlsForUser(registeredControls, userRoles, annotationMap);
          registeredControls.retainAll(allowedControls);
@@ -158,7 +158,7 @@ public class ControlsRegistration implements RegisterControlHandler
       for (Control control : controls)
       {
          String className = control.getClass().getName();
-         List<String> rolesAllowed = annotationMap.getClassAnnotation().get(className);
+         List<String> rolesAllowed = annotationMap.getClassAnnotations().get(className);
          if (rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed))
          {
             allowedControls.add(control);

@@ -23,11 +23,25 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Class is used to represent the the class type's annotation values, kept in {@link HashMap}, 
+ * where key is class's FQN, values - the list of annotation values. 
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
  *
  */
-public interface ClassAnnotationMap
+public abstract class ClassAnnotationMap
 {
-   HashMap<String, List<String>> getClassAnnotation();
+   /**
+    * Class annotation map.
+    */
+   protected HashMap<String, List<String>> classAnnotations = new HashMap<String, List<String>>();
+
+   /**
+    * @return {@link HashMap} class annotation map
+    */
+   public HashMap<String, List<String>> getClassAnnotations()
+   {
+      return classAnnotations;
+   }
 }

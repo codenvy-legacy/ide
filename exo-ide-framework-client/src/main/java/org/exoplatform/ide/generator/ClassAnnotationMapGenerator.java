@@ -37,37 +37,10 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
    {
       writeImports(writer);
       writeClassIntro(interfaceType, implName, writer);
-      writeFieldsIntro(writer);
       writeConstructor(writer, interfaceType, implName, context);
-      writeMethodIntro(writer);
       writeOutro(writer);
    }
-
-   /**
-    * Writes implemented method source.
-    * 
-    * @param writer source writer
-    */
-   private void writeMethodIntro(ConsolePrintWriter writer)
-   {
-      writer.write("public HashMap<String, List<String>> getClassAnnotation()");
-      writer.println();
-      writer.write("{");
-      writer.write("return classAnnotations;");
-      writer.write("}");
-   }
-
-   /**
-    * Writes class fields describtion and initialization.
-    * 
-    * @param writer source writer
-    */
-   private void writeFieldsIntro(ConsolePrintWriter writer)
-   {
-      writer.write("private static HashMap<String, List<String>> classAnnotations = new HashMap<String, List<String>>();");
-      writer.println();
-   }
-
+   
    /**
     * Writes imports source of the class.
     * 
@@ -92,7 +65,7 @@ public abstract class ClassAnnotationMapGenerator extends BaseGenerator
     */
    protected void writeClassIntro(JClassType interfaceType, String implName, ConsolePrintWriter writer)
    {
-      writer.write("public class %1$s implements %2$s {", implName, interfaceType.getName());
+      writer.write("public class %1$s extends %2$s {", implName, interfaceType.getName());
       writer.println();
    }
    
