@@ -53,7 +53,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
          "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml", MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(FILE_NAME);
-      String url = getItemUrl();
+      String url = getSelectedItemUrl();
       
       assertEquals(BASE_URL+"rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/uploads/gadget.xml",url);
       

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.browse;
 
+import org.exoplatform.ide.operation.upload.OpenFileByPathTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -29,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ExploringWorkspacePanelTest.class, GeItemUrlTest.class, GoToFolderTest.class, OpeningFilesTest.class,
-   WorkspaceTest.class, UsingKeyboardTest.class, ItemOrderingTest.class})
+   WorkspaceTest.class, UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByPathTest.class})
 public class BrowseTestSuite
 {
 

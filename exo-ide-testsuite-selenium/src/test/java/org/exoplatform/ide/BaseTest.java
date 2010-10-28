@@ -1027,7 +1027,7 @@ public abstract class BaseTest
     * @return {@link String} URL
     * @throws Exception
     */
-   protected String getItemUrl() throws Exception
+   protected String getSelectedItemUrl() throws Exception
    {
       //Click get URL 
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);

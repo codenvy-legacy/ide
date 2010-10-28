@@ -80,7 +80,7 @@ public class GeItemUrlTest extends BaseTest
 
       String workspaceName = getItemNameFromWorkspaceTree(0);
 
-      String url = getItemUrl();
+      String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/"));
 
@@ -94,13 +94,13 @@ public class GeItemUrlTest extends BaseTest
 
       //Check get URL for file in root of the tree
       selectItemInWorkspaceTree(file1Name);
-      url = getItemUrl();
+      url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for folder in root of the tree
       selectItemInWorkspaceTree(folderName);
-      url = getItemUrl();
+      url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/"));
 
@@ -115,7 +115,7 @@ public class GeItemUrlTest extends BaseTest
       openOrCloseFolder(folderName);
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(file2Name);
-      url = getItemUrl();
+      url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
 
@@ -153,13 +153,13 @@ public class GeItemUrlTest extends BaseTest
       
       //Check get URL for first file
       selectItemInSearchResultsTree(file1Name);
-      String url = getItemUrl();
+      String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
       
       //Check get URL for second file
       selectItemInSearchResultsTree(file2Name);
-      url = getItemUrl();
+      url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
       
