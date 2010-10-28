@@ -33,7 +33,7 @@ import org.junit.Test;
 public class AutoCompletionCSSTest extends BaseTest
 {
 
-   //   @Test
+      @Test
    public void testPlainCSS() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
@@ -85,7 +85,7 @@ public class AutoCompletionCSSTest extends BaseTest
       closeUnsavedFileAndDoNotSave("0");
    }
 
-   //   @Test
+      @Test
    public void testHTML() throws Exception
    {
       selenium.refresh();
