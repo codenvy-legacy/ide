@@ -1513,10 +1513,11 @@ public abstract class BaseTest
       {
          url = new URL(BASE_URL);
          connection = Utils.getConnection(url);
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");
+         HTTPResponse response = connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");
+         System.out.println("cleanRegistry " + response.getStatusCode());
          connection = Utils.getConnection(url);
-         connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications/IDE");
-
+         response = connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications/IDE");
+         System.out.println("cleanRegistry " + response.getStatusCode());
       }
       catch (MalformedURLException e)
       {
