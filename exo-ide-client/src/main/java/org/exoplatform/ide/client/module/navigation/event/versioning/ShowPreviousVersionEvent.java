@@ -21,29 +21,20 @@ package org.exoplatform.ide.client.module.navigation.event.versioning;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when user asks to open view of versions in separate panel.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 27, 2010 $
+ * @version $Id: Sep 29, 2010 $
  *
  */
-public class ViewVersionHistoryEvent extends GwtEvent<ViewVersionHistoryHandler>
+public class ShowPreviousVersionEvent extends GwtEvent<ShowPreviousVersionHandler>
 {
 
-   public static final GwtEvent.Type<ViewVersionHistoryHandler> TYPE = new GwtEvent.Type<ViewVersionHistoryHandler>();
-
-   private boolean showVersionHistory;
-
-   public ViewVersionHistoryEvent(boolean showVersionHistory)
-   {
-      this.showVersionHistory = showVersionHistory;
-   }
-
+   public static final GwtEvent.Type<ShowPreviousVersionHandler> TYPE = new GwtEvent.Type<ShowPreviousVersionHandler>();
+   
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewVersionHistoryHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowPreviousVersionHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -52,13 +43,9 @@ public class ViewVersionHistoryEvent extends GwtEvent<ViewVersionHistoryHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ViewVersionHistoryHandler handler)
+   protected void dispatch(ShowPreviousVersionHandler handler)
    {
-      handler.onViewVersionHistory(this);
+      handler.onShowPreviousVersion(this);
    }
 
-   public boolean isShowVersionHistory()
-   {
-      return showVersionHistory;
-   }
 }

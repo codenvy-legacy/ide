@@ -18,17 +18,34 @@
  */
 package org.exoplatform.ide.client.module.navigation.event.versioning;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 27, 2010 $
+ * @version $Id: Sep 29, 2010 $
  *
  */
-public interface ViewVersionHistoryHandler extends EventHandler
+public class ShowNextVersionEvent extends GwtEvent<ShowNextVersionHandler>
 {
+
+   public static final GwtEvent.Type<ShowNextVersionHandler> TYPE = new GwtEvent.Type<ShowNextVersionHandler>();
+   
    /**
-    * @param event event
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   void onViewVersionHistory(ViewVersionHistoryEvent event);
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowNextVersionHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowNextVersionHandler handler)
+   {
+      handler.onShowNextVersion(this);
+   }
+
 }

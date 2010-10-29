@@ -25,24 +25,36 @@ import java.util.List;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event is fired, when user asks to open view of versions in separate panel.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Oct 12, 2010 $
+ * @version $Id: Sep 27, 2010 $
  *
  */
 public class OpenVersionEvent extends GwtEvent<OpenVersionHandler>
 {
+
    public static final GwtEvent.Type<OpenVersionHandler> TYPE = new GwtEvent.Type<OpenVersionHandler>();
+
+   private boolean showVersionHistory;
    
    private Version version;
    
    private List<Version> versionHistory;
-   
+
+   public OpenVersionEvent(boolean showVersionHistory)
+   {
+      this.showVersionHistory = showVersionHistory;
+   }
+
    public OpenVersionEvent(Version version, List<Version> versionHistory)
    {
+      this.showVersionHistory = false;
       this.version = version;
       this.versionHistory = versionHistory;
-    }
-
+   }
+   
+   
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -59,6 +71,11 @@ public class OpenVersionEvent extends GwtEvent<OpenVersionHandler>
    protected void dispatch(OpenVersionHandler handler)
    {
       handler.onOpenVersion(this);
+   }
+
+   public boolean isShowVersionHistory()
+   {
+      return showVersionHistory;
    }
 
    public Version getVersion()

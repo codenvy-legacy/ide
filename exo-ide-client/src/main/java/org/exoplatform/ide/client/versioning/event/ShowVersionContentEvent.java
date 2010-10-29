@@ -29,14 +29,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Oct 11, 2010 $
  *
  */
-public class ShowVersionEvent extends GwtEvent<ShowVersionHandler>
+public class ShowVersionContentEvent extends GwtEvent<ShowVersionContentHandler>
 {
 
-   public static final GwtEvent.Type<ShowVersionHandler> TYPE = new GwtEvent.Type<ShowVersionHandler>();
+   public static final GwtEvent.Type<ShowVersionContentHandler> TYPE = new GwtEvent.Type<ShowVersionContentHandler>();
 
    private Version version;
 
-   public ShowVersionEvent(Version version)
+   public ShowVersionContentEvent(Version version)
    {
       this.version = version;
    }
@@ -45,7 +45,7 @@ public class ShowVersionEvent extends GwtEvent<ShowVersionHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowVersionHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowVersionContentHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -54,9 +54,9 @@ public class ShowVersionEvent extends GwtEvent<ShowVersionHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ShowVersionHandler handler)
+   protected void dispatch(ShowVersionContentHandler handler)
    {
-      handler.onShowVersion(this);
+      handler.onShowVersionContent(this);
    }
 
    public Version getVersion()

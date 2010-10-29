@@ -22,10 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Oct 12, 2010 $
+ * @version $Id: Sep 27, 2010 $
  *
  */
 public interface OpenVersionHandler extends EventHandler
 {
+   /**
+    * @param event event
+    */
    void onOpenVersion(OpenVersionEvent event);
 }

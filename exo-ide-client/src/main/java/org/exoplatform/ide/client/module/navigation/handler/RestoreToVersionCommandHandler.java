@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -35,10 +37,10 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionHandler;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -47,7 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Sep 30, 2010 $
  *
  */
-public class RestoreVersionCommandHandler implements ShowVersionHandler, RestoreVersionHandler,
+public class RestoreToVersionCommandHandler implements ShowVersionContentHandler, RestoreToVersionHandler,
    ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler, ExceptionThrownHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
@@ -58,15 +60,15 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
 
    private Map<String, String> lockTokens;
 
-   public RestoreVersionCommandHandler(HandlerManager eventBus)
+   public RestoreToVersionCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
       handlers = new Handlers(eventBus);
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowVersionEvent.TYPE, this);
-      eventBus.addHandler(RestoreVersionEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
+      eventBus.addHandler(RestoreToVersionEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -80,23 +82,39 @@ public class RestoreVersionCommandHandler implements ShowVersionHandler, Restore
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
-   public void onShowVersion(ShowVersionEvent event)
+   public void onShowVersionContent(ShowVersionContentEvent event)
    {
       activeVersion = event.getVersion();
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionEvent)
     */
-   public void onRestoreToVersion(RestoreVersionEvent event)
+   public void onRestoreToVersion(RestoreToVersionEvent event)
    {
       if (activeVersion == null)
       {
          return;
       }
 
+      Dialogs.getInstance().ask("Restore version",
+         "Do you want to restore file to version " + activeVersion.getDisplayName() + "?",
+         new BooleanValueReceivedCallback()
+         {
+            public void execute(Boolean value)
+            {
+               if (value != null && value)
+               {
+                  restoreToVersion();
+               }
+            }
+         });
+   }
+   
+   private void restoreToVersion()
+   {
       File file = new File(activeVersion.getItemHref());
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);

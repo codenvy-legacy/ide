@@ -86,7 +86,7 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopup
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenFileByPathCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
-import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreVersionControl;
+import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreToVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewNextVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewPreviousVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewVersionHistoryControl;
@@ -121,12 +121,12 @@ import org.exoplatform.ide.client.module.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.module.navigation.handler.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.PasteItemsCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.RestoreVersionCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.RestoreToVersionCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.ViewVersionHistoryCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.ViewVersionListCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.VersionHistoryCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.permissions.ShowPermissionsCommandHandler;
 import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
@@ -199,7 +199,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RestoreVersionControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), true, true));
 
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
@@ -258,9 +258,9 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new GoToFolderCommandHandler(eventBus);
       new PasteItemsCommandHandler(eventBus, context);
       new FileClosedHandler(eventBus);
-      new ViewVersionListCommandHandler(eventBus);
-      new ViewVersionHistoryCommandHandler(eventBus);
-      new RestoreVersionCommandHandler(eventBus);
+      new ShowVersionListCommandHandler(eventBus);
+      new VersionHistoryCommandHandler(eventBus);
+      new RestoreToVersionCommandHandler(eventBus);
       new CreateProjectTemplateCommandHandler(eventBus);
       new ShowPermissionsCommandHandler(eventBus);
    }

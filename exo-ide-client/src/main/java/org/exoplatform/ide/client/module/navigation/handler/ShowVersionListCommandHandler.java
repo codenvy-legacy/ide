@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.versioning.ViewVersionsForm;
  * @version $Id: Oct 12, 2010 $
  *
  */
-public class ViewVersionListCommandHandler implements ViewVersionListHandler, ExceptionThrownHandler,
+public class ShowVersionListCommandHandler implements ShowVersionListHandler, ExceptionThrownHandler,
    ItemVersionsReceivedHandler, EditorActiveFileChangedHandler
 {
    private HandlerManager eventBus;
@@ -50,11 +50,11 @@ public class ViewVersionListCommandHandler implements ViewVersionListHandler, Ex
 
    private File activeFile;
 
-   public ViewVersionListCommandHandler(HandlerManager eventBus)
+   public ShowVersionListCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ViewVersionListEvent.TYPE, this);
+      handlers.addHandler(ShowVersionListEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -108,9 +108,9 @@ public class ViewVersionListCommandHandler implements ViewVersionListHandler, Ex
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListHandler#onViewVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent)
     */
-   public void onViewVersionList(ViewVersionListEvent event)
+   public void onShowVersionList(ShowVersionListEvent event)
    {
       getVersionHistory();
    }

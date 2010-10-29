@@ -25,10 +25,10 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: Sep 29, 2010 $
  *
  */
-public interface RestoreVersionHandler extends EventHandler
+public interface ShowPreviousVersionHandler extends EventHandler
 {
    /**
-    * @param event event
+    * @param event
     */
-   void onRestoreToVersion(RestoreVersionEvent event);
+   void onShowPreviousVersion(ShowPreviousVersionEvent event);
 }

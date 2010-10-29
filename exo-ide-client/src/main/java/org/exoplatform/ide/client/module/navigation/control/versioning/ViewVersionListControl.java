@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
@@ -49,7 +49,7 @@ public class ViewVersionListControl extends VersionControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ViewVersionListEvent());
+      setEvent(new ShowVersionListEvent());
       setImages(IDEImageBundle.INSTANCE.viewVersions(), IDEImageBundle.INSTANCE.viewVersionsDisabled());
    }
    

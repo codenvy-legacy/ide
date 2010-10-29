@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
@@ -62,7 +62,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT_SHOW);
-      setEvent(new ViewVersionHistoryEvent(true));
+      setEvent(new OpenVersionEvent(true));
       setImages(IDEImageBundle.INSTANCE.viewVersionContent(), IDEImageBundle.INSTANCE.viewVersionContentDisabled());
       setDelimiterBefore(true);
       setCanBeSelected(true);
@@ -100,12 +100,12 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       if (versionPanelOpened)
       {
          setPrompt(PROMPT_HIDE);
-         setEvent(new ViewVersionHistoryEvent(false));
+         setEvent(new OpenVersionEvent(false));
       }
       else
       {
          setPrompt(PROMPT_SHOW);
-         setEvent(new ViewVersionHistoryEvent(true));
+         setEvent(new OpenVersionEvent(true));
       }
    }
 

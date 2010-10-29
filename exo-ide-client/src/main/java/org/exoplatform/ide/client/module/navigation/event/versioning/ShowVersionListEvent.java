@@ -21,20 +21,22 @@ package org.exoplatform.ide.client.module.navigation.event.versioning;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Is fired to view the list of versions of the concrete item.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 29, 2010 $
+ * @version $Id: Oct 11, 2010 $
  *
  */
-public class RestoreVersionEvent extends GwtEvent<RestoreVersionHandler>
+public class ShowVersionListEvent extends GwtEvent<ShowVersionListHandler>
 {
 
-   public static final GwtEvent.Type<RestoreVersionHandler> TYPE = new GwtEvent.Type<RestoreVersionHandler>();
-   
+   public static final GwtEvent.Type<ShowVersionListHandler> TYPE = new GwtEvent.Type<ShowVersionListHandler>();
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestoreVersionHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowVersionListHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -43,9 +45,9 @@ public class RestoreVersionEvent extends GwtEvent<RestoreVersionHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(RestoreVersionHandler handler)
+   protected void dispatch(ShowVersionListHandler handler)
    {
-      handler.onRestoreToVersion(this);
-   } 
+      handler.onShowVersionList(this);
+   }
 
 }

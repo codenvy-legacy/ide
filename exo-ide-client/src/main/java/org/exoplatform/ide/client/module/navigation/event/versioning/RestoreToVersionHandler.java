@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,24 +15,20 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
-
-package org.exoplatform.ide.client.versioning.event;
+package org.exoplatform.ide.client.module.navigation.event.versioning;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Sep 29, 2010 $
+ *
  */
-
-public interface ShowVersionsPanelHandler extends EventHandler
+public interface RestoreToVersionHandler extends EventHandler
 {
-   
-   void onShowVersionsPanel(ShowVersionsPanelEvent event);
-
+   /**
+    * @param event event
+    */
+   void onRestoreToVersion(RestoreToVersionEvent event);
 }

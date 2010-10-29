@@ -31,13 +31,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviousVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviousVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -54,7 +52,7 @@ import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +62,9 @@ import java.util.List;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandler, ExceptionThrownHandler,
-   ItemVersionsReceivedHandler, EditorActiveFileChangedHandler, ViewPreviousVersionHandler, ViewNextVersionHandler,
-   FileContentReceivedHandler, OpenVersionHandler, PanelClosedHandler, PanelOpenedHandler, FileContentSavedHandler
+public class VersionHistoryCommandHandler implements OpenVersionHandler, ExceptionThrownHandler,
+   ItemVersionsReceivedHandler, EditorActiveFileChangedHandler, ShowPreviousVersionHandler, ShowNextVersionHandler,
+   FileContentReceivedHandler, PanelClosedHandler, PanelOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
@@ -84,23 +82,22 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
 
    private boolean isVersionPanelOpened = false;
 
-   public ViewVersionHistoryCommandHandler(HandlerManager eventBus)
+   public VersionHistoryCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ViewVersionHistoryEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(ViewNextVersionEvent.TYPE, this);
-      handlers.addHandler(ViewPreviousVersionEvent.TYPE, this);
       handlers.addHandler(OpenVersionEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(ShowNextVersionEvent.TYPE, this);
+      handlers.addHandler(ShowPreviousVersionEvent.TYPE, this);
       handlers.addHandler(PanelOpenedEvent.TYPE, this);
       handlers.addHandler(PanelClosedEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryHandler#onViewVersionHistory(org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionHistoryEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler#onOpenVersion(org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent)
     */
-   public void onViewVersionHistory(ViewVersionHistoryEvent event)
+   public void onOpenVersion(OpenVersionEvent event)
    {
       if (event.isShowVersionHistory())
       {
@@ -108,7 +105,15 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
       }
       else
       {
-         eventBus.fireEvent(new ClosePanelEvent(VersionContentForm.ID));
+         if (event.getVersion() == null)
+         {
+            eventBus.fireEvent(new ClosePanelEvent(VersionContentForm.ID));
+         }
+         else
+         {
+            versionHistory = event.getVersionHistory();
+            openVersion(event.getVersion());
+         }
       }
    }
 
@@ -181,9 +186,9 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionHandler#onViewNextrVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler#onShowNextVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent)
     */
-   public void onViewNextrVersion(ViewNextVersionEvent event)
+   public void onShowNextVersion(ShowNextVersionEvent event)
    {
       if (versionHistory == null || versionHistory.size() <= 0)
       {
@@ -198,9 +203,9 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviousVersionHandler#onViewPreviousVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ViewPreviousVersionEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler#onShowPreviousVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent)
     */
-   public void onViewPreviousVersion(ViewPreviousVersionEvent event)
+   public void onShowPreviousVersion(ShowPreviousVersionEvent event)
    {
       if (versionHistory == null || versionHistory.size() <= 0)
       {
@@ -242,14 +247,14 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
                @Override
                public void run()
                {
-                  eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+                  eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
                }
             };
             timer.schedule(1000);
          }
          else
          {
-            eventBus.fireEvent(new ShowVersionEvent((Version)event.getFile()));
+            eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
          }
 
          eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
@@ -257,20 +262,11 @@ public class ViewVersionHistoryCommandHandler implements ViewVersionHistoryHandl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListHandler#onViewVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ViewVersionListEvent)
+    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent)
     */
-   public void onViewVersionList(ViewVersionListEvent event)
+   public void onShowVersionList(ShowVersionListEvent event)
    {
       getVersionHistory();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler#onOpenVersion(org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent)
-    */
-   public void onOpenVersion(OpenVersionEvent event)
-   {
-      versionHistory = event.getVersionHistory();
-      openVersion(event.getVersion());
    }
 
    private void openVersion(Version version)

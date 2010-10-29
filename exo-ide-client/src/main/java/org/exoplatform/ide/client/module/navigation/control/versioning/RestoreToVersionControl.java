@@ -21,12 +21,12 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -34,14 +34,14 @@ import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class RestoreVersionControl extends VersionControl implements ShowVersionHandler
+public class RestoreToVersionControl extends VersionControl implements ShowVersionContentHandler
 {
 
-   private static final String ID = "File/Restore Version";
+   private static final String ID = "File/Restore to Version";
 
-   private final String TITLE = "Restore Version";
+   private final String TITLE = "Restore To Version";
 
-   private final String PROMPT = "Restore Version";
+   private final String PROMPT = "Restore To Version";
 
    private Version version;
 
@@ -49,12 +49,12 @@ public class RestoreVersionControl extends VersionControl implements ShowVersion
     * @param id
     * @param eventBus
     */
-   public RestoreVersionControl()
+   public RestoreToVersionControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new RestoreVersionEvent());
+      setEvent(new RestoreToVersionEvent());
       setImages(IDEImageBundle.INSTANCE.restoreVersion(), IDEImageBundle.INSTANCE.restoreVersionDisabled());
    }
    
@@ -64,14 +64,14 @@ public class RestoreVersionControl extends VersionControl implements ShowVersion
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
       super.initialize(eventBus);
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
-   public void onShowVersion(ShowVersionEvent event)
+   public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();
       boolean isEnabled =

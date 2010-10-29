@@ -16,19 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.event.versioning;
+package org.exoplatform.ide.client.versioning.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Sep 29, 2010 $
+ * @version $Id: Oct 11, 2010 $
  *
  */
-public interface ViewNextVersionHandler extends EventHandler
+public interface ShowVersionContentHandler extends EventHandler
 {
    /**
     * @param event
     */
-   void onViewNextrVersion(ViewNextVersionEvent event);
+   void onShowVersionContent(ShowVersionContentEvent event);
 }

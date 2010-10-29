@@ -21,12 +21,12 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ViewNextVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.versioning.event.ShowVersionEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.versioning.event.ShowVersionHandler;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class ViewNextVersionControl extends VersionControl implements ShowVersionHandler
+public class ViewNextVersionControl extends VersionControl implements ShowVersionContentHandler
 {
 
    private static final String ID = "View/Newer Version";
@@ -54,7 +54,7 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ViewNextVersionEvent());
+      setEvent(new ShowNextVersionEvent());
       setImages(IDEImageBundle.INSTANCE.viewNewerVersion(), IDEImageBundle.INSTANCE.viewNewerVersionDisabled());
    }
    
@@ -64,14 +64,14 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ShowVersionEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
       super.initialize(eventBus);
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.event.ShowVersionHandler#onShowVersion(org.exoplatform.ide.client.versioning.event.ShowVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
-   public void onShowVersion(ShowVersionEvent event)
+   public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();
       boolean isEnabled =
