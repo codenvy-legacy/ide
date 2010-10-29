@@ -384,7 +384,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 
       eventbus.addHandler(ItemPropertiesReceivedEvent.TYPE, new ItemPropertiesReceivedHandler()
       {
-         @Override
          public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
          {
             Item item = event.getItem();
