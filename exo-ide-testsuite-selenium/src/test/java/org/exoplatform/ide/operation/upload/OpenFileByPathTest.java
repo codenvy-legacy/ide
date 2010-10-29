@@ -22,7 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -51,7 +50,7 @@ public class OpenFileByPathTest extends BaseTest
    
    private static final String OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"" + OPEN_FILE_BY_PATH_FORM_ID + "\"]/item[name=" + OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_NAME + "]/element";   
    
-   private static final String FILE_NAME = "Приклад.groovy";
+   private static final String FILE_NAME = "OpenFileByPathTest_приклад.groovy";
    
    private static final String NOT_FOUND_ERROR_MESSAGE = "404 Not Found\n\n\nPossible reasons:\nService is not deployed.\nResource not found.";
    
@@ -158,6 +157,17 @@ public class OpenFileByPathTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      cleanDefaultWorkspace();
+      try
+      {
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL + "/" + WS_NAME + "/" + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 }
