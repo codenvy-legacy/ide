@@ -16,42 +16,34 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Iterator;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.DoNotRunWith;
-import com.google.gwt.junit.Platform;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
@@ -74,14 +66,16 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    private static String testUrlWrongWs;
 
    private final int DELAY_TEST = 5000;
+   
+   private static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
 
    @Override
    @Before
    protected void gwtSetUp() throws Exception
    {
       super.gwtSetUp();
-      testUrl = "http://" + Window.Location.getHost() + "/rest/jcr/repository/dev-monit/";
-      testUrlWrongWs = "http://" + Window.Location.getHost() + "/rest/jcr/repository/not-found/";
+      testUrl = "http://" + Window.Location.getHost() + "/rest"+WEBDAV_CONTEXT+"repository/dev-monit/";
+      testUrlWrongWs = "http://" + Window.Location.getHost() + "/rest"+WEBDAV_CONTEXT+"repository/not-found/";
       eventbus = new HandlerManager(null);
       vfsWebDav = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
    }
@@ -223,6 +217,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    /**
     * Save file content
     */
+   
    public void testSaveContent()
    {
       final String fileContent = System.currentTimeMillis() + "";
@@ -386,23 +381,21 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setContent(fileContent);
       file.setContentChanged(true);
             
-      eventbus.addHandler(ItemACLReceivedEvent.TYPE, new ItemACLReceivedHandler()
+
+      eventbus.addHandler(ItemPropertiesReceivedEvent.TYPE, new ItemPropertiesReceivedHandler()
       {
-         
-         public void onItemACLReceived(ItemACLReceivedEvent event)
+         @Override
+         public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
          {
-            System.out
-               .println("GwtTestWebDavFileSystem.testGetACL().new ItemACLReceivedHandler() {...}.onItemACLReceived()");
-            for (AccessControlEntry e :  event.getItem().getAcl().getPermissionsList())
-            {
-               System.out.println("User name = " + e.getIdentity() + " , permissions - " + e.getPermissionsList());
-            }       
-            fail();
+            Item item = event.getItem();
+            
+            System.out.println(item.getProperty(ItemProperty.ACL.ACL));
          }
       });
-      vfsWebDav.saveContent(file);
       
-      vfsWebDav.getACL(file);
+      vfsWebDav.saveContent(file);
+   
+      vfsWebDav.getProperties(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}));
       
    }
    

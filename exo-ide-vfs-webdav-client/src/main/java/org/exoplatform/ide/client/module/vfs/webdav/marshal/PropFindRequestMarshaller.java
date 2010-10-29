@@ -20,7 +20,10 @@
 
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.gwtframework.commons.xml.QName;
 
 /**
  * 
@@ -32,23 +35,42 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 
 public class PropFindRequestMarshaller implements Marshallable
 {
-   
-   public PropFindRequestMarshaller() {
-      
+
+   private List<QName> properties;
+
+   public PropFindRequestMarshaller(List<QName> properties)
+   {
+      this.properties = properties;
    }
 
    public String marshal()
    {
       String xml = "<?xml version='1.0' encoding='UTF-8' ?>";
-
       xml += "<D:propfind xmlns:D=\"DAV:\">";
-         xml += "<D:prop>";
-            xml += "<D:acl />";
-         xml += "</D:prop>";
+      
+      if(properties == null || properties.size() == 0)
+      {
+         xml += "<D:allprop />";
+         xml += "</D:propfind>";
+         return xml;
+      }
+      
+      xml += "<D:prop>";
+      for (QName property : properties)
+      {
+         if("DAV:".equals(property.getNamespaceURI()))
+          xml += "<D:" +  property.getLocalName() +" />";
+      }
+      xml += "</D:prop>";
       xml += "</D:propfind>";
-
       return xml;
+//      xml += "<D:propfind xmlns:D=\"DAV:\">";
+//      xml += "<D:prop>";
+//      xml += "<D:acl />";
+//      xml += "</D:prop>";
+//      xml += "</D:propfind>";
+
+//      return xml;
    }
 
 }
-

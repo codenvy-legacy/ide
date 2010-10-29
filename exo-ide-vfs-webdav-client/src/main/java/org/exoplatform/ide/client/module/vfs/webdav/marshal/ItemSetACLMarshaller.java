@@ -19,9 +19,9 @@
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.ACL.Permissions;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,14 +33,14 @@ import org.exoplatform.ide.client.framework.vfs.ACL.Permissions;
 public class ItemSetACLMarshaller implements Marshallable
 {
 
-   private Item item;
+   private AccessControlList acl;
 
    /**
     * @param item
     */
-   public ItemSetACLMarshaller(Item item)
+   public ItemSetACLMarshaller(AccessControlList acl)
    {
-      this.item = item;
+      this.acl = acl;    
    }
 
    /**
@@ -49,12 +49,11 @@ public class ItemSetACLMarshaller implements Marshallable
    public String marshal()
    {
       //remove ace with empty permissions 
-      item.getAcl().removeEmptyPermissions();
-
       String xml = "<?xml version='1.0' encoding='UTF-8' ?>";
+      
       xml += "<D:acl xmlns:D=\"DAV:\">";
 
-      for (AccessControlEntry e : item.getAcl().getPermissionsList())
+      for (AccessControlEntry e : acl.getPermissionsList())
       {
          xml += "<D:ace>";
          xml += "<D:principal>";

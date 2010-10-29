@@ -42,10 +42,8 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
 {
 
    private Item item;
-   
+
    private Map<String, String> images;
-   
-   
 
    public ItemPropertiesUnmarshaller(Item item, Map<String, String> images)
    {
@@ -83,18 +81,21 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
 
       if (item instanceof File)
       {
-         String contentType = getProperty(item, ItemProperty.GETCONTENTTYPE).getValue();
-         ((File)item).setContentType(contentType);
-         String jcrNodeType = NodeTypeUtil.getContentNodeType(contentType);
-         ((File)item).setJcrContentNodeType(jcrNodeType);
-         String icon = getIcon(contentType);
-         item.setIcon(icon);
+         Property prop = getProperty(item, ItemProperty.GETCONTENTTYPE);
+         if (prop != null)
+         {
+            String contentType = prop.getValue();
+            ((File)item).setContentType(contentType);
+            String jcrNodeType = NodeTypeUtil.getContentNodeType(contentType);
+            ((File)item).setJcrContentNodeType(jcrNodeType);
+            String icon = getIcon(contentType);
+            item.setIcon(icon);
+         }
       }
    }
 
-   
    private String getIcon(String mimeType)
-   {      
+   {
       String icon = images.get(mimeType);
       if (icon == null)
       {
@@ -102,7 +103,7 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
       }
       return icon;
    }
-   
+
    private Property getProperty(Item item, QName name)
    {
       for (Property property : item.getProperties())

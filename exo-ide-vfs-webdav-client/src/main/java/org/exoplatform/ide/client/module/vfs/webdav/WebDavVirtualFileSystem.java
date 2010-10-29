@@ -28,18 +28,19 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.LockToken;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
 import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
@@ -55,8 +56,6 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshalle
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FolderContentUnmarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemGetACLMarshaller;
-import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemGetACLUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesSavingResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemPropertiesUnmarshaller;
@@ -67,6 +66,7 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.ItemVersionsUnmarsha
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.MoveResponseUnmarshaller;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.PropFindRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchResultUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemMarshaller;
@@ -277,12 +277,20 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       }
    }
 
-   @Override
    public void getProperties(Item item)
+   {
+      getProperties(item, null);
+   }
+   
+   @Override
+   public void getProperties(Item item, List<QName> properties)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
+      PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(properties);
+
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item, images);
+      
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
       String errorMessage = "Service is not deployed.<br>Resource not found.";
@@ -294,7 +302,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.GET_PROPERTIES);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").send(callback);
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").data(marshaller).send(callback);
    }
 
    @Override
@@ -599,39 +607,39 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    }
 
+//   /**
+//    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getACL(org.exoplatform.ide.client.framework.vfs.Item)
+//    */
+//   @Override
+//   public void getACL(Item item)
+//   {
+//      String url = javaScriptEncodeURI(item.getHref());
+//
+//      ItemGetACLMarshaller marshaller = new ItemGetACLMarshaller();
+//      ItemGetACLUnmarshaller unmarshaller = new ItemGetACLUnmarshaller(item);
+//
+//      ItemACLReceivedEvent event = new ItemACLReceivedEvent(item);
+//
+//      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+//
+//      String errorMessage = "Service is not deployed.<br>Resource not found.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//
+//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+//
+//      AsyncRequest.build(RequestBuilder.POST, url, loader)
+//         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
+//   }
+
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getACL(org.exoplatform.ide.client.framework.vfs.Item)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item)
     */
    @Override
-   public void getACL(Item item)
+   public void setACL(Item item, AccessControlList acl)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
-      ItemGetACLMarshaller marshaller = new ItemGetACLMarshaller();
-      ItemGetACLUnmarshaller unmarshaller = new ItemGetACLUnmarshaller(item);
-
-      ItemACLReceivedEvent event = new ItemACLReceivedEvent(item);
-
-      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveACL(org.exoplatform.ide.client.framework.vfs.Item)
-    */
-   @Override
-   public void saveACL(Item item)
-   {
-      String url = javaScriptEncodeURI(item.getHref());
-
-      ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(item);
+      ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(acl);
       ItemSetACLUnmarshaller unmarshaller = new ItemSetACLUnmarshaller();
 
       ItemACLSavedEvent event = new ItemACLSavedEvent(item);
