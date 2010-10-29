@@ -50,7 +50,7 @@ ExceptionThrownHandler
    {
       HasClickHandlers getOpenButton();
 
-      HasClickHandlers getCloseButton();
+      HasClickHandlers getCancelButton();
       
       void enableOpenButton();
       
@@ -89,7 +89,7 @@ ExceptionThrownHandler
          }
       });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
+      display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {

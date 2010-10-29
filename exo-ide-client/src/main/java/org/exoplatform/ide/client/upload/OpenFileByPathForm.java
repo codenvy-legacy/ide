@@ -47,19 +47,21 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    public static final int HEIGHT = 160;
 
-   private static final String ID = "ideOpenFileByPathForm";
+   private static final String ID = "ideOpenFileByPathWindow";
 
-   private static final String ID_OPEN_BUTTON = "ideOpenFileByPathFormUploadButton";
+   private static final String FORM_ID = "ideOpenFileByPathForm";   
+   
+   private static final String OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
 
-   private static final String ID_CLOSE_BUTTON = "ideOpenFileByPathFormCloseButton";
+   private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
 
-   private static final String FILE_PATH_FIELD = "ideOpenFileByPathFormFilepathField";
+   private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
 
    private TextField filePathField;
 
    private IButton openButton;
 
-   private IButton closeButton;
+   private IButton cancelButton;
 
    private String title;
 
@@ -104,6 +106,8 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       DynamicForm openFileByPathForm = new DynamicForm();
       openFileByPathForm.setLayoutAlign(Alignment.CENTER);
       openFileByPathForm.setMargin(15);
+      openFileByPathForm.setAutoFocus(true);
+      openFileByPathForm.setID(FORM_ID);
 
       StaticTextItem promptItem = new StaticTextItem();
       promptItem.setWidth(250);
@@ -119,7 +123,7 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       this.filePathField.setWidth(450);
       this.filePathField.setTitleAlign(Alignment.LEFT);
       this.filePathField.setShowTitle(false);
-      this.filePathField.setName(FILE_PATH_FIELD);
+      this.filePathField.setName(FILE_PATH_FIELD_NAME);
       this.filePathField.setColSpan(2);
                   
       openFileByPathForm.setItems(promptItem, spacer, this.filePathField);
@@ -138,29 +142,29 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
 
       this.openButton = new IButton(this.buttonTitle);
-      this.openButton.setID(ID_OPEN_BUTTON);
+      this.openButton.setID(OPEN_BUTTON_ID);
       this.openButton.setHeight(22);
       this.openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
 
       StatefulCanvas buttonSpacer = new StatefulCanvas();
       buttonSpacer.setWidth(5);
 
-      this.closeButton = new IButton("Cancel");
-      this.closeButton.setID(ID_CLOSE_BUTTON);
-      this.closeButton.setHeight(22);
-      this.closeButton.setIcon(Images.Buttons.CANCEL);
+      this.cancelButton = new IButton("Cancel");
+      this.cancelButton.setID(CANCEL_BUTTON_ID);
+      this.cancelButton.setHeight(22);
+      this.cancelButton.setIcon(Images.Buttons.CANCEL);
 
       ToolbarItem buttonToolbar = new ToolbarItem();
-      buttonToolbar.setButtons(this.openButton, buttonSpacer, this.closeButton);
+      buttonToolbar.setButtons(this.openButton, buttonSpacer, this.cancelButton);
 
       uploadWindowButtonsForm.setFields(buttonToolbar);
 
       addItem(uploadWindowButtonsForm);
    }
 
-   public HasClickHandlers getCloseButton()
+   public HasClickHandlers getCancelButton()
    {
-      return this.closeButton;
+      return this.cancelButton;
    }
 
    public HasKeyPressHandlers getFilePathField()

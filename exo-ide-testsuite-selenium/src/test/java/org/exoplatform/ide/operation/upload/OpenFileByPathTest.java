@@ -105,14 +105,16 @@ public class OpenFileByPathTest extends BaseTest
       
       selenium.isTextPresent(NOT_FOUND_ERROR_MESSAGE);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));            
-       
+      
+      // close window by clicking the "close" button
+      selenium.click("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]/closeButton/");
+      
       // trying to open file by correct url and using "Open" key
       openFileByFilePath(fileUrl);
-
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[title=" + FILE_NAME + "]"));
       
       closeTab("0");
       
@@ -153,38 +155,9 @@ public class OpenFileByPathTest extends BaseTest
       "//div[@eventproxy='" + OPEN_FILE_BY_PATH_FORM_CANCEL_BUTTON_ID + "']//td[@class='buttonTitle' and text()='Cancel']"));
    }
    
-   /**
-    * Open file by its path
-    * @param fileUrl
-    * @throws Exception
-    */
-   private void openFileByFilePath(String fileUrl) throws Exception
-   {
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));
-
-      selenium.type(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR, fileUrl);      
-      selenium.click("scLocator=//IButton[ID=\"" + OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID + "\"]/");
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
-      assertFalse(selenium.isElementPresent("scLocator=//IButton[ID=\"" + OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID + "\"]/"));      
-   }
-   
    @AfterClass
    public static void tearDown()
    {
-      try
-      {
-         VirtualFileSystemUtils.delete(ENTRY_POINT_URL + "/" + URLEncoder.encode(FILE_NAME,"UTF-8"));
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+      cleanDefaultWorkspace();
    }
 }
