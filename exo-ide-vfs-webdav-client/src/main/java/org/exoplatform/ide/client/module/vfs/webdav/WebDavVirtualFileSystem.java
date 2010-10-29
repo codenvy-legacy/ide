@@ -124,8 +124,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    public static final String DEFAULT_CHARSET = "charset=UTF-8";
 
-   private static final String MIXINS = "exo:privilegeable,exo:owneable";
-
    private HandlerManager eventBus;
 
    private Loader loader;
@@ -208,7 +206,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.CREATE_FOLDER);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
-         .header(HTTPHeader.CONTENT_LENGTH, "0").header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS).send(callback);
+         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
    @Override
@@ -265,15 +263,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS)
-            .data(marshaller).send(callback);
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
       }
       else
       {
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.CONTENT_MIXINTYPES, MIXINS).data(marshaller).send(callback);
+            .data(marshaller).send(callback);
       }
    }
 
@@ -281,7 +278,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    {
       getProperties(item, null);
    }
-   
+
    @Override
    public void getProperties(Item item, List<QName> properties)
    {
@@ -290,7 +287,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(properties);
 
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item, images);
-      
+
       ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
 
       String errorMessage = "Service is not deployed.<br>Resource not found.";
@@ -302,7 +299,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.GET_PROPERTIES);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").data(marshaller).send(callback);
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").data(marshaller)
+         .send(callback);
    }
 
    @Override
@@ -607,29 +605,29 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    }
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getACL(org.exoplatform.ide.client.framework.vfs.Item)
-//    */
-//   @Override
-//   public void getACL(Item item)
-//   {
-//      String url = javaScriptEncodeURI(item.getHref());
-//
-//      ItemGetACLMarshaller marshaller = new ItemGetACLMarshaller();
-//      ItemGetACLUnmarshaller unmarshaller = new ItemGetACLUnmarshaller(item);
-//
-//      ItemACLReceivedEvent event = new ItemACLReceivedEvent(item);
-//
-//      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-//
-//      String errorMessage = "Service is not deployed.<br>Resource not found.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-//
-//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
-//
-//      AsyncRequest.build(RequestBuilder.POST, url, loader)
-//         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
-//   }
+   //   /**
+   //    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getACL(org.exoplatform.ide.client.framework.vfs.Item)
+   //    */
+   //   @Override
+   //   public void getACL(Item item)
+   //   {
+   //      String url = javaScriptEncodeURI(item.getHref());
+   //
+   //      ItemGetACLMarshaller marshaller = new ItemGetACLMarshaller();
+   //      ItemGetACLUnmarshaller unmarshaller = new ItemGetACLUnmarshaller(item);
+   //
+   //      ItemACLReceivedEvent event = new ItemACLReceivedEvent(item);
+   //
+   //      int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
+   //
+   //      String errorMessage = "Service is not deployed.<br>Resource not found.";
+   //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+   //
+   //      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+   //
+   //      AsyncRequest.build(RequestBuilder.POST, url, loader)
+   //         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).data(marshaller).send(callback);
+   //   }
 
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item)
