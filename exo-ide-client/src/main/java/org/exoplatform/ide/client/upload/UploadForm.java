@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
@@ -46,7 +46,6 @@ import com.smartgwt.client.widgets.form.fields.CanvasItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class UploadForm extends DialogWindow implements UploadPresenter.Display
@@ -92,10 +91,10 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    private VerticalPanel postFieldsPanel;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile,
-      ApplicationConfiguration applicationConfiguration)
+      IDEConfiguration applicationConfiguration)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;

@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
 import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
@@ -338,7 +338,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       }
    }
 
-   public void showGadget(GadgetMetadata metadata, ApplicationConfiguration applicationConfiguration)
+   public void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration)
    {
       show();
       gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);

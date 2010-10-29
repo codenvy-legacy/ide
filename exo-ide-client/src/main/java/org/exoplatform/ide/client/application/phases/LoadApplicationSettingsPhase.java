@@ -29,8 +29,8 @@ import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateSt
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -57,7 +57,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
 
    private Handlers handlers;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
 
@@ -65,7 +65,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
 
    private UserInfo userInfo;
 
-   public LoadApplicationSettingsPhase(HandlerManager eventBus, ApplicationConfiguration applicationConfiguration,
+   public LoadApplicationSettingsPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
       UserInfo userInfo, ControlsRegistration controls)
    {
       this.eventBus = eventBus;

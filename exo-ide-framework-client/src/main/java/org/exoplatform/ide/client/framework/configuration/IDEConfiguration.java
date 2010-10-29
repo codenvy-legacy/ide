@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.framework.application;
+package org.exoplatform.ide.client.framework.configuration;
 
 import com.google.gwt.core.client.GWT;
 
@@ -24,7 +24,7 @@ import com.google.gwt.core.client.GWT;
  * @version $Id: $
  */
 
-public class ApplicationConfiguration
+public class IDEConfiguration
 {
 
    private String registryURL;
@@ -43,11 +43,11 @@ public class ApplicationConfiguration
 
    private String gadgetServer;
 
-   public ApplicationConfiguration()
+   public IDEConfiguration()
    {
    }
 
-   public ApplicationConfiguration(String registryURL)
+   public IDEConfiguration(String registryURL)
    {
       this.registryURL = registryURL;
    }

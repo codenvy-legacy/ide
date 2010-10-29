@@ -20,14 +20,14 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
@@ -43,7 +43,6 @@ import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesH
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -72,7 +71,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
       void changeActiveFile(File file);
 
-      void showGadget(GadgetMetadata metadata, ApplicationConfiguration applicationConfiguration);
+      void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration);
 
       void closeGadgetPreviewTab();
 
@@ -86,7 +85,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    private File activeFile;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    public OperationPresenter(HandlerManager eventBus)
    {

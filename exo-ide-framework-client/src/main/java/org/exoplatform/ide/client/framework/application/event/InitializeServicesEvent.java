@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.framework.application.event;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -32,17 +32,17 @@ public class InitializeServicesEvent extends GwtEvent<InitializeServicesHandler>
 
    public static final GwtEvent.Type<InitializeServicesHandler> TYPE = new GwtEvent.Type<InitializeServicesHandler>();
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
    
    private Loader loader;
 
-   public InitializeServicesEvent(ApplicationConfiguration applicationConfiguration, Loader loader)
+   public InitializeServicesEvent(IDEConfiguration applicationConfiguration, Loader loader)
    {
       this.applicationConfiguration = applicationConfiguration;
       this.loader = loader;
    }
 
-   public ApplicationConfiguration getApplicationConfiguration()
+   public IDEConfiguration getApplicationConfiguration()
    {
       return applicationConfiguration;
    }

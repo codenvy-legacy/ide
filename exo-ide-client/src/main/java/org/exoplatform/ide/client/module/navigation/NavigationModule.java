@@ -29,11 +29,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -53,8 +55,6 @@ import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderForm;
 import org.exoplatform.ide.client.module.navigation.action.DeleteItemForm;
@@ -125,8 +125,8 @@ import org.exoplatform.ide.client.module.navigation.handler.RestoreToVersionComm
 import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.module.navigation.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ShowVersionListCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.permissions.ShowPermissionsCommandHandler;
 import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
@@ -157,7 +157,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    private ApplicationSettings applicationSettings;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 

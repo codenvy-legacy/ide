@@ -16,18 +16,12 @@
  */
 package org.exoplatform.ide.client.module.gadget.ui;
 
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.TabPanel;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ide.client.module.gadget.service.GadgetService;
-import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 
@@ -53,13 +47,13 @@ public class GadgetPreviewPane extends TabPanel
     */
    public static final String ID = "gadgetpreview";
    
-   private ApplicationConfiguration configuration;
+   private IDEConfiguration configuration;
 
    /**
     * @param eventBus
     * @param gadgetMetadata
     */
-   public GadgetPreviewPane(HandlerManager eventBus, ApplicationConfiguration configuration, GadgetMetadata gadgetMetadata)
+   public GadgetPreviewPane(HandlerManager eventBus, IDEConfiguration configuration, GadgetMetadata gadgetMetadata)
    {
       super(eventBus, true);
       this.configuration = configuration;

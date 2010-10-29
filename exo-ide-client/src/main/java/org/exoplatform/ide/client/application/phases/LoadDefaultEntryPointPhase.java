@@ -20,13 +20,13 @@
 
 package org.exoplatform.ide.client.application.phases;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.model.discovery.DiscoveryService;
 import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -41,11 +41,11 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
 
    private HandlerManager eventBus;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
 
-   public LoadDefaultEntryPointPhase(HandlerManager eventBus, ApplicationConfiguration applicationConfiguration,
+   public LoadDefaultEntryPointPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;

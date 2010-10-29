@@ -17,9 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.client.model.configuration;
+package org.exoplatform.ide.client.framework.configuration.event;
 
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -36,14 +36,14 @@ public class ConfigurationReceivedSuccessfullyEvent extends GwtEvent<Configurati
    public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE =
       new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
 
-   private ApplicationConfiguration configuration;
+   private IDEConfiguration configuration;
 
-   public ConfigurationReceivedSuccessfullyEvent(ApplicationConfiguration configuration)
+   public ConfigurationReceivedSuccessfullyEvent(IDEConfiguration configuration)
    {
       this.configuration = configuration;
    }
 
-   public ApplicationConfiguration getConfiguration()
+   public IDEConfiguration getConfiguration()
    {
       return configuration;
    }

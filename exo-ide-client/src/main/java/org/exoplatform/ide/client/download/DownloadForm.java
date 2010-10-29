@@ -20,13 +20,13 @@
 package org.exoplatform.ide.client.download;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileHandler;
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
@@ -55,7 +55,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    private Item selectedItem;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    public DownloadForm(HandlerManager eventBus)
    {

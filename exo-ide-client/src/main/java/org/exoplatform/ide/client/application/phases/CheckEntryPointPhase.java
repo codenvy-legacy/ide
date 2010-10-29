@@ -23,9 +23,9 @@ package org.exoplatform.ide.client.application.phases;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
@@ -48,11 +48,11 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    private Handlers handlers;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
 
-   public CheckEntryPointPhase(HandlerManager eventBus, ApplicationConfiguration applicationConfiguration,
+   public CheckEntryPointPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;

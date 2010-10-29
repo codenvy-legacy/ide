@@ -24,7 +24,7 @@ package org.exoplatform.ide.client.application.phases;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.application.ControlsRegistration;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
@@ -46,11 +46,11 @@ public class LoadUserInfoPhase extends Phase implements UserInfoReceivedHandler
 
    private Handlers handlers;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ControlsRegistration controls;
 
-   public LoadUserInfoPhase(HandlerManager eventBus, ApplicationConfiguration applicationConfiguration,
+   public LoadUserInfoPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
       ControlsRegistration controls)
    {
       this.eventBus = eventBus;

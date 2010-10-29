@@ -24,10 +24,10 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
-import org.exoplatform.ide.client.model.configuration.Configuration;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.model.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
@@ -49,7 +49,7 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
 
    private Handlers handlers;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ControlsRegistration controls;
 
@@ -65,7 +65,7 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
    @Override
    protected void execute()
    {
-      new Configuration(eventBus, IDELoader.getInstance()).loadConfiguration();
+      new IDEConfigurationLoader(eventBus, IDELoader.getInstance()).loadConfiguration();
    }
 
    /**
@@ -82,7 +82,7 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
          new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
 
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
-            + RegistryConstants.EXO_APPLICATIONS + "/" + Configuration.APPLICATION_NAME);
+            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
 
          new GadgetServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext(),
             applicationConfiguration.getGadgetServer(), applicationConfiguration.getPublicContext());

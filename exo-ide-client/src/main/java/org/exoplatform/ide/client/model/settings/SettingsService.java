@@ -43,7 +43,7 @@ import org.exoplatform.ide.client.framework.settings.event.GetApplicationSetting
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.model.configuration.Configuration;
+import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
@@ -100,7 +100,7 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
    private String getURL()
    {
       String url =
-         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/" + Configuration.APPLICATION_NAME;
+         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/" + IDEConfigurationLoader.APPLICATION_NAME;
       return url;
    }
 

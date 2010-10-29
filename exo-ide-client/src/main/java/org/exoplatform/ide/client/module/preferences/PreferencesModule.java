@@ -25,9 +25,9 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.component.command.Control;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.component.AboutForm;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
@@ -79,7 +79,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    protected Handlers handlers;
 
-   private ApplicationConfiguration applicationConfiguration;
+   private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
 

@@ -22,7 +22,8 @@ import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.ide.client.framework.application.ApplicationConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
@@ -33,7 +34,7 @@ import com.google.gwt.user.client.Window.Location;
  * @version $Id: $
  */
 
-public class Configuration implements ApplicationConfigurationReceivedHandler
+public class IDEConfigurationLoader implements ApplicationConfigurationReceivedHandler
 {
 
    public final static String APPLICATION_NAME = "IDE";
@@ -54,16 +55,16 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
 
    private HandlerManager eventBus;
    
-   private ApplicationConfiguration configuration;
+   private IDEConfiguration configuration;
    
    private Loader loader;
 
-   public Configuration(HandlerManager eventBus, Loader loader)
+   public IDEConfigurationLoader(HandlerManager eventBus, Loader loader)
    {
       this.eventBus = eventBus;
       this.loader = loader;
       eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
-      configuration = new ApplicationConfiguration(getRegistryURL());
+      configuration = new IDEConfiguration(getRegistryURL());
    }
    
    public void loadConfiguration() {
@@ -77,7 +78,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       
       if (jsonConfiguration.containsKey(CONTEXT))
       {
-         configuration.setContext(jsonConfiguration.get(Configuration.CONTEXT).isString().stringValue());
+         configuration.setContext(jsonConfiguration.get(IDEConfigurationLoader.CONTEXT).isString().stringValue());
          configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
          configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);         
       }
@@ -88,7 +89,7 @@ public class Configuration implements ApplicationConfigurationReceivedHandler
       }
 
       if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
-         configuration.setPublicContext(jsonConfiguration.get(Configuration.PUBLIC_CONTEXT).isString().stringValue());
+         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString().stringValue());
       else
       {
          showErrorMessage(PUBLIC_CONTEXT);
