@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.permissions;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -25,12 +27,17 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.StringValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedHandler;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -74,6 +81,8 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
    private Dispaly dispaly;
    
    private Handlers handlers;
+   
+   private AccessControlList acl;
 
    /**
     * @param eventBus
@@ -106,17 +115,21 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
          public void onClick(ClickEvent event)
          {
 //            Window.alert("Add");
-            Dialogs.getInstance().askForValue("IDE", "Entity:", "", new StringValueReceivedCallback()
-            {
-               
-               public void execute(String value)
-               {
-                 if(value != null && !"".equals(value))
-                 {
-                    addEntity(value);
-                 }
-               }
-            });
+//            Dialogs.getInstance().askForValue("IDE", "Entity:", "", new StringValueReceivedCallback()
+//            {
+//               
+//               public void execute(String value)
+//               {
+//                 if(value != null && !"".equals(value))
+//                 {
+//                    addEntity(value);
+//                 }
+//               }
+//            });
+            
+            acl.addPermission(new AccessControlEntry(""));
+            dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+            
          }
       });
       
@@ -129,7 +142,17 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
          }
       });
       
-      dispaly.getPermissionsListGrid().setValue(item.getAcl().getPermissionsList());
+      try
+      {
+         acl = parseItemACL();         
+         dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+      }
+      catch (Exception e)
+      {
+         GWT.log(e.getMessage());
+         Dialogs.getInstance().showError(e.getMessage());
+      }
+      
       
       dispaly.getPermissionsListGrid().addSelectionHandler(new SelectionHandler<AccessControlEntry>()
       {
@@ -151,16 +174,10 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
       
       handlers.addHandler(ItemACLSavedEvent.TYPE, this);
    }
-
-   private void addEntity(String identity)
-   {
-      item.getAcl().getPermissionsList().add(new AccessControlEntry(identity));
-      dispaly.getPermissionsListGrid().setValue(item.getAcl().getPermissionsList());
-   }
    
    private void saveACL()
    {
-      VirtualFileSystem.getInstance().saveACL(item);
+      VirtualFileSystem.getInstance().setACL(item, acl);
    }
    
    /**
@@ -185,6 +202,95 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
    public void onError(ExceptionThrownEvent event)
    {
       dispaly.closeForm();
+   }
+   
+   private AccessControlList parseItemACL() throws Exception
+   {
+      
+      AccessControlList accessControlList = new AccessControlList();
+      
+      Property acl = item.getProperty(ItemProperty.ACL.ACL);
+
+      if(acl == null)
+      {
+         throw new Exception("No acl property");
+      }
+      
+      for (Property aceProperty : acl.getChildProperties())
+      {
+
+         String entity = "";
+         List<Permissions> permissionList = new ArrayList<Permissions>();
+         //         List<Permissions> deny = new ArrayList<Permissions>();
+
+         for (Property p : aceProperty.getChildProperties())
+         {
+            if (p.getName().equals(ItemProperty.ACL.PRINCIPAL))
+            {
+               // parse principal
+               entity = getEntity(p.getChildProperties());
+            }
+            else if (p.getName().equals(ItemProperty.ACL.GRANT))
+            {
+               //parse grant
+               permissionList = getPermission(p.getChildProperties());
+            }
+         }
+
+         accessControlList.addPermission(new AccessControlEntry(entity, permissionList));
+      }
+
+      //      for (String key : item.getAcl().getPermissionsMap().keySet())
+      //      {
+      //         System.out.println("UserID - " + key + ", per ="
+      //            + item.getAcl().getPermisions(key).getPermissionsList());
+      //      }
+      return accessControlList;
+   }
+
+   /**
+    * @param childProperties
+    * @return
+    */
+   private List<Permissions> getPermission(Collection<Property> childProperties)
+   {
+      List<Permissions> permissions = new ArrayList<Permissions>();
+
+      for (Property p : childProperties)
+      {
+         if (p.getName().equals(ItemProperty.ACL.PRIVILEGE))
+         {
+            for (Property per : p.getChildProperties())
+            {
+               if (per.getName().getLocalName().equals(Permissions.READ.toString()))
+               {
+                  permissions.add(Permissions.READ);
+               }
+               else if (per.getName().getLocalName().equals(Permissions.WRITE.toString()))
+                  permissions.add(Permissions.WRITE);
+            }
+         }
+      }
+
+      return permissions;
+   }
+
+   /**
+    * @param childProperties
+    * @return userID
+    */
+   private String getEntity(Collection<Property> childProperties)
+   {
+      for (Property p : childProperties)
+      {
+         if (p.getName().equals(ItemProperty.ACL.HREF))
+            return p.getValue();
+         else if (p.getName().equals(ItemProperty.ACL.PROPERTY))
+            return p.getChildProperty(ItemProperty.OWNER).getName().getLocalName();
+         else if (p.getName().equals(ItemProperty.ACL.ALL))
+            return p.getName().getLocalName();
+      }
+      return "";
    }
 
 }

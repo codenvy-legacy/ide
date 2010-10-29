@@ -18,15 +18,19 @@
  */
 package org.exoplatform.ide.client.permissions;
 
+import java.util.Arrays;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsHandler;
 
@@ -39,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, ItemsSelectedHandler, ItemACLReceivedHandler, ExceptionThrownHandler
+public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, ItemsSelectedHandler, ExceptionThrownHandler, ItemPropertiesReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -68,9 +72,10 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       if(selectedItem == null)
          return;
       
-      handlers.addHandler(ItemACLReceivedEvent.TYPE, this);
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getACL(selectedItem);
+      
+      VirtualFileSystem.getInstance().getProperties(selectedItem, Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}));
    }
 
    /**
@@ -83,11 +88,11 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
          selectedItem = event.getSelectedItems().get(0);
       }
    }
-
+   
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedHandler#onItemACLReceived(org.exoplatform.ide.client.framework.vfs.event.ItemACLReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
     */
-   public void onItemACLReceived(ItemACLReceivedEvent event)
+   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
       new PermissionsManagerForm(eventBus, event.getItem());
@@ -100,5 +105,6 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
    {
       handlers.removeHandlers();
    }
+
 
 }

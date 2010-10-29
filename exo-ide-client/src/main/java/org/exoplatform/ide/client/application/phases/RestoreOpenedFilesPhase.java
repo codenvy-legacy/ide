@@ -125,7 +125,7 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
 
          fileToLoad = new File(href);
          filesToLoad.remove(0);
-         VirtualFileSystem.getInstance().getProperties(fileToLoad);
+         VirtualFileSystem.getInstance().getProperties(fileToLoad, null);
       }
       catch (Exception exc)
       {

@@ -118,7 +118,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
       File file = new File(activeVersion.getItemHref());
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getProperties(file);
+      VirtualFileSystem.getInstance().getProperties(file, null);
    }
 
    /**

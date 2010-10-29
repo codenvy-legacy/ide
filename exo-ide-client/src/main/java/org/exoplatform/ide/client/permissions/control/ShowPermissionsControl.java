@@ -24,7 +24,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -69,7 +68,7 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
     */
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;

@@ -210,7 +210,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      VirtualFileSystem.getInstance().getProperties(event.getItem());
+      VirtualFileSystem.getInstance().getProperties(event.getItem(), null);
    }
 
    public void onError(ExceptionThrownEvent event)
@@ -270,7 +270,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       }
       else
       {
-         VirtualFileSystem.getInstance().getProperties(event.getItem());
+         VirtualFileSystem.getInstance().getProperties(event.getItem(), null);
       }
 
    }

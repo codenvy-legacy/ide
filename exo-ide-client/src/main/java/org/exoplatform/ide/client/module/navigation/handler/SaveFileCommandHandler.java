@@ -112,7 +112,7 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      VirtualFileSystem.getInstance().getProperties(event.getFile());
+      VirtualFileSystem.getInstance().getProperties(event.getFile(), null);
    }
 
    public void onError(ExceptionThrownEvent event)

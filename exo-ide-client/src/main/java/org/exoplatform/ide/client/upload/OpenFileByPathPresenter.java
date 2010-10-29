@@ -148,7 +148,7 @@ ExceptionThrownHandler
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       File file = new File(filePath);
-      VirtualFileSystem.getInstance().getProperties(file); 
+      VirtualFileSystem.getInstance().getProperties(file, null); 
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)

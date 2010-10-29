@@ -239,7 +239,7 @@ public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesR
             eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
 
-         VirtualFileSystem.getInstance().getProperties(event.getItem());
+         VirtualFileSystem.getInstance().getProperties(event.getItem(), null);
       }
       else
       {

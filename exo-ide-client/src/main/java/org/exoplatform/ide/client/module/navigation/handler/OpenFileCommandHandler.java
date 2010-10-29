@@ -127,7 +127,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
          handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
          handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
-         VirtualFileSystem.getInstance().getProperties(file);
+         VirtualFileSystem.getInstance().getProperties(file, null);
       }
       else
       {

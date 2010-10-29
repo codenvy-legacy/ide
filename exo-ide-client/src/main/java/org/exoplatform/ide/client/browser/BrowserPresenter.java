@@ -55,7 +55,6 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
@@ -464,7 +463,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
       Folder rootFolder = new Folder(event.getEntryPoint());
-      VirtualFileSystem.getInstance().getProperties(rootFolder);
+      VirtualFileSystem.getInstance().getProperties(rootFolder, null);
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)

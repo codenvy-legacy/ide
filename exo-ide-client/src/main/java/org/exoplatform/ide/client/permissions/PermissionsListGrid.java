@@ -19,14 +19,13 @@
 package org.exoplatform.ide.client.permissions;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.ACL.Permissions;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.types.SortArrow;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
@@ -64,7 +63,7 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
       
       ListGridField fieldIdentity = new ListGridField(IDENTITY, IDENTITY);
       fieldIdentity.setAlign(Alignment.LEFT);
-      fieldIdentity.setCanEdit(false);
+      fieldIdentity.setCanEdit(true);
       fieldIdentity.setWidth("60%");
 
       ListGridField fieldRead = new ListGridField(READ, READ);
@@ -135,6 +134,10 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
          {
             entry.removePermission(Permissions.WRITE);
          }
+      }
+      if(event.getNewValues().containsKey(IDENTITY))
+      {
+         entry.setIdentity(event.getNewValues().get(IDENTITY).toString());
       }
    }
 
