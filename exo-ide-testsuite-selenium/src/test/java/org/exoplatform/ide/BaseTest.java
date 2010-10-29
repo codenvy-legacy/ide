@@ -1294,15 +1294,15 @@ public abstract class BaseTest
       String divIndex = String.valueOf(rowNumber + 1);
       if (isSelected)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]//div["
-            + "@class='tabSetContainer']//table[@class='listTable']/tbody/tr[" + divIndex
-            + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
+            + divIndex + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]//div["
-            + "@class='tabSetContainer']//table[@class='listTable']/tbody/tr[" + divIndex
-            + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
+            + divIndex + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
+         
+         
       }
    }
 
