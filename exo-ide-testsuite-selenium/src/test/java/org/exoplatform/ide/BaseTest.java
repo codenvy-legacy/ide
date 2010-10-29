@@ -1761,4 +1761,19 @@ public abstract class BaseTest
       assertTrue(selenium.isTextPresent(workspaceName));
       Thread.sleep(TestConstants.SLEEP);
    }
+   
+   /**
+    * Open file by its path
+    * @param fileUrl
+    * @throws Exception
+    */
+   protected void openFileByFilePath(String fileUrl) throws Exception
+   {
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideOpenFileByPathWindow\"]"));
+      selenium.type("scLocator=//DynamicForm[ID=\"ideOpenFileByPathForm\"]/item[name=ideOpenFileByPathFormFilePathField]/element", fileUrl);      
+      selenium.click("scLocator=//IButton[ID=\"ideOpenFileByPathFormOpenButton\"]/icon");
+      
+      Thread.sleep(TestConstants.SLEEP);   
+   }
 }
