@@ -31,14 +31,10 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedHandler;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -54,7 +50,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class UploadPresenter implements UploadFileSelectedHandler
+public class UploadPresenter implements FileSelectedHandler
 {
 
    interface Display
@@ -94,8 +90,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    private Display display;
 
-   private HandlerRegistration fileSelectedHandler;
-
    private String path;
 
    private boolean openLocalFile;
@@ -105,14 +99,13 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private String fileType;
 
    private boolean isSetAll = false;
-   
+
    public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openLocalFile)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.path = path;
       this.openLocalFile = openLocalFile;
-      fileSelectedHandler = eventBus.addHandler(UploadFileSelectedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
@@ -188,7 +181,7 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
             public void onValueChange(ValueChangeEvent<String> event)
             {
-               if(!isSetAll)
+               if (!isSetAll)
                {
                   String[] allMimeTypes = MimeTypeResolver.getAllMimeTypes().toArray(new String[0]);
                   Arrays.sort(allMimeTypes);
@@ -208,8 +201,8 @@ public class UploadPresenter implements UploadFileSelectedHandler
     * @return result of javaScript function <code>encodeURI(url)</code>
     */
    public static native String encodeURI(String url) /*-{
-      return encodeURI(url);
-   }-*/;
+                                                     return encodeURI(url);
+                                                     }-*/;
 
    private void uploadFile()
    {
@@ -243,10 +236,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
    void destroy()
    {
-      if (fileSelectedHandler != null)
-      {
-         fileSelectedHandler.removeHandler();
-      }
    }
 
    /**
@@ -279,11 +268,11 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
       Collections.sort(mimeTypes);
-      
+
       List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(fileName);
 
       String[] valueMap = mimeTypes.toArray(new String[0]);
-      
+
       display.setMimeTypes(valueMap);
 
       if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
@@ -292,18 +281,6 @@ public class UploadPresenter implements UploadFileSelectedHandler
          display.setDefaultMimeType(mimeTYpe);
          display.enableUploadButton();
       }
-   }
-
-   public void onUploadFileSelected(UploadFileSelectedEvent event)
-   {
-      if (openLocalFile)
-      {
-         openInEditor(event.getFileName());
-         return;
-      }
-
-      uploadFileToServer(event.getFileName());
-      isSetAll = false;
    }
 
    private void uploadFileToServer(String fileName)
@@ -358,9 +335,9 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       boolean matches = false;
       //check is uploadServiceResponse enclosed in xml tag <pre></pre> (do not case sensitive)
-      
-      System.out.println("uploadServiceResponse > [" + uploadServiceResponse + "]" );
-      
+
+      System.out.println("uploadServiceResponse > [" + uploadServiceResponse + "]");
+
       if (openLocalFile)
       {
          matches =
@@ -433,8 +410,9 @@ public class UploadPresenter implements UploadFileSelectedHandler
    private void completeUpload(String response)
    {
       display.closeDisplay();
-      
-      if (!"<pre></pre>".equals(response)) {
+
+      if (!"<pre></pre>".equals(response))
+      {
          String message = response.substring("<pre>".length());
          message = message.substring(0, message.length() - "</pre>".length());
          Dialogs.getInstance().showError("Can't upload file!<br>" + message);
@@ -450,6 +428,18 @@ public class UploadPresenter implements UploadFileSelectedHandler
 
       Folder folder = new Folder(href);
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
+   }
+
+   public void onFileSelected(String fileName)
+   {
+      if (openLocalFile)
+      {
+         openInEditor(fileName);
+         return;
+      }
+
+      uploadFileToServer(fileName);
+      isSetAll = false;
    }
 
 }

@@ -62,7 +62,7 @@ public class UploadService
       
    }
 
-   private static final String WEBDAV_CONTEXT = "jcr";
+   private static final String WEBDAV_CONTEXT = "ide-vfs-webdav";
    
    private static Log log = ExoLogger.getLogger(UploadService.class);
 

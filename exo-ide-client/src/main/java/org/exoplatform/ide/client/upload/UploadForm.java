@@ -92,6 +92,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    private VerticalPanel postFieldsPanel;
 
    private IDEConfiguration applicationConfiguration;
+   
+   private FileUploadInput fileUploadInput;
 
    public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile,
       IDEConfiguration applicationConfiguration)
@@ -130,6 +132,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
       presenter = new UploadPresenter(eventBus, selectedItems, path, openFile);
+      fileUploadInput.setFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
    }
 
@@ -271,10 +274,10 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       postFieldsPanel = new VerticalPanel();
 
-      FileUploadInput upload = new FileUploadInput(eventBus);
-      upload.setWidth("80px");
-      upload.setHeight("22px");
-      postFieldsPanel.add(upload);
+      fileUploadInput = new FileUploadInput();
+      fileUploadInput.setWidth("80px");
+      fileUploadInput.setHeight("22px");
+      postFieldsPanel.add(fileUploadInput);
 
       //uploadForm.setEncoding(encodingType)
 

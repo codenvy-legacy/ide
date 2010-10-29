@@ -16,10 +16,7 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import org.exoplatform.ide.client.upload.event.UploadFileSelectedEvent;
-
 import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FileUpload;
 
@@ -33,12 +30,10 @@ import com.google.gwt.user.client.ui.FileUpload;
 public class FileUploadInput extends FileUpload
 {
 
-   private HandlerManager eventBus;
+   private FileSelectedHandler fileSelectedHandler;
 
-   public FileUploadInput(HandlerManager eventBus)
+   public FileUploadInput()
    {
-      this.eventBus = eventBus;
-
       setName(FormFields.FILE);
       addStyleName("UploadFile-FileSelect");
 
@@ -46,16 +41,28 @@ public class FileUploadInput extends FileUpload
       sinkEvents(Event.ONCHANGE);
    }
 
+   public FileUploadInput(FileSelectedHandler fileSelectedHandler)
+   {
+      this();
+      this.fileSelectedHandler = fileSelectedHandler;
+   }
+   
+   public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler) {
+      this.fileSelectedHandler = fileSelectedHandler;
+   }
+
    public void onBrowserEvent(Event event)
    {
       String fileName = getFilename();
-            
+
       if (fileName == null || fileName.trim().length() == 0)
       {
          return;
       }
 
-      eventBus.fireEvent(new UploadFileSelectedEvent(fileName));
+      if (fileSelectedHandler != null) {
+         fileSelectedHandler.onFileSelected(fileName);
+      }
    }
-   
+
 }
