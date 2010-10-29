@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.framework.vfs;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 
 /**

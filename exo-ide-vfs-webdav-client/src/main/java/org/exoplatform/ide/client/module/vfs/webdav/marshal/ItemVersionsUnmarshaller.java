@@ -24,8 +24,8 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Resource;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.Item;

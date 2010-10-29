@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.module.groovy.util;
 
 import java.util.Collection;
 
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;

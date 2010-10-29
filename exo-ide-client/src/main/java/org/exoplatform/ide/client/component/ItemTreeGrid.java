@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.vfs.File;

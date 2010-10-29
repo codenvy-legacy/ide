@@ -2,7 +2,6 @@ package org.exoplatform.ide.client.framework.vfs;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
 

@@ -17,14 +17,15 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -52,8 +53,7 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHand
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.

@@ -16,11 +16,8 @@
  */
 package org.exoplatform.ide.client.module.groovy.ui;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -73,14 +70,6 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       editCompleteHandler = addEditCompleteHandler(this);
    }
 
-   protected void fireOnValueChangeEvent()
-   {
-      for (ValueChangeHandler<List<WadlParameterEntry>> handler : valueChangeHandlers)
-      {
-         //handler.onValueChange(new ValueChangeEvent(<List<WadlParameterEntry>>(items));
-      }
-   }
-
    @Override
    protected void setRecordFields(ListGridRecord record, WadlParameterEntry item)
    {
@@ -117,8 +106,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> imp
       {
          listItem.setDefaultValue("" + event.getNewValues().get("default"));
       }
-      
-      fireOnValueChangeEvent();
+
       editCompleteHandler = addEditCompleteHandler(this);
    }
 

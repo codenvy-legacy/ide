@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 

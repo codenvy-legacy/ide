@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
 import org.exoplatform.ide.client.framework.vfs.File;
