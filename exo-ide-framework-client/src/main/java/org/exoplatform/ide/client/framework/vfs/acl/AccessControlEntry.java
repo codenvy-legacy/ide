@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.vfs.ACL;
+package org.exoplatform.ide.client.framework.vfs.acl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +87,15 @@ public class AccessControlEntry
    public String getIdentity()
    {
       return identity;
+   }
+
+   
+   /**
+    * @param identity the identity to set
+    */
+   public void setIdentity(String identity)
+   {
+      this.identity = identity;
    }
 
    /**

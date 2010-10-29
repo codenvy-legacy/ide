@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.vfs.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.vfs.acl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +25,13 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: Oct 18, 2010 $
  *
  */
-public interface ItemACLReceivedHandler extends EventHandler
-{
+public enum Permissions {
 
-   void onItemACLReceived(ItemACLReceivedEvent event);
+   READ, WRITE;
+
+   public String toString()
+   {
+      return name().toLowerCase();
+   }
    
 }

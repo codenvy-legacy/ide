@@ -21,7 +21,6 @@ import java.util.Collection;
 
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.framework.vfs.ACL.AccessControlList;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,8 +39,6 @@ public abstract class Item
    private boolean propertiesChanged = false;
 
    private String icon;
-
-   private AccessControlList acl = new AccessControlList();
 
    protected Item(String href)
    {
@@ -120,14 +117,6 @@ public abstract class Item
    public void setIcon(String icon)
    {
       this.icon = icon;
-   }
-
-   /**
-    * @return the acl
-    */
-   public AccessControlList getAcl()
-   {
-      return acl;
    }
 
 }

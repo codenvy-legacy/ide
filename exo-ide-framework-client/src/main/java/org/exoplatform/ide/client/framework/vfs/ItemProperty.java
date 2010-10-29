@@ -62,6 +62,8 @@ public class ItemProperty
 
    public static final QName PREDECESSOR_SET = new QName("predecessor-set", Namespace.DAV);
 
+   public static final QName OWNER = new QName("owner", Namespace.DAV);
+
    /*
     * JCR_PROPERTIES
     */
@@ -86,20 +88,29 @@ public class ItemProperty
     * ACL Properties
     */
 
-   
    public interface ACL
    {
       public static final QName ACL = new QName("acl", Namespace.DAV);
-      
+
       public static final QName ACE = new QName("ace", Namespace.DAV);
-      
+
       public static final QName PRINCIPAL = new QName("principal", Namespace.DAV);
-      
+
       public static final QName GRANT = new QName("grant", Namespace.DAV);
-      
+
       public static final QName PRIVILEGE = new QName("privilege", Namespace.DAV);
-      
+
       public static final QName DENY = new QName("deny", Namespace.DAV);
-      
+
+      public static final QName HREF = new QName("href", "DAV:");
+
+      public static final QName PROPERTY = new QName("property", "DAV:");
+
+      public static final QName ALL = new QName("all", "DAV:");
+
+      public static final QName READ = new QName("read", "DAV:");
+
+      public static final QName WRITE = new QName("write", "DAV:");
+
    }
 }

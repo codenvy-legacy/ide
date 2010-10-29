@@ -1,5 +1,11 @@
 package org.exoplatform.ide.client.framework.vfs;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.webdav.PropfindResponse.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
+
 
 public abstract class VirtualFileSystem
 {
@@ -91,7 +97,7 @@ public abstract class VirtualFileSystem
     * 
     * @param item
     */
-   public abstract void getProperties(Item item);
+   public abstract void getProperties(Item item, List<QName> properties);
 
    /**
     * Save properties of file or folder
@@ -142,19 +148,12 @@ public abstract class VirtualFileSystem
     * @param item
     */
    public abstract void getVersions(Item item);
-   
-   /**
-    * Get ACL of item
-    * 
-    * @param item
-    */
-   public abstract void getACL(Item item);
-   
+
    
    /**
     * Save ACL of item
     * 
     * @param item
     */
-   public abstract void saveACL(Item item);
+   public abstract void setACL(Item item, AccessControlList acl);
 }
