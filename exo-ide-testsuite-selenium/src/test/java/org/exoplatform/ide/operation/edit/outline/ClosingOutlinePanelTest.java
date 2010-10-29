@@ -44,10 +44,17 @@ import java.io.IOException;
 public class ClosingOutlinePanelTest extends BaseTest
 {
    private final static String JAVASCRIPT_FILE_NAME = "TestJavaScriptFile.js";
-   
+
+   private final static String OUTLINE = "ideOutlineTreeGrid";
+
+   //   private final static String LAP = ;
+
    private final static String TEXT_FILE_NAME = "SampleTextFile.txt";
 
-   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String FOLDER_NAME = "TestFolder";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -55,9 +62,13 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       String javaScriptFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/TestJavaScriptFile.js";
       String textFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/SampleTextFile.txt";
-      
+
       try
       {
+         //*******TODO****Fix
+         VirtualFileSystemUtils.mkcol(URL);
+         //*******************
+
          VirtualFileSystemUtils.put(javaScriptFilePath, MimeType.APPLICATION_JAVASCRIPT, URL + JAVASCRIPT_FILE_NAME);
          VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, URL + TEXT_FILE_NAME);
       }
@@ -70,7 +81,7 @@ public class ClosingOutlinePanelTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -88,14 +99,14 @@ public class ClosingOutlinePanelTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    public void afterMethod()
    {
       deleteCookies();
       cleanRegistry();
       cleanDefaultWorkspace();
    }
-   
+
    //IDE-170:Test closing Code Outline panel
    @Test
    public void testClosingOutlinePanel() throws Exception
@@ -106,16 +117,18 @@ public class ClosingOutlinePanelTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //----- 2 -------------
       //show Code Outline panel
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline present
       checkCodeHelperPanelPresent(true);
-      
+
       //----- 3 -------------
       //open text file.
       openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
@@ -123,13 +136,13 @@ public class ClosingOutlinePanelTest extends BaseTest
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //return to the tab with JavaScript.
       selectEditorTab(0);
       //check Code Outline present
       checkCodeHelperPanelVisibility(true);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //----- 4 -------------
       //close code outline panel.
       closeTab("0");
@@ -147,36 +160,40 @@ public class ClosingOutlinePanelTest extends BaseTest
       checkCodeHelperPanelPresent(false);
 
    }
-   
+
    //---- implementation -----------
 
    private void checkCodeHelperPanelPresent(boolean isPresent)
    {
       if (isPresent)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]"));
+
+         assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/"));
       }
       else
       {
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]"));
+         assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/"));
+
       }
    }
 
    private void checkCodeHelperPanelVisibility(boolean isVisible)
    {
+    //TODO********fix***locators*******
       if (isVisible)
       {
          assertTrue(selenium
-            .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: inherit')]"));
+            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: inherit')]/div[@eventproxy='CodeHelper']"));
          assertFalse(selenium
-            .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: hidden')]"));
+            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: hidden')]/div[@eventproxy='CodeHelper']"));
       }
       else
       {
          assertTrue(selenium
-            .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: hidden')]"));
+            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: hidden')]/div[@eventproxy='CodeHelper']"));
          assertFalse(selenium
-            .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: inherit')]"));
+            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: inherit')]/div[@eventproxy='CodeHelper']"));
+      //***********************************
       }
    }
 
