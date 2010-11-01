@@ -46,6 +46,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 /**
+ * Presenter for commands upload file and open local file.
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
@@ -240,15 +242,15 @@ public class UploadPresenter implements FileSelectedHandler
 
    /**
     * Extract uploaded file content from upload service response.
-    * @param uploadServiceResponse
+    * File content is included in tag <filecontent>
+    * 
+    * @param uploadServiceResponse response from server
     * @return extracted content of submitted file.
     */
    private String extractRecievedContent(String uploadServiceResponse)
    {
-      //extract content from uploadServiceResponse
-      //5 - index of letter, that follows after tag <pre>
-      //6 - number of letters in </pre> closing tag
-      String content = uploadServiceResponse.substring(5, uploadServiceResponse.length() - 6);
+      int index = "<filecontent>".length();
+      String content = uploadServiceResponse.substring(index, uploadServiceResponse.length() - index + 1);
 
       return Utils.urlDecode_decode(content); // to unescape end of lines
    }
@@ -331,28 +333,10 @@ public class UploadPresenter implements FileSelectedHandler
    {
       IDELoader.getInstance().hide();
 
-      final String errorMsg = openLocalFile ? "Can not open local file!" : "Can not upload file!";
-
-      boolean matches = false;
-      //check is uploadServiceResponse enclosed in xml tag <pre></pre> (do not case sensitive)
-
-      System.out.println("uploadServiceResponse > [" + uploadServiceResponse + "]");
-
-      if (openLocalFile)
+      String responseOk = checkResponseOk(uploadServiceResponse);
+      if (responseOk != null)
       {
-         matches =
-            uploadServiceResponse.matches("^<PRE>(.*)</PRE>$") || uploadServiceResponse.matches("^<pre>(.*)</pre>$");
-      }
-      else
-      {
-         //in browser chrome tag <pre> can have some attributes, that's why regexp is another
-         matches =
-            uploadServiceResponse.matches("^<PRE(.*)</PRE>$") || uploadServiceResponse.matches("^<pre(.*)</pre>$");
-      }
-
-      if (uploadServiceResponse == null || !matches)
-      {
-         Dialogs.getInstance().showError(errorMsg);
+         Dialogs.getInstance().showError(responseOk);
          return;
       }
 
@@ -367,6 +351,50 @@ public class UploadPresenter implements FileSelectedHandler
       }
 
    }
+   
+   /**
+    * Check response is Ok.
+    * If response is Ok, return null,
+    * else return error message
+    * 
+    * @param uploadServiceResponse
+    * @return
+    */
+   private String checkResponseOk(String uploadServiceResponse)
+   {
+      boolean matches = 
+         uploadServiceResponse.matches("^<ERROR>(.*)</ERROR>$") || uploadServiceResponse.matches("^<error>(.*)</error>$");
+      
+      boolean gotError;
+      
+      if (openLocalFile)
+      {
+         boolean getFileContent = uploadServiceResponse.matches("^<FILECONTENT>(.*)</FILECONTENT>$") 
+            || uploadServiceResponse.matches("^<filecontent>(.*)</filecontent>$");
+         gotError = uploadServiceResponse == null || (uploadServiceResponse.length() > 0 && ! getFileContent) || matches;
+      }
+      else
+      {
+         gotError = uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
+      }
+      
+      if (!gotError)
+      {
+         return null;
+      }
+      
+      if (matches)
+      {
+         String errorMsg = uploadServiceResponse.substring("<error>".length());
+         errorMsg = errorMsg.substring(0, errorMsg.length() - "</error>".length());
+         
+         return errorMsg;
+      }
+      else
+      {
+         return openLocalFile ? "Can not open local file!" : "Can not upload file!";
+      }
+   }
 
    /**
     * Opening local file.
@@ -376,7 +404,6 @@ public class UploadPresenter implements FileSelectedHandler
     */
    private void completeOpenLocalFile(String uploadServiceResponse)
    {
-
       // extract uploaded file content from response
       final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
       if (submittedFileContent == null)
@@ -410,14 +437,6 @@ public class UploadPresenter implements FileSelectedHandler
    private void completeUpload(String response)
    {
       display.closeDisplay();
-
-      if (!"<pre></pre>".equals(response))
-      {
-         String message = response.substring("<pre>".length());
-         message = message.substring(0, message.length() - "</pre>".length());
-         Dialogs.getInstance().showError("Can't upload file!<br>" + message);
-         return;
-      }
 
       Item item = selectedItems.get(0);
       String href = item.getHref();
