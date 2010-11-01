@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
-import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
@@ -56,7 +56,7 @@ public class UndoTypingCommand extends SimpleControl implements IDEControl, Edit
       setPrompt(TITLE);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
-      setEvent(new UndoTypingEvent());
+      setEvent(new EditorUndoTypingEvent());
    }
    
    /**

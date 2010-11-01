@@ -51,10 +51,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTex
 import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
@@ -62,6 +66,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextHandle
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
@@ -76,14 +82,8 @@ import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
-import org.exoplatform.ide.client.module.edit.event.FormatFileHandler;
-import org.exoplatform.ide.client.module.edit.event.RedoTypingEvent;
-import org.exoplatform.ide.client.module.edit.event.RedoTypingHandler;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.module.edit.event.UndoTypingEvent;
-import org.exoplatform.ide.client.module.edit.event.UndoTypingHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -96,8 +96,8 @@ import com.google.gwt.user.client.Timer;
  */
 
 public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
-   EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, UndoTypingHandler,
-   RedoTypingHandler, FormatFileHandler, ShowLineNumbersHandler,
+   EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
+   EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler,
    EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler
@@ -195,10 +195,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorSaveContentEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
-      handlers.addHandler(UndoTypingEvent.TYPE, this);
-      handlers.addHandler(RedoTypingEvent.TYPE, this);
+      handlers.addHandler(EditorUndoTypingEvent.TYPE, this);
+      handlers.addHandler(EditorRedoTypingEvent.TYPE, this);
       handlers.addHandler(FileSavedEvent.TYPE, this);
-      handlers.addHandler(FormatFileEvent.TYPE, this);
+      handlers.addHandler(EditorFormatTextEvent.TYPE, this);
       handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
       handlers.addHandler(EditorChangeActiveFileEvent.TYPE, this);
       handlers.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
@@ -418,12 +418,12 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
    }
 
-   public void onUndoTypig(UndoTypingEvent event)
+   public void onEditorUndoTypig(EditorUndoTypingEvent event)
    {
       display.undoEditing(activeFile.getHref());
    }
 
-   public void onRedoTyping(RedoTypingEvent event)
+   public void onEditorRedoTyping(EditorRedoTypingEvent event)
    {
       display.redoEditing(activeFile.getHref());
    }
@@ -433,7 +433,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       display.updateTabTitle(href);
    }
 
-   public void onFormatFile(FormatFileEvent event)
+   public void onFormatFile(EditorFormatTextEvent event)
    {
       display.formatFile(activeFile.getHref());
    }

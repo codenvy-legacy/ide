@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
@@ -232,13 +232,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
-   @Override
-   public void saveContent(File file)
-   {
-      saveContent(file, null);
-
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveContent(org.exoplatform.ide.client.framework.vfs.File, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
@@ -303,27 +296,6 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .send(callback);
    }
 
-   @Override
-   public void saveProperties(Item item)
-   {
-      String url = javaScriptEncodeURI(item.getHref());
-
-      ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
-      ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
-      ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
-
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-
-      loader.setMessage(Messages.SAVE_PROPERTIES);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
@@ -379,49 +351,49 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(requestMarshaller).send(callback);
    }
 
-   @Override
-   public void move(Item item, String destination)
-   {
-      String url = javaScriptEncodeURI(item.getHref());
-      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
-      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
-
-      String errorMessage =
-         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      if (item instanceof File)
-      {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-
-         loader.setMessage(Messages.MOVE_FILE);
-
-         AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-      }
-      else
-      {
-         if (!url.endsWith("/"))
-         {
-            url += "/";
-         }
-
-         if (!destination.endsWith("/"))
-         {
-            destination += "/";
-         }
-
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-
-         loader.setMessage(Messages.MOVE_FOLDER);
-
-         AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-      }
-
-   }
+//   @Override
+//   public void move(Item item, String destination)
+//   {
+//      String url = javaScriptEncodeURI(item.getHref());
+//      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
+//      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+//
+//      String errorMessage =
+//         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//
+//      if (item instanceof File)
+//      {
+//         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+//
+//         loader.setMessage(Messages.MOVE_FILE);
+//
+//         AsyncRequest.build(RequestBuilder.POST, url, loader)
+//            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+//            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+//      }
+//      else
+//      {
+//         if (!url.endsWith("/"))
+//         {
+//            url += "/";
+//         }
+//
+//         if (!destination.endsWith("/"))
+//         {
+//            destination += "/";
+//         }
+//
+//         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+//
+//         loader.setMessage(Messages.MOVE_FOLDER);
+//
+//         AsyncRequest.build(RequestBuilder.POST, url, loader)
+//            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+//            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+//      }
+//
+//   }
 
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#move(org.exoplatform.ide.client.framework.vfs.Item, java.lang.String, org.exoplatform.ide.client.framework.vfs.LockToken)
@@ -640,7 +612,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(acl);
       ItemSetACLUnmarshaller unmarshaller = new ItemSetACLUnmarshaller();
 
-      ItemACLSavedEvent event = new ItemACLSavedEvent(item);
+      SetACLResultReceivedEvent event = new SetACLResultReceivedEvent(item);
 
       int[] acceptStatus = new int[]{HTTPStatus.OK};
 

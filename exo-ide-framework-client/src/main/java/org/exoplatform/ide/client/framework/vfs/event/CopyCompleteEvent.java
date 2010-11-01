@@ -27,6 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class CopyCompleteEvent extends GwtEvent<CopyCompleteHandler>
 {
+   
    public static final GwtEvent.Type<CopyCompleteHandler> TYPE = new GwtEvent.Type<CopyCompleteHandler>();
 
    private Item copiedItem;
@@ -60,4 +61,5 @@ public class CopyCompleteEvent extends GwtEvent<CopyCompleteHandler>
    {
       return TYPE;
    }
+   
 }

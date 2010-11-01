@@ -29,8 +29,10 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface FindTextHandler extends EventHandler
 {
+   
    /**
     * @param event event
     */
    void onFindText(FindTextEvent event);
+   
 }

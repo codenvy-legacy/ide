@@ -51,6 +51,8 @@ public class RepositoryDiscoveryService implements ResourceContainer
    //private final String WEBDAV_CONTEXT = "jcr";
    private final String WEBDAV_CONTEXT = "ide-vfs-webdav";
    
+   public static final String WEBDAV_SCHEME = "jcr-webdav";
+   
    private String defaultEntryPoint;
 
    /**
@@ -105,7 +107,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
       List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
       for (int i = 0; i < entryPoints.size(); i++)
       {
-         entryPointList.add(new EntryPoint(Scheme.WEBDAV, entryPoints.get(i)));
+         entryPointList.add(new EntryPoint(WEBDAV_SCHEME, entryPoints.get(i)));
       }
 
       return entryPointList;

@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,9 +25,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface RedoTypingHandler extends EventHandler
+public class EditorUndoTypingEvent extends GwtEvent<EditorUndoTypingHandler>
 {
 
-   void onRedoTyping(RedoTypingEvent event);
+   public static final GwtEvent.Type<EditorUndoTypingHandler> TYPE = new GwtEvent.Type<EditorUndoTypingHandler>();
+
+   @Override
+   protected void dispatch(EditorUndoTypingHandler handler)
+   {
+      handler.onEditorUndoTypig(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorUndoTypingHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

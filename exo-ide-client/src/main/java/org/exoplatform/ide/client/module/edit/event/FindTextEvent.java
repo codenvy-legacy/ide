@@ -31,6 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class FindTextEvent extends GwtEvent<FindTextHandler>
 {
+   
    public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
    
    /**

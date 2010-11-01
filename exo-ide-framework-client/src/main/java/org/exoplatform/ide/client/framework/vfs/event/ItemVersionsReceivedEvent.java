@@ -32,6 +32,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ItemVersionsReceivedEvent extends GwtEvent<ItemVersionsReceivedHandler>
 {
+   
    public static final GwtEvent.Type<ItemVersionsReceivedHandler> TYPE =
       new GwtEvent.Type<ItemVersionsReceivedHandler>();
 
@@ -84,6 +85,5 @@ public class ItemVersionsReceivedEvent extends GwtEvent<ItemVersionsReceivedHand
    {
       return versions;
    }
-
    
 }

@@ -189,7 +189,8 @@ public class AskForValueDialog extends Window
    private void onOk()
    {
       destroy();
-      valueCallback.execute(textItem.getValue().toString());
+      String value = textItem.getValue().toString();
+      valueCallback.execute(value);
    }
 
 }

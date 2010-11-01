@@ -42,14 +42,6 @@ public abstract class VirtualFileSystem
     */
 
    public abstract void getContent(File file);
-
-   /**
-    * Save file content
-    * 
-    * @param file
-    * @param path
-    */
-   public abstract void saveContent(File file);
    
    /**
     * Save locked file content
@@ -65,14 +57,6 @@ public abstract class VirtualFileSystem
     * @param path
     */
    public abstract void deleteItem(Item item);
-
-   /**
-    * Move existed item to another location as path
-    * 
-    * @param item
-    * @param destination
-    */
-   public abstract void move(Item item, String destination);
    
    /**
     * Move existed item to another location as path
@@ -87,7 +71,8 @@ public abstract class VirtualFileSystem
     * Copy item to another locations as path
     * 
     * @param item
-    * @param destination
+    * @param destination   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+
     */
    public abstract void copy(Item item, String destination);
    
@@ -98,13 +83,6 @@ public abstract class VirtualFileSystem
     */
    public abstract void getProperties(Item item, List<QName> properties);
 
-   /**
-    * Save properties of file or folder
-    * 
-    * @param item
-    */
-   public abstract void saveProperties(Item item);
-   
    /**
     * Save properties of file or folder
     * 
@@ -155,4 +133,5 @@ public abstract class VirtualFileSystem
     * @param item
     */
    public abstract void setACL(Item item, AccessControlList acl);
+   
 }

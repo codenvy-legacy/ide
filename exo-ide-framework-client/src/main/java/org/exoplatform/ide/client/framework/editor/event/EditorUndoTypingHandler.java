@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface UndoTypingHandler extends EventHandler
+public interface EditorUndoTypingHandler extends EventHandler
 {
 
-   void onUndoTypig(UndoTypingEvent event);
+   void onEditorUndoTypig(EditorUndoTypingEvent event);
 
 }

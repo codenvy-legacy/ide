@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
-import org.exoplatform.ide.client.module.edit.event.RedoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
@@ -55,7 +55,7 @@ public class RedoTypingCommand extends SimpleControl implements IDEControl, Edit
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.redo(), IDEImageBundle.INSTANCE.redoDisabled());
-      setEvent(new RedoTypingEvent());
+      setEvent(new EditorRedoTypingEvent());
    }
 
    /**

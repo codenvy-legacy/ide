@@ -237,7 +237,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.saveContent(file);
+      vfsWebDav.saveContent(file, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -258,7 +258,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.move(folder, testUrl + newLocation);
+      vfsWebDav.move(folder, testUrl + newLocation, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -277,7 +277,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.move(folder, testUrl + "new-movedtest");
+      vfsWebDav.move(folder, testUrl + "new-movedtest", null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -392,7 +392,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          }
       });
       
-      vfsWebDav.saveContent(file);
+      vfsWebDav.saveContent(file, null);
    
       vfsWebDav.getProperties(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}));
       

@@ -33,8 +33,8 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
 import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -54,7 +54,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class PermissionsManagerPresenter implements ItemACLSavedHandler, ExceptionThrownHandler
+public class PermissionsManagerPresenter implements SetACLResultReceivedHandler, ExceptionThrownHandler
 {
 
    public interface Dispaly
@@ -170,7 +170,7 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
          }
       });
       
-      handlers.addHandler(ItemACLSavedEvent.TYPE, this);
+      handlers.addHandler(SetACLResultReceivedEvent.TYPE, this);
    }
    
    private void saveACL()
@@ -187,9 +187,9 @@ public class PermissionsManagerPresenter implements ItemACLSavedHandler, Excepti
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedHandler#onItemACLSaved(org.exoplatform.ide.client.framework.vfs.event.ItemACLSavedEvent)
+    * @see org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedHandler#onSetACLResultReceived(org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent)
     */
-   public void onItemACLSaved(ItemACLSavedEvent event)
+   public void onSetACLResultReceived(SetACLResultReceivedEvent event)
    {
       dispaly.closeForm();
    }

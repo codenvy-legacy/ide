@@ -15,9 +15,9 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -25,20 +25,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
  * @version $Id: 
  */
-public class FormatFileEvent extends GwtEvent<FormatFileHandler>
+public interface EditorFormatTextHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<FormatFileHandler> TYPE = new GwtEvent.Type<FormatFileHandler>();
-
-   @Override
-   protected void dispatch(FormatFileHandler handler)
-   {
-      handler.onFormatFile(this);
-   }
-
-   @Override
-   public Type<FormatFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   
+   void onFormatFile(EditorFormatTextEvent event);
+   
 }

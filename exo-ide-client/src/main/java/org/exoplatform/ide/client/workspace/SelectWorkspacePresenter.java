@@ -297,5 +297,4 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }
 
-
 }

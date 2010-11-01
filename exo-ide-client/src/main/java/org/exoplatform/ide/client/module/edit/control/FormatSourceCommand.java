@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.edit.event.FormatFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -51,7 +51,7 @@ public class FormatSourceCommand extends SimpleControl implements IDEControl, Ed
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
-      setEvent(new FormatFileEvent());
+      setEvent(new EditorFormatTextEvent());
    }
    
    /**

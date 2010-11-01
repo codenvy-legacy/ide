@@ -29,17 +29,17 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Oct 21, 2010 $
  *
  */
-public class ItemACLSavedEvent extends GwtEvent<ItemACLSavedHandler>
+public class SetACLResultReceivedEvent extends GwtEvent<SetACLResultReceivedHandler>
 {
 
-   public static GwtEvent.Type<ItemACLSavedHandler> TYPE = new Type<ItemACLSavedHandler>();
+   public static GwtEvent.Type<SetACLResultReceivedHandler> TYPE = new Type<SetACLResultReceivedHandler>();
 
    private Item item;
 
    /**
     * @param item
     */
-   public ItemACLSavedEvent(Item item)
+   public SetACLResultReceivedEvent(Item item)
    {
       this.item = item;
    }
@@ -48,7 +48,7 @@ public class ItemACLSavedEvent extends GwtEvent<ItemACLSavedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemACLSavedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SetACLResultReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -57,9 +57,9 @@ public class ItemACLSavedEvent extends GwtEvent<ItemACLSavedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ItemACLSavedHandler handler)
+   protected void dispatch(SetACLResultReceivedHandler handler)
    {
-      handler.onItemACLSaved(this);
+      handler.onSetACLResultReceived(this);
    }
 
    /**

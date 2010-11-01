@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: Oct 21, 2010 $
  *
  */
-public interface ItemACLSavedHandler extends EventHandler
+public interface SetACLResultReceivedHandler extends EventHandler
 {
 
-   void onItemACLSaved(ItemACLSavedEvent event);
+   void onSetACLResultReceived(SetACLResultReceivedEvent event);
    
 }
