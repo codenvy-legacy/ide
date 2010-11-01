@@ -300,8 +300,8 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          if (!locktokens.containsKey(item.getHref()))
          {
             title +=
-               "<img id=\"resourceLocked\" style=\"margin-left:-4px; margin-bottom:-5px;\"  border=\"0\" suppress=\"TRUE\" src=\""
-                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;";
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-12px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
          }
       }
       title += item.getName();
