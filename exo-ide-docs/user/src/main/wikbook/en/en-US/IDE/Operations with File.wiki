@@ -140,6 +140,19 @@ To upload the file directly into the _JCR_ on the server, go to *File > Upload..
 * *Step 6:* Press the *Upload* button.
   The *gadget.xml* gadget will be uploaded on the sever and appear in the *Gadget* folder on the_Workspace Panel_.
 
+h1. Open File by Path
+
+To open some file by its path, go to *File > Open File By Path...* on the top menu. For example, to open some file with path "[http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy|http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy]" file in IDE, do as follows:
+* *Step 1:* Go to *File > Open File By Path...* on the top menu.
+* *Step 2:* Type or paste target file path "[http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy|http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy]" in the *File URL* text field of *Open file by path* dialog.
+* *Step 3:* Press the *Open* button.
+The *Example.groovy* will be opened in the new file tab of _Content Panel_.
+
+You can use *View > Get URL...* top menu command to obtain the file's path.
+{note}
+Be sure, that target file is placed at the same domain as IDE.
+{note}
+
 h1. Use File Template
 
 _File Template_ is stored in the IDE registry file, and then can be used to create another file with the same MIME type.
