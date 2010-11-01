@@ -41,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"administrators"})
 public class SetAutoloadCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ItemPropertiesSavedHandler
 {

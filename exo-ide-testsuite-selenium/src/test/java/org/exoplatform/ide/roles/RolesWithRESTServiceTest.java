@@ -82,6 +82,8 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkDeployUndeployAllowed(true);
       // 
       checkRunService(true);
+      checkSetAutoload(true);
+      
       closeTab("0");
       
       //Logout and login as developer
@@ -97,6 +99,8 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkDeployUndeployAllowed(false);
       // Check run service is allowed for developer
       checkRunService(true);
+      //Check set autoload property is not available for developer
+      checkSetAutoload(false);
       
       runToolbarButton(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
@@ -198,4 +202,12 @@ public class RolesWithRESTServiceTest extends BaseTest
       }
    }
    
+   private void checkSetAutoload(boolean allowed) throws Exception
+   {
+      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+      if (allowed)
+      {
+         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+      }
+   }
 }
