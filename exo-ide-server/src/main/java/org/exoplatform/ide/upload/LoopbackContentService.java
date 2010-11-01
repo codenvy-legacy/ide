@@ -17,6 +17,11 @@
 
 package org.exoplatform.ide.upload;
 
+import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,13 +35,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 /**
- * Simple REST service which returns the request body wraped in javascript.
+ * Uses for receiving the content of local file through server.
+ * 
  * Created by The eXo Platform SAS
  * 
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> ${date}
@@ -72,7 +73,8 @@ public class LoopbackContentService implements ResourceContainer
             catch (IOException ioe)
             {
                log.error(ioe.getMessage(), ioe);
-               return Response.serverError().entity(ioe.getMessage()).build();
+               return Response.serverError().entity(ioe.getMessage()).type(
+                  MediaType.TEXT_HTML).build();
             }
          }
       }
@@ -93,12 +95,12 @@ public class LoopbackContentService implements ResourceContainer
       catch (IOException ioe)
       {
          log.error(ioe.getMessage(), ioe);
-         return Response.serverError().entity(ioe.getMessage()).build();
+         return Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_HTML).build();
       }
 
       String bodyString = sb.toString();
 
-      String responceString = "<pre>" + bodyString + "</pre>";
+      String responceString = "<filecontent>" + bodyString + "</filecontent>";
 
       return Response.ok(responceString, MediaType.TEXT_HTML).build();
    }

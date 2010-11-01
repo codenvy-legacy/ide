@@ -19,11 +19,17 @@
  */
 package org.exoplatform.ide.upload;
 
+import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.services.jcr.webdav.WebDavService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -31,12 +37,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.services.jcr.webdav.WebDavService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 /**
+ * Uses for storing files from local system to repository.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -64,6 +67,10 @@ public class UploadService
 
    private static final String WEBDAV_CONTEXT = "ide-vfs-webdav";
    
+   static final String ERROR_OPEN = "<error>";
+   
+   static final String ERROR_CLOSE = "</error>";
+   
    private static Log log = ExoLogger.getLogger(UploadService.class);
 
    private WebDavService webDavService;
@@ -72,8 +79,9 @@ public class UploadService
    {
       this.webDavService = webDavService;
    }
-
+   
    @POST
+   @Consumes("multipart/*")
    public Response post(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
    {
       HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
@@ -86,7 +94,8 @@ public class UploadService
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         return Response.serverError().entity("Can't find input file").build();
+         return Response.serverError().entity(ERROR_OPEN + "Can't find input file" + ERROR_CLOSE).type(
+            MediaType.TEXT_HTML).build();
       }
 
       try
@@ -102,7 +111,8 @@ public class UploadService
 
          if (!location.startsWith(prefix))
          {
-            return Response.serverError().entity("Invalid path").build();
+            return Response.serverError().entity(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE).type(
+               MediaType.TEXT_HTML).build();
          }
 
          location = location.substring(prefix.length());
@@ -133,13 +143,15 @@ public class UploadService
 
          MediaType mediaType = new MediaType(mimeType.split("/")[0], mimeType.split("/")[1]);
 
-         return webDavService.put(repositoryName, repoPath, null, null, nodeType, jcrContentNodeType, null, mediaType,
+         Response response = webDavService.put(repositoryName, repoPath, null, null, nodeType, jcrContentNodeType, null, mediaType,
             inputStream);
+         return Response.fromResponse(response).type(MediaType.TEXT_HTML).build();
+         
       }
       catch (Exception exc)
       {
          log.error(exc.getMessage(), exc);
-         return Response.serverError().entity(exc.getMessage()).build();
+         return Response.serverError().entity(exc.getMessage()).type(MediaType.TEXT_HTML).build();
       }
 
    }

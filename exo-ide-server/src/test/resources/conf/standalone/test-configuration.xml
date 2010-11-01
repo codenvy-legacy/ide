@@ -42,7 +42,52 @@
          </properties-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
+   </component>
 
+   <component>
+   <!-- 
+      <key>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</key>
+       -->
+       
+      <!--type>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</type-->
+      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
+      <init-params>
+         <value-param>
+            <name>auto-mix-lockable</name>
+            <value>false</value>
+         </value-param>
+
+         <value-param>
+            <name>def-folder-node-type</name>
+            <value>nt:folder</value>
+         </value-param>
+
+         <value-param>
+            <name>def-file-node-type</name>
+            <value>nt:file</value>
+         </value-param>
+
+         <value-param>
+            <name>def-file-mimetype</name>
+            <value>text/plain</value>
+         </value-param>
+
+         <value-param>
+            <name>update-policy</name>
+            <value>create-version</value>
+         </value-param>
+         
+         <!--value-param>
+            <name>cache-control</name>
+            <value>text/xml,text/html:max-age=1800;text/*:max-age=777;image/png,image/jpg:max-age=3600;*/*:no-cache;image/*:max-age=555</value>
+         </value-param-->
+      </init-params>
+   </component>
+   
+   
    <component>
       <type>org.exoplatform.ide.conversationstate.RestConversationState</type>
    </component>
