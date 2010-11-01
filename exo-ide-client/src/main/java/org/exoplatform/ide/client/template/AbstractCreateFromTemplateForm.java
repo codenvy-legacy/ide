@@ -75,7 +75,7 @@ implements CreateFromTemplateDisplay<T>
 
    protected TemplateListGrid<T> templateListGrid;
 
-   private TextField fileNameField;
+   private TextField nameField;
    
    private AbstractCreateFromTemplatePresenter<T> presenter;
    
@@ -134,12 +134,12 @@ implements CreateFromTemplateDisplay<T>
 
       DynamicForm form = new DynamicForm();
       form.setID(ID_DYNAMIC_FORM);
-      fileNameField = new TextField("Name", getNameFieldLabel());
-      fileNameField.setName(FILE_NAME_FIELD);
-      fileNameField.setWidth(200);
-      fileNameField.setWrapTitle(false);
+      nameField = new TextField("Name", getNameFieldLabel());
+      nameField.setName(FILE_NAME_FIELD);
+      nameField.setWidth(200);
+      nameField.setWrapTitle(false);
       form.setColWidths("*", "195");
-      form.setItems(fileNameField);
+      form.setItems(nameField);
       actionsLayout.addMember(form);
 
       Layout l = new Layout();
@@ -246,7 +246,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public HasValue<String> getNameField()
    {
-      return fileNameField;
+      return nameField;
    }
    
    public List<T> getTemplatesSelected()
@@ -268,6 +268,23 @@ implements CreateFromTemplateDisplay<T>
    public void disableDeleteButton()
    {
       deleteButton.setDisabled(true);
+   }
+   
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#enableNameField()
+    */
+   public void enableNameField()
+   {
+      nameField.enable();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#disableNameField()
+    */
+   public void disableNameField()
+   {
+      nameField.disable();
    }
 
 }

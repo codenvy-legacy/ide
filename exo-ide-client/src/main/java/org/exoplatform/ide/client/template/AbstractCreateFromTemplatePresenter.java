@@ -22,18 +22,20 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 
 import java.util.List;
 
@@ -73,6 +75,23 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
    public void bindDisplay(CreateFromTemplateDisplay<T> d)
    {
       display = d;
+      
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            String value = event.getValue();
+            
+            if (value == null || value.length() == 0)
+            {
+               display.disableCreateButton();
+            }
+            else
+            {
+               display.enableCreateButton();
+            }
+         }
+      });
 
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
@@ -117,10 +136,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
       });
 
       display.getTemplateListGrid().setValue(templateList);
-
       display.disableCreateButton();
-      
       display.disableDeleteButton();
+      display.disableNameField();
    }
 
    /**
@@ -180,11 +198,13 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
       {
          display.disableCreateButton();
          display.disableDeleteButton();
+         display.disableNameField();
          return;
       }
       
       if (selectedTemplates.size() > 1)
       {
+         display.disableNameField();
          display.disableCreateButton();
          //check is one of selected templates is default
          for (Template template : selectedTemplates)
@@ -200,6 +220,7 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
          return;
       }
       
+      display.enableNameField();
       display.enableCreateButton();
       if (selectedTemplates.get(0).getNodeName() == null)
       {

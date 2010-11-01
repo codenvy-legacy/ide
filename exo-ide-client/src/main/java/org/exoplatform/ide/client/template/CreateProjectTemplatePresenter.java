@@ -27,6 +27,8 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -127,6 +129,8 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       
       handlers.addHandler(TemplateCreatedEvent.TYPE, this);
       
+      display.getNameField().addValueChangeHandler(valueChangeHandler);
+      
       display.getCancelButton().addClickHandler(closeFormHandler);
 
       display.getCreateButton().addClickHandler(createTemplateHandler);
@@ -141,7 +145,25 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
 
       ProjectTemplate projectTemplate = new ProjectTemplate("/");
       display.getTemplateTreeGrid().setValue(projectTemplate);
+      
+      display.disableCreateButton();
    }
+   
+   private ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>()
+   {
+      public void onValueChange(ValueChangeEvent<String> event)
+      {
+         String value = event.getValue();
+         if (value == null || value.length() == 0)
+         {
+            display.disableCreateButton();
+         }
+         else
+         {
+            display.enableCreateButton();
+         }
+      }
+   };
    
    private ClickHandler closeFormHandler  = new ClickHandler()
    {
@@ -364,12 +386,6 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
    {
       String templateName = display.getNameField().getValue().trim();
 
-      if ("".equals(templateName))
-      {
-         Dialogs.getInstance().showError("You must enter project template name the first!");
-         return;
-      }
-      
       String description = "";
       if (display.getDescriptionField().getValue() != null)
       {

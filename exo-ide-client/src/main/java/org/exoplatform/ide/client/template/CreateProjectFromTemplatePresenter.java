@@ -19,7 +19,6 @@ package org.exoplatform.ide.client.template;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -79,16 +78,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
       initFileAndProjectTemplates(templateList);
    }
    
-   /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#bindDisplay(org.exoplatform.ide.client.template.CreateFromTemplateDisplay)
-    */
-   @Override
-   public void bindDisplay(CreateFromTemplateDisplay<ProjectTemplate>d)
-   {
-      super.bindDisplay(d);
-      display.getNameField().setValue("Untitled project");
-   }
-
    /**
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
     */
@@ -167,18 +156,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
    {
       String projectName = display.getNameField().getValue();
 
-      if ("".equals(projectName.trim()))
-      {
-         Dialogs.getInstance().showError("You must enter project name the first!");
-         return;
-      }
-      
-      if (baseHref == null)
-      {
-         Dialogs.getInstance().showError("Select root folder for project!");
-         return;
-      }
-      
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
       
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");

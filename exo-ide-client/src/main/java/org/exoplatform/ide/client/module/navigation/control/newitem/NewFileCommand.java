@@ -43,9 +43,9 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 public class NewFileCommand extends SimpleControl implements IDEControl, PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
-   private boolean browserSelected = false;
+   protected boolean browserSelected = false;
 
-   private String entryPoint;
+   protected String entryPoint;
 
    public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
@@ -78,7 +78,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       updateEnabling();
    }
 
-   private void updateEnabling()
+   protected void updateEnabling()
    {
       if (entryPoint == null)
       {

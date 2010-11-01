@@ -43,6 +43,7 @@ import java.util.List;
 
 public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<FileTemplate>
 {
+   private static final String UNTITLED_FILE = "Untitled file";
 
    private String previousExtension;
    
@@ -75,16 +76,6 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
    }
    
    /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#bindDisplay(org.exoplatform.ide.client.template.CreateFromTemplateDisplay)
-    */
-   @Override
-   public void bindDisplay(CreateFromTemplateDisplay<FileTemplate>d)
-   {
-      super.bindDisplay(d);
-      display.getNameField().setValue("Untitled file");
-   }
-
-   /**
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
     */
    @Override
@@ -116,17 +107,26 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       String extension = IDEMimeTypes.getExtensionsMap().get(selectedTemplate.getMimeType());
       if (previousExtension != null)
       {
-         String fName = display.getNameField().getValue();
-         if (fName.endsWith("." + previousExtension))
+         String name = display.getNameField().getValue();
+         if (name == null || name.length() == 0)
          {
-            fName = fName.substring(0, fName.length() - previousExtension.length() - 1);
+            name = UNTITLED_FILE;
          }
-         fName += "." + extension;
-         display.getNameField().setValue(fName);
+         if (name.endsWith("." + previousExtension))
+         {
+            name = name.substring(0, name.length() - previousExtension.length() - 1);
+         }
+         name += "." + extension;
+         display.getNameField().setValue(name);
       }
       else
       {
-         display.getNameField().setValue(display.getNameField().getValue() + "." + extension);
+         String value = display.getNameField().getValue();
+         if (value == null || value.length() == 0)
+         {
+            value = UNTITLED_FILE;
+         }
+         display.getNameField().setValue(value + "." + extension);
       }
       previousExtension = extension;
    }

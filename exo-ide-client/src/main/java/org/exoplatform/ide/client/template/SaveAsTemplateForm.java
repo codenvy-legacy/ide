@@ -259,4 +259,20 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       return cancelButton;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#disableSaveButton()
+    */
+   public void disableSaveButton()
+   {
+      saveButton.disable();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display#enableSaveButton()
+    */
+   public void enableSaveButton()
+   {
+      saveButton.enable();
+   }
+
 }

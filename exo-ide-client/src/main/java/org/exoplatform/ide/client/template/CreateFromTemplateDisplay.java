@@ -54,6 +54,10 @@ public interface CreateFromTemplateDisplay<T extends Template>
    void enableDeleteButton();
 
    void disableDeleteButton();
+   
+   void enableNameField();
+
+   void disableNameField();
 
    void selectLastTemplate();
 

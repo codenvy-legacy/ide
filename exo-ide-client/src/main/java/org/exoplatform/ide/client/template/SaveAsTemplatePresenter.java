@@ -21,12 +21,15 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
@@ -34,7 +37,6 @@ import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -57,6 +59,10 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
       HasClickHandlers getSaveButton();
 
       HasClickHandlers getCancelButton();
+      
+      void disableSaveButton();
+      
+      void enableSaveButton();
 
    }
 
@@ -84,6 +90,23 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
       display = d;
 
       handlers.addHandler(TemplateCreatedEvent.TYPE, this);
+      
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            String value = event.getValue();
+            
+            if (value == null || value.length() == 0)
+            {
+               display.disableSaveButton();
+            }
+            else
+            {
+               display.enableSaveButton();
+            }
+         }
+      });
 
       display.getSaveButton().addClickHandler(new ClickHandler()
       {
@@ -103,6 +126,7 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
       });
 
       display.getTypeField().setValue(file.getContentType());
+      display.disableSaveButton();
 
    }
 
