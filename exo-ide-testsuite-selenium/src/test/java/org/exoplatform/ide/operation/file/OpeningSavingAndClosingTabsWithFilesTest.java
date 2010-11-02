@@ -32,6 +32,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.exoplatform.ide.TestConstants;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -40,6 +41,8 @@ import org.junit.Test;
  */
 public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 {
+
+   private static String FOLDER_NAME = "TestFolder";
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -57,13 +60,15 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-   private final static String STORAGE_URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
+         VirtualFileSystemUtils.mkcol(STORAGE_URL);
          VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, STORAGE_URL + HTML_FILE_NAME);
          VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, STORAGE_URL + CSS_FILE_NAME);
          VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, STORAGE_URL + JS_FILE_NAME);
@@ -81,7 +86,7 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -111,36 +116,57 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
       //------------3---------------------    
       // Refresh Workspace:
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      openOrCloseFolder(FOLDER_NAME);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       // check icons
-      
+
       checkIcons();
-      reopenFiles();
+
+      // reopenFiles();
+
       //------------------4------------------------      
       //check_hilight_code     
+      openCss();
       chekHilightingInCssFile();
-      Thread.sleep(500);
-      
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+
+      openGooglegadget();
       checkHiligtGoofleGadget();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
+      openGroovy();
       checkHilightGroovy();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
+      openHtml();
       checkHilightHTML();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
+      openJavaScript();
       checkHilightJavaScript();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
+      openTXT();
       checkHiligtTXT();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
+      openXML();
       checkHilightXML();
-      Thread.sleep(500);
+      closeTab("0");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       // ----------5--------------
+      reopenFiles();
       clickTabAndCheckSaveButton();
       //------------6-------------      
       changeFiles();
@@ -219,7 +245,7 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       // ------8-------
       // reopenFiles
       // Open Css:
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
@@ -437,73 +463,73 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void openXML() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(1000);
+    //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openTXT() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(1000);
+     // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openJavaScript() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(1000);
+    //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openHtml() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(1000);
+  //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openGroovy() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openGooglegadget() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(1000);
+     // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
       Thread.sleep(2000);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
    }
 
    public void checkHilightXML()
    {
-      selenium.selectFrame("relative=top");
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[8]//iframe");
+     // selenium.selectFrame("relative=top");
+      //selenium.selectFrame("//div[@class='tabSetContainer']/div/div[8]//iframe");
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='xml-processing' and text()=\"<?xml \"]"));
       assertTrue(selenium
@@ -535,12 +561,12 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void checkHiligtTXT()
    {
-      selenium.selectFrame("relative=top");
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[7]//iframe");
+      //selenium.selectFrame("relative=top");
+     // selenium.selectFrame("//div[@class='tabSetContainer']/div/div[7]//iframe");
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[1][@class='css-identifier' and text()=\"text \"]"));
+         .isElementPresent("//body[@class='editbox']/span[1][@class='css-selector' and text()=\"text \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[2][@class='css-identifier' and text()=\"content\"]"));
+         .isElementPresent("//body[@class='editbox']/span[2][@class='css-selector' and text()=\"content\"]"));
    }
 
    public void checkHilightJavaScript()
@@ -629,7 +655,7 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void checkHilightHTML()
    {
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[5]//iframe");
+//      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[5]//iframe");
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='xml-punctuation' and text()=\"<\"]"));
       assertTrue(selenium
@@ -724,11 +750,11 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[56][@class='xml-attribute' and text()=\"'text/css'\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[59][@class='css-identifier' and text()=\"div\"]"));
+         .isElementPresent("//body[@class='editbox']/span[59][@class='css-selector' and text()=\"div\"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[60][@class='css-select-op' and text()=\".\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[61][@class='css-identifier' and text()=\"border \"]"));
+         .isElementPresent("//body[@class='editbox']/span[61][@class='css-selector' and text()=\"border \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[62][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
@@ -752,9 +778,9 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[76][@class='css-punctuation' and text()=\"}\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[78][@class='css-identifier' and text()=\"#foo \"]"));
+         .isElementPresent("//body[@class='editbox']/span[78][@class='css-selector' and text()=\"#foo \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[79][@class='css-identifier' and text()=\"code \"]"));
+         .isElementPresent("//body[@class='editbox']/span[79][@class='css-selector' and text()=\"code \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[80][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
@@ -827,7 +853,7 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void checkHilightGroovy()
    {
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[4]//iframe");
+     // selenium.selectFrame("//div[@class='tabSetContainer']/div/div[4]//iframe");
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='groovyComment' and text()=\"//simple groovy script\"]"));
       assertTrue(selenium
@@ -879,7 +905,7 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[25][@class='groovyVariable' and text()=\"PathParam\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[26][@class='groovyVariable' and text()=\"@Path \"]"));
+         .isElementPresent("//body[@class='editbox']/span[26][@class='javaAnnotation' and text()=\"@Path \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[27][@class='groovyPunctuation' and text()=\"(\"]"));
       assertTrue(selenium
@@ -889,9 +915,9 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[34][@class='groovyVariable' and text()=\"HelloWorld\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[36][@class='groovyVariable' and text()=\"@Get\"]"));
+         .isElementPresent("//body[@class='editbox']/span[36][@class='javaAnnotation' and text()=\"@Get\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[37][@class='groovyVariable' and text()=\"@Path \"]"));
+         .isElementPresent("//body[@class='editbox']/span[37][@class='javaAnnotation' and text()=\"@Path \"]"));
       assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[40][@class='groovyString' and text()=\"h\"]"));
       assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[41][@class='groovyString' and text()=\"e\"]"));
       assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[42][@class='groovyString' and text()=\"l\"]"));
@@ -957,8 +983,20 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void checkHiligtGoofleGadget()
    {
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
+      //selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
       // string 1
+    
+      try
+      {
+         selectIFrameWithEditor(0);
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      
+      
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='xml-processing' and text()=\"<?xml \"]"));
       assertTrue(selenium
@@ -1055,11 +1093,11 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[63][@class='xml-attribute' and text()=\"'text/css'\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[66][@class='css-identifier' and text()=\"div\"]"));
+         .isElementPresent("//body[@class='editbox']/span[66][@class='css-selector' and text()=\"div\"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[67][@class='css-select-op' and text()=\".\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[68][@class='css-identifier' and text()=\"border \"]"));
+         .isElementPresent("//body[@class='editbox']/span[68][@class='css-selector' and text()=\"border \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[69][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
@@ -1083,9 +1121,9 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[83][@class='css-punctuation' and text()=\"}\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[85][@class='css-identifier' and text()=\"#foo \"]"));
+         .isElementPresent("//body[@class='editbox']/span[85][@class='css-selector' and text()=\"#foo \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[86][@class='css-identifier' and text()=\"code \"]"));
+         .isElementPresent("//body[@class='editbox']/span[86][@class='css-selector' and text()=\"code \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[87][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
@@ -1145,6 +1183,15 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void chekHilightingInCssFile()
    {
+      try
+      {
+         selectIFrameWithEditor(0);
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
       // hilight in string 1
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='css-comment' and text()=\"/*Some example CSS*/\"]"));
@@ -1199,9 +1246,9 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
          .isElementPresent("//body[@class='editbox']/span[31][@class='css-punctuation' and text()=\"}\" ]"));
       // string 10
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[33][@class='css-identifier' and text()=\"#navigation \"]"));
+         .isElementPresent("//body[@class='editbox']/span[33][@class='css-selector' and text()=\"#navigation \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[34][@class='css-identifier' and text()=\"a \"]"));
+         .isElementPresent("//body[@class='editbox']/span[34][@class='css-selector' and text()=\"a \"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[35][@class='css-punctuation' and text()=\"{\" ]"));
       assertTrue(selenium
@@ -1222,24 +1269,25 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
    public void checkIcons() throws InterruptedException, Exception
    {
-      Thread.sleep(1000);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(WS_NAME);
-      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[2]//img[contains(@src, 'css.png')]"));
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[3]//img[contains(@src, 'css.png')]"));
       assertTrue(selenium.isTextPresent(CSS_FILE_NAME));
       assertTrue(selenium
-         .isElementPresent("//table[@class='listTable']/tbody/tr[3]//img[contains(@src, 'gadget.png')]"));
+         .isElementPresent("//table[@class='listTable']/tbody/tr[4]//img[contains(@src, 'gadget.png')]"));
       assertTrue(selenium.isTextPresent(GADGET_FILE_NAME));
       assertTrue(selenium
-         .isElementPresent("//table[@class='listTable']/tbody/tr[4]//img[contains(@src, 'groovy.png')]"));
+         .isElementPresent("//table[@class='listTable']/tbody/tr[5]//img[contains(@src, 'rest.png')]"));
       assertTrue(selenium.isTextPresent(GROOVY_FILE_NAME));
-      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[5]//img[contains(@src, 'html.png')]"));
+      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[6]//img[contains(@src, 'html.png')]"));
       assertTrue(selenium.isTextPresent(HTML_FILE_NAME));
       assertTrue(selenium
-         .isElementPresent("//table[@class='listTable']/tbody/tr[6]//img[contains(@src, 'javascript.gif')]"));
+         .isElementPresent("//table[@class='listTable']/tbody/tr[7]//img[contains(@src, 'javascript.gif')]"));
       assertTrue(selenium.isTextPresent(JS_FILE_NAME));
-      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[7]//img[contains(@src, 'txt.png')]"));
+      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[8]//img[contains(@src, 'txt.png')]"));
       assertTrue(selenium.isTextPresent(TXT_FILE_NAME));
-      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[8]//img[contains(@src, 'xml.png')]"));
+      assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[9]//img[contains(@src, 'xml.png')]"));
       assertTrue(selenium.isTextPresent(XML_FILE_NAME));
    }
 
