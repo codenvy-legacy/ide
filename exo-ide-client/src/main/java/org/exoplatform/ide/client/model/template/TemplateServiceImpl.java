@@ -58,7 +58,7 @@ public class TemplateServiceImpl extends TemplateService
 
       public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
 
-      public static final String GROOVY_TEMPLATE = "Groovy Template";
+      public static final String GROOVY_TEMPLATE = "Template";
    }
 
    private static final String CONTEXT = "/templates";
@@ -135,7 +135,7 @@ public class TemplateServiceImpl extends TemplateService
             "Sample of Groovy REST service.", FileTemplates.getTemplateFor(MimeType.GROOVY_SERVICE), null));
 
       templateList.getTemplates().add(
-         new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE, "Sample of Groovy Template.",
+         new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE, "Sample of Template.",
             FileTemplates.getTemplateFor(MimeType.GROOVY_TEMPLATE), null));
 
       templateList.getTemplates().add(

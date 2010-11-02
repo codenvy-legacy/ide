@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
@@ -132,7 +133,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
-      runCommandFromMenuNewOnToolbar("Groovy Template");
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", " <script>");

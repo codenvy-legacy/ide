@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-
-import junit.framework.Assert;
+import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -31,12 +30,11 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Test;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -133,7 +131,7 @@ public class TemplateOperationsTest extends BaseTest
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      TemplateUtils.selectFileInTemplateListForTempletaOperationTets(selenium, "test template");
+//      TemplateUtils.selectFileInTemplateListForTempletaOperationTets(selenium, "test template");
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
@@ -171,7 +169,7 @@ public class TemplateOperationsTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //----------2,3------
-      createFileFromTemplate("Groovy Template", "Sample of Groovy Template.");
+      createFileFromTemplate(MenuCommands.New.GROOVY_TEMPLATE_FILE, "Sample of Template.");
 
       //--------4-------
       selectItemInWorkspaceTree(TEST_FOLDER);

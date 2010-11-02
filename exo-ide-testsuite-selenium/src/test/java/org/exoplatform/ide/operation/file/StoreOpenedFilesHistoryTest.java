@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -120,7 +121,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //create groovy script file
-      runCommandFromMenuNewOnToolbar("Groovy Script");
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //closing all files

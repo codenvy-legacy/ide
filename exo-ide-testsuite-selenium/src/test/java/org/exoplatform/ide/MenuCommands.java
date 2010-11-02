@@ -44,9 +44,9 @@ public interface MenuCommands
 
       public static final String REST_SERVICE_FILE = "REST Service";
 
-      public static final String GROOVY_SCRIPT_FILE = "Groovy Script";
+      public static final String GROOVY_SCRIPT_FILE = "POGO";
 
-      public static final String GROOVY_TEMPLATE_FILE = "Groovy Template";
+      public static final String GROOVY_TEMPLATE_FILE = "Template";
 
       public static final String FILE_FROM_TEMPLATE = "File From Template...";
       
@@ -54,7 +54,7 @@ public interface MenuCommands
 
       public static final String FOLDER = "Folder...";
       
-      public static final String CHROMATTIC = "Chromattic Data Object";
+      public static final String CHROMATTIC = "Data Object";
       
       public static final String PROJECT_TEMPLATE = "Project Template...";
    }

@@ -60,7 +60,6 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
     */
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      System.out.println("size: " + event.getSelectedItems().size());
       if (event.getSelectedItems().size() != 1)
       {
          folderItemSelected = false;
