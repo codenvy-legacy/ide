@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.framework.vfs.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * This interface defines handler for {@link SetACLResultReceivedEvent} event 
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 21, 2010 $
  *

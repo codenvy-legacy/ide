@@ -23,8 +23,8 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ *This event fires if ACL successful set.<br>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 21, 2010 $
  *

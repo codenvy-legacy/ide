@@ -22,8 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *This class represent all permissions of item.<br>
+ *Do not change <var>permissions</var> directly by <var>getPermissionsList()</var>,
+ *use <var>addPermissions</var>,
+ *<var>removePermission</var> methods instead.
+ *<br>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 18, 2010 $
  *
@@ -31,15 +35,30 @@ import java.util.List;
 public class AccessControlList
 {
 
-   private List<AccessControlEntry> permissions = new ArrayList<AccessControlEntry>();
-
+   /**
+    * The name of item owner 
+    */
    private String owner;
 
+   /**
+    *The list of item permissions
+    */
+   private List<AccessControlEntry> permissions = new ArrayList<AccessControlEntry>();
+
+   /**
+    * Add new permission
+    * @param access control entry
+    */
    public void addPermission(AccessControlEntry ace)
    {
       permissions.add(ace);
    }
 
+   /**
+    * Get permission for specific identity
+    * @param identity name
+    * @return permissions for identity or <b>null</b> if identity not found  
+    */
    public AccessControlEntry getPermisions(String identity)
    {
       for (AccessControlEntry e : permissions)
@@ -49,10 +68,14 @@ public class AccessControlList
             return e;
          }
       }
-
       return null;
    }
 
+   /**
+    * Add specific permission for identity
+    * @param identity name
+    * @param permission
+    */
    public void addPermission(String identity, Permissions permission)
    {
       for (AccessControlEntry e : permissions)
@@ -66,7 +89,13 @@ public class AccessControlList
 
       permissions.add(new AccessControlEntry(identity, permission));
    }
-   
+
+   /**
+    * Add list permissions for identity.
+    * If identity not found, creates new access control entry
+    * @param identity
+    * @param permissions
+    */
    public void addPermissions(String identity, List<Permissions> permissions)
    {
       for (AccessControlEntry e : this.permissions)
@@ -77,16 +106,21 @@ public class AccessControlList
             return;
          }
       }
-      
+
       this.permissions.add(new AccessControlEntry(identity, permissions));
    }
 
+   /**
+    * Remove specific permission for identity
+    * @param identity
+    * @param permission
+    */
    public void removePermission(String identity, Permissions permission)
    {
       AccessControlEntry entry = null;
-      for (AccessControlEntry e : permissions)   
+      for (AccessControlEntry e : permissions)
       {
-         if(e.getIdentity().equals(identity))
+         if (e.getIdentity().equals(identity))
          {
             e.removePermission(permission);
             entry = e;
@@ -95,19 +129,23 @@ public class AccessControlList
       }
       if (entry != null)
       {
-         if(entry.getPermissionsList().size() == 0)
+         if (entry.getPermissionsList().size() == 0)
          {
             permissions.remove(entry);
          }
       }
-      
+
    }
 
+   /**
+    * Remove all permission for identity
+    * @param identity
+    */
    public void removePermission(String identity)
    {
-      for(int i = 0 ; permissions.size() > i; i++)
+      for (int i = 0; permissions.size() > i; i++)
       {
-         if(permissions.get(i).getIdentity().equals(identity))
+         if (permissions.get(i).getIdentity().equals(identity))
          {
             permissions.remove(i);
             break;
@@ -115,31 +153,37 @@ public class AccessControlList
       }
    }
 
+   /**
+    * Remove access controls entry's with empty permission list.
+    */
    public void removeEmptyPermissions()
    {
       List<AccessControlEntry> entyForRemove = new ArrayList<AccessControlEntry>();
-      for(AccessControlEntry e: permissions)
+      for (AccessControlEntry e : permissions)
       {
-         if(e.getPermissionsList().size() == 0)
+         if (e.getPermissionsList().size() == 0)
          {
             entyForRemove.add(e);
          }
       }
-      
-      for(AccessControlEntry e : entyForRemove)
+
+      for (AccessControlEntry e : entyForRemove)
       {
          permissions.remove(e);
       }
    }
-   
+
    /**
-    * @return the permissions
+    * @return the permissions list
     */
    public List<AccessControlEntry> getPermissionsList()
    {
       return permissions;
    }
 
+   /**
+    * Remove all permissions
+    */
    public void clear()
    {
       permissions.clear();

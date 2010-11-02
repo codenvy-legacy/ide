@@ -22,19 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *This class represents one identity with this permissions;
+ *Do not change <var>permissionsList</var> directly by <var>getPermissionsList()</var>,
+ *use <code>addPermission()</code>, <code>removePermission()</code> instead 
+ *<br>
  * Created by The eXo Platform SAS .
- *
- * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 18, 2010 $
  *
  */
-
 public class AccessControlEntry
 {
-
-   private List<Permissions> permissionsList = new ArrayList<Permissions>();
-
+   
+   /**
+    *The name of identity(its user name, group or role) 
+    */
    private String identity;
+
+   /**
+    * The list of allowed permissions
+    */
+   private List<Permissions> permissionsList = new ArrayList<Permissions>();
 
    /**
     * @param identity
@@ -56,13 +64,16 @@ public class AccessControlEntry
       this.permissionsList.addAll(permissions);
    }
    
+   /**
+    * @return list of permission
+    */
    public List<Permissions> getPermissionsList()
    {
       return permissionsList;
    }
 
    /**
-    * Gant permission
+    * Add specific permission 
     * 
     * @param permission
     */
@@ -73,6 +84,10 @@ public class AccessControlEntry
          permissionsList.add(permission);
    }
 
+   /**
+    * Remove specific permissions 
+    * @param permissions
+    */
    public void removePermission(Permissions permissions)
    {
       if (permissionsList.contains(permissions))
@@ -113,7 +128,8 @@ public class AccessControlEntry
    }
 
    /**
-    * @param permissions
+    * Add all permissions
+    * @param permissions list
     */
    public void addPermissionsList(List<Permissions> permissions)
    {

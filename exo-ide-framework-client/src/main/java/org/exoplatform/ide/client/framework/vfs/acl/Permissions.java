@@ -19,19 +19,24 @@
 package org.exoplatform.ide.client.framework.vfs.acl;
 
 /**
+ *This enum represent permission right i.e. READ and WRITE;
+ *<br>
+ *It contains only two constants : <code>READ</code> and <code>WRITE</code>
+ *<br>
  * Created by The eXo Platform SAS .
- *
- * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 18, 2010 $
- *
  */
 public enum Permissions {
 
    READ, WRITE;
 
+   /**
+    *  @see java.lang.Enum#toString()
+    */
    public String toString()
    {
       return name().toLowerCase();
    }
-   
+
 }
