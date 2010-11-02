@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -47,8 +46,6 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
 
    private final String WRITE = "Write";
    
-   private HandlerRegistration editCompleteHandler;
-
    public PermissionsListGrid()
    {
       setCanSort(true);
@@ -78,12 +75,27 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
       fieldWrite.setWidth("20%");
       fieldWrite.setType(ListGridFieldType.BOOLEAN);
       
-      editCompleteHandler = addEditCompleteHandler(this);
+      addEditCompleteHandler(this);
       setData(new ListGridRecord[0]);
       
       setFields(fieldIdentity, fieldRead, fieldWrite);
    }
 
+   public void selectItem(AccessControlEntry item)
+   {
+      for (ListGridRecord record : getRecords())
+      {
+         AccessControlEntry recordItem = (AccessControlEntry)record.getAttributeAsObject(getValuePropertyName());
+         if (item == recordItem)
+         {
+            selectRecord(record);
+            return;
+         }
+      }
+
+      deselectAllRecords();
+   }
+   
    /**
     * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#setRecordFields(com.smartgwt.client.widgets.grid.ListGridRecord, java.lang.Object)
     */

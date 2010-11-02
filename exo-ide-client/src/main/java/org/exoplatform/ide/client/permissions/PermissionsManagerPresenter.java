@@ -42,10 +42,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -68,7 +66,15 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
 
       HasClickHandlers getSaveACLButton();
 
+      HasClickHandlers getRemoveEntityButton();
+
       HasClickHandlers getCancelButton();
+
+      HasValue<String> getFileNameLabel();
+
+      HasValue<String> getFileOwnerLabel();
+
+      void selectItem(AccessControlEntry item);
 
    }
 
@@ -77,10 +83,12 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    private Item item;
 
    private Dispaly dispaly;
-   
+
    private Handlers handlers;
-   
+
    private AccessControlList acl;
+
+   private AccessControlEntry selectedEntry;
 
    /**
     * @param eventBus
@@ -90,13 +98,30 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    {
       this.eventBus = eventBus;
       this.item = item;
-      
+
       handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Dispaly d)
    {
       dispaly = d;
+
+      try
+      {
+         acl = parseItemACL();
+
+         dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+
+         dispaly.getFileNameLabel().setValue(item.getName());
+         dispaly.getFileOwnerLabel().setValue(getFileOwner());
+
+      }
+      catch (Exception e)
+      {
+         GWT.log(e.getMessage());
+         Dialogs.getInstance().showError(e.getMessage());
+         return;
+      }
 
       dispaly.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -109,81 +134,68 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
 
       dispaly.getAddEntityButton().addClickHandler(new ClickHandler()
       {
-         
+
          public void onClick(ClickEvent event)
          {
-//            Window.alert("Add");
-//            Dialogs.getInstance().askForValue("IDE", "Entity:", "", new StringValueReceivedCallback()
-//            {
-//               
-//               public void execute(String value)
-//               {
-//                 if(value != null && !"".equals(value))
-//                 {
-//                    addEntity(value);
-//                 }
-//               }
-//            });
-            
             acl.addPermission(new AccessControlEntry(""));
             dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
-            
+            dispaly.getPermissionsListGrid().startEditing(acl.getPermissionsList().size() - 1, 0, false);
+
          }
       });
-      
+
       dispaly.getSaveACLButton().addClickHandler(new ClickHandler()
       {
-         
+
          public void onClick(ClickEvent event)
          {
             saveACL();
          }
       });
-      
-      try
-      {
-         acl = parseItemACL();         
-         dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
-      }
-      catch (Exception e)
-      {
-         GWT.log(e.getMessage());
-         Dialogs.getInstance().showError(e.getMessage());
-      }
-      
-      
+
       dispaly.getPermissionsListGrid().addSelectionHandler(new SelectionHandler<AccessControlEntry>()
       {
-         
+
          public void onSelection(SelectionEvent<AccessControlEntry> event)
          {
-            event.getSelectedItem();
+            selectedEntry = event.getSelectedItem();
+
          }
       });
-      
-      dispaly.getPermissionsListGrid().addValueChangeHandler(new ValueChangeHandler<List<AccessControlEntry>>()
+
+      dispaly.getRemoveEntityButton().addClickHandler(new ClickHandler()
       {
-         
-         public void onValueChange(ValueChangeEvent<List<AccessControlEntry>> event)
+
+         public void onClick(ClickEvent event)
          {
-            Window.alert("Change!!!11");            
+            removeSelectedPermission();
          }
+
       });
-      
+
       handlers.addHandler(SetACLResultReceivedEvent.TYPE, this);
    }
-   
+
+   /**
+    * @return
+    */
+   private String getFileOwner()
+   {
+      return item.getProperty(ItemProperty.OWNER).getChildProperty(ItemProperty.ACL.HREF).getValue();
+   }
+
    private void saveACL()
    {
+      acl.removeEmptyPermissions();
       VirtualFileSystem.getInstance().setACL(item, acl);
    }
-   
+
    /**
     * 
     */
    public void destroy()
    {
-      handlers.removeHandlers();      
+      handlers.removeHandlers();
    }
 
    /**
@@ -201,25 +213,45 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    {
       dispaly.closeForm();
    }
-   
+
+   private void removeSelectedPermission()
+   {
+      if (selectedEntry == null)
+         return;
+
+      int i = acl.getPermissionsList().indexOf(selectedEntry);
+      acl.removePermission(selectedEntry.getIdentity());
+      dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+      if (i > acl.getPermissionsList().size() - 1)
+      {
+         i = acl.getPermissionsList().size() - 1;
+      }
+
+      if (!acl.getPermissionsList().isEmpty())
+      {
+         AccessControlEntry itemToSelect = acl.getPermissionsList().get(i);
+
+         dispaly.selectItem(itemToSelect);
+      }
+   }
+
    private AccessControlList parseItemACL() throws Exception
    {
-      
+
       AccessControlList accessControlList = new AccessControlList();
-      
+
       Property acl = item.getProperty(ItemProperty.ACL.ACL);
 
-      if(acl == null)
+      if (acl == null)
       {
          throw new Exception("No acl property");
       }
-      
+
       for (Property aceProperty : acl.getChildProperties())
       {
 
          String entity = "";
          List<Permissions> permissionList = new ArrayList<Permissions>();
-         //         List<Permissions> deny = new ArrayList<Permissions>();
 
          for (Property p : aceProperty.getChildProperties())
          {
@@ -238,11 +270,6 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
          accessControlList.addPermission(new AccessControlEntry(entity, permissionList));
       }
 
-      //      for (String key : item.getAcl().getPermissionsMap().keySet())
-      //      {
-      //         System.out.println("UserID - " + key + ", per ="
-      //            + item.getAcl().getPermisions(key).getPermissionsList());
-      //      }
       return accessControlList;
    }
 
