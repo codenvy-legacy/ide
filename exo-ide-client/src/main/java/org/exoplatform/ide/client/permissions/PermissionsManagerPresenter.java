@@ -46,8 +46,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
+ *This class is presenter for {@link PermissionsManagerForm}<br>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *

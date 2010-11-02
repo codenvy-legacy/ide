@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.client.permissions.event;
 
+import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * This event fires by {@link ShowPermissionsControl}<br>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *

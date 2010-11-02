@@ -29,8 +29,9 @@ import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * This class represent command in main menu(<var>View/Show Permissions</var>).<br>
+ * Fired {@link ShowPermissionsEvent} if clicked. <br>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *

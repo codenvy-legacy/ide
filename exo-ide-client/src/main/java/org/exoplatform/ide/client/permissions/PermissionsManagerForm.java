@@ -40,8 +40,15 @@ import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
+ *This class represent form for managing permissions.<br>
+ *Its contains:
+ *<ul>
+ *<li> {@link TextField} - name of {@link Item}
+ *<li> {@link TextField} - owner of {@link Item} 
+ *<li> {@link PermissionsListGrid} - list of all permission for {@link Item}
+ *<li> several {@link IButton} (Add, Remove, Save and Cancel)
+ *</ul>
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *

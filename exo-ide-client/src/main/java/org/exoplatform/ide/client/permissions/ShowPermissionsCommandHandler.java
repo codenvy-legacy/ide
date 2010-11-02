@@ -37,8 +37,9 @@ import org.exoplatform.ide.client.permissions.event.ShowPermissionsHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * This class handle {@link ShowPermissionsEvent} event,
+ * asked permissions for item and create new {@link PermissionsManagerForm} form.
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *
@@ -52,9 +53,6 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
    
    private Item selectedItem;
    
-   /**
-    * @param eventBus
-    */
    public ShowPermissionsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;

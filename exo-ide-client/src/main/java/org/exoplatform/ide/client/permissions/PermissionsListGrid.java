@@ -31,8 +31,9 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * This class extends {@link ListGrid} with {@link AccessControlEntry}.<br>
  *
+ * Created by The eXo Platform SAS .
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 20, 2010 $
  *
@@ -49,11 +50,6 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
    public PermissionsListGrid()
    {
       setCanSort(true);
-//      setCanGroupBy(false);
-////      setCanFocus(false);
-//      setSelectionType(SelectionStyle.SINGLE);
-//      setCanFreezeFields(false);
-//      setCanPickFields(false);
       setCanEdit(true);  
       setEditEvent(ListGridEditEvent.CLICK);  
       setHeaderHeight(22);
