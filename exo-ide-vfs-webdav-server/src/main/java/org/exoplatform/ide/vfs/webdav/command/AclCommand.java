@@ -179,8 +179,16 @@ public class AclCommand
          nodePermissions.put(principal, permissionList);
       }
 
-      node.setPermissions(nodePermissions);
-      node.getSession().save();
+      if(nodePermissions.size() == 0)
+      {
+         node.clearACL();
+         node.getSession().save();
+      }
+      else
+      {
+         node.setPermissions(nodePermissions);
+         node.getSession().save();        
+      }
    }
 
 }
