@@ -24,8 +24,9 @@ import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
 import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
 /**
+ * This class marshal {@link AccessControlList} to XML
+ * 
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 18, 2010 $
  *

@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
+ * This class unmarshal  response for setACL request.  
  * Created by The eXo Platform SAS .
- *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 18, 2010 $
  *
