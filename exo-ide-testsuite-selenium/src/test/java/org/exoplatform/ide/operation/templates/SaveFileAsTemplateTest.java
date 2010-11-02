@@ -53,6 +53,9 @@ public class SaveFileAsTemplateTest extends BaseTest
    
    private static final String TEXT = "// test groovy file template";
    
+   private static final String NAME_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
+      + "name=ideSaveAsTemplateFormNameField]/element";
+   
    @BeforeClass
    public static void setUp()
    {
@@ -110,9 +113,27 @@ public class SaveFileAsTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       // check "Save file as template" dialog window
       TemplateUtils.checkSaveAsTemplateWindow(selenium);
+      
+      //check save button disabled
+      checkSaveButtonEnabled(false);
+      
+      //type some text to name field
+      selenium.type(NAME_FIELD_LOCATOR, "a");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //check save button enabled
+      checkSaveButtonEnabled(true);
+      
+      //remove text from name field
+      selenium.type(NAME_FIELD_LOCATOR, "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      //check save button disabled
+      checkSaveButtonEnabled(false);
+      
+      
       //set name
-      selenium.type("scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
-         + "name=ideSaveAsTemplateFormNameField]/element", REST_SERVICE_TEMPLATE_NAME);
+      selenium.type(NAME_FIELD_LOCATOR, REST_SERVICE_TEMPLATE_NAME);
       //set description
       selenium.type("scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
          + "name=ideSaveAsTemplateFormDescriptionField]/element", REST_SERVICE_TEMPLATE_DESCRIPTION);
@@ -157,6 +178,20 @@ public class SaveFileAsTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       closeTab("0");
       Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+   
+   private void checkSaveButtonEnabled(boolean enabled)
+   {
+      if (enabled)
+      {
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSaveAsTemplateForm']//td[@class='buttonTitle' and text()='Save']"));
+         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideSaveAsTemplateForm']//td[@class='buttonTitleDisabled' and text()='Save']"));
+      }
+      else
+      {
+         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideSaveAsTemplateForm']//td[@class='buttonTitle' and text()='Save']"));
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSaveAsTemplateForm']//td[@class='buttonTitleDisabled' and text()='Save']"));
+      }
    }
    
 }

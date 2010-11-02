@@ -26,6 +26,8 @@ import org.exoplatform.ide.TestConstants;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
+
 /**
  * Created by The eXo Platform SAS.
  *	
@@ -144,6 +146,75 @@ public class CreateFileFromTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
    
+   @Test
+   public void testEnablingDisablingElements() throws Exception
+   {
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //---- 1 ----------
+      //call create file from template form
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      
+      checkNameFieldEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      
+      //---- 2 ----------
+      //select template in list
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_HTML);
+      
+      checkNameFieldEnabled(selenium, true);
+      checkCreateButtonEnabled(selenium, true);
+      checkDeleteButtonEnabled(selenium, false);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      String text = selenium.getValue(NAME_FIELD_LOCATOR);
+      assertEquals("Untitled file.html", text);
+      
+      //---- 3 ----------
+      //deselect template
+      selenium.controlKeyDown();
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_HTML);
+      selenium.controlKeyUp();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkNameFieldEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      
+      //---- 4 ----------
+      //select several templates
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_HTML);
+      selenium.controlKeyDown();
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_TEXT);
+      selenium.controlKeyUp();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkNameFieldEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      
+      //---- 5 ----------
+      //select one template
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_XML);
+      //remove text from name field
+      selenium.type(NAME_FIELD_LOCATOR, "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkCreateButtonEnabled(selenium, false);
+      
+      //---- 6 ----------
+      //type some text to name field
+      selenium.type(NAME_FIELD_LOCATOR, "a");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkCreateButtonEnabled(selenium, true);
+      
+      closeCreateFromTemplateForm(selenium);
+   }
+   
    private void testFileCreatedOnServer(String fileName)
    {
      
@@ -182,4 +253,5 @@ public class CreateFileFromTemplateTest extends BaseTest
       assertElementPresentInWorkspaceTree(fileName);
       closeTab("0");
    }
+   
 }

@@ -209,30 +209,32 @@ public class CreateProjectTemplateTest extends BaseTest
    }
    
    @Test
-   public void createProjectTemplateWithEmptyName() throws Exception
+   public void testEnablingDisablingButtons() throws Exception
    {
-      //=================== Create project template with empty name ====================
-      //----- 13 ----------------
       Thread.sleep(TestConstants.SLEEP);
-      //----- 11 ----------------
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //----- 1 ----------------
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);
-      checkCreateProjectTemplateForm();
+      checkButtonDisabled(CREATE_BUTTON_TITLE);
       
-      //click create button
-      selenium.click(CREATE_BUTTON);
+      //----- 2 ----------------
+      //type text to name field
+      selenium.type(NAME_FIELD, "a");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      //check warn dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Error", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
-      //click ok button and close
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      checkButtonEnabled(CREATE_BUTTON_TITLE);
+      
+      //----- 3 ----------------
+      //remove text
+      selenium.type(NAME_FIELD, "");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      //check template form
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      checkButtonDisabled(CREATE_BUTTON_TITLE);
       
-      //----- 14 ----------------
+      //----- 3 ----------------
       //close
       //click cancel button
       selenium.click(CANCEL_BUTTON);
@@ -322,7 +324,7 @@ public class CreateProjectTemplateTest extends BaseTest
       assertTrue(selenium.isElementPresent(DELETE_BUTTON));
       checkButtonDisabled(DELETE_BUTTON_TITLE);
       assertTrue(selenium.isElementPresent(CREATE_BUTTON));
-      checkButtonEnabled(CREATE_BUTTON_TITLE);
+      checkButtonDisabled(CREATE_BUTTON_TITLE);
       assertTrue(selenium.isElementPresent(CANCEL_BUTTON));
       checkButtonEnabled(CANCEL_BUTTON_TITLE);
       

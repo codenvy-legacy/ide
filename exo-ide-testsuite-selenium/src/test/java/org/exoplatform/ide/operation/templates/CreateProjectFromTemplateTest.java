@@ -44,6 +44,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
    
    private static final String PROJECT_TEMPLATE_NAME = "Test Project Template";
    
+   private static final String PROJECT_TEMPLATE_NAME_2 = "Project Template 2";
+   
    private static final String PROJECT_FROM_DEFAULT_TEMPLATE = "Greeting Project";
    
    private static final String DEFAULT_PROJECT_TEMPLATE_NAME = "Sample project";
@@ -63,6 +65,13 @@ public class CreateProjectFromTemplateTest extends BaseTest
    private static String templateUrl;
    
    private static final String PROJECT_TEMPLATE_XML = "<template><name>Test%20Project%20Template</name>"
+      + "<description>Project%20template%20for%20test%20purposes</description>"
+      + "<template-type>project</template-type><items><folder><name>org</name><items><folder><name>exoplatform</name>"
+      + "<items><file><template-file-name>Groovy%20REST%20Service</template-file-name>"
+      + "<file-name>Main.groovy</file-name></file><file><template-file-name>Empty%20HTML</template-file-name>"
+      + "<file-name>Index.html</file-name></file></items></folder></items></folder></items></template>";
+   
+   private static final String PROJECT_TEMPLATE_XML_2 = "<template><name>Project%20Template%202</name>"
       + "<description>Project%20template%20for%20test%20purposes</description>"
       + "<template-type>project</template-type><items><folder><name>org</name><items><folder><name>exoplatform</name>"
       + "<items><file><template-file-name>Groovy%20REST%20Service</template-file-name>"
@@ -94,6 +103,18 @@ public class CreateProjectFromTemplateTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(PROJECT_FOLDER_URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+      
+      try
+      {
          VirtualFileSystemUtils.delete(PROJECT_FROM_DEFAULT_TEMPLATE);
       }
       catch (IOException e)
@@ -180,6 +201,98 @@ public class CreateProjectFromTemplateTest extends BaseTest
       
       clickOpenIconOfFolder("UI");
       assertElementPresentInWorkspaceTree("Greeting Google Gadget.xml");
+   }
+   
+   @Test
+   public void testEnablingDisablingElements() throws Exception
+   {
+      putProjectTemplateToRegistry();
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //----- 1 ----------------
+      //open create project from template form
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      
+      checkNameFieldEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      
+      //----- 2 ----------------
+      //select one template
+      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+      
+      checkNameFieldEnabled(selenium, true);
+      checkDeleteButtonEnabled(selenium, true);
+      checkCreateButtonEnabled(selenium, true);
+      
+      //----- 3 ----------------
+      //deselect one template
+      selenium.controlKeyDown();
+      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+      selenium.controlKeyUp();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkNameFieldEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      
+      //----- 4 ----------------
+      //select several templates (one is default)
+      selectProjectTemplate(selenium, DEFAULT_PROJECT_TEMPLATE_NAME);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.controlKeyDown();
+      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME_2);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.controlKeyUp();
+      
+      checkNameFieldEnabled(selenium, false);
+      checkDeleteButtonEnabled(selenium, false);
+      checkCreateButtonEnabled(selenium, false);
+      
+      //----- 5 ----------------
+      //select one template
+      Thread.sleep(TestConstants.SLEEP);
+      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+      
+      checkNameFieldEnabled(selenium, true);
+      checkDeleteButtonEnabled(selenium, true);
+      checkCreateButtonEnabled(selenium, true);
+      
+      //----- 6 ----------------
+      //remove text from name field
+      selenium.type(NAME_FIELD_LOCATOR, "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkCreateButtonEnabled(selenium, false);
+      
+      //----- 7 ----------------
+      //type some text to name field
+      selenium.type(NAME_FIELD_LOCATOR, "a");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      checkCreateButtonEnabled(selenium, true);
+      
+      closeCreateFromTemplateForm(selenium);
+   }
+   
+   private void putProjectTemplateToRegistry()
+   {
+      templateUrl = URL + "template-" + System.currentTimeMillis();
+      try
+      {
+         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML_2.getBytes(), templateUrl + "/?createIfNotExist=true");
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
    
 

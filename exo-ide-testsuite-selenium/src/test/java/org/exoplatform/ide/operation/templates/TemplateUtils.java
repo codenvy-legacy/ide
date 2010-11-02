@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.TestConstants;
@@ -38,6 +39,8 @@ public class TemplateUtils
    static final String DELETE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/";
    
    static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/";
+   
+   static final String NAME_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element";
    
    static void checkCreateProjectFromTemplateForm(Selenium selenium)
    {
@@ -61,7 +64,7 @@ public class TemplateUtils
    
    static void selectItemInTemplateList(Selenium selenium, String templateName) throws Exception
    {
-      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
+//      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
       selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
       selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -98,5 +101,62 @@ public class TemplateUtils
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + "Empty HTML" + "']"));
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + "Empty TEXT" + "']"));
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + "Google Gadget" + "']"));
+   }
+   
+   
+   static void checkNameFieldEnabled(Selenium selenium, boolean enabled)
+   {
+      if (enabled)
+      {
+         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//input[@class='textItemDisabled']"));
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//input[@class='textItem']"));
+      }
+      else
+      {
+         assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//input[@class='textItem']"));
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//input[@class='textItemDisabled']"));
+      }
+   }
+   
+   static void checkCreateButtonEnabled(Selenium selenium, boolean enabled)
+   {
+      if (enabled)
+      {
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitleDisabled' and text()='Create']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitle' and text()='Create']"));
+      }
+      else
+      {
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitle' and text()='Create']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitleDisabled' and text()='Create']"));
+      }
+   }
+   
+   static void checkDeleteButtonEnabled(Selenium selenium, boolean enabled)
+   {
+      if (enabled)
+      {
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitleDisabled' and text()='Delete']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitle' and text()='Delete']"));
+      }
+      else
+      {
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitle' and text()='Delete']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCreateFileFromTemplateForm']//td[@class='buttonTitleDisabled' and text()='Delete']"));
+      }
+   }
+   
+   static void closeCreateFromTemplateForm(Selenium selenium) throws Exception
+   {
+      selenium.click("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/closeButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 }
