@@ -48,8 +48,8 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
    private static final String FOLDER_NAME = "CreatingAndSavingAsNewFileTest";
 
-   private static final String STORAGE_URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + FOLDER_NAME + "/";
 
    private static final String REST_SERVICE_FILE_NAME = "TestGroovyRest.groovy";
 
@@ -68,14 +68,13 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private static final String GROOVY_TEMPLATE_FILE_NANE = "TestGroovyTemplate.gtmpl";
 
    private static final String GROOVY_FILE_NAME = "TestGroovyScript.groovy";
-   
+
    private static final String CHROMATTIC_FILE_NAME = "TestChromatticDataObject.groovy";
 
-   
    @BeforeClass
    public static void setUp()
    {
-     try
+      try
       {
          VirtualFileSystemUtils.mkcol(STORAGE_URL);
       }
@@ -90,7 +89,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testCreatingAndSavingAsNewFiles() throws Exception
    {
@@ -152,11 +151,15 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      //TODO***********fix***************
+      closeUnsavedFileAndDoNotSave("0");
+      //*****************************
+
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      //    selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -186,8 +189,8 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       {
          e.printStackTrace();
       }
-    }
-   
+   }
+
    @AfterClass
    public static void tearDown()
    {
