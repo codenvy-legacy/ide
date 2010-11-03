@@ -21,9 +21,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
+import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Version;
 
 /**
  * Created by The eXo Platform SAS .
@@ -92,23 +92,21 @@ public class EditorTab extends Tab
    public String getTabTitle()
    {
       boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
-      boolean version = (file instanceof Version);
       
       String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
       
       String mainHint = file.getHref();
-      mainHint = (version) ? mainHint+" [version:"+((Version)file).getDisplayName()+"]" : mainHint;
       
-      String hint = "File opened in read only mode. Use SaveAs command.";
-      String readTitle = (readOnly && !version) ? "&nbsp;<font color=\"#acacac\" title=\"" + hint + "\">[ Read only ]</font>" : "";
-      readTitle = (version) ? "&nbsp;<font color=\"#acacac\" >[Version:"+((Version)file).getDisplayName()+"]</font>" : readTitle;
+      String readonlyImage = (readOnly) ? "<img id=\"fileReadonly\"  style=\"position:absolute; margin-left:-2px; margin-top:9px;\" border=\"0\" suppress=\"true\" src=\""
+         + Images.Editor.READONLY_FILE + "\" />" : "";
       
-      
-      String icon = /*(version) ? Images.Versioning.OPEN_VERSION : */file.getIcon();
-      
+      mainHint = (readOnly) ? "File opened in read only mode. Use SaveAs command." : mainHint;
       String title =
-         "<span title=\"" + mainHint + "\">" + Canvas.imgHTML(icon) + "&nbsp;" + fileName + readTitle+  "</span>";
+         "<span title=\"" + mainHint + "\">"+ Canvas.imgHTML(file.getIcon()) + readonlyImage + "&nbsp;&nbsp;" +fileName +  "</span>";
+      
       return title;
    }
 
+  
+   
 }
