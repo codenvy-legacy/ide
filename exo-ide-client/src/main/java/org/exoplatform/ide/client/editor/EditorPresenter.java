@@ -411,6 +411,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
                }
                else
                {
+                  closeFileAfterSaving = false;
                   closeFile(file);
                }
             }
