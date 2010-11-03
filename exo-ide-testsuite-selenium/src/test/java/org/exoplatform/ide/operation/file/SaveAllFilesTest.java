@@ -78,6 +78,11 @@ public class SaveAllFilesTest extends BaseTest
    {
       //---- 2 ----------------
       //Create  "Test" and  "Test 2" folders in the root folder.
+    
+      //TODO*******fix******
+      Thread.sleep(TestConstants.SLEEP);
+      //*******************************
+      
       createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
       
