@@ -51,15 +51,17 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
             + WS_NAME + "/" + FILE_NAME;
    
-   private final static String MAIN_FORM_LOCATOR = "//div[@id='isc_G']";
+   private final static String MAIN_FORM_LOCATOR = "//div[@eventproxy = 'ideHorizontalSplitLayout' and @class='normal']";
    
-   private final static String OPERATION_PANEL_LOCATOR = "//div[@id='isc_H']/div[2]/div/div[1]/div/div[4]";
+   private final static String OPERATION_PANEL_LOCATOR = "//div[@eventproxy='ideOperationPanel' and @class='normal']";
    
-   private final static String CONTENT_PANEL_LOCATOR = "//div[@id='isc_H']/div[2]/div/div[1]/div/div[1]";
+   private final static String CONTENT_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
    
-   private final static String NAVIGATION_PANEL_LOCATOR = "//div[@id='isc_H']/div[1]";
+   private final static String NAVIGATION_PANEL_LOCATOR = "//div[@eventproxy='ideNavigationPanel' and @class='normal']";
    
-   private final static String CODE_HELPER_PANEL_LOCATOR = "//div[@id='isc_H']/div[2]/div/div[4]";
+   private final static String CODE_HELPER_PANEL_LOCATOR = "//div[@eventproxy='ideCodeHelperPanel' and @class='normal']";
+
+   private static final String VERTICAL_SPLIT_LAYOUT_LOCATOR = "//div[@eventproxy='ideVerticalSplitLayout' and @class='normal']";
    
    private Number operationPanelNormalWidth;
    private Number operationPanelNormalHeight;
@@ -234,13 +236,14 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //Click on Show Outline Panel
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
+      //check code helper panel visible
+      assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR));
+      
       operationPanelNormalWidth = selenium.getElementWidth(OPERATION_PANEL_LOCATOR);
       contentPanelNormalWidth = selenium.getElementWidth(CONTENT_PANEL_LOCATOR);
       codeHelperPanelNormalWidth = selenium.getElementWidth(CODE_HELPER_PANEL_LOCATOR);
       codeHelperPanelNormalHeight = selenium.getElementHeight(CODE_HELPER_PANEL_LOCATOR);
       
-      //check code helper panel visible
-      assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]"));
 //      checkCodeHelperPanelVisibility(true);
       
       //---- 11 -----------------
@@ -250,8 +253,8 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //check outline tab is maximized
       checkCodeHelperPanelMaximized();
       checkNavigationPanelVisibility(false);
-      //check
-      assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1][contains(@style, 'visibility: hidden')]"));
+      //check vertical layout (contains content panel and operations panel) is hidden
+      assertTrue(selenium.isElementPresent(VERTICAL_SPLIT_LAYOUT_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
 //      checkContentPanelVisibility(false);
 //      checkOperationsPanelVisibility(false);
       
@@ -335,17 +338,21 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    
    private void checkSearchTabSelected()
    {
-      assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[1]//td[@class='tabTitleSelected']/span[contains(text(), 'Search')]"));
-      assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[1]//td[@class='tabTitle']/span[contains(text(), 'Workspace')]"));
+      assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR
+         + "//td[@class='tabTitleSelected']/span[contains(text(), 'Search')]"));
+      assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR
+         + "//td[@class='tabTitle']/span[contains(text(), 'Workspace')]"));
    }
    
    private void checkContentPanelMaximized()
    {
       //TODO
-      assertEquals(selenium.getElementWidth(MAIN_FORM_LOCATOR).intValue(), selenium.getElementWidth(CONTENT_PANEL_LOCATOR).intValue() + 5);
+      assertEquals(selenium.getElementWidth(MAIN_FORM_LOCATOR).intValue(),
+         selenium.getElementWidth(CONTENT_PANEL_LOCATOR).intValue() + 5);
       //1 pixel - it is height of delimeter
-      assertEquals(selenium.getElementHeight(MAIN_FORM_LOCATOR).intValue(), selenium.getElementHeight(CONTENT_PANEL_LOCATOR).intValue() + 1);
-      
+      assertEquals(selenium.getElementHeight(MAIN_FORM_LOCATOR).intValue(),
+         selenium.getElementHeight(CONTENT_PANEL_LOCATOR).intValue() + 1);
+
    }
    
    private void checkContentPanelRestored()
@@ -373,13 +380,13 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       if (isVisible)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4][contains(@style, 'visibility: inherit')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4][contains(@style, 'visibility: hidden')]"));
+         assertTrue(selenium.isElementPresent(OPERATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
+         assertFalse(selenium.isElementPresent(OPERATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4][contains(@style, 'visibility: hidden')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4][contains(@style, 'visibility: inherit')]"));
+         assertTrue(selenium.isElementPresent(OPERATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
+         assertFalse(selenium.isElementPresent(OPERATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
       }
    }
    
@@ -393,13 +400,13 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       if (isVisible)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[1 and contains(@style, 'visibility: inherit;')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[1 and contains(@style, 'visibility: hidden;')]"));
+         assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertFalse(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[1 and contains(@style, 'visibility: hidden;')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[1 and contains(@style, 'visibility: inherit;')]"));
+         assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+         assertFalse(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
       }
    }
    
@@ -407,14 +414,14 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       if (isVisible)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1][contains(@style, 'visibility: inherit;')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1][contains(@style, 'visibility: hidden;')]"));
+         assertTrue(selenium.isElementPresent(CONTENT_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertFalse(selenium.isElementPresent(CONTENT_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
       }
       else
       {
          
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1][contains(@style, 'visibility: hidden;')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1][contains(@style, 'visibility: inherit;')]"));
+         assertTrue(selenium.isElementPresent(CONTENT_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+         assertFalse(selenium.isElementPresent(CONTENT_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
       }
    }
    
@@ -436,55 +443,55 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       if (isVisible)
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: inherit')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: hidden')]"));
+         assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
+         assertFalse(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: hidden')]"));
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4][contains(@style, 'visibility: inherit')]"));
+         assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
+         assertFalse(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
       }
    }
    
    private void clickMaximizeInOperationsPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4]//img[contains(@src, 'maximize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4]//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseDownAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseUpAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMinimizeInOperationsPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4]//img[contains(@src, 'minimize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[4]//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseDownAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseUpAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMaximizeInContentPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1]/div/div/div/div[5 and @class='tabBar']//img[contains(@src, 'maximize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1]/div/div/div/div[5 and @class='tabBar']//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseDownAt(CONTENT_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseUpAt(CONTENT_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMinimizeInContentPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1]/div/div/div/div[5 and @class='tabBar']//img[contains(@src, 'minimize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[1]/div/div[1]/div/div/div/div[5 and @class='tabBar']//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseDownAt(CONTENT_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseUpAt(CONTENT_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMaximizeInCodeHelperPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[4]//img[contains(@src, 'maximize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[4]//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseDownAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseUpAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMinimizeInCodeHelperPanel() throws Exception
    {
-      selenium.mouseDownAt("//div[@id='isc_H']/div[2]/div/div[4]//img[contains(@src, 'minimize')]", "2,2");
-      selenium.mouseUpAt("//div[@id='isc_H']/div[2]/div/div[4]//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseDownAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseUpAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
