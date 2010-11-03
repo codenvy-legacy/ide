@@ -21,6 +21,7 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.exoplatform.ide.Locators.*;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -50,18 +51,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
             + WS_NAME + "/" + FILE_NAME;
-   
-   private final static String MAIN_FORM_LOCATOR = "//div[@eventproxy = 'ideHorizontalSplitLayout' and @class='normal']";
-   
-   private final static String OPERATION_PANEL_LOCATOR = "//div[@eventproxy='ideOperationPanel' and @class='normal']";
-   
-   private final static String CONTENT_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
-   
-   private final static String NAVIGATION_PANEL_LOCATOR = "//div[@eventproxy='ideNavigationPanel' and @class='normal']";
-   
-   private final static String CODE_HELPER_PANEL_LOCATOR = "//div[@eventproxy='ideCodeHelperPanel' and @class='normal']";
-
-   private static final String VERTICAL_SPLIT_LAYOUT_LOCATOR = "//div[@eventproxy='ideVerticalSplitLayout' and @class='normal']";
    
    private Number operationPanelNormalWidth;
    private Number operationPanelNormalHeight;
