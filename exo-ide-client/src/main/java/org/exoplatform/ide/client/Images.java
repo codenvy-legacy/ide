@@ -200,6 +200,12 @@ public interface Images
       public static final String OPEN_VERSION = IMAGE_URL + "versioning/open_version.png";
 
    }
+   
+   public interface Editor
+   {
+
+      public static final String READONLY_FILE = IMAGE_URL + "panel/editor/file_readonly.png";
+   }
 
    public static final String BLANK = IMAGE_URL + "blank.png";
 
