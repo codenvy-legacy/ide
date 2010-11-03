@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.webdav.resource;
 
 import java.net.URI;
+import java.util.Set;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
@@ -83,6 +84,15 @@ public class VersionedFileResource extends FileResource implements VersionedReso
       return URI.create(identifier.toASCIIString() + "?vh");
    }
 
+   @Override
+   public Set<HierarchicalProperty> getProperties(boolean namesOnly) throws PathNotFoundException,
+      AccessDeniedException, RepositoryException
+   {
+      Set<HierarchicalProperty> props = super.getProperties(namesOnly);
+      props.add(namesOnly ? new HierarchicalProperty(ISVERSIONED) : getProperty(ISVERSIONED));     
+      return props;
+   }
+   
    /**
     * {@inheritDoc}
     */

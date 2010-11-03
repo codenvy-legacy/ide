@@ -20,14 +20,18 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
-import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
 import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
@@ -40,7 +44,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class ViewVersionHistoryControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, PanelClosedHandler, PanelOpenedHandler
+public class ViewVersionHistoryControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, PanelClosedHandler, PanelOpenedHandler, FileSavedHandler
 {
 
    private static final String ID = "View/Version History...";
@@ -52,6 +56,8 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    private final String PROMPT_HIDE = "Hide Item Version History";
    
    private boolean versionPanelOpened = false;
+   
+   private File activeFile;
 
    /**
     * @param id
@@ -76,6 +82,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       eventBus.addHandler(PanelClosedEvent.TYPE, this);
       eventBus.addHandler(PanelOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(FileSavedEvent.TYPE, this);
    }
 
    /**
@@ -83,14 +90,15 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getFile().isNewFile() || event.getFile() instanceof Version)
+      activeFile = event.getFile();
+      if (activeFile == null || activeFile.isNewFile())
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
       setVisible(true);
-      setEnabled(true);
+      setEnabled(checkIsVersioned(activeFile));
    }
    
    private void update()
@@ -130,5 +138,29 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
          versionPanelOpened = false;
          update();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
+    */
+   public void onFileSaved(FileSavedEvent event)
+   {
+      if (activeFile != null && event.getFile().equals(activeFile))
+      {
+         setEnabled(checkIsVersioned(event.getFile()));
+      }
+   }
+   
+   
+   /**
+    * Checks whether file is versioned or not. 
+    * 
+    * @param file file to check
+    * @return boolean true if versioned
+    */
+   private boolean checkIsVersioned(File file)
+   {
+      Property property = file.getProperty(ItemProperty.ISVERSIONED);
+      return (property != null && "1".equals(property.getValue()));
    }
 }

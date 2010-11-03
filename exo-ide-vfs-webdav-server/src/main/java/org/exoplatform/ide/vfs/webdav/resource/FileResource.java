@@ -142,6 +142,11 @@ public class FileResource extends GenericResource
       props.add(namesOnly ? new HierarchicalProperty(GETLASTMODIFIED) : getProperty(GETLASTMODIFIED));
       props.add(namesOnly ? new HierarchicalProperty(GETCONTENTLENGTH) : getProperty(GETCONTENTLENGTH));
       props.add(namesOnly ? new HierarchicalProperty(GETCONTENTTYPE) : getProperty(GETCONTENTTYPE));
+      props.add(namesOnly ? new HierarchicalProperty(ISVERSIONED) : getProperty(ISVERSIONED));
+      
+      if (node.isLocked()) {
+         props.add(namesOnly ? new HierarchicalProperty(LOCKDISCOVERY) : getProperty(LOCKDISCOVERY));         
+      }
 
       QName nodeTypeName = namespaceContext.createQName("jcr:nodeType");
       HierarchicalProperty noneTypeProp =

@@ -63,6 +63,12 @@ public class ItemProperty
    public static final QName PREDECESSOR_SET = new QName("predecessor-set", Namespace.DAV);
 
    public static final QName OWNER = new QName("owner", Namespace.DAV);
+   
+   public static final QName ISVERSIONED = new QName("isversioned", Namespace.DAV);
+   
+   public static final QName CHECKEDOUT = new QName("checked-out", Namespace.DAV);
+   
+   public static final QName CHECKEDIN = new QName("checked-in", Namespace.DAV);
 
    /*
     * JCR_PROPERTIES

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 
 /**
  * 
@@ -58,8 +59,11 @@ public class PropFindRequestMarshaller implements Marshallable
       xml += "<D:prop>";
       for (QName property : properties)
       {
-         if("DAV:".equals(property.getNamespaceURI()))
-          xml += "<D:" +  property.getLocalName() +" />";
+         if(ItemProperty.Namespace.DAV.equals(property.getNamespaceURI())){
+            xml += "<D:" +  property.getLocalName() +" />";
+         } else if (ItemProperty.Namespace.JCR.equals(property.getNamespaceURI())) {
+            xml += "<jcr:" +  property.getLocalName() +" xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"/>";
+         } 
       }
       xml += "</D:prop>";
       xml += "</D:propfind>";
