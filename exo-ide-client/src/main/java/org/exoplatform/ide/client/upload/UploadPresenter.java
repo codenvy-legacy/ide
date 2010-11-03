@@ -249,8 +249,8 @@ public class UploadPresenter implements FileSelectedHandler
     */
    private String extractRecievedContent(String uploadServiceResponse)
    {
-      int index = "<filecontent>".length();
-      String content = uploadServiceResponse.substring(index, uploadServiceResponse.length() - index + 1);
+      String content = uploadServiceResponse.substring("<filecontent>".length());
+      content = content.substring(0, content.length() - "</filecontent>".length());
 
       return Utils.urlDecode_decode(content); // to unescape end of lines
    }
@@ -400,7 +400,7 @@ public class UploadPresenter implements FileSelectedHandler
     * Opening local file.
     * 
     * @param uploadServiceResponse is checked in parent method, so we sure that it is not null,
-    * and data is enclose in tag <pre></pre> (or <PRE></PRE>)
+    * and data is enclose in tag <filecontent></filecontent> (or <FILECONTENT></FILECONTENT>)
     */
    private void completeOpenLocalFile(String uploadServiceResponse)
    {
@@ -419,6 +419,11 @@ public class UploadPresenter implements FileSelectedHandler
       openFile(submittedFileContent);
    }
 
+   /**
+    * Open new file in editor with known content.
+    * 
+    * @param submittedFileContent content of new file
+    */
    private void openFile(String submittedFileContent)
    {
       String fileName = display.getFileNameField().getValue();
