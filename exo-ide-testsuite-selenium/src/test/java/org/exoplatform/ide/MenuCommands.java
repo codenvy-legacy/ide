@@ -137,7 +137,7 @@ public interface MenuCommands
 
       public static final String REFRESH = "Refresh";
       
-      public static final String RESTORE_VERSION = "Restore Version";
+      public static final String RESTORE_VERSION = "Restore To Version";
       
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
    }

@@ -39,7 +39,8 @@ import java.io.IOException;
  */
 public class RestoreVersionTest extends VersioningTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    private final static String TEST_FOLDER = "testFolder";
 
@@ -88,10 +89,12 @@ public class RestoreVersionTest extends VersioningTest
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent();
-
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
+      
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version3Text);
@@ -120,7 +123,12 @@ public class RestoreVersionTest extends VersioningTest
 
       //Restore version and check opened file has restored content
       runToolbarButton(MenuCommands.File.RESTORE_VERSION);
-      Thread.sleep(50000);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkAskDialogPresent(true);
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkAskDialogPresent(false);
+      Thread.sleep(TestConstants.SLEEP);
       assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -172,7 +180,12 @@ public class RestoreVersionTest extends VersioningTest
 
       //Restore version and check opened file has restored content
       runToolbarButton(MenuCommands.File.RESTORE_VERSION);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkAskDialogPresent(true);
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkAskDialogPresent(false);
+      Thread.sleep(TestConstants.SLEEP);
       assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -217,11 +230,9 @@ public class RestoreVersionTest extends VersioningTest
    @Test
    public void testRestoreVersionAndEditFile() throws Exception
    {
+      Thread.sleep(10000);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(20000);
-      
-      
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -232,10 +243,12 @@ public class RestoreVersionTest extends VersioningTest
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent();
-
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
+      
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version3Text);
@@ -261,7 +274,13 @@ public class RestoreVersionTest extends VersioningTest
 
       //Restore version and check opened file has restored content
       runToolbarButton(MenuCommands.File.RESTORE_VERSION);
-      Thread.sleep(1000000);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkAskDialogPresent(true);
+      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
+      Thread.sleep(100000);
+      checkAskDialogPresent(false);
+      Thread.sleep(30000);
       assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -271,7 +290,7 @@ public class RestoreVersionTest extends VersioningTest
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(6);
       clickCloseVersionListPanelButton();
-      
+
       selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
       selenium.keyPressNative("" + KeyEvent.VK_END);
@@ -281,12 +300,18 @@ public class RestoreVersionTest extends VersioningTest
       Thread.sleep(5000);
       saveCurrentFile();
       Thread.sleep(5000);
-      
+
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(7);
       clickCloseVersionListPanelButton();
-      
+
       closeTab("0");
+   }
+
+   private void checkAskDialogPresent(boolean isPresent)
+   {
+      assertEquals(isPresent, selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertEquals(isPresent, selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
    }
 
    @After

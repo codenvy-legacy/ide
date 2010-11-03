@@ -88,15 +88,19 @@ public class NavigateVersionsTest extends VersioningTest
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-
+      checkViewVersionHistoryButtonPresent(false);
+      
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent();
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
 
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version3Text);
@@ -175,7 +179,8 @@ public class NavigateVersionsTest extends VersioningTest
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkViewVersionHistoryButtonPresent();
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       //View versions
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
@@ -207,17 +212,20 @@ public class NavigateVersionsTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_2);
-      checkViewVersionHistoryButtonPresent();
-
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
+      
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version4Text);
@@ -314,16 +322,20 @@ public class NavigateVersionsTest extends VersioningTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_3);
-      checkViewVersionHistoryButtonPresent();
-
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
+      
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version4Text);
@@ -420,16 +432,20 @@ public class NavigateVersionsTest extends VersioningTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_4);
-      checkViewVersionHistoryButtonPresent();
-
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
+      
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version4Text);

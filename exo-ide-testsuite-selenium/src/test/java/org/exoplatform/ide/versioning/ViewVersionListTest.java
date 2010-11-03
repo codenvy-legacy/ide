@@ -77,15 +77,19 @@ public class ViewVersionListTest extends VersioningTest
       //Open new file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      checkViewVersionHistoryButtonPresent(false);
 
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent();
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
       //Edit and save file
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
 
       //Open version panel
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -175,15 +179,19 @@ public class ViewVersionListTest extends VersioningTest
       //Open new file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-
+      checkViewVersionHistoryButtonPresent(false);
+      
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent();
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(false);
       //Edit and save file
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      checkViewVersionHistoryButtonPresent(true);
+      checkViewVersionHistoryButtonState(true);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version3Text);

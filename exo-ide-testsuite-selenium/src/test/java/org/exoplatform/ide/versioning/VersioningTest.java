@@ -34,6 +34,11 @@ import org.exoplatform.ide.ToolbarCommands;
  */
 public abstract class VersioningTest extends BaseTest
 {
+   /**
+    * Checks whether version panel is opened or not.
+    * 
+    * @param isOpened 
+    */
    protected void checkVersionPanelState(boolean isOpened)
    {
       if (isOpened)
@@ -75,6 +80,12 @@ public abstract class VersioningTest extends BaseTest
       }
    }
 
+   /**
+    * Compares pointed content with content on version panel.
+    * 
+    * @param text text to compare
+    * @throws Exception
+    */
    protected void checkTextOnVersionPanel(String text) throws Exception
    {
       selenium.selectFrame("//div[@eventproxy='ideVersionContentForm']//iframe");
@@ -83,42 +94,91 @@ public abstract class VersioningTest extends BaseTest
       selectMainFrame();
    }
 
+   /**
+    * Closes version panel.
+    */
    protected void closeVersionPanel()
    {
       selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]/icon");
    }
 
-   protected void checkViewVersionHistoryButtonPresent() throws Exception
+   /**
+    * Check whether "View Version History" button is present in top menu and toolbar.
+    * 
+    * @param isPresent button is present
+    * @throws Exception
+    */
+   protected void checkViewVersionHistoryButtonPresent(boolean isPresent) throws Exception
    {
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, true);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, isPresent);
+      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, isPresent);
+   }
+   
+   /**
+    * Checks  "View Version History" button enabled/disabled state.
+    * 
+    * @param enabled button is enabled
+    * @throws Exception
+    */
+   protected void checkViewVersionHistoryButtonState(boolean enabled) throws Exception
+   {
+      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, enabled);
+      checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION_HISTORY, enabled);
    }
 
+   /**
+    * Checks  "View View Older Version" button enabled/disabled state.
+    * 
+    * @param enabled
+    * @throws Exception
+    */
    protected void checkOlderVersionButtonState(boolean enabled) throws Exception
    {
       checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.OLDER_VERSION, enabled);
       checkToolbarButtonState(ToolbarCommands.View.VIEW_OLDER_VERSION, enabled);
    }
 
+   /**
+    * Checks  "View View Newer Version" button enabled/disabled state.
+    * 
+    * @param enabled
+    * @throws Exception
+    */
    protected void checkNewerVersionButtonState(boolean enabled) throws Exception
    {
       checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.NEWER_VERSION, enabled);
       checkToolbarButtonState(ToolbarCommands.View.VIEW_NEWER_VERSION, enabled);
    }
 
+   /**
+    * Checks  "Restore To Version" button enabled/disabled state.
+    * 
+    * @param enabled
+    * @throws Exception
+    */
    protected void checkRestoreVersionButtonState(boolean enabled) throws Exception
    {
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.RESTORE_VERSION, enabled);
       checkToolbarButtonState(MenuCommands.File.RESTORE_VERSION, enabled);
    }
    
+   /**
+    * Checks  "View Version List" button enabled/disabled state.
+    * 
+    * @param enabled
+    * @throws Exception
+    */
    protected void checkViewVersionListButtonState(boolean enabled) throws Exception
    {
       checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST, enabled);
       checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION, enabled);
    }
 
+   /**
+    * Checks the panel with version list is opened or closed.
+    * 
+    * @param isOpened
+    */
    protected void checkViewVersionsListPanel(boolean isOpened)
    {
       if (isOpened)
@@ -135,6 +195,11 @@ public abstract class VersioningTest extends BaseTest
       }
    }
 
+   /**
+    * Checks  "Open" button enabled/disabled state on the panel with version list.
+    * 
+    * @param isEnabled
+    */
    protected void checkOpenVersionButtonState(boolean isEnabled)
    {
       if (isEnabled)
@@ -148,16 +213,27 @@ public abstract class VersioningTest extends BaseTest
       }
    }
 
+   /**
+    * Click on "Open" button on the panel with version list.
+    */
    protected void clickOpenVersionButton()
    {
       selenium.click("scLocator=//IButton[ID=\"ideViewVersionsFormOpenVersionButton\"]");
    }
 
+   /**
+    * Click on "Close" button on the panel with version list.
+    */
    protected void clickCloseVersionListPanelButton()
    {
       selenium.click("scLocator=//IButton[ID=\"ideViewVersionsFormCloseButton\"]");
    }
 
+   /**
+    * Compared versions count in the list with pointed size.
+    * 
+    * @param size versions count
+    */
    protected void checkVersionListSize(int size)
    {
       for (int i = 0; i < size; i++)
@@ -167,11 +243,23 @@ public abstract class VersioningTest extends BaseTest
       }
    }
 
+   /**
+    * Selects version in version list by its index.
+    * 
+    * @param index version index
+    */
    protected void selectVersionInVersionList(int index)
    {
       selenium.click("scLocator=//ListGrid[ID=\"ideViewVersionsGrid\"]/body/row[" + index + "]/col[0]");
    }
 
+   /**
+    * Opens version from version list with pointed index and compares its content with pointed one.
+    * 
+    * @param index
+    * @param versionContent
+    * @throws Exception
+    */
    protected void checkOpenVersion(int index, String versionContent) throws Exception
    {
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
