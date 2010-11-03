@@ -97,12 +97,12 @@ public class EditorTab extends Tab
       
       String mainHint = file.getHref();
       
-      String readonlyImage = (readOnly) ? "<img id=\"fileReadonly\"  style=\"position:absolute; margin-left:-2px; margin-top:9px;\" border=\"0\" suppress=\"true\" src=\""
+      String readonlyImage = (readOnly) ? "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\" src=\""
          + Images.Editor.READONLY_FILE + "\" />" : "";
       
       mainHint = (readOnly) ? "File opened in read only mode. Use SaveAs command." : mainHint;
       String title =
-         "<span title=\"" + mainHint + "\">"+ Canvas.imgHTML(file.getIcon()) + readonlyImage + "&nbsp;&nbsp;" +fileName +  "</span>";
+         "<span title=\"" + mainHint + "\">"+ Canvas.imgHTML(file.getIcon()) + readonlyImage + "&nbsp;" +fileName +  "</span>";
       
       return title;
    }
