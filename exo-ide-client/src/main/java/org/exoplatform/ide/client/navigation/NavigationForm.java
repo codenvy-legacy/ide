@@ -42,7 +42,9 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
    private TabContainer tabContainer;
    
-   private final String ID = "ideNavigationTabSet";
+   private final String ID = "ideNavigationPanel";
+   
+   private final String TABSET_ID = "ideNavigationTabSet";
 
    /**
     * @param eventBus
@@ -51,10 +53,12 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
    {
       this.eventBus = eventBus;
       this.context = context;
+      
+      setID(ID);
 
       setHeight100();
       setWidth100();
-      tabContainer = new TabContainer(eventBus, ID);
+      tabContainer = new TabContainer(eventBus, TABSET_ID);
       showBrowser();
 
       addMember(tabContainer);

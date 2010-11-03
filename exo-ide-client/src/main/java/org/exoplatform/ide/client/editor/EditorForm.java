@@ -60,7 +60,9 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 public class EditorForm extends Layout implements EditorPresenter.Display, EditorPanelRestoredHandler,
    ApplicationSettingsReceivedHandler
 {
-   private final String ID = "ideEditorFormTabSet";
+   private final String ID = "ideEditorPanel";
+   
+   private final String TABSET_ID = "ideEditorFormTabSet";
 
    private HandlerManager eventBus;
 
@@ -80,9 +82,11 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
+      
+      setID(ID);
 
       tabSet = new TabSet();
-      tabSet.setID(ID);
+      tabSet.setID(TABSET_ID);
       createControlButtons();
       addMember(tabSet);
 

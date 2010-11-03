@@ -47,7 +47,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  */
 public class CodeHelperForm extends Layout implements CodeHelperPresenter.Display, CodeHelperPanelRestoredHandler
 {
-   public static final String ID = "CodeHelper";
+   public static final String ID = "ideCodeHelperPanel";
 
    private static final String TAB_SET_ID = "ideCodeHelperTabSet";
 

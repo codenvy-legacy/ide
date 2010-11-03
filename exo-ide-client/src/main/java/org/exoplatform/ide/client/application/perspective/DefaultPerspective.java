@@ -90,6 +90,12 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private static final int MIN_CODE_HELPER_WIDTH = 100;
 
    private static final int MIN_OPERATION_HEIGHT = 50;
+   
+   private static final String HORIZONTAL_SPLIT_LAYOUT_ID = "ideHorizontalSplitLayout";
+   
+   private static final String HORIZONTAL_SPLIT_LAYOUT_ID_2 = "ideHorizontalSplitLayout2";
+   
+   private static final String VERTICAL_SPLIT_LAYOUT_ID = "ideVerticalSplitLayout";
 
    /**
     * Minimum width of outline resize bar.
@@ -178,6 +184,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       addMember(toolbarWrapper);
 
       horizontalSplitLayout = new HLayout();
+      horizontalSplitLayout.setID(HORIZONTAL_SPLIT_LAYOUT_ID);
       horizontalSplitLayout.setMargin(MARGIN);
       horizontalSplitLayout.setWidth100();
       horizontalSplitLayout.setResizeBarSize(RESIZE_BAR_SIZE);
@@ -205,9 +212,11 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       });
 
       horizontalSplitLayout2 = new HLayout();
+      horizontalSplitLayout2.setID(HORIZONTAL_SPLIT_LAYOUT_ID_2);
       horizontalSplitLayout.addMember(horizontalSplitLayout2);
 
       verticalSplitLayout = new VLayout();
+      verticalSplitLayout.setID(VERTICAL_SPLIT_LAYOUT_ID);
       verticalSplitLayout.setHeight100();
       //      verticalSplitLayout.setOverflow(Overflow.HIDDEN);
       verticalSplitLayout.setResizeBarTarget("next");
