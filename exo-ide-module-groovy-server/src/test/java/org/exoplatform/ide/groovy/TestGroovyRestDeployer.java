@@ -177,26 +177,26 @@ public class TestGroovyRestDeployer extends Base
       assertEquals(resourceNumber + 1, binder.getSize());
    }
 
-   @Test
-   public void testDeploySandboxAndUserAccess() throws IOException, Exception
-   {
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres =
-         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
-      assertEquals(resourceNumber + 1, binder.getSize());
-      cres = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertEquals("Hello from groovy to developers", cres.getEntity());
-      EnvironmentContext ctx1 = new EnvironmentContext();
-      ctx1.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres2 = launcher.service("GET", "/test-groovy/groovy1/root", "", headers, null, null, ctx1);
-      assertEquals(HTTPStatus.NOT_FOUND, cres2.getStatus());
-   }
+//   @Test
+//   public void testDeploySandboxAndUserAccess() throws IOException, Exception
+//   {
+//      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+//      headers.putSingle("Content-type", "script/groovy");
+//      headers.putSingle("location", GroovyScriptService.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
+//      EnvironmentContext ctx = new EnvironmentContext();
+//      ctx.put(SecurityContext.class, devSecurityContext);
+//      ContainerResponse cres =
+//         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+//      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+//      assertEquals(resourceNumber + 1, binder.getSize());
+//      cres = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
+//      assertEquals(HTTPStatus.OK, cres.getStatus());
+//      assertEquals("Hello from groovy to developers", cres.getEntity());
+//      EnvironmentContext ctx1 = new EnvironmentContext();
+//      ctx1.put(SecurityContext.class, adminSecurityContext);
+//      ContainerResponse cres2 = launcher.service("GET", "/test-groovy/groovy1/root", "", headers, null, null, ctx1);
+//      assertEquals(HTTPStatus.NOT_FOUND, cres2.getStatus());
+//   }
 
    @Test
    public void testDeploySandboxNotDev() throws IOException, Exception
