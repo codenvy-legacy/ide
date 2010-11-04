@@ -22,7 +22,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -50,10 +52,16 @@ public class CreateFolderTest extends BaseTest
    @Test
    public void testCreateFolderFromToolbar() throws Exception
    {
-      selenium.mouseDownAt("//div[@title='New']//img", "");
-      selenium.mouseUpAt("//div[@title='New']//img", "");
-      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
-      checkCreateFolderFormElements();
+      //****TODO********fix
+      Thread.sleep(TestConstants.SLEEP);
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.FOLDER);
+      //****************
+
+
+      //      selenium.mouseDownAt("//div[@title='New']//img", "");
+      //      selenium.mouseUpAt("//div[@title='New']//img", "");
+      //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
+      //      checkCreateFolderFormElements();
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element");
       selenium
