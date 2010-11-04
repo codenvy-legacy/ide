@@ -133,7 +133,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          {
             if (newNode == null)
             {
-               newNode = new TreeNode(child.getName());
+               newNode = new TreeNode();
                newNode.setAttribute(getValuePropertyName(), child);
                if (child.getType().equals(TokenType.FUNCTION))
                {
@@ -167,7 +167,17 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                {
                   newNode.setAttribute(ICON, CLASS_ICON);
                }
-               newNode.setAttribute(NAME, child.getName());
+               
+               // add java type after the ':'
+               if (child.getJavaType() == null)
+               {
+                  newNode.setAttribute(NAME, child.getName());
+               }
+               else
+               {
+                  newNode.setAttribute(NAME, child.getName() + " : " + child.getJavaType());                  
+               }
+
                tree.add(newNode, parentNode);
             }
             
