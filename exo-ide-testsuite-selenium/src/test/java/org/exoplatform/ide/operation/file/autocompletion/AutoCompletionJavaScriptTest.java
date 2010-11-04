@@ -51,6 +51,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       runCommandFromMenuNewOnToolbar("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -78,6 +79,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       runCommandFromMenuNewOnToolbar("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -133,6 +135,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 

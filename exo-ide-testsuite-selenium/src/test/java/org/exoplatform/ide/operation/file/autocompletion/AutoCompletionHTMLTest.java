@@ -46,9 +46,8 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       htmlTest();
-
-      closeTab("0");
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
+      
+      closeUnsavedFileAndDoNotSave("0");
    }
 
    /**
@@ -80,7 +79,7 @@ public class AutoCompletionHTMLTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
