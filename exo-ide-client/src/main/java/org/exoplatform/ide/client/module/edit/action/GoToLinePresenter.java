@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -162,6 +163,7 @@ public class GoToLinePresenter
 
    public void destroy()
    {
+      eventBus.fireEvent(new EditorSetFocusEvent());
       handlers.removeHandlers();
    }
 
