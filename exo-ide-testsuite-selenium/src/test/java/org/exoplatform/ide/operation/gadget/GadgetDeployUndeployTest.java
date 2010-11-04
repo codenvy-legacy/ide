@@ -28,6 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Test;
 
@@ -40,13 +41,17 @@ public class GadgetDeployUndeployTest extends BaseTest
 {
 
    private static final String FILE_NAME = "GoogleMapsGadget.xml";
-
+   
+   private static final String FOLDER_NAME="TestFolder";
+   
    private static final String FILE_DEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/deploy?gadgetURL="
       + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
 
    private static final String FILE_UNDEPLOY_URL = "/" + REST_CONTEXT + "/ideall/gadget/undeploy?gadgetURL="
       + ENTRY_POINT_URL + WS_NAME + "/" + FILE_NAME + "&privateContext=/" + REST_CONTEXT + "&publicContext=/rest";
 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   
    @Test
    public void testGadgetDeployUndeploy() throws Exception
    {
@@ -56,7 +61,15 @@ public class GadgetDeployUndeployTest extends BaseTest
          "src/test/resources/org/exoplatform/ide/operation/gadget/gadgetDeployUndeployTest/GoogleMapsGadget.xml";
 
       Thread.sleep(TestConstants.SLEEP);
-
+     
+      //*********TODO******Add_and_select_folder_for_aploading_file
+      VirtualFileSystemUtils.mkcol(URL);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //***********************
+      
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
 
