@@ -86,6 +86,7 @@ public class IDE113CopyTest extends BaseTest
    @Test
    public void copyOperationTestIde113() throws Exception
    {
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //Open Gadget window and create next folders' structure in the workspace root:
       //      "test 1/gadget.xml" file with sample content
       //      "test 1/test.groovy" file with sample content

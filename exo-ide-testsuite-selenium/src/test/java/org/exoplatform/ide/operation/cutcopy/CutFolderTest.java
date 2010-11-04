@@ -32,6 +32,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 /**
@@ -173,9 +174,9 @@ public class CutFolderTest extends BaseTest
       // step 7 - Select folders "test 1" and "test 2".
       selectItemInWorkspaceTree(FOLDER_1);
       
-      selenium.controlKeyDown();
+      selenium.keyPressNative(""+KeyEvent.VK_CONTROL);
       selectItemInWorkspaceTree(FOLDER_2);
-      selenium.controlKeyUp();
+      selenium.keyUpNative(""+KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);

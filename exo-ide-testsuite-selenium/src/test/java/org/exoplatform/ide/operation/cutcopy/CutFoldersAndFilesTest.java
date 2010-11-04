@@ -52,6 +52,7 @@ public class CutFoldersAndFilesTest extends BaseTest
    @Test
    public void testCutOperation() throws Exception
    {
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //      1.Open Gadget window and create next folders' structure in the workspace root:
       //      "test 1/gadget.xml" file with sample content
       //      "test 1/test.groovy" file with sample content

@@ -215,6 +215,7 @@ public class CutFileTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_1);
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_2);
+         closeTab("0");
          VirtualFileSystemUtils.delete(URL + FILE_NAME_1);
       }
       catch (IOException e)
@@ -225,6 +226,10 @@ public class CutFileTest extends BaseTest
       {
          e.printStackTrace();
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      } 
    }
 
 }
