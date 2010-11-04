@@ -21,6 +21,7 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -31,12 +32,11 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * IDE-156:HotKeys customization.
@@ -50,6 +50,8 @@ import java.io.IOException;
  */
 public class HotkeysCustomizationTest extends BaseTest
 {
+   private static final int NUMBER_OF_COMMANDS = 500;
+   
    private static final String INFO_MESSAGE_STYLE = "exo-cutomizeHotKey-label-info";
    
    private static final String ERROR_MESSAGE_STYLE = "exo-cutomizeHotKey-label-error";
@@ -58,14 +60,34 @@ public class HotkeysCustomizationTest extends BaseTest
    
    private static final String DEFAULT_TEXT_IN_GADGET = "Hello, world!";
    
-   private static final String FOLDER_NAME = "test";
+   private static String FOLDER_NAME;
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
    + WS_NAME + "/";
+
+   private static final String BIND_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/";
+
+   private static final String SAVE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/";
+
+   private static final String CUSTOMIZE_HOTKEYS_FORM_LOCATOR = "scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/";
+
+   private static final String UNBIND_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormUnbindButton\"]/";
+
+   private static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormCancelButton\"]/";
    
-   @BeforeClass
-   public static void setUp()
+   private String locator;
+   
+   private interface Commands
    {
+      public static final String CREATE_FILE_FROM_TEMPLATE = "Create File From Template...";
+      
+      public static final String NEW_CSS_FILE = "New CSS File";
+   }
+   
+   @Before
+   public void setUp() throws Exception
+   {
+      FOLDER_NAME = UUID.randomUUID().toString();
       String filePath ="src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
@@ -80,13 +102,7 @@ public class HotkeysCustomizationTest extends BaseTest
       {
          e.printStackTrace();
       }
-   }
-   
-   @Before
-   public void beforeMethod() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      deleteCookies();
+      
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
@@ -98,14 +114,10 @@ public class HotkeysCustomizationTest extends BaseTest
    }
    
    @After
-   public void afterMethod()
+   public void tearDown()
    {
       cleanRegistry();
-   }
-   
-   @AfterClass
-   public static void tearDown()
-   {
+      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
@@ -157,7 +169,7 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/closeButton/");
       Thread.sleep(TestConstants.SLEEP);
       //close file
-      closeUnsavedFileAndDoNotSave("0");
+//      closeUnsavedFileAndDoNotSave("0");
    }
    
    /**
@@ -173,6 +185,7 @@ public class HotkeysCustomizationTest extends BaseTest
       //and check Ctrl+B, Ctrl+I, Ctrl+U
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
+      
       selectIFrameWithEditor(0);
       selenium.click("//body");
       Thread.sleep(TestConstants.SLEEP);
@@ -224,28 +237,28 @@ public class HotkeysCustomizationTest extends BaseTest
       //close file
       closeTab("0");
       
-      //----- 5 ------------
-      //check, that if no file is opened, Ctrl+B, Ctrl+I, Ctrl+U
-      //call default browser events
-      // Ctrl+B
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "B");
-      selenium.keyUp("//", "B");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      // Ctrl+I
-      selenium.controlKeyUp();
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "I");
-      selenium.keyUp("//", "I");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      // Ctrl+U
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "U");
-      selenium.keyUp("//", "U");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+//      //----- 5 ------------
+//      //check, that if no file is opened, Ctrl+B, Ctrl+I, Ctrl+U
+//      //call default browser events
+//      // Ctrl+B
+//      selenium.controlKeyDown();
+//      selenium.keyDown("//", "B");
+//      selenium.keyUp("//", "B");
+//      selenium.controlKeyUp();
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+//      // Ctrl+I
+//      selenium.controlKeyUp();
+//      selenium.controlKeyDown();
+//      selenium.keyDown("//", "I");
+//      selenium.keyUp("//", "I");
+//      selenium.controlKeyUp();
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+//      // Ctrl+U
+//      selenium.controlKeyDown();
+//      selenium.keyDown("//", "U");
+//      selenium.keyUp("//", "U");
+//      selenium.controlKeyUp();
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
    
    /**
@@ -403,7 +416,7 @@ public class HotkeysCustomizationTest extends BaseTest
       //Create new text file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       
-      final String textToRevert = "abcd";
+      final String textToRevert = "a";
       
       //----- 2 -------
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, textToRevert);
@@ -425,8 +438,8 @@ public class HotkeysCustomizationTest extends BaseTest
       
       //----- 4 -------
       //ctrl+z
-      selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      selenium.controlKeyDown();
       selenium.keyDown("//", "90");
       selenium.keyUp("//", "90");
       selenium.controlKeyUp();
@@ -670,7 +683,12 @@ public class HotkeysCustomizationTest extends BaseTest
       //----- 17 ------------
       //Select "New HTML File" and bind Ctrl+H to this command 
       //(Press Ctrl+H, press "Bind" button)
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[0]");
+      locator = getRowLocator("New HTML File");
+      if (locator == null)
+      {
+         fail("Can't find locator for New HTML File command");
+      }
+      selenium.click(locator);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //press Ctrl+H
       selenium.controlKeyDown();
@@ -678,22 +696,25 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "H");
       selenium.controlKeyUp();
       //check Bind button is enabled
-      assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
-      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
+      checkBindButtonEnabled(true);
       
       //check, Ctrl+H text appears in text field
-      assertEquals("Ctrl+H", selenium.getValue("scLocator=//DynamicForm[ID=\"ideCustomizeHotKeysFormDynamicFormHotKeyField\"]/item[0][name=\"ideCustomizeHotKeysFormHotKeyField\"]/element"));
+      assertEquals("Ctrl+H", getTextFromNameField());
       //click Bind button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      selenium.click(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check, Ctrl+H text appears near New HTML File in list grid
-      assertEquals("Ctrl+H", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[1]"));
+      
+      assertEquals("Ctrl+H", getTextFromBindColumn(locator));
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 18 ------------
       //Select "Create File From Template" and bind Alt+N to this command. Press Save button
       
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[Binding=Ctrl+N]/col[0]");
+      locator = getRowLocator(Commands.CREATE_FILE_FROM_TEMPLATE);
+      
+      selenium.click(locator);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //press Alt+N
       selenium.altKeyDown();
@@ -702,14 +723,14 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.altKeyUp();
       
       //click Bind button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/");
+      selenium.click(BIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //click Save button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/");
+      selenium.click(SAVE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/"));
+      assertFalse(selenium.isElementPresent(CUSTOMIZE_HOTKEYS_FORM_LOCATOR));
       
       
       //----- 19 ------------
@@ -811,7 +832,8 @@ public class HotkeysCustomizationTest extends BaseTest
       
       //Select "New HTML File" and bind Ctrl+H to this command 
       //(Press Ctrl+H, press "Bind" button)
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[0]");
+      locator = getRowLocator("New HTML File");
+      selenium.click(locator);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //press Ctrl+H
       selenium.controlKeyDown();
@@ -819,20 +841,20 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "H");
       selenium.controlKeyUp();
       //check Bind button is enabled
-      assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
-      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
+      checkBindButtonEnabled(true);
       
       //check, Ctrl+H text appears in text field
-      assertEquals("Ctrl+H", selenium.getValue("scLocator=//DynamicForm[ID=\"ideCustomizeHotKeysFormDynamicFormHotKeyField\"]/item[0][name=\"ideCustomizeHotKeysFormHotKeyField\"]/element"));
+      assertEquals("Ctrl+H", getTextFromNameField());
       //click Bind button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/");
+      selenium.click(BIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       //check, Ctrl+H text appears near New HTML File in list grid
-      assertEquals("Ctrl+H", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[1]"));
+      assertEquals("Ctrl+H", getTextFromBindColumn(locator));
       Thread.sleep(TestConstants.SLEEP);
       
       //Select "Create File From Template" and bind Alt+N to this command. Press Save button
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[10]/col[0]");
+      locator = getRowLocator(Commands.CREATE_FILE_FROM_TEMPLATE);
+      selenium.click(locator);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //press Alt+N
       selenium.altKeyDown();
@@ -841,11 +863,11 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.altKeyUp();
       
       //click Bind button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/");
+      selenium.click(BIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //click Save button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/");
+      selenium.click(SAVE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/"));
@@ -883,17 +905,19 @@ public class HotkeysCustomizationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkCustomizeHotkeyDialogWindow();
       
-      //Select "New HTML File" and check Ctrl+H is bind 
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[0]");
+      //Select "New HTML File" and check Ctrl+H is bind
+      locator = getRowLocator("New HTML File");
+      selenium.click(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      assertEquals("Ctrl+H", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[2]/col[1]"));
+      assertEquals("Ctrl+H", getTextFromBindColumn(locator));
       Thread.sleep(TestConstants.SLEEP);
       
       //Select "Create File From Template" and check Alt+N is bind to it
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[10]/col[0]");
+      locator = getRowLocator(Commands.CREATE_FILE_FROM_TEMPLATE);
+      selenium.click(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      assertEquals("Alt+N", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[10]/col[1]"));
+      assertEquals("Alt+N", getTextFromBindColumn(locator));
       
       //close
       closeHotkeysWindow();
@@ -925,7 +949,9 @@ public class HotkeysCustomizationTest extends BaseTest
       //that start with Shift, but Ctrl+<digital> and Alt+<digital> will work)
       
       //click "New TEXT File" row
-      selectRowInHotkeysListgrid(3, "New TEXT File");
+      locator = getRowLocator("New TEXT File");
+//      selectRowInHotkeysListgrid(3, "New TEXT File");
+      selenium.click(locator);
       Thread.sleep(TestConstants.SLEEP);
       checkUnbindButtonEnabled(true);
       //press Shift+N 
@@ -951,7 +977,10 @@ public class HotkeysCustomizationTest extends BaseTest
       //Holt Ctrl or Alt, then press key
       
       //select row with Css file
-      selectRowInHotkeysListgrid(5, "New CSS File");
+      locator = getRowLocator("New CSS File");
+//      selectRowInHotkeysListgrid(5, "New CSS File");
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkUnbindButtonEnabled(true);
       //press Ctrl
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_CONTROL);
@@ -1033,7 +1062,10 @@ public class HotkeysCustomizationTest extends BaseTest
       checkSaveButtonEnabled(true);
       
       //Try to bind the same hotkes
-      selectRowInHotkeysListgrid(5, "New CSS File");
+      locator = getRowLocator("New CSS File");
+//      selectRowInHotkeysListgrid(5, "New CSS File");
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       //press Ctrl+P
       selenium.controlKeyDown();
       selenium.keyDown("//", "P");
@@ -1067,18 +1099,20 @@ public class HotkeysCustomizationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //select row with Create File From Template... command
       
-      //doesn't use selectRowInHotkeysListgrid method, because this method after selecting
-      //check css style of element, that it is selected. But Create File From Template... command
-      //is hidden. In deed, we need to scroll listgrid, but selenium doesn't scroll it.
-      //So, command will be selected, but there will be no selected element on display
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[10]/col[0]");
+      locator = getRowLocator(Commands.CREATE_FILE_FROM_TEMPLATE);
+      selenium.click(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       //unbind
       pressUnbindButton();
+      Thread.sleep(TestConstants.SLEEP);
       checkSaveButtonEnabled(true);
       
       //select row with Css file
-      selectRowInHotkeysListgrid(5, "New CSS File"); 
+      locator = getRowLocator(Commands.NEW_CSS_FILE);
+//      selectRowInHotkeysListgrid(5, "New CSS File"); 
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       //press Ctrl+P
       selenium.controlKeyDown();
       selenium.keyDown("//", "P");
@@ -1088,6 +1122,7 @@ public class HotkeysCustomizationTest extends BaseTest
       
       pressBindButton();
       pressSaveButton();
+      Thread.sleep(TestConstants.SLEEP);
       
       //press Ctrl+P
       selenium.controlKeyDown();
@@ -1108,6 +1143,7 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
+      //TODO: unreadable locator
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
       
       //Call "Customize Hotkeys" window
@@ -1115,7 +1151,11 @@ public class HotkeysCustomizationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //unbind Ctrl+P from New Css File command
-      selectRowInHotkeysListgrid(5, "New CSS File");
+      locator = getRowLocator(Commands.NEW_CSS_FILE);
+//      selectRowInHotkeysListgrid(5, "New CSS File");
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       pressUnbindButton();
       checkSaveButtonEnabled(true);
       pressSaveButton();
@@ -1128,7 +1168,9 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertFalse(selenium.isTextPresent("Untitled file.css *"));
+      checkIsTabPresentInEditorTabset("Untitled file.css", false);
+      
+//      assertFalse(selenium.isTextPresent("Untitled file.css *"));
    }
    
    /**
@@ -1141,7 +1183,11 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       //call customize hotkeys form
       runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      
+      locator = getRowLocator(Commands.NEW_CSS_FILE);
+//      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //----- 26 ------------
       //Press Ctrl+P, press Bind button, press Save button
@@ -1154,12 +1200,13 @@ public class HotkeysCustomizationTest extends BaseTest
       //check no message
       assertFalse(selenium.isElementPresent("//div[@class='windowBody']//div[text()='Such hot key already bound to another control']"));
       //check Bind button is enabled
-      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
+//      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
+      checkBindButtonEnabled(true);
       //click Bind button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/");
+      selenium.click(BIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //click Save button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/");
+      selenium.click(SAVE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 27 ------------
@@ -1179,18 +1226,21 @@ public class HotkeysCustomizationTest extends BaseTest
       //----- 28 ------------
       //Call "Customize Hotkeys" window and select "New CSS file". Press Unbind button
       runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      locator = getRowLocator(Commands.NEW_CSS_FILE);
+//      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
       
       //check, Ctrl+H text appears near New HTML File in list grid
-      assertEquals("Ctrl+P", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[1]"));
+      assertEquals("Ctrl+P", getTextFromBindColumn(locator));
       
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormUnbindButton\"]/");
+      selenium.click(UNBIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[1]"));
+      assertEquals("", getTextFromBindColumn(locator));
       //Press Cancel button.
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormCancelButton\"]/");
+      selenium.click(CANCEL_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //----- 29 ------------
@@ -1215,19 +1265,22 @@ public class HotkeysCustomizationTest extends BaseTest
       //Call "Customize Hotkeys" window and select "New CSS file". 
       //Press Unbind button and then press Save button.
       runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
-      Thread.sleep(TestConstants.SLEEP);
       
-      //check, Ctrl+H text appears near New HTML File in list grid
-      assertEquals("Ctrl+P", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[1]"));
-      
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormUnbindButton\"]/");
+      locator = getRowLocator(Commands.NEW_CSS_FILE);
+//      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      selenium.click(locator);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[1]"));
+      //check, Ctrl+p text appears near New HTML File in list grid
+      assertEquals("Ctrl+P", getTextFromBindColumn(locator));
+      
+      selenium.click(UNBIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      assertEquals("", getTextFromBindColumn(locator));
       
       //click Save button
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/");
+      selenium.click(SAVE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //----- 31 ------------
@@ -1270,10 +1323,12 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       if (isEnabled)
       {
+         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
          assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
       }
       else
       {
+         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
          assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
       }
    }
@@ -1387,7 +1442,7 @@ public class HotkeysCustomizationTest extends BaseTest
    
    private void pressUnbindButton() throws Exception
    {
-      selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormUnbindButton\"]/");
+      selenium.click(UNBIND_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
@@ -1401,6 +1456,56 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       selenium.click("scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/closeButton/");
       Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   private String getRowLocator(String name) throws Exception
+   {
+      String locator = null;
+      
+      for (int rowNumber = 0; rowNumber < NUMBER_OF_COMMANDS; rowNumber++)
+      {
+         locator = "scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[" 
+            + String.valueOf(rowNumber) + "]/col[0]";
+         
+         if (selenium.isElementPresent(locator))
+         {
+            String text = selenium.getText(locator);
+            if (text.equals(name))
+            {
+               return locator;
+            }
+         }
+         else
+         {
+            return null;
+         }
+      }
+      return null;
+   }
+   
+   private String getTextFromNameField()
+   {
+      return selenium.getValue("scLocator=//DynamicForm[ID=\"ideCustomizeHotKeysFormDynamicFormHotKeyField\"]/item[0]" 
+         + "[name=\"ideCustomizeHotKeysFormHotKeyField\"]/element");
+   }
+   
+   /**
+    * Get text from Bind column in list grid by row locator.
+    * 
+    * @param rowLocator row locator, which used for selection row in list grid.
+    * Must end on col[0]
+    * 
+    * @return {@link String}
+    */
+   private String getTextFromBindColumn(String rowLocator)
+   {
+      if (!selenium.isElementPresent(rowLocator))
+      {
+         fail("Can't find row locator: " + rowLocator);
+      }
+      String bindLocator = rowLocator.replace("col[0]", "col[1]");
+      
+      return selenium.getText(bindLocator);
    }
  
 }
