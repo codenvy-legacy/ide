@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -38,7 +39,12 @@ public class GadgetDevelopmentTest extends BaseTest
     * 
     */
    private static final String FILE_NAME = "Test Gadget File.xml";
-
+   
+   private static final String FOLDER_NAME = "TestFolder";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   
+   
    //IDE-78
    //TODO doesn't work on Windows
    @Test
@@ -47,12 +53,17 @@ public class GadgetDevelopmentTest extends BaseTest
 
       //      Click on "New->From Template" button.
      
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-     
-      //TODO*******change*****change add folder for locked file
-      createFolder("Test");
+      //TODO*******change*****change add folder for locked file//
+      VirtualFileSystemUtils.mkcol(URL);
       //*******************
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      
       Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -103,9 +114,8 @@ public class GadgetDevelopmentTest extends BaseTest
       closeTab("0");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //TODO*****change**********
-      openOrCloseFolder("Test");
+      openOrCloseFolder(FOLDER_NAME);
       //************************
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
