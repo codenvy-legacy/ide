@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
+
 import org.exoplatform.ide.BaseTest;
 import org.junit.Test;
 
@@ -42,6 +45,11 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testCreateFolderFromToolbar() throws Exception
    {
+      //TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //********************************* 
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
@@ -75,9 +83,12 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testCreateFolderMenu() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
+
+      //TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //************************
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       Thread.sleep(1000);
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'New')]", "");
@@ -98,9 +109,12 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testDeleteFolder() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
+
+      //TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //********************
       createFolder("FolderToDelete");
       runToolbarButton("Delete Item(s)...");
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
@@ -121,8 +135,11 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testRenameFolder() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+      //**TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //**********************
       Thread.sleep(1000);
       createFolder("RenameMe");
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
@@ -156,28 +173,37 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testCreateFolderWithNonLatinSymbols() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
-      createFolder("Тестовая папка");
+      //**TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //**************************
+
+      Thread.sleep(TestConstants.SLEEP);
+      createFolder("Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ð°Ñ� Ð¿Ð°Ð¿ÐºÐ°");
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
       selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
       Thread.sleep(1000);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      assertTrue(selenium.isTextPresent("exact:Do you want to delete Тестовая папка ?"));
+      assertTrue(selenium.isTextPresent("exact:Do you want to delete Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ð°Ñ� Ð¿Ð°Ð¿ÐºÐ° ?"));
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(1000);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertElementNotPresentInWorkspaceTree("Тестовая папка");
+      assertElementNotPresentInWorkspaceTree("Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ð°Ñ� Ð¿Ð°Ð¿ÐºÐ°");
    }
 
    @Test
    public void testRootFolder() throws Exception
    {
-      Thread.sleep(1000);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=dev-monit||0]/col[fieldName=name||1]");
+      //**TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //****************************
+      selenium
+         .click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=dev-monit||0]/col[fieldName=name||1]");
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Text File\")]", "");
@@ -194,8 +220,8 @@ public class FolderOperationsTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]");
       Thread.sleep(1000);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + textFileName
-         + "]/col[1]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
+         + textFileName + "]/col[1]"));
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       runToolbarButton("Refresh Selected Folder");
       Thread.sleep(2000);
@@ -206,15 +232,20 @@ public class FolderOperationsTest extends BaseTest
    @Test
    public void testDeleteSeveralFoldersSimultaniously() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(1000);
+      //TODO**********fix**********
+      Thread.sleep(TestConstants.SLEEP);
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //************************
+
+      Thread.sleep(TestConstants.SLEEP);
       createFolder("test 1");
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 1]/col[1]");
       createFolder("test 2");
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       createFolder("test 3");
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 3]/col[fieldName=nodeTitle||0]");
+      selenium
+         .click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 3]/col[fieldName=nodeTitle||0]");
       selenium.mouseDownAt("//div[@title='New']//img", "");
       selenium.mouseUpAt("//div[@title='New']//img", "");
       selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"REST Service\")]", "");
@@ -257,7 +288,6 @@ public class FolderOperationsTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(1000);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-
       assertElementNotPresentInWorkspaceTree("test 1");
       assertElementNotPresentInWorkspaceTree("test 2");
       assertElementNotPresentInWorkspaceTree("test 3");
@@ -276,6 +306,7 @@ public class FolderOperationsTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
       runToolbarButton("Delete Item(s)...");
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
+      Thread.sleep(TestConstants.SLEEP);
       assertElementNotPresentInWorkspaceTree(name);
    }
 
