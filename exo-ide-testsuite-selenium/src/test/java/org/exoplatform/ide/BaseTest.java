@@ -1170,7 +1170,7 @@ public abstract class BaseTest
    }
 
    /**
-   * Select editor tab
+   * Click on editor tab to make it active.
    * 
    * @param tabIndex index of tab
    * @throws Exception

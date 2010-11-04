@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
@@ -57,7 +58,10 @@ public class HotkeysCustomizationTest extends BaseTest
    
    private static final String DEFAULT_TEXT_IN_GADGET = "Hello, world!";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GOOGLE_GADGET_FILE;
+   private static final String FOLDER_NAME = "test";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
+   + WS_NAME + "/";
    
    @BeforeClass
    public static void setUp()
@@ -65,7 +69,8 @@ public class HotkeysCustomizationTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
       }
       catch (IOException e)
       {
@@ -87,11 +92,9 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
       
-      if (! selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
-         + GOOGLE_GADGET_FILE + "]/col[0]"))
-      {
-         openOrCloseFolder(WS_NAME);
-      }
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
    }
    
    @After
@@ -105,7 +108,7 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
@@ -385,37 +388,45 @@ public class HotkeysCustomizationTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      //----- 12 ------------
-      //test Ctrl+Z, Ctrl+Y
       
-      //delete all text
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      selectMainFrame();
+      //TODO: Ctrl+Home, Ctrl+End
       
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "D");
-      selenium.keyUp("//body[@class='editbox']", "D");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      closeUnsavedFileAndDoNotSave("0");
+   }
+   
+   @Test
+   public void testUndoRedoHotkeys() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      //----- 1 -------
+      //Create new text file
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
       
-      final String textToRevert = "text to revert";
+      final String textToRevert = "abcd";
       
+      //----- 2 -------
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, textToRevert);
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       
+      //----- 3 -------
       //change text
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "55");
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "5");
       Thread.sleep(TestConstants.SLEEP);
       
-      assertEquals(textToRevert + "55", selenium.getText("//body[@class='editbox']"));
+      assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
       selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+Z
       selectIFrameWithEditor(0);
       selenium.click("//body");
       
+      
+      //----- 4 -------
+      //ctrl+z
       selenium.controlKeyDown();
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyDown("//", "90");
       selenium.keyUp("//", "90");
       selenium.controlKeyUp();
@@ -425,6 +436,7 @@ public class HotkeysCustomizationTest extends BaseTest
       selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
+      //----- 5 -------
       //press Ctrl+Y
       selectIFrameWithEditor(0);
       Thread.sleep(TestConstants.SLEEP);
@@ -433,7 +445,7 @@ public class HotkeysCustomizationTest extends BaseTest
       selenium.keyUp("//body[@class='editbox']", "89");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(textToRevert + "55", selenium.getText("//body[@class='editbox']"));
+      assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
       Thread.sleep(TestConstants.SLEEP);
       
       selectMainFrame();
@@ -680,7 +692,8 @@ public class HotkeysCustomizationTest extends BaseTest
       
       //----- 18 ------------
       //Select "Create File From Template" and bind Alt+N to this command. Press Save button
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[10]/col[0]");
+      
+      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[Binding=Ctrl+N]/col[0]");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //press Alt+N
       selenium.altKeyDown();
@@ -702,8 +715,10 @@ public class HotkeysCustomizationTest extends BaseTest
       //----- 19 ------------
       //Try Ctrl+H and Alt+N hotkeys in several tabs
       
+      selectEditorTab(2);
+      
       //press Alt+N
-      runHotkeyWithinEditor(2, false, true, 78);
+      runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       
       Thread.sleep(TestConstants.SLEEP);
       
