@@ -47,6 +47,7 @@ public class DevelopmentResourceMethodFilter implements MethodInvokerFilter
    {
       String developer =
          genericMethodResource.getParentResource().getProperties().getFirst(GroovyScriptService.DEVELOPER_ID);
+      System.out.println("                      DevelopmentResourceMethodFilter.accept()" + developer);
       if (developer != null)
       {
          ApplicationContext context = ApplicationContextImpl.getCurrent();

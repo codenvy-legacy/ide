@@ -26,7 +26,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,10 +33,11 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
- *
- */
+*/
+
 public class GroovyTemplatePreviewTest extends BaseTest
 {
 
@@ -76,7 +76,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
    }
 
    @Test
-   public void testGadgetPreview() throws Exception
+   public void testGtmplPreview() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);

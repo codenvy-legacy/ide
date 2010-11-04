@@ -63,6 +63,8 @@ public class GroovyTemplateService implements ResourceContainer
    private RepositoryService repositoryService;
 
    private ThreadLocalSessionProviderService sessionProviderService;
+   
+   private String WEBDAV_CONTEXT = "ide-vfs-webdav";
 
    /**
     * Underlying template engine used to evaluate template source files.
@@ -108,7 +110,7 @@ public class GroovyTemplateService implements ResourceContainer
    private InputStream getGtmplContent(String baseUri, String gtmplUrl) throws LoginException,
       NoSuchWorkspaceException, RepositoryException, RepositoryConfigurationException
    {
-      baseUri += "/jcr/";
+      baseUri += "/" + WEBDAV_CONTEXT + "/";
       String[] elements = new String[3];
       String path = gtmplUrl.substring(baseUri.length());
       elements[0] = path.substring(0, path.indexOf('/'));

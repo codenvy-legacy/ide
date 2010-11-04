@@ -113,7 +113,7 @@ public class TestGroovyTemplateRender extends Base
       HttpServletResponse httpServletResponse = new MockHttpServletResponse();
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?url=/jcr/db1/ws/testRoot/script", "", headers, GTMPL.getBytes(), null, ctx);
+      ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?url=/ide-vfs-webdav/db1/ws/testRoot/script", "", headers, GTMPL.getBytes(), null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().toString().contains("Hello root"));
    }
