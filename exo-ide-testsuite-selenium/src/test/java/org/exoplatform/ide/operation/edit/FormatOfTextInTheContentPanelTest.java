@@ -90,6 +90,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void tesFormatingHtml() throws Exception
    {
+     
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
@@ -122,6 +123,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void tesFormatingJS() throws Exception
    {
+    
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
