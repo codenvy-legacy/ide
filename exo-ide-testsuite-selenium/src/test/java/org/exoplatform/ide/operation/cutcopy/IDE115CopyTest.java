@@ -80,6 +80,8 @@ public class IDE115CopyTest extends BaseTest
    @Test
    public void copyOperationTestIde115() throws Exception
    {
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
       /*
       * Create folder "Test 1" in root. After this folder "Test 1" must be selected.
        */
@@ -186,17 +188,16 @@ public class IDE115CopyTest extends BaseTest
       selectMainFrame();
 
       /*
-       * Call "Ctrl+S"
+       * Save file
        */
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_S);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      saveCurrentFile();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       /*
       * Close file
       */
       closeTab("0");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /*
       * Open file "/Test 1/test.groovy"
@@ -220,17 +221,13 @@ public class IDE115CopyTest extends BaseTest
       assertEquals("hello world", file1Content);
       assertEquals("hello", file2Content);
 
-      /*
-       * Close both files
-       */
-
+      // Close both files
       closeTab("0");
       closeTab("0");
 
       /*
        * Delete files
        */
-
       selectItemInWorkspaceTree("Test 1");
       deleteSelectedItems();
 

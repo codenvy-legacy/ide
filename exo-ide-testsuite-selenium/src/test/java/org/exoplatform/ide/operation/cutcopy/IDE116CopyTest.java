@@ -19,13 +19,18 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
+
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -34,13 +39,53 @@ import org.junit.Test;
  */
 public class IDE116CopyTest extends BaseTest
 {
+   
+   private final String FILE1_NAME = "test"; 
+   
+  private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   private final static String FOLDER_1 = "Test 1";
 
+   private final static String FOLDER_1_1 = "Test 1.1";
+    
+   
    @AfterClass
    public static void tearDown()
    {
-      cleanDefaultWorkspace();
+      try
+      {
+         VirtualFileSystemUtils.delete(URL +FOLDER_1);
+         VirtualFileSystemUtils.delete(URL +FOLDER_1_1);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" +FOLDER_1_1);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   
    /*
     * Create folder "/Test 1"
     * Create folder "/Test 1/Test 1.1" 
@@ -68,19 +113,14 @@ public class IDE116CopyTest extends BaseTest
     * Check it content
     * 
     */
-
    @Test
    public void copyOperationTestIde116() throws Exception
    {
-      /*
-       * Create folder "/Test 1"
-       */
-      createFolder("Test 1");
-
-      /*
-       * Create folder "/Test 1/Test 1.1"
-       */
-      createFolder("Test 1.1");
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+     
+      openOrCloseFolder(FOLDER_1);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_1_1);
 
       /*
        * Create new groovy script
@@ -91,20 +131,17 @@ public class IDE116CopyTest extends BaseTest
       /*
        *  Type "groovy file content"
        */
-      selectIFrameWithEditor(0);
-      selenium.typeKeys("//body[@class='editbox']", "file content");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selectMainFrame();
-
+      typeTextIntoEditor(0,  "file content");
+      
       /*  
        * Save file as "/Test 1/Test 1.1/test.groovy"
        */
-      saveAsUsingToolbarButton("test.groovy");
+      saveAsUsingToolbarButton(FILE1_NAME);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
+      selectItemInWorkspaceTree(FOLDER_1_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       /*
@@ -138,71 +175,36 @@ public class IDE116CopyTest extends BaseTest
       selectRootOfWorkspaceTree();
       runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      /* 
-      * Edit currently opened file
-      */
-      selectIFrameWithEditor(0);
-
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_HOME);
+      typeTextIntoEditor(0, "updated");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      selenium.typeKeys("//body[@class='editbox']", "updated ");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      selectMainFrame();
-
-      /* 
-      * Call "Ctrl+S"
-      */
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_S);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      saveCurrentFile();
+      
+      Thread.sleep(TestConstants.SLEEP);
 
       /* 
       * Close opened file
       */
       closeTab("0");
-
+      
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       /* 
       * Open "/Test 1.1/test.groovy"
       */
       selectRootOfWorkspaceTree();
       runToolbarButton(ToolbarCommands.File.REFRESH);
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[0]");
+      openOrCloseFolder(FOLDER_1_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      openFileFromNavigationTreeWithCodeEditor("test.groovy", false);
+      openFileFromNavigationTreeWithCodeEditor(FILE1_NAME, false);
 
-      /* 
-      * Check it content
-      * 
-      */
-
+      // Check it content
       String fileContent = getTextFromCodeEditor(0);
       assertEquals("file content", fileContent);
 
-      /*
-       * close file
-       */
+      //Close file
       closeTab("0");
-
-      /*
-       * delete files
-       */
-      selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      deleteSelectedItems();
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      deleteSelectedItems();
    }
 
 }
