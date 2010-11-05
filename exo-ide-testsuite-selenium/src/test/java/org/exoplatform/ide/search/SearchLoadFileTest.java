@@ -20,12 +20,17 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,6 +48,29 @@ public class SearchLoadFileTest extends BaseTest
       "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
          + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world!\n" + "Hello, world!\n" + "]]></Content></Module>";
 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private final static String TEST_FOLDER = "testFolder";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   
+   
    /**
     * IDE-33:Load found file in the Content Panel
     * 
@@ -51,6 +79,9 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      selectItemInWorkspaceTree(TEST_FOLDER);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsByTopMenu(restFileName);
@@ -66,19 +97,7 @@ public class SearchLoadFileTest extends BaseTest
       openFileFromSearchResultsWithCodeEditor(restFileName);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(restFileName, getTabTitle(0));
-      /* checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.FOLDER, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.FROM_TEMPLATE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GROOVY_SCRIPT_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GROOVY_TEMPLATE_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.HTML_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.JAVASCRIPT_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.NETVIBES_WIDGET_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.REST_SERVICE_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.TEXT_FILE, false);
-       checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.XML_FILE, false);
-       */
+     
       checkToolbarButtonState("Delete Item(s)...", false);
       checkToolbarButtonState("Cut Selected Item(s)", false);
       checkToolbarButtonState("Copy Selected Item(s)", false);
@@ -202,6 +221,6 @@ public class SearchLoadFileTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(URL + TEST_FOLDER);
    }
 }

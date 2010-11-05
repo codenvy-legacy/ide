@@ -20,11 +20,16 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>
@@ -33,22 +38,48 @@ import org.junit.Test;
  */
 public class CursorPositionStatusBarTest extends BaseTest
 {
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   private final static String TEST_FOLDER = "TestFolder";
+
+   private final static String FILE_1 = "Untitled File.html";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   
+   
    //IDE-154
    @Test
    public void testCursorPositionInStatusBar() throws Exception
    {
-
-      //TODO******change*********
-       Thread.sleep(TestConstants.SLEEP);
-      //**********************
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      saveAsUsingToolbarButton("Untitled File.html");
+
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+       
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      saveAsUsingToolbarButton(FILE_1);
 
       Thread.sleep(TestConstants.SLEEP);
 
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       selectIFrameWithEditor(0);
       Thread.sleep(TestConstants.SLEEP);
       // format text for example HTML
@@ -85,9 +116,6 @@ public class CursorPositionStatusBarTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.CSS_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-//      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]");
-//
-//      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       selectEditorTab(0);
 
       selectMainFrame();
@@ -96,22 +124,28 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       //	refresh
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       //			check status bar
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
-      Thread.sleep(TestConstants.SLEEP);
-      deleteSelectedItems();
-
+      closeTab("0");
    }
    
    @AfterClass
    public static void tearDown()
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      try
+      {
+         VirtualFileSystemUtils.delete(URL +TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 }

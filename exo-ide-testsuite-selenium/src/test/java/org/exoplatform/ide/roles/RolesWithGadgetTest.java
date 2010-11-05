@@ -28,6 +28,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -48,13 +49,33 @@ public class RolesWithGadgetTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
+   private final static String TEST_FOLDER = "testFolder";
+   
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @AfterClass
    public static void tearDown() throws Exception
    {
       try
       {
          closeTab("0");
-         VirtualFileSystemUtils.delete(URL + FILE1);
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
       {
@@ -75,6 +96,8 @@ public class RolesWithGadgetTest extends BaseTest
    public void testDeveloperRoleWithGadget() throws Exception
    {
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      selectItemInWorkspaceTree(TEST_FOLDER);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(FILE1);
 

@@ -69,12 +69,10 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
@@ -176,7 +174,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //Refresh browser with opened gadget window
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //new file should be closed, and file newHtmlFile.html should be opened in the WYSYWYG editor.
       checkCkEditorOpened(0);
 //      assertEquals(CUR_TIME + HTML_FILE_NAME, getTabTitle(0));
@@ -192,7 +190,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       closeFileTab("0");
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
       checkOpenWithWindowCkEditorIsDefault();
-      selectEditorAndOpenByDoubleClick(MenuCommands.CodeEditors.CODE_MIRROR, true);
+      selectEditorAndOpen(MenuCommands.CodeEditors.CODE_MIRROR, true);
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
       
@@ -204,8 +202,10 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       
       //step 13
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD+"");
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       closeFileTab("0");
+      openOrCloseFolder(FOLDER_NAME);
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
@@ -315,7 +315,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
       //open
       selenium.mouseDownAt("//nobr[contains(text(), '" + editor + "')]", "");
-      selenium.doubleClickAt("//nobr[contains(text(), '" + editor + "')]", "");
+      selenium.doubleClick("//nobr[contains(text(), '" + editor + "')]");
    }
    
    private void checkReopenWarningDialog(boolean clickYes) throws Exception

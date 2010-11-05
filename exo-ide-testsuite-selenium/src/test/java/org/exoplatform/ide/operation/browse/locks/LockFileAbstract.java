@@ -76,8 +76,7 @@ public abstract class LockFileAbstract extends BaseTest
 
    protected void checkIsFileReadOnlyInEditorTab(String fileName)
    {
-      assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
-         + fileName + "')]/font[contains(text(),'[ Read only ]')]"));
+      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideEditorFormTabSet_tabBar']//span[contains(text(), '"+fileName+"')]//img[@id='fileReadonly']"));
    }
 
    /**
