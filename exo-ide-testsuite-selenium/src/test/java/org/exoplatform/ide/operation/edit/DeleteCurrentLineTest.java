@@ -39,11 +39,11 @@ public class DeleteCurrentLineTest extends BaseTest
    public void deleteLine() throws Exception
    {
       //      Create folder "Test" and file "test.html"
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.SLEEP);
       createFolder("test");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       String text1 = selenium.getText("//body[@class='editbox']");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       saveAsUsingToolbarButton("test.html");
@@ -53,12 +53,12 @@ public class DeleteCurrentLineTest extends BaseTest
       
       //      Click on "Edit->Delete Current Line" top menu command.
       runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       String text2 = selenium.getText("//body[@class='editbox']");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertFalse(text1.equals(selenium.getText("//body[@class='editbox']")));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       
       //      Press "Ctrl+D" keys.
@@ -78,6 +78,7 @@ public class DeleteCurrentLineTest extends BaseTest
       for (int i = 0; i < 2; i++)
       {
          selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
       }
       Thread.sleep(TestConstants.SLEEP_SHORT);
