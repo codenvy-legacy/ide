@@ -390,7 +390,7 @@ public abstract class BaseTest
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
