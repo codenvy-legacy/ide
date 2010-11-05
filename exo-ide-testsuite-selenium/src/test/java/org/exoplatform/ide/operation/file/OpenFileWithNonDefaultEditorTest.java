@@ -53,7 +53,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
-   private static String GOOGLE_GADGET_FILE_NAME = "newGoogleGadgetFile.xml";
+   private static String GOOGLE_GADGET_FILE_NAME = "Calculator.xml";
 
    private static String CUR_TIME = String.valueOf(System.currentTimeMillis());   
    
