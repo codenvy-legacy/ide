@@ -182,6 +182,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       for (String folderName : names)
       {
          node = getChild(node, folderName);
+         if (node == null) return node;
       }
 
       return node;
