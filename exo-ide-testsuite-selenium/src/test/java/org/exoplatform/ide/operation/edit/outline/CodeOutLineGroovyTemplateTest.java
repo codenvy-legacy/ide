@@ -70,18 +70,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+      cleanDefaultWorkspace();
    }
 
    // IDE-178:Groovy Template Code Outline
@@ -153,7 +142,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
 
-      closeTab("0");
+      closeUnsavedFileAndDoNotSave("0");
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -214,8 +203,6 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check new nodes added under a
       assertEquals("groovy code", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[18]/col[0]"));
-      
-      
    }
 
 }
