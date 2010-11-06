@@ -68,8 +68,9 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    }
    
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
+      closeUnsavedFileAndDoNotSave("0");
       cleanDefaultWorkspace();
    }
 
@@ -139,13 +140,6 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //check selection in outline tree
       checkOutlineTreeNodeSelected(2, "a", true);
       assertEquals("27 : 1", getCursorPositionUsingStatusBar());
-      
-      Thread.sleep(TestConstants.SLEEP);
-
-      closeUnsavedFileAndDoNotSave("0");
-
-      Thread.sleep(TestConstants.SLEEP);
-
    }
    
    private void checkTreeCorrectlyCreated() throws Exception
