@@ -1,13 +1,8 @@
 // simple groovy script
 import javax.ws.rs.Path
 import javax.ws.rs.POST
-import javax.ws.rs.Produces
-import javax.ws.rs.Consumes
-import javax.ws.rs.PathParam
-import javax.ws.rs.HeaderParam
-import javax.ws.rs.QueryParam
 
-@Path("/testMediaTypes")
+@Path("/testService11")
 public class TestService {
   @POST
   @Consumes("application/xml")
@@ -26,11 +21,31 @@ public class TestService {
 
   @Produces("application/json")
   @Path("InnerPath/{pathParam}")
-  public String post2(@PathParam("pathParam") String pathParam,
-    @HeaderParam("Test-Header2") String testHeader,
+  public java.lang.String post2(@PathParam("pathParam") String pathParam,
+    @HeaderParam("Test-Header2") java.lang.String testHeader,
     @QueryParam("Test Query Parameter 2") String testQueryParam,
-    String body) {
+    java.lang.String body) {
       return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam + "; Test-Header2: " + testHeader + "; Body: " + body;
   }
-
 }
+
+class Dep extends String 
+{
+   private String name;
+   private int age;
+   
+   public int getAge(){
+     return age;
+   }
+   
+   public void addYear(){
+     int i = 1;
+     age += i;
+   }
+   
+   public String greet(String begin){
+     return begin+", " + name + "!";
+   }
+
+   private int address;   
+ }

@@ -1301,8 +1301,6 @@ public abstract class BaseTest
       {
          assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
             + divIndex + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
-         
-         
       }
    }
 
@@ -1775,5 +1773,24 @@ public abstract class BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileByPathFormOpenButton\"]/icon");
       
       Thread.sleep(TestConstants.SLEEP);   
+   }
+   
+   /**
+    * Go to line with lineNumber in the Code Editor by using top menu command "Edit > Go to Line..."
+    * @param lineNumber
+    * @throws InterruptedException
+    */
+   public void goToLine(int lineNumber) throws Exception
+   {
+      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+
+      // Type line number
+      selenium.type(Locators.GoToLineWindow.GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);      
+
+      // click "Go" button
+      selenium.click(Locators.GoToLineWindow.GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 }

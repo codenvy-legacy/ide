@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -32,14 +34,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: Oct 26, 2010 $
  *
  */
-public class CodeOutLineRESTTest extends BaseTest
+public class CodeOutLineRESTServiceTest extends BaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
@@ -47,11 +48,18 @@ public class CodeOutLineRESTTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FILE_NAME;
 
+   private OulineTreeHelper outlineTreeHelper;
+   
+   public CodeOutLineRESTServiceTest()
+   {
+      this.outlineTreeHelper = new OulineTreeHelper();
+   }   
+   
    @BeforeClass
    public static void setUp()
    {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy";
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
       {
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
@@ -66,27 +74,10 @@ public class CodeOutLineRESTTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
-
    @Test
-   public void testCodeOutLineGroovy() throws Exception
+   public void testCodeOutLineRestService() throws Exception
    {
-      //Open groovy file with content
+      // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -94,27 +85,57 @@ public class CodeOutLineRESTTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
-      //Open outline panel:
+      // open outline panel
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
-      //Check ouline tree nodes:
-      checkOutlineTree();
-      
-      //TODO test go to line with outline when parser is ready
-   }
-   
-   private void  checkOutlineTree() throws Exception
-   {
-      //check for presence of tab outline
+      // check for presence of tab outline
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]"));
       assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
+
+      // create initial outline tree map
+      outlineTreeHelper.addOutlineItem(0, "@Path(\"/testService11\")", 5, false);
+      outlineTreeHelper.addOutlineItem(1, "TestService", 6, false);
+      outlineTreeHelper.addOutlineItem(2, "Dep", 32, false);
+
+      // check is tree created correctly
+      outlineTreeHelper.checkOutlineTree();
+
+      // expand outline tree
+      outlineTreeHelper.expandOutlineTree();
       
-     //check tree correctly created:
-      assertEquals("@Path : QueryParam", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("TestService", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
+      // create opened outline tree map
+      outlineTreeHelper.clearOutlineTreeInfo();
+      outlineTreeHelper.addOutlineItem(0, "@Path(\"/testService11\")", 5);
+
+      outlineTreeHelper.addOutlineItem(1, "TestService", 6);
+      outlineTreeHelper.addOutlineItem(2, "@POST", 7);
+      outlineTreeHelper.addOutlineItem(3, "@Consumes(\"application/xml\")", 8);
+      outlineTreeHelper.addOutlineItem(4, "@Produces(\"text/html\")", 10);
+      outlineTreeHelper.addOutlineItem(5, "@Path(\"InnerPath/{pathParam}\")", 11);
+      outlineTreeHelper.addOutlineItem(6, "post1 : String", 12);
+      outlineTreeHelper.addOutlineItem(7, "@POST", 19);
+      outlineTreeHelper.addOutlineItem(8, "@Consumes(\"application/xml\")", 20);
+      outlineTreeHelper.addOutlineItem(9, "@Produces(\"application/json\")", 22);
+      outlineTreeHelper.addOutlineItem(10, "@Path(\"InnerPath/{pathParam}\")", 23);
+      outlineTreeHelper.addOutlineItem(11, "post2 : java.lang.String", 24);
       
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[1]");
-      //TODO check other nodes of outline tree when parser is ready
+      outlineTreeHelper.addOutlineItem(12, "Dep", 32);
+      outlineTreeHelper.addOutlineItem(13, "name : String", 34);
+      outlineTreeHelper.addOutlineItem(14, "age : int", 35);
+      outlineTreeHelper.addOutlineItem(15, "getAge : int", 37);
+      outlineTreeHelper.addOutlineItem(16, "addYear : void", 41);
+      outlineTreeHelper.addOutlineItem(17, "greet : String", 46);
+      outlineTreeHelper.addOutlineItem(18, "address : int", 50);
+      
+      // check is tree created correctly
+      outlineTreeHelper.checkOutlineTree();      
+   }
+   
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+      closeTab("0");
+      cleanDefaultWorkspace();
    }
 }

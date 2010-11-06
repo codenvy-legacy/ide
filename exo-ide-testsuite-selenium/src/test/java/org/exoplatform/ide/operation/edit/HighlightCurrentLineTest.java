@@ -49,11 +49,7 @@ public class HighlightCurrentLineTest extends BaseTest
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
    
    private static final String LINE_HIGHLIGHTER_LOCATOR = "//div[@class='CodeMirror-line-highlighter']";
-   
-   private static final String GOTO_LINE_FORM_TEXT_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element";
-   
-   private static final String GOTO_LINE_FORM_GO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/";
-   
+      
    private static final int LINE_HEIGHT = 16;
    
    private static final int EDITOR_TOP_OFFSET_POSITION = 88;
@@ -200,25 +196,6 @@ public class HighlightCurrentLineTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP_SHORT);
          lineHighlighterTest(4, 0);
       }
-   }
-
-   /**
-    * Go to line with lineNumber in the Code Editor by using hotKey "Ctrl+L"
-    * @param lineNumber
-    * @throws InterruptedException
-    */
-   private void goToLine(int lineNumber) throws Exception
-   {
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      // Type line number
-      selenium.type(GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);      
-
-      // click "Go" button
-      selenium.click(GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
    
    /**
