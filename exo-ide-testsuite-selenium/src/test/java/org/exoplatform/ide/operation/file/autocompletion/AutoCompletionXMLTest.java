@@ -74,17 +74,15 @@ public class AutoCompletionXMLTest extends BaseTest
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "ro");
       selenium.keyPress("//input[@class='exo-autocomplete-edit']", "\\8");
-      //selenium.keyPress("//input[@class='exo-autocomplete-edit']", "\\13");
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'rot')]"));
       
-      selenium.keyPressNative("10");
-      String textAfter = selenium.getText("//body[@class='editbox']");
-      Thread.sleep(20000);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      //********fixed****
-      assertTrue(textAfter.contains("<root>" + "\n" + "</root>"));
-      //*****************
-      
+      selenium.keyPressNative(""+java.awt.event.KeyEvent.VK_ENTER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      String textAfter = getTextFromCodeEditor(0);
+      assertTrue(textAfter.contains("<root></root>"));
+
       closeUnsavedFileAndDoNotSave("0");      
    }
 }

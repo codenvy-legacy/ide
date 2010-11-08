@@ -29,6 +29,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -58,11 +59,32 @@ public class OpenFileByPathTest extends BaseTest
    
    private String secondWorkspaceName;
    
+   private final static String TEST_FOLDER = "testFolder";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testOpenFileByPath() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      
+      selectItemInWorkspaceTree(TEST_FOLDER);
       // create file 
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);     
       
@@ -160,8 +182,7 @@ public class OpenFileByPathTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-            + "/" + FILE_NAME);
+         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
       }
       catch (IOException e)
       {

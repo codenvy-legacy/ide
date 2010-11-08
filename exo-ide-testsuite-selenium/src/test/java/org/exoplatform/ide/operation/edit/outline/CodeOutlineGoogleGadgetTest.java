@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -33,6 +32,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 
 /**
@@ -44,17 +45,20 @@ import java.io.IOException;
 public class CodeOutlineGoogleGadgetTest extends BaseTest
 {
    private final static String FILE_NAME = "GoogleGadgetCodeOutline.xml";
+   
+   private final static String TEST_FOLDER = "testFolder";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @BeforeClass
    public static void setUp()
    {
-
+      
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/GoogleGadgetCodeOutline.xml";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER+ "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -74,9 +78,8 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       //---- 1-2 -----------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //---- 3 -----------------
@@ -91,22 +94,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.REDRAW_PERIOD);
+     
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -130,25 +118,30 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       //check selecting of tree node, when cursor changes position
 
       //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      Thread.sleep(TestConstants.SLEEP);
-
+      
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       //press key DOWN to navigate in editor
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("33 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(8, "br", false);
       checkOutlineTreeNodeSelected(9, "br", true);
-
+      
       //go to script tag by pressing key DOWN
-      for (int i = 0; i < 7; i++)
+      clickOnEditor(0);
+      //Go to start of the document:
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      //Go to script tag in editor
+      for (int i = 0; i < 39; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
-      Thread.sleep(TestConstants.SLEEP);
+      
+      selectMainFrame();
+      Thread.sleep(TestConstants.SLEEP*2);
       //check tree
-      checkOutlineTreeNodeSelected(9, "br", false);
       checkOutlineTreeNodeSelected(11, "script", true);
 
       //delete script node
@@ -331,7 +324,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
       }
       catch (IOException e)
       {
@@ -341,6 +334,48 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       {
          e.printStackTrace();
       }
+   }
+   
+   private void clickOnEditor(int index) throws Exception
+   {
+      // Make system mouse click on editor space
+      Robot robot = new Robot();
+      robot.mouseMove(getEditorLeftScreenPosition() + 20, getEditorTopScreenPosition() + 40);
+      Thread.sleep(TestConstants.SLEEP);
+      selectIFrameWithEditor(index);
+      robot.mousePress(InputEvent.BUTTON1_MASK);
+      robot.mouseRelease(InputEvent.BUTTON1_MASK);
+      // Put cursor at the beginning of the document
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
+   }
+   
+   /**
+    * Returns the editor's left position on the screen
+    * 
+    * @return int x
+    */
+   private int getEditorLeftScreenPosition()
+   {
+      // Get the delta between of toolbar browser area
+      int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
+      // Get the position on screen of the editor
+      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+      return x;
+   }
+
+   /**
+    * Returns the editor's top position on the screen
+    * 
+    * @return int y
+    */
+   private int getEditorTopScreenPosition()
+   {
+      // Get the delta between of toolbar browser area
+      int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
+      // Get the position on screen of the editor
+      int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
+      return y;
    }
 
 }
