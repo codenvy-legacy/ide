@@ -22,11 +22,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -75,37 +77,49 @@ public class CutFolderTest extends BaseTest
       }
    }
    
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL +FOLDER_1);
+         VirtualFileSystemUtils.delete(URL +FOLDER_3);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testCutFolderOperation() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
 
       //      step 1 - Open Gadget window and create next folders' structure in the workspace root:
       //     "test 1/test 2/test.groovy" file with sample content  and "test 2" folder
 
-      selectItemInWorkspaceTree(WS_NAME);
-      
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-            
+      selectRootOfWorkspaceTree();
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FOLDER_1);
       
       selectItemInWorkspaceTree(FOLDER_1);
-      
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FOLDER_2);
       
       selectItemInWorkspaceTree(FOLDER_2);
-      
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FILE_1);
+      
       assertElementPresentInWorkspaceTree(FOLDER_3);
 
       //step2 - Open file "test 1/test 2/test.groovy
 
       selectRootOfWorkspaceTree();
-
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       // check in toolbar
@@ -119,32 +133,20 @@ public class CutFolderTest extends BaseTest
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
 
       //step 3 - Select folder "test 1/test 2". Click on "Cut" toolbar button.
-      selectRootOfWorkspaceTree();
-      
       selectItemInWorkspaceTree(FOLDER_2);
-      
       runToolbarButton(MenuCommands.Edit.CUT_TOOLBAR);
-      
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       //step 4 - Select file "test 1/test 2/test.groovy" in the Workspace Panel.
-      selectRootOfWorkspaceTree();
-      
       selectItemInWorkspaceTree(FOLDER_2);
-      
       selectItemInWorkspaceTree(FILE_1);
       
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       //step5 - Select folder "test 1/test 2/" and click on "Paste" toolbar button.
-      selectRootOfWorkspaceTree();
-      
       selectItemInWorkspaceTree(FOLDER_2);
-      
       runToolbarButton(MenuCommands.Edit.PASTE_TOOLBAR);
       
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
@@ -168,7 +170,6 @@ public class CutFolderTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       // step 7 - Select folders "test 1" and "test 2".
@@ -184,13 +185,9 @@ public class CutFolderTest extends BaseTest
 
       // step 8 - Select file "test 1/test 2/test.groovy".
       selectRootOfWorkspaceTree();
-      
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       openOrCloseFolder(FOLDER_1);
-      
       openOrCloseFolder(FOLDER_2);
-      
       selectItemInWorkspaceTree(FILE_1);
       
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
@@ -212,17 +209,13 @@ public class CutFolderTest extends BaseTest
 
       //step 10 - Change content of opened file "test.groovy" in Content Panel, click on "Ctrl+S" hot key, close file tab and open file "test 2/test 2/test.groovy".
       typeTextIntoEditor(0, "Content has been changed");
-
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
-      
+      saveCurrentFile();
       closeTab("0");
-
-      checkItemsOnWebDav();
-
-      //open first folder test 2
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[0]/open");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
+      checkItemsOnWebDav();
+      
+      Thread.sleep(TestConstants.SLEEP*3);
+
       //open second folder test 2
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[0]/open");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -268,45 +261,17 @@ public class CutFolderTest extends BaseTest
 
    private void checkItemsOnWebDav() throws Exception
    {
-      selenium.open(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-
-      assertTrue(selenium.isElementPresent("link=test 1"));
-      assertTrue(selenium.isElementPresent("link=test 2"));
-      selenium.click("link=test 2");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      assertTrue(selenium.isElementPresent("link=test 2"));
-      selenium.click("link=test 2");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER_1);
+      assertEquals(200, response.getStatusCode());
       
-      assertTrue(selenium.isElementPresent("link=test.groovy"));
+      response = VirtualFileSystemUtils.get(URL + FOLDER_2);
+      assertEquals(200, response.getStatusCode());
+      
+      response = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_2);
+      assertEquals(200, response.getStatusCode());
 
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-   }
-   
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(URL +FOLDER_3);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-     
+      response = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_2 + "/" + FILE_1);
+      assertEquals(200, response.getStatusCode());
    }
 
 }
