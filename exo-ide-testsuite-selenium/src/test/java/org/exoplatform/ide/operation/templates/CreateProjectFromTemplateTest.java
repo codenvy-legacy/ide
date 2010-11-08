@@ -168,10 +168,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @Test
    public void createDefaultSampleProject() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       //----- 1 ----------------
       //open create project from template form
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
@@ -207,10 +204,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
    public void testEnablingDisablingElements() throws Exception
    {
       putProjectTemplateToRegistry();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //----- 1 ----------------
       //open create project from template form

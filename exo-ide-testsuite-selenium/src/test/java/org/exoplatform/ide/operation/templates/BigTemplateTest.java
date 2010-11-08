@@ -52,10 +52,7 @@ public class BigTemplateTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         //******TODO**********************change add folder for locked file
          VirtualFileSystemUtils.mkcol(URL);
-         //********************************
-
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
@@ -72,13 +69,13 @@ public class BigTemplateTest extends BaseTest
    public void testBigTemplate() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      selectRootOfWorkspaceTree();
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openOrCloseFolder(FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
 
@@ -87,7 +84,7 @@ public class BigTemplateTest extends BaseTest
       // ----------------------------
       selenium
          .type(
-            "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[name=ideSaveAsTemplateFormNameField||title=ideSaveAsTemplateFormNameField||index=3||Class=TextItem]/element",
+            "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[name=ideSaveAsTemplateFormNameField]/element",
             "Calc");
       // --------3--------------
       selenium.click("scLocator=//IButton[ID=\"ideSaveAsTemplateFormSaveButton\"]");
@@ -105,14 +102,14 @@ public class BigTemplateTest extends BaseTest
       closeTab("0");
 
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // check "Create file" dialog window
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       TemplateUtils.selectItemInTemplateList(selenium, "Calc");
       //click Create button
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       closeUnsavedFileAndDoNotSave("0");
    }

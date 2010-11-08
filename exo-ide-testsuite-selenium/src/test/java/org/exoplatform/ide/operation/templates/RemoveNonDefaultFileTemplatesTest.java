@@ -132,9 +132,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    public void testDeleteFileTemplateWhichUsedInProjectTemplate() throws Exception
    {
       putFileTemplateWithProjectTemplateToRegistry();
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //------ 1 --------
       //Click on "File->New->From Template..." topmenu item.
@@ -185,9 +183,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    public void testDeleteSeveralFileTemplates() throws Exception
    {
       putSeveralFileTemplatesToRegistry();
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //------ 1 --------
       //Click on "File->New->From Template..." topmenu item.

@@ -113,9 +113,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
    public void testDeleteSeveralProjectTemplates() throws Exception
    {
       putSeveralProjectTemplatesToRegistry();
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //------ 1 --------
       //Click on "New->Project From Template..."  toolbar button.

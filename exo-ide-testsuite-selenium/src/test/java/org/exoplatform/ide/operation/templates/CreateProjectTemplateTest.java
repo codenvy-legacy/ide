@@ -211,10 +211,7 @@ public class CreateProjectTemplateTest extends BaseTest
    @Test
    public void testEnablingDisablingButtons() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //----- 1 ----------------
       runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_TEMPLATE);

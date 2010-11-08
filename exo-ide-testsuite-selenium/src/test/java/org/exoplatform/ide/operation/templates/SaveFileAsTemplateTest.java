@@ -31,6 +31,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,7 +44,7 @@ public class SaveFileAsTemplateTest extends BaseTest
 {
    private static final String FILE_NAME = "RestServiceTemplate.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static final String REST_SERVICE_TEMPLATE_NAME = "test REST template";
    
@@ -56,14 +57,17 @@ public class SaveFileAsTemplateTest extends BaseTest
    private static final String NAME_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[" 
       + "name=ideSaveAsTemplateFormNameField]/element";
    
+   private static String FOLDER_NAME;
+   
    @BeforeClass
    public static void setUp()
    {
-      
+      FOLDER_NAME = UUID.randomUUID().toString();
       String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/RestServiceTemplate.groovy";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -81,7 +85,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       cleanRegistry();
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
