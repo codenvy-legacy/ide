@@ -38,6 +38,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -1808,4 +1810,55 @@ public abstract class BaseTest
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
    }
+   
+   /**
+    * Clicks on editor panel with the help of {@link Robot}.
+    * It makes a system click, so the coordinates, where to click are computered, 
+    * taking into consideration the browser outer and inner height.
+    * 
+    * @param index editor tab's index
+    * @throws Exception
+    */
+   protected void clickOnEditor() throws Exception
+   {
+      // Make system mouse click on editor space
+      Robot robot = new Robot();
+      robot.mouseMove(getEditorLeftScreenPosition() + 20, getEditorTopScreenPosition() + 40);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      robot.mousePress(InputEvent.BUTTON1_MASK);
+      robot.mouseRelease(InputEvent.BUTTON1_MASK);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      // Put cursor at the beginning of the document
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
+   }
+   
+   /**
+    * Returns the editor's left position on the screen
+    * 
+    * @return int x
+    */
+   protected int getEditorLeftScreenPosition()
+   {
+      // Get the delta between of toolbar browser area
+      int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
+      // Get the position on screen of the editor
+      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+      return x;
+   }
+
+   /**
+    * Returns the editor's top position on the screen
+    * 
+    * @return int y
+    */
+   protected int getEditorTopScreenPosition()
+   {
+      // Get the delta between of toolbar browser area
+      int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
+      // Get the position on screen of the editor
+      int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
+      return y;
+   }
+
+   
 }

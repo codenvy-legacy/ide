@@ -33,8 +33,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.io.IOException;
 
 /**
@@ -166,9 +164,8 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // Make system mouse click on editor space
-      clickOnEditor(0);
+      clickOnEditor();
 
-      selectMainFrame();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(0);
@@ -207,9 +204,8 @@ public class FindReplaceTest extends BaseTest
       // Step 9
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox");
-      clickOnEditor(0);
+      clickOnEditor();
 
-      selectMainFrame();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(0);
@@ -298,8 +294,7 @@ public class FindReplaceTest extends BaseTest
          .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox");
 
       // Put cursor at the start of file and click "Find" button.
-      clickOnEditor(0);
-      selectMainFrame();
+      clickOnEditor();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(0);
@@ -372,9 +367,8 @@ public class FindReplaceTest extends BaseTest
             "panel");
 
       // Put cursor at the start of file and click "Find" button.
-      clickOnEditor(0);
+      clickOnEditor();
       // Step 9 Click find button
-      selectMainFrame();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(0);
@@ -409,15 +403,13 @@ public class FindReplaceTest extends BaseTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       // Put cursor at the start of file and click "Find" button.
-      clickOnEditor(0);
-      selectMainFrame();
+      clickOnEditor();
       // Step 13 Click "Replace All" button.
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceAllButton\"]");
       Thread.sleep(TestConstants.SLEEP);
 
       // Step 14
-      clickOnEditor(0);
-      selectMainFrame();
+      clickOnEditor();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       // Check buttons enabled
@@ -470,9 +462,8 @@ public class FindReplaceTest extends BaseTest
             "html");
       checkFindFieldNotEmptyState();
       // Make system mouse click on editor space
-      clickOnEditor(0);
+      clickOnEditor();
 
-      selectMainFrame();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(0);
@@ -516,8 +507,7 @@ public class FindReplaceTest extends BaseTest
             "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element",
             "define");
       //Put cursor at start and click on "Find" button
-      clickOnEditor(1);
-      selectMainFrame();
+      clickOnEditor();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(1);
@@ -543,8 +533,7 @@ public class FindReplaceTest extends BaseTest
             "java");
 
       //Put cursor at start and click on "Find" button
-      clickOnEditor(2);
-      selectMainFrame();
+      clickOnEditor();
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       selectIFrameWithEditor(2);
@@ -692,49 +681,7 @@ public class FindReplaceTest extends BaseTest
    {
       return selenium.getText("scLocator=//Label[ID=\"ideFindReplaceTextFormFindResult\"]");
    }
-
-   /**
-    * Returns the editor's left position on the screen
-    * 
-    * @return int x
-    */
-   private int getEditorLeftScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
-      // Get the position on screen of the editor
-      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
-      return x;
-   }
-
-   /**
-    * Returns the editor's top position on the screen
-    * 
-    * @return int y
-    */
-   private int getEditorTopScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
-      // Get the position on screen of the editor
-      int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
-      return y;
-   }
-
-   private void clickOnEditor(int index) throws Exception
-   {
-      // Make system mouse click on editor space
-      Robot robot = new Robot();
-      robot.mouseMove(getEditorLeftScreenPosition() + 20, getEditorTopScreenPosition() + 40);
-      Thread.sleep(TestConstants.SLEEP);
-      selectIFrameWithEditor(index);
-      robot.mousePress(InputEvent.BUTTON1_MASK);
-      robot.mouseRelease(InputEvent.BUTTON1_MASK);
-      // Put cursor at the beginning of the document
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
-   }
-   
+  
    @AfterClass
    public static void tearDown()
    {
