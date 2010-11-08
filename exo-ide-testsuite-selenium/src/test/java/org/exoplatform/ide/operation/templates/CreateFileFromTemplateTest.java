@@ -20,11 +20,19 @@ package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.*;
 
+import org.exoplatform.common.http.client.HTTPResponse;
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
 
@@ -37,9 +45,6 @@ import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
  */
 public class CreateFileFromTemplateTest extends BaseTest
 {
-   
-   private static final String FOLDER = "Testtemplate";
-   
    private static final String GROOVY_REST_SERVICE = "Groovy REST Service";
    
    private static final String EMPTY_XML = "Empty XML";
@@ -60,10 +65,45 @@ public class CreateFileFromTemplateTest extends BaseTest
    
    private static final String GOOGLE_GADGET_FILE_NAME = "Test Gadget File.xml";
    
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   private static String FOLDER;
+   
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      FOLDER = UUID.randomUUID().toString();
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+      
+   }
+   
    @AfterClass
    public static void tearDown()
    {
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
    
    //IDE-76:Create File from Template
@@ -72,12 +112,8 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // -------- 1 ----------
       Thread.sleep(TestConstants.SLEEP);
-      
-      //TODO*************change******change add folder for locked file
-      createFolder(FOLDER);
-      //*************************
-      
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER);
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
       
@@ -87,71 +123,12 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(EMPTY_HTML, HTML_FILE_NAME);
       testTemplate(GOOGLE_GADGET, GOOGLE_GADGET_FILE_NAME);
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
-      
-      //test files created on server
-      selenium.open(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/" );
-      selenium.waitForPageToLoad("10000");
-      Thread.sleep(TestConstants.SLEEP);
-      testFileCreatedOnServer(GROOVY_FILE_NAME);
-      testFileCreatedOnServer(XML_FILE_NAME);
-      testFileCreatedOnServer(HTML_FILE_NAME);
-      testFileCreatedOnServer(GOOGLE_GADGET_FILE_NAME);
-      testFileCreatedOnServer(TEXT_FILE_NAME);
-      selenium.goBack();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      // -------- 6 ----------
-      //Remove created files.
-    
-      
-      //******change******
-      openOrCloseFolder(FOLDER);      
-      //****************
-      
-      selectItemInWorkspaceTree(GROOVY_FILE_NAME);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(GROOVY_FILE_NAME);
-      
-      selectItemInWorkspaceTree(XML_FILE_NAME);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(XML_FILE_NAME);
-      
-      selectItemInWorkspaceTree(HTML_FILE_NAME);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(HTML_FILE_NAME);
-      
-      selectItemInWorkspaceTree(GOOGLE_GADGET_FILE_NAME);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(GOOGLE_GADGET_FILE_NAME);
-      
-      selectItemInWorkspaceTree(TEXT_FILE_NAME);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(TEXT_FILE_NAME);
-      
-      // -------- 7 ----------
-      //Click on "File->New->From Template" top menu command.
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //we will see the "Create file" dialog window.
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]"));
-      //click cancel button
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/icon");
-      Thread.sleep(TestConstants.SLEEP);
    }
    
    @Test
    public void testEnablingDisablingElements() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       //---- 1 ----------
       //call create file from template form
@@ -215,16 +192,6 @@ public class CreateFileFromTemplateTest extends BaseTest
       closeCreateFromTemplateForm(selenium);
    }
    
-   private void testFileCreatedOnServer(String fileName)
-   {
-     
-      //TODO********change****change add folder for locked file
-      assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/"
-         + fileName + "' and text()=' " + fileName + "']"));
-      //*************
-   }
-   
    private void testTemplate(String templateName, String fileName) throws Exception
    {
       // ---------2--------
@@ -252,6 +219,10 @@ public class CreateFileFromTemplateTest extends BaseTest
       assertEquals(fileName, getTabTitle(0));
       assertElementPresentInWorkspaceTree(fileName);
       closeTab("0");
+      
+      //check file created on server
+      HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER + "/" + fileName);
+      assertEquals(200, response.getStatusCode());
    }
    
 }
