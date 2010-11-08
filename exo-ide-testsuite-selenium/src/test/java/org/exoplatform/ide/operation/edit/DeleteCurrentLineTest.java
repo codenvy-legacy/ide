@@ -45,7 +45,7 @@ public class DeleteCurrentLineTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       String text1 = selenium.getText("//body[@class='editbox']");
-      Thread.sleep(TestConstants.SLEEP_SHORT*2);
+      Thread.sleep(TestConstants.SLEEP_SHORT*3);
       saveAsUsingToolbarButton("test.html");
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
@@ -66,7 +66,7 @@ public class DeleteCurrentLineTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "D");
       selenium.keyUp("//body[@class='editbox']", "D");
       selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT*2);
+      Thread.sleep(TestConstants.SLEEP_SHORT*3);
       
       String text3 = selenium.getText("//body[@class='editbox']");
       Thread.sleep(TestConstants.SLEEP_SHORT*2);
@@ -78,7 +78,7 @@ public class DeleteCurrentLineTest extends BaseTest
       for (int i = 0; i < 2; i++)
       {
          selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT*2);
+         Thread.sleep(TestConstants.SLEEP_SHORT*3);
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
       }
       Thread.sleep(TestConstants.SLEEP_SHORT*2);
@@ -88,7 +88,7 @@ public class DeleteCurrentLineTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "D");
       selenium.keyUp("//body[@class='editbox']", "D");
       selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT*2);
+      Thread.sleep(TestConstants.SLEEP_SHORT*3);
       
       String text4 = selenium.getText("//body[@class='editbox']");
       Thread.sleep(TestConstants.SLEEP_SHORT*2);
