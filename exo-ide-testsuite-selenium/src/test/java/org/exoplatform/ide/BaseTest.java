@@ -1793,4 +1793,19 @@ public abstract class BaseTest
       selenium.click(Locators.GoToLineWindow.GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
+   
+   /**
+    * Calls selenium refresh method and waits for {@link TestConstants}.IDE_LOAD_PERIOD seconds.
+    * 
+    * After waits for {@link TestConstants}.SLEEP seconds (while all elements are drawing).
+    * 
+    * @throws Exception
+    */
+   public void refresh() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.refresh();
+      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
+   }
 }

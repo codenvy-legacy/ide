@@ -123,9 +123,7 @@ public class CursorPositionStatusBarTest extends BaseTest
       //		check status bar
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       //	refresh
-      selenium.refresh();
-      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      refresh();
 
       //			check status bar
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));

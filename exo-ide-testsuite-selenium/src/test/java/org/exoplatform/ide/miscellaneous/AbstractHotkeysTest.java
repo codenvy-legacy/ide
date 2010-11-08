@@ -83,14 +83,6 @@ public abstract class AbstractHotkeysTest extends BaseTest
       deleteCookies();
    }
    
-   void refresh() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-   
    void selectRow(String rowTitle) throws Exception
    {
       String locator = getRowLocator(rowTitle);
