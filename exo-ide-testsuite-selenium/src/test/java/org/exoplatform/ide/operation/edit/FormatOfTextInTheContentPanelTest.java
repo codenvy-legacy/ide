@@ -91,6 +91,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingHtml() throws Exception
    {
      
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
@@ -107,6 +108,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void tesFormatingCss() throws Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
@@ -124,6 +126,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingJS() throws Exception
    {
     
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
@@ -141,6 +144,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void tesFormatingGadget() throws Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
