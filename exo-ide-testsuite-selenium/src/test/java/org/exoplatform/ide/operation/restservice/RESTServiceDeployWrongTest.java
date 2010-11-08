@@ -24,10 +24,9 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,19 +41,40 @@ public class RESTServiceDeployWrongTest extends BaseTest
    
    private static String FILE_NAME = "DeployWrongTest.groovy";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String TEST_FOLDER = RESTServiceDeployWrongTest.class.getSimpleName();
 
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      
+      selectItemInWorkspaceTree(TEST_FOLDER);
       runCommandFromMenuNewOnToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "1");
+      typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       saveAsUsingToolbarButton(FILE_NAME);
@@ -78,8 +98,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
    {
       try
       {
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
       }
       catch (IOException e)
       {

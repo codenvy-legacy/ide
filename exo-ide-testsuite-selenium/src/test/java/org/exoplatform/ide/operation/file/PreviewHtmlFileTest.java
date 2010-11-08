@@ -42,8 +42,10 @@ import java.io.IOException;
 public class PreviewHtmlFileTest extends BaseTest
 {
    private final static String FILE_NAME = "PreviewHtmlFile.html";
+   
+   private final static String TEST_FOLDER = PreviewHtmlFileTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    @BeforeClass
    public static void setUp()
@@ -52,7 +54,8 @@ public class PreviewHtmlFileTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/file/PreviewHtmlFile.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL+TEST_FOLDER+"/"+FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,7 +72,7 @@ public class PreviewHtmlFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
       }
       catch (IOException e)
       {
@@ -91,6 +94,7 @@ public class PreviewHtmlFileTest extends BaseTest
       //---- 1 -----------------
       //open html file
       Thread.sleep(TestConstants.SLEEP);
+      
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -109,6 +113,7 @@ public class PreviewHtmlFileTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       Thread.sleep(TestConstants.SLEEP);
@@ -162,7 +167,7 @@ public class PreviewHtmlFileTest extends BaseTest
     //is Preview Tab present
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
       
-      selenium.selectFrame("//iframe[@src='" + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME + "']");
+      selenium.selectFrame("//iframe[@src='" + URL+TEST_FOLDER+"/"+FILE_NAME + "']");
       
       assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
       
