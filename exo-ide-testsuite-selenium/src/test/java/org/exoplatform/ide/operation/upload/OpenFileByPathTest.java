@@ -88,6 +88,7 @@ public class OpenFileByPathTest extends BaseTest
       
       // empty file path field
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);      
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOpenButton(false);
       
       // close form by clicking "Cancel" button
@@ -159,7 +160,8 @@ public class OpenFileByPathTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(ENTRY_POINT_URL + "/" + WS_NAME + "/" + FILE_NAME);
+         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+            + "/" + FILE_NAME);
       }
       catch (IOException e)
       {

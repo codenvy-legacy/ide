@@ -45,8 +45,6 @@ public class ClosingOutlinePanelTest extends BaseTest
 {
    private final static String JAVASCRIPT_FILE_NAME = "TestJavaScriptFile.js";
 
-   private final static String OUTLINE = "ideOutlineTreeGrid";
-
    //   private final static String LAP = ;
 
    private final static String TEXT_FILE_NAME = "SampleTextFile.txt";
@@ -87,8 +85,7 @@ public class ClosingOutlinePanelTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + JAVASCRIPT_FILE_NAME);
-         VirtualFileSystemUtils.delete(URL + TEXT_FILE_NAME);
+         VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
       {
@@ -179,21 +176,19 @@ public class ClosingOutlinePanelTest extends BaseTest
 
    private void checkCodeHelperPanelVisibility(boolean isVisible)
    {
-    //TODO********fix***locators*******
       if (isVisible)
       {
          assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: inherit')]/div[@eventproxy='CodeHelper']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
          assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: hidden')]/div[@eventproxy='CodeHelper']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
       }
       else
       {
          assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: hidden')]/div[@eventproxy='CodeHelper']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
          assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='CodeHelper' and contains(@style, 'visibility: inherit')]/div[@eventproxy='CodeHelper']"));
-      //***********************************
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
       }
    }
 

@@ -129,6 +129,7 @@ public class ItemOrderingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      closeTab("0");
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME);
    }   
 }

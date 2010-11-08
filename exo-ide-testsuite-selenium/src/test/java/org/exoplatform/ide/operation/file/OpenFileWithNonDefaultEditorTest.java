@@ -307,7 +307,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
    }
    
-   private void selectEditorAndOpenByDoubleClick(String editor, boolean clickOnUseDefaultCheckbox) throws Exception
+ /*  private void selectEditorAndOpenByDoubleClick(String editor, boolean clickOnUseDefaultCheckbox) throws Exception
    {
       if (clickOnUseDefaultCheckbox)
       {
@@ -316,7 +316,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //open
       selenium.mouseDownAt("//nobr[contains(text(), '" + editor + "')]", "");
       selenium.doubleClick("//nobr[contains(text(), '" + editor + "')]");
-   }
+   }*/
    
    private void checkReopenWarningDialog(boolean clickYes) throws Exception
    {

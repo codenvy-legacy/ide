@@ -744,12 +744,10 @@ public class FindReplaceTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
