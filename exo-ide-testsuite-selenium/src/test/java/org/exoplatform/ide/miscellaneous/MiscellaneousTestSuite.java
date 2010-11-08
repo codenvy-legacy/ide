@@ -33,10 +33,13 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({CursorPositionStatusBarTest.class, 
                MaximizeRestoreOperationsTest.class, 
                DialogAboutTest.class, CustomizeToolbarTest.class, 
-               HotkeysCustomizationTest.class,
                DownloadFileToLocalDriveTest.class,
                DownloadZIPedFoldeToLocalDriveTest.class,
-               CookiesTest.class})
+               CookiesTest.class,
+               HotkeysFormTest.class,
+               HotkeysCustomizationTest.class,
+               HotkeysInCodeMirrorTest.class,
+               HotkeysInFCKEditorTest.class})
 public class MiscellaneousTestSuite
 {
 
