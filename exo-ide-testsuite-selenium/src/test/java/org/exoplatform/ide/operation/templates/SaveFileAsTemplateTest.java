@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -104,10 +105,10 @@ public class SaveFileAsTemplateTest extends BaseTest
       //-------- 1 ----------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
       
       //--------- 2 --------
       //Click on "File->Save As Template" top menu item, 
