@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -50,6 +51,13 @@ public class ItemOrderingTest extends BaseTest
    
    private static final String TEST_FILE_1_2 = "file-1-2";
   
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+   }
+   
    @Test
    public void testItemOrdering() throws Exception
    {

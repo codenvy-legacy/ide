@@ -31,7 +31,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Robot;
@@ -80,6 +79,8 @@ public class FindReplaceTest extends BaseTest
    private static final String FILE_NAME_GROOVY_2 = "findReplace2.groovy";
 
    private static final String FILE_NAME_HTML = "findReplace.html";
+   
+   private final static String TEST_FOLDER = "testFolder";
 
    private final static String GROOVY_FILE_CONTENT =
       "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
@@ -100,16 +101,18 @@ public class FindReplaceTest extends BaseTest
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
+   
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.put(FILE_CONTENT_FOR_FIND.getBytes(), MimeType.TEXT_PLAIN, URL + FILE_NAME_TXT);
-         VirtualFileSystemUtils.put(FILE_CONTENT_FOR_REPLACE.getBytes(), MimeType.TEXT_PLAIN, URL + FILE_NAME);
-         VirtualFileSystemUtils.put(GROOVY_FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + FILE_NAME_GROOVY_1);
-         VirtualFileSystemUtils.put(GROOVY_FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + FILE_NAME_GROOVY_2);
-         VirtualFileSystemUtils.put(HTML_FILE_CONTENT.getBytes(), MimeType.TEXT_HTML, URL + FILE_NAME_HTML);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(FILE_CONTENT_FOR_FIND.getBytes(), MimeType.TEXT_PLAIN, URL + TEST_FOLDER + "/" + FILE_NAME_TXT);
+         VirtualFileSystemUtils.put(FILE_CONTENT_FOR_REPLACE.getBytes(), MimeType.TEXT_PLAIN, URL + TEST_FOLDER + "/" + FILE_NAME);
+         VirtualFileSystemUtils.put(GROOVY_FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + TEST_FOLDER + "/" + FILE_NAME_GROOVY_1);
+         VirtualFileSystemUtils.put(GROOVY_FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + TEST_FOLDER + "/" + FILE_NAME_GROOVY_2);
+         VirtualFileSystemUtils.put(HTML_FILE_CONTENT.getBytes(), MimeType.TEXT_HTML, URL + TEST_FOLDER + "/" + FILE_NAME_HTML);
       }
       catch (IOException e)
       {
@@ -130,11 +133,14 @@ public class FindReplaceTest extends BaseTest
    public void testFindTextInFile() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.PAGE_LOAD_PERIOD));
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_TXT, false);
       Thread.sleep(TestConstants.SLEEP);
       checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
@@ -264,11 +270,13 @@ public class FindReplaceTest extends BaseTest
    public void testReplaceTextInFile() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.PAGE_LOAD_PERIOD));
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       // Step 3 Click "Find/Replace" button on toolbar
@@ -432,11 +440,13 @@ public class FindReplaceTest extends BaseTest
    public void testfindReplaceInFewFiles() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.PAGE_LOAD_PERIOD));
+      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_1, false);
@@ -730,11 +740,7 @@ public class FindReplaceTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FILE_NAME_TXT);
-         VirtualFileSystemUtils.delete(URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL + FILE_NAME_GROOVY_1);
-         VirtualFileSystemUtils.delete(URL + FILE_NAME_GROOVY_2);
-         VirtualFileSystemUtils.delete(URL + FILE_NAME_HTML);
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
       {
