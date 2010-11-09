@@ -26,7 +26,6 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -46,14 +45,13 @@ public class CodeOutLineHtmlTest extends BaseTest
    
    private final static String FILE_NAME = "HtmlCodeOutline.html";
    
-   private final static String FOLDER_NAME = "testOutLineWithGroovy";
+   private final static String FOLDER_NAME = CodeOutLineHtmlTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    @BeforeClass
    public static void setUp()
    {
-      
       String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
       try
       {
@@ -107,6 +105,8 @@ public class CodeOutLineHtmlTest extends BaseTest
       //check Outline tree
       checkTreeCorrectlyCreated();
       
+      //---- 6 ----
+      //check navigation in tree
       //click on td tag from tbody of first table
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[1]");
       Thread.sleep(TestConstants.SLEEP);
@@ -116,7 +116,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-
+      
       //open tr tag
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -158,15 +158,16 @@ public class CodeOutLineHtmlTest extends BaseTest
       checkOutlineTreeNodeSelected(3, "br", true);
       assertEquals("14 : 1", getCursorPositionUsingStatusBar());
       
+      //click on editor
+      clickOnEditor();
+      
       //press key DOWN to navigate in editor
-      goToLine(15);
-      goToLine(16);      
-      goToLine(17);
-      goToLine(18);
-      goToLine(19);
-      
+      for (int i = 0; i < 18; i++){
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+      }
+      Thread.sleep(TestConstants.SLEEP);
       assertEquals("19 : 1", getCursorPositionUsingStatusBar());
-      
       //check updated tree
       //node script must be opened and displayGreeting selected (and opened too)
       assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));

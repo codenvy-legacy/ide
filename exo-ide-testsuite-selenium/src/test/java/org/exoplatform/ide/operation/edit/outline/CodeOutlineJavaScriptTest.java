@@ -248,7 +248,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //If Gadget file has text, clear it and enter such text:
 
       // delete default content 
-      goToLine(1);
+      clickOnEditor();
       deleteFileContent();
 
       final String gadgetText =
@@ -257,16 +257,10 @@ public class CodeOutlineJavaScriptTest extends BaseTest
             + "var prefs = new gadgets.Prefs();\n" + "\n" + "function displayGreeting () {\n" + "// Get current time\n"
             + "var today = new Date();\n" + "var time = today.getTime();\n" + "var html = \"\";\n" + "}\n"
             + "</script>\n" + "]]></Content></Module>\n";
-      
-      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
-      
-      selectIFrameWithEditor(2);
-      selenium.clickAt("//body", "5,5");
-      selectMainFrame();
+           
+      clickOnEditor();
       typeTextIntoEditor(2, gadgetText);
       Thread.sleep(TestConstants.SLEEP);
-      
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
       
       //New nodes with variables, functions (may be with methods and properties) appear in Outline tree. 
       //If you click on some node, cursor jumps to the line in file, where this variable 
@@ -324,18 +318,21 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       checkOutlineTreeNodeSelected(0, "a", true);
       
       // walk through content to navigate in editor
-      for (int i = 1; i <= 8; i++)
+      clickOnEditor();
+      for (int i = 1; i < 8; i++)
       {
-         goToLine(i);
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
       }
 
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("8 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(4, "b", true);
 
-      for (int i = 9; i <= 17; i++)
+      for (int i = 8; i < 17; i++)
       {
-         goToLine(i);
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
       }
 
       Thread.sleep(TestConstants.SLEEP);
