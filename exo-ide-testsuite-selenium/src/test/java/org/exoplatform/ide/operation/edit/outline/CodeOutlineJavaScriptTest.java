@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -126,18 +127,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //open node a
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      //subnodes of a
-      assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("\"a1\"", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("a2", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("a5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      //other nodes
-      assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("d", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
-      assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
+      firstCheckJavaScriptOutlineTree();
 
       //open node d
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]/open");
@@ -231,16 +221,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //check outline tree
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("\"a1\"", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("a2", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("a5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("d", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
-      assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
+      firstCheckJavaScriptOutlineTree();
 
       checkOutlineTreeNodeSelected(0, "a", true);
 
@@ -266,12 +247,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //---- 13 -----------------
       //If Gadget file has text, clear it and enter such text:
 
-      //delete default content
-      for (int i = 0; i < 7; i++)
-      {
-         runHotkeyWithinEditor(0, true, false, 68);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
+      // delete default content 
+      goToLine(1);
+      deleteFileContent();
 
       final String gadgetText =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
@@ -279,12 +257,17 @@ public class CodeOutlineJavaScriptTest extends BaseTest
             + "var prefs = new gadgets.Prefs();\n" + "\n" + "function displayGreeting () {\n" + "// Get current time\n"
             + "var today = new Date();\n" + "var time = today.getTime();\n" + "var html = \"\";\n" + "}\n"
             + "</script>\n" + "]]></Content></Module>\n";
-
+      
+      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      
       selectIFrameWithEditor(2);
       selenium.clickAt("//body", "5,5");
       selectMainFrame();
       typeTextIntoEditor(2, gadgetText);
       Thread.sleep(TestConstants.SLEEP);
+      
+      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      
       //New nodes with variables, functions (may be with methods and properties) appear in Outline tree. 
       //If you click on some node, cursor jumps to the line in file, where this variable 
       //(function, method or property) is defined
@@ -335,40 +318,26 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //check outline tree
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("\"a1\"", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("a2", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("a5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("d", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
-      assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
+      
+      firstCheckJavaScriptOutlineTree();
 
       checkOutlineTreeNodeSelected(0, "a", true);
-
-      //press down arrow button
-      //click on editor
-      selectIFrameWithEditor(1);
-      selenium.clickAt("//body", "5,5");
-      selectMainFrame();
-
-      //press key DOWN to navigate in editor
-      for (int i = 0; i < 7; i++)
+      
+      // walk through content to navigate in editor
+      for (int i = 1; i <= 8; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         goToLine(i);
       }
+
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("8 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(4, "b", true);
 
-      for (int i = 0; i < 9; i++)
+      for (int i = 9; i <= 17; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         goToLine(i);
       }
+
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("17 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(4, "b", false);
@@ -379,7 +348,10 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //After closing Outline tab, Outline Panel hides. 
       //After clicking on Show Outline buttons, Outline Panel appears
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");
+
+//      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");  // see bug http://jira.exoplatform.org/browse/IDE-417
+      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(false);
 
@@ -387,7 +359,47 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(true);
 
-      //check outline tree
+      // check outline tree
+      secondCheckJavaScriptOutlineTree();
+
+      // close google gadget file
+      closeUnsavedFileAndDoNotSave("2");
+      Thread.sleep(TestConstants.SLEEP);
+
+      // close js file
+      closeTab("1");
+      openFileFromNavigationTreeWithCodeEditor(jsFile, false);
+      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      Thread.sleep(TestConstants.SLEEP);
+      checkOutlineVisibility(false);
+
+      // remove jsFile from workspace panel
+      selectItemInWorkspaceTree(jsFile);
+      deleteSelectedItems();
+      Thread.sleep(TestConstants.SLEEP);
+
+      // close text file
+      closeUnsavedFileAndDoNotSave("0");
+      Thread.sleep(TestConstants.SLEEP);
+   }
+
+   private void firstCheckJavaScriptOutlineTree()
+   {
+      assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
+      assertEquals("\"a1\"", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
+      assertEquals("a2", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
+      assertEquals("a5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
+      assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
+      assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
+      assertEquals("d", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
+      assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
+      assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
+   } 
+
+   private void secondCheckJavaScriptOutlineTree()
+   {
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
       assertEquals("b", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
       assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
@@ -398,29 +410,5 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
       assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
       assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
-
-      //close js file
-      closeTab("1");
-      openFileFromNavigationTreeWithCodeEditor(jsFile, false);
-      Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
-      Thread.sleep(TestConstants.SLEEP);
-      checkOutlineVisibility(false);
-
-      //end
-      //      saveCurrentFile();
-      //      Thread.sleep(TestConstants.SLEEP);
-      closeTab("1");
-      selectItemInWorkspaceTree(jsFile);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-
-      closeUnsavedFileAndDoNotSave("0");
-      Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave("0");
-      Thread.sleep(TestConstants.SLEEP);
-      
-   } 
-
-
+   }
 }

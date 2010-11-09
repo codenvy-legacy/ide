@@ -1602,7 +1602,7 @@ public abstract class BaseTest
     * Note: you can't use this method, to check is Outline Panel visible,
     * when it appears in first time.
     * It is because to check, is Outline visible this method used
-    * visibility attribute in style attribute of div[4].
+    * visibility attribute in style attribute.
     * But this attribute appears after that, when you hide outline.
     * 
     * @param isVisible
@@ -1612,16 +1612,16 @@ public abstract class BaseTest
       if (isVisible)
       {
          assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
          assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
       }
       else
       {
-         assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
          assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
       }
    }
 
