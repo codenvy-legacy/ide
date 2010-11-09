@@ -1611,17 +1611,17 @@ public abstract class BaseTest
    {
       if (isVisible)
       {
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4 "
-            + "and contains(@style,'visibility: hidden;')]//div[@class='tabSetContainer']"));
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4 "
-            + "and contains(@style,'visibility: inherit;')]//div[@class='tabSetContainer']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
       }
       else
       {
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4 "
-            + "and contains(@style,'visibility: inherit;')]//div[@class='tabSetContainer']"));
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4 "
-            + "and contains(@style,'visibility: hidden;')]//div[@class='tabSetContainer']"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: hidden')]/div[@eventproxy='ideCodeHelperPanel']"));
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style, 'visibility: inherit')]/div[@eventproxy='ideCodeHelperPanel']"));
       }
    }
 
@@ -1825,6 +1825,10 @@ public abstract class BaseTest
       Robot robot = new Robot();
       robot.mouseMove(getEditorLeftScreenPosition() + 20, getEditorTopScreenPosition() + 40);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+      robot.mousePress(InputEvent.BUTTON1_MASK);
+      robot.mouseRelease(InputEvent.BUTTON1_MASK);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      //Second click is needed in some tests with outline , because editor looses focus:
       robot.mousePress(InputEvent.BUTTON1_MASK);
       robot.mouseRelease(InputEvent.BUTTON1_MASK);
       Thread.sleep(TestConstants.REDRAW_PERIOD);

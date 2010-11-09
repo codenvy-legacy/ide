@@ -135,7 +135,6 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       
-      selectMainFrame();
       Thread.sleep(TestConstants.SLEEP*2);
       //check tree
       checkOutlineTreeNodeSelected(11, "script", true);

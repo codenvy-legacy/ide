@@ -164,13 +164,11 @@ public class ClosingOutlinePanelTest extends BaseTest
    {
       if (isPresent)
       {
-
          assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/"));
       }
       else
       {
          assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/"));
-
       }
    }
 

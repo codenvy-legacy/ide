@@ -74,12 +74,12 @@ public class ShowOutlineButtonTest extends BaseTest
       //---- 7 ------
       //open rest service file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 8 ------
       //open groovy script file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 9 ------
       //open groovy template file

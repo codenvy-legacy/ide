@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -45,8 +44,10 @@ import java.io.IOException;
 public class CodeOutlineXmlTest extends BaseTest
 {
    private final static String FILE_NAME = "XmlCodeOutline.xml";
+   
+   private final static String TEST_FOLDER = CodeOutlineXmlTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    @BeforeClass
    public static void setUp()
@@ -55,7 +56,8 @@ public class CodeOutlineXmlTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/XmlCodeOutline.xml";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL+TEST_FOLDER + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -72,7 +74,7 @@ public class CodeOutlineXmlTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
       }
       catch (IOException e)
       {
@@ -91,9 +93,9 @@ public class CodeOutlineXmlTest extends BaseTest
       //---- 1-2 -----------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+
+      openOrCloseFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
@@ -125,17 +127,16 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkCodeNavigation() throws Exception
    {
       //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+     //press key DOWN to navigate in editor
+      for (int i = 0; i < 4; i++){
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+     
       Thread.sleep(TestConstants.SLEEP);
-      
-      //press key DOWN to navigate in editor
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
-      
+     
       checkOutlineTreeNodeSelected(1, "display-name", true);
       assertEquals("5 : 1", getCursorPositionUsingStatusBar());
       
@@ -247,7 +248,6 @@ public class CodeOutlineXmlTest extends BaseTest
       //check cursor position
       assertEquals("10 : 3", getCursorPositionUsingStatusBar());
       
-      
       //---- 2 ----
       //navigate in editor and check, that tree
       //works correctly with new node
@@ -255,17 +255,17 @@ public class CodeOutlineXmlTest extends BaseTest
       //click on node
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[1]");
       
-      selectIFrameWithEditor(0);
       //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      Thread.sleep(TestConstants.SLEEP);
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       //go up and check, that node settings opened
       //and node value selected
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.SLEEP);
-      selectMainFrame();
+      for (int i = 0; i < 7; i++)
+      {
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+      
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated

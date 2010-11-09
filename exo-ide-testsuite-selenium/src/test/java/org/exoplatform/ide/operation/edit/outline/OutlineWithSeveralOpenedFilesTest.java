@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -58,9 +57,8 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //no outline panel
-      assertFalse(selenium
-         .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]/div/div/div/div[@class='tabSetContainer']"));
-
+      assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCodeHelperPanel']"));
+      
       //---- 2 --------------
       //show outline
       runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
@@ -69,17 +67,17 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //we can't use checkOutlineVisibility() method,
       //because when outline appears at first time, element div
       //doesn't have in style attribute visibility attribute
-      assertTrue(selenium
-         .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]/div/div/div/div[@class='tabSetContainer']"));
-
+      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCodeHelperPanel']"));
+      
       //---- 3 --------------
       //open new html file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       //check outline present
-      assertTrue(selenium
-         .isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]/div/div/div/div[@class='tabSetContainer']"));
-
+      Thread.sleep(TestConstants.SLEEP);
+      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCodeHelperPanel']"));
+      
       //---- 4 --------------
       //Close Outline tab 
       selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");
@@ -95,8 +93,5 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //end
       closeUnsavedFileAndDoNotSave("0");
       closeUnsavedFileAndDoNotSave("0");
-
-      Thread.sleep(TestConstants.SLEEP);
    }
-   
 }
