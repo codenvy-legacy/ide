@@ -58,9 +58,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_NAME + "/" + FILE_NAME);
-         
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -99,6 +97,8 @@ public class CodeOutLineHtmlTest extends BaseTest
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      
+      Thread.sleep(TestConstants.SLEEP);
 
       //---- 4 ----
       //show Outline
@@ -109,9 +109,6 @@ public class CodeOutLineHtmlTest extends BaseTest
       //check Outline tree
       checkTreeCorrectlyCreated();
       
-      //---- 6 ----
-      //check navigation in tree
-      
       //click on td tag from tbody of first table
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[1]");
       Thread.sleep(TestConstants.SLEEP);
@@ -121,8 +118,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-      
-     
+
       //open tr tag
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -164,20 +160,14 @@ public class CodeOutLineHtmlTest extends BaseTest
       checkOutlineTreeNodeSelected(3, "br", true);
       assertEquals("14 : 1", getCursorPositionUsingStatusBar());
       
-      //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      Thread.sleep(TestConstants.SLEEP);
-      
       //press key DOWN to navigate in editor
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals("18 : 1", getCursorPositionUsingStatusBar());
+      goToLine(15);
+      goToLine(16);      
+      goToLine(17);
+      goToLine(18);
+      goToLine(19);
+      
+      assertEquals("19 : 1", getCursorPositionUsingStatusBar());
       
       //check updated tree
       //node script must be opened and displayGreeting selected (and opened too)
@@ -199,15 +189,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 8 ----
       //close file
-      closeTab("0");
-
-      //close dialog window by pressing "No"
-      selenium
-         .click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-      Thread.sleep(TestConstants.SLEEP);
-
+      closeUnsavedFileAndDoNotSave("0");
    }
    
    private void checkTreeCorrectlyCreated() throws Exception

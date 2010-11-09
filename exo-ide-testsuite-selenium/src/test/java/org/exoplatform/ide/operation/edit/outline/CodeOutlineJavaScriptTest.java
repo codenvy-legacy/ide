@@ -56,8 +56,8 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //Near item appeard red circul with V, which means variable
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
       checkOutlineTreeNodeSelected(0, "a", true);
-      checkIconNearToken(0, "var-item.png", true);
-
+      OulineTreeHelper.checkIconNearToken(0, "var-item.png", true);
+      
       //---- 4 -----------------
       //continue typing text:
       //var a = {
@@ -84,9 +84,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("\"a1\"", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
       assertEquals("a2", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       assertEquals("a5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      checkIconNearToken(1, "property-item.png", false);
-      checkIconNearToken(2, "property-item.png", false);
-      checkIconNearToken(3, "method-item.png", true);
+      OulineTreeHelper.checkIconNearToken(1, "property-item.png", false);
+      OulineTreeHelper.checkIconNearToken(2, "property-item.png", false);
+      OulineTreeHelper.checkIconNearToken(3, "method-item.png", true);
 
       //---- 5 -----------------
       //Click Enter and enter text in editor:
@@ -109,16 +109,20 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("c", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       assertEquals("d", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
       assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
+      
       assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
       assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
       checkOutlineTreeNodeSelected(6, "f", true);
-      checkIconNearToken(0, "var-item.png", false);
-      checkIconNearToken(1, "var-item.png", false);
-      checkIconNearToken(2, "var-item.png", false);
-      checkIconNearToken(3, "function-item.png", false);
-      checkIconNearToken(4, "var-item.png", false);
-      checkIconNearToken(5, "var-item.png", false);
-      checkIconNearToken(6, "function-item.png", true);
+      OulineTreeHelper.checkIconNearToken(0, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(1, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(2, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(3, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(4, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(5, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(6, "function-item.png", true);
 
       //open node a
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]/open");
@@ -143,9 +147,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("d1", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
       assertEquals("d4", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
       assertEquals("d5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
-      checkIconNearToken(7, "var-item.png", false);
-      checkIconNearToken(8, "function-item.png", false);
-      checkIconNearToken(9, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(7, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(8, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(9, "function-item.png", false);
       //other nodes
       assertEquals("g", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
       assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
@@ -158,9 +162,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("g1", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
       assertEquals("g4", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
       assertEquals("g5", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
-      checkIconNearToken(11, "var-item.png", false);
-      checkIconNearToken(12, "function-item.png", false);
-      checkIconNearToken(13, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(11, "var-item.png", false);
+      OulineTreeHelper.checkIconNearToken(12, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(13, "function-item.png", false);
       //other nodes
       assertEquals("e", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
       assertEquals("f", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
@@ -168,13 +172,13 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //---- 6 -----------------
       //Click a node in Outline tree.
       //cursor jump to line, where a variable is defined
-      clickNode(0);
+      OulineTreeHelper.clickNode(0);
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
 
       //---- 7 -----------------
       //Click g4 node in Outline tree
       //cursor jump to line, where g4 is defined
-      clickNode(12);
+      OulineTreeHelper.clickNode(12);
       assertEquals("20 : 1", getCursorPositionUsingStatusBar());
 
       //---- 8 -----------------
@@ -417,35 +421,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       closeUnsavedFileAndDoNotSave("0");
       Thread.sleep(TestConstants.SLEEP);
       
-   }
+   } 
 
-   
-
-   
-
-   private void clickNode(int rowNumber) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
-         + "]/col[1]");
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   private void checkIconNearToken(int rowNumber, String iconText, boolean isSelected)
-   {
-      String divIndex = String.valueOf(rowNumber + 1);
-      if (isSelected)
-      {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]//div["
-            + "@class='tabSetContainer']//table[@class='listTable']/tbody/tr[" + divIndex
-            + "]//table[@class='treeCellSelected']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']/div[2]/div/div[4]//div["
-            + "@class='tabSetContainer']//table[@class='listTable']/tbody/tr[" + divIndex
-            + "]//table[@class='treeCell']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
-      }
-
-   }
 
 }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -160,6 +161,40 @@ public class OulineTreeHelper extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineTreeNodeSelected(itemRowNumber, itemName, true);
    }
+   
+   /**
+    * check icon near outline item
+    * @param rowNumber starting from 0
+    * @param iconText
+    * @param isSelected row
+    */
+   protected static void checkIconNearToken(int rowNumber, String iconText, boolean isSelected)
+   {
+      String divIndex = String.valueOf(rowNumber + 1);
+      if (isSelected)
+      {
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
+            + "]//table[@class='treeCellSelected']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
+      }
+      else
+      {
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
+            + "]//table[@class='treeCell']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
+      }
+   }
+
+   /**
+    * click the outline item node
+    * @param rowNumber startign from 0
+    * @throws Exception
+    */
+   protected static void clickNode(int rowNumber) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
+         + "]/col[1]");
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
 }
 
 /**
