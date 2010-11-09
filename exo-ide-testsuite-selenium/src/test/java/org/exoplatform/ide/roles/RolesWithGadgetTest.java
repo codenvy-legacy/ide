@@ -49,7 +49,7 @@ public class RolesWithGadgetTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = RolesWithGadgetTest.class.getSimpleName();
    
    
    @BeforeClass
@@ -114,13 +114,14 @@ public class RolesWithGadgetTest extends BaseTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
+      openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
       closeTab("0");
-
+      
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -141,7 +142,7 @@ public class RolesWithGadgetTest extends BaseTest
       standaloneLogin(USER);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-
+      openOrCloseFolder(TEST_FOLDER);
       //Double click on item :
       //TODO not works in Windows
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + FILE1 + "]/col[1]");
@@ -163,24 +164,27 @@ public class RolesWithGadgetTest extends BaseTest
       {
          checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
          checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
+         //Check deploy/undeploy gadget functionality only when in portal:
+         if (IdeAddress.PORTAL.getApplicationUrl().equals(APPLICATION_URL))
+         {
+            //Deploy gadget:
+            runToolbarButton(ToolbarCommands.Run.DEPLOY_GADGET);
+            Thread.sleep(TestConstants.SLEEP);
+            //Check successfully deployed message
+            assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
+            String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+            assertTrue(message.contains("[INFO]"));
+            assertTrue(message.contains(FILE1 + " deployed successfully."));
 
-         //Deploy gadget:
-         runToolbarButton(ToolbarCommands.Run.DEPLOY_GADGET);
-         Thread.sleep(TestConstants.SLEEP);
-         //Check successfully deployed message
-         assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-         String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
-         assertTrue(message.contains("[INFO]"));
-         assertTrue(message.contains(FILE1 + " deployed successfully."));
-
-         //Undeploy gadget
-         runToolbarButton(ToolbarCommands.Run.UNDEPLOY_GADGET);
-         Thread.sleep(TestConstants.SLEEP);
-         //Check successfully undeployed message
-         assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-         message = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
-         assertTrue(message.contains("[INFO]"));
-         assertTrue(message.contains(FILE1 + " undeployed successfully."));
+            //Undeploy gadget
+            runToolbarButton(ToolbarCommands.Run.UNDEPLOY_GADGET);
+            Thread.sleep(TestConstants.SLEEP);
+            //Check successfully undeployed message
+            assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
+            message = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+            assertTrue(message.contains("[INFO]"));
+            assertTrue(message.contains(FILE1 + " undeployed successfully."));
+         }
       }
    }
 }

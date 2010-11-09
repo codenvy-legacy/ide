@@ -1830,6 +1830,9 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       // Put cursor at the beginning of the document
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
    /**
