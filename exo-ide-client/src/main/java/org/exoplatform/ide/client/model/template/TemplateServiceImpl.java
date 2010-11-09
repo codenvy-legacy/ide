@@ -207,7 +207,7 @@ public class TemplateServiceImpl extends TemplateService
             + "      function getGreeting(userName) {\n"
             + "        var params = {};\n"
             + "        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;\n"
-            + "        var url = '/my-service/helloworld/' + userName;\n"
+            + "        var url = 'http://' + location.host + '/rest/my-service/helloworld/' + userName;\n"
             + "        gadgets.io.makeRequest(url, response, params);\n"
             + "      }\n"
             + "      // Callback function to process the response\n"
