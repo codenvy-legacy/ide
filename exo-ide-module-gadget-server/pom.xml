@@ -45,6 +45,9 @@
                <include>**/*.xml</include>
             </includes>
          </resource>
+         <resource>                                                                                                                                                                                            
+            <directory>src/main/resources</directory>                                                                                                                                                               
+         </resource>
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>

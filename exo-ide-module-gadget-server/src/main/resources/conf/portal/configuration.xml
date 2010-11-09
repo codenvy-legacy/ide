@@ -3,24 +3,6 @@
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <!--
-      component>
-      <type>org.exoplatform.ideall.service.gatein.GadgetListingService</type>
-      <init-params> <value-param> <name>workspace</name>
-      <description>dev workspace</description> <value>dev-monit</value>
-      </value-param> <value-param> <name>host</name> <description>native
-      host</description> <value>127.0.0.1</value> </value-param>
-      <value-param> <name>port</name> <description>native
-      port</description> <value>8080</value> </value-param>
-      <value-param> <name>context</name> <description>webdav
-      context</description> <value>/rest/jcr</value> </value-param>
-      </init-params> </component
-   -->
-
-   <component>
-      <type>org.exoplatform.ide.service.gatein.RestGadgetRegistryService</type>
-   </component>
-
    <component>
       <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
       <init-params>
