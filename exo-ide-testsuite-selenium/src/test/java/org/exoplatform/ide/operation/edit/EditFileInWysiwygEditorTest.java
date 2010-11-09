@@ -44,19 +44,25 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    //IDE-123 Edit file in WYSIWYG editor
 
    private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
+   
+   private final static String TEST_FOLDER ="TestFolder";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_FILE;
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
 
    @Test
    public void editFileInWysiwygEditor() throws Exception
    {
 
+      
+      VirtualFileSystemUtils.mkcol(URL);
+      
       final String defaultText =
          "<html>\n" + "\t<head>\n" + "\t\t<title></title>\n" + "\t</head>\n" + "\t<body>\n" + "\t\t<br />\n"
             + "\t</body>\n" + "</html>";
       
       Thread.sleep(TestConstants.SLEEP);
-
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
       //------ 1 ---------------
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);
       Thread.sleep(TestConstants.SLEEP);
@@ -160,7 +166,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
 
       //select iframe in Preview tab
-      selenium.selectFrame("//iframe[@src='" + URL + "']");
+      selenium.selectFrame("//iframe[@src='" + URL + HTML_FILE + "']");
 
       checkTable2x3Present();
 
