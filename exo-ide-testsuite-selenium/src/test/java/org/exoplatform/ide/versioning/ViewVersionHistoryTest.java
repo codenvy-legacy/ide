@@ -159,7 +159,7 @@ public class ViewVersionHistoryTest extends VersioningTest
    public void testViewVersionHistoryOneFile() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.PAGE_LOAD_PERIOD + "");
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //Open new file
       runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
@@ -204,7 +204,7 @@ public class ViewVersionHistoryTest extends VersioningTest
    public void testOpenCloseVersionPanel() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.PAGE_LOAD_PERIOD + "");
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       openOrCloseFolder(TEST_FOLDER);
       //Open file
@@ -261,7 +261,7 @@ public class ViewVersionHistoryTest extends VersioningTest
    public void testVersionPanelForFewFiles() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.PAGE_LOAD_PERIOD + "");
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       openOrCloseFolder(TEST_FOLDER);
       //Open file
