@@ -33,6 +33,7 @@ import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,6 +66,7 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id:   ${date} ${time}
  *
  */
+@RunWith(RCRunner.class)
 public abstract class BaseTest
 {
    protected static Selenium selenium;
@@ -368,6 +370,14 @@ public abstract class BaseTest
    {
       selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body[@class='editbox']");
+      selectMainFrame();
+      return text;
+   }
+   
+   protected String getTextFromCKEditor(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      String text = selenium.getText("//body");
       selectMainFrame();
       return text;
    }
@@ -1174,6 +1184,8 @@ public abstract class BaseTest
    /**
    * Click on editor tab to make it active.
    * 
+   * Numbering of tabs starts with 0.
+   * 
    * @param tabIndex index of tab
    * @throws Exception
    */
@@ -1865,6 +1877,21 @@ public abstract class BaseTest
       // Get the position on screen of the editor
       int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
       return y;
+   }
+   
+   @AfterFailure
+   public void captureScreenShotOnFailure(Throwable failure) {
+       // Get test method name
+       String testMethodName = null;
+       for (StackTraceElement stackTrace : failure.getStackTrace()) {
+           if (stackTrace.getClassName().equals(this.getClass().getName())) {
+               testMethodName = stackTrace.getMethodName();
+               break;
+           }
+       }
+       
+       selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "."
+                                  + testMethodName + ".png");
    }
 
    
