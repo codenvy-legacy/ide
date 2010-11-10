@@ -33,7 +33,7 @@ import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+import org.junit.Rule;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -53,9 +53,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
-
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -66,10 +63,10 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id:   ${date} ${time}
  *
  */
-@RunWith(RCRunner.class)
 public abstract class BaseTest
 {
-   protected static Selenium selenium;
+   @Rule
+   public static CapturingSelenium selenium;
 
    protected static final String BASE_URL = IdeAddress.STANDALONE.getBaseUrl();
 
@@ -108,7 +105,7 @@ public abstract class BaseTest
    public static void startSelenium() throws Exception
    {
       cleanDefaultWorkspace();
-      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
+      selenium = new CapturingSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
 
       switch (BROWSER_COMMAND)
       {
@@ -1878,21 +1875,5 @@ public abstract class BaseTest
       int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
       return y;
    }
-   
-   @AfterFailure
-   public void captureScreenShotOnFailure(Throwable failure) {
-       // Get test method name
-       String testMethodName = null;
-       for (StackTraceElement stackTrace : failure.getStackTrace()) {
-           if (stackTrace.getClassName().equals(this.getClass().getName())) {
-               testMethodName = stackTrace.getMethodName();
-               break;
-           }
-       }
-       
-       selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "."
-                                  + testMethodName + ".png");
-   }
 
-   
 }
