@@ -43,7 +43,7 @@ public class DeleteCurrentLineTest extends BaseTest
       createFolder("test");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.SLEEP*2);
       String text1 = selenium.getText("//body[@class='editbox']");
       Thread.sleep(TestConstants.SLEEP_SHORT*3);
       saveAsUsingToolbarButton("test.html");
