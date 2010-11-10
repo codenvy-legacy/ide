@@ -54,8 +54,8 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
    public HotKeyItemListGrid()
    {
-      setCanSort(false);
-      setCanGroupBy(false);
+//      setCanSort(false);
+//      setCanGroupBy(false);
 //      setCanFocus(false);
       setSelectionType(SelectionStyle.SINGLE);
 //      setCanFreezeFields(false);

@@ -83,6 +83,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    
    /**
     * Get selected templates.
+    * @return 
     * 
     * @return selected templates
     */
