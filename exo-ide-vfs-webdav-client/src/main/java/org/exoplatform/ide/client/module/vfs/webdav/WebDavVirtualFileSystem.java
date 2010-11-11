@@ -538,7 +538,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       ItemUnlockedEvent event = new ItemUnlockedEvent(item);
 
-      int[] acceptStatus = new int[]{HTTPStatus.NO_CONTENT};
+      int[] acceptStatus = new int[]{HTTPStatus.NO_CONTENT, 1223}; //1223 for IE
 
       String errorMessage = "Service is not deployed.";
       ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
