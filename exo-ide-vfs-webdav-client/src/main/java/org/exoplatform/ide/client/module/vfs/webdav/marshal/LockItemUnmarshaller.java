@@ -55,14 +55,15 @@ public class LockItemUnmarshaller implements Unmarshallable
 
    private void parseLockToken(String body)
    {
-      Document token = XMLParser.parse(body);
-      //      NodeList activeLock = token.getElementsByTagName("D:activelock");
-      NodeList activeLock =
-         token.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getChildNodes();
+      body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
 
-      for (int i = 0; i < activeLock.getLength(); i++)
+      Document token = XMLParser.parse(body);
+   
+      NodeList activeLock = token.getElementsByTagName("activelock");
+      NodeList activeLockList = activeLock.item(0).getChildNodes() ; 
+      for (int i = 0; i < activeLockList.getLength(); i++)
       {
-         Node node = activeLock.item(i);
+         Node node = activeLockList.item(i);
          if (node.getNodeName().equals("D:owner"))
          {
             if (node.getChildNodes().item(0).getNodeName().equals("D:href"))
