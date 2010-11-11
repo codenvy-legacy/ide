@@ -17,8 +17,8 @@
 package org.exoplatform.ide.client.editor;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
+import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedEvent;
+import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
@@ -26,13 +26,7 @@ import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import com.google.gwt.dom.client.BodyElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.Tab;
 
@@ -43,7 +37,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  * @version @version $Id: $
  */
 
-public class EditorTab extends Tab implements EditorActivityHandler
+public class EditorTab extends Tab implements EditorFocusReceivedHandler
 {
 
    private View viewPane;
@@ -54,8 +48,6 @@ public class EditorTab extends Tab implements EditorActivityHandler
 
    private boolean readOnly = false;
 
-   private BodyElement body;
-
    private static int ID;
 
    private Handlers handlers;
@@ -65,7 +57,7 @@ public class EditorTab extends Tab implements EditorActivityHandler
       this.file = file;
 
       handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorFocusReceivedEvent.TYPE, this);
 
       setTitle(getTabTitle());
       viewPane = new View("ideEditorTab-" + ID++, eventBus);
@@ -89,46 +81,6 @@ public class EditorTab extends Tab implements EditorActivityHandler
       return textEditor;
    }
 
-   //   private List<Element> getChildren(Element element)
-   //   {
-   //      List<Element> elements = new ArrayList<Element>();
-   //
-   //      for (int i = 0; i < DOM.getChildCount(element); i++)
-   //      {
-   //         Element child = DOM.getChild(element, i);
-   //         elements.add(child);
-   //      }
-   //
-   //      return elements;
-   //   }
-   //   
-   //   private Element getIFrameElement(Element element) {
-   //      for (Element child1 : getChildren(element))
-   //      {
-   //         if (child1.getAttribute("class") != null && "CodeMirror-wrapping".equals(child1.getAttribute("class")))
-   //         {
-   //            System.out.println("codemirror > " + child1);
-   //
-   //            for (Element child2 : getChildren(child1))
-   //            {
-   //               if ("iframe".equalsIgnoreCase(child2.getNodeName()))
-   //               {
-   //                  return child2;
-   //                  
-   ////                  IFrameElement iframe = IFrameElement.as(child2);
-   ////                  Document doc = getIFrameDocument(iframe);
-   ////                  BodyElement body = doc.getBody();
-   ////                  setHandler(body);
-   //               }
-   //
-   //            }
-   //
-   //         }
-   //      }
-   //
-   //      return null;
-   //   }
-
    public void setTextEditor(final SmartGWTTextEditor textEditor)
    {
       if (this.textEditor != null)
@@ -139,28 +91,6 @@ public class EditorTab extends Tab implements EditorActivityHandler
       this.textEditor = textEditor;
 
       viewPane.addMember(textEditor);
-
-      //      new Timer()
-      //      {
-      //
-      //         @Override
-      //         public void run()
-      //         {
-      //
-      //            Element editorWraper = Document.get().getElementById(textEditor.getTextEditor().getEditorWrapperID());
-      //
-      //            NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
-      //            if (iframes != null && iframes.getLength() > 0)
-      //            {
-      //
-      //               Element iFrameElement = iframes.getItem(0);
-      //               Document doc = getIFrameDocument(IFrameElement.as(iFrameElement));
-      //               body = doc.getBody();
-      //               setHandler(body);
-      //            }
-      //         }
-      //      }.schedule(1000);
-
    }
 
    public File getFile()
@@ -194,37 +124,20 @@ public class EditorTab extends Tab implements EditorActivityHandler
       return title;
    }
 
-   private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;     
-      if(typeof e.addEventListener != "undefined")
-      {
-      e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.editor.EditorTab::onMouseDown()();},false);
-      }
-      else
-      {
-      e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.editor.EditorTab::onMouseDown()();});
-      }
-   }-*/;
-
-   private native Document getIFrameDocument(IFrameElement iframe)/*-{
-      return iframe.contentDocument || iframe.contentWindow.document;
-   }-*/;
-
    private void onMouseDown()
    {
       ViewHighlightManager.getInstance().selectView(viewPane);
    }
 
    /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
+    * Highlight File Tab after Editor had received the focus
+    * @see org.exoplatform.gwtframework.editor.event.EditorFocusRecievedHandler#onEditorFocusRecieved(org.exoplatform.gwtframework.editor.event.EditorFocusRecievedEvent)
     */
-   public void onEditorActivity(EditorActivityEvent event)
+   public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
       if (textEditor.getEditorId().equals(event.getEditorId()))
       {
          onMouseDown();
       }
    }
-
 }
