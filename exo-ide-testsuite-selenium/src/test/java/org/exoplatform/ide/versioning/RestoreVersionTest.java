@@ -79,6 +79,7 @@ public class RestoreVersionTest extends VersioningTest
    @Ignore
    public void testRestoreVersion() throws Exception
    {
+      Thread.sleep(10000);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -126,7 +127,7 @@ public class RestoreVersionTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkAskDialogPresent(true);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
       checkAskDialogPresent(false);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
@@ -228,6 +229,7 @@ public class RestoreVersionTest extends VersioningTest
    }
 
    @Test
+   @Ignore
    public void testRestoreVersionAndEditFile() throws Exception
    {
       Thread.sleep(10000);
@@ -278,7 +280,6 @@ public class RestoreVersionTest extends VersioningTest
       checkAskDialogPresent(true);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
-      Thread.sleep(100000);
       checkAskDialogPresent(false);
       Thread.sleep(30000);
       assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
