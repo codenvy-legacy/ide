@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,50 +15,21 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
+package org.exoplatform.ide.client.framework.ui.event;
 
-package org.exoplatform.ide.client.panel.event;
-
-import org.exoplatform.ide.client.framework.ui.View;
-
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ *
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Nov 8, 2010 $
+ *
  */
-
-public class OpenPanelEvent extends GwtEvent<OpenPanelHandler>
+public interface ViewActivatedHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<OpenPanelHandler> TYPE = new GwtEvent.Type<OpenPanelHandler>();
-
-   private View view;
-
-   public OpenPanelEvent(View view)
-   {
-      this.view = view;
-   }
-
-   public View getView()
-   {
-      return view;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenPanelHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(OpenPanelHandler handler)
-   {
-      handler.onOpenPanel(this);
-   }
-
+   void onViewActivated(ViewActivatedEvent event);
+   
 }

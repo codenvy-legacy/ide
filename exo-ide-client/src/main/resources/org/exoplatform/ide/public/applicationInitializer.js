@@ -12,6 +12,6 @@ var appConfig = {
 	"context" : "/rest/private",
 	"publicContext" : "/rest",
 	
-	"gadgetServer" : "/gadgets/", /*under GWT Shell*/
+	"gadgetServer" : "/gadgets/" /*under GWT Shell*/
 	//"gadgetServer" : "/eXoGadgetServer/gadgets/" /*for portal*/
 }

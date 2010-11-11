@@ -17,10 +17,13 @@
 package org.exoplatform.ide.client.operation.preview;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.framework.ui.LockableView;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.HTMLPane;
 
@@ -31,19 +34,23 @@ import com.smartgwt.client.widgets.HTMLPane;
  * @version @version $Id: $
  */
 
-public class PreviewForm extends TabPanel
+public class PreviewForm extends LockableView
 {
 
    private static final String TAB_ID = "Preview";
 
    private HTMLPane htmlPane;
 
+   private Image image;
+
    /**
     * @param eventBus
     */
    public PreviewForm(HandlerManager eventBus)
    {
-      super(eventBus, true);
+      super(TAB_ID, eventBus, true);
+      image = new Image(IDEImageBundle.INSTANCE.preview());
+      setHeight100();
    }
 
    /**
@@ -52,9 +59,15 @@ public class PreviewForm extends TabPanel
    @Override
    public String getTitle()
    {
-      Image image = new Image(IDEImageBundle.INSTANCE.preview());
-      String html = ImageUtil.getHTML(image);
-      return "<span>" + html + "&nbsp;Preview</span>";
+      return "Preview";
+   }
+
+   /**
+    * @return the image
+    */
+   public Image getImage()
+   {
+      return image;
    }
 
    /**
@@ -69,15 +82,49 @@ public class PreviewForm extends TabPanel
          htmlPane.destroy();
       }
       htmlPane = new HTMLPane();
-      addMember(htmlPane);
 
       //String fileURL = Configuration.getInstance().getContext() + "/jcr" + path;
       String iframe =
-         "<iframe name=\"eXo-IDE-preview-frame\" src=\"" + href + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
+         "<iframe name=\"eXo-IDE-preview-frame\" id=\"eXo-IDE-preview-frame\" src=\"" + href
+            + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
       iframe += "<p>Your browser does not support iframes.</p>";
       iframe += "</iframe>";
+
+      //      htmlPane.setContentsURL(href);
       htmlPane.setContents(iframe);
+      //      addChild(htmlPane);
+      addMember(htmlPane);
+
+      new Timer()
+      {
+
+         @Override
+         public void run()
+         {
+            Document doc = getIFrameDocument(IFrameElement.as(Document.get().getElementById("eXo-IDE-preview-frame")));
+            Element body = doc.getBody();
+            setHandler(body);
+         }
+      }.schedule(1000);
+
    }
+
+   private native void setHandler(Element e)/*-{
+      var type = "mousedown";
+      var instance = this;     
+      if(typeof e.addEventListener != "undefined")
+      {
+      e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();},false);
+      }
+      else
+      {
+      e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
+      }
+   }-*/;
+
+   private native Document getIFrameDocument(IFrameElement iframe)/*-{
+      return iframe.contentDocument || iframe.contentWindow.document;
+   }-*/;
 
    @Override
    public void onOpenTab()
@@ -91,7 +138,6 @@ public class PreviewForm extends TabPanel
       super.onCloseTab();
    }
 
-   @Override
    public String getId()
    {
       return TAB_ID;

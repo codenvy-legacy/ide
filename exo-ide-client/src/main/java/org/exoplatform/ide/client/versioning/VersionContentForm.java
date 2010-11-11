@@ -20,18 +20,23 @@
 
 package org.exoplatform.ide.client.versioning;
 
-
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
+
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * 
@@ -41,21 +46,21 @@ import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
  * @version $
  */
 
-public class VersionContentForm extends SimpleTabPanel implements VersionContentPresenter.Display
+public class VersionContentForm extends View implements VersionContentPresenter.Display
 {
    public static final String ID = "ideVersionContentPanel";
-   
+
    public static final String FORM_ID = "ideVersionContentForm";
 
    private HandlerManager eventBus;
 
    private SmartGWTTextEditor smartGWTTextEditor;
-   
+
    private VersionContentPresenter presenter;
 
    public VersionContentForm(HandlerManager eventBus, Version version)
    {
-      super(ID);
+      super(ID, eventBus);
       setID(FORM_ID);
       this.eventBus = eventBus;
       createEditor(version);
@@ -63,11 +68,13 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
       presenter.bindDisplay(this);
    }
 
-   private void createEditor(Version version){
-      if (smartGWTTextEditor != null){
+   private void createEditor(Version version)
+   {
+      if (smartGWTTextEditor != null)
+      {
          removeMember(smartGWTTextEditor);
       }
-      
+
       Editor editor = null;
       try
       {
@@ -85,15 +92,37 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       smartGWTTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
       addMember(smartGWTTextEditor);
+
+      new Timer()
+      {
+
+         @Override
+         public void run()
+         {
+            Element editorWraper =
+               Document.get().getElementById(smartGWTTextEditor.getTextEditor().getEditorWrapperID());
+
+            NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
+            if (iframes != null && iframes.getLength() > 0)
+            {
+
+               Element iFrameElement = iframes.getItem(0);
+
+               Document doc = getIFrameDocument(IFrameElement.as(iFrameElement));
+               BodyElement body = doc.getBody();
+               setHandler(body);
+            }
+         }
+      }.schedule(1000);
    }
-   
+
    /**
     * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
     */
    @Override
    protected void onDraw()
    {
-      eventBus.fireEvent(new PanelOpenedEvent(ID));   
+      eventBus.fireEvent(new PanelOpenedEvent(ID));
       super.onDraw();
    }
 
@@ -137,4 +166,21 @@ public class VersionContentForm extends SimpleTabPanel implements VersionContent
    {
       destroy();
    }
+
+   private native void setHandler(Element e)/*-{
+      var type = "mousedown";
+      var instance = this;     
+      if(typeof e.addEventListener != "undefined")
+      {
+         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
+      }
+      else
+      {
+         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
+      }
+   }-*/;
+
+   private native Document getIFrameDocument(IFrameElement iframe)/*-{
+      return iframe.contentDocument || iframe.contentWindow.document;
+   }-*/;
 }

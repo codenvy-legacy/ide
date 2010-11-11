@@ -20,10 +20,10 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsForm extends SimpleTabPanel implements SearchResultPanel, SearchResultsPresenter.Display
+public class SearchResultsForm extends View implements SearchResultPanel, SearchResultsPresenter.Display
 {
 
    private final String TREE_ID = "ideSearchResultItemTreeGrid";
@@ -47,7 +47,7 @@ public class SearchResultsForm extends SimpleTabPanel implements SearchResultPan
 
    public SearchResultsForm(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
-      super(ID);
+      super(ID, eventBus);
       searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
       searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
       searchItemTreeGrid.setShowHeader(false);

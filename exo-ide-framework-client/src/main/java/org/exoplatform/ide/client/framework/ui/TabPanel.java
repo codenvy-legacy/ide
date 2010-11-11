@@ -146,7 +146,7 @@ public abstract class TabPanel extends Layout implements ResizedHandler, LockIFr
 
       lockCanvas = new Canvas();
       lockCanvas.setBackgroundColor("#3344FF");
-      lockCanvas.setOpacity(0);
+      lockCanvas.setOpacity(50);
       lockCanvas.setWidth100();
       lockCanvas.setHeight100();
       addChild(lockCanvas);

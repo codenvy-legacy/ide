@@ -20,6 +20,7 @@ import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.ide.client.application.perspective.DefaultPerspective;
 import org.exoplatform.ide.client.component.ClearFocusForm;
 import org.exoplatform.ide.client.download.DownloadForm;
+import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -65,6 +66,7 @@ public class IDEForm extends Layout implements IDEPresenter.Display
 
       new ClearFocusForm(eventBus);
       new DownloadForm(eventBus);
+      new ViewHighlightManager(eventBus);
 
       Window.addResizeHandler(new ResizeHandler()
       {

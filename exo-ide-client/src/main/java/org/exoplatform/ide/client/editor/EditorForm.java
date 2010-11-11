@@ -34,9 +34,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.panel.HighlightedTabSet;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -44,7 +47,6 @@ import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -70,7 +72,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    private EditorPresenter presenter;
 
-   private TabSet tabSet;
+   private HighlightedTabSet tabSet;
 
    private EditorTab activeTab;
 
@@ -85,8 +87,9 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       
       setID(ID);
 
-      tabSet = new TabSet();
+      tabSet = new HighlightedTabSet();
       tabSet.setID(TABSET_ID);
+//      tabSet.setAttribute("paneMargin", 1, false);
       createControlButtons();
       addMember(tabSet);
 
@@ -100,6 +103,10 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          public void onMouseDown(MouseDownEvent event)
          {
+            if(activeTab != null)
+            {
+               ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
+            }
             event.cancel();
          }
       });
@@ -140,6 +147,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          try
          {
             activeTab = (EditorTab)event.getTab();
+//            ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
             //            String path = activeTab.getFile().getHref();
             eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
@@ -167,7 +175,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       boolean addTab = false;
       if (tab == null)
       {
-         tab = new EditorTab(file);
+         tab = new EditorTab(file, eventBus);
          tab.setCanClose(true);
          if (readOnly)
             tab.showReadOnlyStatus();

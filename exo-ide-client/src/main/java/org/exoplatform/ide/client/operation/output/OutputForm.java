@@ -16,6 +16,12 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.LockableView;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -24,13 +30,6 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.ui.TabPanel;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -38,10 +37,10 @@ import org.exoplatform.ide.client.framework.ui.TabPanel;
  * @version @version $Id: $
  */
 
-public class OutputForm extends TabPanel implements OutputPresenter.Display
+public class OutputForm extends LockableView implements OutputPresenter.Display
 {
 
-   private final String ID = "ideOutputForm"; 
+   private final static String ID = "ideOutputForm"; 
    
    private OutputPresenter presenter;
 
@@ -51,9 +50,11 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
 
    public OutputForm(HandlerManager eventBus)
    {
-      super(eventBus, false);
+      super(ID,eventBus, true);
+      
+      setVertical(Boolean.TRUE);
       setCanFocus(false);
-
+      
       setOverflow(Overflow.HIDDEN);
 
       outputLayout = new VLayout();
@@ -61,7 +62,7 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
       outputLayout.setHeight100();
       outputLayout.setOverflow(Overflow.SCROLL);
       outputLayout.setCanFocus(false);
-      outputLayout.setID(ID);
+//      outputLayout.setID(ID);
       addMember(outputLayout);
 
       clearOutputButton = new ImgButton();
@@ -72,7 +73,9 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
       clearOutputButton.setTooltip("Clear output");
       //clearOutputButton1.disable();
       addTabButton(clearOutputButton);
-
+      
+      image = new Image(IDEImageBundle.INSTANCE.output());
+      
       presenter = new OutputPresenter(eventBus);
       presenter.bindDisplay(this);
    }
@@ -106,12 +109,20 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
 
    };
 
+   private Image image;
+
    @Override
    public String getTitle()
    {
-      Image image = new Image(IDEImageBundle.INSTANCE.output());
-      String html = ImageUtil.getHTML(image);
-      return "<span>" + html + "&nbsp;Output</span>";
+      return "Output";
+   }
+
+   /**
+    * @return the image
+    */
+   public Image getImage()
+   {
+      return image;
    }
 
    public HasClickHandlers getClearOutputButton()
@@ -119,7 +130,6 @@ public class OutputForm extends TabPanel implements OutputPresenter.Display
       return clearOutputButton;
    }
 
-   @Override
    public String getId()
    {
       return "Output";

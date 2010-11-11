@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.TabBarControls;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
-import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.MinMaxControlButton;
@@ -34,10 +27,17 @@ import org.exoplatform.ide.client.event.perspective.MaximizeCodeHelperPanelEvent
 import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
 import org.exoplatform.ide.client.panel.TabContainer;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.types.TabBarControls;
+import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
+import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -70,7 +70,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
       tabSet = new TabContainer(eventBus, TAB_SET_ID);
       createButtons();
-      OutlineForm outlineForm= new OutlineForm(eventBus);
+      OutlineForm outlineForm = new OutlineForm(eventBus);
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
       tabSet.addTabPanel(outlineForm, "Outline", tabIcon, true);
       addMember(tabSet);
@@ -102,10 +102,12 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    {
       public void onCloseClick(TabCloseClickEvent event)
       {
-         event.cancel();
-         
-        hide();
-         eventBus.fireEvent(new ShowOutlineEvent(false));
+         hide();
+         if (event.getTab().getPane().getTitle().equals(OutlineForm.ID))
+         {
+            event.cancel();
+            eventBus.fireEvent(new ShowOutlineEvent(false));
+         }
       }
    };
 
@@ -124,12 +126,12 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    }
 
    /**
-    * @see org.exoplatform.ide.client.outline.CodeHelperPresenter.Display#addPanel(org.exoplatform.ide.client.panel.SimpleTabPanel)
+    * @see org.exoplatform.ide.client.outline.CodeHelperPresenter.Display#addView(org.exoplatform.ide.client.panel.SimpleTabPanel)
     */
-   public void addPanel(SimpleTabPanel panel)
+   public void addView(View view)
    {
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.viewVersions());
-      tabSet.addTabPanel(panel, "Version", tabIcon, true);
+      tabSet.addTabPanel(view, "Version", tabIcon, true);
       tabSet.selectTabPanel(VersionContentForm.ID);
    }
 

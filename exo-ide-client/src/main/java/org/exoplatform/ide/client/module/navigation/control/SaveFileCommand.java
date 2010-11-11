@@ -42,8 +42,6 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
-import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChangedEvent;
-import org.exoplatform.ide.client.operation.properties.event.FilePropertiesChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -55,7 +53,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FilePropertiesChangedHandler, FileContentSavedHandler,
+   ItemPropertiesSavedHandler, EditorFileContentChangedHandler,  FileContentSavedHandler,
    EntryPointChangedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -86,7 +84,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      eventBus.addHandler(FilePropertiesChangedEvent.TYPE, this);
+//      eventBus.addHandler(FilePropertiesChangedEvent.TYPE, this);
       eventBus.addHandler(FileContentSavedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -185,17 +183,17 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
-   public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
-   {
-      if (event.getFile().isNewFile())
-      {
-         setEnabled(false);
-      }
-      else
-      {
-         setEnabled(true);
-      }
-   }
+//   public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
+//   {
+//      if (event.getFile().isNewFile())
+//      {
+//         setEnabled(false);
+//      }
+//      else
+//      {
+//         setEnabled(true);
+//      }
+//   }
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {

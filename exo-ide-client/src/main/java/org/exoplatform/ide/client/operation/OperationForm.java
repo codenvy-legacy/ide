@@ -16,34 +16,27 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.editor.MinMaxControlButton;
-import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
-import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
 import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.preview.PreviewForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
+import org.exoplatform.ide.client.panel.TabContainer;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.TabBarControls;
-import com.smartgwt.client.widgets.Canvas;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.TabSet;
-import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
-import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
@@ -68,7 +61,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    private OperationPresenter presenter;
 
-   private TabSet tabSet;
+   private TabContainer tabSet;
 
    private PropertiesForm propertiesForm;
 
@@ -78,13 +71,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    private GadgetPreviewPane gadgetPreviewPane;
 
-   private Layout tabBarColtrols;
 
-   private HashMap<String, List<Canvas>> tabColtrolButtons = new HashMap<String, List<Canvas>>();
-
-   protected String previousTab = null;
-
-   protected MinMaxControlButton minMaxControlButton;
 
    public OperationForm(HandlerManager eventBus)
    {
@@ -95,16 +82,16 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
       setHeight(INITIAL_HEIGHT);
 
-      tabSet = new TabSet();
-      tabSet.setID(TABSET_ID);
-      createButtons();
+      tabSet = new TabContainer(eventBus,TABSET_ID);
+//      tabSet.setID(TABSET_ID);
+      tabSet.createButtons();
       addMember(tabSet);
 
       propertiesForm = new PropertiesForm(eventBus);
       outputForm = new OutputForm(eventBus);
       previewForm = new PreviewForm(eventBus);
 
-      addTab(outputForm, false);
+      tabSet.addTabPanel(outputForm, outputForm.getTitle(), outputForm.getImage(), false);
 
       /*
        * 
@@ -121,7 +108,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       presenter.bindDisplay(this);
 
       tabSet.addTabSelectedHandler(tabSelectedHandler);
-      tabSet.addCloseClickHandler(closeClickhandler);
+//      tabSet.addCloseClickHandler(closeClickhandler);
 
       handlers.addHandler(OperationPanelRestoredEvent.TYPE, this);
    }
@@ -134,58 +121,32 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       super.destroy();
    }
 
-   private void createButtons()
-   {
-      tabBarColtrols = new Layout();
-      tabBarColtrols.setHeight(18);
-      tabBarColtrols.setAutoWidth();
 
-      minMaxControlButton =
-         new MinMaxControlButton(eventBus, true, new MaximizeOperationPanelEvent(), new RestoreOperationPanelEvent());
-      tabBarColtrols.addMember(minMaxControlButton);
 
-      tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
-   }
-
-   /**
-    * Add new Tab to TabSet
-    * 
-    * @param tabPanel
-    * @param canClose
-    * @return
-    */
-   private Tab addTab(TabPanel tabPanel, boolean canClose)
-   {
-      /*
-       * disable all control buttons
-       */
-      for (String tabTitle : tabColtrolButtons.keySet())
-      {
-         List<Canvas> buttons = tabColtrolButtons.get(tabTitle);
-         for (Canvas button : buttons)
-         {
-            button.hide();
-         }
-      }
-
-      tabColtrolButtons.put(tabPanel.getTitle(), tabPanel.getColtrolButtons());
-      int position = 0;
-      for (Canvas button : tabColtrolButtons.get(tabPanel.getTitle()))
-      {
-         tabBarColtrols.addMember(button, position);
-         position++;
-      }
-
-      Tab tab = new Tab(tabPanel.getTitle());
-      tab.setID(tabPanel.getId());
-      tab.setPane(tabPanel);
-      tab.setCanClose(canClose);
-      tabSet.addTab(tab);
-
-      tabPanel.onOpenTab();
-
-      return tab;
-   }
+//   /**
+//    * Add new Tab to TabSet
+//    * 
+//    * @param tabPanel
+//    * @param canClose
+//    * @return
+//    */
+//   private Tab addTab(View tabPanel, boolean canClose)
+//   {
+//      /*
+//       * disable all control buttons
+//       */
+//     
+//
+//      Tab tab = new Tab(tabPanel.getTitle());
+//      tab.setID(tabPanel.getViewId());
+//      tab.setPane(tabPanel);
+//      tab.setCanClose(canClose);
+//      tabSet.addTab(tab);
+//
+//      tabPanel.onOpenTab();
+//
+//      return tab;
+//   }
 
    /*
     * Switching
@@ -199,7 +160,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       //         propertiesForm.refreshProperties(file);
       //      }
 
-      Tab previewTab = tabSet.getTab(previewForm.getId());
+      Tab previewTab = tabSet.getTab(previewForm.getViewId());
       if (previewTab != null)
       {
          previewForm.showPreview(file.getHref());
@@ -225,58 +186,23 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    {
       public void onTabSelected(TabSelectedEvent event)
       {
-         if (previousTab != null)
-         {
-            List<Canvas> buttons = tabColtrolButtons.get(previousTab);
-            for (Canvas button : buttons)
-            {
-               button.hide();
-            }
-         }
-
-         int buttonsWidth = 20;
-         List<Canvas> buttonsToShow = tabColtrolButtons.get(event.getTab().getTitle());
-         for (Canvas button : buttonsToShow)
-         {
-            button.show();
-            buttonsWidth += button.getWidth();
-         }
-
-         previousTab = event.getTab().getTitle();
-
-         for (Canvas c : tabSet.getChildren())
-         {
-            if (c.getID().equals(tabSet.getID() + "_tabBar"))
-            {
-               if (c.getWidth() > tabSet.getWidth() - buttonsWidth)
-               {
-                  c.setWidth(tabSet.getWidth() - buttonsWidth);
-               }
-            }
-         }
+        
 
       }
    };
 
-   /**
-    * Closing tab click handler
-    */
-   private CloseClickHandler closeClickhandler = new CloseClickHandler()
-   {
-      public void onCloseClick(TabCloseClickEvent event)
-      {
-         /*
-          * delete all buttons from control bar 
-          */
-         List<Canvas> buttons = tabColtrolButtons.get(event.getTab().getTitle());
-         for (Canvas button : buttons)
-         {
-            tabBarColtrols.removeMember(button);
-         }
-
-         ((TabPanel)event.getTab().getPane()).onCloseTab();
-      }
-   };
+//   /**
+//    * Closing tab click handler
+//    */
+//   private CloseClickHandler closeClickhandler = new CloseClickHandler()
+//   {
+//      public void onCloseClick(TabCloseClickEvent event)
+//      {
+//
+//
+//         ((TabPanel)event.getTab().getPane()).onCloseTab();
+//      }
+//   };
 
    /*
     * Show Output
@@ -284,7 +210,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    public void showOutput()
    {
       show();
-      Tab outputTab = tabSet.getTab(outputForm.getId());
+      Tab outputTab = tabSet.getTab(outputForm.getViewId());
       tabSet.selectTab(outputTab);
    }
 
@@ -296,13 +222,14 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       show();
 
       // if properties already opened
-      Tab propertiesTab = tabSet.getTab(propertiesForm.getId());
+      Tab propertiesTab = tabSet.getTab(propertiesForm.getViewId());
       if (propertiesTab == null)
       {
-         propertiesTab = addTab(propertiesForm, true);
+         tabSet.addTabPanel(propertiesForm, propertiesForm.getTitle(), propertiesForm.getImage(), true);
+         propertiesTab = tabSet.getTab(propertiesForm.getViewId());
       }
 
-      tabSet.selectTab(propertiesTab);
+      tabSet.selectTab(propertiesTab.getID());
 
       propertiesForm.refreshProperties(file);
 
@@ -310,9 +237,9 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    public void closePropertiesTab()
    {
-      if (tabSet.getTab(propertiesForm.getId()) != null)
+      if (tabSet.getTab(propertiesForm.getViewId()) != null)
       {
-         tabSet.removeTab(propertiesForm.getId());
+         tabSet.closeTabPanel(propertiesForm.getViewId());
       }
    }
 
@@ -321,23 +248,23 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       show();
 
       // if preview already opened
-      Tab previewTab = tabSet.getTab(previewForm.getId());
+      Tab previewTab = tabSet.getTab(previewForm.getViewId());
       if (previewTab == null)
       {
-         previewTab = addTab(previewForm, true);
+         tabSet.addTabPanel(previewForm, previewForm.getTitle(), previewForm.getImage(), true);
       }
 
-      tabSet.selectTab(previewTab);
+      tabSet.selectTab(previewForm.getViewId());
       previewForm.showPreview(path);
    }
 
    public void closePreviewTab()
    {
-      Tab previewTab = tabSet.getTab(previewForm.getId());
+      Tab previewTab = tabSet.getTab(previewForm.getViewId());
       if (previewTab != null)
       {
          tabSet.removeTab(previewTab);
-         ((TabPanel)previewTab.getPane()).onCloseTab();
+         ((LockableView)previewTab.getPane()).onCloseTab();
       }
    }
 
@@ -346,17 +273,18 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       show();
       gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
       // if preview already opened
-      Tab gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getId());
+      Tab gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getViewId());
       if (gadgetPreviewTab == null)
       {
-         gadgetPreviewTab = addTab(gadgetPreviewPane, true);
+         tabSet.addTabPanel(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
       }
-      tabSet.selectTab(gadgetPreviewTab);
+      tabSet.selectTab(gadgetPreviewPane.getViewId());
+      gadgetPreviewPane.onOpenTab();
    }
 
    public void onOperationPanelRestored(OperationPanelRestoredEvent event)
    {
-      minMaxControlButton.setMaximize(true);
+//      minMaxControlButton.setMaximize(true);
    }
 
 }

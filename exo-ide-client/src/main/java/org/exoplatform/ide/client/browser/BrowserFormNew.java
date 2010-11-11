@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 
-public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, BrowserPresenter.Display
+public class BrowserFormNew extends View implements BrowserPanel, BrowserPresenter.Display
 {
 
    public static final String TITLE = "Workspace";
@@ -40,7 +40,7 @@ public class BrowserFormNew extends SimpleTabPanel implements BrowserPanel, Brow
 
    public BrowserFormNew(HandlerManager eventBus)
    {
-      super(ID);
+      super(ID,eventBus);
       treeGrid = new GWTItemTreeGrid();
       treeGrid.setEmptyMessage("Root folder not found!");
       addMember(treeGrid);

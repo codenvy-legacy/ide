@@ -144,6 +144,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       goToLine = true;
    }
 
+   public void destroy()
+   {
+      handlers.removeHandlers();
+   }
+   
    private void refreshOutline(TextEditor editor)
    {
       tokens = editor.getTokenList();

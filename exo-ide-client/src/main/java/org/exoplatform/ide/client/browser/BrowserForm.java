@@ -22,17 +22,17 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
-import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.model.ApplicationContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 
-public class BrowserForm extends SimpleTabPanel implements BrowserPanel, BrowserPresenter.Display
+public class BrowserForm extends View implements BrowserPanel, BrowserPresenter.Display
 {
 
    private final String TREE_ID = "ideNavigatorItemTreeGrid";
@@ -45,7 +45,7 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
 
    public BrowserForm(HandlerManager eventBus, ApplicationContext context)
    {
-      super(ID);
+      super(ID, eventBus);
       treeGrid = new ItemTreeGrid<Item>(TREE_ID);
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
@@ -60,12 +60,14 @@ public class BrowserForm extends SimpleTabPanel implements BrowserPanel, Browser
 
       presenter = new BrowserPresenter(eventBus);
       presenter.bindDisplay(this);
-
+      
       addMouseDownHandler(new MouseDownHandler()
       {
          public void onMouseDown(MouseDownEvent event)
          {
-            event.cancel();
+//            System.out.println("BrowserForm onMouse Down");
+//            ViewHighlightManager.getInstance().selectView(BrowserForm.this);
+//            event.cancel();
          }
       });
    }

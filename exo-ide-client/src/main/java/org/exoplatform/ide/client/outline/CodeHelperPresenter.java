@@ -24,8 +24,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
 import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
 import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
@@ -47,7 +47,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
 
       void hide();
       
-      void addPanel(SimpleTabPanel panel);
+      void addView(View view);
       
       void closePanel(String panelId);
    }
@@ -121,7 +121,7 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
    public void onOpenPanel(OpenPanelEvent event)
    {
       display.show();
-      display.addPanel(event.getPanel());
+      display.addView(event.getView());
    }
 
    /**

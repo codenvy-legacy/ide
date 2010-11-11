@@ -76,7 +76,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
          return;
       }
       activeFile = file;
-      
+      refresh.cancel();
       refresh.schedule(200);
    }
    

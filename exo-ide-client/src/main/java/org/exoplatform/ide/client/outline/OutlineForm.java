@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.SelectionStyle;
+import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.panel.SimpleTabPanel;
+import org.exoplatform.ide.client.framework.ui.View;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.types.SelectionStyle;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,11 +33,11 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineForm extends SimpleTabPanel implements OutlinePresenter.Display
+public class OutlineForm extends View implements OutlinePresenter.Display
 {
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
-   
-   private static final String ID = "ideOutlineForm";
+
+   public static final String ID = "ideOutlineForm";
 
    private HandlerManager eventBus;
 
@@ -47,7 +47,7 @@ public class OutlineForm extends SimpleTabPanel implements OutlinePresenter.Disp
 
    public OutlineForm(HandlerManager bus)
    {
-      super(ID);
+      super(ID, bus);
       eventBus = bus;
 
       treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
@@ -60,7 +60,7 @@ public class OutlineForm extends SimpleTabPanel implements OutlinePresenter.Disp
 
       treeGrid.setHeight100();
       treeGrid.setWidth100();
-      
+
       addMember(treeGrid);
       presenter = new OutlinePresenter(eventBus);
       presenter.bindDisplay(this);
@@ -80,16 +80,27 @@ public class OutlineForm extends SimpleTabPanel implements OutlinePresenter.Disp
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.View#onDestroy()
+    */
+   @Override
+   protected void onDestroy()
+   {
+      System.out.println("OutlineForm.onDestroy()");
+      presenter.destroy();
+      super.onDestroy();
+   }
+   
    public boolean isFormVisible()
    {
       return isVisible();
    }
-   
+
    public List<Token> getSelectedTokens()
    {
       return treeGrid.getSelectedTokens();
    }
-   
+
    public void setFocus()
    {
       treeGrid.focus();

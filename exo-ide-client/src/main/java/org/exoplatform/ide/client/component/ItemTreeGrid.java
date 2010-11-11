@@ -75,7 +75,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       setShowConnectors(false);
       setCanSort(false);
-
+      
       TreeGridField nameField = new TreeGridField(TITLE);
 
       //TODO

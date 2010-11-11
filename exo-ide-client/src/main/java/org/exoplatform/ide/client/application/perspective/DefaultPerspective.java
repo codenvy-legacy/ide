@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTMenuWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTStatusBarWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
+import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorForm;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.EditorPanelRestoredEvent;
@@ -46,6 +47,7 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
@@ -295,6 +297,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       statusBar = new GWTStatusBarWrapper(eventBus);
       //statusBar = new StatusBarForm(eventBus, context);
       addMember(statusBar);
+      eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
    }
 
    @Override

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,50 +15,57 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
-
-package org.exoplatform.ide.client.panel.event;
-
-import org.exoplatform.ide.client.framework.ui.View;
+package org.exoplatform.ide.client.framework.ui.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ *
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Nov 10, 2010 $
+ *
  */
-
-public class OpenPanelEvent extends GwtEvent<OpenPanelHandler>
+public class ActivateViewEvent extends GwtEvent<ActivateViewHandler>
 {
 
-   public static final GwtEvent.Type<OpenPanelHandler> TYPE = new GwtEvent.Type<OpenPanelHandler>();
+   public static GwtEvent.Type<ActivateViewHandler> TYPE = new Type<ActivateViewHandler>();
 
-   private View view;
+   private String viewId;
 
-   public OpenPanelEvent(View view)
+   /**
+    * @param viewId
+    */
+   public ActivateViewEvent(String viewId)
    {
-      this.view = view;
+      this.viewId = viewId;
    }
 
-   public View getView()
-   {
-      return view;
-   }
-
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenPanelHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ActivateViewHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
-   protected void dispatch(OpenPanelHandler handler)
+   protected void dispatch(ActivateViewHandler handler)
    {
-      handler.onOpenPanel(this);
+      handler.onActivateView(this);
+   }
+
+   /**
+    * @return the viewId
+    */
+   public String getViewId()
+   {
+      return viewId;
    }
 
 }

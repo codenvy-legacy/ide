@@ -17,11 +17,15 @@
 package org.exoplatform.ide.client.module.gadget.ui;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.TabPanel;
+import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 
@@ -30,7 +34,7 @@ import com.google.gwt.user.client.ui.Frame;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class GadgetPreviewPane extends TabPanel
+public class GadgetPreviewPane extends LockableView
 {
 
    /**
@@ -46,7 +50,7 @@ public class GadgetPreviewPane extends TabPanel
     * 
     */
    public static final String ID = "gadgetpreview";
-   
+
    private IDEConfiguration configuration;
 
    /**
@@ -55,7 +59,7 @@ public class GadgetPreviewPane extends TabPanel
     */
    public GadgetPreviewPane(HandlerManager eventBus, IDEConfiguration configuration, GadgetMetadata gadgetMetadata)
    {
-      super(eventBus, true);
+      super(ID, eventBus, true);
       this.configuration = configuration;
       metadata = gadgetMetadata;
    }
@@ -95,18 +99,16 @@ public class GadgetPreviewPane extends TabPanel
 
    private native String getST()/*-{
       return encodeURIComponent(gadgets.util.getUrlParameters().st);
-    }-*/;
-   
-   private native String getGadgetParent()/*-{
-   return encodeURIComponent(gadgets.util.getUrlParameters().parent);
- }-*/;
-   
-   private native boolean isGadget()/*-{
-       return (typeof(gadgets) !== "undefined" &&  typeof(gadgets) !== "null");
    }-*/;
-   
-   
-   
+
+   private native String getGadgetParent()/*-{
+      return encodeURIComponent(gadgets.util.getUrlParameters().parent);
+   }-*/;
+
+   private native boolean isGadget()/*-{
+      return (typeof(gadgets) !== "undefined" &&  typeof(gadgets) !== "null");
+   }-*/;
+
    /**
     * Create iframe. 
     * Gadget will be load here.
@@ -114,28 +116,56 @@ public class GadgetPreviewPane extends TabPanel
     */
    private void showGadget()
    {
-      
+
       String url = metadata.getIframeUrl();
       url = url.replace("?container=", "?container=default");
       url = url.replace("&view=", "&view=canvas");
       url = configuration.getGadgetServer() + "ifr" + url; // Configuration.getInstance().getGadgetServer() + "ifr" + url;
       if (isGadget())
       {
-         url = url + "&parent=" + getGadgetParent() + "&nocache=1&st="+ getST();
+         url = url + "&parent=" + getGadgetParent() + "&nocache=1&st=" + getST();
       }
       else
       {
          url = url + "&parent=" + Location.getHref() + "&nocache=1";
       }
-      Frame frame = new Frame(url);
+      final Frame frame = new Frame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
       frame.setHeight("100%");
       addMember(frame);
+
+      new Timer()
+      {
+
+         @Override
+         public void run()
+         {
+            Document doc = getIFrameDocument(IFrameElement.as(frame.getElement()));
+            Element body = doc.getBody();
+            setHandler(body);
+         }
+      }.schedule(1000);
    }
 
-   @Override
+   private native void setHandler(Element e)/*-{
+      var type = "mousedown";
+      var instance = this;     
+      if(typeof e.addEventListener != "undefined")
+      {
+         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
+      }
+      else
+      {
+         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
+      }
+   }-*/;
+
+   private native Document getIFrameDocument(IFrameElement iframe)/*-{
+      return iframe.contentDocument || iframe.contentWindow.document;
+   }-*/;
+
    public String getId()
    {
       return ID;

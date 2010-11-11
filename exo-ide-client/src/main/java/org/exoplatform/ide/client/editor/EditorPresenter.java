@@ -387,13 +387,13 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          return;
       }
 
-      closeFileAfterSaving = true;
       if (file.isNewFile())
       {
          eventBus.fireEvent(new SaveFileAsEvent(file, new EditorCloseFileEvent(file, true)));
       }
       else
       {
+         closeFileAfterSaving = true;
          String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
          Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedCallback()
          {
