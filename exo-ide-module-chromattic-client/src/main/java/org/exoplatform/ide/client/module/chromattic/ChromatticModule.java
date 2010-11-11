@@ -44,7 +44,7 @@ public class ChromatticModule implements IDEModule
    {
       this.eventBus = eventBus;
       
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Chromattic Data Object",
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Data Object",
          "Data Object", "Create Data Object", Images.FileType.CHROMATTIC,
          MimeType.CHROMATTIC_DATA_OBJECT)));
    }
