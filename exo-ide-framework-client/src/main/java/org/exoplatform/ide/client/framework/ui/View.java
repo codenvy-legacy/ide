@@ -143,7 +143,6 @@ public class View extends Layout implements ActivateViewHandler
    /**
     * @see org.exoplatform.ide.client.framework.ui.event.ActivateViewHandler#onActivateView(org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent)
     */
-   @Override
    public void onActivateView(ActivateViewEvent event)
    {
       if (id.equals(event.getViewId()))
