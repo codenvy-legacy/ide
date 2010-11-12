@@ -43,8 +43,14 @@ import com.google.gwt.event.shared.HandlerManager;
 public class CompileGroovyCommandHandler implements CompileGroovyHandler, CompileGroovyResultReceivedHandler
 {
 
+   /**
+    * Event Bus
+    */
    private HandlerManager eventBus;
 
+   /**
+    * @param eventBus Event Bus
+    */
    public CompileGroovyCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -53,14 +59,18 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler, Compil
       eventBus.addHandler(CompileGroovyResultReceivedEvent.TYPE, this);
    }
 
-   @Override
+   /**
+    * @see org.exoplatform.ide.client.module.chromattic.event.CompileGroovyHandler#onCompileGroovy(org.exoplatform.ide.client.module.chromattic.event.CompileGroovyEvent)
+    */
    public void onCompileGroovy(CompileGroovyEvent event)
    {
       File file = event.getFile();
       ChrommaticService.getInstance().compile(file);
    }
 
-   @Override
+   /**
+    * @see org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedHandler#onCompileGroovyResultReceived(org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedEvent)
+    */
    public void onCompileGroovyResultReceived(CompileGroovyResultReceivedEvent event)
    {
       if (event.getException() == null)

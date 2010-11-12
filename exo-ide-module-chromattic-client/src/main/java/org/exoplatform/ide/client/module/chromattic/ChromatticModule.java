@@ -40,10 +40,13 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ChromatticModule implements IDEModule, InitializeServicesHandler
 {
 
+   /**
+    * Event Bus
+    */
    private HandlerManager eventBus;
 
    /**
-    * @param eventBus
+    * @param eventBus Event Bus
     */
    public ChromatticModule(HandlerManager eventBus)
    {
@@ -60,7 +63,11 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
       new CompileGroovyCommandHandler(eventBus);
    }
 
-   @Override
+   /**
+    * Initialisation of services
+    * 
+    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
+    */
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());

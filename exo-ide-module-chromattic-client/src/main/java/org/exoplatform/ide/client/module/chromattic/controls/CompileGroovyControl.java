@@ -44,8 +44,14 @@ import com.google.gwt.event.shared.HandlerManager;
 public class CompileGroovyControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
    
+   /**
+    * Control ID
+    */
    public static final String ID = "Run/Compile";
    
+   /**
+    * 
+    */
    public CompileGroovyControl() {
       super(ID);
       setTitle("Compile");
@@ -53,13 +59,21 @@ public class CompileGroovyControl extends SimpleControl implements IDEControl, E
       setIcon(Images.COMPILE_GROOVY);
    }
 
-   @Override
+   /**
+    * Initialise control
+    * 
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
-   @Override
+   /**
+    * Handling of changing currently edited file
+    * 
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null || (event.getFile() instanceof Version))
