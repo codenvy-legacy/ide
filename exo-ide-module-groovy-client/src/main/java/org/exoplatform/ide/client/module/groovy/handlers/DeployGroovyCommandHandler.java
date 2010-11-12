@@ -62,7 +62,6 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
    }
 
-   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();

@@ -112,7 +112,6 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       initGoToErrorFunction();
    }
 
-   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
@@ -154,7 +153,6 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       openedFiles = event.getOpenedFiles();
    }
 
-   @Override
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
       GroovyService.getInstance().validate(activeFile.getName(), activeFile.getHref(), activeFile.getContent());

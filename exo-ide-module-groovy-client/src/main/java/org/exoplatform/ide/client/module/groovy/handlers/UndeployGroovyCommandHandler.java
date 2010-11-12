@@ -107,7 +107,6 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
       }
    }
 
-   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
