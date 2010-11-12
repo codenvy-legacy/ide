@@ -107,10 +107,11 @@ public class VersionContentForm extends View implements VersionContentPresenter.
             {
 
                Element iFrameElement = iframes.getItem(0);
-
-               Document doc = getIFrameDocument(IFrameElement.as(iFrameElement));
-               BodyElement body = doc.getBody();
-               setHandler(body);
+               setHandler(iFrameElement);
+//
+//               Document doc = getIFrameDocument(IFrameElement.as(iFrameElement));
+//               BodyElement body = doc.getBody();
+//               setHandler(body);
             }
          }
       }.schedule(1000);
@@ -170,14 +171,24 @@ public class VersionContentForm extends View implements VersionContentPresenter.
    private native void setHandler(Element e)/*-{
       var type = "mousedown";
       var instance = this;     
-      if(typeof e.addEventListener != "undefined")
+
+       if(typeof e.contentDocument != "undefined")
       {
-         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
+              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
       }
       else
       {
-         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
       }
+
+      //      if(typeof e.addEventListener != "undefined")
+      //      {
+      //         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
+      //      }
+      //      else
+      //      {
+      //         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
+      //      }
    }-*/;
 
    private native Document getIFrameDocument(IFrameElement iframe)/*-{

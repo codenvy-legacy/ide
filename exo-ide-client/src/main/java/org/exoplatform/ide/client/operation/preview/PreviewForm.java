@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.HTMLPane;
 
@@ -90,7 +91,6 @@ public class PreviewForm extends LockableView
       iframe += "<p>Your browser does not support iframes.</p>";
       iframe += "</iframe>";
 
-      //      htmlPane.setContentsURL(href);
       htmlPane.setContents(iframe);
       //      addChild(htmlPane);
       addMember(htmlPane);
@@ -101,25 +101,31 @@ public class PreviewForm extends LockableView
          @Override
          public void run()
          {
-            Document doc = getIFrameDocument(IFrameElement.as(Document.get().getElementById("eXo-IDE-preview-frame")));
-            Element body = doc.getBody();
-            setHandler(body);
+            setHandler(IFrameElement.as(Document.get().getElementById("eXo-IDE-preview-frame")));
          }
-      }.schedule(1000);
+      }.schedule(1500);
 
    }
 
    private native void setHandler(Element e)/*-{
       var type = "mousedown";
-      var instance = this;     
-      if(typeof e.addEventListener != "undefined")
+      var instance = this;
+      if(typeof e.contentDocument != "undefined")
       {
-      e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();},false);
+              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();},false);
       }
       else
       {
-      e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
       }
+//      if(typeof e.addEventListener != "undefined")
+//      {
+//      e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();},false);
+//      }
+//      else
+//      {
+//      e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
+//      }
    }-*/;
 
    private native Document getIFrameDocument(IFrameElement iframe)/*-{
