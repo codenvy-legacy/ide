@@ -150,16 +150,28 @@ public class GadgetPreviewPane extends LockableView
    }
 
    private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;     
-      if(typeof e.addEventListener != "undefined")
+      
+            var type = "mousedown";
+      var instance = this;
+      if(typeof e.contentDocument != "undefined")
       {
-         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
+              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
       }
       else
       {
-         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
       }
+      
+//      var type = "mousedown";
+//      var instance = this;     
+//      if(typeof e.addEventListener != "undefined")
+//      {
+//         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
+//      }
+//      else
+//      {
+//         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
+//      }
    }-*/;
 
    private native Document getIFrameDocument(IFrameElement iframe)/*-{
