@@ -12,15 +12,6 @@
    <name>eXo IDE :: Module : Chrommattic : Client</name>
    <dependencies>
       <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-servlet</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
@@ -29,9 +20,8 @@
          <artifactId>gwt-user</artifactId>
       </dependency>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
    </dependencies>
    <build>

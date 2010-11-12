@@ -13,14 +13,6 @@
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.ext</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.webdav</artifactId>
       </dependency>
       <dependency>
@@ -29,13 +21,9 @@
          <scope>compile</scope>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.testframework</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.core</groupId>
-         <artifactId>exo.core.component.security.core</artifactId>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+         <version>1.0</version>
       </dependency>
    </dependencies>
    <build>

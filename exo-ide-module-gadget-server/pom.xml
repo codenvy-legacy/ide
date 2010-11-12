@@ -36,6 +36,31 @@
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
       </dependency>
+      <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+         <version>1.4</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.jcr</groupId>
+         <artifactId>jcr</artifactId>
+         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+         <version>20070829</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>picocontainer</groupId>
+         <artifactId>picocontainer</artifactId>
+         <version>1.1</version>
+      </dependency>
    </dependencies>
    <build>
       <resources>
@@ -45,8 +70,8 @@
                <include>**/*.xml</include>
             </includes>
          </resource>
-         <resource>                                                                                                                                                                                            
-            <directory>src/main/resources</directory>                                                                                                                                                               
+         <resource>
+            <directory>src/main/resources</directory>
          </resource>
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>

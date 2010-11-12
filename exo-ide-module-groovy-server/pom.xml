@@ -12,16 +12,20 @@
    <name>eXo IDE :: Module : Groovy : Server</name>
    <dependencies>
       <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>exo.kernel.commons</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>exo.kernel.container</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.webdav</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
@@ -38,33 +42,52 @@
          <artifactId>exo.core.component.security.core</artifactId>
       </dependency>
       <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.script.groovy</artifactId>
-    </dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.script.groovy</artifactId>
+      </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
          <artifactId>jsr250-api</artifactId>
       </dependency>
       <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-log4j12</artifactId>
-       <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>hsqldb</groupId>
-        <artifactId>hsqldb</artifactId>
-        <version>1.8.0.7</version>
-        <scope>test</scope>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
       </dependency>
-      <dependency>                                                                                                                                                                                             
-         <groupId>junit</groupId>                                                                                                                                                                              
-         <artifactId>junit</artifactId>                                                                                                                                                                        
-         <version>4.7</version>                                                                                                                                                                                
-         <scope>test</scope>                                                                                                                                                                                   
-      </dependency> 
-       <dependency>                                                                                                                                          
-         <groupId>org.codehaus.groovy</groupId>                                                                                                                                                                
-         <artifactId>groovy-all</artifactId>                                                                                                                                                                   
+      <dependency>
+         <groupId>hsqldb</groupId>
+         <artifactId>hsqldb</artifactId>
+         <version>1.8.0.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.groovy</groupId>
+         <artifactId>groovy-all</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.rest.ext</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.5</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.jcr</groupId>
+         <artifactId>jcr</artifactId>
+         <version>1.0</version>
       </dependency>
    </dependencies>
    <build>
