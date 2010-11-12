@@ -181,6 +181,11 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-module-chromattic-server</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -443,6 +448,7 @@
       <module>exo-ide-module-netvibes-client</module>
       
       <module>exo-ide-module-chromattic-client</module>
+      <module>exo-ide-module-chromattic-server</module>
   
       <module>exo-ide-docs</module>
 
