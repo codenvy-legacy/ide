@@ -299,9 +299,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
 
    }
-   
-   
-   
 
    /**
     * @param baseUri base URI

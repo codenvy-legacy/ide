@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.module.groovy.service;
 
 import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .

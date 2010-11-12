@@ -60,7 +60,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version $
  */
 
-public class TabContainer extends TabSet implements SelectPanelHandler, ChangePanelTitleHandler
+public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitleHandler
 {
 
    private HandlerManager eventBus;
@@ -77,7 +77,7 @@ public class TabContainer extends TabSet implements SelectPanelHandler, ChangePa
 
    private Tab selectedTab;
    
-   public TabContainer(HandlerManager eventBus, String id)
+   public Panel(HandlerManager eventBus, String id)
    {
       setID(id);
       setAttribute("paneMargin", 1, false);
@@ -112,12 +112,12 @@ public class TabContainer extends TabSet implements SelectPanelHandler, ChangePa
       super.destroy();
    }
 
-   public boolean isTabPanelExist(String tabID)
+   public boolean isViewIsOpened(String tabID)
    {
       return getTab(tabID) != null;
    }
 
-   public void addTabPanel(View view, String title, Image image, boolean canClose)
+   public void openView(View view, String title, Image image, boolean canClose)
    {
       for (String tabTitle : tabColtrolButtons.keySet())
       {
@@ -144,12 +144,12 @@ public class TabContainer extends TabSet implements SelectPanelHandler, ChangePa
       addTab(tab);
    }
 
-   public void closeTabPanel(String tabId)
+   public void closeView(String viewId)
    {
-      if (isTabPanelExist(tabId))
+      if (isViewIsOpened(viewId))
       {
-         removeTab(tabId);
-         eventBus.fireEvent(new PanelClosedEvent(tabId));
+         removeTab(viewId);
+         eventBus.fireEvent(new PanelClosedEvent(viewId));
       }
    }
 
@@ -241,7 +241,7 @@ public class TabContainer extends TabSet implements SelectPanelHandler, ChangePa
     */
    public void onChangePanelTitle(ChangePanelTitleEvent event)
    {
-      if (isTabPanelExist(event.getPanelId())){
+      if (isViewIsOpened(event.getPanelId())){
          setTabTitle(event.getPanelId(), event.getTitle());
       }
    }

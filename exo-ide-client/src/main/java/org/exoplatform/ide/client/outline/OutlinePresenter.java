@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -44,8 +40,12 @@ import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -54,7 +54,7 @@ import java.util.List;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorActivityHandler, FormOpenedHandler, FormClosedHandler
+   EditorCursorActivityHandler, FormOpenedHandler, FormClosedHandler
 {
    interface Display
    {
@@ -98,7 +98,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorCursorActivityEvent.TYPE, this);
       handlers.addHandler(FormClosedEvent.TYPE, this);
       handlers.addHandler(FormOpenedEvent.TYPE, this);
 
@@ -358,9 +358,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    }
 
    /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
+    * @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent)
     */
-   public void onEditorActivity(EditorActivityEvent event)
+   public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
       if (currentRow == event.getRow())
       {

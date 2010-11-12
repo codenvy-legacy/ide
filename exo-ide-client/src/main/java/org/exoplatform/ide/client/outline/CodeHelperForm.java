@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.panel.TabContainer;
+import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -55,7 +55,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
    private CodeHelperPresenter presenter;
 
-   private TabContainer tabSet;
+   private Panel tabSet;
 
    private Layout tabBarColtrols;
 
@@ -68,11 +68,11 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
       this.eventBus = eventBus;
       new Handlers(eventBus);
 
-      tabSet = new TabContainer(eventBus, TAB_SET_ID);
+      tabSet = new Panel(eventBus, TAB_SET_ID);
       createButtons();
       OutlineForm outlineForm = new OutlineForm(eventBus);
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
-      tabSet.addTabPanel(outlineForm, "Outline", tabIcon, true);
+      tabSet.openView(outlineForm, "Outline", tabIcon, true);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
 
@@ -131,7 +131,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    public void addView(View view)
    {
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.viewVersions());
-      tabSet.addTabPanel(view, "Version", tabIcon, true);
+      tabSet.openView(view, "Version", tabIcon, true);
       tabSet.selectTabPanel(VersionContentForm.ID);
    }
 
@@ -140,7 +140,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
     */
    public void closePanel(String panelId)
    {
-      tabSet.closeTabPanel(panelId);
+      tabSet.closeView(panelId);
    }
 
 }

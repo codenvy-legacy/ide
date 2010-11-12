@@ -35,8 +35,6 @@ import org.exoplatform.ide.client.module.groovy.event.UndeployGroovyScriptSandbo
 import org.exoplatform.ide.client.module.groovy.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedHandler;
-import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent;
-import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
@@ -53,7 +51,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, EditorActiveFileChangedHandler,
    FileSavedHandler, ExceptionThrownHandler, GroovyDeployResultReceivedHandler, GroovyValidateResultReceivedHandler,
-   RestServiceOutputReceivedHandler, GroovyUndeployResultReceivedHandler
+   RestServiceOutputReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -66,10 +64,9 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(RunGroovyServiceEvent.TYPE, this);
-      handlers.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);      
+      eventBus.addHandler(RunGroovyServiceEvent.TYPE, this);
    }
 
    /**
@@ -84,27 +81,22 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
     * @see org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler#onRunGroovyService(org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent)
     */
    public void onRunGroovyService(RunGroovyServiceEvent event)
-   {
+   {      
       if (activeFile == null)
       {
          return;
       }
-
+      
       if (activeFile.isContentChanged())
       {
-         saveFile();
+         handlers.addHandler(FileSavedEvent.TYPE, this);
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         eventBus.fireEvent(new SaveFileEvent());
          return;
       }
 
       validateFile();
 
-   }
-
-   protected void saveFile()
-   {
-      handlers.addHandler(FileSavedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.fireEvent(new SaveFileEvent());
    }
 
    public void onFileSaved(FileSavedEvent event)
@@ -149,26 +141,14 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
     */
    public void onRestServiceOutputReceived(RestServiceOutputReceivedEvent event)
    {
-      eventBus.fireEvent(new UndeployGroovyScriptSandboxEvent());
-   }
+      handlers.removeHandlers();
    
-   /**
-    * @see org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedHandler#onGroovyUndeployResultReceived(org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent)
-    */
-   public void onGroovyUndeployResultReceived(GroovyUndeployResultReceivedEvent event)
-   {
-      handlers.removeHandler(RestServiceOutputReceivedEvent.TYPE);
+      eventBus.fireEvent(new UndeployGroovyScriptSandboxEvent());
    }
 
    public void onError(ExceptionThrownEvent event)
    {
-      //Can occurs while saving file.
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      //Before saving file, we add FileSavedHandler,
-      //remove it
-      handlers.removeHandler(FileSavedEvent.TYPE);
-
+      handlers.removeHandlers();
    }
-
 
 }

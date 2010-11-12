@@ -19,8 +19,8 @@
 package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
 import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -37,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class EditorCursorPositionControl extends StatusTextControl implements IDEControl, EditorActivityHandler,
+public class EditorCursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
    EditorActiveFileChangedHandler
 {
    public static final String ID = "__editor_cursor_position";
@@ -60,7 +60,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(EditorActivityEvent.TYPE, this);
+      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -72,7 +72,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    /**
     * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
     */
-   public void onEditorActivity(EditorActivityEvent event)
+   public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
       if (event.getRow() > 0 && event.getColumn() > 0)
       {

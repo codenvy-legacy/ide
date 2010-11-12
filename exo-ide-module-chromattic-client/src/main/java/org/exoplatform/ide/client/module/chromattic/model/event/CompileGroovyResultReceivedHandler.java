@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,25 +15,25 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package org.exoplatform.ide.client.panel;
 
-import com.smartgwt.client.widgets.tab.TabSet;
+package org.exoplatform.ide.client.module.chromattic.model.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 3, 2010 $
- *
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class HighlightedTabSet extends TabSet
-{
 
-   public HighlightedTabSet()
-   {
-      super();
-      setAttribute("paneMargin", 1, false);
-   }
+public interface CompileGroovyResultReceivedHandler extends EventHandler
+{
    
+   void onCompileGroovyResultReceived(CompileGroovyResultReceivedEvent event);
+
 }
+

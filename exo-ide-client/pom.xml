@@ -251,6 +251,12 @@
                   </exclusion>
                </exclusions>
             </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-module-chromattic-server</artifactId>
+      </dependency>            
+            
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
@@ -544,6 +550,10 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-groovy-server</artifactId>
             </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-module-chromattic-server</artifactId>
+      </dependency>            
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-module-gadget-server</artifactId>

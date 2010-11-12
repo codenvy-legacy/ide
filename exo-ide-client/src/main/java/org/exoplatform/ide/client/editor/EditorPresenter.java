@@ -27,10 +27,10 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.editor.event.EditorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorSaveContentEvent;
@@ -95,7 +95,7 @@ import com.google.gwt.user.client.Timer;
  * @version @version $Id: $
  */
 
-public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorActivityHandler,
+public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorCursorActivityHandler,
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
    EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
@@ -191,7 +191,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorInitializedEvent.TYPE, this);
-      handlers.addHandler(EditorActivityEvent.TYPE, this);
+      handlers.addHandler(EditorCursorActivityEvent.TYPE, this);
       handlers.addHandler(EditorSaveContentEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorCloseFileEvent.TYPE, this);
@@ -290,9 +290,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    }
 
    /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
+    * @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent)
     */
-   public void onEditorActivity(EditorActivityEvent event)
+   public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
       //eventBus.fireEvent(new EditorSetFocusEvent());
    }
@@ -306,23 +306,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       if (curentFile == null)
       {
          activeFile = null;
-         //eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
-         //         context.setActiveFile(null);
-         //         context.setActiveTextEditor(null);
          return;
       }
 
       activeFile = curentFile;
-      //      TextEditor textEditor = display.getEditor(curentFile.getHref());
-      //eventBus.fireEvent(new EditorActiveFileChangedEvent());
-      //event.
-
-      //      context.setActiveFile(curentFile);
-      //      context.setActiveTextEditor(display.getEditor(curentFile.getHref()));
-      //      CookieManager.getInstance().storeOpenedFiles(context);
-
-      //TODO
-
       display.setEditorFocus(curentFile.getHref());
    }
 

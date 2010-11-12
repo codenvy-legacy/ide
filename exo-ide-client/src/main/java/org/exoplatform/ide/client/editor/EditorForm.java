@@ -39,7 +39,6 @@ import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.panel.HighlightedTabSet;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.TabBarControls;
@@ -47,6 +46,7 @@ import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -63,7 +63,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    ApplicationSettingsReceivedHandler
 {
    private final String ID = "ideEditorPanel";
-   
+
    private final String TABSET_ID = "ideEditorFormTabSet";
 
    private HandlerManager eventBus;
@@ -72,7 +72,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    private EditorPresenter presenter;
 
-   private HighlightedTabSet tabSet;
+   private EditorPanel tabSet;
 
    private EditorTab activeTab;
 
@@ -84,12 +84,12 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      
+
       setID(ID);
 
-      tabSet = new HighlightedTabSet();
+      tabSet = new EditorPanel();
       tabSet.setID(TABSET_ID);
-//      tabSet.setAttribute("paneMargin", 1, false);
+      //      tabSet.setAttribute("paneMargin", 1, false);
       createControlButtons();
       addMember(tabSet);
 
@@ -103,7 +103,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          public void onMouseDown(MouseDownEvent event)
          {
-            if(activeTab != null)
+            if (activeTab != null)
             {
                ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
             }
@@ -147,7 +147,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          try
          {
             activeTab = (EditorTab)event.getTab();
-//            ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
+            //            ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
             //            String path = activeTab.getFile().getHref();
             eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
@@ -170,20 +170,6 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
 
    public void openTab(File file, boolean lineNumbers, Editor editor, boolean readOnly)
    {
-      EditorTab tab = getEditorTab(file.getHref());
-      
-      boolean addTab = false;
-      if (tab == null)
-      {
-         tab = new EditorTab(file, eventBus);
-         tab.setCanClose(true);
-         if (readOnly)
-            tab.showReadOnlyStatus();
-         else
-            tab.hideReadOnlyStatus();
-         addTab = true;
-      }
-
       EditorConfiguration configuration = new EditorConfiguration(file.getContentType());
       configuration.setLineNumbers(lineNumbers);
       // Set "read only" mode for editor
@@ -191,21 +177,24 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
       {
          configuration.setReadOnly(true);
       }
-
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
       SmartGWTTextEditor smartGwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-
       List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
       smartGwtTextEditor.setHotKeyList(hotKeyList);
 
-      tab.setTextEditor(smartGwtTextEditor);
-      tab.setFile(file);
+      EditorTab tab = getEditorTab(file.getHref());
 
-      if (addTab)
+      if (tab == null)
       {
-         redraw();
+         tab = new EditorTab(file, eventBus, smartGwtTextEditor);
+         tab.setCanClose(true);
+         tab.setTitleStatusReadOnly(readOnly);
          tabSet.addTab(tab);
-         redraw();
+      }
+      else
+      {
+         tab.setTextEditor(smartGwtTextEditor);
+         tab.setFile(file);
       }
    }
 
@@ -309,11 +298,12 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          if (editorTab.getFile().equals(oldFile))
          {
             editorTab.setFile(newFile);
-            
-            if (!oldFile.getContent().equals(newFile.getContent())){
+
+            if (!oldFile.getContent().equals(newFile.getContent()))
+            {
                editorTab.getTextEditor().setText(newFile.getContent());
             }
-            
+
             //String newFilePath = newFile.getHref();
             //            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
             //               hasRedoChanges(newFilePath)));
@@ -447,6 +437,14 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+   }
+   
+   protected class EditorPanel extends TabSet
+   {
+      public EditorPanel()
+      {
+         setAttribute("paneMargin", 1, false);
+      }
    }
 
 }

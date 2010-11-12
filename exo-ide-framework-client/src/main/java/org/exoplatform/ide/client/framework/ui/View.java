@@ -72,7 +72,6 @@ public class View extends Layout implements ActivateViewHandler
 
       mouseDownHandler = addMouseDownHandler(new MouseDownHandler()
       {
-
          public void onMouseDown(MouseDownEvent event)
          {
             activateView();

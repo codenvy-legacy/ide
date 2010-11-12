@@ -20,7 +20,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserForm;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.panel.TabContainer;
+import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.client.search.file.SearchResultPanel;
 import org.exoplatform.ide.client.search.file.SearchResultsForm;
 
@@ -40,7 +40,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
    private ApplicationContext context;
 
-   private TabContainer tabContainer;
+   private Panel tabContainer;
    
    private final String ID = "ideNavigationPanel";
    
@@ -58,7 +58,7 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
       setHeight100();
       setWidth100();
-      tabContainer = new TabContainer(eventBus, TABSET_ID);
+      tabContainer = new Panel(eventBus, TABSET_ID);
       showBrowser();
 
       addMember(tabContainer);
@@ -69,11 +69,11 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
    protected void showBrowser()
    {
-      if (!tabContainer.isTabPanelExist(BrowserForm.ID))
+      if (!tabContainer.isViewIsOpened(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
          Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
-         tabContainer.addTabPanel(navigatorForm, BrowserForm.TITLE, tabIcon, false);
+         tabContainer.openView(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }
       
 //      if (!tabContainer.isTabPanelExist(BrowserFormNew.ID))
@@ -88,11 +88,11 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
     */
    public void showSearchResult(Folder folder)
    {
-      tabContainer.closeTabPanel(SearchResultPanel.ID);
+      tabContainer.closeView(SearchResultPanel.ID);
 
       SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, context, folder);
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.search());
-      tabContainer.addTabPanel(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
+      tabContainer.openView(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
       tabContainer.selectTabPanel(SearchResultsForm.ID);
    }
 

@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
 import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.preview.PreviewForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
-import org.exoplatform.ide.client.panel.TabContainer;
+import org.exoplatform.ide.client.panel.Panel;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ImageResource;
@@ -61,7 +61,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
    private OperationPresenter presenter;
 
-   private TabContainer tabSet;
+   private Panel tabSet;
 
    private PropertiesForm propertiesForm;
 
@@ -82,7 +82,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
 
       setHeight(INITIAL_HEIGHT);
 
-      tabSet = new TabContainer(eventBus,TABSET_ID);
+      tabSet = new Panel(eventBus,TABSET_ID);
 //      tabSet.setID(TABSET_ID);
       tabSet.createButtons();
       addMember(tabSet);
@@ -91,7 +91,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       outputForm = new OutputForm(eventBus);
       previewForm = new PreviewForm(eventBus);
 
-      tabSet.addTabPanel(outputForm, outputForm.getTitle(), outputForm.getImage(), false);
+      tabSet.openView(outputForm, outputForm.getTitle(), outputForm.getImage(), false);
 
       /*
        * 
@@ -225,7 +225,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       Tab propertiesTab = tabSet.getTab(propertiesForm.getViewId());
       if (propertiesTab == null)
       {
-         tabSet.addTabPanel(propertiesForm, propertiesForm.getTitle(), propertiesForm.getImage(), true);
+         tabSet.openView(propertiesForm, propertiesForm.getTitle(), propertiesForm.getImage(), true);
          propertiesTab = tabSet.getTab(propertiesForm.getViewId());
       }
 
@@ -239,7 +239,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
    {
       if (tabSet.getTab(propertiesForm.getViewId()) != null)
       {
-         tabSet.closeTabPanel(propertiesForm.getViewId());
+         tabSet.closeView(propertiesForm.getViewId());
       }
    }
 
@@ -251,7 +251,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       Tab previewTab = tabSet.getTab(previewForm.getViewId());
       if (previewTab == null)
       {
-         tabSet.addTabPanel(previewForm, previewForm.getTitle(), previewForm.getImage(), true);
+         tabSet.openView(previewForm, previewForm.getTitle(), previewForm.getImage(), true);
       }
 
       tabSet.selectTab(previewForm.getViewId());
@@ -276,7 +276,7 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       Tab gadgetPreviewTab = tabSet.getTab(gadgetPreviewPane.getViewId());
       if (gadgetPreviewTab == null)
       {
-         tabSet.addTabPanel(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
+         tabSet.openView(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
       }
       tabSet.selectTab(gadgetPreviewPane.getViewId());
       gadgetPreviewPane.onOpenTab();

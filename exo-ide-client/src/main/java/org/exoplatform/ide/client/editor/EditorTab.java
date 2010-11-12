@@ -17,6 +17,8 @@
 package org.exoplatform.ide.client.editor;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
+import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
@@ -28,6 +30,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 
 /**
@@ -37,72 +40,123 @@ import com.smartgwt.client.widgets.tab.Tab;
  * @version @version $Id: $
  */
 
-public class EditorTab extends Tab implements EditorFocusReceivedHandler
+public class EditorTab extends Tab implements EditorFocusReceivedHandler, EditorCursorActivityHandler
 {
 
+   /**
+    * 
+    */
    private View viewPane;
 
+   /**
+    * Smart GWT Text Editor
+    */
    private SmartGWTTextEditor textEditor;
 
+   /**
+    * File
+    */
    private File file;
 
+   /**
+    * Layout for storing SmartWGT editor 
+    */
+   private VLayout editorLayout;
+
+   /**
+    * Editor read only status
+    */
    private boolean readOnly = false;
 
+   /**
+    * ID uses for identification View, contains 
+    */
    private static int ID;
 
+   /**
+    * Handlers for storing working event handlers 
+    */
    private Handlers handlers;
 
-   public EditorTab(File file, HandlerManager eventBus)
+   /**
+    * @param file - File to be edited
+    * @param eventBus - Event Bus
+    * @param textEditor SmartGWT Text Editor
+    */
+   public EditorTab(File file, HandlerManager eventBus, SmartGWTTextEditor textEditor)
    {
       this.file = file;
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorFocusReceivedEvent.TYPE, this);
+      handlers.addHandler(EditorCursorActivityEvent.TYPE, this);
 
       setTitle(getTabTitle());
-      viewPane = new View("ideEditorTab-" + ID++, eventBus);
+      viewPane = new EditorView("ideEditorTab-" + ID++, eventBus);
+
       setPane(viewPane);
+
+      editorLayout = new VLayout();
+      this.textEditor = textEditor;
+      editorLayout.addMember(textEditor);
+      viewPane.addMember(editorLayout);
    }
 
-   public void showReadOnlyStatus()
+   /**
+    *  Set read only status for Tab title.
+    */
+   public void setTitleStatusReadOnly(boolean readOnly)
    {
-      readOnly = true;
+      this.readOnly = readOnly;
       setTitle(getTabTitle());
    }
 
-   public void hideReadOnlyStatus()
-   {
-      readOnly = false;
-      setTitle(getTabTitle());
-   }
-
+   /**
+    * @return SmartGWT Text Editor
+    */
    public SmartGWTTextEditor getTextEditor()
    {
       return textEditor;
    }
 
+   /**
+    * Set text editor. If text editor already present, it will be replaced by new text editor.
+    * 
+    * @param textEditor
+    */
    public void setTextEditor(final SmartGWTTextEditor textEditor)
    {
       if (this.textEditor != null)
       {
-         viewPane.removeMember(this.textEditor);
+         editorLayout.removeMember(this.textEditor);
       }
 
       this.textEditor = textEditor;
 
-      viewPane.addMember(textEditor);
+      editorLayout.addMember(textEditor);
    }
 
+   /**
+    * @return File
+    */
    public File getFile()
    {
       return file;
    }
 
+   /**
+    * Set new file
+    * 
+    * @param file
+    */
    public void setFile(File file)
    {
       this.file = file;
    }
 
+   /**
+    * @return Title for tab is depends of file is new, file's MimeType and content changing state.
+    */
    public String getTabTitle()
    {
       boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
@@ -124,11 +178,6 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler
       return title;
    }
 
-   private void onMouseDown()
-   {
-      ViewHighlightManager.getInstance().selectView(viewPane);
-   }
-
    /**
     * Highlight File Tab after Editor had received the focus
     * @see org.exoplatform.gwtframework.editor.event.EditorFocusRecievedHandler#onEditorFocusRecieved(org.exoplatform.gwtframework.editor.event.EditorFocusRecievedEvent)
@@ -137,7 +186,34 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler
    {
       if (textEditor.getEditorId().equals(event.getEditorId()))
       {
-         onMouseDown();
+         ViewHighlightManager.getInstance().selectView(viewPane);
       }
    }
+
+   public void onEditorCursorActivity(EditorCursorActivityEvent event)
+   {
+      if (textEditor.getEditorId().equals(event.getEditorId()))
+      {
+         ViewHighlightManager.getInstance().selectView(viewPane);
+      }
+   }
+
+   protected class EditorView extends View
+   {
+
+      public EditorView(String id, HandlerManager eventBus)
+      {
+         super(id, eventBus);
+      }
+
+      @Override
+      public void destroy()
+      {
+         System.out.println("EditorTab.EditorView.destroy()");
+         handlers.removeHandlers();
+         super.destroy();
+      }
+
+   }
+
 }

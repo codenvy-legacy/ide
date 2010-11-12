@@ -80,6 +80,10 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   </component>
+   
+   <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
       <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
       <init-params>
@@ -209,7 +213,9 @@
       <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
    </component>
 
-   
+   <component>
+      <type>org.exoplatform.ide.chromattic.IDEChromatticRestService</type>
+   </component>   
 
    <component>
       <type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>

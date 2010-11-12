@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,29 +15,50 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package org.exoplatform.ide.client.module.chromattic;
 
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+package org.exoplatform.ide.client.module.chromattic.event;
+
+import org.exoplatform.ide.client.framework.vfs.File;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
- *
- * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Sep 28, 2010 $
- *
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface Images
+
+public class CompileGroovyEvent extends GwtEvent<CompileGroovyHandler>
 {
-   
-   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
-   public interface FileType
+
+   public static final GwtEvent.Type<CompileGroovyHandler> TYPE = new GwtEvent.Type<CompileGroovyHandler>();
+
+   private File file;
+
+   public CompileGroovyEvent(File file)
    {
-      
-      public static final String CHROMATTIC = IMAGE_URL + "module/chromattic/filetype/chromattic.png";
+      this.file = file;
    }
 
-   public static final String COMPILE_GROOVY = IMAGE_URL + "module/chromattic/compile.png";
-   
+   public File getFile()
+   {
+      return file;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CompileGroovyHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(CompileGroovyHandler handler)
+   {
+      handler.onCompileGroovy(this);
+   }
+
 }

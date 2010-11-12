@@ -19,9 +19,14 @@
 package org.exoplatform.ide.client.module.chromattic;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.module.chromattic.controls.CompileGroovyControl;
+import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommandHandler;
+import org.exoplatform.ide.client.module.chromattic.model.ChrommaticServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -32,9 +37,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Sep 28, 2010 $
  *
  */
-public class ChromatticModule implements IDEModule
+public class ChromatticModule implements IDEModule, InitializeServicesHandler
 {
-   
+
    private HandlerManager eventBus;
 
    /**
@@ -43,11 +48,22 @@ public class ChromatticModule implements IDEModule
    public ChromatticModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Data Object",
          "Data Object", "Create Data Object", Images.FileType.CHROMATTIC,
          MimeType.CHROMATTIC_DATA_OBJECT)));
+
+      eventBus.fireEvent(new RegisterControlEvent(new CompileGroovyControl(), true, true));
+
+      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+
+      new CompileGroovyCommandHandler(eventBus);
    }
-   
-   
+
+   @Override
+   public void onInitializeServices(InitializeServicesEvent event)
+   {
+      new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+   }
+
 }
