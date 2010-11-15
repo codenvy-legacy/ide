@@ -40,7 +40,7 @@ public class GadgetDevelopmentTest extends BaseTest
     */
    private static final String FILE_NAME = "Test Gadget File.xml";
    
-   private static final String FOLDER_NAME = "TestFolder";
+   private static final String FOLDER_NAME = GadgetDevelopmentTest.class.getSimpleName();
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
    
