@@ -45,7 +45,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
    private final static String FILE_NAME = "ComplexMediaType.groovy";
    
-   private final static String FOLDER_NAME="Test";
+   private final static String FOLDER_NAME=RESTServiceComplexMediaTypeTest.class.getSimpleName();
    
  //**************
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
