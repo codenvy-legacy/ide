@@ -38,7 +38,7 @@ public class OpenLockedFileTest extends LockFileAbstract
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
-   private static final String FOLDER_NAME = "lockedFiles";
+   private static final String FOLDER_NAME = OpenLockedFileTest.class.getSimpleName();
 
    static final String FILE_NAME = "aldfnlaksfdbgjksdbkhgs";
 
