@@ -44,7 +44,7 @@ public class ShowHideLineNumbersTest extends BaseTest
 
    private static final String GROOVY = System.currentTimeMillis() + ".groovy";
    
-   private static final String FOLDER_NAME = "Folder" + System.currentTimeMillis(); 
+   private static final String FOLDER_NAME = SavingPreviouslyEditedFileTest.class.getSimpleName(); 
       
    @Test
    public void testShowHideLineRestService() throws Exception
