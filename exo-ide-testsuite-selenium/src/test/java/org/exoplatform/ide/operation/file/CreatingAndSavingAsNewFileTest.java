@@ -46,7 +46,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 {
    //IDE-10: Creating and "Saving As" new files.
 
-   private static final String FOLDER_NAME = "CreatingAndSavingAsNewFileTest";
+   private static final String FOLDER_NAME = CreatingAndSavingAsNewFileTest.class.getSimpleName() ;
 
    private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME + "/";
