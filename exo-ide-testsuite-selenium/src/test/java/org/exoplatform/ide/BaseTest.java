@@ -1660,25 +1660,25 @@ public abstract class BaseTest
     */
    protected static void deleteCookies()
    {
-      if (selenium.isCookiePresent("line-numbers_bool"))
+      if (selenium.isCookiePresent( "eXo-IDE-" + USER_NAME +"-line-numbers_bool"))
       {
-         selenium.deleteCookie("line-numbers_bool", "/");
+         selenium.deleteCookie( "eXo-IDE-" + USER_NAME +"-line-numbers_bool", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("opened-files_list"))
+      if (selenium.isCookiePresent( "eXo-IDE-" + USER_NAME +"-opened-files_list"))
       {
-         selenium.deleteCookie("opened-files_list", "/");
+         selenium.deleteCookie( "eXo-IDE-" + USER_NAME +"-opened-files_list", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("active-file_str"))
+      if (selenium.isCookiePresent( "eXo-IDE-" + USER_NAME +"-active-file_str"))
       {
-         selenium.deleteCookie("active-file_str", "/");
+         selenium.deleteCookie( "eXo-IDE-" + USER_NAME +"-active-file_str", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("line-numbers_bool"))
+      if (selenium.isCookiePresent( "eXo-IDE-" + USER_NAME +"-line-numbers_bool"))
       {
-         selenium.deleteCookie("line-numbers_bool", "/");
+         selenium.deleteCookie( "eXo-IDE-" + USER_NAME +"-line-numbers_bool", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("lock-tokens_map"))
+      if (selenium.isCookiePresent( "eXo-IDE-" + USER_NAME +"-lock-tokens_map"))
       {
-         selenium.deleteCookie("lock-tokens_map", "/");
+         selenium.deleteCookie( "eXo-IDE-" + USER_NAME +"-lock-tokens_map", "path=/, recurse=true");
       }
    }
 

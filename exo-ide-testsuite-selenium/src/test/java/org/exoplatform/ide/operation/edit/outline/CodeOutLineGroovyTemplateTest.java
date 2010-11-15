@@ -100,7 +100,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //click on second groovy code node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[1]");
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]");
       Thread.sleep(TestConstants.SLEEP);
       
       //check, than cursor go to line
