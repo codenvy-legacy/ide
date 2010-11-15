@@ -147,7 +147,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
          try
          {
             activeTab = (EditorTab)event.getTab();
-            //            ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
+                        ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
             //            String path = activeTab.getFile().getHref();
             eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
