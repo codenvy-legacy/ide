@@ -43,7 +43,7 @@ public class ParsingLockTokensInIETest extends BaseTest
  
  private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private static String FOLDER_NAME = "locksIE";
+   private static String FOLDER_NAME = ParsingLockTokensInIETest.class.getSimpleName();
 
    private static String FILE_NAME = "lhntklshbadsygfbolthg";
    
