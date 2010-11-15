@@ -46,7 +46,7 @@ public class CookiesTest extends BaseTest
 
    private final static String FILE_NAME = "zxcvjnklzxbvlczkxbvlkbnlsf";
 
-   private final static String TEST_FOLDER = CursorPositionStatusBarTest.class.getSimpleName();
+   private final static String TEST_FOLDER = CookiesTest.class.getSimpleName();
 
    private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
       + "/";
