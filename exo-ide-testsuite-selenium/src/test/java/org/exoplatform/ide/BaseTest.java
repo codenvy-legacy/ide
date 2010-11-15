@@ -919,7 +919,7 @@ public abstract class BaseTest
          assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/body/"));
          assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
 
-         selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/");
+         selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogNoButton\"]/");
 
       }
       Thread.sleep(TestConstants.SLEEP);
