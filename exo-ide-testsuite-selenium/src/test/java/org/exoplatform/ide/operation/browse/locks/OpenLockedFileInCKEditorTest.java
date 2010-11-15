@@ -42,7 +42,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 
    private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
-   private static final String FOLDER_NAME = "ekrgjbalsgblsgsgn";
+   private static final String FOLDER_NAME = OpenLockedFileInCKEditorTest.class.getSimpleName();
 
    private static final String FILE_NAME = "lghnlskabfgkgbhglhsdnsgdnb";
 
