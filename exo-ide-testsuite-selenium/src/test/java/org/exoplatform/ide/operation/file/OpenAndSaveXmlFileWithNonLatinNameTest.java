@@ -46,9 +46,9 @@ import org.junit.Test;
 public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 {
    
-   private static final String FILE_NAME = System.currentTimeMillis() + "ТестовыйФайл.xml";
+   private static final String FILE_NAME = System.currentTimeMillis() + "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹Ð¤Ð°Ð¹Ð».xml";
    
-   private static final String FOLDER_NAME = System.currentTimeMillis() + "open";
+   private static final String FOLDER_NAME = System.currentTimeMillis() + OpenAndSaveXmlFileWithNonLatinNameTest.class.getSimpleName();
    
     
     private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" +
