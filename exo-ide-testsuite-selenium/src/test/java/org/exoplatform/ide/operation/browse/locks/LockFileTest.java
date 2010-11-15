@@ -38,7 +38,7 @@ public class LockFileTest extends LockFileAbstract
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private static String FOLDER_NAME = "locks";
+   private static String FOLDER_NAME = LockFileTest.class.getSimpleName();
 
    private static String FILE_NAME = "sdfsdfsdafsdag";
 
@@ -79,6 +79,8 @@ public class LockFileTest extends LockFileAbstract
       selenium.waitForPageToLoad("10000");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
+     openOrCloseFolder(FOLDER_NAME);
+     Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkIsTabPresentInEditorTabset(FILE_NAME, true);
       
       selectItemInWorkspaceTree(FOLDER_NAME);
