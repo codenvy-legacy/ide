@@ -45,7 +45,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
    private final static String FILE_NAME = "FilterParametersTest.groovy";
 
    //TODO*************change*********
-   private final static String TEST_FOLDER = "GroovyFolder";
+   private final static String TEST_FOLDER = RESTServiceFilterParametersTest.class.getSimpleName();
 
    //***************************** 
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
