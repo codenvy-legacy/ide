@@ -44,7 +44,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 {
    private final static String FILE_WITH_ERROR = "RestServiceWithError.groovy";
 
-   private final static String TEST_FOLDER = "GoToError";
+   private final static String TEST_FOLDER = GoToErrorInRestServiceTest.class.getSimpleName();
 
    private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.groovy";
 
