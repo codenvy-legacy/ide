@@ -39,7 +39,7 @@ import org.junit.Test;
 public class NavigationPanelWithoutSelectedItemTest extends BaseTest
 {
    
-   private static final String TEST_FOLDER_NAME = "test";
+   private static final String TEST_FOLDER_NAME = NavigationPanelWithoutSelectedItemTest.class.getSimpleName();
    private static final String TEST_FILE_NAME = "test.html";
    private static final String SAVE_ERROR_MESSAGE = "Please, select target folder in the Workspace Panel before calling this command !";
    
