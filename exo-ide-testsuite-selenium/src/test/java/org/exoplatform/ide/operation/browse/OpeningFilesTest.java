@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class OpeningFilesTest extends BaseTest
 {
-   private final String folderName = "Container";
+   private final String folderName = OpeningFilesTest.class.getSimpleName();
 
    private final String file1Name = "File1";
 
