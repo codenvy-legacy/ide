@@ -40,6 +40,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class OutputForm extends LockableView implements OutputPresenter.Display
 {
 
+   /**
+    * 
+    */
+   private static final String OUTPUT_VIEW_ID = "ideOutputView";
+
    private final static String ID = "ideOutputForm"; 
    
    private OutputPresenter presenter;
@@ -50,7 +55,7 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
 
    public OutputForm(HandlerManager eventBus)
    {
-      super(ID,eventBus, true);
+      super(OUTPUT_VIEW_ID,eventBus, true);
       
       setVertical(Boolean.TRUE);
       setCanFocus(false);
@@ -62,7 +67,7 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
       outputLayout.setHeight100();
       outputLayout.setOverflow(Overflow.SCROLL);
       outputLayout.setCanFocus(false);
-//      outputLayout.setID(ID);
+      outputLayout.setID(ID);
       addMember(outputLayout);
 
       clearOutputButton = new ImgButton();
