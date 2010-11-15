@@ -57,8 +57,8 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
    {
       super(OUTPUT_VIEW_ID,eventBus, true);
       
-      setVertical(Boolean.TRUE);
-      setCanFocus(false);
+//      setVertical(Boolean.TRUE);
+      
       
       setOverflow(Overflow.HIDDEN);
 
@@ -66,7 +66,7 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
       outputLayout.setWidth100();
       outputLayout.setHeight100();
       outputLayout.setOverflow(Overflow.SCROLL);
-      outputLayout.setCanFocus(false);
+      outputLayout.setCanFocus(Boolean.TRUE);
       outputLayout.setID(ID);
       addMember(outputLayout);
 

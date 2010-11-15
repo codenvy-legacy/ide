@@ -81,10 +81,12 @@ public class OperationForm extends Layout implements OperationPresenter.Display,
       setID(ID);
 
       setHeight(INITIAL_HEIGHT);
+      setCanFocus(Boolean.TRUE);
 
       tabSet = new Panel(eventBus,TABSET_ID);
 //      tabSet.setID(TABSET_ID);
       tabSet.createButtons();
+      tabSet.setCanFocus(true);
       addMember(tabSet);
 
       propertiesForm = new PropertiesForm(eventBus);

@@ -55,6 +55,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       treeGrid.setLeaveScrollbarGap(false);
       treeGrid.setShowOpenIcons(true);
       treeGrid.setEmptyMessage("");
+      treeGrid.setCanFocus(true);
 
       treeGrid.setSelectionType(SelectionStyle.SINGLE);
 

@@ -40,7 +40,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  * @version @version $Id: $
  */
 
-public class EditorTab extends Tab implements EditorFocusReceivedHandler, EditorCursorActivityHandler
+public class EditorTab extends Tab implements EditorFocusReceivedHandler
 {
 
    /**
@@ -89,7 +89,6 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler, Editor
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorFocusReceivedEvent.TYPE, this);
-      handlers.addHandler(EditorCursorActivityEvent.TYPE, this);
 
       setTitle(getTabTitle());
       viewPane = new EditorView("ideEditorTab-" + ID++, eventBus);
@@ -184,19 +183,13 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler, Editor
     */
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
+      System.out.println("EditorTab.onEditorFocusReceived()");
       if (textEditor.getEditorId().equals(event.getEditorId()))
       {
          ViewHighlightManager.getInstance().selectView(viewPane);
       }
    }
 
-   public void onEditorCursorActivity(EditorCursorActivityEvent event)
-   {
-      if (textEditor.getEditorId().equals(event.getEditorId()))
-      {
-         ViewHighlightManager.getInstance().selectView(viewPane);
-      }
-   }
 
    protected class EditorView extends View
    {

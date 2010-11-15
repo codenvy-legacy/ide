@@ -78,6 +78,7 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
          //         content.removeFromParent();
          content.destroy();
       }
+      setCanFocus(Boolean.TRUE);
 
       if (file.getProperties().size() == 0)
       {
