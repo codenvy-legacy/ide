@@ -44,7 +44,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 {
    private final static String FILE_NAME = "GoogleGadgetCodeOutline.xml";
    
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = CodeOutlineGoogleGadgetTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
