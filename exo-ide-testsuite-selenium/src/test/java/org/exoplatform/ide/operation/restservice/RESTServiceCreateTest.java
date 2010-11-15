@@ -41,7 +41,8 @@ import java.net.URLEncoder;
  */
 public class RESTServiceCreateTest extends BaseTest
 {
-
+   private static final String FOLDER_NAME=RESTServiceCreateTest.class.getSimpleName();
+   
    private static final String FIRST_NAME = System.currentTimeMillis() + "test.groovy";
    
    private static final String SECOND_NAME = System.currentTimeMillis() + "новий.groovy";
@@ -53,9 +54,9 @@ public class RESTServiceCreateTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
      //TODO*************fixed*****************change add folder for locked file
-      createFolder("Test");
+      createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      selectFolder("Test");
+      selectFolder(FOLDER_NAME);
      //**********************************
       runCommandFromMenuNewOnToolbar("REST Service");
       //createFileFromToolbar("REST Service");
@@ -91,7 +92,8 @@ public class RESTServiceCreateTest extends BaseTest
             .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextFileNodeType||title=%3Cb%3EFile%20Node%20Type%3C%24fs%24b%3E||value=nt%3Afile||index=6||Class=StaticTextItem]/textbox"));
 
       selenium.click("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Properties]/icon");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      Thread.sleep(TestConstants.SLEEP_SHORT*2);
 
       assertFalse(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/"));
 
