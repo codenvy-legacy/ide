@@ -40,6 +40,17 @@
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <groovy.version>1.6.9</groovy.version>
    </properties>
+
+
+   <!--  Add temporary until fix issue http://jira.exoplatform.org/browse/SWF-775  -->
+     <repositories>   
+        <repository>
+            <id>jboss.org</id>
+            <name>thirdparty-uploads</name>
+            <url>dav:https://repository.jboss.org/nexus/content/repositories/thirdparty-uploads/</url>
+        </repository>
+   </repositories>
+   
    <dependencyManagement>
       <dependencies>
          <dependency>
