@@ -49,7 +49,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    @Before
    public void setUp() throws Exception
    {
-      FOLDER_NAME = UUID.randomUUID().toString();
+      FOLDER_NAME = HotkeysInFCKEditorTest.class.getSimpleName();
       String filePath ="src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
