@@ -82,7 +82,7 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
 
       if (file.isNewFile())
       {
-         eventBus.fireEvent(new SaveFileAsEvent());
+         eventBus.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
          return;
       }
 

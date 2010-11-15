@@ -36,6 +36,11 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
 /**
+ * Dialog window for asking value.
+ * 
+ * Contains title, prompt, text field and buttons:
+ * "Yes", "No" (optional), "Cancel"
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -55,15 +60,27 @@ public class AskForValueDialog extends Window
    
    public static final String ID_CANCEL_BUTTON = "ideAskForValueDialogCancelButton";
    
+   public static final String ID_NO_BUTTON = "ideAskForValueDialogNoButton";
+   
    public static final String VALUE_FIELD = "ideAskForValueDialogValueField";
 
    private ValueCallback valueCallback;
+   
+   private ValueDiscardCallback valueDiscardCallback;
 
    protected TextItem textItem;
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
+      new AskForValueDialog(title, prompt, defaultValue, dialogWidth, callback, null);
+   }
+   
+   public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
+      ValueDiscardCallback discardCallback)
+   {
       valueCallback = callback;
+      valueDiscardCallback = discardCallback;
+      
       setID(ID);
       
       setShowShadow(true);
@@ -92,7 +109,7 @@ public class AskForValueDialog extends Window
       //textItem.focusInItem();
       textItem.selectValue();
    }
-
+   
    private void createPromptForm(int dialogWidth, String prompt, String defaultValue)
    {
       DynamicForm form = new DynamicForm();
@@ -145,7 +162,7 @@ public class AskForValueDialog extends Window
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      IButton okButton = new IButton("OK");
+      IButton okButton = new IButton("Yes");
       okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(90);
       okButton.setHeight(22);
@@ -156,11 +173,39 @@ public class AskForValueDialog extends Window
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
-
+      
       ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(okButton, delimiter1, cancelButton);
+      
+      if (valueDiscardCallback == null)
+      {
+         StatefulCanvas delimiter1 = new StatefulCanvas();
+         delimiter1.setWidth(3);
+         tbi.setButtons(okButton, delimiter1, cancelButton);
+      }
+      else
+      {
+         IButton noButton = new IButton("No");
+         noButton.setID(ID_NO_BUTTON);
+         noButton.setWidth(90);
+         noButton.setHeight(22);
+         noButton.setIcon(Images.Buttons.NO);
+         
+         noButton.addClickHandler(new ClickHandler()
+         {
+            public void onClick(ClickEvent event)
+            {
+               destroy();
+               valueDiscardCallback.discard();
+            }
+         });
+         
+         StatefulCanvas delimiter1 = new StatefulCanvas();
+         delimiter1.setWidth(3);
+         StatefulCanvas delimiter2 = new StatefulCanvas();
+         delimiter2.setWidth(3);
+         tbi.setButtons(okButton, delimiter1, noButton, delimiter2, cancelButton);
+      }
+      
       buttonsForm.setFields(tbi);
 
       buttonsForm.setAutoWidth();

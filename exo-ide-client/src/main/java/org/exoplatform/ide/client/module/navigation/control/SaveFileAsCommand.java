@@ -19,6 +19,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -26,8 +28,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,9 +45,9 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    private static final String TITLE = "Save As...";
 
-   private boolean activeFileSelected = false;
-
    private boolean singleItemSelected = true;
+   
+   private File activeFile;
 
    public SaveFileAsCommand()
    {
@@ -54,7 +55,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
-      setEvent(new SaveFileAsEvent());
+      setEvent(new SaveFileAsEvent(activeFile, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
    }
 
    /**
@@ -70,22 +71,14 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
-      {
-         activeFileSelected = false;
-         updateEnabling();
-      }
-      else
-      {
-         activeFileSelected = true;
-         updateEnabling();
-      }
+      activeFile = event.getFile();
+      updateEnabling();
    }
 
    @Override
    protected void updateEnabling()
    {
-      if (browserSelected && activeFileSelected && singleItemSelected)
+      if (browserSelected && activeFile != null && singleItemSelected)
       {
          setEnabled(true);
       }

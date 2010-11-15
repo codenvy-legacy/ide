@@ -251,7 +251,7 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
                {
                   if (file.isNewFile())
                   {
-                     eventBus.fireEvent(new SaveFileAsEvent(file, true));
+                     eventBus.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
                   }
                   else
                   {

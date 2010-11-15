@@ -19,8 +19,11 @@ package org.exoplatform.ide.client.component;
 /**
  * Interface for feedback from dialog window (which ask for value).
  * 
- * Used for two simple actions: take value and execute some action or 
- * cancel (when value is null).
+ * Used when ValueCallback is not enough and you need not only 
+ * execute or cancel actions. 
+ * 
+ * E.g. you need to handle not only "Yes" and "Cancel" buttons click, 
+ * but also "No" button click
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -28,9 +31,9 @@ package org.exoplatform.ide.client.component;
  * @version @version $Id: $
  */
 
-public interface ValueCallback
+public interface ValueDiscardCallback
 {
 
-   void execute(String value);
+   void discard();
    
 }

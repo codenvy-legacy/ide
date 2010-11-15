@@ -376,7 +376,9 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
       if (file.isNewFile())
       {
-         eventBus.fireEvent(new SaveFileAsEvent(file, new EditorCloseFileEvent(file, true)));
+         closeFileAfterSaving = true;
+         eventBus.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED,
+            new EditorCloseFileEvent(file, true), null));
       }
       else
       {
@@ -406,7 +408,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
    }
 
-   public void onEditorUndoTypig(EditorUndoTypingEvent event)
+   public void onEditorUndoTyping(EditorUndoTypingEvent event)
    {
       display.undoEditing(activeFile.getHref());
    }

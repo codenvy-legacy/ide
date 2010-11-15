@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
+import org.exoplatform.ide.client.component.ValueDiscardCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -93,8 +94,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    private File newFile;
    
-   private GwtEvent<?> eventFiredOnCancel;
-
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -122,8 +121,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
          return;
       }
 
-      eventFiredOnCancel = event.getEventFiredOnCancel();
-
       handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -132,7 +129,7 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
-      askForNewFileName(file);
+      askForNewFileName(file, event.getDialogType(), event.getEventFiredOnNo(), event.getEventFiredOnCancel());
    }
 
    /**
@@ -140,50 +137,93 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
     * 
     * @param file
     */
-   private void askForNewFileName(final File file)
+   private void askForNewFileName(final File file, SaveFileAsEvent.SaveDialogType type, final GwtEvent<?> eventFiredOnNo, final GwtEvent<?> eventFiredOnCancel)
    {
-
       final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
       sourceHref = file.getHref();
-      new AskForValueDialog("Save file as", "Enter new file name:", newFileName, 400, new ValueCallback()
+      
+      if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
-         public void execute(String value)
+         new AskForValueDialog("Save file as", "Enter name to new file:", newFileName, 400, new ValueCallback()
          {
-            if (value == null)
+            public void execute(String value)
+            {
+               if (value == null)
+               {
+                  handlers.removeHandlers();
+
+                  if (eventFiredOnCancel != null)
+                  {
+                     eventBus.fireEvent(eventFiredOnCancel);
+                  }
+
+                  return;
+               }
+
+               saveFileAs(file, value);
+            }
+
+         });
+      }
+      else
+      {
+         new AskForValueDialog("Save file as", "Do you want to save new file?", newFileName, 400, new ValueCallback()
+         {
+            public void execute(String value)
+            {
+               if (value == null)
+               {
+                  handlers.removeHandlers();
+
+                  if (eventFiredOnCancel != null)
+                  {
+                     eventBus.fireEvent(eventFiredOnCancel);
+                  }
+
+                  return;
+               }
+
+               saveFileAs(file, value);
+            }
+
+         }, new ValueDiscardCallback()
+         {
+            public void discard()
             {
                handlers.removeHandlers();
                
-               if (eventFiredOnCancel != null) {
-                  eventBus.fireEvent(eventFiredOnCancel);
+               if (eventFiredOnNo != null)
+               {
+                  eventBus.fireEvent(eventFiredOnNo);
                }
-               
-               return;
             }
-            
-            String pathToSave = getFilePath(selectedItems.get(0)) + value;
-            File newFile = new File(pathToSave);
-            newFile.setContent(file.getContent());
-            newFile.setContentType(file.getContentType());
-            newFile.setJcrContentNodeType(file.getJcrContentNodeType());
-            newFile.setNewFile(true);
-            newFile.setContentChanged(true);
+         });
+      }
+   }
+   
+   private void saveFileAs(File file, String value)
+   {
+      String pathToSave = getFilePath(selectedItems.get(0)) + value;
+      File newFile = new File(pathToSave);
+      newFile.setContent(file.getContent());
+      newFile.setContentType(file.getContentType());
+      newFile.setJcrContentNodeType(file.getJcrContentNodeType());
+      newFile.setNewFile(true);
+      newFile.setContentChanged(true);
 
-            if (!file.isNewFile())
-            {
-               newFile.getProperties().addAll(file.getProperties());
-               newFile.setPropertiesChanged(true);
-            }
+      if (!file.isNewFile())
+      {
+         newFile.getProperties().addAll(file.getProperties());
+         newFile.setPropertiesChanged(true);
+      }
 
-            newFile.setIcon(file.getIcon());
+      newFile.setIcon(file.getIcon());
 
-            oldFile = file;
-            SaveFileAsCommandHandler.this.newFile = newFile;
+      oldFile = file;
+      SaveFileAsCommandHandler.this.newFile = newFile;
 
-            //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
-            VirtualFileSystem.getInstance().saveContent(newFile, null);
-         }
-
-      });
+      //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
+      VirtualFileSystem.getInstance().saveContent(newFile, null);
    }
 
    private String getFilePath(Item item)
