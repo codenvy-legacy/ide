@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.event.perspective.RestoreCodeHelperPanelEvent;
 import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
@@ -102,11 +103,13 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    {
       public void onCloseClick(TabCloseClickEvent event)
       {
-         hide();
+         if (tabSet.getTabs().length <= 1)
+            hide();
          if (event.getTab().getPane().getTitle().equals(OutlineForm.ID))
          {
             event.cancel();
             eventBus.fireEvent(new ShowOutlineEvent(false));
+            ViewHighlightManager.getInstance().viewClosed((View)event.getTab().getPane());
          }
       }
    };
@@ -114,6 +117,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    @Override
    public void show()
    {
+      ViewHighlightManager.getInstance().selectView((View)tabSet.getSelectedTab().getPane());
       super.show();
       eventBus.fireEvent(new FormOpenedEvent(ID));
    }
@@ -121,6 +125,7 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    @Override
    public void hide()
    {
+      ViewHighlightManager.getInstance().viewClosed((View)tabSet.getSelectedTab().getPane());
       super.hide();
       eventBus.fireEvent(new FormClosedEvent(ID));
    }
