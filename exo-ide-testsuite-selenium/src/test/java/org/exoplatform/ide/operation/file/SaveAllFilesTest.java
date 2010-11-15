@@ -41,9 +41,9 @@ import java.io.IOException;
 public class SaveAllFilesTest extends BaseTest
 {
    
-   private static final String FOLDER_NAME = "SaveAllFilesTest";
+   private static final String FOLDER_NAME = SaveAllFilesTest.class.getSimpleName();
    
-   private static final String FOLDER_NAME_2 = "SaveAllFilesTest 2";
+   private static final String FOLDER_NAME_2 = SaveAllFilesTest.class.getSimpleName()+"2";
    
    private static final String SAVED_FILE_XML = "Saved File.xml";
    
