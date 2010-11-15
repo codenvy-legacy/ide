@@ -47,7 +47,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       final String googleGadgetFile = "testGadgetFile.xml";
 
-      final String FolderName = "TestFolder";
+      final String FolderName = UndoRedoEditingInWysiwygEditorTest.class.getSimpleName();
 
       final String URL =
          BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FolderName + "/";
