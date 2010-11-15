@@ -46,7 +46,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 {
    private final static String FILE_NAME = "AnnotationInheritance.groovy";
 
-   private final static String FOLDER = "AnnotationInheritance";
+   private final static String FOLDER = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
    
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER+ "/";
    
