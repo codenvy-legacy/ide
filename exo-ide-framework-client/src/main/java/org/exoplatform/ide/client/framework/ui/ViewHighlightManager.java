@@ -76,10 +76,19 @@ public class ViewHighlightManager
 
    public void viewClosed(View view)
    {
-//      if (view == currentActiveView)
-//      {
+      if (view == currentActiveView)
+      {
          if (lastActiveView != null)
          {
+            try
+            {
+               if(!view.getDestroying())
+                  view.removeFocus();
+            }
+            catch (Exception e)
+            {
+               view.removeFocus();
+            }            
             try
             {
 //               view.removeFocus();
@@ -99,7 +108,7 @@ public class ViewHighlightManager
             //TODO fire event to select default view
             eventBus.fireEvent(new ActivateViewEvent("BrowserPanel"));
          }
-//      }
+      }
    }
 
    /**
