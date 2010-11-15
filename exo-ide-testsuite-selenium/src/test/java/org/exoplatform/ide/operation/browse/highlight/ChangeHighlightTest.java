@@ -38,13 +38,13 @@ import org.junit.Test;
  * @version $Id: Nov 15, 2010 $
  *
  */
-public class ChangeHighlihtTest extends BaseTest
+public class ChangeHighlightTest extends BaseTest
 {
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   private static String FOLDER_NAME = ChangeHighlihtTest.class.getSimpleName();
+   private static String FOLDER_NAME = ChangeHighlightTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
