@@ -1,6 +1,6 @@
 <module rename-to="IDE">
    <!-- Inherit the core Web Toolkit stuff. -->
-   <inherits name="com.google.gwt.core.Core"/>
+   <inherits name="com.google.gwt.core.Core" />
    <inherits name='com.google.gwt.user.User' />
    <inherits name='com.google.gwt.user.theme.standard.Standard' />
    <inherits name="com.google.gwt.http.HTTP" />
@@ -23,6 +23,9 @@
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
+
+   <inherits name="com.allen_sauer.gwt.log.gwt-log-TRACE" />
+   <inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" />
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEApplication' />

@@ -29,7 +29,8 @@
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
-   
+
+   <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />   
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEGadget' />
