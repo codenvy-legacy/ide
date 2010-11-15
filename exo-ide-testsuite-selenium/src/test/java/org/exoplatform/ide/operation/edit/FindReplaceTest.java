@@ -78,7 +78,7 @@ public class FindReplaceTest extends BaseTest
 
    private static final String FILE_NAME_HTML = "findReplace.html";
    
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = FindReplaceTest.class.getSimpleName();
 
    private final static String GROOVY_FILE_CONTENT =
       "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
