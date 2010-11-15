@@ -1,0 +1,209 @@
+/*
+ * Copyright (C) 2003-2010 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ */
+package org.exoplatform.ide.groovy.codeassistant.bean;
+
+
+
+/**
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public class ClassInfo extends Member
+{
+   
+   
+   private MethodInfo[] methods;   
+   
+   private MethodInfo[] declaredMethods;;
+   
+   private RoutineInfo[] constructors;
+   
+   private RoutineInfo[] declaredConstructors;
+   
+   private FieldInfo[] fields;
+   
+   private FieldInfo[] declaredFields;
+   
+   private String superClass;
+   
+   private String[] interfaces;
+   
+   private String qualifiedName;
+   
+   
+   public ClassInfo()
+   {
+   }
+   
+   
+   public ClassInfo(Integer modifiers, String name, MethodInfo[] methods,
+      MethodInfo[] declaredMethods, RoutineInfo[] constructors, RoutineInfo[] declaredConstructors,
+      FieldInfo[] fields, FieldInfo[] declaredFields, String superClass, String[] interfaces,String qualifiedName)
+   {
+      super(modifiers, name);
+      this.methods = methods;
+      this.declaredMethods = declaredMethods;
+      this.constructors = constructors;
+      this.declaredConstructors = declaredConstructors;
+      this.fields = fields;
+      this.declaredFields = declaredFields;
+      this.superClass = superClass;
+      this.interfaces = interfaces;
+      this.qualifiedName = qualifiedName;
+   }
+
+   /**
+    * @return the methods
+    */
+   public MethodInfo[] getMethods()
+   {
+      return methods;
+   }
+
+   /**
+    * @param methods the methods to set
+    */
+   public void setMethods(MethodInfo[] methods)
+   {
+      this.methods = methods;
+   }
+
+   /**
+    * @return the declaredMethods
+    */
+   public MethodInfo[] getDeclaredMethods()
+   {
+      return declaredMethods;
+   }
+
+   /**
+    * @param declaredMethods the declaredMethods to set
+    */
+   public void setDeclaredMethods(MethodInfo[] declaredMethods)
+   {
+      this.declaredMethods = declaredMethods;
+   }
+
+   /**
+    * @return the constructors
+    */
+   public RoutineInfo[] getConstructors()
+   {
+      return constructors;
+   }
+
+   /**
+    * @param constructors the constructors to set
+    */
+   public void setConstructors(RoutineInfo[] constructors)
+   {
+      this.constructors = constructors;
+   }
+
+   /**
+    * @return the declaredConstructors
+    */
+   public RoutineInfo[] getDeclaredConstructors()
+   {
+      return declaredConstructors;
+   }
+
+   /**
+    * @param declaredConstructors the declaredConstructors to set
+    */
+   public void setDeclaredConstructors(RoutineInfo[] declaredConstructors)
+   {
+      this.declaredConstructors = declaredConstructors;
+   }
+
+   /**
+    * @return the fields
+    */
+   public FieldInfo[] getFields()
+   {
+      return fields;
+   }
+
+   /**
+    * @param fields the fields to set
+    */
+   public void setFields(FieldInfo[] fields)
+   {
+      this.fields = fields;
+   }
+
+   /**
+    * @return the declaredFields
+    */
+   public FieldInfo[] getDeclaredFields()
+   {
+      return declaredFields;
+   }
+
+   /**
+    * @param declaredFields the declaredFields to set
+    */
+   public void setDeclaredFields(FieldInfo[] declaredFields)
+   {
+      this.declaredFields = declaredFields;
+   }
+
+   /**
+    * @return the superClass
+    */
+   public String getSuperClass()
+   {
+      return superClass;
+   }
+
+   /**
+    * @param superClass the superClass to set
+    */
+   public void setSuperClass(String superClass)
+   {
+      this.superClass = superClass;
+   }
+
+   /**
+    * @return the interfaces
+    */
+   public String[] getInterfaces()
+   {
+      return interfaces;
+   }
+
+   /**
+    * @param interfaces the interfaces to set
+    */
+   public void setInterfaces(String[] interfaces)
+   {
+      this.interfaces = interfaces;
+   }
+   
+   public String getQualifiedName()
+   {
+      return qualifiedName;
+   }
+   
+   public void setQualifiedName(String qualifiedName)
+   {
+      this.qualifiedName = qualifiedName;
+   }
+   
+
+}

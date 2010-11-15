@@ -1,0 +1,300 @@
+/*
+ * Copyright (C) 2003-2010 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ */
+package org.exoplatform.ide.groovy.codeassistant.bean;
+
+import java.lang.reflect.Modifier;
+
+/**
+ * 
+ * Member is an interface that reflects identifying information about
+ * a single member (a field or a method) or a constructor.
+ *
+ * @see  ClassInfo
+ * @see  FieldInfo
+ * @see  MethodInfo
+ * @see  ConstructorsDescription
+ *
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public abstract class Member
+{
+
+   protected Integer modifiers;
+   
+   protected String name;
+
+   public Member()
+   {
+   }
+   
+   public Member(Integer modifiers, String name)
+   {
+      this.modifiers = modifiers;
+      this.name = name;
+   }
+
+ 
+   /**
+    * @return the modifiers
+    */
+   public Integer getModifiers()
+   {
+      return modifiers;
+   }
+
+   /**
+    * @return the name
+    */
+   public String getName()
+   {
+      return name;
+   }
+   
+   
+   /**
+    * @param modifiers the modifiers to set
+    */
+   public void setModifiers(Integer modifiers)
+   {
+      this.modifiers = modifiers;
+   }
+
+   /**
+    * @param name the name to set
+    */
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>public</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>public</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isPublic()
+   {
+      return (modifiers & Modifier.PUBLIC) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>private</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>private</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isPrivate()
+   {
+      return (modifiers & Modifier.PRIVATE) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>protected</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>protected</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isProtected()
+   {
+      return (modifiers & Modifier.PROTECTED) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>static</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>static</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isStatic()
+   {
+      return (modifiers & Modifier.STATIC) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>final</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>final</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isFinal()
+   {
+      return (modifiers & Modifier.FINAL) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>synchronized</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>synchronized</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isSynchronized()
+   {
+      return (modifiers & Modifier.SYNCHRONIZED) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>volatile</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>volatile</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isVolatile()
+   {
+      return (modifiers & Modifier.VOLATILE) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>transient</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>transient</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isTransient()
+   {
+      return (modifiers & Modifier.TRANSIENT) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>native</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>native</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isNative()
+   {
+      return (modifiers & Modifier.NATIVE) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>interface</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>interface</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isInterface()
+   {
+      if (modifiers == null)
+      System.out.println("Member.isInterface()" + this.getClass().getCanonicalName());
+      return (modifiers & Modifier.INTERFACE) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>abstract</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>abstract</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isAbstract()
+   {
+      return (modifiers & Modifier.ABSTRACT) != 0;
+   }
+
+   /**
+    * Return <tt>true</tt> if the integer argument includes the
+    * <tt>strictfp</tt> modifier, <tt>false</tt> otherwise.
+    *
+    * @return <tt>true</tt> if <code>modifiers</code> includes the
+    * <tt>strictfp</tt> modifier; <tt>false</tt> otherwise.
+    */
+   public boolean isStrict()
+   {
+      return (modifiers & Modifier.STRICT) != 0;
+   }
+
+   /**
+    * Return a string describing the access modifier flags in
+    * the specified modifier. For example:
+    * <blockquote><pre>
+    *    public final synchronized strictfp
+    * </pre></blockquote>
+    * The modifier names are returned in an order consistent with the
+    * suggested modifier orderings given in <a
+    * href="http://java.sun.com/docs/books/jls/second_edition/html/j.title.doc.html"><em>The
+    * Java Language Specification, Second Edition</em></a> sections
+    * <a href="http://java.sun.com/docs/books/jls/second_edition/html/classes.doc.html#21613">&sect;8.1.1</a>, 
+    * <a href="http://java.sun.com/docs/books/jls/second_edition/html/classes.doc.html#78091">&sect;8.3.1</a>, 
+    * <a href="http://java.sun.com/docs/books/jls/second_edition/html/classes.doc.html#78188">&sect;8.4.3</a>, 
+    * <a href="http://java.sun.com/docs/books/jls/second_edition/html/classes.doc.html#42018">&sect;8.8.3</a>, and
+    * <a href="http://java.sun.com/docs/books/jls/second_edition/html/interfaces.doc.html#235947">&sect;9.1.1</a>.  
+    * The full modifier ordering used by this method is:
+    * <blockquote> <code> 
+    * public protected private abstract static final transient
+    * volatile synchronized native strictfp
+    * interface </code> </blockquote> 
+    * The <code>interface</code> modifier discussed in this class is
+    * not a true modifier in the Java language and it appears after
+    * all other modifiers listed by this method.  This method may
+    * return a string of modifiers that are not valid modifiers of a
+    * Java entity; in other words, no checking is done on the
+    * possible validity of the combination of modifiers represented
+    * by the input.
+    *
+    * @return a string representation of the set of modifiers
+    * represented by <code>modifiers</code>
+    */
+   public String modifierToString()
+   {
+      StringBuffer sb = new StringBuffer();
+      int len;
+
+      if ((modifiers & Modifier.PUBLIC) != 0)
+         sb.append("public ");
+      if ((modifiers & Modifier.PROTECTED) != 0)
+         sb.append("protected ");
+      if ((modifiers & Modifier.PRIVATE) != 0)
+         sb.append("private ");
+
+      /* Canonical order */
+      if ((modifiers & Modifier.ABSTRACT) != 0)
+         sb.append("abstract ");
+      if ((modifiers & Modifier.STATIC) != 0)
+         sb.append("static ");
+      if ((modifiers & Modifier.FINAL) != 0)
+         sb.append("final ");
+      if ((modifiers & Modifier.TRANSIENT) != 0)
+         sb.append("transient ");
+      if ((modifiers & Modifier.VOLATILE) != 0)
+         sb.append("volatile ");
+      if ((modifiers & Modifier.SYNCHRONIZED) != 0)
+         sb.append("synchronized ");
+      if ((modifiers & Modifier.NATIVE) != 0)
+         sb.append("native ");
+      if ((modifiers & Modifier.STRICT) != 0)
+         sb.append("strictfp ");
+      if ((modifiers & Modifier.INTERFACE) != 0)
+         sb.append("interface ");
+
+      if ((len = sb.length()) > 0) /* trim trailing space */
+         return sb.toString().substring(0, len - 1);
+      return "";
+   }
+
+}

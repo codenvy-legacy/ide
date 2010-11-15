@@ -81,8 +81,14 @@
    </component>
    
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
-   </component>
+   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   <init-params>
+      <value-param>
+         <name>wsname</name>
+         <value>ws</value>
+      </value-param>
+   </init-params>
+</component>
    
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>
@@ -97,7 +103,7 @@
                   <name>autoCreatedInNewRepository</name>
                   <description>Node types configuration file</description>
                   <value>jar:/conf/ext-nodetypes-config.xml</value>
-                  <value>jar:/conf/test/nodetypes-ext-test.xml</value>
+                  <value>jar:/conf/code-assitant-nodetypes.xml</value>
                </values-param>
             </init-params>
          </component-plugin>
@@ -108,7 +114,8 @@
             <init-params>                                                                                                                                                                                      
                <properties-param>                                                                                                                                                                              
                   <name>namespaces</name>                                                                                                                                                                      
-                  <property name="dc" value="http://purl.org/dc/elements/1.1/" />                                                                                                                              
+                  <property name="dc" value="http://purl.org/dc/elements/1.1/" />
+                  <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />                                                                                                                              
                </properties-param>                                                                                                                                                                             
             </init-params>                                                                                                                                                                                     
          </component-plugin> 
@@ -251,38 +258,7 @@
       </component-plugins>
    </component>
    
-    <component>
-      <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
-      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
-      <init-params>
-
-         <value-param>
-            <name>auto-mix-lockable</name>
-            <value>false</value>
-         </value-param>
-
-         <value-param>
-            <name>def-folder-node-type</name>
-            <value>nt:folder</value>
-         </value-param>
-
-         <value-param>
-            <name>def-file-node-type</name>
-            <value>nt:file</value>
-         </value-param>
-
-         <value-param>
-            <name>def-file-mimetype</name>
-            <value>text/plain</value>
-         </value-param>
-
-         <value-param>
-            <name>update-policy</name>
-            <value>create-version</value>
-         </value-param>
-      </init-params>
-   </component>
-   
+    
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>

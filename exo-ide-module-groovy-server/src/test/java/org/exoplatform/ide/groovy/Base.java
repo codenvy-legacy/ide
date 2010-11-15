@@ -20,6 +20,9 @@ import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.dataflow.PersistentDataManager;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.jcr.impl.dataflow.serialization.ReaderSpoolFileHolder;
@@ -28,13 +31,19 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.RequestHandler;
 import org.exoplatform.services.rest.impl.ResourceBinder;
+import org.exoplatform.services.rest.tools.DummySecurityContext;
 import org.exoplatform.services.rest.tools.ResourceLauncher;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -82,6 +91,8 @@ public class Base extends TestCase
    public ResourceLauncher launcher;
 
    public int resourceNumber = 0;
+   
+   protected DummySecurityContext adminSecurityContext;
 
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
 
@@ -113,6 +124,16 @@ public class Base extends TestCase
       resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
+      SessionProviderService sessionProviderService =
+         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
+      SessionProvider sessionProvider = new SessionProvider(new ConversationState(new Identity("root")));
+      sessionProvider.setCurrentRepository(repository);
+      sessionProviderService.setSessionProvider(null, sessionProvider);
+      Set<String> adminRoles = new HashSet<String>();
+      adminRoles.add("administrators");
+      Set<String> devRoles = new HashSet<String>();
+      devRoles.add("developers");
+      adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
 
    }
 

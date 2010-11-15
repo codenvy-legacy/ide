@@ -19,6 +19,13 @@
  */
 package org.exoplatform.ide.groovy;
 
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorageJcrImpl;
+import org.exoplatform.ide.groovy.codeassistant.CodeAssistantImpl;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,10 +45,19 @@ public class GroovyScriptServiceApplication extends Application
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication()
+   public GroovyScriptServiceApplication(SessionProviderService sessionProvider, 
+                                         RepositoryService repositoryService,
+                                         InitParams initParams)
    {
+      if (initParams != null)
+      {
+         ValueParam valueParam = initParams.getValueParam("wsname");
+         objects.add(new ClassInfoStrorageJcrImpl(sessionProvider, repositoryService, valueParam.getValue()));
+         objects.add(new CodeAssistantImpl(valueParam.getValue(), repositoryService, sessionProvider));
+      }
       objects.add(new DevelopmentResourceMethodFilter());
       classes.add(GroovyTemplateService.class);
+
    }
 
    public Set<Class<?>> getClasses()
