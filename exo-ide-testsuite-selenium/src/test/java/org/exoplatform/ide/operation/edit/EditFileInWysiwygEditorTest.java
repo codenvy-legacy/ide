@@ -45,7 +45,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
    private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
    
-   private final static String TEST_FOLDER ="TestFolder";
+   private final static String TEST_FOLDER =EditFileInWysiwygEditorTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
 
