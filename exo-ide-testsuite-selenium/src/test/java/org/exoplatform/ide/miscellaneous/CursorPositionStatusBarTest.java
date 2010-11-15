@@ -40,7 +40,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private final static String TEST_FOLDER = "TestFolder";
+   private final static String TEST_FOLDER = "CursorPositionStatusBarTest";
 
    private final static String FILE_1 = "Untitled File.html";
 
