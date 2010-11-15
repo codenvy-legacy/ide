@@ -46,7 +46,7 @@ public class DisplayingWarningMessageTest extends BaseTest
    
    private static final String XML_FILE_NAME = "Untitled file.xml";
    
-   private static final String FOLDER_NAME = "Warnig-test";
+   private static final String FOLDER_NAME = DisplayingWarningMessageTest.class.getSimpleName();
    
    @AfterClass
    public static void tearDown()
@@ -81,8 +81,8 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Try to close file tab.
       //Click on "No" button in confirmation dialog.
       
-      //After the step 2: You will see smartGWT “Dialogs.showError” dialog 
-      //windows “Do you want to save <default XML file name> before closing?".
+      //After the step 2: You will see smartGWT â€œDialogs.showErrorâ€� dialog 
+      //windows â€œDo you want to save <default XML file name> before closing?".
       closeUnsavedFileAndDoNotSave("0");
       
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
