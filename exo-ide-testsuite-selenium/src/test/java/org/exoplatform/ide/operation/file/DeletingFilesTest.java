@@ -44,7 +44,7 @@ import org.junit.Test;
 public class DeletingFilesTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = "DeletingFiles";
+   private static String FOLDER_NAME = DeletingFilesTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
