@@ -49,7 +49,7 @@ public class ClosingOutlinePanelTest extends BaseTest
 
    private final static String TEXT_FILE_NAME = "SampleTextFile.txt";
 
-   private final static String FOLDER_NAME = "TestFolder";
+   private final static String FOLDER_NAME = ClosingOutlinePanelTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/";
