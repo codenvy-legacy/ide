@@ -83,6 +83,6 @@ public class AutoCompletionXMLTest extends BaseTest
       String textAfter = getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
-      closeUnsavedFileAndDoNotSave("0");      
+      closeUnsavedFileAndDoNotSave(0);      
    }
 }

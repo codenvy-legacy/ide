@@ -101,7 +101,7 @@ public class HighlightNavigatorTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
 
    }
 

@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * IDE-156:HotKeys customization.
@@ -190,7 +189,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       
       //check new html file created
       assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave("3");
+      closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //select first tab
@@ -204,7 +203,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       
       //check new html file created
       assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave("3");
+      closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //select second tab
@@ -220,13 +219,13 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       
       //check new html file created
       assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave("3");
+      closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //close all tabs
-      closeUnsavedFileAndDoNotSave("0");
-      closeUnsavedFileAndDoNotSave("0");
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
+      closeUnsavedFileAndDoNotSave(0);
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    /**
@@ -296,7 +295,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       
       //check new html file created
       assertEquals("Untitled file.html *", getTabTitle(0));
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 3 ------------

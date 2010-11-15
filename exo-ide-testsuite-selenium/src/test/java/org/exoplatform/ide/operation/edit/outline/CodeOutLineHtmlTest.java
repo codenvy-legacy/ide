@@ -188,7 +188,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 8 ----
       //close file
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    private void checkTreeCorrectlyCreated() throws Exception

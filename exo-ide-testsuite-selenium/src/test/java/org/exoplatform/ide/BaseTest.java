@@ -109,6 +109,7 @@ public abstract class BaseTest
    {
       cleanDefaultWorkspace();
       selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
+      CloseFileUtils.selenium = selenium;
 
       switch (BROWSER_COMMAND)
       {
@@ -240,7 +241,7 @@ public abstract class BaseTest
     * @return {@link String} tab's title
     * @throws Exception
     */
-   protected String getTabTitle(int index) throws Exception
+   protected static String getTabTitle(int index) throws Exception
    {
       return selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/title");
    }
@@ -891,9 +892,13 @@ public abstract class BaseTest
     * @param tabIndex index of tab to close
     * @throws Exception
     */
-   protected static void closeUnsavedFileAndDoNotSave(String tabIndex) throws Exception
+   protected static void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
    {
-      closeTab(tabIndex);
+      //check, that file is unsaved
+      //TODO
+//      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+//      assertTrue(tabName.endsWith("*"));
+      closeTab(String.valueOf(tabIndex));
 
       /*
        * close existed file
@@ -1013,24 +1018,28 @@ public abstract class BaseTest
     */
    protected void checkSaveAsDialogAndSave(String name) throws Exception
    {
-      String okButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
-      String cancelButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/";
+      final String dialogWindowLocator = "scLocator=//Window[ID=\"ideAskForValueDialog\"]";
+      final String okButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
+      final String cancelButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/";
+      final String textFieldLocator ="scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
+         + "item[name=ideAskForValueDialogValueField]/element";
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
+      assertTrue(selenium.isElementPresent(dialogWindowLocator));
       assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
+      assertTrue(selenium.isElementPresent(textFieldLocator));
       assertTrue(selenium.isElementPresent(okButtonLocator));
       assertTrue(selenium.isElementPresent(cancelButtonLocator));
 
       //clearFocus();
 
-      String textItemLocator =
-         "scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField||Class=TextItem]/element";
-      AbstractTextUtil.getInstance().typeToInput(textItemLocator, name, true);
+      if (name != null)
+      {
+         AbstractTextUtil.getInstance().typeToInput(textFieldLocator, name, true);
+      }
 
       selenium.click(okButtonLocator);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      assertFalse(selenium.isElementPresent(dialogWindowLocator));
    }
 
    /**

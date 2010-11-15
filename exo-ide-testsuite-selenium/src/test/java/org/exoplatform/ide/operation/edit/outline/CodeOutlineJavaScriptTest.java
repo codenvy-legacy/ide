@@ -360,7 +360,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       secondCheckJavaScriptOutlineTree();
 
       // close google gadget file
-      closeUnsavedFileAndDoNotSave("2");
+      closeUnsavedFileAndDoNotSave(2);
       Thread.sleep(TestConstants.SLEEP);
 
       // close js file
@@ -377,7 +377,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // close text file
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
    }
 

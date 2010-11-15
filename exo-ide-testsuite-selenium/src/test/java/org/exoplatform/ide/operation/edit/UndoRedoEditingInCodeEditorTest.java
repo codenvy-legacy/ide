@@ -250,8 +250,8 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
       
-      closeUnsavedFileAndDoNotSave("1");
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(1);
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    

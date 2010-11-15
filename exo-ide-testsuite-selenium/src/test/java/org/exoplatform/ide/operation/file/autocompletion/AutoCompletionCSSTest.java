@@ -44,7 +44,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
 //      closeTab("0");
 //      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -83,7 +83,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
       @Test
@@ -114,7 +114,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    /**

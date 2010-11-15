@@ -81,7 +81,7 @@ public class ChangeHighlightTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));

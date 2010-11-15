@@ -45,7 +45,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -73,7 +73,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -129,7 +129,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -183,7 +183,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    /**

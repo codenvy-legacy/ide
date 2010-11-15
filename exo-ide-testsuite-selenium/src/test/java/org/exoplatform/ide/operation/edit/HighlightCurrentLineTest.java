@@ -246,8 +246,8 @@ public class HighlightCurrentLineTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeUnsavedFileAndDoNotSave("1");
-      closeUnsavedFileAndDoNotSave("0");      
+      closeUnsavedFileAndDoNotSave(1);
+      closeUnsavedFileAndDoNotSave(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }   
 

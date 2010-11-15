@@ -19,12 +19,17 @@
 package org.exoplatform.ide;
 
 /**
+ * Contains locators of main parts of IDE gadget.
+ * 
+ * Performs methods to get locators to some of most used parts of IDE,
+ * which must be calculated (such as close button of editor tab)
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
-public interface Locators
+public class Locators
 {
    public final static String MAIN_FORM_LOCATOR = "//div[@eventproxy = 'ideHorizontalSplitLayout' and @class='normal']";
    
@@ -38,6 +43,8 @@ public interface Locators
 
    public static final String VERTICAL_SPLIT_LAYOUT_LOCATOR = "//div[@eventproxy='ideVerticalSplitLayout' and @class='normal']";
    
+   public static final String EDITOR_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/";
+   
    
    // go to line window locators
    public interface GoToLineWindow
@@ -45,5 +52,10 @@ public interface Locators
       public static final String GOTO_LINE_FORM_TEXT_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element";
       
       public static final String GOTO_LINE_FORM_GO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/";
+   }
+   
+   public static String getTabCloseButtonLocator(int index)
+   {
+      return EDITOR_TABSET_LOCATOR + "tab[index=" + index + "]/icon";
    }
 }

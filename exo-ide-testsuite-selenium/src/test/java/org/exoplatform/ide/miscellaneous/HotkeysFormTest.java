@@ -155,7 +155,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //check new Css file is createed
       assertEquals("Untitled file.css *", getTabTitle(0));
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 5 ------------
@@ -183,7 +183,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //check new Css file is createed
       assertEquals("Untitled file.css *", getTabTitle(0));
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 7 ------------

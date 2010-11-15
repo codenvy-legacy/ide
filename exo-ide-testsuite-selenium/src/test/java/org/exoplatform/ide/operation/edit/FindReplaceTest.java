@@ -421,7 +421,7 @@ public class FindReplaceTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
       checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    /**

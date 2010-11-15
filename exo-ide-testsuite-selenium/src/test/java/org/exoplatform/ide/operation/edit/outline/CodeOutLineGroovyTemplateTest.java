@@ -70,7 +70,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       cleanDefaultWorkspace();
    }
 

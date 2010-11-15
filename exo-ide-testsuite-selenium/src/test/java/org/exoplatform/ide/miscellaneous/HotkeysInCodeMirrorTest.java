@@ -111,7 +111,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
 
    }
    
@@ -209,7 +209,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    @Test
@@ -268,7 +268,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    /**
@@ -298,7 +298,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       //close file
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
 
    }
  

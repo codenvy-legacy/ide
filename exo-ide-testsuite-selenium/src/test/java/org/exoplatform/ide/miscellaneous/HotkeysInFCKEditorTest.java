@@ -217,7 +217,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    @Test
@@ -323,7 +323,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selectMainFrame();
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    @Test
@@ -350,7 +350,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       checkCreateFileFromTemplateFormAndClose();
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception

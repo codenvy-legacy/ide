@@ -19,19 +19,20 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-36:Displaying warning message test.
@@ -48,12 +49,31 @@ public class DisplayingWarningMessageTest extends BaseTest
    
    private static final String FOLDER_NAME = DisplayingWarningMessageTest.class.getSimpleName();
    
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" +FOLDER_NAME);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
@@ -66,12 +86,12 @@ public class DisplayingWarningMessageTest extends BaseTest
    }
    
    //IDE-36:Displaying warning message test.
-   //@Ignore
    @Test
    public void displayingWarningMessage() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
       runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
@@ -81,9 +101,8 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Try to close file tab.
       //Click on "No" button in confirmation dialog.
       
-      //After the step 2: You will see smartGWT â€œDialogs.showErrorâ€� dialog 
-      //windows â€œDo you want to save <default XML file name> before closing?".
-      closeUnsavedFileAndDoNotSave("0");
+      //After the step 2: You will see smartGWT Dialogs.showError dialog 
+      CloseFileUtils.closeNewFile(0, false, null);
       
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
       //"Save" and "Save As" buttons, and "File->Save", "File->Save As" top menu commands 
@@ -104,28 +123,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //--------- 5 -------------------
       //Try to close file tab again.
-      closeTab("0");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      //--------- 6 -------------------
-      //Click on "Yes" button in confirmation dialog and save file with default name.
-      
-//      //check is warning dialog appears
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save " 
-//         + XML_FILE_NAME + " before closing?')]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-//      //click Yes button
-//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-//      Thread.sleep(TestConstants.SLEEP);
-      //check is Save As dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
-      //save file with default name
-      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
+      CloseFileUtils.closeNewFile(0, true, null);
       
       //After the step 6: new file will be saved, and file tab should be closed.
       
@@ -133,7 +131,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertElementPresentInWorkspaceTree(XML_FILE_NAME);
       
       //check is file closed
-      checkIsTabPresentInEditorTabset("Untitled file.xml", false);
+      checkIsTabPresentInEditorTabset(XML_FILE_NAME, false);
       
       //--------- 7 -------------------
       //Open created earlier xml file and change file content. 
@@ -178,12 +176,7 @@ public class DisplayingWarningMessageTest extends BaseTest
          +"  </bean>\n"
          +"</test>";
       
-      
-      selectIFrameWithEditor(0);
-      String text = selenium.getText("//body[@class='editbox']/");
-      assertEquals(previousContent, text);
-      selectMainFrame();
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(previousContent, getTextFromCodeEditor(0));
       
       //check Save button enabled
       checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
@@ -200,41 +193,15 @@ public class DisplayingWarningMessageTest extends BaseTest
       //After the step 9: there is saved file content in the new file tab with title without mark "*".
       
       //check file opened and title doesn't mark with *
-//      assertFalse(selenium.isTextPresent(XML_FILE_NAME + " *"));
-      
       assertEquals(XML_FILE_NAME, getTabTitle(1));
-      
-      selectIFrameWithEditor(1);
-      String savedText = selenium.getText("//body[@class='editbox']/");
-      assertEquals(previousContent, savedText);
-      selectMainFrame();
+
+      assertEquals(previousContent, getTextFromCodeEditor(1));
       closeTab("1");
       
-      //close untitled JavaScript file
-//      closeTab("0");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      
-//      //check is warning dialog appears
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"][contains(text(), 'Do you want to save Untitled file.xml before closing?')]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-//      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-//      
-//      //click No button
-//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-      closeUnsavedFileAndDoNotSave("0");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //-------- 10 ---------------
-      //Remove created files.
-      
-      //delete Untitled file.xml
-      selectItemInWorkspaceTree(XML_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      deleteSelectedItems();
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
    }
+   
    private void changeFileContent() throws Exception
    {
       selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");

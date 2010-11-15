@@ -57,7 +57,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
       typeTextIntoEditor(0, "test test test");
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       

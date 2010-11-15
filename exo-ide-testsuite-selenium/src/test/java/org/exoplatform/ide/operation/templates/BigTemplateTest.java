@@ -111,7 +111,7 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

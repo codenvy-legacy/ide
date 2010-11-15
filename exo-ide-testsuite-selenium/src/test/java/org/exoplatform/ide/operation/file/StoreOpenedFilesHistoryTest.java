@@ -128,7 +128,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       closeTab("0");
       closeTab("0");
       closeTab("0");
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       openFileFromNavigationTreeWithCodeEditor(textFile, false);

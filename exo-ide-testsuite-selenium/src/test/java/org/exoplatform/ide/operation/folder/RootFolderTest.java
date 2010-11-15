@@ -16,14 +16,13 @@
  */
 package org.exoplatform.ide.operation.folder;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,38 +36,33 @@ import java.net.URLEncoder;
 public class RootFolderTest extends BaseTest
 {
    
-   private final static String URL =
+   private static final String URL =
       BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private static String textFileName;
+   private static String folderName;
+   
+   @Before
+   public void setUp()
+   {
+      folderName = getClass().getSimpleName();
+   }
    
    @Test
    public void testRootFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=dev-monit||0]/col[fieldName=name||1]");
-      selenium.mouseDownAt("//div[@title='New']//img", "");
-      selenium.mouseUpAt("//div[@title='New']//img", "");
-      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Text File\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]"));
-      selenium.mouseDownAt("//div[@title='Save As...']//img", "");
-      selenium.mouseUpAt("//div[@title='Save As...']//img", "");
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]"));
-      textFileName =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField]/element");
-      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + textFileName
-         + "]/col[1]"));
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      runToolbarButton("Refresh Selected Folder");
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree(textFileName);
+      selectRootOfWorkspaceTree();
+      
+      //create folder
+      createFolder(folderName);
+      
+      //check new folder appeared in navigation tree
+      assertElementPresentInWorkspaceTree(folderName);
+      //refresh workspace folder
+      selectRootOfWorkspaceTree();
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      //check new folder is present in navigation tree
+      assertElementPresentInWorkspaceTree(folderName);
    }
    
    @AfterClass
@@ -76,7 +70,7 @@ public class RootFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(textFileName, "UTF-8"));
+         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(folderName, "UTF-8"));
       }
       catch (IOException e)
       {

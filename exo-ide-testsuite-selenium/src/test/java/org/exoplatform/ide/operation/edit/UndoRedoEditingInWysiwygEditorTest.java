@@ -320,7 +320,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //step 27
 
       //****Todo***fix
-      closeUnsavedFileAndDoNotSave("1");
+      closeUnsavedFileAndDoNotSave(1);
       //**************
 
       //step 28

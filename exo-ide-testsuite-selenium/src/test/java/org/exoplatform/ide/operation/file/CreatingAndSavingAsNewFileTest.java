@@ -152,7 +152,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //TODO***********fix***************
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
       //*****************************
 
       //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");

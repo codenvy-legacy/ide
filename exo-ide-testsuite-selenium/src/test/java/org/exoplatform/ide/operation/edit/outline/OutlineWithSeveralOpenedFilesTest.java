@@ -91,7 +91,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       checkOutlineVisibility(false);
 
       //end
-      closeUnsavedFileAndDoNotSave("0");
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
+      closeUnsavedFileAndDoNotSave(0);
    }
 }

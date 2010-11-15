@@ -47,7 +47,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       htmlTest();
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -71,7 +71,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       //************fixed
       GoogleGadgetTest();
       //***********
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
     @Test
@@ -134,7 +134,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
 
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    private void htmlTest() throws InterruptedException

@@ -314,7 +314,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //Close and remove created file.
-      closeUnsavedFileAndDoNotSave("1");
+      closeUnsavedFileAndDoNotSave(1);
       Thread.sleep(TestConstants.SLEEP);
       closeTab("0");
       Thread.sleep(TestConstants.SLEEP_SHORT);

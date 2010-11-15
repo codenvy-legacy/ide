@@ -112,7 +112,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title=folder-1-2]/col[fieldName=title]"));
       
-      closeUnsavedFileAndDoNotSave("0");
+      closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
