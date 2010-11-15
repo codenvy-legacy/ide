@@ -28,6 +28,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface EditorUndoTypingHandler extends EventHandler
 {
 
-   void onEditorUndoTypig(EditorUndoTypingEvent event);
+   void onEditorUndoTyping(EditorUndoTypingEvent event);
 
 }

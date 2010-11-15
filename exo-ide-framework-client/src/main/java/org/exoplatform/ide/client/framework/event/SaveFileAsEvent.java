@@ -24,6 +24,8 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Open new dialog window for asking new file name.
+ * Save new file with new name.
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -32,6 +34,15 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 {
+   /**
+    * Enum to configure ask for value dialog window:
+    * two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel).
+    */
+   public enum SaveDialogType
+   {
+      YES_CANCEL,
+      EXTENDED
+   }
 
    public static final GwtEvent.Type<SaveFileAsHandler> TYPE = new GwtEvent.Type<SaveFileAsHandler>();
 
@@ -39,7 +50,11 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 
    private boolean saveOnly = false;
    
+   private GwtEvent<?> eventFiredOnNo;
+   
    private GwtEvent<?> eventFiredOnCancel;
+   
+   private SaveDialogType dialogType;
 
    public SaveFileAsEvent()
    {
@@ -58,13 +73,18 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 
    
    /**
-    * @param file
-    * @param eventFiredOnCancel
+    * @param file - file to save
+    * @param type - type of dialog window (two or three buttons)
+    * @param eventFiredOnNo - event, which will be fired if No button will be clicked
+    * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked 
+    * (if null - window will be closed without any actions)
     */
-   public SaveFileAsEvent(File file, GwtEvent<?> eventFiredOnCancel)
+   public SaveFileAsEvent(File file,  SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
    {
       this.file = file;
+      this.eventFiredOnNo = eventFiredOnNo;
       this.eventFiredOnCancel = eventFiredOnCancel;
+      this.dialogType = type;
    }
 
    public boolean isSaveOnly()
@@ -96,6 +116,21 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    {
       return eventFiredOnCancel;
    }
-
+   
+   /**
+    * @return the eventFiredOnNo
+    */
+   public GwtEvent<?> getEventFiredOnNo()
+   {
+      return eventFiredOnNo;
+   }
+   
+   /**
+    * @return the dialogType
+    */
+   public SaveDialogType getDialogType()
+   {
+      return dialogType;
+   }
    
 }

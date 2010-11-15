@@ -33,7 +33,7 @@ public class EditorUndoTypingEvent extends GwtEvent<EditorUndoTypingHandler>
    @Override
    protected void dispatch(EditorUndoTypingHandler handler)
    {
-      handler.onEditorUndoTypig(this);
+      handler.onEditorUndoTyping(this);
    }
 
    @Override
