@@ -40,7 +40,7 @@ import java.net.URLEncoder;
 public class CreateFolderTest extends BaseTest
 {
 
-   private static String FOLDER_NAME_TOOLBAR = "CreateFolderToolbar";
+   private static String FOLDER_NAME_TOOLBAR = CreateFolderTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
