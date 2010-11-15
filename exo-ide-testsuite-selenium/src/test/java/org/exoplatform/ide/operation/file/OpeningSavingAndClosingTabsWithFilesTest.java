@@ -42,7 +42,7 @@ import org.exoplatform.ide.TestConstants;
 public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = "TestFolder";
+   private static String FOLDER_NAME = OpeningSavingAndClosingTabsWithFilesTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
