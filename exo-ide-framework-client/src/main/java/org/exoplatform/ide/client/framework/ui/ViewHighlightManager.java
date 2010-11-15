@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-
+import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewActivatedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -36,6 +36,8 @@ public class ViewHighlightManager
    private static ViewHighlightManager instance;
 
    private View currentActiveView;
+
+   private View lastActiveView;
 
    private HandlerManager eventBus;
 
@@ -67,8 +69,37 @@ public class ViewHighlightManager
          }
       }
       view.highlightView();
+      lastActiveView = currentActiveView;
       currentActiveView = view;
       eventBus.fireEvent(new ViewActivatedEvent(view.getViewId()));
+   }
+
+   public void viewClosed(View view)
+   {
+//      if (view == currentActiveView)
+//      {
+         if (lastActiveView != null)
+         {
+            try
+            {
+//               view.removeFocus();
+               if (!lastActiveView.getDestroying())
+                  lastActiveView.highlightView();
+            }
+            catch (Exception e)
+            {
+               lastActiveView.highlightView();
+            }
+            currentActiveView = lastActiveView;
+            lastActiveView = null;
+            eventBus.fireEvent(new ViewActivatedEvent(currentActiveView.getViewId()));
+         }
+         else
+         {
+            //TODO fire event to select default view
+            eventBus.fireEvent(new ActivateViewEvent("BrowserPanel"));
+         }
+//      }
    }
 
    /**

@@ -79,6 +79,11 @@ public class View extends Layout implements ActivateViewHandler
       });
    }
 
+   
+   /**
+    * Activate this view.
+    * Use only in sub classes of {@link View} 
+    */
    protected void activateView()
    {
       ViewHighlightManager.getInstance().selectView(this);
@@ -90,12 +95,12 @@ public class View extends Layout implements ActivateViewHandler
    @Override
    protected void onDestroy()
    {
-      //      if (mouseDownHandler != null)
-      //         mouseDownHandler.removeHandler();
+      ViewHighlightManager.getInstance().viewClosed(this);
       handlers.removeHandlers();
       super.onDestroy();
    }
 
+  
    public void highlightView()
    {
       setBorder(HIGLIDTH_STYLE);
