@@ -48,7 +48,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    @Before
    public void setUp() throws Exception
    {
-      FOLDER_NAME = UUID.randomUUID().toString();
+      FOLDER_NAME = HotkeysCustomizationTest.class.getSimpleName();
       String filePath ="src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
