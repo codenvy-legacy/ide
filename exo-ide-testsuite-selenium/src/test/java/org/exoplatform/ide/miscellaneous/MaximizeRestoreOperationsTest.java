@@ -47,7 +47,7 @@ import java.io.IOException;
  */
 public class MaximizeRestoreOperationsTest extends BaseTest
 {
-   private final static String FILE_NAME = "SampleHtmlFile.html";
+   private final static String FILE_NAME =MaximizeRestoreOperationsTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
             + WS_NAME + "/" + FILE_NAME;
