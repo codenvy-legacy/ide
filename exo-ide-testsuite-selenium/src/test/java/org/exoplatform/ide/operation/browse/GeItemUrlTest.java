@@ -45,7 +45,7 @@ public class GeItemUrlTest extends BaseTest
 
    private final String file2Name = "Example.groovy";
 
-   private final String folderName = "TestFolder";
+   private final String folderName = GeItemUrlTest.class.getSimpleName();
 
    private final String entrypoint = WEBDAV_CONTEXT+"/repository/";
 
