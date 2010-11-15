@@ -77,7 +77,11 @@ public class CursorPositionStatusBarTest extends BaseTest
       saveAsUsingToolbarButton(FILE_1);
 
       Thread.sleep(TestConstants.SLEEP);
-
+      //TODO****try****fix
+      runCommandFromMenuNewOnToolbar(MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      //****************
+      
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selectIFrameWithEditor(0);
