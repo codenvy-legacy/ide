@@ -36,7 +36,7 @@ import java.net.URLEncoder;
 */
 public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
 {
-   private static String FOLDER_NAME = "Тестовая папка" + System.currentTimeMillis();
+   private static String FOLDER_NAME = CreateFolderWithNonLatinSymbolsTest.class.getSimpleName()  + System.currentTimeMillis();
    
    private final static String URL =
       BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
