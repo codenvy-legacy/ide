@@ -45,7 +45,7 @@ public class RenameOpenedFileTest extends BaseTest
 
    private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
 
-   private final static String FOLDER_NAME = "falkfsdhglesthga";
+   private final static String FOLDER_NAME = RenameOpenedFileTest.class.getSimpleName();
 
    private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
       + FOLDER_NAME + "/" + ORIG_FILE_NAME;
