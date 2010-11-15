@@ -41,7 +41,7 @@ import org.junit.Test;
 public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 {
 
-   private final static String FILE_NAME = "DefaultHTTPParameters.groovy";
+   private final static String FILE_NAME = RESTServiceDefaultHTTPParametersTest.class.getSimpleName();
 
    private final static String TEST_FOLDER = "DefaultHTTPParameters";
 
