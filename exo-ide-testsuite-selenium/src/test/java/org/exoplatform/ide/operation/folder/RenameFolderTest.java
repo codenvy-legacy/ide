@@ -38,7 +38,7 @@ import java.io.IOException;
 */
 public class RenameFolderTest extends BaseTest
 {
-   private final static String FOLDER_NAME = "RenameFolderTest";
+   private final static String FOLDER_NAME = RenameFolderTest.class.getSimpleName();
 
    private final static String NEW_FOLDER_NAME = "FolderRenamed";
 
