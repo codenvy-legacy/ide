@@ -74,7 +74,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       try
       {
-         FOLDER_NAME = UUID.randomUUID().toString();
+         FOLDER_NAME = SavingPreviouslyEditedFileTest.class.getSimpleName();
          VirtualFileSystemUtils.mkcol(URL +  FOLDER_NAME + "/");
       }
       catch (IOException e)
