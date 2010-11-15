@@ -151,6 +151,21 @@
       <servlet-class>org.apache.shindig.social.sample.oauth.SampleOAuthServlet</servlet-class>
    </servlet>
 
+
+     <servlet>
+                <servlet-name>remoteLoggerServiceImpl</servlet-name>
+                <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
+        </servlet>
+
+
+
+        <servlet-mapping>
+                <servlet-name>remoteLoggerServiceImpl</servlet-name>
+                <url-pattern>/IDE/gwt-log</url-pattern>
+        </servlet-mapping>
+
+
+
    <servlet-mapping>
       <servlet-name>js</servlet-name>
       <url-pattern>/gadgets/js/*</url-pattern>
