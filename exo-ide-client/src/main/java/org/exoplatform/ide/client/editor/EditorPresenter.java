@@ -354,6 +354,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       if (event.isForceClosing())
       {
+         closeFileAfterSaving = false;
          closeFile(event.getFile());
          return;
       }
