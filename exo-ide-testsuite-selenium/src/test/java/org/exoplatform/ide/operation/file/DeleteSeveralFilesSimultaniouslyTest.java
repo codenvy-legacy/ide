@@ -38,7 +38,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
 {
      
    
-   private static String FOLDER_NAME = "DeleteSeveralFilesSimultaniously";
+   private static String FOLDER_NAME = DeleteSeveralFilesSimultaniouslyTest.class.getSimpleName() ;
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
