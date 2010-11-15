@@ -45,7 +45,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    //TODO: doesn't work on windows, because double click is used
    //IDE-109 Open file with non-default editor.
    
-   private static String FOLDER_NAME = "OpenFileWithNonDefaultEditor";
+   private static String FOLDER_NAME =OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
    
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
    
