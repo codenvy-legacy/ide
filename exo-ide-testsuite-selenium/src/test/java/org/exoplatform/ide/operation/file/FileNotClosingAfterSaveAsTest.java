@@ -39,7 +39,7 @@ import org.junit.Test;
 public class FileNotClosingAfterSaveAsTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = "file-not-closing";
+   private static String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
    
    private String FILE_NAME = "sagfnldskdfladsgfadsfgsbg";
    
