@@ -20,13 +20,16 @@ package org.exoplatform.ide.operation.file;
 
 import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,21 +43,42 @@ import org.junit.Test;
 public class FileNotClosingAfterSaveAsTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
+   private static final String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
    
-   private String FILE_NAME = "sagfnldskdfladsgfadsfgsbg";
+   private static final String FILE_NAME_1 = UUID.randomUUID().toString();
+   
+   private static final String FILE_NAME_2 = UUID.randomUUID().toString();
+   
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
    
    //http://jira.exoplatform.com/browse/IDE-404
    @Test
    public void testFileNotClosingAfterSaveAs() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
-      createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);
+      createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME_1, 0);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       
       typeTextIntoEditor(0, "test test test");
       
@@ -62,7 +86,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
       
-      saveAsUsingToolbarButton("asdgffasdhgsgdh");
+      saveAsUsingToolbarButton(FILE_NAME_2);
       
       checkCodeEditorOpened(0);
       

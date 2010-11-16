@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
