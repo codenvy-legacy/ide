@@ -1476,7 +1476,7 @@ public abstract class BaseTest
       }
    }
 
-   @AfterClass
+//   @AfterClass
    public static void killFireFox()
    {
       try
@@ -1819,6 +1819,22 @@ public abstract class BaseTest
        
        selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "."
                                   + testMethodName + ".png");
+   }
+   
+   /**
+    * Click on close button of form.
+    * 
+    * @param locator locator of form
+    * @throws Exception
+    */
+   protected void closeForm(String locator) throws Exception
+   {
+      if (!locator.endsWith("/"))
+      {
+         locator += "/";
+      }
+      selenium.click(locator + "closeButton/");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
 }

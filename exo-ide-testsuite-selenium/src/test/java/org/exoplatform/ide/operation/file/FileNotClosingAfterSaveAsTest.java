@@ -19,8 +19,6 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
-import java.io.IOException;
-import java.util.UUID;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -31,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,9 +45,11 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
 
    private static final String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
    
-   private static final String FILE_NAME_1 = UUID.randomUUID().toString();
-   
-   private static final String FILE_NAME_2 = UUID.randomUUID().toString();
+   private static final String FILE_NAME_1 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
+      + System.currentTimeMillis();
+
+   private static final String FILE_NAME_2 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
+      + System.currentTimeMillis() + "5";
    
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
    

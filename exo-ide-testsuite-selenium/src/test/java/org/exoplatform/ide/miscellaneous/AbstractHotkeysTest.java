@@ -139,22 +139,6 @@ public abstract class AbstractHotkeysTest extends BaseTest
       runToolbarButton(ToolbarCommands.File.REFRESH);
    }
    
-   /**
-    * Click on close button of form.
-    * 
-    * @param locator locator of form
-    * @throws Exception
-    */
-   void closeForm(String locator) throws Exception
-   {
-      if (!locator.endsWith("/"))
-      {
-         locator += "/";
-      }
-      selenium.click(locator + "closeButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
    void clickButton(String buttonLocator) throws Exception
    {
       selenium.click(buttonLocator);
