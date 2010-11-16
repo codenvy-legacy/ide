@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -34,19 +35,22 @@ import org.junit.Test;
  */
 public class DeleteCurrentLineTest extends BaseTest
 {
+   
+   private final static String TEST_FOLDER = DeleteCurrentLineTest.class.getSimpleName();
+   
    //IDE-151
    @Test
    public void deleteLine() throws Exception
    {
       //      Create folder "Test" and file "test.html"
       Thread.sleep(TestConstants.SLEEP);
-      createFolder("test");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      createFolder(TEST_FOLDER);
+      Thread.sleep(TestConstants.SLEEP);
       runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP*2);
+      Thread.sleep(TestConstants.SLEEP);
       
       //TODO****try****fix
-      runCommandFromMenuNewOnToolbar(MenuCommands.File.REFRESH);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //****************
      
