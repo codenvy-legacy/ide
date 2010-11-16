@@ -44,7 +44,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 {
    private final static String FILE_NAME = "VaditionCorrectTest.groovy";
 
-   private final static String FOLDER = "VaditionCorrect";
+   private final static String FOLDER = RESTServiceVaditionCorrectTest.class.getSimpleName();
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 

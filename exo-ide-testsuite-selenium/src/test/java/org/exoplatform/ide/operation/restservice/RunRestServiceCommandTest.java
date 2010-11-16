@@ -51,7 +51,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
    private final static String NEW_FILE_NAME = "NewRestService";
    
-   private final static String FOLDER_NAME = "RunRestServiceCommandTest";
+   private final static String FOLDER_NAME = RunRestServiceCommandTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 

@@ -45,7 +45,7 @@ public class RESTServiceOutputTest extends BaseTest
 
    private final static String FILE_NAME = "RESTServiceOutputTest.groovy";
 
-   private final static String TEST_FOLDER = "Outputfolder";
+   private final static String TEST_FOLDER = RESTServiceOutputTest.class.getSimpleName();
    
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
 

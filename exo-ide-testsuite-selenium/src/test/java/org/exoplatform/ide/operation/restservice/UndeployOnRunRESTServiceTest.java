@@ -44,7 +44,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
 {
    
    
-   private final static String FOLDER_NAME = "fdlhkgjklfdhgrashglfsbvlafdsgbv";
+   private final static String FOLDER_NAME = UndeployOnRunRESTServiceTest.class.getSimpleName();
    
    private final static String SIMPLE_FILE_NAME = "RestServiceExample.groovy";
    

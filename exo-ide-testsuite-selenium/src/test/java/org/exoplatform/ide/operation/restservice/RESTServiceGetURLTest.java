@@ -43,7 +43,7 @@ public class RESTServiceGetURLTest extends BaseTest
 
    private static final String FILE_NAME = "RESTServiceGetURL.groovy";
 
-   private final static String TEST_FOLDER = "URLTemplate";
+   private final static String TEST_FOLDER = RESTServiceGetURLTest.class.getSimpleName() ;
 
    @BeforeClass
    public static void setUp()

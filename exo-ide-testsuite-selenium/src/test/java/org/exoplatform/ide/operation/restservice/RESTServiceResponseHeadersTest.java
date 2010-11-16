@@ -44,7 +44,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 {
 
    private final static String FILE_NAME = "ResponseHeaders.groovy";
-   private final static String FOLDER_NAME = "ResponseHeaders";
+   private final static String FOLDER_NAME = RESTServiceResponseHeadersTest.class.getSimpleName();
    
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
