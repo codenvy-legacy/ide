@@ -42,7 +42,7 @@ public class RestoreVersionTest extends VersioningTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = RestoreVersionTest.class.getSimpleName();
 
    private final static String FILE_1 = "Test File 1";
 

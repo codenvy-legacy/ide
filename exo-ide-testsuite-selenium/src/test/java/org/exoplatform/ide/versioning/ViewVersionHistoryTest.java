@@ -41,7 +41,7 @@ public class ViewVersionHistoryTest extends VersioningTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = ViewVersionHistoryTest.class.getSimpleName();
 
    private final static String FILE_0 = "File 0";
 
