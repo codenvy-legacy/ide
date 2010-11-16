@@ -71,6 +71,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
+import org.exoplatform.ide.client.framework.event.SaveFileAsHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -100,7 +101,8 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler,
-   EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler
+   EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler,
+   SaveFileAsHandler
 {
 
    public interface Display
@@ -204,6 +206,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       handlers.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
+      handlers.addHandler(SaveFileAsEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -316,6 +319,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
    {
+      System.out.println("EditorPresenter.onEditorSaveContent()");
       File file = activeFile;
       file.setContent(display.getTabContent(file.getHref()));
       if (file.isNewFile())
@@ -662,6 +666,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          String file = it.next();
          display.getEditor(file).setHotKeyList(hotKeyList);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.framework.event.SaveFileAsEvent)
+    */
+   public void onSaveFileAs(SaveFileAsEvent event)
+   {
+      closeFileAfterSaving = false;
    }
 
 }
