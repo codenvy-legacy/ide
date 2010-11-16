@@ -108,7 +108,7 @@ public class HighlightEditorsTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      closeTab("0");
+     closeUnsavedFileAndDoNotSave(0);
       
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
