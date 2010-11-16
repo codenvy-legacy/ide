@@ -103,6 +103,16 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
+      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      {
+         public void onError(ExceptionThrownEvent event)
+         {
+            assertNotNull(event.getError());
+            System.out
+               .println(event.getError().getMessage());
+            fail();
+         }
+      });
       vfsWebDav.createFolder(newFolder);
       delayTestFinish(DELAY_TEST);
    }
@@ -117,6 +127,8 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          public void onError(ExceptionThrownEvent event)
          {
             assertNotNull(event.getError());
+            System.out
+               .println(event.getError().getMessage());
             finishTest();
          }
       });
