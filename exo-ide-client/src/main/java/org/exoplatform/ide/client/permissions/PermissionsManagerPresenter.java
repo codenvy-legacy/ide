@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.permissions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -89,15 +90,18 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    private AccessControlList acl;
 
    private AccessControlEntry selectedEntry;
+   
+   private Map<String, String> lockTokens;
 
    /**
     * @param eventBus
     * @param item
     */
-   public PermissionsManagerPresenter(HandlerManager eventBus, Item item)
+   public PermissionsManagerPresenter(HandlerManager eventBus, Item item, Map<String, String> lockTokens)
    {
       this.eventBus = eventBus;
       this.item = item;
+      this.lockTokens = lockTokens;
 
       handlers = new Handlers(eventBus);
    }
@@ -177,7 +181,7 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    }
 
    /**
-    * @return
+    * @return owner of item
     */
    private String getFileOwner()
    {
@@ -187,7 +191,7 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    private void saveACL()
    {
       acl.removeEmptyPermissions();
-      VirtualFileSystem.getInstance().setACL(item, acl);
+      VirtualFileSystem.getInstance().setACL(item, acl, lockTokens.get(item.getHref()));
    }
 
    /**

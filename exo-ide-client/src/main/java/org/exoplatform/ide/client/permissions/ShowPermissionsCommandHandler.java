@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.permissions;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -26,6 +28,9 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -44,20 +49,24 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, ItemsSelectedHandler, ExceptionThrownHandler, ItemPropertiesReceivedHandler
+public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, ItemsSelectedHandler,
+   ExceptionThrownHandler, ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
 
    private Handlers handlers;
-   
+
    private Item selectedItem;
-   
+
+   private Map<String, String> lockTokens;
+
    public ShowPermissionsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      
+
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(ShowPermissionsEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
@@ -67,13 +76,14 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
     */
    public void onShowPermissions(ShowPermissionsEvent event)
    {
-      if(selectedItem == null)
+      if (selectedItem == null)
          return;
-      
+
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
-      VirtualFileSystem.getInstance().getProperties(selectedItem, Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}));
+
+      VirtualFileSystem.getInstance().getProperties(selectedItem,
+         Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}));
    }
 
    /**
@@ -81,19 +91,19 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
     */
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if(event.getSelectedItems().size() == 1)
+      if (event.getSelectedItems().size() == 1)
       {
          selectedItem = event.getSelectedItems().get(0);
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
     */
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       handlers.removeHandlers();
-      new PermissionsManagerForm(eventBus, event.getItem());
+      new PermissionsManagerForm(eventBus, event.getItem(), lockTokens);
    }
 
    /**
@@ -104,5 +114,18 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       handlers.removeHandlers();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+   }
 
 }

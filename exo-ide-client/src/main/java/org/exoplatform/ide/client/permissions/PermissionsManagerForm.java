@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.permissions;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
@@ -85,7 +87,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private IButton removeButton;
 
-   public PermissionsManagerForm(HandlerManager eventBus, Item item)
+   public PermissionsManagerForm(HandlerManager eventBus, Item item, Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGTH, ID);
 
@@ -108,7 +110,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       UIHelper.setAsReadOnly(itemNameField.getName());
       UIHelper.setAsReadOnly(itemOwnerField.getName());
       
-      presenter = new PermissionsManagerPresenter(eventBus, item);
+      presenter = new PermissionsManagerPresenter(eventBus, item, lockTokens);
       presenter.bindDisplay(this);
       addCloseClickHandler(new CloseClickHandler()
       {

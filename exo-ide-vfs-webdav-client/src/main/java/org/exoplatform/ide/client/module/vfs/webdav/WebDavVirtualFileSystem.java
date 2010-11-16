@@ -139,8 +139,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    public static native String javaScriptEncodeURI(String text) /*-{
-      return encodeURI(text);
-   }-*/;
+                                                                return encodeURI(text);
+                                                                }-*/;
 
    private ExceptionThrownEvent getErrorEvent(String message)
    {
@@ -262,8 +262,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       {
          AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
-            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .data(marshaller).send(callback);
+            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
       }
    }
 
@@ -351,49 +350,49 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(requestMarshaller).send(callback);
    }
 
-//   @Override
-//   public void move(Item item, String destination)
-//   {
-//      String url = javaScriptEncodeURI(item.getHref());
-//      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
-//      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
-//
-//      String errorMessage =
-//         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-//
-//      if (item instanceof File)
-//      {
-//         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-//
-//         loader.setMessage(Messages.MOVE_FILE);
-//
-//         AsyncRequest.build(RequestBuilder.POST, url, loader)
-//            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-//            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-//      }
-//      else
-//      {
-//         if (!url.endsWith("/"))
-//         {
-//            url += "/";
-//         }
-//
-//         if (!destination.endsWith("/"))
-//         {
-//            destination += "/";
-//         }
-//
-//         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-//
-//         loader.setMessage(Messages.MOVE_FOLDER);
-//
-//         AsyncRequest.build(RequestBuilder.POST, url, loader)
-//            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-//            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-//      }
-//
-//   }
+   //   @Override
+   //   public void move(Item item, String destination)
+   //   {
+   //      String url = javaScriptEncodeURI(item.getHref());
+   //      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
+   //      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+   //
+   //      String errorMessage =
+   //         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
+   //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+   //
+   //      if (item instanceof File)
+   //      {
+   //         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+   //
+   //         loader.setMessage(Messages.MOVE_FILE);
+   //
+   //         AsyncRequest.build(RequestBuilder.POST, url, loader)
+   //            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+   //            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+   //      }
+   //      else
+   //      {
+   //         if (!url.endsWith("/"))
+   //         {
+   //            url += "/";
+   //         }
+   //
+   //         if (!destination.endsWith("/"))
+   //         {
+   //            destination += "/";
+   //         }
+   //
+   //         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+   //
+   //         loader.setMessage(Messages.MOVE_FOLDER);
+   //
+   //         AsyncRequest.build(RequestBuilder.POST, url, loader)
+   //            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
+   //            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+   //      }
+   //
+   //   }
 
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#move(org.exoplatform.ide.client.framework.vfs.Item, java.lang.String, org.exoplatform.ide.client.framework.vfs.LockToken)
@@ -605,7 +604,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item)
     */
    @Override
-   public void setACL(Item item, AccessControlList acl)
+   public void setACL(Item item, AccessControlList acl, String lockToken)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
@@ -621,8 +620,16 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
-         .data(marshaller).send(callback);
+      if (lockToken != null)
+      {
+         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
+            .data(marshaller).send(callback);
+      }
    }
 
 }

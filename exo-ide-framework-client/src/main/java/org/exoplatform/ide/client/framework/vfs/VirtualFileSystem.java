@@ -132,6 +132,6 @@ public abstract class VirtualFileSystem
     * 
     * @param item
     */
-   public abstract void setACL(Item item, AccessControlList acl);
+   public abstract void setACL(Item item, AccessControlList acl, String lockToken);
    
 }
