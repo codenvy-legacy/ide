@@ -183,7 +183,6 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler
     */
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      System.out.println("EditorTab.onEditorFocusReceived()");
       if (textEditor.getEditorId().equals(event.getEditorId()))
       {
          ViewHighlightManager.getInstance().selectView(viewPane);
@@ -202,7 +201,6 @@ public class EditorTab extends Tab implements EditorFocusReceivedHandler
       @Override
       public void destroy()
       {
-         System.out.println("EditorTab.EditorView.destroy()");
          handlers.removeHandlers();
          super.destroy();
       }
