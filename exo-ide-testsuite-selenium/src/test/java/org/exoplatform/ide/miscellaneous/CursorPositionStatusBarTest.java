@@ -24,6 +24,7 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -78,7 +79,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       //TODO****try****fix
-      runCommandFromMenuNewOnToolbar(MenuCommands.File.REFRESH);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //****************
       
