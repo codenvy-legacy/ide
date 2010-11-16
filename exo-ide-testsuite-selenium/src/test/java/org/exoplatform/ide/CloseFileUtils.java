@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide;
 
+import static org.exoplatform.ide.BaseTest.getTabTitle;
+import static org.exoplatform.ide.Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR;
+import static org.exoplatform.ide.Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR;
 import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import static org.junit.Assert.fail;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -31,20 +33,13 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class CloseFileUtils
 {
-   static Selenium selenium;
-
-   private static final String ASK_FOR_VALUE_DIALOG_LOCATOR = "scLocator=//Window[ID=\"ideAskForValueDialog\"]";
-
-   private static final String ASK_FOR_VALUE_OK_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
-
-   private static final String ASK_FOR_VALUE_NO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogNoButton\"]/";
-
-   private static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/";
-
-   private static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR =
-      "scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/"
-         + "item[name=ideAskForValueDialogValueField]/element";
+   private static Selenium selenium;
    
+   static void setSelenium(Selenium s)
+   {
+      selenium = s;
+   }
+
    /**
     * Close new file. 
     * If saveFile true - save file.
@@ -60,22 +55,18 @@ public class CloseFileUtils
    {
       CloseFileUtils.closeTab(tabIndex);
 
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_OK_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_NO_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR));
-
       if (saveFile)
       {
-         if(fileName != null)
-         {
-            AbstractTextUtil.getInstance().typeToInput(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR, fileName, true);
-         }
-         selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
+         SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);
+//         if(fileName != null)
+//         {
+//            AbstractTextUtil.getInstance().typeToInput(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR, fileName, true);
+//         }
+//         selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
       }
       else
       {
+         SaveFileUtils.checkSaveAsDialog(true);
          selenium.click(ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
@@ -94,6 +85,53 @@ public class CloseFileUtils
 
       selenium.click(Locators.getTabCloseButtonLocator(index));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Close unsaved file without saving it.
+    * 
+    * Close tab with tabIndex. Check is warning dialog appears.
+    * Click No (Discard) button if file is new.
+    * 
+    * @param tabIndex index of tab to close
+    * @throws Exception
+    */
+   public static void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
+   {
+      //check, that file is unsaved
+      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+      assertTrue(tabName.endsWith("*"));
+      closeTab(tabIndex);
+
+      /*
+       * close existed file
+       * SmartGWT not destroy warning dialog(only hide, maybe set smoller z-index property ),
+       * so need check is warning dialogs is visible
+       */
+      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]")
+         && selenium.isVisible("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
+      {
+         //check is warning dialog appears
+         assertTrue(selenium
+            .isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+
+         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+
+         //click No button
+         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      }
+      //close new file
+      else if (selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR)
+               && selenium.isVisible(ASK_FOR_VALUE_DIALOG_LOCATOR))
+      {
+         selenium.click(ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+      }
+      else
+      {
+         fail("Unknown warning dialog!");
+      }
+      Thread.sleep(TestConstants.SLEEP);
    }
    
 }

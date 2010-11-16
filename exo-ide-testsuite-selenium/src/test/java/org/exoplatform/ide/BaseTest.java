@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
+
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
@@ -52,9 +55,6 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
@@ -109,7 +109,8 @@ public abstract class BaseTest
    {
       cleanDefaultWorkspace();
       selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
-      CloseFileUtils.selenium = selenium;
+      CloseFileUtils.setSelenium(selenium);
+      SaveFileUtils.setSelenium(selenium);
 
       switch (BROWSER_COMMAND)
       {
@@ -642,7 +643,7 @@ public abstract class BaseTest
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
       runToolbarButton("Save As...");
-      checkSaveAsDialogAndSave(name);
+      SaveFileUtils.checkSaveAsDialogAndSave(name, false);
    }
 
    /**
@@ -666,7 +667,7 @@ public abstract class BaseTest
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']", "");
       Thread.sleep(TestConstants.SLEEP);
 
-      checkSaveAsDialogAndSave(name);
+      SaveFileUtils.checkSaveAsDialogAndSave(name, false);
    }
 
    /**
@@ -884,53 +885,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Close unsaved file withous saving it.
-    * 
-    * Close tab with tabIndex. Check is warning dialog appears.
-    * Click No button]
-    * 
-    * @param tabIndex index of tab to close
-    * @throws Exception
-    */
-   protected static void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
-   {
-      //check, that file is unsaved
-      //TODO
-//      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
-//      assertTrue(tabName.endsWith("*"));
-      closeTab(String.valueOf(tabIndex));
-
-      /*
-       * close existed file
-       * SmartGWT not desroy warning dialog(only hide, meybe set smoller z-index property ),
-       * so need check is warning dialogs is visible
-       */
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]")
-         && selenium.isVisible("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
-      {
-         //check is warning dialog appears
-         assertTrue(selenium
-            .isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-
-         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-
-         //click No button
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-      }
-      //close new file
-      else
-      {
-         assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/body/"));
-         assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
-
-         selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogNoButton\"]/");
-
-      }
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
     * Check is command in top menu enabled or disabled.
     * 
     * @param topMenuName mane of menu
@@ -1004,42 +958,6 @@ public abstract class BaseTest
       String divIndex = String.valueOf(tabIndex + 2);
       assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
          + "]//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
-   }
-
-   /**
-    * Check is dialog window Save as file appeared
-    * and do all elements present.
-    * 
-    * Enter name to text field and click Ok button.
-    * 
-    * If name is null, will created with proposed default name.
-    * 
-    * @param name file name
-    */
-   protected void checkSaveAsDialogAndSave(String name) throws Exception
-   {
-      final String dialogWindowLocator = "scLocator=//Window[ID=\"ideAskForValueDialog\"]";
-      final String okButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
-      final String cancelButtonLocator = "scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/";
-      final String textFieldLocator ="scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]/" 
-         + "item[name=ideAskForValueDialogValueField]/element";
-
-      assertTrue(selenium.isElementPresent(dialogWindowLocator));
-      assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium.isElementPresent(textFieldLocator));
-      assertTrue(selenium.isElementPresent(okButtonLocator));
-      assertTrue(selenium.isElementPresent(cancelButtonLocator));
-
-      //clearFocus();
-
-      if (name != null)
-      {
-         AbstractTextUtil.getInstance().typeToInput(textFieldLocator, name, true);
-      }
-
-      selenium.click(okButtonLocator);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      assertFalse(selenium.isElementPresent(dialogWindowLocator));
    }
 
    /**

@@ -24,6 +24,7 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
@@ -300,7 +301,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 5 -----------------
       //save as dialog appears
-      checkSaveAsDialogAndSave(NEW_FILE_NAME);
+      SaveFileUtils.checkSaveAsDialogAndSave(NEW_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //check Launch Rest Service form appears

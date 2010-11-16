@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

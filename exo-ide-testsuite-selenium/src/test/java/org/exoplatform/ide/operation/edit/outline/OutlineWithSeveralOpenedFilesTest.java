@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.*;
 
 import org.exoplatform.ide.BaseTest;

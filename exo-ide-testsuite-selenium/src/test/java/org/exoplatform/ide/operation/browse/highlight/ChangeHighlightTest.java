@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.*;
 
 import java.io.IOException;

@@ -19,20 +19,21 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-10: Creating and "Saving As" new files.
@@ -80,12 +81,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
@@ -125,34 +124,14 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
-      selenium.mouseDownAt("//div[@title='Save As...']//img", "");
-      selenium.mouseUpAt("//div[@title='Save As...']//img", "");
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
-      assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0]"
-         + "[Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField"
-         + "||title=ideAskForValueDialogValueField||Class=TextItem]/element"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/"));
-      selenium.click("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0]"
-         + "[Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField"
-         + "||title=ideAskForValueDialogValueField||Class=TextItem]/element");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0]"
-         + "[Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField"
-         + "||title=ideAskForValueDialogValueField||Class=TextItem]/element", "");
-      selenium.type("scLocator=//Window[ID=\"ideAskForValueDialog\"]/item[0][Class=\"DynamicForm\"]"
-         + "/item[name=ideAskForValueDialogValueField||title=ideAskForValueDialogValueField"
-         + "||Class=TextItem]/element", fileName);
-      selenium.click("scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/");
+      
+      runToolbarButton(ToolbarCommands.File.SAVE_AS);
+      SaveFileUtils.checkSaveAsDialogAndSave(fileName, false);
 
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/icon");
-
-      Thread.sleep(TestConstants.SLEEP);
+      CloseFileUtils.closeTab(1);
 
       //TODO***********fix***************
-      closeUnsavedFileAndDoNotSave(0);
+      CloseFileUtils.closeUnsavedFileAndDoNotSave(0);
       //*****************************
 
       //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");

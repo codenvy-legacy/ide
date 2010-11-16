@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;

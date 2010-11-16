@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;

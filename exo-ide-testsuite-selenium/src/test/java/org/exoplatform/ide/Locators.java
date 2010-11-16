@@ -58,4 +58,18 @@ public class Locators
    {
       return EDITOR_TABSET_LOCATOR + "tab[index=" + index + "]/icon";
    }
+   
+   public interface AskForValue
+   {
+      public static final String ASK_FOR_VALUE_DIALOG_LOCATOR = "scLocator=//Window[ID=\"ideAskForValueDialog\"]/";
+      
+      public static final String ASK_FOR_VALUE_OK_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
+
+      public static final String ASK_FOR_VALUE_NO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogNoButton\"]/";
+
+      public static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideAskForValueDialogCancelButton\"]/";
+
+      public static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR = ASK_FOR_VALUE_DIALOG_LOCATOR
+         + "item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField]/element";
+   }
 }

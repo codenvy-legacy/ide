@@ -20,10 +20,13 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
@@ -111,9 +114,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //press Ctrl+S
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAskForValueDialog\"]"));
+      SaveFileUtils.checkSaveAsDialog(false);
       //close
-      closeForm("scLocator=//Window[ID=\"ideAskForValueDialog\"]");
+      closeForm(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
    }
    
