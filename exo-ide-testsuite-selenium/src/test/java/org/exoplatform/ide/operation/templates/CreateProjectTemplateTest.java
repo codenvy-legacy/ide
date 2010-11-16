@@ -64,7 +64,7 @@ public class CreateProjectTemplateTest extends BaseTest
    
    private static final String ROOT_NODE_NAME = "/";
    
-   private String myFolder = "myFolder";
+   private String myFolder = CreateProjectTemplateTest.class.getSimpleName();
    
    private String newProjectName = "SampleProject";
    

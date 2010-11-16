@@ -42,7 +42,7 @@ public class BigTemplateTest extends BaseTest
 {
    private final static String FILE_NAME = "Calculator.xml";
 
-   private final static String FOLDER = "BigTemplate";
+   private final static String FOLDER = BigTemplateTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
