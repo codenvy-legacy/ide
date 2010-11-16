@@ -18,6 +18,7 @@ package org.exoplatform.ide.groovy.codeassistant;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
+import org.exoplatform.ide.groovy.codeassistant.impl.CodeAssistantImpl;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class ClassInfoStorageTest extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar, "", null, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertTrue(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.POST"));
       assertTrue(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.GET"));
       assertTrue(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.ext/javax.ws.rs.ext.MessageBodyReader"));
@@ -68,7 +69,7 @@ public class ClassInfoStorageTest extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar + "&package=" + "javax.ws.rs.ext", "", null, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertFalse(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.POST"));
       assertFalse(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.GET"));
       assertTrue(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.ext/javax.ws.rs.ext.MessageBodyReader"));
@@ -89,7 +90,7 @@ public class ClassInfoStorageTest extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/class?fqn=" + CodeAssistantImpl.class.getCanonicalName(), "", null, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       Node classpath = root.getNode("classpath");
       assertTrue(classpath.hasNode("org/org.exoplatform/org.exoplatform.ide/org.exoplatform.ide.groovy/org.exoplatform.ide.groovy.codeassistant"));
       assertFalse(classpath.hasNode("org/org.exoplatform/org.exoplatform.services/org.exoplatform.services.jcr"));
@@ -119,7 +120,7 @@ public class ClassInfoStorageTest extends Base
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java?java-source-path=" + javaHome + "&package=" + "java.lang", "", null, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       assertTrue(root.hasNode("classpath"));
       assertTrue(root.hasNode("classpath/java/java.lang/java.lang.String"));
       assertFalse(root.hasNode("classpath/javax"));

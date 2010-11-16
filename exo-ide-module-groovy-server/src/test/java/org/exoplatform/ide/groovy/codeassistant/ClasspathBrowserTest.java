@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
+import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -41,14 +43,14 @@ public class ClasspathBrowserTest extends TestCase
    
    public void testgetClassesNamesFromJavaSrc() throws IOException
    {
-      List<String> classes = ClasspathBrowser.getClassesNamesFromJavaSrc(javaHome);
+      List<String> classes = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome);
       assertTrue(classes.contains("org.w3c.dom.Document"));
       assertTrue(classes.contains("java.lang.String"));
    }
    
    public void testgetClassesNamesFromJavaSrcPkg() throws IOException
    {
-      List<String> classes = ClasspathBrowser.getClassesNamesFromJavaSrc(javaHome,"java.lang");
+      List<String> classes = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome,"java.lang");
       assertTrue(classes.contains("java.lang.String"));
       assertTrue(classes.contains("java.lang.Boolean"));
       

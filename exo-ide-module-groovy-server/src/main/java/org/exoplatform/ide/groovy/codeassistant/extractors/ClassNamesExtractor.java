@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.groovy.codeassistant;
+package org.exoplatform.ide.groovy.codeassistant.extractors;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.util.zip.ZipInputStream;
  * @version $Id: $
 */
 
-public class ClasspathBrowser
+public class ClassNamesExtractor
 {
 
    /**

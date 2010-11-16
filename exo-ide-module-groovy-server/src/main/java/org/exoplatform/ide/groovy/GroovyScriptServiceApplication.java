@@ -21,8 +21,8 @@ package org.exoplatform.ide.groovy;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorageJcrImpl;
-import org.exoplatform.ide.groovy.codeassistant.CodeAssistantImpl;
+import org.exoplatform.ide.groovy.codeassistant.impl.ClassInfoStrorageJcrImpl;
+import org.exoplatform.ide.groovy.codeassistant.impl.CodeAssistantImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 

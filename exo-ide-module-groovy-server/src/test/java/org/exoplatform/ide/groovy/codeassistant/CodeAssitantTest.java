@@ -26,7 +26,6 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.List;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
@@ -56,15 +55,15 @@ public class CodeAssitantTest extends Base
    public void setUp() throws Exception
    {
       super.setUp();
-      putClass(ClassLoader.getSystemClassLoader(), session, CodeAssistantImpl.class.getCanonicalName());
+      putClass(ClassLoader.getSystemClassLoader(), session, Address.class.getCanonicalName());
    }
-
+   
    @Test
    public void testGetClassByFqn() throws Exception
    {
       ContainerResponse cres =
          launcher.service("GET",
-            "/ide/code-assistant/class-description?fqn=" + CodeAssistantImpl.class.getCanonicalName(), "", null, null,
+            "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName(), "", null, null,
             null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertEquals(cres.getEntityType(), ClassInfo.class);
@@ -79,7 +78,7 @@ public class CodeAssitantTest extends Base
    {
       ContainerResponse cres =
          launcher.service("GET",
-            "/ide/code-assistant/class-description?fqn=" + CodeAssistantImpl.class.getCanonicalName()+"error", "", null, null,
+            "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName()+"error", "", null, null,
             null, null);
       assertEquals(500, cres.getStatus());
    }
@@ -88,26 +87,28 @@ public class CodeAssitantTest extends Base
    public void testFindClassByName() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/find?class=" + CodeAssistantImpl.class.getSimpleName(), "", null,
+         launcher.service("GET", "/ide/code-assistant/find?class=" + Address.class.getSimpleName(), "", null,
             null, null, null);
-      List<String> list = (List<String>)cres.getEntity();
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertEquals(1, list.size());
-      assertTrue(list.contains(CodeAssistantImpl.class.getCanonicalName()));
+      assertTrue(cres.getEntity().getClass().isArray());
+      String[] fqns =  (String[])cres.getEntity();
+      assertEquals(1, fqns.length);
+      assertTrue(fqns[0].equals(Address.class.getCanonicalName()));
    }
    
    
    @Test
    public void testFindClassByPrefix() throws Exception
    {
-      String pkg = CodeAssistantImpl.class.getPackage().getName();
+      String pkg = Address.class.getPackage().getName();
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/find-by-prefix?prefix=" + pkg, "", null,
             null, null, null);
-      List<String> list = (List<String>)cres.getEntity();
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertEquals(1, list.size());
-      assertTrue(list.contains(CodeAssistantImpl.class.getCanonicalName()));
+      assertTrue(cres.getEntity().getClass().isArray());
+      String[] fqns =  (String[])cres.getEntity();
+      assertEquals(1, fqns.length);
+      assertTrue(fqns[0].equals(Address.class.getCanonicalName()));
    }
 
    

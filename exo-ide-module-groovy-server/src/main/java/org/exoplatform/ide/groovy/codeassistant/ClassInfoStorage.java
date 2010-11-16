@@ -47,18 +47,18 @@ public interface ClassInfoStorage
     * @param packageName the package name for filtering classes if set to null save
     *        info about all classes in jar 
     * @return true if save info successfully
-    * @throws Exception
+    * @throws SaveClassInfoException
     */
-   Response addClassesFormJar(String jarPath,  String packageName) throws Exception;
+   void addClassesFormJar(String jarPath,  String packageName) throws SaveClassInfoException;
 
    /**
     * Save information about class. 
     * 
     * @param fqn the Canonical Name of classes
     * @return
-    * @throws Exception
+    * @throws SaveClassInfoException
     */
-   Response addClass(String fqn) throws Exception;
+   void addClass(String fqn) throws SaveClassInfoException;
 
    /**
     * Save information about classes in source. Can be filtering by package name 
@@ -68,8 +68,8 @@ public interface ClassInfoStorage
     * @param packageName the package name for filtering classes if set to null save
     *        info about all classes in jar 
     * @return true if save info successfully
-    * @throws Exception
+    * @throws SaveClassInfoException
     */
-   Response addClassesFromJavaSource(String javaSrcPath, String packageName) throws Exception;
+   void addClassesFromJavaSource(String javaSrcPath, String packageName) throws SaveClassInfoException;
 
 }

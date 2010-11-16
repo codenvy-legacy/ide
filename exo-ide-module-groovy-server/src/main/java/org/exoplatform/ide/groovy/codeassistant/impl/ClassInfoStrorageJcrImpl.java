@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.groovy.codeassistant;
+package org.exoplatform.ide.groovy.codeassistant.impl;
 
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage;
+import org.exoplatform.ide.groovy.codeassistant.SaveClassInfoException;
 import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
 import org.exoplatform.ide.groovy.codeassistant.extractors.ClassInfoExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
@@ -43,7 +47,6 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 
 /**
  * Created by The eXo Platform SAS.
@@ -74,8 +77,8 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    @POST
    @Path("/jar")
    @RolesAllowed("administrators")
-   public Response addClassesFormJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
-      throws Exception
+   public void addClassesFormJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
+      throws SaveClassInfoException
    {
       try
       {
@@ -83,17 +86,18 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          ClassLoader classLoader = thread.getContextClassLoader();
          Repository repository = repositoryService.getDefaultRepository();
          Session session = repository.login(wsName);
-         List<String> fqns = ClasspathBrowser.getClassesNamesInJar(jarPath, packageName);
+         List<String> fqns = ClassNamesExtractor.getClassesNamesInJar(jarPath, packageName);
          for (String fqn : fqns)
          {
             putClass(classLoader, session, fqn);
          }
-         return Response.ok().build();
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new Exception(e.getMessage());
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         
       }
    }
 
@@ -103,7 +107,7 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    @POST
    @Path("/class")
    @RolesAllowed("administrators")
-   public Response addClass(@QueryParam("fqn") String fqn) throws Exception
+   public void addClass(@QueryParam("fqn") String fqn) throws SaveClassInfoException
    {
       try
       {
@@ -114,12 +118,12 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          Session session = repository.login(wsName);
          putClass(classLoader, session, fqn);
          session.save();
-         return Response.ok().build();
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new Exception(e.getMessage());
+       //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
 
@@ -131,8 +135,8 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    @POST
    @Path("/java")
    @RolesAllowed("administrators")
-   public Response addClassesFromJavaSource(@QueryParam("java-source-path") String javaSrcPath,
-      @QueryParam("package") String packageName) throws Exception
+   public void addClassesFromJavaSource(@QueryParam("java-source-path") String javaSrcPath,
+      @QueryParam("package") String packageName) throws SaveClassInfoException
    {
       try
       {
@@ -140,17 +144,17 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          ClassLoader classLoader = thread.getContextClassLoader();
          Repository repository = repositoryService.getDefaultRepository();
          Session session = repository.login(wsName);
-         List<String> fqns = ClasspathBrowser.getClassesNamesFromJavaSrc(javaSrcPath, packageName);
+         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaSrcPath, packageName);
          for (String fqn : fqns)
          {
             putClass(classLoader, session, fqn);
          }
-         return Response.ok().build();
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new Exception(e.getMessage());
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
    

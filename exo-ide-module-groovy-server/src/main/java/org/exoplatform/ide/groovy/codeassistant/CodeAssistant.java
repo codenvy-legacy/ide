@@ -63,7 +63,7 @@ public interface CodeAssistant
     * @param prefix the string for matching FQNs
     * 
     */
-   List<String> findFQNsByPrefix(String prefix) throws CodeAssistantException;
+   String[] findFQNsByPrefix(String prefix) throws CodeAssistantException;
    
    /**
     * Returns set of FQNs matched to Class name (means FQN end on {className})
@@ -82,6 +82,6 @@ public interface CodeAssistant
     * @return
     * @throws Exception 
     */
-   List <String> findFQNsByClassName(String className) throws CodeAssistantException;
+   String[] findFQNsByClassName(String className) throws CodeAssistantException;
 
 }

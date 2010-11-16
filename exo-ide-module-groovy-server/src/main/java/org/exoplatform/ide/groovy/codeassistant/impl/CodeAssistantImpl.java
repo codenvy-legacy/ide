@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.groovy.codeassistant;
+package org.exoplatform.ide.groovy.codeassistant.impl;
 
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
+import org.exoplatform.ide.groovy.codeassistant.CodeAssistantException;
 import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -131,21 +133,24 @@ public class CodeAssistantImpl implements CodeAssistant
    @GET
    @Path("/find")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
+   public String[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
-      List<String> fqns = new ArrayList<String>();
+      
       try
       {
          Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
+         //TODO
+         String[] fqns = new String[(int)nodes.getSize()];
+         int i = 0;
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            fqns.add(node.getParent().getName());
+            fqns[i++] = node.getParent().getName();
          }
          return fqns;
       }
@@ -170,22 +175,24 @@ public class CodeAssistantImpl implements CodeAssistant
    @GET
    @Path("/find-by-prefix")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> findFQNsByPrefix(@QueryParam("prefix") String prefix) throws CodeAssistantException
+   public String[] findFQNsByPrefix(@QueryParam("prefix") String prefix) throws CodeAssistantException
    {
       {
          String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn LIKE '" + prefix + "%'";
          SessionProvider sp = sessionProviderService.getSessionProvider(null);
-         List<String> fqns = new ArrayList<String>();
          try
          {
             Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
             Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
             QueryResult result = q.execute();
             NodeIterator nodes = result.getNodes();
+            //TODO
+            String[] fqns = new String[(int)nodes.getSize()];
+            int i = 0;
             while (nodes.hasNext())
             {
                Node node = (Node)nodes.next();
-               fqns.add(node.getParent().getName());
+               fqns[i++] = node.getParent().getName();
             }
             return fqns;
          }
