@@ -302,6 +302,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      closeFileAfterSaving = false;
       File curentFile = event.getFile();
       if (curentFile == null)
       {

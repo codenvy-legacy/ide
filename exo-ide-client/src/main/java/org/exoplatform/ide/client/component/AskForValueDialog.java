@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ide.client.component;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.ide.client.Images;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.smartgwt.client.types.Alignment;
@@ -32,8 +29,13 @@ import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.ide.client.Images;
 
 /**
  * Dialog window for asking value.
@@ -69,6 +71,8 @@ public class AskForValueDialog extends Window
    private ValueDiscardCallback valueDiscardCallback;
 
    protected TextItem textItem;
+   
+   private IButton okButton;
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
@@ -91,7 +95,7 @@ public class AskForValueDialog extends Window
       setHeight(160);
 
       createPromptForm(dialogWidth, prompt, defaultValue);
-      createButtonsForm();
+      createButtonsForm(defaultValue);
 
       setIsModal(true);
       centerInPage();
@@ -142,10 +146,38 @@ public class AskForValueDialog extends Window
                return;
             if (event.getKeyName().equals(KeyNames.ENTER)) 
             {
-               onOk();            
+               if (textItem.getValue() == null || textItem.getValue().toString().length() == 0)
+               {
+                  return;
+               }
+               onOk();
             }               
          }
          
+      });
+      
+      textItem.addChangeHandler(new ChangeHandler()
+      {
+         public void onChange(ChangeEvent event)
+         {
+            if (event.getValue() == null)
+            {
+               okButton.setDisabled(true);
+               return;
+            }
+            if (event.getValue() instanceof String)
+            {
+               final String value = (String)event.getValue();
+               if (value.length() == 0)
+               {
+                  okButton.setDisabled(true);
+               }
+               else
+               {
+                  okButton.setDisabled(false);
+               }
+            }
+         }
       });
       
       form.setItems(promptItem, spacer1, textItem);
@@ -155,18 +187,22 @@ public class AskForValueDialog extends Window
       addItem(form);
    }
 
-   private void createButtonsForm()
+   private void createButtonsForm(String defaultValue)
    {
       DynamicForm buttonsForm = new DynamicForm();
       buttonsForm.setPadding(5);
       buttonsForm.setHeight(24);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
-      IButton okButton = new IButton("Yes");
+      okButton = new IButton("Yes");
       okButton.setID(ID_OK_BUTTON);
       okButton.setWidth(90);
       okButton.setHeight(22);
       okButton.setIcon(Images.Buttons.OK);
+      if (defaultValue == null || defaultValue.length() == 0)
+      {
+         okButton.setDisabled(true);
+      }
 
       IButton cancelButton = new IButton("Cancel");
       cancelButton.setID(ID_CANCEL_BUTTON);
@@ -184,7 +220,7 @@ public class AskForValueDialog extends Window
       }
       else
       {
-         IButton noButton = new IButton("No");
+         IButton noButton = new IButton("Discard");
          noButton.setID(ID_NO_BUTTON);
          noButton.setWidth(90);
          noButton.setHeight(22);
