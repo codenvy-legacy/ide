@@ -38,7 +38,7 @@ import org.junit.Test;
 public class UploadingGoogleGadgetTest extends BaseTest
 {
    
-   private static final String FOLDER_NAME = "uploads";
+   private static final String FOLDER_NAME = UploadingGoogleGadgetTest.class.getSimpleName();
    
    private static final String FILE_NAME = "gadget.xml";
    

@@ -42,7 +42,7 @@ public class UploadingHtmlFileTest extends BaseTest
 
    private static String HTML_NAME = "Example.html";
    
-   private static String FOLDER="UploadingHtml";
+   private static String FOLDER=UploadingHtmlFileTest.class.getSimpleName();
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_NAME;
 

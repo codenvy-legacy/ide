@@ -40,7 +40,7 @@ import org.junit.Test;
 public class OpenGadgetLocalFileTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = "Test";
+   private static String FOLDER_NAME = OpenGadgetLocalFileTest.class.getSimpleName();
 
    private static String GADGET_NAME = "gadget.xml";
    

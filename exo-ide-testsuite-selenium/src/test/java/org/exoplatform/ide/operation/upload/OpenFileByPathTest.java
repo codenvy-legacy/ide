@@ -59,7 +59,7 @@ public class OpenFileByPathTest extends BaseTest
    
    private String secondWorkspaceName;
    
-   private final static String TEST_FOLDER = "testFolder";
+   private final static String TEST_FOLDER = OpenFileByPathTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 

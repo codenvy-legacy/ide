@@ -43,7 +43,7 @@ public class UploadingGroovyFileTest extends BaseTest
 {
    private static String GROOVY_NAME = "Приклад.groovy";
    
-   private static String FOLDER = "UploadingGroovyFileTest";
+   private static String FOLDER = UploadingGroovyFileTest.class.getSimpleName();
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
 

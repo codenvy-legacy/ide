@@ -42,7 +42,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
 
    private static String HTML_NAME = "file.groovy";
    
-   private static String FOLDER_NAME = "Test";
+   private static String FOLDER_NAME = OpenHtmlLocalFileTest.class.getSimpleName();
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
