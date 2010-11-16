@@ -31,8 +31,12 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.tab.Tab;
 
 /**
+ * This class is base pane of all UI components.
+ * Use as pane in {@link Tab}. 
+ * 
  * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,15 +49,18 @@ public class View extends Layout implements ActivateViewHandler
    private ArrayList<Canvas> buttons = new ArrayList<Canvas>();
 
    /**
-    * 
+    * White border style  
     */
    private static final String CLEAR_HIGLIGTH_STYLE = "3px solid #FFFFFF";
 
    /**
-    * 
+    * Blue border style
     */
    private static final String HIGLIDTH_STYLE = "3px solid #7AADE0";
 
+   /**
+    * Id if view
+    */
    private final String id;
 
    private HandlerRegistration mouseDownHandler;
@@ -101,11 +108,20 @@ public class View extends Layout implements ActivateViewHandler
    }
 
   
+   /**
+    * Set view highlight view.
+    * Uses only in {@link ViewHighlightManager}
+    */
    public void highlightView()
    {
       setBorder(HIGLIDTH_STYLE);
    }
 
+   
+   /**
+    * Remove highlight frim view
+    * Uses only in {@link ViewHighlightManager}
+    */
    public void removeFocus()
    {
       setBorder(CLEAR_HIGLIGTH_STYLE);
@@ -119,11 +135,17 @@ public class View extends Layout implements ActivateViewHandler
       return id;
    }
 
+   /**
+    * @param button
+    */
    public void addTabButton(Canvas button)
    {
       buttons.add(button);
    }
 
+   /**
+    * @return
+    */
    public List<Canvas> getColtrolButtons()
    {
       return buttons;
@@ -139,7 +161,7 @@ public class View extends Layout implements ActivateViewHandler
    }
 
    /**
-    * 
+    * Empty method. Override in {@link LockableView}
     */
    public void onOpenTab()
    {
