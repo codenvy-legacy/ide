@@ -49,11 +49,11 @@ public class LockItemUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         throw new UnmarshallerException("Can't parse lock token");
+         throw new UnmarshallerException("Can't parse lock token<br /> " + e.getMessage());
       }
    }
 
-   private void parseLockToken(String body)
+   private void parseLockToken(String body) throws Exception
    {
       body = body.replace(" b:dt=\"dateTime.rfc1123\"", ""); // TODO to fix bug with the Internet Explorer XML Parser, when parsing node with property b:dt="dateTime.rfc1123" (http://markmail.org/message/ai2wypfkbhazhrdp)
 
@@ -84,6 +84,8 @@ public class LockItemUnmarshaller implements Unmarshallable
             lockToken.setLockToken(node.getFirstChild().getFirstChild().getNodeValue());
          }
       }
-
+      
+      if(lockToken.getLockToken() == null || lockToken.getLockToken().isEmpty())
+       throw new Exception("Lock token is null or empty!");
    }
 }
