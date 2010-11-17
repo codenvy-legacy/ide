@@ -319,7 +319,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
    {
-      System.out.println("EditorPresenter.onEditorSaveContent()");
       File file = activeFile;
       file.setContent(display.getTabContent(file.getHref()));
       if (file.isNewFile())
@@ -673,7 +672,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {
-      closeFileAfterSaving = false;
+      if (event.getDialogType().equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
+      {
+         closeFileAfterSaving = false;
+      }
    }
 
 }
