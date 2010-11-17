@@ -45,6 +45,8 @@ public class Locators
    
    public static final String EDITOR_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/";
    
+   public static final String STATUS_BAR_LOCATOR = "//td[@class='exo-statusText-table-middle']/nobr";
+   
    
    // go to line window locators
    public interface GoToLineWindow
