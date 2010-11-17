@@ -54,7 +54,7 @@ public class DeleteCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //****************
      
-      String text1 = selenium.getText("//body[@class='editbox']");
+      String text1 = getTextFromCodeEditor(0);
           
       Thread.sleep(TestConstants.SLEEP_SHORT*3);
       saveAsUsingToolbarButton("test.html");
