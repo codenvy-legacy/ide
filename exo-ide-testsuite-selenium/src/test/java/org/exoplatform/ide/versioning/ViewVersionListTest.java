@@ -69,6 +69,11 @@ public class ViewVersionListTest extends VersioningTest
       }
    }
 
+   /**
+    * Tests the list of versions.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testViewVersionList() throws Exception
    {
@@ -111,10 +116,11 @@ public class ViewVersionListTest extends VersioningTest
       checkVersionPanelState(true);
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       checkOlderVersionButtonState(true);
@@ -131,7 +137,7 @@ public class ViewVersionListTest extends VersioningTest
       selectVersionInVersionList(0);
       clickOpenVersionButton();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-
+     
       checkViewVersionsListPanel(false);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
@@ -139,10 +145,11 @@ public class ViewVersionListTest extends VersioningTest
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       checkOlderVersionButtonState(true);
@@ -169,6 +176,11 @@ public class ViewVersionListTest extends VersioningTest
       closeTab("0");
    }
 
+   /**
+    * Test navigate version buttons with selecting item from version list.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testViewVersionListWithNavigateVersions() throws Exception
    {

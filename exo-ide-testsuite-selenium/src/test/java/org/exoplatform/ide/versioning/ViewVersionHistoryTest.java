@@ -78,6 +78,12 @@ public class ViewVersionHistoryTest extends VersioningTest
       }
    }
 
+   /**
+    * Test "View Version History" button state (enable/disable, show/hide)
+    * with new files, just saved files, edited files.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testViewVersionHistoryButton() throws Exception
    {
@@ -97,6 +103,8 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
 
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version1Text);
       //File content is changed, but not saved yet:
       checkViewVersionHistoryButtonPresent(true);
@@ -155,6 +163,11 @@ public class ViewVersionHistoryTest extends VersioningTest
       closeTab("0");
    }
 
+   /**
+    * Test Version Panel when work with one file.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testViewVersionHistoryOneFile() throws Exception
    {
@@ -171,7 +184,9 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
-
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
@@ -200,6 +215,12 @@ public class ViewVersionHistoryTest extends VersioningTest
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
    }
 
+   /**
+    * Test version panel for opening/closing using "View/Hide Version History"
+    * and close button.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testOpenCloseVersionPanel() throws Exception
    {
@@ -212,7 +233,11 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Go to end of document
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //Edit file and save:
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -239,10 +264,11 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkVersionPanelState(false);
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
       //Open again with button
@@ -257,6 +283,12 @@ public class ViewVersionHistoryTest extends VersioningTest
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
    }
 
+   /**
+    * Test Version Panel when work with few files, switch between them, close/open 
+    * files.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testVersionPanelForFewFiles() throws Exception
    {
@@ -289,6 +321,8 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonState(false);
 
       //Edit second file and save
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(1, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -335,7 +369,9 @@ public class ViewVersionHistoryTest extends VersioningTest
       saveAsByTopMenu(FILE_3);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
-
+      
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(2, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
