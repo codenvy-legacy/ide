@@ -32,6 +32,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -77,6 +78,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
    }
    
+   @Ignore
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {      
