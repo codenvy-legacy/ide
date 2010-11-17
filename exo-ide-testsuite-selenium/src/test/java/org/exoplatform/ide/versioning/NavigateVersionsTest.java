@@ -29,7 +29,6 @@ import org.junit.Test;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 14, 2010 $
@@ -68,6 +67,7 @@ public class NavigateVersionsTest extends VersioningTest
    {
       try
       {
+         cleanRegistry();
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
@@ -101,6 +101,8 @@ public class NavigateVersionsTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version3Text);
@@ -221,6 +223,8 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -331,6 +335,8 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -360,10 +366,10 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version6Text);
       saveCurrentFile();
       //Check viewed version on version panel is not changed
@@ -388,10 +394,10 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text);
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version7Text);
       saveCurrentFile();
 
@@ -441,6 +447,8 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -496,10 +504,10 @@ public class NavigateVersionsTest extends VersioningTest
       checkVersionPanelState(false);
 
       //Edit file and save
-      selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      clickOnEditor();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative(""+KeyEvent.VK_END);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version6Text);
       saveCurrentFile();
 

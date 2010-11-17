@@ -47,15 +47,15 @@ import org.junit.Test;
 public class UsingKeyboardTest extends BaseTest
 {
    
-   private static final String TEST_SUBFOLDER = "folder-1-2";
+   private static final String TEST_SUBFOLDER = UsingKeyboardTest.class.getSimpleName()+"1";
 
-   private static final String TEST_FOLDER = "folder-1";
+   private static final String TEST_FOLDER = UsingKeyboardTest.class.getSimpleName()+"2";
 
    private static final String TEST_FILE = "usingKeyboardTestGoogleGadget.xml";
 
    private static final String TEST_FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + TEST_FILE;
    
-   private static final String TEST_FILE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FILE;
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @Before
    public void setUp() throws Exception
@@ -92,7 +92,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title=folder-1-2]/col[fieldName=title]"));
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="+TEST_SUBFOLDER+"]/col[fieldName=title]"));
       
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -100,7 +100,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title=folder-1-2]/col[fieldName=title]"));
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="+TEST_SUBFOLDER+"]/col[fieldName=title]"));
       
       // test keyboard with opened Content Panel
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
@@ -111,7 +111,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title=folder-1-2]/col[fieldName=title]"));
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="+TEST_SUBFOLDER+"]/col[fieldName=title]"));
       
       closeUnsavedFileAndDoNotSave(0);
    }
@@ -172,7 +172,8 @@ public class UsingKeyboardTest extends BaseTest
       // copy test file into repository
       try
       {
-         VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, TEST_FILE_URL);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + TEST_FILE);
       }
       catch (IOException e)
       {
@@ -182,9 +183,13 @@ public class UsingKeyboardTest extends BaseTest
       {
          e.printStackTrace();
       }
+      
+      //Refresh page:
+      selenium.refresh();
+      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
       
@@ -193,11 +198,14 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       selectEditorTab(0);
+      clickOnEditor();
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      
+      Thread.sleep(TestConstants.SLEEP);
       
       // check outline tree
       assertElementPresentOutlineTree("Module");
@@ -230,7 +238,8 @@ public class UsingKeyboardTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      closeTab("0");
+      VirtualFileSystemUtils.delete(URL +TEST_FOLDER);
       selectWorkspaceTab();
    }   
 }

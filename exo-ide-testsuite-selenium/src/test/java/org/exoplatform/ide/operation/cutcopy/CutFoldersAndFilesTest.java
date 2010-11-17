@@ -24,31 +24,41 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
  */
 public class CutFoldersAndFilesTest extends BaseTest
 {
 
-   /**
-    * 
-    */
-   private static final String FOLDER_2 = "test 2";
-
-   /**
-    * 
-    */
    private static final String FOLDER_1 = "test 1";
+   
+   private static final String FOLDER_2 = "test 2";
+   
+   private static final String FOLDER_3 = "test 1-1";
 
-   //IDE-117
+   
+   private static final String FILE1 = "gadgetxml";
+   
+   private static final String FILE2 = "testgroovy";
+   
+   private static final String FILE3 = "gadget1xml";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+  
+   /**
+    *  Test from TestLink IDE-117
+    * @throws Exception
+    */
    @Test
    public void testCutOperation() throws Exception
    {
@@ -67,7 +77,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[0]");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      saveAsUsingToolbarButton("gadgetxml");
+      saveAsUsingToolbarButton(FILE1);
 
       String oldText = getTextFromCodeEditor(0);
       closeTab("0");
@@ -75,13 +85,13 @@ public class CutFoldersAndFilesTest extends BaseTest
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
-      saveAsUsingToolbarButton("testgroovy");
+      saveAsUsingToolbarButton(FILE2);
 
       String omg = selenium.getText("//body[@class='editbox']");
 
       closeTab("0");
 
-      createFolder("test 1-1");
+      createFolder(FOLDER_3);
 
       selectRootOfWorkspaceTree();
 
@@ -91,26 +101,26 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       selectItemInWorkspaceTree(FOLDER_2);
 
-      createFolder("test 1-1");
+      createFolder(FOLDER_3);
 
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       selectItemInWorkspaceTree(FOLDER_2);
 
-      saveAsUsingToolbarButton("gadget1xml");
-
+      saveAsUsingToolbarButton(FILE3);
+      
       closeTab("0");
 
       //    Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor("gadgetxml", false);
+      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //    Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor("testgroovy", false);
+      openFileFromNavigationTreeWithCodeEditor(FILE2, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      openFileFromNavigationTreeWithCodeEditor("gadget1xml", false);
+      openFileFromNavigationTreeWithCodeEditor(FILE3, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //      Select file "test 1/gadgetxml", and folder "test 2".
@@ -123,7 +133,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      checkButtons();
+      checkButtonsDisabled();
 
       selectRootOfWorkspaceTree();
 
@@ -137,7 +147,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      checkButtons();
+      checkButtonsDisabled();
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       //      Select folders "test 1/test 1.1", and root folder.
@@ -148,7 +158,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      checkButtons();
+      checkButtonsDisabled();
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -169,7 +179,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
-      checkPaste(true);
+      checkPasteButton(true);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[5]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -183,7 +193,7 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      checkPaste(true);
+      checkPasteButton(true);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -229,9 +239,9 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.open(url);
       selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
 
-      assertTrue(selenium.isElementPresent("link=testgroovy"));
-      assertTrue(selenium.isElementPresent("link=gadgetxml"));
-      assertTrue(selenium.isElementPresent("link=test 1-1"));
+      assertTrue(selenium.isElementPresent("link="+FILE2));
+      assertTrue(selenium.isElementPresent("link="+FILE1));
+      assertTrue(selenium.isElementPresent("link="+FOLDER_3));
 
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
@@ -255,9 +265,9 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.open(url1);
       selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
 
-      assertFalse(selenium.isElementPresent("link=testgroovy"));
-      assertFalse(selenium.isElementPresent("link=gadgetxml"));
-      assertFalse(selenium.isElementPresent("link=test 1-1"));
+      assertFalse(selenium.isElementPresent("link="+FILE2));
+      assertFalse(selenium.isElementPresent("link="+FILE1));
+      assertFalse(selenium.isElementPresent("link="+FOLDER_3));
 
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
@@ -266,29 +276,19 @@ public class CutFoldersAndFilesTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      checkPaste(false);
+      checkPasteButton(false);
 
-      selenium.controlKeyDown();
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[5]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[4]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //      Remove all created folders and files
-      deleteSelectedItems();
+     //Close Tabs
+      closeTab("0");
+      closeTab("0");
    }
 
    /**
+    * Check "Paste" buttons state (enabled/disabled).
+    * 
     * @throws Exception
     */
-   private void checkPaste(boolean enabled) throws Exception
+   private void checkPasteButton(boolean enabled) throws Exception
    {
       checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
@@ -296,9 +296,11 @@ public class CutFoldersAndFilesTest extends BaseTest
    }
 
    /**
+    * Check copy/cut/paste buttons are disabled in top menu and on toolbar.
+    * 
     * @throws Exception
     */
-   private void checkButtons() throws Exception
+   private void checkButtonsDisabled() throws Exception
    {
       checkToolbarButtonState(MenuCommands.Edit.CUT_TOOLBAR, false);
       checkToolbarButtonState(MenuCommands.Edit.COPY_TOOLBAR, false);
@@ -308,9 +310,31 @@ public class CutFoldersAndFilesTest extends BaseTest
       checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);
    }
 
+   /**
+    * Clear test results.
+    * 
+    * @throws Exception
+    */
    @AfterClass
-   public static void tearDown() throws IOException
+   public static void tearDown() throws Exception
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      closeTab("0");
+      closeTab("0");
+      try
+      {
+         VirtualFileSystemUtils.delete(URL +FOLDER_1);
+         VirtualFileSystemUtils.delete(URL +FOLDER_2);
+         VirtualFileSystemUtils.delete(URL +FOLDER_3);
+         VirtualFileSystemUtils.delete(URL +FILE1);
+         VirtualFileSystemUtils.delete(URL +FILE2);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 }
