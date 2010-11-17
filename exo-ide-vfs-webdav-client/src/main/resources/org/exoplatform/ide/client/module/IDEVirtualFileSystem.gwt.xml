@@ -10,6 +10,7 @@
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+   <inherits name='org.exoplatform.ide.testframework.IDEallTestFramework' />
    
 
    <!-- Specify the app entry point class. -->

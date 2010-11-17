@@ -21,12 +21,14 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.LockToken;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
@@ -41,6 +43,8 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
+import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemUnmarshaller;
+import org.exoplatform.ide.testframework.http.MockResponse;
 import org.junit.Before;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -408,6 +412,58 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    
       vfsWebDav.getProperties(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}));
       
+   }
+   
+   public void testLockUnmarshaller()
+   {
+      String xml =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?><D:prop xmlns:D=\"DAV:\"><D:lockdiscovery>"
+            + "<D:activelock><D:locktype><D:write/></D:locktype>"
+            + "<D:lockscope><D:exclusive/></D:lockscope><D:depth>Infinity</D:depth>" + "<D:owner>" + "<D:href>"
+            + "evgen" + "</D:href>" + "</D:owner>"
+            + "<D:timeout>Second-604800</D:timeout>" + " <D:locktoken>" + "<D:href>"
+            + "opaquelocktoken:e71d4fae-5dec-22d6-fea5-00a0c91e6be4" + "</D:href>" + "  </D:locktoken>"
+            + " </D:activelock>" + "</D:lockdiscovery>" + "</D:prop>";
+
+      LockToken lockToken = new LockToken();
+      LockItemUnmarshaller unmarshaller = new LockItemUnmarshaller(lockToken);
+
+      MockResponse response = new MockResponse(xml);
+      try
+      {
+         unmarshaller.unmarshal(response);
+      }
+      catch (UnmarshallerException e)
+      {
+         fail(e.getMessage());
+         e.printStackTrace();
+      }
+   }
+
+   
+   public void testNullLockUnmarshaller()
+   {
+      String xml =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?><D:prop xmlns:D=\"DAV:\"><D:lockdiscovery>"
+            + "<D:activelock><D:locktype><D:write/></D:locktype>"
+            + "<D:lockscope><D:exclusive/></D:lockscope><D:depth>Infinity</D:depth>" + "<D:owner>" + "<D:href>"
+            + "evgen" + "</D:href>" + "</D:owner>"
+            + "<D:timeout>Second-604800</D:timeout>"
+            + " </D:activelock>" + "</D:lockdiscovery>" + "</D:prop>";
+
+      LockToken lockToken = new LockToken();
+      LockItemUnmarshaller unmarshaller = new LockItemUnmarshaller(lockToken);
+
+      MockResponse response = new MockResponse(xml);
+      try
+      {
+         unmarshaller.unmarshal(response);
+         fail();
+      }
+      catch (UnmarshallerException e)
+      {
+         System.out.println(e.getMessage());
+      }
    }
    
    private class MockExceptionThrownHandler implements ExceptionThrownHandler

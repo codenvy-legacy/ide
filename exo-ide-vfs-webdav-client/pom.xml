@@ -33,6 +33,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+      <dependency>
+      	<groupId>org.exoplatform.ide</groupId>
+      	<artifactId>exo-ide-testframework</artifactId>
+      	<scope>test</scope>
+      </dependency>
    </dependencies>
    <build>
       <resources>
