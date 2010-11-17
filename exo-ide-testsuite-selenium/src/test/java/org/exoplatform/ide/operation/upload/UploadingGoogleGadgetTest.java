@@ -25,8 +25,10 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
@@ -42,36 +44,53 @@ public class UploadingGoogleGadgetTest extends BaseTest
    
    private static final String FILE_NAME = "gadget.xml";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
    
    @Test
    public void testUploadGoogleGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
-      uploadFile(MenuCommands.File.UPLOAD,
-         "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml", MimeType.GOOGLE_GADGET);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      uploadFile(MenuCommands.File.UPLOAD, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
+      
       selectItemInWorkspaceTree(FILE_NAME);
       String url = getSelectedItemUrl();
       
-      assertEquals(BASE_URL+"rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/uploads/gadget.xml",url);
+      assertEquals(URL + "/" + FILE_NAME, url);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
-      assertEquals(
-         "exo:googleGadget",
+      assertEquals("exo:googleGadget",
          selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.GOOGLE_GADGET,
+            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType]/textbox"));
+      assertEquals(MimeType.GOOGLE_GADGET,
          selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
+            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType]/textbox"));
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
-      deleteSelectedItems();
     }
    
    @AfterClass
