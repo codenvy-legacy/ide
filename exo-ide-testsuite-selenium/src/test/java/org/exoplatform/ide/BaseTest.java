@@ -224,8 +224,13 @@ public abstract class BaseTest
    /**
     * Close tab by it's index.
     * 
+    * Use instead CloseFileUitls.closeTab(int tabIndex).
+    * 
+    * This method will be removed.
+    * 
     * @param index numeration starts with 0 index
     */
+   @Deprecated
    protected static void closeTab(String index) throws Exception
    {
       selenium.mouseOver("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + index + "]/icon");
@@ -750,7 +755,7 @@ public abstract class BaseTest
 
    protected void saveCurrentFile() throws Exception
    {
-      runToolbarButton("Save");
+      runToolbarButton(ToolbarCommands.File.SAVE);
    }
 
    /**
