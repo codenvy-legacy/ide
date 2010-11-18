@@ -94,9 +94,8 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
 
       // create initial outline tree map
-      outlineTreeHelper.addOutlineItem(0, "@Path(\"/testService11\")", 5, false);
-      outlineTreeHelper.addOutlineItem(1, "TestService", 6, false);
-      outlineTreeHelper.addOutlineItem(2, "Dep", 32, false);
+      outlineTreeHelper.addOutlineItem(0, "@ TestService", 6, false);
+      outlineTreeHelper.addOutlineItem(1, "Dep", 32, false);
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
@@ -106,27 +105,19 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
-      outlineTreeHelper.addOutlineItem(0, "@Path(\"/testService11\")", 5);
 
-      outlineTreeHelper.addOutlineItem(1, "TestService", 6);
-      outlineTreeHelper.addOutlineItem(2, "@POST", 7);
-      outlineTreeHelper.addOutlineItem(3, "@Consumes(\"application/xml\")", 8);
-      outlineTreeHelper.addOutlineItem(4, "@Produces(\"text/html\")", 10);
-      outlineTreeHelper.addOutlineItem(5, "@Path(\"InnerPath/{pathParam}\")", 11);
-      outlineTreeHelper.addOutlineItem(6, "post1 : String", 12);
-      outlineTreeHelper.addOutlineItem(7, "@POST", 19);
-      outlineTreeHelper.addOutlineItem(8, "@Consumes(\"application/xml\")", 20);
-      outlineTreeHelper.addOutlineItem(9, "@Produces(\"application/json\")", 22);
-      outlineTreeHelper.addOutlineItem(10, "@Path(\"InnerPath/{pathParam}\")", 23);
-      outlineTreeHelper.addOutlineItem(11, "post2 : java.lang.String", 24);
+      // TODO update content of node
+      outlineTreeHelper.addOutlineItem(1, "@ TestService", 6);
+      outlineTreeHelper.addOutlineItem(2, "@ post1(@ String, @ String, @ String, String) : String", 12);
+      outlineTreeHelper.addOutlineItem(3, "@ post2(@ String, @ java.lang.String, @ String, java.lang.String) : java.lang.String", 24);
       
-      outlineTreeHelper.addOutlineItem(12, "Dep", 32);
-      outlineTreeHelper.addOutlineItem(13, "name : String", 34);
-      outlineTreeHelper.addOutlineItem(14, "age : int", 35);
-      outlineTreeHelper.addOutlineItem(15, "getAge : int", 37);
-      outlineTreeHelper.addOutlineItem(16, "addYear : void", 41);
-      outlineTreeHelper.addOutlineItem(17, "greet : String", 46);
-      outlineTreeHelper.addOutlineItem(18, "address : int", 50);
+      outlineTreeHelper.addOutlineItem(4, "Dep", 32);
+      outlineTreeHelper.addOutlineItem(5, "name : String", 34);
+      outlineTreeHelper.addOutlineItem(6, "age : int", 35);
+      outlineTreeHelper.addOutlineItem(7, "getAge() : int", 37);
+      outlineTreeHelper.addOutlineItem(8, "addYear() : void", 41);
+      outlineTreeHelper.addOutlineItem(9, "greet(String) : String", 46);
+      outlineTreeHelper.addOutlineItem(10, "address : int", 50);
       
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();      
