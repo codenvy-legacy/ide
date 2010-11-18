@@ -27,7 +27,7 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -116,14 +116,13 @@ public class OpeningSavingAndClosingTabsWithFilesTest extends BaseTest
 
       //------------3---------------------    
       // Refresh Workspace:
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      openOrCloseFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
       // check icons
-
       checkIcons();
 
       // reopenFiles();
