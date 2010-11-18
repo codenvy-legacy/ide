@@ -25,14 +25,16 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -48,108 +50,13 @@ public class RESTServiceCreateTest extends BaseTest
    private static final String SECOND_NAME = System.currentTimeMillis() + "новий.groovy";
    
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
-   @Test
-   public void testCreatingRESTService() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-     //TODO*************fixed*****************change add folder for locked file
-      createFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      selectFolder(FOLDER_NAME);
-     //**********************************
-      runCommandFromMenuNewOnToolbar("REST Service");
-      //createFileFromToolbar("REST Service");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      saveAsUsingToolbarButton(FIRST_NAME);
-
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      selenium.mouseDownAt("//div[@title='Show Properties']//img", "");
-      selenium.mouseUpAt("//div[@title='Show Properties']//img", "");
-
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/"));
-
-      assertEquals(
-         "false",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||value=exo%3AgroovyResourceContainer||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(MimeType.GROOVY_SERVICE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||value=application%24fs%24x-jaxrs-groovy||index=3||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         FIRST_NAME,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextDisplayName||title=%3Cb%3EDisplay%20Name%3C%24fs%24b%3E||value=новий.groove||index=5||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         TestConstants.NodeTypes.NT_FILE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextFileNodeType||title=%3Cb%3EFile%20Node%20Type%3C%24fs%24b%3E||value=nt%3Afile||index=6||Class=StaticTextItem]/textbox"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Properties]/icon");
-      
-      Thread.sleep(TestConstants.SLEEP_SHORT*2);
-
-      assertFalse(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/"));
-
-      selenium.mouseDownAt("//div[@title='Show Properties']//img", "");
-      selenium.mouseUpAt("//div[@title='Show Properties']//img", "");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/"));
-
-      saveAsUsingToolbarButton(SECOND_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals(
-         "false",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||value=exo%3AgroovyResourceContainer||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.GROOVY_SERVICE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||value=application%24fs%24x-jaxrs-groovy||index=3||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         SECOND_NAME,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextDisplayName||title=%3Cb%3EDisplay%20Name%3C%24fs%24b%3E||value=новий.groove||index=5||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         TestConstants.NodeTypes.NT_FILE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextFileNodeType||title=%3Cb%3EFile%20Node%20Type%3C%24fs%24b%3E||value=nt%3Afile||index=6||Class=StaticTextItem]/textbox"));
-   }
    
-   
-   
-   protected void selectFolder(String folderName) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-         + "]/col[1]/open");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-   }
-   
-   
-   
-   
-   
-   
-   
-   @AfterClass
-   public static void tearDown()
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FIRST_NAME);
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(SECOND_NAME, "UTF-8"));
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
@@ -160,4 +67,73 @@ public class RESTServiceCreateTest extends BaseTest
          e.printStackTrace();
       }
    }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   @Test
+   public void testCreatingRESTService() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      saveAsUsingToolbarButton(FIRST_NAME);
+
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+
+      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
+
+      assertEquals("false", selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextAutoload]/textbox"));
+      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentNodeType]/textbox"));
+      assertEquals(MimeType.GROOVY_SERVICE,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentType]/textbox"));
+      assertEquals(FIRST_NAME,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextDisplayName]/textbox"));
+      assertEquals(TestConstants.NodeTypes.NT_FILE,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextFileNodeType]/textbox"));
+
+      selenium.click(Locators.OperationForm.PROPERTIES_TAB_LOCATOR + Locators.CLOSE_ICON);
+      
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+
+      assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
+
+      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+
+      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
+
+      saveAsUsingToolbarButton(SECOND_NAME);
+      Thread.sleep(TestConstants.SLEEP);
+
+      assertEquals("false", selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextAutoload]/textbox"));
+      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentNodeType]/textbox"));
+      assertEquals(MimeType.GROOVY_SERVICE,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentType]/textbox"));
+      assertEquals(
+         SECOND_NAME,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextDisplayName]/textbox"));
+      assertEquals(TestConstants.NodeTypes.NT_FILE,
+         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextFileNodeType]/textbox"));
+   }
+   
 }

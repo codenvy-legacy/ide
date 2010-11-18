@@ -47,6 +47,17 @@ public class Locators
    
    public static final String STATUS_BAR_LOCATOR = "//td[@class='exo-statusText-table-middle']/nobr";
    
+   public static final String CLOSE_ICON = "/icon";
+   
+   
+   public interface OperationForm
+   {
+      public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]";
+      
+      public static final String PROPERTIES_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
+      
+      public static final String PROPERTIES_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=idePropertiesView]";
+   }
    
    // go to line window locators
    public interface GoToLineWindow
