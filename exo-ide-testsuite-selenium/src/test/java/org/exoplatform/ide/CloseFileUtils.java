@@ -134,4 +134,28 @@ public class CloseFileUtils
       Thread.sleep(TestConstants.SLEEP);
    }
    
+   /**
+    * Close file tab, and don't see into file has changes or no.
+    * 
+    * If tab's title doesn't ends with *, simple close tab.
+    * Otherwise, waits for warning dialog window and click No button.
+    * 
+    * @param tabIndex - index of tab with file to close
+    * @throws Exception
+    */
+   public static void closeFileTabIgnoreChanges(int tabIndex) throws Exception
+   {
+      //check, is file was changed
+      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+      
+      if (tabName.endsWith("*"))
+      {
+         closeUnsavedFileAndDoNotSave(tabIndex);
+      }
+      else
+      {
+         closeTab(tabIndex);
+      }
+   }
+   
 }

@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
@@ -33,7 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * IDE-156:HotKeys customization.
@@ -218,7 +217,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave(0);
+      CloseFileUtils.closeFileTabIgnoreChanges(0);
    }
    
    @Test
@@ -324,7 +323,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selectMainFrame();
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave(0);
+      CloseFileUtils.closeFileTabIgnoreChanges(0);
    }
    
    @Test
@@ -351,7 +350,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       checkCreateFileFromTemplateFormAndClose();
       
       Thread.sleep(TestConstants.SLEEP);
-      closeUnsavedFileAndDoNotSave(0);
+      CloseFileUtils.closeFileTabIgnoreChanges(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception
