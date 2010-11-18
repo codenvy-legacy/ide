@@ -79,6 +79,9 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       setCanSort(false);
       setCanEdit(false);
       setShowRoot(false);
+      setFixedFieldWidths(false);
+
+      setSeparateFolders(true);
       
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
