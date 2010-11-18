@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGridField;
-import com.smartgwt.client.widgets.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -32,8 +28,12 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.tree.Tree;
+import com.smartgwt.client.widgets.tree.TreeGridField;
+import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
  * Created by The eXo Platform SAS.
@@ -171,16 +171,25 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                   newNode.setAttribute(ICON, CLASS_ICON);
                }
                
-               // add java type after the ':'
-               if (child.getJavaType() == null)
+               String name = child.getName();
+               
+               // add info about java type, parameters and annotations
+               if (MimeType.APPLICATION_GROOVY.equals(child.getMimeType()))
                {
-                  newNode.setAttribute(NAME, child.getName());
+                  String annotationList = getAnnotationList(child);
+                  
+                  name = "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + name + "</span>";
+                  
+                  if (TokenType.METHOD.equals(child.getType()))
+                  {
+                     name += getParametersList(child);
+                  }
+ 
+                  name += "<span title=\"" + annotationList + "\">" + getJavaType(child) + "</span>";
                }
-               else
-               {
-                  newNode.setAttribute(NAME, child.getName() + " : " + child.getJavaType());                  
-               }
-
+               
+               newNode.setAttribute(NAME, name);
+               
                tree.add(newNode, parentNode);
             }
             
@@ -192,6 +201,15 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       }
    }
    
+   /**
+    * @param annotationList 
+    * @return HTML code to display "@" sign near the groovy token if annotationList is not empty, or "" otherwise
+    */
+   private String getAnnotationSign(String annotationList)
+   {
+      return (! annotationList.isEmpty() ? "<small><sup>@&nbsp;</sup></small>" : "");
+   }
+
    public void selectToken(Token token)
    {
       if (token.getName() == null) return;
@@ -259,6 +277,75 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       }
 
       return selectedItems;
+   }
+
+   /**
+    * get formatted string with java type from token.getJavaType() like " : java.lang.String"
+    * @param token
+    * @return string like " : java.lang.String", or "".
+    */
+   private String getJavaType(Token token)
+   {
+      if (token.getJavaType() != null)
+      {
+         return " : " + token.getJavaType();                  
+      }
+     
+      return "";
+   }
+
+   /**
+    * Return parameters list from token.getParameters()
+    * @param token
+    * @return parameters list like '(String, int)', or '()' if there are no parameters
+    */
+   private String getParametersList(Token token)
+   {
+      String parametersDescription = "(";      
+
+      if (token.getParameters() != null && token.getParameters().size() > 0)
+      {
+         
+         List<Token> parameters = token.getParameters();
+         
+         for (int i = 0; i < parameters.size(); i++)
+         {
+            Token parameter = parameters.get(i);
+            if (i > 0)
+            {
+               parametersDescription += ", ";
+            }
+            
+            String annotationList = getAnnotationList(parameter);
+            
+            parametersDescription += "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + parameter.getJavaType() + "</span>";
+         } 
+      }
+
+      return parametersDescription + ")";
+   }   
+
+   /**
+    * Return formatted annotation list from token.getAnnotations()
+    * @param token
+    * @return annotations like '@Path; @PathParam(&#34;name&#34;)' or "", if there are no annotations in the token
+    */
+   private String getAnnotationList(Token token)
+   {
+      if (token.getAnnotations() != null && token.getAnnotations().size() > 0)
+      {
+         String title = "";
+         
+         for (Token annotation : token.getAnnotations())
+         {
+               title += annotation.getName() + "; ";
+         }
+         
+         // replace all '"' on HTML Entity "&#34;"
+         return title.replaceAll("\"", "&#34;");
+      }
+      
+      return "";
    }
 
 }
