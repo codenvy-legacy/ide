@@ -59,8 +59,6 @@ public class ChrommaticServiceImpl extends ChrommaticService
    @Override
    public void compile(File file)
    {
-      System.out.println("compiling >>>> " + file.getHref());
-
       String url = restServiceContext + COMPILE_METHOD_CONTEXT;
 
       CompileGroovyResultReceivedEvent event = new CompileGroovyResultReceivedEvent(file.getHref());

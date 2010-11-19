@@ -45,30 +45,28 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 public class IDEChromatticRestService implements ResourceContainer
 {
 
+   /**
+    * WebDav context uses for selecting jcr path of resource which is adressed via WebDav or IDE Virtual File System service (server)
+    */
    public static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
 
    /**
-    * @param uriInfo
-    * @param location
+    * Compile Groovy script
+    * 
+    * @param uriInfo - UriInfo
+    * @param location - Resource URL 
     * @return
     */
    @POST
    @Path("/compile")
    public Response compile(@Context UriInfo uriInfo, @HeaderParam("location") String location)
    {
-      //      System.out.println("compiling >>>>>>>>>>>>");
-      //      System.out.println("Location: [" + location + "]");
-
       String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (jcrLocation == null)
       {
          return Response.status(HTTPStatus.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
             .build();
       }
-
-      //      for (String l : jcrLocation) {
-      //         System.out.println("l >>> [" + l + "]");
-      //      }
 
       try
       {
@@ -81,34 +79,16 @@ public class IDEChromatticRestService implements ResourceContainer
             pp = pp.substring(1);
          }
 
-//         String groovyRepository = pp.substring(0, pp.indexOf("/"));
          String path = "/" + jcrLocation[2];
-
-         //         System.out.println("GroovyScriptCompiler.compile()");
-         //         System.out.println("repository [" + repository + "]");
-         //         System.out.println("workspace [" + workspace + "]");
-         //         System.out.println("groocy repository [" + groovyRepository + "]");
-         //         System.out.println("path [" + path + "]");
 
          JcrGroovyCompiler compiler = new JcrGroovyCompiler();
 
-         //         URL groovyRepoURL =          
-         //         String u = "jcr://" + repository + "/" + workspace + "#/" + groovyRepository;
-         //         java.net.URL url = new java.net.URL(u);
-         //         compiler.getGroovyClassLoader().setResourceLoader(new JcrGroovyResourceLoader(new java.net.URL[]{url}));
-
          UnifiedNodeReference ref = new UnifiedNodeReference(repository, workspace, path);
-         Class[] classes = compiler.compile(ref);
-
-         //         System.out.println("compiled > " + classes.length);
+         compiler.compile(ref);
          return Response.ok().build();
-
       }
       catch (Exception e)
       {
-         e.printStackTrace();
-         //         System.out.println(">>>>>>>>>>>>>> errrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrr!!!!!!!!!!!!!!!");
-
          return Response.serverError().entity(e.getMessage()).build();
       }
 
