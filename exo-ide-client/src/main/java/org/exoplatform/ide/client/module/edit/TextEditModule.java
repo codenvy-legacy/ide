@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.module.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.module.edit.control.RedoTypingCommand;
 import org.exoplatform.ide.client.module.edit.control.ShowLineNumbersCommand;
 import org.exoplatform.ide.client.module.edit.control.UndoTypingCommand;
@@ -79,6 +80,8 @@ public class TextEditModule implements IDEModule, FindTextHandler, GoToLineHandl
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl()));
 
       eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl()));
+      
+      eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), true));
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -87,6 +90,8 @@ public class TextEditModule implements IDEModule, FindTextHandler, GoToLineHandl
       handlers.addHandler(FindTextEvent.TYPE, this);
       handlers.addHandler(GoToLineEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      new LockUnlockFileHandler(eventBus);
    }
 
    /**

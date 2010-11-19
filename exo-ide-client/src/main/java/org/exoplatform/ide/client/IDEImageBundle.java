@@ -108,6 +108,12 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/edit/delete_current_line_Disabled.png")
    ImageResource deleteCurrentLineDisabled();
+   
+   @Source("../public/images/bundled/edit/lock_file.png")
+   ImageResource lockUnlockFile();
+
+   @Source("../public/images/bundled/edit/lock_file_Disabled.png")
+   ImageResource lockUnlockFileDisabled();
 
    /*
     * FILE

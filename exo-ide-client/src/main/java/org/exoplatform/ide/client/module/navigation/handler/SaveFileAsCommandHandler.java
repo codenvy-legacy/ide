@@ -19,10 +19,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -42,26 +40,21 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -72,8 +65,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
    ExceptionThrownHandler, SaveFileAsHandler, ItemPropertiesReceivedHandler, ItemsSelectedHandler,
-   EditorActiveFileChangedHandler, ItemUnlockedHandler, UserInfoReceivedHandler, ItemLockResultReceivedHandler,
-   ApplicationSettingsReceivedHandler
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
 
    private Handlers handlers;
@@ -88,12 +80,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    private Map<String, String> lockTokens;
 
-   private UserInfo userInfo;
-
-   private File oldFile;
-
-   private File newFile;
-   
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -102,7 +88,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
@@ -125,8 +110,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
       handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
       askForNewFileName(file, event.getDialogType(), event.getEventFiredOnNo(), event.getEventFiredOnCancel());
@@ -219,10 +202,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
       newFile.setIcon(file.getIcon());
 
-      oldFile = file;
-      SaveFileAsCommandHandler.this.newFile = newFile;
-
-      //            VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
       VirtualFileSystem.getInstance().saveContent(newFile, null);
    }
 
@@ -238,13 +217,15 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
-      if (!oldFile.isNewFile())
+      File file = event.getFile();
+      
+      if (file.isPropertiesChanged())
       {
-         VirtualFileSystem.getInstance().unlock(oldFile, lockTokens.get(oldFile.getHref()));
+         VirtualFileSystem.getInstance().saveProperties(file, lockTokens.get(file.getHref()));
       }
       else
       {
-         VirtualFileSystem.getInstance().lock(event.getFile(), 600, userInfo.getName());
+         VirtualFileSystem.getInstance().getProperties(file, null);
       }
    }
 
@@ -280,39 +261,6 @@ public class SaveFileAsCommandHandler implements FileContentSavedHandler, ItemPr
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
-    */
-   public void onItemUnlocked(ItemUnlockedEvent event)
-   {
-      VirtualFileSystem.getInstance().lock(newFile, 600, userInfo.getName());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
-    */
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userInfo = event.getUserInfo();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
-    */
-   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
-   {
-
-      if (event.getItem().isPropertiesChanged())
-      {
-         VirtualFileSystem.getInstance().saveProperties(event.getItem(), lockTokens.get(event.getItem().getHref()));
-      }
-      else
-      {
-         VirtualFileSystem.getInstance().getProperties(event.getItem(), null);
-      }
-
    }
 
    /**

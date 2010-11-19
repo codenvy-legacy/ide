@@ -195,6 +195,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private void storeLockTokens()
    {
       applicationSettings.setValue("lock-tokens", lockTokens, Store.COOKIES);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
    }
 
    /**

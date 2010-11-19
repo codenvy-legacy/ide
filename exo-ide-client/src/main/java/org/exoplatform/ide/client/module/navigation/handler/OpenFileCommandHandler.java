@@ -17,12 +17,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.webdav.Property;
@@ -40,29 +38,26 @@ import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
+ * Handlers events for opening files.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
 public class OpenFileCommandHandler implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, ItemLockResultReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler, UserInfoReceivedHandler
+   ItemPropertiesReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
@@ -72,8 +67,12 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
 
    private ApplicationSettings applicationSettings;
 
-   private UserInfo userInfo;
-   
+   /**
+    * Need for versions. 
+    * 
+    * Number of errors, which we will ignore
+    * or number of attempts to get versions.
+    */
    private int ignoreErrorsCount = 0;
    
    private File fileToOpenOnError;
@@ -90,7 +89,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
       eventBus.addHandler(OpenFileEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
+//      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    public void onOpenFile(OpenFileEvent event)
@@ -110,7 +109,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
          //TODO Check opened file!!!
          if (openedFiles.containsKey(file.getHref()))
          {
-            System.out.println("OpenFileCommandHandler.onOpenFile()");
             openFile(file);
             return;
          }
@@ -122,17 +120,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      if (event.isLockFile())
-      {
-         handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-         handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
 
-         VirtualFileSystem.getInstance().getProperties(file, null);
-      }
-      else
-      {
-         getFileContent(file);
-      }
+      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+
+      VirtualFileSystem.getInstance().getProperties(file, null);
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
@@ -148,47 +139,16 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
          }
       }
 
-      VirtualFileSystem.getInstance().lock(event.getItem(), 600, userInfo.getName());
+      if (file.getContent() != null)
+      {
+         openFile(file);
+         return;
+      }
+      getFileContent(file);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
-    */
-   public void onItemLockResultReceived(final ItemLockResultReceivedEvent event)
+   private void getFileContent(File file)
    {
-      if (event.getException() == null)
-      {
-         File file = (File)event.getItem();
-         if (file.getContent() != null)
-         {
-            openFile(file);
-            return;
-         }
-         getFileContent((File)event.getItem());
-      }
-      else
-      {
-         Dialogs.getInstance().ask("Lock fail", "Can't lock file <b>"+event.getItem().getName()+"</b><br />Do you wont open file without locking?", new BooleanValueReceivedCallback()
-         {
-            
-            public void execute(Boolean value)
-            {
-                     if(value)
-                     {
-                        getFileContent((File)event.getItem());
-                     }
-                     else
-                     {
-                        handlers.removeHandlers();
-                     }
-            }
-         });
-         
-      }
-   }
-   
-   
-   private void getFileContent(File file){
       fileToOpenOnError = file;
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       VirtualFileSystem.getInstance().getContent(file);
@@ -260,14 +220,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.model.conversation.event.UserInfoReceivedEvent)
-    */
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userInfo = event.getUserInfo();
    }
 
 }
