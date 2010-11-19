@@ -173,6 +173,10 @@ public interface MenuCommands
       public static final String DELETE_CURRENT_LINE = "Delete Current Line";
       
       public static final String FIND_REPLACE = "Find/Replace...";
+      
+      public static final String LOCK_FILE = "Lock File";
+      
+      public static final String UNLOCK_FILE = "Unlock File";
    }
 
    public interface CodeEditors

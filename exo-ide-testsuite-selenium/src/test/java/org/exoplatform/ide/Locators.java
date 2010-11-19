@@ -31,25 +31,54 @@ package org.exoplatform.ide;
  */
 public class Locators
 {
+   /**
+    * XPath locator for main form of IDE. Non-smartGWt.
+    */
    public final static String MAIN_FORM_LOCATOR = "//div[@eventproxy = 'ideHorizontalSplitLayout' and @class='normal']";
    
+   /**
+    * XPath locator for operation panel of IDE. Non-smartGWt.
+    */
    public final static String OPERATION_PANEL_LOCATOR = "//div[@eventproxy='ideOperationPanel' and @class='normal']";
    
+   /**
+    * XPath locator for content (editor) panel of IDE. Non-smartGWt.
+    */
    public final static String CONTENT_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
    
+   /**
+    * XPath locator for navigation panel of IDE. Non-smartGWt.
+    */
    public final static String NAVIGATION_PANEL_LOCATOR = "//div[@eventproxy='ideNavigationPanel' and @class='normal']";
    
+   /**
+    * XPath locator for code helper (outline, versions) panel of IDE. Non-smartGWt.
+    */
    public final static String CODE_HELPER_PANEL_LOCATOR = "//div[@eventproxy='ideCodeHelperPanel' and @class='normal']";
 
    public static final String VERTICAL_SPLIT_LAYOUT_LOCATOR = "//div[@eventproxy='ideVerticalSplitLayout' and @class='normal']";
    
+   /**
+    * SmartGWT locator for editor tabset.
+    */
    public static final String EDITOR_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/";
    
+   /**
+    * XPath locator for status bar of IDE. Non-smartGWt.
+    */
    public static final String STATUS_BAR_LOCATOR = "//td[@class='exo-statusText-table-middle']/nobr";
    
+   /**
+    * Locator-suffix for close icon of different tabs.
+    * 
+    * Add this locator to you tab locator to get locator for close icon.
+    */
    public static final String CLOSE_ICON = "/icon";
    
    
+   /**
+    * Locators for forms and tabs of operation panel.
+    */
    public interface OperationForm
    {
       public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]";
@@ -59,7 +88,9 @@ public class Locators
       public static final String PROPERTIES_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=idePropertiesView]";
    }
    
-   // go to line window locators
+   /**
+    * Locators for Go to line dialog window.
+    */
    public interface GoToLineWindow
    {
       public static final String GOTO_LINE_FORM_TEXT_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element";
@@ -67,11 +98,23 @@ public class Locators
       public static final String GOTO_LINE_FORM_GO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/";
    }
    
+   /**
+    * Return locator for close icon of tab (tab with file) in editor tabset.
+    * 
+    * @param index - index of editor tab (numeration start with 0).
+    * 
+    * @return {@link String}
+    */
    public static String getTabCloseButtonLocator(int index)
    {
       return EDITOR_TABSET_LOCATOR + "tab[index=" + index + "]/icon";
    }
    
+   /**
+    * Locators for components of Ask for value dialog window.
+    * 
+    * E.g. when you try to Save As new file.
+    */
    public interface AskForValue
    {
       public static final String ASK_FOR_VALUE_DIALOG_LOCATOR = "scLocator=//Window[ID=\"ideAskForValueDialog\"]/";

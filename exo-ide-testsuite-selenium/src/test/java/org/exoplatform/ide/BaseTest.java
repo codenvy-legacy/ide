@@ -21,6 +21,7 @@ package org.exoplatform.ide;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
@@ -165,6 +166,7 @@ public abstract class BaseTest
       {
          //TODO
          //log out from ide
+         fail("Can't logout under portal. Fix it!!!");
       }
       else if (isRunIdeAsStandalone())
       {
@@ -354,15 +356,15 @@ public abstract class BaseTest
     */
    protected void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
-
       if (selenium.isElementPresent(getContentPanelLocator(tabIndex)
          + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
       {
+         selectIFrameWithEditor(tabIndex);
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
       }
       else
       {
+         selectIFrameWithEditor(tabIndex);
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
       }
 
@@ -833,8 +835,8 @@ public abstract class BaseTest
       {
          assertFalse(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Left' and @title='" + name
             + "']//img"));
-         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_LeftHidden' and @title='" + name
-            + "']//img"));
+//         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_LeftHidden' and @title='" + name
+//            + "']//img"));
       }
    }
 
@@ -1751,7 +1753,7 @@ public abstract class BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
-      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
    }
    

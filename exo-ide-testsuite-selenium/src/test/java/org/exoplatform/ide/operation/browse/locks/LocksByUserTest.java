@@ -18,19 +18,20 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS .
+ * Test that file, locked by another user, became unchangable
+ * and marked by special icon in navigation tree.
  *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 14, 2010 $
@@ -39,7 +40,7 @@ import org.junit.Test;
 public class LocksByUserTest extends LockFileAbstract
 {
 
-   private final static String FILE_NAME = "zxcvjnklzxbvlczkxbvlkbnlsf";
+   private final static String FILE_NAME = "file-" + LocksByUserTest.class.getSimpleName();
 
    private final static String TEST_FOLDER = LocksByUserTest.class.getSimpleName();
 
@@ -70,35 +71,36 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
-//      Thread.sleep(TestConstants.SLEEP);
-//      selectItemInWorkspaceTree(WS_NAME);
-//      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       
+      //----- 1 --------
+      //open file
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      selenium.click("//a[@href='../login/logout.jsp']");
+      //----- 2 --------
+      //lock file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
       
-     //TODO ***********fix-name-login
-      standaloneLogin("john");
-      //*****************************
+      //----- 3 --------
+      //logout
+      logout();
+      
+      //----- 4 --------
+      //login under another user
+      standaloneLogin(TestConstants.Users.JOHN);
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
-//      selectItemInWorkspaceTree(WS_NAME);
-//      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      //----- 5 --------
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       
+      checkFileLocking(FILE_NAME, true);
+      //open file
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       checkCantSaveLockedFile(FILE_NAME);
-      
-      Thread.sleep(6000);
    }
    
    @AfterClass

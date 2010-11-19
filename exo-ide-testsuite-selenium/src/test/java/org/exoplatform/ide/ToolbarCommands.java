@@ -37,6 +37,10 @@ public interface ToolbarCommands
       public static final String UNDO = "Undo Typing";
       
       public static final String REDO = "Redo Typing";
+      
+      public static final String LOCK_FILE = "Lock File";
+      
+      public static final String UNLOCK_FILE = "Unlock File";
    }
    
    public interface File

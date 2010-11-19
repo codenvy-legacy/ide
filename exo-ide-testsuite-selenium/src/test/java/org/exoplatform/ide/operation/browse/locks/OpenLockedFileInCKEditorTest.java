@@ -20,18 +20,22 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS .
+ * Check, is can open locked file in CK editor.
+ * If open if CK editor locked file, you can't save it.
  *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 15, 2010 $
@@ -40,57 +44,29 @@ import org.junit.Test;
 public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 {
 
-   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
    private static final String FOLDER_NAME = OpenLockedFileInCKEditorTest.class.getSimpleName();
 
-   private static final String FILE_NAME = "lghnlskabfgkgbhglhsdnsgdnb";
-
-   @Test
-   public void testOpenLockedFile() throws Exception
+   private static final String FILE_NAME = "file-" + OpenLockedFileInCKEditorTest.class.getSimpleName();
+   
+   private static final String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   @BeforeClass
+   public static void setUp()
    {
-      Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
-
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
-
-      saveAsByTopMenu(FILE_NAME);
-
-      checkFileLocking(FILE_NAME, false);
-
-      deleteLockTokensCookies();
-
-      selenium.refresh();
-      selenium.waitForPageToLoad("10000");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      selectItemInWorkspaceTree(FILE_NAME);
-      
-      
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
-      
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
-      
-      closeTab("0");
-      
-      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
-      
-//      checkCantSaveLockedFile(FILE_NAME);
-      checkFileLocking(FILE_NAME, true);
-      
-      selectIFrameWithEditor(0);
-      
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, "Test editor");
-      selectMainFrame();
-      
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      closeTab("0");
-      
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-      
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
    
    @AfterClass
@@ -108,6 +84,63 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       {
          e.printStackTrace();
       }
+   }
+
+   @Test
+   public void testOpenLockedFile() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+
+      //----- 1 ----------
+      //open file
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      
+      //----- 2 ----------
+      //lock file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      checkFileLocking(FILE_NAME, false);
+
+      //----- 3 ----------
+      //delete lock tokens from cookies and refresh
+      deleteLockTokensCookies();
+      refresh();
+      
+      //----- 4 ----------
+      //check is file locked
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      selectItemInWorkspaceTree(FILE_NAME);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+      
+      checkFileLocking(FILE_NAME, true);
+      
+      //----- 5 ----------
+      //close file
+      CloseFileUtils.closeTab(0);
+      
+      //----- 6 ----------
+      //open file in CK editor and check is file locked
+      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
+      checkFileLocking(FILE_NAME, true);
+      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+
+      typeTextIntoEditor(0, "Test editor");
+      
+      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      
+      CloseFileUtils.closeTab(0);
+      
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+      
    }
    
 }

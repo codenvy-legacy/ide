@@ -21,15 +21,19 @@ package org.exoplatform.ide.operation.browse.locks;
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS .
- *
+ * Check, that can open locked file only in read-only mode.
+ * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2010 $
  *
@@ -40,42 +44,27 @@ public class OpenLockedFileTest extends LockFileAbstract
 
    private static final String FOLDER_NAME = OpenLockedFileTest.class.getSimpleName();
 
-   static final String FILE_NAME = "aldfnlaksfdbgjksdbkhgs";
-
-   @Test
-   public void testOpenLockedFile() throws Exception
+   static final String FILE_NAME = "file-" + OpenLockedFileTest.class.getSimpleName();
+   
+   @BeforeClass
+   public static void setUp()
    {
-      Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
-
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
-
-      saveAsByTopMenu(FILE_NAME);
-
-      checkFileLocking(FILE_NAME, false);
-
-      deleteLockTokensCookies();
-
-      selenium.refresh();
-      selenium.waitForPageToLoad("10000");
-      Thread.sleep(TestConstants.SLEEP);
-
-      checkCantSaveLockedFile(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      checkFileLocking(FILE_NAME, true);
-
-      closeTab("0");
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-
-      checkCantSaveLockedFile(FILE_NAME);
-
-      closeTab("0");
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
-
+   
    @AfterClass
    public static void tierDown()
    {
@@ -91,6 +80,48 @@ public class OpenLockedFileTest extends LockFileAbstract
       {
          e.printStackTrace();
       }
+   }
+
+   @Test
+   public void testOpenLockedFile() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+
+      //----- 1 ----------
+      //open file
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      
+      //----- 2 ----------
+      //lock file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      checkFileLocking(FILE_NAME, false);
+
+      //----- 3 ----------
+      //delete lock tokens from cookies and refresh
+      deleteLockTokensCookies();
+      refresh();
+      
+      //----- 4 ----------
+      //check that file is locked
+      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+      checkCantSaveLockedFile(FILE_NAME);
+
+      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      
+      checkFileLocking(FILE_NAME, true);
+
+      //----- 5 ----------
+      //close and open file
+      CloseFileUtils.closeTab(0);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+
+      checkCantSaveLockedFile(FILE_NAME);
+
+      CloseFileUtils.closeTab(0);
    }
 
 }

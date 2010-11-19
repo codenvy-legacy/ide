@@ -21,86 +21,59 @@ package org.exoplatform.ide.operation.browse.locks;
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS .
- *
+ * Check the work of Lock/Unlock feature.
+ * 
+ * Test is Lock/Unlock button correctly changes state,
+ * while changing tabs in editor.
+ * 
+ * Test is Lick/Unlock button saves its state after refresh.
+ * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2010 $
  *
  */
 public class LockFileTest extends LockFileAbstract
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private static String FOLDER_NAME = LockFileTest.class.getSimpleName();
+   private static String FOLDER_NAME;
 
-   private static String FILE_NAME = "sdfsdfsdafsdag";
-
-   @Test
-   public void testLockFile() throws Exception
+   private static final String FILE_NAME_1 = "file-" + LockFileTest.class.getSimpleName() + "_1";
+   
+   private static final String FILE_NAME_2 = "file-" + LockFileTest.class.getSimpleName() + "_2";
+   
+   @Before
+   public void setUp()
    {
-      
-      Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
-
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-
-      saveAsByTopMenu(FILE_NAME);
-
-      checkFileLocking(FILE_NAME, false);
-
-      assertElementPresentInWorkspaceTree(FILE_NAME);
-
-      closeTab("0");
-
-      checkFileLocking(FILE_NAME, false);
-      
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
-      checkFileLocking(FILE_NAME, false);
-      
-      typeTextIntoEditor(0, "Test test test");
-      
-      saveCurrentFile();
-      
-      closeTab("0");
-      
-      checkFileLocking(FILE_NAME, false);
-      
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
-      selenium.refresh();
-      selenium.waitForPageToLoad("10000");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
-     openOrCloseFolder(FOLDER_NAME);
-     Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkIsTabPresentInEditorTabset(FILE_NAME, true);
-      
-      selectItemInWorkspaceTree(FOLDER_NAME);
-      openOrCloseFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-            
-      checkFileLocking(FILE_NAME, false);
-      
-      typeTextIntoEditor(0, "go go go test");
-      
-      saveCurrentFile();
-      
-      closeTab("0");
-      
-      checkFileLocking(FILE_NAME, false);
-      
+      FOLDER_NAME = LockFileTest.class.getSimpleName() + "-" + System.currentTimeMillis();
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
-
-   @AfterClass
-   public static void tierDown()
+   
+   @After
+   public void tierDown()
    {
       deleteCookies();
       try
@@ -116,4 +89,184 @@ public class LockFileTest extends LockFileAbstract
          e.printStackTrace();
       }
    }
+   
+   @Test
+   public void testLockFileManually() throws Exception
+   {
+      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.LOCK_FILE, false);
+
+      //----- 1 ------------
+      //open new XML file
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      
+      //check menu and button on toolbar
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, false);
+      
+      //----- 2 ------------
+      //save XML file
+      saveAsUsingToolbarButton(FILE_NAME_1);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, true);
+      checkFileLocking(FILE_NAME_1, false);
+      
+      //----- 3 ------------
+      //lock XML file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.UNLOCK_FILE, true);
+      
+      checkFileLocking(FILE_NAME_1, false);
+      
+      //----- 4 ------------
+      //open new HTML file
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, false);
+      
+      //----- 5 ------------
+      //select XML file tab
+      selectEditorTab(0);
+      
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.UNLOCK_FILE, true);
+      
+      //----- 6 ------------
+      //unlock XML file
+      runToolbarButton(ToolbarCommands.Editor.UNLOCK_FILE);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, true);
+      
+      //----- 7 ------------
+      //select HTML file, save file, lock
+      selectEditorTab(1);
+      saveAsUsingToolbarButton(FILE_NAME_2);
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.UNLOCK_FILE, true);
+      
+      //----- 8 ------------
+      //close HTML file, open and check, that file is unlocked
+      CloseFileUtils.closeTab(1);
+      checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, true);
+      
+      //----- 9 ------------
+      //lock file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.UNLOCK_FILE, true);
+      
+      //----- 10 ------------
+      //create new file and close it
+      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      
+      //check menu and button on toolbar
+      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, false);
+      
+      CloseFileUtils.closeUnsavedFileAndDoNotSave(2);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //----- 11 ------------
+      //check, that HTML file is locked
+//      checkIsEditorTabSelected(FILE_NAME_2, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.UNLOCK_FILE, true);
+      
+      //----- 12 ------------
+      //check XML file is unlocked
+      selectEditorTab(0);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonState(MenuCommands.Edit.LOCK_FILE, true);
+   }
+   
+   @Test
+   public void testLockFileStaysAfterRefresh() throws Exception
+   {
+      createFileViaWebDav(FILE_NAME_1);
+      createFileViaWebDav(FILE_NAME_2);
+      refresh();
+      
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
+      //----- 1 ------------
+      //open files
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, true);
+      
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      
+      selectEditorTab(0);
+      
+      //----- 2 ------------
+      //lock file
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      
+      //----- 3 ------------
+      //refresh IDE
+      refresh();
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
+      checkIsEditorTabSelected(FILE_NAME_1, true);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      
+      //----- 4 ------------
+      //select second tab and check, that file is not locked
+      selectEditorTab(1);
+      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, true);
+   }
+   
+   private void createFileViaWebDav(String fileName)
+   {
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
+      try
+      {
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + fileName);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+         fail("Can't put file to webdav");
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+         fail("Can't put file to webdav");
+      }
+   }
+
 }

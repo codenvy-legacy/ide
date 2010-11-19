@@ -82,6 +82,27 @@ public interface TestConstants
       public static final String EXO_GOOGLE_GADGET = "exo:googleGadget";
    }
    
+   /**
+    * Users, allowed in IDE
+    */
+   public interface Users
+   {
+      /**
+       * administrators and developers
+       */
+      public static final String ROOT = "root";
+      
+      /**
+       * developers
+       */
+      public static final String JOHN = "john";
+      
+      /**
+       * users
+       */
+      public static final String DEMO = "demo";
+   }
+   
    String CODEMIRROR_EDITOR_LOCATOR = "//body[@class='editbox']";
    
    String CK_EDITOR_LOCATOR = "//body";
