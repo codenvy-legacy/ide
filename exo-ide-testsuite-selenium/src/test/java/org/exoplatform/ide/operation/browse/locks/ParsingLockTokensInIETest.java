@@ -26,6 +26,7 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Ignore;
@@ -62,6 +63,8 @@ public class ParsingLockTokensInIETest extends BaseTest
       selectItemInWorkspaceTree(FILE_NAME);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      
+      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
       
       closeTab("0");
       
