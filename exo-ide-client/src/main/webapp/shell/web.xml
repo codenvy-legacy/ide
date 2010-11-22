@@ -10,12 +10,11 @@
    <context-param>
       <param-name>guice-modules</param-name>
       <param-value>
-         org.apache.shindig.common.PropertiesModule:
-         org.apache.shindig.gadgets.DefaultGuiceModule:
-         org.apache.shindig.gadgets.servlet.AuthenticationModule:
-         org.exoplatform.portal.gadget.core.ExoOAuthModule:
-         org.apache.shindig.common.cache.ehcache.EhCacheModule:
-         org.exoplatform.portal.gadget.core.ExoModule
+       org.exoplatform.ide.shindig.ExoIdeModule:
+      org.apache.shindig.gadgets.DefaultGuiceModule:
+      org.apache.shindig.social.sample.SampleModule:
+      org.apache.shindig.gadgets.oauth.OAuthModule:
+      org.apache.shindig.common.cache.ehcache.EhCacheModule
     </param-value>
    </context-param>
 
@@ -29,6 +28,11 @@
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
       <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
+   
+   <filter>
+    <filter-name>SetCurrentIdentityFilter</filter-name>
+    <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+  </filter>
 
    <filter>
       <filter-name>BasicAuthFilter</filter-name>
@@ -48,6 +52,11 @@
       <filter-name>RestEncodingFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
+
+<filter-mapping>
+    <filter-name>SetCurrentIdentityFilter</filter-name>
+    <url-pattern>/rest/*</url-pattern>
+  </filter-mapping> 
 
    <filter-mapping>
       <filter-name>BasicAuthFilter</filter-name>

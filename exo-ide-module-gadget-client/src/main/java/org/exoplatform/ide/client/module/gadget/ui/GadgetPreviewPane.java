@@ -142,36 +142,33 @@ public class GadgetPreviewPane extends LockableView
          @Override
          public void run()
          {
-            Document doc = getIFrameDocument(IFrameElement.as(frame.getElement()));
-            Element body = doc.getBody();
-            setHandler(body);
+            setHandler(IFrameElement.as(frame.getElement()));
          }
-      }.schedule(1000);
+      }.schedule(2000);
    }
 
    private native void setHandler(Element e)/*-{
-      
-            var type = "mousedown";
+      var type = "mousedown";
       var instance = this;
       if(typeof e.contentDocument != "undefined")
       {
-              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
+        e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
       }
-      else
+      else if (typeof e.contentWindow != "undefined")
       {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
+        e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
       }
-      
-//      var type = "mousedown";
-//      var instance = this;     
-//      if(typeof e.addEventListener != "undefined")
-//      {
-//         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
-//      }
-//      else
-//      {
-//         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
-//      }
+
+      //      var type = "mousedown";
+      //      var instance = this;     
+      //      if(typeof e.addEventListener != "undefined")
+      //      {
+      //         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();},false);
+      //      }
+      //      else
+      //      {
+      //         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane::activateView()();});
+      //      }
    }-*/;
 
    private native Document getIFrameDocument(IFrameElement iframe)/*-{
