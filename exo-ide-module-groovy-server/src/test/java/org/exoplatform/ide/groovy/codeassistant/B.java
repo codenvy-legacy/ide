@@ -44,6 +44,14 @@ public class B extends A implements I
    }
    
    
+   /**
+    * @param s
+    * @param ss
+    * @param clazz
+    * @return
+    * @throws ClassFormatError
+    * @throws ClassNotFoundException
+    */
    public A createA(String s, List<String> ss, Class<?> clazz) throws ClassFormatError, ClassNotFoundException
    {
       return new A(){};

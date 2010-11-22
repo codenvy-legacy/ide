@@ -19,9 +19,9 @@ package org.exoplatform.ide.groovy.codeassistant.impl;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage;
 import org.exoplatform.ide.groovy.codeassistant.SaveClassInfoException;
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassInfoExtractor;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -121,7 +121,6 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    {
       try
       {
-         System.out.println("ClassInfoStrorageJcrImpl.addClass()" + fqn);
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
          Repository repository = repositoryService.getDefaultRepository();
@@ -168,7 +167,6 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       }
    }
    
-   
    /**
     * {@inheritDoc}
     */
@@ -202,7 +200,6 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       }
    }
    
-   
    private void putClass(ClassLoader classLoader, Session session, String fqn) throws RepositoryException,
    ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException,
    ConstraintViolationException, IncompatibleClassChangeError, ValueFormatException, JsonException,
@@ -217,7 +214,8 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    try
    {
       String clazz = fqn;
-      ClassInfo cd = ClassInfoExtractor.extract(classLoader.loadClass(clazz));
+      Class cls = classLoader.loadClass(clazz);
+      TypeInfo cd = TypeInfoExtractor.extract(cls);
       Node child = base;
       String[] seg = fqn.split("\\.");
       String path = new String();
@@ -244,6 +242,8 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          child.setProperty("jcr:mimeType", "text/plain");
          child.setProperty("exoide:className", clazz.substring(clazz.lastIndexOf(".") + 1));
          child.setProperty("exoide:fqn", clazz);
+         child.setProperty("exoide:type", cd.getType().toString());
+         child.setProperty("exoide:modifieres", cd.getModifiers());
       }
    }
    catch (ClassNotFoundException e)

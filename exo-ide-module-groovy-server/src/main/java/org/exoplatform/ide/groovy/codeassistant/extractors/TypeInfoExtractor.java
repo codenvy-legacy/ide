@@ -16,16 +16,15 @@
  */
 package org.exoplatform.ide.groovy.codeassistant.extractors;
 
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.FieldInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.MethodInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.RoutineInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.Types;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 /**
  * Extracting meta information from given classes to the bean object that can be transform to JSON
@@ -36,12 +35,12 @@ import java.lang.reflect.TypeVariable;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class ClassInfoExtractor
+public class TypeInfoExtractor
 {
 
-   public static ClassInfo extract(Class<?> clazz) throws IncompatibleClassChangeError
+   public static TypeInfo extract(Class<?> clazz) throws IncompatibleClassChangeError
    {
-      ClassInfo classDescription = new ClassInfo();
+      TypeInfo classDescription = new TypeInfo();
       Constructor<?>[] constructors = clazz.getConstructors();
       RoutineInfo[] cds = new RoutineInfo[constructors.length];
       for (int i = 0; i < constructors.length; i++)
@@ -98,6 +97,8 @@ public class ClassInfoExtractor
          classDescription.setSuperClass(clazz.getSuperclass().getCanonicalName());
       }
       
+      
+      
       classDescription.setConstructors(cds);
       classDescription.setDeclaredConstructors(decCds);
       
@@ -110,6 +111,21 @@ public class ClassInfoExtractor
       
       classDescription.setQualifiedName(clazz.getCanonicalName());
       classDescription.setName(clazz.getSimpleName());
+      
+      if (clazz.isAnnotation())
+      {
+       classDescription.setType(Types.ANNOTATION);
+      }
+      else if (clazz.isInterface())
+      {
+         classDescription.setType(Types.INTERFACE);
+      }
+      else 
+      {
+         classDescription.setType(Types.CLASS);
+      }
+      
+     
       return classDescription;
    }
 

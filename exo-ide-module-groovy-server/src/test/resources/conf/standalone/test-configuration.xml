@@ -54,6 +54,11 @@
             <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/>
             <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
             <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG"/>
+            
+            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG"/>
+            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG"/>
+
+            
 
          </properties-param>
       </init-params>

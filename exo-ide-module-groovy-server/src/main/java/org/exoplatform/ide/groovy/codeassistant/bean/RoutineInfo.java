@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.groovy.codeassistant.bean;
 
+import javax.xml.transform.Source;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>

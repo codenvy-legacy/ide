@@ -20,13 +20,12 @@ import java.lang.reflect.Modifier;
 
 /**
  * 
- * Member is an interface that reflects identifying information about
+ * Member is reflects identifying information about
  * a single member (a field or a method) or a constructor.
  *
- * @see  ClassInfo
+ * @see  TypeInfo
  * @see  FieldInfo
  * @see  MethodInfo
- * @see  ConstructorsDescription
  *
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -81,152 +80,6 @@ public abstract class Member
    public void setName(String name)
    {
       this.name = name;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>public</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>public</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isPublic()
-   {
-      return (modifiers & Modifier.PUBLIC) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>private</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>private</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isPrivate()
-   {
-      return (modifiers & Modifier.PRIVATE) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>protected</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>protected</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isProtected()
-   {
-      return (modifiers & Modifier.PROTECTED) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>static</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>static</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isStatic()
-   {
-      return (modifiers & Modifier.STATIC) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>final</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>final</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isFinal()
-   {
-      return (modifiers & Modifier.FINAL) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>synchronized</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>synchronized</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isSynchronized()
-   {
-      return (modifiers & Modifier.SYNCHRONIZED) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>volatile</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>volatile</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isVolatile()
-   {
-      return (modifiers & Modifier.VOLATILE) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>transient</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>transient</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isTransient()
-   {
-      return (modifiers & Modifier.TRANSIENT) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>native</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>native</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isNative()
-   {
-      return (modifiers & Modifier.NATIVE) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>interface</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>interface</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isInterface()
-   {
-      if (modifiers == null)
-      System.out.println("Member.isInterface()" + this.getClass().getCanonicalName());
-      return (modifiers & Modifier.INTERFACE) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>abstract</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>abstract</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isAbstract()
-   {
-      return (modifiers & Modifier.ABSTRACT) != 0;
-   }
-
-   /**
-    * Return <tt>true</tt> if the integer argument includes the
-    * <tt>strictfp</tt> modifier, <tt>false</tt> otherwise.
-    *
-    * @return <tt>true</tt> if <code>modifiers</code> includes the
-    * <tt>strictfp</tt> modifier; <tt>false</tt> otherwise.
-    */
-   public boolean isStrict()
-   {
-      return (modifiers & Modifier.STRICT) != 0;
    }
 
    /**

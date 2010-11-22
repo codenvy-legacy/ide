@@ -1,20 +1,89 @@
-<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
-   xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
 
-   <nodeType name="exoide:classDescription" isMixin="false"
-      hasOrderableChildNodes="false" primaryItemName="" >
+  <nodeType name="exoide:javaDoc" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
          <supertype>nt:resource</supertype>
       </supertypes>
-       <propertyDefinitions>
-         <propertyDefinition name="exoide:className" requiredType="String"
-          autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
-             <valueConstraints />
-         </propertyDefinition>
-         <propertyDefinition name="exoide:fqn" requiredType="String"
-          autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
-             <valueConstraints />
+      <propertyDefinitions>
+         <propertyDefinition name="exoide:fqn" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
+            protected="false" multiple="false">
+            <valueConstraints />
          </propertyDefinition>
       </propertyDefinitions>
    </nodeType>
+   
+   <nodeType name="exoide:methodDoc" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>exoide:javaDoc</supertype>
+      </supertypes>
+   </nodeType>
+   
+    <nodeType name="exoide:fieldDoc" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>exoide:javaDoc</supertype>
+      </supertypes>
+   </nodeType>
+   
+   <nodeType name="exoide:classDoc" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>exoide:javaDoc</supertype>
+      </supertypes>
+      <childNodeDefinitions>
+         <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY"
+            protected="false" sameNameSiblings="false">
+            <requiredPrimaryTypes>
+               <requiredPrimaryType>exoide:methodDoc</requiredPrimaryType>
+            </requiredPrimaryTypes>
+         </childNodeDefinition>
+          <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY"
+            protected="false" sameNameSiblings="false">
+            <requiredPrimaryTypes>
+               <requiredPrimaryType>exoide:fieldDoc</requiredPrimaryType>
+            </requiredPrimaryTypes>
+         </childNodeDefinition>
+      </childNodeDefinitions>
+   </nodeType>
+
+ 
+
+   <nodeType name="exoide:classDescription" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:resource</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exoide:className" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
+            protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exoide:fqn" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
+            protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exoide:type" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY"
+            protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+         <propertyDefinition name="exoide:modifieres" requiredType="Integer" autoCreated="false" mandatory="true" onParentVersion="COPY"
+            protected="false" multiple="false">
+            <valueConstraints />
+         </propertyDefinition>
+      </propertyDefinitions>
+      <childNodeDefinitions>
+         <childNodeDefinition name="exoide:classDoc" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY"
+            protected="false" sameNameSiblings="false">
+            <requiredPrimaryTypes>
+               <requiredPrimaryType>exoide:classDoc</requiredPrimaryType>
+            </requiredPrimaryTypes>
+         </childNodeDefinition>
+      </childNodeDefinitions>
+   </nodeType>
+   
+   
+   
+   
+  
+   
+   
+   
 </nodeTypes>

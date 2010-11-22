@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import javax.ws.rs.core.Response;
-
 
 /**
  * Service provide save meta information about classes in storage.

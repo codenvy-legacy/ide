@@ -16,10 +16,14 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.FieldInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.MethodInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassInfoExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
+import org.exoplatform.ws.frameworks.json.JsonGenerator;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,7 +40,7 @@ public class ClassInfoExtractorTest extends TestCase
 
    public void testExctractClass()
    {
-      ClassInfo cd = ClassInfoExtractor.extract(A.class);
+      TypeInfo cd = TypeInfoExtractor.extract(A.class);
       assertEquals(A.class.getDeclaredConstructors().length, cd.getDeclaredConstructors().length);
       assertEquals(A.class.getConstructors().length, cd.getConstructors().length);
       assertEquals(A.class.getDeclaredMethods().length, cd.getDeclaredMethods().length);
@@ -47,9 +51,10 @@ public class ClassInfoExtractorTest extends TestCase
       assertEquals(A.class.getSimpleName(), cd.getName());
    }
    
+   
    public void testExctractField()
    {
-      ClassInfo cd = ClassInfoExtractor.extract(A.class);
+      TypeInfo cd = TypeInfoExtractor.extract(A.class);
       FieldInfo[] fds = cd.getDeclaredFields();
       Field[] fields = A.class.getDeclaredFields();
       for (int i = 0; i < fields.length; i++)
@@ -77,7 +82,7 @@ public class ClassInfoExtractorTest extends TestCase
    
    public void testExctractMethod() 
    {
-      ClassInfo cd = ClassInfoExtractor.extract(B.class);
+      TypeInfo cd = TypeInfoExtractor.extract(B.class);
       MethodInfo[] mds = cd.getDeclaredMethods();
       Method[] methods = B.class.getDeclaredMethods();
       for (int i = 0; i < methods.length; i++)

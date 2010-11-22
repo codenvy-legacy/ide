@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
+import java.lang.reflect.Modifier;
 import java.util.Set;
 
 /**
@@ -33,6 +34,7 @@ public abstract class A
    
    public A() throws ClassNotFoundException
    {
+      
    }
    
    public A(Set<Class<?>> classes) throws ClassNotFoundException, ClassFormatError

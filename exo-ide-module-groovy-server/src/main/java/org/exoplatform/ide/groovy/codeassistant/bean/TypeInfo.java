@@ -23,7 +23,7 @@ package org.exoplatform.ide.groovy.codeassistant.bean;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class ClassInfo extends Member
+public class TypeInfo extends ShortTypeInfo
 {
    
    
@@ -43,19 +43,17 @@ public class ClassInfo extends Member
    
    private String[] interfaces;
    
-   private String qualifiedName;
    
-   
-   public ClassInfo()
+   public TypeInfo()
    {
    }
    
    
-   public ClassInfo(Integer modifiers, String name, MethodInfo[] methods,
+   public TypeInfo(Integer modifiers, String name, MethodInfo[] methods,
       MethodInfo[] declaredMethods, RoutineInfo[] constructors, RoutineInfo[] declaredConstructors,
-      FieldInfo[] fields, FieldInfo[] declaredFields, String superClass, String[] interfaces,String qualifiedName)
+      FieldInfo[] fields, FieldInfo[] declaredFields, String superClass, String[] interfaces,String qualifiedName, Types type)
    {
-      super(modifiers, name);
+      super(modifiers, name, qualifiedName, type);
       this.methods = methods;
       this.declaredMethods = declaredMethods;
       this.constructors = constructors;
@@ -64,7 +62,6 @@ public class ClassInfo extends Member
       this.declaredFields = declaredFields;
       this.superClass = superClass;
       this.interfaces = interfaces;
-      this.qualifiedName = qualifiedName;
    }
 
    /**
@@ -195,15 +192,4 @@ public class ClassInfo extends Member
       this.interfaces = interfaces;
    }
    
-   public String getQualifiedName()
-   {
-      return qualifiedName;
-   }
-   
-   public void setQualifiedName(String qualifiedName)
-   {
-      this.qualifiedName = qualifiedName;
-   }
-   
-
 }

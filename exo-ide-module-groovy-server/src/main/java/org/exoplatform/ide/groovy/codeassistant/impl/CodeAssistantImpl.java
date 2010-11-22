@@ -19,7 +19,9 @@ package org.exoplatform.ide.groovy.codeassistant.impl;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
 import org.exoplatform.ide.groovy.codeassistant.CodeAssistantException;
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.Types;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -33,8 +35,6 @@ import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -84,7 +84,7 @@ public class CodeAssistantImpl implements CodeAssistant
    @GET
    @Path("/class-description")
    @Produces(MediaType.APPLICATION_JSON)
-   public ClassInfo getClassByFQN(@QueryParam("fqn") String fqn) throws CodeAssistantException
+   public TypeInfo getClassByFQN(@QueryParam("fqn") String fqn) throws CodeAssistantException
    {
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
@@ -133,7 +133,7 @@ public class CodeAssistantImpl implements CodeAssistant
    @GET
    @Path("/find")
    @Produces(MediaType.APPLICATION_JSON)
-   public String[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
+   public ShortTypeInfo[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
@@ -145,14 +145,16 @@ public class CodeAssistantImpl implements CodeAssistant
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
          //TODO
-         String[] fqns = new String[(int)nodes.getSize()];
+         ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
          int i = 0;
          while (nodes.hasNext())
          {
+            
             Node node = (Node)nodes.next();
-            fqns[i++] = node.getParent().getName();
+            types[i++] = new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), 
+               node.getProperty("exoide:fqn").getString(), Types.valueOf(node.getProperty("exoide:type").getString().toUpperCase())); 
          }
-         return fqns;
+         return types;
       }
       catch (RepositoryException e)
       {
@@ -175,7 +177,7 @@ public class CodeAssistantImpl implements CodeAssistant
    @GET
    @Path("/find-by-prefix")
    @Produces(MediaType.APPLICATION_JSON)
-   public String[] findFQNsByPrefix(@QueryParam("prefix") String prefix) throws CodeAssistantException
+   public ShortTypeInfo[] findFQNsByPrefix(@QueryParam("prefix") String prefix) throws CodeAssistantException
    {
       {
          String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn LIKE '" + prefix + "%'";
@@ -187,14 +189,16 @@ public class CodeAssistantImpl implements CodeAssistant
             QueryResult result = q.execute();
             NodeIterator nodes = result.getNodes();
             //TODO
-            String[] fqns = new String[(int)nodes.getSize()];
+            //TODO
+            ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
             int i = 0;
             while (nodes.hasNext())
             {
                Node node = (Node)nodes.next();
-               fqns[i++] = node.getParent().getName();
+               types[i++] = new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), 
+                  node.getProperty("exoide:fqn").getString(), Types.valueOf(node.getProperty("exoide:type").getString())); 
             }
-            return fqns;
+            return types;
          }
          catch (RepositoryException e)
          {
@@ -211,12 +215,12 @@ public class CodeAssistantImpl implements CodeAssistant
       }
    }
 
-   private ClassInfo json2classInfo(String json) throws JsonException
+   private TypeInfo json2classInfo(String json) throws JsonException
    {
       ByteArrayInputStream stream = new ByteArrayInputStream(json.getBytes());
       jsonParser.parse(stream, jsonHandler);
       JsonValue jsonValue = jsonHandler.getJsonObject();
-      ClassInfo cd = ObjectBuilder.createObject(ClassInfo.class, jsonValue);
+      TypeInfo cd = ObjectBuilder.createObject(TypeInfo.class, jsonValue);
       return cd;
 
    }

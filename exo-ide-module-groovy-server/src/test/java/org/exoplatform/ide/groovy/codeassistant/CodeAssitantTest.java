@@ -18,8 +18,9 @@ package org.exoplatform.ide.groovy.codeassistant;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassInfoExtractor;
+import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
@@ -55,7 +56,10 @@ public class CodeAssitantTest extends Base
    public void setUp() throws Exception
    {
       super.setUp();
+      decMethods = ClassLoader.getSystemClassLoader().loadClass(Address.class.getCanonicalName()).getDeclaredMethods().length;
+      methods = ClassLoader.getSystemClassLoader().loadClass(Address.class.getCanonicalName()).getMethods().length;
       putClass(ClassLoader.getSystemClassLoader(), session, Address.class.getCanonicalName());
+      putClass(ClassLoader.getSystemClassLoader(), session, A.class.getCanonicalName());
    }
    
    @Test
@@ -66,12 +70,12 @@ public class CodeAssitantTest extends Base
             "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName(), "", null, null,
             null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertEquals(cres.getEntityType(), ClassInfo.class);
-      ClassInfo cd = (ClassInfo)cres.getEntity();
+      assertEquals(cres.getEntityType(), TypeInfo.class);
+      TypeInfo cd = (TypeInfo)cres.getEntity();
+      JsonGeneratorImpl generatorImpl =  new JsonGeneratorImpl();
       assertEquals(methods,cd.getMethods().length);
       assertEquals(decMethods, cd.getDeclaredMethods().length);
    }
-   
    
    @Test
    public void testGetClassByFqnError() throws Exception
@@ -91,9 +95,8 @@ public class CodeAssitantTest extends Base
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
-      String[] fqns =  (String[])cres.getEntity();
-      assertEquals(1, fqns.length);
-      assertTrue(fqns[0].equals(Address.class.getCanonicalName()));
+      ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
+      assertEquals(1, types.length);
    }
    
    
@@ -106,9 +109,9 @@ public class CodeAssitantTest extends Base
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
-      String[] fqns =  (String[])cres.getEntity();
-      assertEquals(1, fqns.length);
-      assertTrue(fqns[0].equals(Address.class.getCanonicalName()));
+      ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
+      assertEquals(2, types.length);
+      
    }
 
    
@@ -129,9 +132,7 @@ public class CodeAssitantTest extends Base
       try
       {
          String clazz = fqn;
-         decMethods = classLoader.loadClass(clazz).getDeclaredMethods().length;
-         methods = classLoader.loadClass(clazz).getMethods().length;
-         ClassInfo cd = ClassInfoExtractor.extract(classLoader.loadClass(clazz));
+         TypeInfo cd = TypeInfoExtractor.extract(classLoader.loadClass(clazz));
          Node child = base;
          String[] seg = fqn.split("\\.");
          String path = new String();
@@ -159,6 +160,8 @@ public class CodeAssitantTest extends Base
             child.setProperty("jcr:mimeType", "text/plain");
             child.setProperty("exoide:className", clazz.substring(clazz.lastIndexOf(".") + 1));
             child.setProperty("exoide:fqn", clazz);
+            child.setProperty("exoide:type", cd.getType().toString());
+            child.setProperty("exoide:modifieres", cd.getModifiers());
          }
          session.save();
       }

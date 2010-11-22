@@ -16,7 +16,8 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 
 import java.util.List;
 
@@ -38,10 +39,10 @@ public interface CodeAssistant
     * Returns the Class object associated with the class or interface with the given string name.
     * 
     * @param fqn the Full Qualified Name
-    * @return {@link ClassInfo} 
+    * @return {@link TypeInfo} 
     * @throws ClassNotFoundException
     */
-   ClassInfo getClassByFQN(String fqn) throws CodeAssistantException;
+   TypeInfo getClassByFQN(String fqn) throws CodeAssistantException;
    
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix})
@@ -63,7 +64,7 @@ public interface CodeAssistant
     * @param prefix the string for matching FQNs
     * 
     */
-   String[] findFQNsByPrefix(String prefix) throws CodeAssistantException;
+   ShortTypeInfo[] findFQNsByPrefix(String prefix) throws CodeAssistantException;
    
    /**
     * Returns set of FQNs matched to Class name (means FQN end on {className})
@@ -82,6 +83,6 @@ public interface CodeAssistant
     * @return
     * @throws Exception 
     */
-   String[] findFQNsByClassName(String className) throws CodeAssistantException;
+   ShortTypeInfo[] findFQNsByClassName(String className) throws CodeAssistantException;
 
 }

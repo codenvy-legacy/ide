@@ -55,5 +55,7 @@ public class ClasspathBrowserTest extends TestCase
       assertTrue(classes.contains("java.lang.Boolean"));
       
    }
+   
+ 
 
 }

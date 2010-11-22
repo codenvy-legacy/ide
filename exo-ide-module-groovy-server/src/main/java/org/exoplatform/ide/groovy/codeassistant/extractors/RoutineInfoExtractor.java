@@ -105,7 +105,8 @@ public class RoutineInfoExtractor
             return sb.toString();
          }
          catch (Throwable e)
-         { /*FALLTHRU*/
+         { 
+            e.printStackTrace();
          }
       }
       return type.getName();
