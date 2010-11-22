@@ -107,17 +107,17 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       outlineTreeHelper.clearOutlineTreeInfo();
 
       // TODO update content of node
-      outlineTreeHelper.addOutlineItem(1, "@ TestService", 6);
-      outlineTreeHelper.addOutlineItem(2, "@ post1(@ String, @ String, @ String, String) : String", 12);
-      outlineTreeHelper.addOutlineItem(3, "@ post2(@ String, @ java.lang.String, @ String, java.lang.String) : java.lang.String", 24);
+      outlineTreeHelper.addOutlineItem(0, "@ TestService", 6);
+      outlineTreeHelper.addOutlineItem(1, "@ post1(@ String, @ String, @ String, String) : String", 12);
+      outlineTreeHelper.addOutlineItem(2, "@ post2(@ String, @ java.lang.String, @ String, java.lang.String) : java.lang.String", 24);
       
-      outlineTreeHelper.addOutlineItem(4, "Dep", 32);
-      outlineTreeHelper.addOutlineItem(5, "name : String", 34);
-      outlineTreeHelper.addOutlineItem(6, "age : int", 35);
-      outlineTreeHelper.addOutlineItem(7, "getAge() : int", 37);
-      outlineTreeHelper.addOutlineItem(8, "addYear() : void", 41);
-      outlineTreeHelper.addOutlineItem(9, "greet(String) : String", 46);
-      outlineTreeHelper.addOutlineItem(10, "address : int", 50);
+      outlineTreeHelper.addOutlineItem(3, "Dep", 32);
+      outlineTreeHelper.addOutlineItem(4, "name : String", 34);
+      outlineTreeHelper.addOutlineItem(5, "age : int", 35);
+      outlineTreeHelper.addOutlineItem(6, "getAge() : int", 37);
+      outlineTreeHelper.addOutlineItem(7, "addYear() : void", 41);
+      outlineTreeHelper.addOutlineItem(8, "greet(String) : String", 46);
+      outlineTreeHelper.addOutlineItem(9, "address : int", 50);
       
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();      
