@@ -133,5 +133,16 @@ public class ClassInfoStorageTest extends Base
       assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
       assertFalse(root.hasNode("classpath"));
    }
+   
+   
+   @Test
+   public void testAddClassesInfoFormJavaLang() throws Exception
+   {
+      EnvironmentContext ctx = new EnvironmentContext();
+      ctx.put(SecurityContext.class, adminSecurityContext);
+      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java-lang", "", null, null, null,ctx);
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+      assertTrue(root.hasNode("classpath/java/java.lang"));
+   }
 
 }

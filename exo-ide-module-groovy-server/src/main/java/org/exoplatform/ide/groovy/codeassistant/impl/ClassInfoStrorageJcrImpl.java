@@ -23,6 +23,7 @@ import org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo;
 import org.exoplatform.ide.groovy.codeassistant.extractors.ClassInfoExtractor;
 import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
@@ -69,6 +70,15 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       this.sessionProvider = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
+      System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from java.lang <<<<<<<<<<<<<<<<<<<<<<<<<,");
+      try
+      {
+         addClassesFromJavaLangSource();
+      }
+      catch (SaveClassInfoException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -145,6 +155,40 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          Repository repository = repositoryService.getDefaultRepository();
          Session session = repository.login(wsName);
          List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaSrcPath, packageName);
+         for (String fqn : fqns)
+         {
+            putClass(classLoader, session, fqn);
+         }
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+   }
+   
+   
+   /**
+    * {@inheritDoc}
+    */
+   
+   //TODO:for prototype client side
+   @POST
+   @Path("/java-lang")
+   @RolesAllowed("administrators")
+   public void addClassesFromJavaLangSource() throws SaveClassInfoException
+   {
+      try
+      {
+         Thread thread = Thread.currentThread();
+         ClassLoader classLoader = thread.getContextClassLoader();
+         ManageableRepository repository = repositoryService.getDefaultRepository();
+         Session session = sessionProvider.getSystemSessionProvider(null).getSession(wsName, repository);
+         String javaHome = System.getProperty("java.home");
+         String fileSeparator = System.getProperty("file.separator");
+         javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
+         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, "java.lang");
          for (String fqn : fqns)
          {
             putClass(classLoader, session, fqn);

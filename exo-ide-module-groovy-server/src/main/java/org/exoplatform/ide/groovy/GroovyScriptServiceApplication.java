@@ -49,9 +49,15 @@ public class GroovyScriptServiceApplication extends Application
                                          RepositoryService repositoryService,
                                          InitParams initParams)
    {
+      System.out.println("                     GroovyScriptServiceApplication.GroovyScriptServiceApplication()");
+      System.out.println("GroovyScriptServiceApplication.GroovyScriptServiceApplication()" + initParams);
       if (initParams != null)
       {
+         
          ValueParam valueParam = initParams.getValueParam("wsname");
+         
+         System.out.println("============================ GroovyScriptServiceApplication.GroovyScriptServiceApplication()" + valueParam.getValue());
+         
          objects.add(new ClassInfoStrorageJcrImpl(sessionProvider, repositoryService, valueParam.getValue()));
          objects.add(new CodeAssistantImpl(valueParam.getValue(), repositoryService, sessionProvider));
       }

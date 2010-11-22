@@ -79,10 +79,17 @@
       </init-params>
    </component>
 
+
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   <init-params>
+      <value-param>
+         <name>wsname</name>
+         <value>production</value>
+      </value-param>
+   </init-params>
    </component>
-   
+
    <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
       <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
@@ -209,9 +216,6 @@
       </init-params>
    </component>
    
-   <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
-   </component>
 
    <component>
       <type>org.exoplatform.ide.chromattic.IDEChromatticRestService</type>
@@ -233,6 +237,7 @@
                <description>Node types configuration file</description>
                <value>war:/conf/ext-nodetypes-config.xml</value>
                <value>jar:/conf/organization-nodetypes.xml</value>
+                <value>jar:/conf/code-assitant-nodetypes.xml</value>
             </values-param>
          </init-params>
       </component-plugin>
@@ -251,6 +256,7 @@
                <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
                <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/"/>
+               <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
             </properties-param>
          </init-params>
       </component-plugin>
