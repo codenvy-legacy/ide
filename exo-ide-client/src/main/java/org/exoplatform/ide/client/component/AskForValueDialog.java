@@ -220,7 +220,7 @@ public class AskForValueDialog extends Window
       }
       else
       {
-         IButton noButton = new IButton("Discard");
+         IButton noButton = new IButton("No");
          noButton.setID(ID_NO_BUTTON);
          noButton.setWidth(90);
          noButton.setHeight(22);
