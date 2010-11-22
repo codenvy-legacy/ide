@@ -63,19 +63,19 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-gadget-client</artifactId>
+         <artifactId>exo-ide-extension-gadget-client</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-groovy-client</artifactId>
+         <artifactId>exo-ide-extension-groovy-client</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-netvibes-client</artifactId>
+         <artifactId>exo-ide-extension-netvibes-client</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-chromattic-client</artifactId>
+         <artifactId>exo-ide-extension-chromattic-client</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -252,7 +252,7 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-chromattic-server</artifactId>
+         <artifactId>exo-ide-extension-chromattic-server</artifactId>
       </dependency>            
             
             <dependency>
@@ -285,13 +285,13 @@
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-groovy-server</artifactId>
+               <artifactId>exo-ide-extension-groovy-server</artifactId>
                <scope>runtime</scope>
             </dependency>
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-gadget-server</artifactId>
+               <artifactId>exo-ide-extension-gadget-server</artifactId>
                <exclusions>
                   <exclusion>
                      <groupId>pull-parser</groupId>
@@ -546,15 +546,15 @@
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-groovy-server</artifactId>
+               <artifactId>exo-ide-extension-groovy-server</artifactId>
             </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-module-chromattic-server</artifactId>
+         <artifactId>exo-ide-extension-chromattic-server</artifactId>
       </dependency>            
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-gadget-server</artifactId>
+               <artifactId>exo-ide-extension-gadget-server</artifactId>
                <exclusions>
                   <exclusion>
                      <groupId>pull-parser</groupId>
@@ -564,7 +564,7 @@
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-netvibes-server</artifactId>
+               <artifactId>exo-ide-extension-netvibes-server</artifactId>
             </dependency>
             <dependency>
                <groupId>hsqldb</groupId>
@@ -809,7 +809,7 @@
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-module-gadget-server</artifactId>
+               <artifactId>exo-ide-extension-gadget-server</artifactId>
                <exclusions>
                   <exclusion>
                      <groupId>pull-parser</groupId>

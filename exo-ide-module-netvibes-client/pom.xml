@@ -7,7 +7,7 @@
       <version>1.1.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-module-netvibes-client</artifactId>
+   <artifactId>exo-ide-extension-netvibes-client</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Module : Netvibes : Client</name>
    <dependencies>

@@ -155,7 +155,7 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-groovy-client</artifactId>
+            <artifactId>exo-ide-extension-groovy-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -172,27 +172,27 @@
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-groovy-server</artifactId>
+            <artifactId>exo-ide-extension-groovy-server</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-gadget-server</artifactId>
+            <artifactId>exo-ide-extension-gadget-server</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-gadget-client</artifactId>
+            <artifactId>exo-ide-extension-gadget-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-chromattic-client</artifactId>
+            <artifactId>exo-ide-extension-chromattic-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-chromattic-server</artifactId>
+            <artifactId>exo-ide-extension-chromattic-server</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -210,21 +210,16 @@
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client-module-gadget</artifactId>
-            <version>${project.version}</version>
-         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-netvibes-client</artifactId>
+            <artifactId>exo-ide-extension-netvibes-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-module-netvibes-server</artifactId>
+            <artifactId>exo-ide-extension-netvibes-server</artifactId>
             <version>${project.version}</version>
          </dependency>
 

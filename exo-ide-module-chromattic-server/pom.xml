@@ -7,7 +7,7 @@
       <version>1.1.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-module-chromattic-server</artifactId>
+   <artifactId>exo-ide-extension-chromattic-server</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Module : Chromattic : Server</name>
    <dependencies>
