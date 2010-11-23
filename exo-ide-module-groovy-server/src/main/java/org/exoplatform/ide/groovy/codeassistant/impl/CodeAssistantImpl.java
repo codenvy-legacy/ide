@@ -135,7 +135,7 @@ public class CodeAssistantImpl implements CodeAssistant
    @Produces(MediaType.APPLICATION_JSON)
    public ShortTypeInfo[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
    {
-      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
+      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className LIKE '" + className + "%'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       
       try

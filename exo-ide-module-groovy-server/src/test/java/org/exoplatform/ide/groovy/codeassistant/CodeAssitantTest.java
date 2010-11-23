@@ -92,12 +92,12 @@ public class CodeAssitantTest extends Base
    public void testFindClassByName() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/find?class=" + Address.class.getSimpleName(), "", null,
+         launcher.service("GET", "/ide/code-assistant/find?class=A", "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
       ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
-      assertEquals(1, types.length);
+      assertEquals(2, types.length);
    }
    
    
