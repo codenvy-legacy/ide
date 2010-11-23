@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  *
  */
-package org.exoplatform.ide.server;
+package org.exoplatform.ide.client.module.server;
 
 import org.exoplatform.ide.testframework.server.AbstractTestServlet;
 
@@ -30,5 +30,14 @@ import org.exoplatform.ide.testframework.server.AbstractTestServlet;
 
 public class GroovyTestServlet extends AbstractTestServlet
 {
+
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1L;
+   
+   public GroovyTestServlet() {
+      System.out.println("GroovyTestServlet.GroovyTestServlet()");
+   }
    
 }
