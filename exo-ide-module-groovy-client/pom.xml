@@ -107,12 +107,13 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ide.plugin.groovy.ideGroovyPlugin</module>
+                     <module>org.exoplatform.ide.client.module.IDEGroovyModule</module>
                      <logLevel>SPAM</logLevel>
                      <skipTests>false</skipTests>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
                      <manualMode>${manualMode}</manualMode>
                      <productionMode>${productionMode}</productionMode>
+                      <includes>**/*Unmarshall*.java</includes>
                   </configuration>
                   <executions>
                      <execution>

@@ -29,7 +29,19 @@ import com.google.gwt.resources.client.ImageResource;
 public interface GroovyPluginImageBundle extends ClientBundle
 {
 
-   public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);   
+   public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
+
+   @Source("images/codeassistant/class.gif")
+   ImageResource classItem();
+
+   @Source("images/codeassistant/annotation.gif")
+   ImageResource annotationItem();
+
+   @Source("images/codeassistant/innerinterface_public.gif")
+   ImageResource intrfaceItem();
+   
+   @Source("images/codeassistant/enum.gif")
+   ImageResource enumItem();   
 
    //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
 //   ImageResource setAutoLoad();

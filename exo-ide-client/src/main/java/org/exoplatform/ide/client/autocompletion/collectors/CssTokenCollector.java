@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ide.client.autocompletion.JSONTokenParser;
-import org.exoplatform.ide.client.autocompletion.TokenCollector;
-import org.exoplatform.ide.client.autocompletion.TokensCollectedCallback;
+import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
@@ -51,7 +51,7 @@ public class CssTokenCollector implements TokenCollector
    }
 
    /**
-    * @see org.exoplatform.ide.client.autocompletion.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
     */
    public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
    {

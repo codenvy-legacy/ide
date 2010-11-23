@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.module.groovy.codeassistant.AssistImportDeclarationManager;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.client.module.groovy.controls.RunGroovyServiceCommand;
@@ -53,6 +54,7 @@ import org.exoplatform.ide.client.module.groovy.handlers.DeployGroovyCommandHand
 import org.exoplatform.ide.client.module.groovy.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.UndeployGroovyCommandHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.ValidateGroovyCommandHandler;
+import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedHandler;
@@ -123,6 +125,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new ValidateGroovyCommandHandler(eventBus);
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
+      new AssistImportDeclarationManager(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -130,6 +133,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       configuration = event.getApplicationConfiguration();
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
+      new CodeAssistantServiceImpl(eventBus,event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**

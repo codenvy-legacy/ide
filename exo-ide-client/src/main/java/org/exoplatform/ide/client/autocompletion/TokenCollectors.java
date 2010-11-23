@@ -22,10 +22,10 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.autocompletion.collectors.CssTokenCollector;
-import org.exoplatform.ide.client.autocompletion.collectors.GroovyTokenCollector;
 import org.exoplatform.ide.client.autocompletion.collectors.HtmlTokenCollector;
 import org.exoplatform.ide.client.autocompletion.collectors.JavaScriptTokenCollector;
 import org.exoplatform.ide.client.autocompletion.collectors.XmlTokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -42,7 +42,7 @@ public final class TokenCollectors
 
    private TokenCollectors(HandlerManager eventBus)
    {
-      tokenCollectors.put(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus));
+      //tokenCollectors.put(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus));
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus));

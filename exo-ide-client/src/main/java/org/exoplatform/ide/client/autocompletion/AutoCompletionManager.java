@@ -28,6 +28,8 @@ import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
 import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
+import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -168,8 +170,8 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
             {
                tokenToPaste = beforeToken + "<" + token.getName() + ">" + "</" + token.getName() + ">" + afterToken;
                newCursorPos =
-                  (beforeToken + "<" + token.getName() + ">" + "</" + token.getName() + ">").indexOf("/", beforeToken
-                     .length());
+                  (beforeToken + "<" + token.getName() + ">" + "</" + token.getName() + ">").indexOf("/",
+                     beforeToken.length());
             }
             break;
 

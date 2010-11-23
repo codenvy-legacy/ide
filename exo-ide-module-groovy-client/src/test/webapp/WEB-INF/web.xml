@@ -4,8 +4,7 @@
 
    <servlet>
       <servlet-name>testservlet</servlet-name>
-      <servlet-class>org.exoplatform.ide.server.GroovyServlet
-      </servlet-class>
+      <servlet-class>org.exoplatform.ide.client.module.server.GroovyTestServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
 
