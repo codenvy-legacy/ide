@@ -170,6 +170,10 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
                {
                   newNode.setAttribute(ICON, CLASS_ICON);
                }
+               else
+               {
+                  continue;
+               }
                
                String name = child.getName();
                
