@@ -24,7 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.marshal.ClassDescriptionUnmarshaller;

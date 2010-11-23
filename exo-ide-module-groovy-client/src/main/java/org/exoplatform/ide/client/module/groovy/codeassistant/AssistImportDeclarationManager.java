@@ -20,16 +20,16 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyTokenProperties;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorInsertImportStatmentEvent;
-import org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationForm;
-import org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationHandler;
-import org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollector;
-import org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollectorCallback;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
+import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
+import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.module.groovy.codeassistant.ui.AssistImportDeclarationForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -78,12 +78,12 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
          ImportDeclarationTokenCollector collector =
             ImportDeclarationsTokenCollectors.getCollector(eventBus, event.getFileMimeType());
 //         collector.getImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
-         collector.getImportDeclarationTokens("Boolean", this);
+         collector.getImportDeclarationTokens("List", this);
 //      }
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollectorCallback#tokensCollected(java.util.List)
+    * @see org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback#tokensCollected(java.util.List)
     */
    public void tokensCollected(List<GroovyToken> tokens)
    {

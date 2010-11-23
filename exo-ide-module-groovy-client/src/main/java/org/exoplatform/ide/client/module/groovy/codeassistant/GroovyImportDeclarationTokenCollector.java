@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollector;
-import org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollectorCallback;
+import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedHandler;
@@ -52,7 +52,7 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollector#getImportDeclarationTokens(java.lang.String)
+    * @see org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector#getImportDeclarationTokens(java.lang.String)
     */
    public void getImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback)
    {

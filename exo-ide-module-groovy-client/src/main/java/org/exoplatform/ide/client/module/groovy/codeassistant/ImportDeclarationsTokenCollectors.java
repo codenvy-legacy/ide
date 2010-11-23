@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.codeassistant.ImportDeclarationTokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 
 import com.google.gwt.event.shared.HandlerManager;
 

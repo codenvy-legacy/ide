@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyTokenProperties;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;

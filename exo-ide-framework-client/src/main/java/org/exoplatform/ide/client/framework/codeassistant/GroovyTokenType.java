@@ -22,12 +22,9 @@ package org.exoplatform.ide.client.framework.codeassistant;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 22, 2010 2:41:04 PM evgen $
+ * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
  *
  */
-public interface ImportDeclarationTokenCollector
-{
-   
-   void getImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback);
-
+public enum GroovyTokenType {
+   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM
 }

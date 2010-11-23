@@ -13,5 +13,6 @@
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <!-- <inherits name='org.exoplatform.ide.testframework.IDEallTestFramework' />  -->
    
+   <stylesheet src='groovy.css' />
    <source path="groovy" />
 </module>

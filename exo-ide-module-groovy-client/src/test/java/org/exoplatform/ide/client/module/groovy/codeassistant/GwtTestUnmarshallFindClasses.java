@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyTokenProperties;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
 import org.exoplatform.ide.client.module.groovy.ClientTest;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.testframework.http.MockResponse;

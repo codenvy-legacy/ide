@@ -26,10 +26,10 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
-import org.exoplatform.gwtframework.ui.client.component.autocomplete.AutocompleteTokenSelectedHandler;
-import org.exoplatform.gwtframework.ui.client.component.autocomplete.NewAutoCompleteForm;
+import org.exoplatform.ide.client.autocompletion.ui.NewAutoCompleteForm;
 import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
+import org.exoplatform.ide.client.framework.codeassistant.api.AutocompleteTokenSelectedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
 import com.google.gwt.event.shared.HandlerManager;

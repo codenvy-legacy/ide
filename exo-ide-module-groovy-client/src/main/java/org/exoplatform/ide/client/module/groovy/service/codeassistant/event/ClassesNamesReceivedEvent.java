@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.groovy.service.codeassistant.event;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 
 import com.google.gwt.event.shared.GwtEvent;
 

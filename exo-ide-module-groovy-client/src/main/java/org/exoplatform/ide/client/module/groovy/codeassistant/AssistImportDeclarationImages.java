@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 
 import java.util.HashMap;
 
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.resources.client.ImageResource;

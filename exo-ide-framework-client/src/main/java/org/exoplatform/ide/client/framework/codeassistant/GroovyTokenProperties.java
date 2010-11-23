@@ -18,20 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken;
-
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 22, 2010 2:41:23 PM evgen $
+ * @version $Id: Nov 17, 2010 5:31:49 PM evgen $
  *
  */
-public interface ImportDeclarationTokenCollectorCallback
-{
-
-   void tokensCollected(List<GroovyToken> tokens);
-   
+public enum GroovyTokenProperties {
+   CLASS, FQN, PACKAGE, MODIFIERS;
 }
