@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
 import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
+import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -126,7 +127,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
       scrollPanel.addMouseOutHandler(mousHandler);
 
-      scrollPanel.setStyleName(Style.AUTO_PANEL);
+      scrollPanel.setStylePrimaryName(GroovyPluginImageBundle.INSTANCE.css().panelStyle());
       scrollPanel.setHeight("100px");
       scrollPanel.setWidth("350px");
       lockLayer.add(scrollPanel, left, top);
@@ -169,18 +170,18 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
       if (selectedWidget != null)
       {
-         selectedWidget.setStyleName(Style.AUTO_LIST_ITEM);
+         selectedWidget.setDefaultStyle();
       }
 
       selectedWidget = widget;
 
       if (widget.equals(overedWidget))
       {
-         selectedWidget.setStyleName(Style.AUTO_LIST_ITEM_OVERED);
+         selectedWidget.setOveredStyle();
       }
       else
       {
-         selectedWidget.setStyleName(Style.AUTO_LIST_ITEM_SELECTED);
+         selectedWidget.setSelectedStyle();
       }
    }
 
@@ -196,11 +197,11 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       {
          if (overedWidget.equals(selectedWidget))
          {
-            overedWidget.setStyleName(Style.AUTO_LIST_ITEM_SELECTED);
+            overedWidget.setSelectedStyle();
          }
          else
          {
-            overedWidget.setStyleName(Style.AUTO_LIST_ITEM);
+            overedWidget.setDefaultStyle();
          }
          overedWidget = null;
          return;
@@ -210,16 +211,16 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       {
          if (overedWidget.equals(selectedWidget))
          {
-            overedWidget.setStyleName(Style.AUTO_LIST_ITEM_SELECTED);
+            overedWidget.setSelectedStyle();
          }
          else
          {
-            overedWidget.setStyleName(Style.AUTO_LIST_ITEM);
+            overedWidget.setDefaultStyle();
          }
       }
 
       overedWidget = t;
-      overedWidget.setStyleName(Style.AUTO_LIST_ITEM_OVERED);
+      overedWidget.setOveredStyle();
    }
 
    private void cancelAssistant()

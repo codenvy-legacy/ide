@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.CodeError;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorInsertImportStatmentEvent;
@@ -40,8 +41,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 22, 2010 2:46:01 PM evgen $
  *
  */
-public class AssistImportDeclarationManager implements EditorErrorMarkClickedHandler,
-   AssistImportDeclarationHandler, ImportDeclarationTokenCollectorCallback
+public class AssistImportDeclarationManager implements EditorErrorMarkClickedHandler, AssistImportDeclarationHandler,
+   ImportDeclarationTokenCollectorCallback
 {
 
    private HandlerManager eventBus;
@@ -51,7 +52,6 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
    private int top;
 
    private String editorId;
-   
 
    /**
     * @param eventBus
@@ -67,19 +67,23 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
     */
    public void onEditorErrorMarkClicked(EditorErrorMarkClickedEvent event)
    {
-//      if (!event.getCodeErrorList().isEmpty())
-//      {
-      
-         left = event.getMarkOffsetY(); 
-         top = event.getMarkOffsetX();
+      for (CodeError s : event.getCodeErrorList())
+      {
+         System.out.println(s.getIncorrectToken() + " " + s.getLineNumber());
+      }
+      if (!event.getCodeErrorList().isEmpty())
+      {
+
+         left = event.getMarkOffsetY() + 3;
+         top = event.getMarkOffsetX() + 4;
          System.out.println("left - " + left + " <<<>>> top - " + top);
          editorId = event.getEditorId();
-         
+
          ImportDeclarationTokenCollector collector =
             ImportDeclarationsTokenCollectors.getCollector(eventBus, event.getFileMimeType());
-//         collector.getImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
-         collector.getImportDeclarationTokens("List", this);
-//      }
+         collector.getImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
+         //     collector.getImportDeclarationTokens("Array", this);   
+      }
    }
 
    /**

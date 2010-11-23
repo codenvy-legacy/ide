@@ -126,6 +126,8 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
       new AssistImportDeclarationManager(eventBus);
+      
+      GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

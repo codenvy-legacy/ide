@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
 import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
+import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
@@ -52,7 +53,8 @@ public class GroovyClassTokenWidget extends TokenWidget
    {
       super(token, number);
       grid = new Grid(1, 3);
-      grid.setStyleName(Style.AUTO_LIST_ITEM);
+//      grid.setStyleName(Style.AUTO_LIST_ITEM);
+      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
     
       Image i = new Image(images.get(token.getType()));
       i.setHeight("16px");
@@ -73,6 +75,42 @@ public class GroovyClassTokenWidget extends TokenWidget
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setSelectedStyle()
+    */
+   @Override
+   public void setSelectedStyle()
+   {
+      // TODO Auto-generated method stub
+      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().selectedItem());
+   }
+
+
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setOveredStyle()
+    */
+   @Override
+   public void setOveredStyle()
+   {
+      // TODO Auto-generated method stub
+      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().overedItem());
+   }
+
+
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setDefaultStyle()
+    */
+   @Override
+   public void setDefaultStyle()
+   {
+      // TODO Auto-generated method stub
+      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
    }
 
 }

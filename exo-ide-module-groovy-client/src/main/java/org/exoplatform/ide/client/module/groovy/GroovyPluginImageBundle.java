@@ -18,6 +18,7 @@ package org.exoplatform.ide.client.module.groovy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -31,6 +32,9 @@ public interface GroovyPluginImageBundle extends ClientBundle
 
    public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
 
+   @Source("groovy.css")
+   public GroovyCss css();
+   
    @Source("images/codeassistant/class.gif")
    ImageResource classItem();
 
@@ -41,7 +45,7 @@ public interface GroovyPluginImageBundle extends ClientBundle
    ImageResource intrfaceItem();
    
    @Source("images/codeassistant/enum.gif")
-   ImageResource enumItem();   
+   ImageResource enumItem();
 
    //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
 //   ImageResource setAutoLoad();

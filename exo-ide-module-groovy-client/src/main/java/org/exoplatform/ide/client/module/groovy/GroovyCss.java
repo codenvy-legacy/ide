@@ -16,30 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
+package org.exoplatform.ide.client.module.groovy;
+
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 22, 2010 9:40:36 AM evgen $
+ * @version $Id: Nov 23, 2010 3:46:05 PM evgen $
  *
  */
-public interface Style
+public interface GroovyCss extends CssResource
 {
-
-   public static String AUTO_PANEL = "exo-autocomplete-panel";
-
-   public static String AUTO_EDIT = "exo-autocomplete-edit";
-
-   public static String AUTO_LIST = "exo-autocomplete-list";
-
-   public static String AUTO_LIST_ITEM = "exo-autocomplete-list-item";
-
-   public static String AUTO_LIST_ITEM_SELECTED = "exo-autocomplete-list-item-selected";
-
-   public static String AUTO_LIST_ITEM_OVERED = "exo-autocomplete-list-item-overed";
-
-   public static String AUTO_DESCRIPTION_PANEL = "exo-autocomplete-description";
-
+  @ClassName("exo-autocomplete-panel")
+  String panelStyle(); 
+  
+  @ClassName("exo-autocomplete-list-item")
+  String item();
+  
+  @ClassName("exo-autocomplete-list-item-overed")
+  String overedItem();
+  
+  @ClassName("exo-autocomplete-list-item-selected")
+  String selectedItem();
+  
+  @ClassName("exo-autocomplete-description")
+  String description();
+  
+  @ClassName("exo-autocomplete-list")
+  String listStyle();
 }

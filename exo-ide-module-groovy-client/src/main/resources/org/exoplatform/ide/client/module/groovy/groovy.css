@@ -5,7 +5,6 @@
 }
 
 
-.exo-autocomplete-edit,
 .exo-autocomplete-list-item,
 .exo-autocomplete-list-item-overed,
 .exo-autocomplete-list-item-selected
@@ -25,11 +24,6 @@
     font-size: 10pt;
     border: 0 none;
     padding: 0px;
-}
-.exo-autocomplete-edit
-{
-	height: 20px;
-	border-bottom: #A7ABB4 1px solid;
 }
 
 
@@ -77,21 +71,3 @@
     overflow: scroll;
 }
 
-.exo-autocomplete-list-variable
-{
-	background-color: #ecbeae;
-}
-.exo-autocomplete-list-function
-{
-	background-color: #b1d4b4;
-}
-
-.exo-autocomplete-list-keyword
-{
-	background-color: #FFFFFF;
-}
-
-.exo-autocomplete-list-template
-{
-	background-color: #efebb1;
-}

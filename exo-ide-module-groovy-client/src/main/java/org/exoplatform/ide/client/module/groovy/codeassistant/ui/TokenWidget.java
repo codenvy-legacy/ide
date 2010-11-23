@@ -62,13 +62,29 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
    }
 
    /**
-    * @return the number
+    * @return the number of token
     */
    public int getNumber()
    {
       return number;
    }
    
+   /**
+    * 
+    */
+   public abstract void setSelectedStyle();
+
+   
+   /**
+    * 
+    */
+   public abstract void setOveredStyle();
+
+   /**
+    * 
+    */
+   public abstract void setDefaultStyle();
+
 
    /**
     * @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler)
