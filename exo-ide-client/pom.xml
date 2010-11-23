@@ -38,7 +38,7 @@
          <artifactId>gwt-dev</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
@@ -234,7 +234,14 @@
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.ext</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>pull-parser</groupId>
+                     <artifactId>pull-parser</artifactId>
+                  </exclusion>
+               </exclusions>
                <scope>runtime</scope>
+
             </dependency>
             <!-- <dependency> <groupId>org.exoplatform.jcr</groupId> <artifactId>exo.jcr.component.webdav</artifactId> <scope>runtime</scope> <exclusions> 
                <exclusion> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> </exclusion> </exclusions> </dependency> -->
@@ -250,11 +257,11 @@
                </exclusions>
             </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic-server</artifactId>
-      </dependency>            
-            
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-chromattic-server</artifactId>
+            </dependency>
+
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
@@ -524,10 +531,10 @@
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.ext</artifactId>
                <exclusions>
-                 <exclusion>
-                   <groupId>pull-parser</groupId>
-                   <artifactId>pull-parser</artifactId>
-                 </exclusion>
+                  <exclusion>
+                     <groupId>pull-parser</groupId>
+                     <artifactId>pull-parser</artifactId>
+                  </exclusion>
                </exclusions>
             </dependency>
             <dependency>
@@ -554,10 +561,10 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-groovy-server</artifactId>
             </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic-server</artifactId>
-      </dependency>            
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-chromattic-server</artifactId>
+            </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-gadget-server</artifactId>
