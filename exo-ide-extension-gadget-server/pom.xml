@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-gadget-server</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Module : Gadget : Server</name>
+   <name>eXo IDE :: Extension : Gadget : Server</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.portal</groupId>

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-groovy-server</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Module : Groovy : Server</name>
+   <name>eXo IDE :: Extension : Groovy : Server</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

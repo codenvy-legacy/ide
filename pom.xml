@@ -435,17 +435,17 @@
       
       <module>exo-ide-framework-client</module>
 
-      <module>exo-ide-module-gadget-server</module>
-      <module>exo-ide-module-gadget-client</module>
+      <module>exo-ide-extension-gadget-server</module>
+      <module>exo-ide-extension-gadget-client</module>
 
-      <module>exo-ide-module-groovy-server</module>
-      <module>exo-ide-module-groovy-client</module>
+      <module>exo-ide-extension-groovy-server</module>
+      <module>exo-ide-extension-groovy-client</module>
       
-      <module>exo-ide-module-netvibes-server</module>
-      <module>exo-ide-module-netvibes-client</module>
+      <module>exo-ide-extension-netvibes-server</module>
+      <module>exo-ide-extension-netvibes-client</module>
       
-      <module>exo-ide-module-chromattic-client</module>
-      <module>exo-ide-module-chromattic-server</module>
+      <module>exo-ide-extension-chromattic-client</module>
+      <module>exo-ide-extension-chromattic-server</module>
   
       <module>exo-ide-docs</module>
 

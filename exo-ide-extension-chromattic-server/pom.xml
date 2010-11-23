@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-chromattic-server</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Module : Chromattic : Server</name>
+   <name>eXo IDE :: Extension : Chromattic : Server</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>

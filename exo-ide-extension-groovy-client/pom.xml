@@ -7,25 +7,39 @@
       <version>1.1.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-extension-gadget-client</artifactId>
+   <artifactId>exo-ide-extension-groovy-client</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Module : Gadget : Client</name>
+   <name>eXo IDE :: Extension : Groovy : Client</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
       <dependency>
+         <groupId>com.smartgwt</groupId>
+         <artifactId>smartgwt</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-testframework</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
       </dependency>
    </dependencies>
    <build>
@@ -93,12 +107,13 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ideall.plugin.groovy.IDEGroovyPlugin</module>
+                     <module>org.exoplatform.ide.client.module.IDEGroovyModule</module>
                      <logLevel>SPAM</logLevel>
                      <skipTests>false</skipTests>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
                      <manualMode>${manualMode}</manualMode>
                      <productionMode>${productionMode}</productionMode>
+                      <includes>**/*Unmarshall*.java</includes>
                   </configuration>
                   <executions>
                      <execution>
