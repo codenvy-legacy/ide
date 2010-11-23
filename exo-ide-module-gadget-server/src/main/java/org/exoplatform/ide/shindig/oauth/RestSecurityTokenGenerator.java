@@ -16,6 +16,13 @@
  */
 package org.exoplatform.ide.shindig.oauth;
 
+import org.apache.shindig.common.crypto.BlobCrypterException;
+import org.exoplatform.container.monitor.jvm.J2EEServerInfo;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.Consumes;
@@ -24,13 +31,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.shindig.common.crypto.BlobCrypterException;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,23 +45,6 @@ public class RestSecurityTokenGenerator implements ResourceContainer
      */
    private final Log log = ExoLogger.getLogger("rest.RestSecurityTokenGenerator");
    
-   private String keyFile;
-   
-   private static final String DEFAULT_KEY_FILE = "key.txt";
-   
-   public RestSecurityTokenGenerator(InitParams initParams)
-   {
-      if (initParams != null) 
-      {
-         ValueParam param = initParams.getValueParam("keyFile");
-         if (param != null)
-            keyFile = param.getValue();
-         else
-            keyFile = DEFAULT_KEY_FILE;
-      }
-      else 
-         keyFile = DEFAULT_KEY_FILE;
-   }
    
    @POST
    @Path("/createToken")
@@ -71,7 +54,7 @@ public class RestSecurityTokenGenerator implements ResourceContainer
    {
       try
       {
-         return SecurityTokenGenerator.createToken(tokenRequest,keyFile);
+         return SecurityTokenGenerator.createToken(tokenRequest,getKeyFilePath());
       }
       catch (IOException e)
       {
@@ -87,5 +70,25 @@ public class RestSecurityTokenGenerator implements ResourceContainer
       } 
       
    }
+   
+   private String getKeyFilePath(){
+      J2EEServerInfo info = new J2EEServerInfo();
+      String confPath = info.getExoConfigurationDirectory();
+      File keyFile = null;
+      
+      if (confPath != null) {
+         File confDir = new File(confPath);
+         if (confDir != null && confDir.exists() && confDir.isDirectory()) {
+            keyFile = new File(confDir, "gadgets/key.txt");
+         }
+      }
+
+      if (keyFile == null) {
+         keyFile = new File("key.txt");
+      }
+      
+      return keyFile.getAbsolutePath();
+  }
+
   
 }

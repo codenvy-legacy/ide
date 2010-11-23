@@ -140,9 +140,9 @@ public class ClassInfoStorageTest extends Base
    {
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java-lang", "", null, null, null,ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java-util", "", null, null, null,ctx);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
-      assertTrue(root.hasNode("classpath/java/java.lang"));
+      assertTrue(root.hasNode("classpath/java/java.util"));
    }
 
 }

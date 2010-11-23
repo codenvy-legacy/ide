@@ -42,15 +42,6 @@
    </properties>
 
 
-   <!--  Add temporary until fix issue http://jira.exoplatform.org/browse/SWF-775  -->
-     <repositories>   
-        <repository>
-            <id>jboss.org</id>
-            <name>thirdparty-uploads</name>
-            <url>dav:https://repository.jboss.org/nexus/content/repositories/thirdparty-uploads/</url>
-        </repository>
-   </repositories>
-   
    <dependencyManagement>
       <dependencies>
          <dependency>
