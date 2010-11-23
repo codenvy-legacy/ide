@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.panel.Panel;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
@@ -41,7 +40,9 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * Form, displayed in bottom side of IDE.
+ * 
+ * Can contain tabs: Output, Preview (HTML, Google Gadget), Properties.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $

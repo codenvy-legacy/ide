@@ -18,36 +18,37 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
 import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
 import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
 import org.exoplatform.ide.client.panel.event.OpenPanelHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
- * Created by The eXo Platform SAS.
+ * Presenter for CodeHelper panel, that displays in
+ * right side of IDE.
+ * 
+ * Handles events, that open and close panels in tabs.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
-public class CodeHelperPresenter implements EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, OpenPanelHandler, ClosePanelHandler
+public class CodeHelperPresenter implements OpenPanelHandler, ClosePanelHandler
 {
    interface Display
    {
+      boolean isShown();
+      
       void show();
 
       void hide();
       
-      void addView(View view);
+      void addView(View view, Image tabIcon, String title);
       
       void closePanel(String panelId);
    }
@@ -58,14 +59,10 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
 
    private Display display;
 
-   private ApplicationSettings applicationSettings;
-
    public CodeHelperPresenter(HandlerManager bus)
    {
       eventBus = bus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(OpenPanelEvent.TYPE, this);
       handlers.addHandler(ClosePanelEvent.TYPE, this);
    }
@@ -75,53 +72,16 @@ public class CodeHelperPresenter implements EditorActiveFileChangedHandler, Appl
       display = d;
    }
 
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      File file = event.getFile();
-      if (file == null || file.getContentType() == null)
-      {
-         display.hide();
-         return;
-      }
-
-      if(!event.getEditor().canCreateTokenList())
-      {
-         display.hide();
-         return;
-      }
-      
-      if (OutlineTreeGrid.haveOutline(file))
-      {
-         boolean show =
-            applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
-//         System.out.println("CodeHelperPresenter.onEditorActiveFileChanged()"+show);
-         if (show)
-         {
-            display.show();
-         }
-         else
-         {
-            display.hide();
-         }
-      }
-      else
-      {
-         display.hide();
-      }
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
-   }
-
    /**
     * @see org.exoplatform.ide.client.panel.event.OpenPanelHandler#onOpenPanel(org.exoplatform.ide.client.panel.event.OpenPanelEvent)
     */
    public void onOpenPanel(OpenPanelEvent event)
    {
-      display.show();
-      display.addView(event.getView());
+      if (!display.isShown())
+      {
+         display.show();
+      }
+      display.addView(event.getView(), event.getTabIcon(), event.getTitle());
    }
 
    /**

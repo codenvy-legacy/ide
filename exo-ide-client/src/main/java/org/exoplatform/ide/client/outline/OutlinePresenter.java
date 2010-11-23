@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -34,38 +38,53 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ide.client.framework.form.FormClosedEvent;
-import org.exoplatform.ide.client.framework.form.FormClosedHandler;
-import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
+ * Presenter for Outline Panel.
+ * 
+ * Handlers editor and outline panel activity 
+ * and synchronize cursor position in editor with current token in outline.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, FormOpenedHandler, FormClosedHandler
+   EditorCursorActivityHandler
 {
+   
+   /**
+    * View for outline panel.
+    */
    interface Display
    {
+      /**
+       * Get outline tree grid
+       * @return {@link TreeGridItem}
+       */
       TreeGridItem<Token> getOutlineTree();
 
+      /**
+       * Select row with token in outline tree.
+       * 
+       * @param token - token to select
+       */
       void selectToken(Token token);
 
-      boolean isFormVisible();
-      
+      /**
+       * Get the list of selected tokens.
+       * 
+       * @return {@link List}
+       */
       List<Token> getSelectedTokens();
       
+      /**
+       * Set focus on treegrid.
+       */
       void setFocus();
    }
 
@@ -87,21 +106,19 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private TextEditor activeTextEditor;
 
-   private boolean outLineFormOpened;
-   
    private boolean afterChangineCursorFromOutline = false;
 
-   public OutlinePresenter(HandlerManager bus)
+   public OutlinePresenter(HandlerManager bus, TextEditor activeTextEditor, File activeFile)
    {
       eventBus = bus;
+      
+      this.activeTextEditor = activeTextEditor;
+      this.activeFile = activeFile;
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(EditorContentChangedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(EditorCursorActivityEvent.TYPE, this);
-      handlers.addHandler(FormClosedEvent.TYPE, this);
-      handlers.addHandler(FormOpenedEvent.TYPE, this);
-
    }
 
    public void bindDisplay(Display d)
@@ -142,6 +159,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       currentRow = 0;
       goToLine = true;
+      
+      refreshOutline(activeTextEditor);
    }
 
    public void destroy()
@@ -173,11 +192,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      if (!outLineFormOpened)
-      {
-         return;
-      }
-
       if (isShowOutlineTree(activeTextEditor, activeFile))
       {
          refreshOutlineTimer.cancel();
@@ -220,10 +234,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       File file = event.getFile();
       TextEditor editor = event.getEditor();
-      if (!outLineFormOpened)
-      {
-         return;
-      }
 
       if (isShowOutlineTree(editor, file))
       {
@@ -369,10 +379,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       currentRow = event.getRow();
 
-      if (!outLineFormOpened)
-      {
-         return;
-      }
       selectOutlineTimer.cancel();
 
       // return focus to the outline panel after the setting of cursor position in the Editor
@@ -394,20 +400,4 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
    };
 
-   public void onFormOpened(FormOpenedEvent event)
-   {
-      if (CodeHelperForm.ID.equals(event.getFormId()))
-      {
-         outLineFormOpened = true;
-         refreshOutline(activeTextEditor);
-      }
-   }
-
-   public void onFormClosed(FormClosedEvent event)
-   {
-      if (CodeHelperForm.ID.equals(event.getFormId()))
-      {
-         outLineFormOpened = false;
-      }
-   }
 }

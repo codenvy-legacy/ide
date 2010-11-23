@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.user.client.Timer;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -26,6 +28,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -241,7 +244,8 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
          version = (Version)event.getFile();
          if (!isVersionPanelOpened)
          {
-            eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version)));
+            Image tabIcon = new Image(IDEImageBundle.INSTANCE.viewVersions());
+            eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version), tabIcon, "Version"));
             Timer timer = new Timer()
             {
                @Override

@@ -20,15 +20,24 @@ package org.exoplatform.ide.client.outline;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
 
 /**
- * Created by The eXo Platform SAS.
+ * Form for displaying code outline.
+ * 
+ * Contains OutlineTreeGrid.
+ * 
+ * If file or text editor doesn't have outline,
+ * this form must be closed.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
@@ -45,11 +54,20 @@ public class OutlineForm extends View implements OutlinePresenter.Display
 
    private OutlineTreeGrid<Token> treeGrid;
 
-   public OutlineForm(HandlerManager bus)
+   public OutlineForm(HandlerManager bus, TextEditor activeTextEditor, File activeFile)
    {
       super(ID, bus);
       eventBus = bus;
 
+      createTreeGrid();
+
+      presenter = new OutlinePresenter(eventBus, activeTextEditor, activeFile);
+      presenter.bindDisplay(this);
+      
+   }
+   
+   private void createTreeGrid()
+   {
       treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
       treeGrid.setShowHeader(false);
       treeGrid.setLeaveScrollbarGap(false);
@@ -63,9 +81,6 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       treeGrid.setWidth100();
 
       addMember(treeGrid);
-      presenter = new OutlinePresenter(eventBus);
-      presenter.bindDisplay(this);
-
    }
 
    public TreeGridItem<Token> getOutlineTree()
@@ -80,6 +95,16 @@ public class OutlineForm extends View implements OutlinePresenter.Display
          treeGrid.selectToken(token);
       }
    }
+   
+   /**
+    * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
+    */
+   @Override
+   protected void onDraw()
+   {
+      eventBus.fireEvent(new PanelOpenedEvent(ID));
+      super.onDraw();
+   }
 
    /**
     * @see org.exoplatform.ide.client.framework.ui.View#onDestroy()
@@ -87,16 +112,10 @@ public class OutlineForm extends View implements OutlinePresenter.Display
    @Override
    protected void onDestroy()
    {
-      System.out.println("OutlineForm.onDestroy()");
       presenter.destroy();
       super.onDestroy();
    }
    
-   public boolean isFormVisible()
-   {
-      return isVisible();
-   }
-
    public List<Token> getSelectedTokens()
    {
       return treeGrid.getSelectedTokens();

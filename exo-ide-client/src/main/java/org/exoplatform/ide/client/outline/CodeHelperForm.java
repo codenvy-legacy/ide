@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.MinMaxControlButton;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredHandler;
@@ -31,7 +30,6 @@ import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.panel.Panel;
-import org.exoplatform.ide.client.versioning.VersionContentForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -41,7 +39,8 @@ import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
 
 /**
- * Created by The eXo Platform SAS.
+ * Form for panel, that displayed in right side of IDE.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
@@ -71,9 +70,6 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
 
       tabSet = new Panel(eventBus, TAB_SET_ID);
       createButtons();
-      OutlineForm outlineForm = new OutlineForm(eventBus);
-      Image tabIcon = new Image(IDEImageBundle.INSTANCE.outline());
-      tabSet.openView(outlineForm, "Outline", tabIcon, true);
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
 
@@ -105,11 +101,17 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
       {
          if (tabSet.getTabs().length <= 1)
             hide();
+         //TODO: remove close click handler for outline tab from 
+         //code of CodeHelperForm
+         
+         //need to call ShowOutlineEvent, to tell DevelopmentModuleEventHandler
+         //that outline panel was closed by user, and need to store in cookies
+         //that outline panel is closed.
          if (event.getTab().getPane().getTitle().equals(OutlineForm.ID))
          {
+            //cancel closing of tab, because it will be closed in DevelopmentModuleEventHandler
             event.cancel();
             eventBus.fireEvent(new ShowOutlineEvent(false));
-            ViewHighlightManager.getInstance().viewClosed((View)event.getTab().getPane());
          }
       }
    };
@@ -117,7 +119,10 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    @Override
    public void show()
    {
-      ViewHighlightManager.getInstance().selectView((View)tabSet.getSelectedTab().getPane());
+      if (tabSet.getSelectedTab() != null)
+      {
+         ViewHighlightManager.getInstance().selectView((View)tabSet.getSelectedTab().getPane());
+      }
       super.show();
       eventBus.fireEvent(new FormOpenedEvent(ID));
    }
@@ -125,7 +130,10 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    @Override
    public void hide()
    {
-      ViewHighlightManager.getInstance().viewClosed((View)tabSet.getSelectedTab().getPane());
+      if (tabSet.getSelectedTab() != null)
+      {
+         ViewHighlightManager.getInstance().viewClosed((View)tabSet.getSelectedTab().getPane());
+      }
       super.hide();
       eventBus.fireEvent(new FormClosedEvent(ID));
    }
@@ -133,11 +141,14 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    /**
     * @see org.exoplatform.ide.client.outline.CodeHelperPresenter.Display#addView(org.exoplatform.ide.client.panel.SimpleTabPanel)
     */
-   public void addView(View view)
+   public void addView(View view, Image tabIcon, String title)
    {
-      Image tabIcon = new Image(IDEImageBundle.INSTANCE.viewVersions());
-      tabSet.openView(view, "Version", tabIcon, true);
-      tabSet.selectTabPanel(VersionContentForm.ID);
+      if (tabSet.isViewIsOpened(view.getViewId()))
+      {
+         return;
+      }
+      tabSet.openView(view, title, tabIcon, true);
+      tabSet.selectTabPanel(view.getViewId());
    }
 
    /**
@@ -145,7 +156,22 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
     */
    public void closePanel(String panelId)
    {
+      if (tabSet.isViewIsOpened(panelId))
+      {
       tabSet.closeView(panelId);
+      }
+      if (tabSet.getNumTabs() == 0)
+      {
+         hide();
+      }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.outline.CodeHelperPresenter.Display#isShown()
+    */
+   public boolean isShown()
+   {
+      return isVisible();
+   }
+   
 }

@@ -20,13 +20,15 @@
 
 package org.exoplatform.ide.client.panel.event;
 
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.ide.client.framework.ui.View;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Generated to open view (as tab) in Code Helper Panel.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -38,15 +40,46 @@ public class OpenPanelEvent extends GwtEvent<OpenPanelHandler>
    public static final GwtEvent.Type<OpenPanelHandler> TYPE = new GwtEvent.Type<OpenPanelHandler>();
 
    private View view;
+   
+   private Image tabIcon;
+   
+   private String title;
 
-   public OpenPanelEvent(View view)
+   public OpenPanelEvent(View view, Image tabIcon, String title)
    {
       this.view = view;
+      this.tabIcon = tabIcon;
+      this.title = title;
    }
 
+   /**
+    * View to open.
+    * 
+    * @return the view
+    */
    public View getView()
    {
       return view;
+   }
+   
+   /**
+    * Image for icon of tab.
+    * 
+    * @return the tabIcon
+    */
+   public Image getTabIcon()
+   {
+      return tabIcon;
+   }
+   
+   /**
+    * Get the title of tab.
+    * 
+    * @return the title
+    */
+   public String getTitle()
+   {
+      return title;
    }
 
    @Override

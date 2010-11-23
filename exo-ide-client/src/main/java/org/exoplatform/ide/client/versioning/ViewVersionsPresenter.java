@@ -35,6 +35,8 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersion
 import java.util.List;
 
 /**
+ * Presenter for view of versions list.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2010 $
  *

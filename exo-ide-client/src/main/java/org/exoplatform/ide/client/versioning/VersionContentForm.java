@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
-import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -40,7 +39,7 @@ import com.google.gwt.user.client.Timer;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Form with version content, that displayed in Version Tab.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

@@ -18,25 +18,21 @@
  */
 package org.exoplatform.ide.client.module.development.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.form.FormClosedEvent;
-import org.exoplatform.ide.client.framework.form.FormClosedHandler;
-import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.outline.CodeHelperForm;
+import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
+import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
+import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
+import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ApplicationSettingsSavedHandler, FormOpenedHandler, FormClosedHandler, ApplicationSettingsReceivedHandler
+   PanelClosedHandler, PanelOpenedHandler
 {
 
    public static final String ID = "View/Show \\ Hide Outline";
@@ -55,10 +51,6 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    public static final String PROMPT_SHOW = "Show Outline";
 
    public static final String PROMPT_HIDE = "Hide Outline";
-
-   private static final String COOKIE_OUTLINE = "outline";
-
-   private boolean showOutLine = false;
 
    private boolean outLineFormOpened = false;
 
@@ -79,9 +71,8 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-      eventBus.addHandler(FormOpenedEvent.TYPE, this);
-      eventBus.addHandler(FormClosedEvent.TYPE, this);      
+      eventBus.addHandler(PanelClosedEvent.TYPE, this);
+      eventBus.addHandler(PanelOpenedEvent.TYPE, this);
    }
    
    /**
@@ -119,39 +110,27 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
-   public void onFormOpened(FormOpenedEvent event)
+   public void onPanelOpened(PanelOpenedEvent event)
    {
-      if (CodeHelperForm.ID.equals(event.getFormId()))
+      if (OutlineForm.ID.equals(event.getPanelId()))
       {
+         setSelected(true);
          outLineFormOpened = true;
          update();
       }
    }
 
-   public void onFormClosed(FormClosedEvent event)
+   /**
+    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    */
+   public void onPanelClosed(PanelClosedEvent event)
    {
-      if (CodeHelperForm.ID.equals(event.getFormId()))
+      if (OutlineForm.ID.equals(event.getPanelId()))
       {
+         setSelected(false);
          outLineFormOpened = false;
          update();
       }
    }
 
-   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsBoolean(COOKIE_OUTLINE) != null)
-      {
-         showOutLine = event.getApplicationSettings().getValueAsBoolean(COOKIE_OUTLINE);
-      }
-      else
-      {
-         showOutLine = true;
-      }
-
-      update();
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-   }
 }

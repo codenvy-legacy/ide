@@ -37,6 +37,8 @@ import org.exoplatform.ide.client.framework.vfs.Version;
 import java.util.List;
 
 /**
+ * Dialog window with list of versions.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2010 $
  *
