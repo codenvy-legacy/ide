@@ -70,10 +70,10 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       this.sessionProvider = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
-      System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from java.lang <<<<<<<<<<<<<<<<<<<<<<<<<,");
+      System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from java.util <<<<<<<<<<<<<<<<<<<<<<<<<,");
       try
       {
-         addClassesFromJavaLangSource();
+         addClassesFromJavaUtilSource();
       }
       catch (SaveClassInfoException e)
       {
@@ -173,9 +173,9 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    
    //TODO:for prototype client side
    @POST
-   @Path("/java-lang")
+   @Path("/java-util")
    @RolesAllowed("administrators")
-   public void addClassesFromJavaLangSource() throws SaveClassInfoException
+   public void addClassesFromJavaUtilSource() throws SaveClassInfoException
    {
       try
       {
@@ -186,7 +186,7 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          String javaHome = System.getProperty("java.home");
          String fileSeparator = System.getProperty("file.separator");
          javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
-         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, "java.lang");
+         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, "java.util");
          for (String fqn : fqns)
          {
             putClass(classLoader, session, fqn);

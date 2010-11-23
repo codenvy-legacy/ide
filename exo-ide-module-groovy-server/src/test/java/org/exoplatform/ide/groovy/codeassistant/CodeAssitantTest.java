@@ -72,7 +72,8 @@ public class CodeAssitantTest extends Base
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertEquals(cres.getEntityType(), TypeInfo.class);
       TypeInfo cd = (TypeInfo)cres.getEntity();
-      JsonGeneratorImpl generatorImpl =  new JsonGeneratorImpl();
+      JsonGeneratorImpl jsonGen =  new JsonGeneratorImpl();
+      System.out.println(jsonGen.createJsonObject(cd).toString());
       assertEquals(methods,cd.getMethods().length);
       assertEquals(decMethods, cd.getDeclaredMethods().length);
    }
