@@ -69,9 +69,13 @@ public class Locators
    public static final String STATUS_BAR_LOCATOR = "//td[@class='exo-statusText-table-middle']/nobr";
    
    /**
-    * Locator-suffix for close icon of different tabs.
+    * Locator-suffix for close icon of different tabs.<p/>
     * 
-    * Add this locator to you tab locator to get locator for close icon.
+    * Add this locator to you tab locator to get locator for close icon.<p/>
+    * 
+    * E.g. to close Outline panel use this command:
+    * <p/>
+    * <code>selenium.click(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR + Locators.CLOSE_ICON);</code>
     */
    public static final String CLOSE_ICON = "/icon";
    
@@ -96,6 +100,37 @@ public class Locators
       public static final String GOTO_LINE_FORM_TEXT_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element";
       
       public static final String GOTO_LINE_FORM_GO_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/";
+   }
+   
+   /**
+    * Locators for elements from code helper panel.
+    */
+   public interface CodeHelperPanel
+   {
+      /**
+       * SmartGWT locator for code helper tabset.
+       */
+      public static final String SC_CODE_HELPER_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]";
+      
+      /**
+       * SmartGWT locator for outline tab.
+       */
+      public static final String SC_OUTLINE_TAB_LOCATOR = SC_CODE_HELPER_TABSET_LOCATOR + "/tab[ID=ideOutlineForm]";
+      
+      /**
+       * SmartGWT locator for versions tab.
+       */
+      public static final String SC_VERSION_TAB_LOCATOR = SC_CODE_HELPER_TABSET_LOCATOR + "/tab[ID=ideVersionContentPanel]";
+      
+      /**
+       * Non smartGWT locator for outline tab.
+       */
+      public static final String XPATH_OUTLINE_TAB_LOCATOR = "//div[@eventproxy='ideOutlineForm']";
+      
+      /**
+       * Non smartGWT locator for versions tab.
+       */
+      public static final String XPATH_VERSION_TAB_LOCATOR = "//div[@eventproxy='ideVersionContentPanel']";
    }
    
    /**

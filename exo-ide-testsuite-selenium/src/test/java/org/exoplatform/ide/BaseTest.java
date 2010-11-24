@@ -346,6 +346,8 @@ public abstract class BaseTest
    /**
     * Type text to file, opened in tab.
     * 
+    * Index of tabs begins from 0.
+    * 
     * Sometimes, if you can't type text to editor,
     * try before to click on editor:
     * 
@@ -1483,7 +1485,7 @@ public abstract class BaseTest
       }
    }
 
-   @AfterClass
+//   @AfterClass
    public static void killFireFox()
    {
       try
