@@ -41,10 +41,12 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.module.groovy.codeassistant.AssistImportDeclarationManager;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
+import org.exoplatform.ide.client.module.groovy.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.client.module.groovy.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.client.module.groovy.controls.SetAutoloadCommand;
 import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovyCommand;
+import org.exoplatform.ide.client.module.groovy.controls.UndeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.ValidateGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputHandler;
@@ -111,6 +113,8 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), true, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), true, true));
 
