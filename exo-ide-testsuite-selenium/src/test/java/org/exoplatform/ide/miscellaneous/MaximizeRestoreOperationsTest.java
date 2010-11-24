@@ -48,10 +48,12 @@ import java.io.IOException;
  */
 public class MaximizeRestoreOperationsTest extends BaseTest
 {
-   private final static String FILE_NAME =MaximizeRestoreOperationsTest.class.getSimpleName();
+   private final static String FILE_NAME = "file-" + MaximizeRestoreOperationsTest.class.getSimpleName();
+   
+   private final static String FOLDER_NAME = MaximizeRestoreOperationsTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
-            + WS_NAME + "/" + FILE_NAME;
+            + WS_NAME + "/" + FOLDER_NAME + "/";
    
    private Number operationPanelNormalWidth;
    private Number operationPanelNormalHeight;
@@ -72,7 +74,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/SampleHtmlFile.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
+         VirtualFileSystemUtils.mkcol(URL);
+         
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -107,11 +111,10 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
-           
       Thread.sleep(TestConstants.SLEEP);
       
       //---- 1 -----------------
@@ -259,6 +262,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkContentPanelVisibility(true);
       checkOperationsPanelRestored();
       checkOperationsPanelVisibility(true);
+      
+      //close outline
+      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
 
       //---- 13 -----------------
       //select Workspace tab
@@ -316,12 +322,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //---- 16 -----------------
       //Close and remove created file.
       closeUnsavedFileAndDoNotSave(1);
-      Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      deleteSelectedItems();
       
       Thread.sleep(TestConstants.SLEEP);
    }
