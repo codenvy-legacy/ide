@@ -422,13 +422,13 @@
                 </value>                                                        
                 <value>
                   <object type="org.exoplatform.services.organization.OrganizationConfig$User">
-                    <field  name="userName"><string>demo</string></field>
+                    <field  name="userName"><string>admin</string></field>
                     <field  name="password"><string>gtn</string></field>
-                    <field  name="firstName"><string>Demo</string></field>
-                    <field  name="lastName"><string>gtn</string></field>
-                    <field  name="email"><string>demo@localhost</string></field>
+                    <field  name="firstName"><string>Admin</string></field>
+                    <field  name="lastName"><string>Admin</string></field>
+                    <field  name="email"><string>admin@localhost</string></field>
                     <field  name="groups">
-                      <string>member:/ide/users</string>
+                      <string>member:/ide/administrators,member:/ide/users</string>
                     </field>
                   </object>
                 </value>                       
