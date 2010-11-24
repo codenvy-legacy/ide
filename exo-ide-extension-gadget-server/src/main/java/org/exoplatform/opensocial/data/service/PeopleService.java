@@ -24,6 +24,8 @@ import org.exoplatform.opensocial.data.model.Person;
 import java.util.List;
 
 /**
+ * Service is used for operations with OpenSocial Person data (retrieving, saving, deleting).
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *

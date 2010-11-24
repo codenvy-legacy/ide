@@ -23,6 +23,8 @@ import org.exoplatform.opensocial.data.model.Group;
 import java.util.List;
 
 /**
+ * Service, used to manipulate with OpenSocial Groups data.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *

@@ -23,6 +23,9 @@ import org.exoplatform.opensocial.data.model.MediaItem;
 import java.util.List;
 
 /**
+ * Service is used for manipulations with media data
+ * (images, movies, and audio). 
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *

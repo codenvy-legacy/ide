@@ -23,6 +23,9 @@ import org.exoplatform.opensocial.data.model.Activity;
 import java.util.List;
 
 /**
+ * Service to manipulate with OpenSocial Activity data,
+ * which represents a short summary or notification of a timestamped event.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *

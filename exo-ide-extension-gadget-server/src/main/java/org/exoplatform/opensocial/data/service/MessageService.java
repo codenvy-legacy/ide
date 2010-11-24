@@ -23,6 +23,8 @@ import org.exoplatform.opensocial.data.model.Message;
 import java.util.List;
 
 /**
+ * Service is used for manipulations with OpenSocial Message data.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 22, 2010 $
  *

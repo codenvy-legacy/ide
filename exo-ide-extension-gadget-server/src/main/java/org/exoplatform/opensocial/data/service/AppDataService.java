@@ -24,6 +24,9 @@ import org.exoplatform.opensocial.data.model.EscapeType;
 import java.util.List;
 
 /**
+ * Service to manipulate with applications data,
+ * used for reading and writing user-specific data
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *

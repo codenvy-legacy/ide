@@ -23,6 +23,8 @@ import org.exoplatform.opensocial.data.model.Album;
 import java.util.List;
 
 /**
+ * Service to manipulate with OpenSocial Albums data (collections of media items).
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
  *
