@@ -53,9 +53,9 @@ public class HighlightCurrentLineTest extends BaseTest
       
    private static final int LINE_HEIGHT = 16;
    
-   private static final int EDITOR_TOP_OFFSET_POSITION = 88;
+   private static final int EDITOR_TOP_OFFSET_POSITION = 84;
    
-   private static final int EDITOR_LEFT_OFFSET_POSITION = 13;
+   private static final int EDITOR_LEFT_OFFSET_POSITION = 12;
 
    private Number linePositionLeft;
     
@@ -95,7 +95,24 @@ public class HighlightCurrentLineTest extends BaseTest
       linePositionLeft = contentPanelPositionLeft + EDITOR_LEFT_OFFSET_POSITION;
            
       // test that new HTML file is opened in editor, first line is highlighted
-      lineHighlighterTest(1, 0);
+//      lineHighlighterTest(1, 0);
+      
+      Number linePositionTop = EDITOR_TOP_OFFSET_POSITION + (1 - 1) * LINE_HEIGHT;
+      
+      // taking in mind vertical scrolling
+      Integer scrollTop = getEditorScrollTop();
+      if (scrollTop != null) 
+      {
+         linePositionTop = linePositionTop.intValue() - scrollTop;
+      }
+      
+      selenium.isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
+
+      assertEquals(selenium.getElementPositionLeft(getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+         linePositionLeft);
+      assertEquals(selenium.getElementPositionTop(getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+         linePositionTop);
+      
       
       // Press down arrow key on keyboard.
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -170,6 +187,7 @@ public class HighlightCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // goto end of first line 
+      clickOnEditor();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       Thread.sleep(TestConstants.SLEEP_SHORT);      
