@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
@@ -50,6 +51,9 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
  //**************
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
    
+   /**
+    * Create REST service for test in test folder.
+    */
    @BeforeClass
    public static void setUp()
    {
@@ -81,6 +85,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
+      //Open REST Service file:
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -101,14 +106,15 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       //Expected 3
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
       Thread.sleep(TestConstants.SLEEP);
-
+      
+      //Check received message:
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
 
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       launchRestService();
-
+      //Choose path:
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
       Thread.sleep(TestConstants.SLEEP);
@@ -134,7 +140,8 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/[icon='picker']");
       Thread.sleep(TestConstants.SLEEP);
-
+      
+      //Choose "application/json" type:
       selenium.click("//nobr[contains(text(), 'application/json')]");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -159,10 +166,10 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
 
+      //Check received message:
       mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
 
       assertTrue(mess.contains("Body: value4"));
-      
       
       launchRestService();
 
@@ -213,15 +220,20 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
 
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
+      //Check received message:
       mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
 
       assertTrue(mess.contains("{\"value\" : \"value4\"}"));
       
-      
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
+   /**
+    * Clear test results.
+    */
    @AfterClass
    public static void tearDown()
    {
