@@ -31,9 +31,9 @@ public class MethodInfo extends RoutineInfo
    }
 
    public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes,
-      String[] genericParameterTypes, String generic, String declaringClass, String genericReturnType)
+      String string, String generic, String declaringClass, String genericReturnType)
    {
-      super(modifiers, name, genericExceptionTypes, genericParameterTypes, generic, declaringClass);
+      super(modifiers, name, genericExceptionTypes, string, generic, declaringClass);
       this.genericReturnType = genericReturnType;
    }
 

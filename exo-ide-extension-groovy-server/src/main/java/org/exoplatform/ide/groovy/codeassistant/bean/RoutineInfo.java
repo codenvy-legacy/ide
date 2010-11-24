@@ -27,7 +27,7 @@ public class RoutineInfo extends Member
 {
    private String[] genericExceptionTypes;
 
-   private String[] genericParameterTypes;
+   private String genericParameterTypes;
 
    private String generic;
 
@@ -37,23 +37,23 @@ public class RoutineInfo extends Member
    {
    }
 
-   public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String[] genericParameterTypes,
+   public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String string,
       String generic, String declaringClass)
    {
       super(modifiers, name);
       this.genericExceptionTypes = genericExceptionTypes;
-      this.genericParameterTypes = genericParameterTypes;
+      this.genericParameterTypes = string;
       this.generic = generic;
       this.declaringClass = declaringClass;
    }
 
 
-   public String[] getGenericParameterTypes()
+   public String getGenericParameterTypes()
    {
       return genericParameterTypes;
    }
 
-   public void setGenericParameterTypes(String[] genericParameterTypes)
+   public void setGenericParameterTypes(String genericParameterTypes)
    {
       this.genericParameterTypes = genericParameterTypes;
    }

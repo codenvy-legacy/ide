@@ -22,6 +22,7 @@ import org.exoplatform.ide.groovy.codeassistant.bean.RoutineInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  * 
@@ -53,7 +54,7 @@ public class RoutineInfoExtractor
          genericParameterTypes[j] = genericType2String(types[j]);
       }
       return new RoutineInfo(constructor.getModifiers(), constructor.getName(), genExceptionTypes,
-            genericParameterTypes, constructor.toGenericString(), constructor.getDeclaringClass()
+         array2string(genericParameterTypes), constructor.toGenericString(), constructor.getDeclaringClass()
                .getCanonicalName());
    }
    
@@ -73,7 +74,7 @@ public class RoutineInfoExtractor
          genericParameterTypes[j] = genericType2String(types[j]);
       }
       
-      return  new MethodInfo(method.getModifiers(), method.getName(), genericExceptionTypes, genericParameterTypes,
+      return  new MethodInfo(method.getModifiers(), method.getName(), genericExceptionTypes, array2string(genericParameterTypes),
             method.toGenericString(), method.getDeclaringClass().getCanonicalName(), genericType2String(method.getGenericReturnType()));
    }
    
@@ -111,5 +112,23 @@ public class RoutineInfoExtractor
       }
       return type.getName();
    }
+   
+   
+   public static String array2string(String[] a) {
+      if (a == null)
+          return "null";
+ int iMax = a.length - 1;
+      if (iMax == -1)
+          return "()";
+
+      StringBuilder b = new StringBuilder();
+ b.append('(');
+      for (int i = 0; ; i++) {
+          b.append(String.valueOf(a[i]));
+          if (i == iMax)
+    return b.append(')').toString();
+     b.append(", ");
+      }
+  }
 
 }
