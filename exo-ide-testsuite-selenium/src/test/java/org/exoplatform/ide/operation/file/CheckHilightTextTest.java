@@ -141,7 +141,7 @@ public class CheckHilightTextTest extends BaseTest
 
    //check_hilight_code
 
-   @Test
+  // @Test
    public void checkXML() throws InterruptedException, Exception
    {
       openXML();
@@ -153,7 +153,7 @@ public class CheckHilightTextTest extends BaseTest
       checkSaveDialog();
    }
 
-   @Test
+   //@Test
    public void chekTXT() throws InterruptedException, Exception
    {
       openTXT();
@@ -165,7 +165,7 @@ public class CheckHilightTextTest extends BaseTest
       checkSaveDialog();
    }
 
-   @Test
+   //@Test
    public void checkJavaScript() throws InterruptedException, Exception
    {
       openJavaScript();
@@ -188,7 +188,7 @@ public class CheckHilightTextTest extends BaseTest
       checkSaveDialog();
    }
 
-   @Test
+   //@Test
    public void checkGroovy() throws InterruptedException, Exception
    {
       openGroovy();
@@ -200,7 +200,7 @@ public class CheckHilightTextTest extends BaseTest
       checkSaveDialog();
    }
 
-   @Test
+   //@Test
    public void checkHilightCSS() throws InterruptedException, Exception
    {
       openCss();
@@ -359,49 +359,49 @@ public class CheckHilightTextTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[26][@class='js-string' and text()='\"redo\"']"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[27][@class='js-punctuation' and text()=\"}\"]"));
+         .isElementPresent("//body[@class='editbox']/span[28][@class='js-punctuation' and text()=\"}\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[28][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[29][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[29][@class='js-keyword' and text()=\"var \"]"));
+         .isElementPresent("//body[@class='editbox']/span[31][@class='js-keyword' and text()=\"var \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[30][@class='js-variable' and text()=\"regex \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[31][@class='js-operator' and text()=\"=\"]"));
+         .isElementPresent("//body[@class='editbox']/span[32][@class='js-variable' and text()=\"regex \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[33][@class='js-operator' and text()=\"=\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[32][@class='js-string' and text()=\"/foo|bar/i\"]"));
+         .isElementPresent("//body[@class='editbox']/span[34][@class='js-string' and text()=\"/foo|bar/i\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[33][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[35][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[34][@class='js-keyword' and text()=\"function \"]"));
+         .isElementPresent("//body[@class='editbox']/span[37][@class='js-keyword' and text()=\"function \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[35][@class='js-variable' and text()=\"example \"]"));
+         .isElementPresent("//body[@class='editbox']/span[38][@class='js-variable' and text()=\"example \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[36][@class='js-punctuation' and text()=\"(\"]"));
+         .isElementPresent("//body[@class='editbox']/span[39][@class='js-punctuation' and text()=\"(\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[37][@class='js-variabledef' and text()=\"x\"]"));
+         .isElementPresent("//body[@class='editbox']/span[40][@class='js-variabledef' and text()=\"x\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[38][@class='js-punctuation' and text()=\")\"]"));
+         .isElementPresent("//body[@class='editbox']/span[41][@class='js-punctuation' and text()=\")\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[39][@class='js-punctuation' and text()=\"{\"]"));
+         .isElementPresent("//body[@class='editbox']/span[42][@class='js-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[41][@class='js-keyword' and text()=\"var \"]"));
+         .isElementPresent("//body[@class='editbox']/span[44][@class='js-keyword' and text()=\"var \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[42][@class='js-variabledef' and text()=\"y\"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[43][@class='js-operator' and text()=\"=\"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[44][@class='js-atom' and text()=\"44.4\"]"));
+         .isElementPresent("//body[@class='editbox']/span[45][@class='js-variabledef' and text()=\"y\"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[46][@class='js-operator' and text()=\"=\"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[47][@class='js-atom' and text()=\"44.4\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[45][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[48][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[47][@class='js-keyword' and text()=\"return \"]"));
+         .isElementPresent("//body[@class='editbox']/span[50][@class='js-keyword' and text()=\"return \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[48][@class='js-localvariable' and text()=\"x\"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[49][@class='js-operator' and text()=\"+\"]"));
+         .isElementPresent("//body[@class='editbox']/span[51][@class='js-localvariable' and text()=\"x\"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[52][@class='js-operator' and text()=\"+\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[50][@class='js-localvariable' and text()=\"y\"]"));
+         .isElementPresent("//body[@class='editbox']/span[53][@class='js-localvariable' and text()=\"y\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[51][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[54][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[52][@class='js-punctuation' and text()=\"}\"]"));
+         .isElementPresent("//body[@class='editbox']/span[56][@class='js-punctuation' and text()=\"}\"]"));
    }
 
    public void checkHilightHTML()
@@ -414,140 +414,140 @@ public class CheckHilightTextTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[3][@class='xml-punctuation' and text()=\">\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[5][@class='xml-punctuation' and text()=\"<\"]"));
+         .isElementPresent("//body[@class='editbox']/span[4][@class='xml-punctuation' and text()=\"<\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[6][@class='xml-tagname' and text()=\"head\"]"));
+         .isElementPresent("//body[@class='editbox']/span[5][@class='xml-tagname' and text()=\"head\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[7][@class='xml-punctuation' and text()=\">\"]"));
+         .isElementPresent("//body[@class='editbox']/span[6][@class='xml-punctuation' and text()=\">\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[9][@class='xml-punctuation' and text()=\"<\"]"));
+         .isElementPresent("//body[@class='editbox']/span[8][@class='xml-punctuation' and text()=\"<\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[10][@class='xml-tagname' and text()=\"title\"]"));
+         .isElementPresent("//body[@class='editbox']/span[9][@class='xml-tagname' and text()=\"title\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[11][@class='xml-punctuation' and text()=\">\"]"));
+         .isElementPresent("//body[@class='editbox']/span[10][@class='xml-punctuation' and text()=\">\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[12][@class='xml-text' and text()=\"HTML Example\"]"));
+         .isElementPresent("//body[@class='editbox']/span[11][@class='xml-text' and text()=\"HTML Example\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[13][@class='xml-punctuation' and text()=\"</\"]"));
+         .isElementPresent("//body[@class='editbox']/span[12][@class='xml-punctuation' and text()=\"</\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[14][@class='xml-tagname' and text()=\"title\"]"));
+         .isElementPresent("//body[@class='editbox']/span[13][@class='xml-tagname' and text()=\"title\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[15][@class='xml-punctuation' and text()=\">\"]"));
+         .isElementPresent("//body[@class='editbox']/span[14][@class='xml-punctuation' and text()=\">\"]"));
       // ---------------------------------------
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[17][@class='xml-punctuation' and text()=\"<\"]"));
+         .isElementPresent("//body[@class='editbox']/span[16][@class='xml-punctuation' and text()=\"<\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[18][@class='xml-tagname' and text()=\"script \"]"));
+         .isElementPresent("//body[@class='editbox']/span[17][@class='xml-tagname' and text()=\"script \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[19][@class='xml-attname' and text()=\"type\"]"));
+         .isElementPresent("//body[@class='editbox']/span[18][@class='xml-attname' and text()=\"type\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[20][@class='xml-punctuation' and text()=\"=\"]"));
+         .isElementPresent("//body[@class='editbox']/span[19][@class='xml-punctuation' and text()=\"=\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[21][@class='xml-attribute' and text()=\"'text/javascript'\"]"));
+         .isElementPresent("//body[@class='editbox']/span[20][@class='xml-attribute' and text()=\"'text/javascript'\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[24][@class='js-keyword' and text()=\"function \"]"));
+         .isElementPresent("//body[@class='editbox']/span[23][@class='js-keyword' and text()=\"function \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[25][@class='js-variable' and text()=\"foo\"]"));
+         .isElementPresent("//body[@class='editbox']/span[24][@class='js-variable' and text()=\"foo\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[26][@class='js-punctuation' and text()=\"(\"]"));
+         .isElementPresent("//body[@class='editbox']/span[25][@class='js-punctuation' and text()=\"(\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[27][@class='js-variabledef' and text()=\"bar\"]"));
+         .isElementPresent("//body[@class='editbox']/span[26][@class='js-variabledef' and text()=\"bar\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[28][@class='js-punctuation' and text()=\", \"]"));
+         .isElementPresent("//body[@class='editbox']/span[27][@class='js-punctuation' and text()=\", \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[29][@class='js-variabledef' and text()=\"baz\"]"));
+         .isElementPresent("//body[@class='editbox']/span[28][@class='js-variabledef' and text()=\"baz\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[30][@class='js-punctuation' and text()=\") \"]"));
+         .isElementPresent("//body[@class='editbox']/span[29][@class='js-punctuation' and text()=\") \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[31][@class='js-punctuation' and text()=\"{\"]"));
+         .isElementPresent("//body[@class='editbox']/span[30][@class='js-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[33][@class='js-variable' and text()=\"alert\"]"));
+         .isElementPresent("//body[@class='editbox']/span[32][@class='js-variable' and text()=\"alert\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[34][@class='js-punctuation' and text()=\"(\"]"));
+         .isElementPresent("//body[@class='editbox']/span[33][@class='js-punctuation' and text()=\"(\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[35][@class='js-string' and text()=\"'quux'\"]"));
+         .isElementPresent("//body[@class='editbox']/span[34][@class='js-string' and text()=\"'quux'\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[36][@class='js-punctuation' and text()=\")\"]"));
+         .isElementPresent("//body[@class='editbox']/span[35][@class='js-punctuation' and text()=\")\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[37][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[36][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[39][@class='js-keyword' and text()=\"return \"]"));
+         .isElementPresent("//body[@class='editbox']/span[38][@class='js-keyword' and text()=\"return \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[40][@class='js-localvariable' and text()=\"bar \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[41][@class='js-operator' and text()=\"+ \"]"));
+         .isElementPresent("//body[@class='editbox']/span[39][@class='js-localvariable' and text()=\"bar \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[40][@class='js-operator' and text()=\"+ \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[42][@class='js-localvariable' and text()=\"baz \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[43][@class='js-operator' and text()=\"+ \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[44][@class='js-atom' and text()=\"1\"]"));
+         .isElementPresent("//body[@class='editbox']/span[41][@class='js-localvariable' and text()=\"baz \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[42][@class='js-operator' and text()=\"+ \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[43][@class='js-atom' and text()=\"1\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[45][@class='js-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[44][@class='js-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[47][@class='js-punctuation' and text()=\"}\"]"));
+         .isElementPresent("//body[@class='editbox']/span[46][@class='js-punctuation' and text()=\"}\"]"));
       // --------------------------------------------
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[49][@class='xml-punctuation' and text()=\"</\"]"));
+         .isElementPresent("//body[@class='editbox']/span[48][@class='xml-punctuation' and text()=\"</\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[50][@class='xml-tagname' and text()=\"script\"]"));
+         .isElementPresent("//body[@class='editbox']/span[49][@class='xml-tagname' and text()=\"script\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[51][@class='xml-punctuation' and text()=\">\"]"));
+         .isElementPresent("//body[@class='editbox']/span[50][@class='xml-punctuation' and text()=\">\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[53][@class='xml-punctuation' and text()=\"<\"]"));
+         .isElementPresent("//body[@class='editbox']/span[52][@class='xml-punctuation' and text()=\"<\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[54][@class='xml-tagname' and text()=\"style \"]"));
+         .isElementPresent("//body[@class='editbox']/span[53][@class='xml-tagname' and text()=\"style \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[55][@class='xml-attname' and text()=\"type\"]"));
+         .isElementPresent("//body[@class='editbox']/span[54][@class='xml-attname' and text()=\"type\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[56][@class='xml-punctuation' and text()=\"=\"]"));
+         .isElementPresent("//body[@class='editbox']/span[55][@class='xml-punctuation' and text()=\"=\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[57][@class='xml-attribute' and text()=\"'text/css'\"]"));
+         .isElementPresent("//body[@class='editbox']/span[56][@class='xml-attribute' and text()=\"'text/css'\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[60][@class='css-selector' and text()=\"div\"]"));
+         .isElementPresent("//body[@class='editbox']/span[59][@class='css-selector' and text()=\"div\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[61][@class='css-select-op' and text()=\".\"]"));
+         .isElementPresent("//body[@class='editbox']/span[60][@class='css-select-op' and text()=\".\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[62][@class='css-selector' and text()=\"border \"]"));
+         .isElementPresent("//body[@class='editbox']/span[61][@class='css-selector' and text()=\"border \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[63][@class='css-punctuation' and text()=\"{\"]"));
+         .isElementPresent("//body[@class='editbox']/span[62][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[65][@class='css-identifier' and text()=\"border\"]"));
+         .isElementPresent("//body[@class='editbox']/span[64][@class='css-identifier' and text()=\"border\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[66][@class='css-punctuation' and text()=\": \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[67][@class='css-unit' and text()=\"1px \"]"));
+         .isElementPresent("//body[@class='editbox']/span[65][@class='css-punctuation' and text()=\": \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[66][@class='css-unit' and text()=\"1px \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[68][@class='css-value' and text()=\"solid \"]"));
+         .isElementPresent("//body[@class='editbox']/span[67][@class='css-value' and text()=\"solid \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[69][@class='css-value' and text()=\"black\"]"));
+         .isElementPresent("//body[@class='editbox']/span[68][@class='css-value' and text()=\"black\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[70][@class='css-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[69][@class='css-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[72][@class='css-identifier' and text()=\"padding\"]"));
+         .isElementPresent("//body[@class='editbox']/span[71][@class='css-identifier' and text()=\"padding\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[73][@class='css-punctuation' and text()=\": \"]"));
-      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[74][@class='css-unit' and text()=\"3px\"]"));
+         .isElementPresent("//body[@class='editbox']/span[72][@class='css-punctuation' and text()=\": \"]"));
+      assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[73][@class='css-unit' and text()=\"3px\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[75][@class='css-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[74][@class='css-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[77][@class='css-punctuation' and text()=\"}\"]"));
+         .isElementPresent("//body[@class='editbox']/span[76][@class='css-punctuation' and text()=\"}\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[79][@class='css-selector' and text()=\"#foo \"]"));
+         .isElementPresent("//body[@class='editbox']/span[78][@class='css-selector' and text()=\"#foo \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[80][@class='css-selector' and text()=\"code \"]"));
+         .isElementPresent("//body[@class='editbox']/span[79][@class='css-selector' and text()=\"code \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[81][@class='css-punctuation' and text()=\"{\"]"));
+         .isElementPresent("//body[@class='editbox']/span[80][@class='css-punctuation' and text()=\"{\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[83][@class='css-identifier' and text()=\"font-family\"]"));
+         .isElementPresent("//body[@class='editbox']/span[81][@class='css-identifier' and text()=\"font-family\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[84][@class='css-punctuation' and text()=\": \"]"));
+         .isElementPresent("//body[@class='editbox']/span[82][@class='css-punctuation' and text()=\": \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[85][@class='css-value' and text()=\"courier\"]"));
+         .isElementPresent("//body[@class='editbox']/span[83][@class='css-value' and text()=\"courier\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[86][@class='css-select-op' and text()=\", \"]"));
+         .isElementPresent("//body[@class='editbox']/span[84][@class='css-select-op' and text()=\", \"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[87][@class='css-value' and text()=\"monospace\"]"));
+         .isElementPresent("//body[@class='editbox']/span[85][@class='css-value' and text()=\"monospace\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[88][@class='css-punctuation' and text()=\";\"]"));
+         .isElementPresent("//body[@class='editbox']/span[86][@class='css-punctuation' and text()=\";\"]"));
       assertTrue(selenium
-         .isElementPresent("//body[@class='editbox']/span[90][@class='css-identifier' and text()=\"font-size\"]"));
+         .isElementPresent("//body[@class='editbox']/span[87][@class='css-identifier' and text()=\"font-size\"]"));
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[91][@class='css-punctuation' and text()=\": \"]"));
       assertTrue(selenium.isElementPresent("//body[@class='editbox']/span[92][@class='css-unit' and text()=\"80%\"]"));
