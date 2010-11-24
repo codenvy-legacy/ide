@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.roles;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -40,10 +40,6 @@ import java.io.IOException;
  */
 public class RolesWithGadgetTest extends BaseTest
 {
-   private final String DEVELOPER = "john";
-
-   private final String USER = "demo";
-
    private final static String FILE1 = "Gadget";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
@@ -51,7 +47,9 @@ public class RolesWithGadgetTest extends BaseTest
 
    private final static String TEST_FOLDER = RolesWithGadgetTest.class.getSimpleName();
    
-   
+   /**
+    * Create test folder.
+    */
    @BeforeClass
    public static void setUp()
    {
@@ -69,13 +67,16 @@ public class RolesWithGadgetTest extends BaseTest
       }
    }
    
+   /**
+    * Clear test results.
+    */
    @AfterClass
    public static void tearDown() throws Exception
    {
       try
       {
-         closeTab("0");
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+    	  CloseFileUtils.closeTab(0);
+    	  VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
       {
@@ -105,12 +106,12 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
 
-      closeTab("0");
-
+      CloseFileUtils.closeTab(0);
+      
       //Logout and login as developer
       logout();
 
-      standaloneLogin(DEVELOPER);
+      standaloneLogin(TestConstants.Users.JOHN);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
@@ -120,18 +121,18 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
-    * Tests allowed commands for work with gadget if user has "users" role.
+    * Tests allowed commands for work with gadget if user has "administrators" role.
     * 
     * @throws Exception
     */
    @Test
-   public void testUserRoleWithGadget() throws Exception
+   public void testAdminRoleWithGadget() throws Exception
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
@@ -139,22 +140,27 @@ public class RolesWithGadgetTest extends BaseTest
 
       logout();
 
-      standaloneLogin(USER);
+      standaloneLogin(TestConstants.Users.ADMIN);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       openOrCloseFolder(TEST_FOLDER);
-      //Double click on item :
-      //TODO not works in Windows
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + FILE1 + "]/col[1]");
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + FILE1 + "]/col[1]");
+
+      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      //Check Run menu is not available for user
-      assertFalse(selenium.isElementPresent("//td[@class='exo-menuBarItem' and @menubartitle='" + MenuCommands.Run.RUN
-         + "']"));
-
-      closeTab("0");
+      
+      //Check deploy/undeploy is available for administrator
+      checkDeployUndeployAllowed(true);
+      
+      CloseFileUtils.closeTab(0);
    }
-
+   
+   /**
+    * Checks the controls for deploy/undeploy gadget presence 
+    * in top menu and toolbar.
+    * 
+    * @param allowed is deploy/undeploy allowed
+    * @throws Exception
+    */
    private void checkDeployUndeployAllowed(boolean allowed) throws Exception
    {
       checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, allowed);

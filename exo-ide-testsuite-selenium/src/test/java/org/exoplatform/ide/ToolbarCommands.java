@@ -97,6 +97,12 @@ public interface ToolbarCommands
       public static final String DEPLOY_GROOVY_SERVICE = "Deploy REST Service";
       
       public static final String UNDEPLOY_GROOVY_SERVICE = "Undeploy REST Service";
-
+      
+      public static final String DEPLOY_SANDBOX = "Deploy REST Service Sandbox";
+      
+      public static final String UNDEPLOY_SANDBOX = "Undeploy REST Service Sandbox";
+      
+      public static final String SET_AUTOLOAD = "Set REST Service Autoload";
+      
    }
 }

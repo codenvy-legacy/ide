@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -38,20 +39,21 @@ import java.io.IOException;
  */
 public class RolesWithRESTServiceTest extends BaseTest
 {
-   private final String DEVELOPER = "john";
-
-   private final String USER = "demo";
-
    private final static String FILE1 = "REST Service";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
+   
+   /**
+    * Clear test results.
+    * 
+    * @throws Exception
+    */
    @AfterClass
    public static void tearDown() throws Exception
    {
       try
       {
-         closeTab("0");
+         CloseFileUtils.closeTab(0);
          VirtualFileSystemUtils.delete(URL+FILE1);
       }
       catch (IOException e)
@@ -78,18 +80,21 @@ public class RolesWithRESTServiceTest extends BaseTest
       saveAsUsingToolbarButton(FILE1);
 
       Thread.sleep(TestConstants.SLEEP);
-      //Check deploy/undeploy is available for administrator
+      //Check controls available for administrators 
+      //and developers
       checkDeployUndeployAllowed(true);
-      // 
       checkRunService(true);
       checkSetAutoload(true);
+      checkSandbox(true);
+      checkLaunchService(true);
+      checkValidateService(true);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       //Logout and login as developer
       logout();
       
-      standaloneLogin(DEVELOPER);
+      standaloneLogin(TestConstants.Users.JOHN);
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
@@ -101,11 +106,17 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkRunService(true);
       //Check set autoload property is not available for developer
       checkSetAutoload(false);
+      //Check deploy/undeploy in sandbox is available for developer
+      checkSandbox(true);
+      // Check validate service is allowed for developer
+      checkValidateService(true);
+      // Check launch service is allowed for developer
+      checkLaunchService(true);
       
       runToolbarButton(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       
-    //check Launch Rest Service form appears
+      //Check Launch Rest Service form appears
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
       
       String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
@@ -121,18 +132,18 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
-    * Tests allowed commands for work with REST services if user has "users" role.
+    * Tests allowed commands for work with REST services if user has "administrators" role.
     * 
     * @throws Exception
     */
    @Test
-   public void testUserRoleWithRESTService() throws Exception
+   public void testAdminRoleWithRESTService() throws Exception
    {
       selenium.refresh();
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
@@ -140,19 +151,26 @@ public class RolesWithRESTServiceTest extends BaseTest
       
       logout();
       
-      standaloneLogin(USER);
+      standaloneLogin(TestConstants.Users.ADMIN);
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      //Double click on item :
-      //TODO not works in Windows
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + FILE1 + "]/col[1]");
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + FILE1 + "]/col[1]");
+      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      //Check Run menu is not available for user
-      assertFalse(selenium.isElementPresent("//td[@class='exo-menuBarItem' and @menubartitle='" + MenuCommands.Run.RUN + "']"));
+      //Check deploy/undeploy is allowed for administrator
+      checkDeployUndeployAllowed(true);
+      // Check run service is not available for administrator
+      checkRunService(false);
+      //Check set autoload property is allowed for administrator
+      checkSetAutoload(true);
+      //Check deploy/undeploy in sandbox is not available for administrator
+      checkSandbox(false);
+      // Check validate service is allowed for administrator
+      checkValidateService(true);
+      // Check launch service is allowed for administrator
+      checkLaunchService(true);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
    /**
@@ -190,24 +208,92 @@ public class RolesWithRESTServiceTest extends BaseTest
    }
 
    /**
+    * Check run service control presence 
+    * in top menu and toolbar.
+    * 
     * @param allowed allowed to run services
     * @throws Exception
     */
    private void checkRunService(boolean allowed) throws Exception
    {
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
+      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       if (allowed)
       {
          checkToolbarButtonState(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
+         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       }
    }
    
+   /**
+    * Check validate service control presence 
+    * in top menu and toolbar.
+    * 
+    * @param allowed allowed to validate services
+    * @throws Exception
+    */
+   private void checkValidateService(boolean allowed) throws Exception
+   {
+	   checkToolbarButtonPresentOnRightSide(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	   checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
+	   if (allowed)
+	   {
+	      checkToolbarButtonState(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
+	   }
+   }
+   
+   /**
+    * Check set autoload property control presence 
+    * in top menu and toolbar.
+    * 
+    * @param allowed allowed to set autoload property
+    * @throws Exception
+    */
    private void checkSetAutoload(boolean allowed) throws Exception
    {
-      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+	   checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+	   if (allowed)
+	   {
+	      checkToolbarButtonState(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
+	      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+	   }
+   }
+   
+   /**
+    * Check set deploy/undeploy service to sandbox control presence 
+    * in top menu and toolbar.
+    * 
+    * @param allowed allowed to set autoload property
+    * @throws Exception
+    */
+   private void checkSandbox(boolean allowed) throws Exception
+   {
+      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
+      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
       if (allowed)
       {
-         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+         checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
+         checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
+         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
+         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
+      }
+   }
+   
+   /**
+    * Check set launch service control presence 
+    * in top menu and toolbar.
+    * 
+    * @param allowed allowed to set autoload property
+    * @throws Exception
+    */
+   private void checkLaunchService(boolean allowed) throws Exception
+   {
+      checkToolbarButtonPresentOnRightSide(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+      if (allowed)
+      {
+         checkToolbarButtonState(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       }
    }
 }

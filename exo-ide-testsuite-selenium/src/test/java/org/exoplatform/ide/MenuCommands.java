@@ -67,7 +67,11 @@ public interface MenuCommands
       public static final String UNDEPLOY_REST_SERVICE = "Undeploy";
 
       public static final String DEPLOY_REST_SERVICE = "Deploy";
-
+      
+      public static final String DEPLOY_SANDBOX = "Deploy Sandbox";
+      
+      public static final String UNDEPLOY_SANDBOX = "Undeploy Sandbox";
+      
       public static final String SET_AUTOLOAD = "Set Autoload";
 
       public static final String UNSET_AUTOLOAD = "Unset Autoload";
@@ -79,6 +83,7 @@ public interface MenuCommands
       public static final String SHOW_PREVIEW = "Show Preview";
       
       public static final String VALIDATE = "Validate";
+      
       
       public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
       

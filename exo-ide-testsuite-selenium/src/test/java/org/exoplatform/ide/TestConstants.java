@@ -98,9 +98,9 @@ public interface TestConstants
       public static final String JOHN = "john";
       
       /**
-       * users
+       * administrator
        */
-      public static final String DEMO = "demo";
+      public static final String ADMIN = "admin";
    }
    
    String CODEMIRROR_EDITOR_LOCATOR = "//body[@class='editbox']";
