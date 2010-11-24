@@ -42,8 +42,8 @@
 						<td style="padding: 2" align="left">developers</td>
 					</tr>
 					<tr>
-						<td style="padding: 2" align="left">demo/gtn</td>
-						<td style="padding: " align="left">users</td>
+						<td style="padding: 2" align="left">admin/gtn</td>
+						<td style="padding: " align="left">administrators</td>
 					</tr>
 				</table>
 				</td>
