@@ -17,16 +17,7 @@
 package org.exoplatform.ide.shindig;
 
 import org.apache.shindig.common.PropertiesModule;
-import org.exoplatform.services.log.ExoLogger;
 
-import sun.misc.BASE64Encoder;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 /**
  * USE ONLY IN STANDALONE BUILD
@@ -44,14 +35,14 @@ import java.security.SecureRandom;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class ExoIdeModule extends PropertiesModule
+public class ExoIdeShellModule extends PropertiesModule
 {
-   private static String DEFAULT_PROPERTIES = "ide.shindig.properties";
+   private static String DEFAULT_PROPERTIES = "ide.shell.shindig.properties";
    
-   public ExoIdeModule()
+   public ExoIdeShellModule()
    {
       super(DEFAULT_PROPERTIES);
       KeyCreator.createKeyFile();
    }
- 
+
 }
