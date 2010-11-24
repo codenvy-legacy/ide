@@ -140,7 +140,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // check changed string in CSS file
       Thread.sleep(TestConstants.SLEEP);
       String CSS =
-         "Change file\n/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n#navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
+         "Change file\n/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n  #navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
       assertEquals(CSS, selenium.getText("//body[@class='editbox']"));
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       Thread.sleep(TestConstants.SLEEP);
