@@ -74,7 +74,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
       if (!event.getCodeErrorList().isEmpty())
       {
 
-         left = event.getMarkOffsetY() + 3;
+         left = event.getMarkOffsetY() + 4;
          top = event.getMarkOffsetX() + 4;
          System.out.println("left - " + left + " <<<>>> top - " + top);
          editorId = event.getEditorId();
@@ -100,6 +100,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
    public void onImportTockenSelected(GroovyToken token)
    {
       eventBus.fireEvent(new EditorInsertImportStatmentEvent(editorId, token.getProperty(GroovyTokenProperties.FQN)));
+      eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
    /**

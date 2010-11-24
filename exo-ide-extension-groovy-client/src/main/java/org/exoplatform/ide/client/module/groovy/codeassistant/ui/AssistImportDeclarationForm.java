@@ -53,6 +53,8 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -120,20 +122,29 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       keyboardManager = new CodeAssistantFormKeyboardManager();
       keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
 
+      FocusPanel focusPanel = new FocusPanel();
+           
+      focusPanel.add(scrollPanel);
+      
       scrollPanel.add(flowPanel);
-
+      scrollPanel.setHeight("100%");
+      
       mousHandler = new MousHandler();
       flowPanel.setWidth("100%");
-
+      
       scrollPanel.addMouseOutHandler(mousHandler);
 
       scrollPanel.setStylePrimaryName(GroovyPluginImageBundle.INSTANCE.css().panelStyle());
-      scrollPanel.setHeight("100px");
-      scrollPanel.setWidth("350px");
-      lockLayer.add(scrollPanel, left, top);
+      
+      focusPanel.setHeight("100px");
+      focusPanel.setWidth("350px");
+      
+      lockLayer.add(focusPanel, left, top);
+      flowPanel.add(new Label("No Proposals."));
 
       fillTokens(items);
-
+      focusPanel.setFocus(true);
+      
    }
 
    /**

@@ -86,7 +86,7 @@ public class GroovyClassTokenWidget extends TokenWidget
    public void setSelectedStyle()
    {
       // TODO Auto-generated method stub
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().selectedItem());
+      setStyleName(GroovyPluginImageBundle.INSTANCE.css().selectedItem());
    }
 
 
@@ -98,7 +98,7 @@ public class GroovyClassTokenWidget extends TokenWidget
    public void setOveredStyle()
    {
       // TODO Auto-generated method stub
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().overedItem());
+      setStyleName(GroovyPluginImageBundle.INSTANCE.css().overedItem());
    }
 
 
@@ -110,7 +110,7 @@ public class GroovyClassTokenWidget extends TokenWidget
    public void setDefaultStyle()
    {
       // TODO Auto-generated method stub
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+      setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
    }
 
 }
