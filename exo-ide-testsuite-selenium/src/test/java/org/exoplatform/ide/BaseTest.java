@@ -1485,7 +1485,7 @@ public abstract class BaseTest
       }
    }
 
-//   @AfterClass
+   @AfterClass
    public static void killFireFox()
    {
       try
