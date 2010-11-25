@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ide.groovy.codeassistant.bean;
 
-import javax.xml.transform.Source;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,6 +27,8 @@ public class RoutineInfo extends Member
    private String[] genericExceptionTypes;
 
    private String genericParameterTypes;
+   
+   private String parameterTypes;
 
    private String generic;
 
@@ -37,12 +38,13 @@ public class RoutineInfo extends Member
    {
    }
 
-   public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String string,
-      String generic, String declaringClass)
+   public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
+String parameterTypes, String generic, String declaringClass)
    {
       super(modifiers, name);
       this.genericExceptionTypes = genericExceptionTypes;
-      this.genericParameterTypes = string;
+      this.genericParameterTypes = genericParameterTypes;
+      this.parameterTypes = parameterTypes;
       this.generic = generic;
       this.declaringClass = declaringClass;
    }
@@ -86,6 +88,16 @@ public class RoutineInfo extends Member
    public void setGenericExceptionTypes(String[] genericExceptionTypes)
    {
       this.genericExceptionTypes = genericExceptionTypes;
+   }
+   
+   public String getParameterTypes()
+   {
+      return parameterTypes;
+   }
+   
+   public void setParameterTypes(String parameterTypes)
+   {
+      this.parameterTypes = parameterTypes;
    }
 
 }

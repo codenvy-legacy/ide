@@ -22,7 +22,7 @@ import org.exoplatform.ide.groovy.codeassistant.bean.RoutineInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Arrays;
+
 
 /**
  * 
@@ -37,7 +37,7 @@ import java.util.Arrays;
 */
 public class RoutineInfoExtractor
 {
-   
+
    public static RoutineInfo extractConstructorInfo(Constructor<?> constructor)
    {
       Type[] types = constructor.getGenericExceptionTypes();
@@ -53,37 +53,55 @@ public class RoutineInfoExtractor
       {
          genericParameterTypes[j] = genericType2String(types[j]);
       }
+      
+      Class[] parameterTypes = constructor.getParameterTypes();
+      String[] params = new String[parameterTypes.length];
+      for (int i = 0; i < parameterTypes.length; i++)
+      {
+         params[i] = parameterTypes[i].getSimpleName();
+      }
+      
       return new RoutineInfo(constructor.getModifiers(), constructor.getName(), genExceptionTypes,
-         array2string(genericParameterTypes), constructor.toGenericString(), constructor.getDeclaringClass()
-               .getCanonicalName());
+         array2string(genericParameterTypes),array2string(params), constructor.toGenericString(), constructor.getDeclaringClass()
+            .getCanonicalName());
    }
-   
+
    public static MethodInfo extractMethodInfo(Method method)
    {
       Type[] types = method.getGenericExceptionTypes();
+
       String[] genericExceptionTypes = new String[types.length];
       for (int j = 0; j < types.length; j++)
       {
          genericExceptionTypes[j] = genericType2String(types[j]);
       }
 
-      types = method.getGenericParameterTypes();
+      types = method.getParameterTypes();
       String[] genericParameterTypes = new String[types.length];
       for (int j = 0; j < types.length; j++)
       {
          genericParameterTypes[j] = genericType2String(types[j]);
       }
       
-      return  new MethodInfo(method.getModifiers(), method.getName(), genericExceptionTypes, array2string(genericParameterTypes),
-            method.toGenericString(), method.getDeclaringClass().getCanonicalName(), genericType2String(method.getGenericReturnType()));
+      Class[] parameterTypes = method.getParameterTypes();
+      String[] params = new String[parameterTypes.length];
+      for (int i = 0; i < parameterTypes.length; i++)
+      {
+         params[i] = parameterTypes[i].getSimpleName();
+      }
+
+      return new MethodInfo(method.getModifiers(), method.getName(), genericExceptionTypes,
+         array2string(genericParameterTypes),array2string(params), method.toGenericString(), method.getDeclaringClass().getCanonicalName(),
+         genericType2String(method.getGenericReturnType()),method.getReturnType().getSimpleName());
    }
-   
+
    private static String genericType2String(Type type)
    {
-
+   
       return ((type instanceof Class) ? getTypeName((Class)type) : type.toString());
    }
-
+   
+ 
    private static String getTypeName(Class type)
    {
       if (type.isArray())
@@ -106,29 +124,30 @@ public class RoutineInfoExtractor
             return sb.toString();
          }
          catch (Throwable e)
-         { 
+         {
             e.printStackTrace();
          }
       }
       return type.getName();
    }
-   
-   
-   public static String array2string(String[] a) {
+
+   private static String array2string(String[] a)
+   {
       if (a == null)
-          return "null";
- int iMax = a.length - 1;
+         return "null";
+      int iMax = a.length - 1;
       if (iMax == -1)
-          return "()";
+         return "()";
 
       StringBuilder b = new StringBuilder();
- b.append('(');
-      for (int i = 0; ; i++) {
-          b.append(String.valueOf(a[i]));
-          if (i == iMax)
-    return b.append(')').toString();
-     b.append(", ");
+      b.append('(');
+      for (int i = 0;; i++)
+      {
+         b.append(String.valueOf(a[i]));
+         if (i == iMax)
+            return b.append(')').toString();
+         b.append(", ");
       }
-  }
+   }
 
 }

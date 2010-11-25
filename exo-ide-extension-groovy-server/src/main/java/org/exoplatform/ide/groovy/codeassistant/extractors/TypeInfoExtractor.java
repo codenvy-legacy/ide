@@ -77,7 +77,7 @@ public class TypeInfoExtractor
       for (int i = 0; i < fields.length; i++)
       {
          fds[i] =
-            new FieldInfo(fields[i].getType().getCanonicalName(), fields[i].getModifiers(), fields[i].getName(),
+            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(),
                fields[i].getDeclaringClass().getCanonicalName());
       }
       fields = clazz.getDeclaredFields();
@@ -85,7 +85,7 @@ public class TypeInfoExtractor
       for (int i = 0; i < fields.length; i++)
       {
          decFds[i] =
-            new FieldInfo(fields[i].getType().getCanonicalName(), fields[i].getModifiers(),
+            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(),
                fields[i].getName(), fields[i].getDeclaringClass().getCanonicalName());
       }
       

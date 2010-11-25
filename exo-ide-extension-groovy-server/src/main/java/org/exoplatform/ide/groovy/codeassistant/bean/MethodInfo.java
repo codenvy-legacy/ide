@@ -25,16 +25,19 @@ public class MethodInfo extends RoutineInfo
 {
 
    private String genericReturnType;
+   
+   private String returnType;
 
    public MethodInfo()
    {
    }
 
    public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes,
-      String string, String generic, String declaringClass, String genericReturnType)
+      String genericParameterTypes,  String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
    {
-      super(modifiers, name, genericExceptionTypes, string, generic, declaringClass);
+      super(modifiers, name, genericExceptionTypes,genericParameterTypes,parameterTypes, generic, declaringClass);
       this.genericReturnType = genericReturnType;
+      this.returnType = returnType;
    }
 
    public String getGenericReturnType()
@@ -45,5 +48,15 @@ public class MethodInfo extends RoutineInfo
    public void setGenericReturnType(String genericReturnType)
    {
       this.genericReturnType = genericReturnType;
+   }
+   
+   public void setReturnType(String returnType)
+   {
+      this.returnType = returnType;
+   }
+   
+   public String getReturnType()
+   {
+      return returnType;
    }
 }

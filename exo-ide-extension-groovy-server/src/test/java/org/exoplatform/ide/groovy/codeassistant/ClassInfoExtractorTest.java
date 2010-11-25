@@ -65,7 +65,7 @@ public class ClassInfoExtractorTest extends TestCase
             fail();
          }
          assertEquals(fields[i].getModifiers(), fd.getModifiers().intValue());
-         assertEquals(fields[i].getType().getCanonicalName(), fd.getType());
+         assertEquals(fields[i].getType().getSimpleName(), fd.getType());
       }
    }
 

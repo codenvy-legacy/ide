@@ -29,7 +29,7 @@
       <supertypes>
          <supertype>exoide:javaDoc</supertype>
       </supertypes>
-      <childNodeDefinitions>
+      <!-- childNodeDefinitions>
          <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY"
             protected="false" sameNameSiblings="false">
             <requiredPrimaryTypes>
@@ -42,7 +42,7 @@
                <requiredPrimaryType>exoide:fieldDoc</requiredPrimaryType>
             </requiredPrimaryTypes>
          </childNodeDefinition>
-      </childNodeDefinitions>
+      </childNodeDefinitions-->
    </nodeType>
 
  
@@ -69,14 +69,6 @@
             <valueConstraints />
          </propertyDefinition>
       </propertyDefinitions>
-      <childNodeDefinitions>
-         <childNodeDefinition name="exoide:classDoc" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY"
-            protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-               <requiredPrimaryType>exoide:classDoc</requiredPrimaryType>
-            </requiredPrimaryTypes>
-         </childNodeDefinition>
-      </childNodeDefinitions>
    </nodeType>
    
    
