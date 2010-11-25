@@ -67,12 +67,12 @@
    </build>
    <profiles>
       <profile>
-      <id>base</id>
-      <activation>
-      <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-       <plugins>
+         <id>base</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
@@ -81,7 +81,7 @@
                         <phase>install</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war"/>
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" />
                               <copy todir="${project.build.directory}/tomcat-ide">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
                               </copy>
@@ -94,7 +94,86 @@
                   </executions>
                </plugin>
             </plugins>
-      </build>
+         </build>
+      </profile>
+      <profile>
+         <id>using-mysql</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <dependencies>
+            <dependency>
+               <groupId>mysql</groupId>
+               <artifactId>mysql-connector-java</artifactId>
+               <version>5.1.13</version>
+               <scope>runtime</scope>
+            </dependency>
+         </dependencies>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <includeTypes>jar</includeTypes>
+                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
+                  <artifactId>maven-antrun-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>unwar-ide</id>
+                        <phase>compile</phase>
+                        <configuration>
+                           <tasks>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" dest="${project.build.directory}/packager-conf/unwar" />
+                           </tasks>
+                        </configuration>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                     </execution>
+                     <execution>
+                        <id>copy-war</id>
+                        <phase>install</phase>
+                        <configuration>
+                           <tasks>
+                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war" />
+                              </copy>
+                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
+                                 <fileset dir="${basedir}/src/main/resources/tomcat" />
+                              </copy>
+                              <move todir="${project.build.directory}/tomcat-ide/lib">
+                                 <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
+                              </move>
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" needxmlfile="false">
+                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
+                              </war>
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
+                                 <fileset dir="${basedir}/src/main/resources/rest-war" />
+                              </war>
+
+                           </tasks>
+                        </configuration>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
       </profile>
       <profile>
          <id>selenium-test</id>
@@ -111,8 +190,7 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" 
-                              dest="${project.build.directory}/packager-conf/unwar" />
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" dest="${project.build.directory}/packager-conf/unwar" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -124,19 +202,21 @@
                         <phase>install</phase>
                         <configuration>
                            <tasks>
-                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true" >
-                                 <fileset dir="${basedir}/src/main/resources/ide-war" />
-                               </copy>
-                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
+                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war">
+                                    <exclude name="**/conf/*.xml" />
+                                 </fileset>
+                              </copy>
+                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
-                               </copy>
+                              </copy>
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
                               <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" needxmlfile="false">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
                               </war>
-                               <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
                                  <fileset dir="${basedir}/src/main/resources/rest-war" />
                               </war>
 
