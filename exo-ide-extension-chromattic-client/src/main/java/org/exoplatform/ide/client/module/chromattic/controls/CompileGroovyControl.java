@@ -85,8 +85,7 @@ public class CompileGroovyControl extends SimpleControl implements IDEControl, E
 
       String fileMimeType = event.getFile().getContentType();
       
-      if (MimeType.GROOVY_SERVICE.equals(fileMimeType) ||
-               MimeType.APPLICATION_GROOVY.equals(fileMimeType))
+      if (MimeType.APPLICATION_GROOVY.equals(fileMimeType))
       {
          setVisible(true);
          
