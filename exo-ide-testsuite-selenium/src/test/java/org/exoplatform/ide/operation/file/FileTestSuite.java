@@ -34,8 +34,7 @@ import org.junit.runners.Suite.SuiteClasses;
    CreatingAndSavingAsNewFileTest.class, DisplayingWarningMessageTest.class, StoreOpenedFilesHistoryTest.class,
    ShowHideLineNumbersTest.class, CreateSaveAsXmlWithNonLatinNameTest.class, SaveAllFilesTest.class,
    SavingPreviouslyEditedFileTest.class, RenameClosedFileTest.class, RenameOpenedFileTest.class,
-   DeletingFilesTest.class, DeletingXmlFileWithNonLatinNameTest.class, OpeningSavingAndClosingTabsWithFilesTest.class,
-   NavigationPanelWithoutSelectedItemTest.class})
+   DeletingFilesTest.class, DeletingXmlFileWithNonLatinNameTest.class,NavigationPanelWithoutSelectedItemTest.class})
 public class FileTestSuite
 {
 
