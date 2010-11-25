@@ -136,41 +136,41 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                newNode = new TreeNode();
                newNode.setAttribute(getValuePropertyName(), child);
-               if (child.getType().equals(TokenType.FUNCTION))
-               {
-                  newNode.setAttribute(ICON, FUNCTION_ICON);
-               }
-               else if (child.getType().equals(TokenType.VARIABLE))
-               {
-                  newNode.setAttribute(ICON, VAR_ICON);
-               }
-               else if (child.getType().equals(TokenType.METHOD))
-               {
-                  newNode.setAttribute(ICON, METHOD_ICON);
-               }
-               else if (child.getType().equals(TokenType.PROPERTY))
-               {
-                  newNode.setAttribute(ICON, PROPERTY_ICON);
-               }
-               else if (child.getType().equals(TokenType.TAG))
-               {
-                  newNode.setAttribute(ICON, TAG_ICON);
-               }
-               else if (child.getType().equals(TokenType.CDATA))
-               {
-                  newNode.setAttribute(ICON, CDATA_ICON);
-               }
-               else if (child.getType().equals(TokenType.GROOVY_TAG))
-               {
-                  newNode.setAttribute(ICON, GROOVY_TAG_ICON);
-               }
-               else if (child.getType().equals(TokenType.CLASS))
-               {
-                  newNode.setAttribute(ICON, CLASS_ICON);
-               }
-               else
-               {
-                  continue;
+               switch (child.getType()) {
+                  case FUNCTION:
+                     newNode.setAttribute(ICON, FUNCTION_ICON);
+                     break;
+
+                  case VARIABLE:
+                     newNode.setAttribute(ICON, VAR_ICON);
+                     break;
+
+                  case METHOD:
+                     newNode.setAttribute(ICON, METHOD_ICON);
+                     break;
+                     
+                  case PROPERTY:
+                     newNode.setAttribute(ICON, PROPERTY_ICON);
+                     break;
+                     
+                  case TAG:
+                     newNode.setAttribute(ICON, TAG_ICON);
+                     break;
+                     
+                  case CDATA:
+                     newNode.setAttribute(ICON, CDATA_ICON);
+                     break;
+                     
+                  case GROOVY_TAG:
+                     newNode.setAttribute(ICON, GROOVY_TAG_ICON);
+                     break;
+
+                  case CLASS:
+                     newNode.setAttribute(ICON, CLASS_ICON);
+                     break;                     
+                     
+                  default:
+                     continue;
                }
                
                String name = child.getName();
