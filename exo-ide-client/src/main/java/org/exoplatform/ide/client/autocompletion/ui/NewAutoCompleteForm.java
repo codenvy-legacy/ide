@@ -613,6 +613,7 @@ public class NewAutoCompleteForm extends Composite implements ChangeHandler, Win
                   break;
 
                case KeyCodes.KEY_ENTER :
+            	  event.cancel();
                   pasteAutocomplete();
                   break;
 
