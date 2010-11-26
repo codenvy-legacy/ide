@@ -190,6 +190,22 @@ public interface Images
       public static final String GROOVY_TAG_ITEM = IMAGE_URL + "outline/groovy-tag.png";
       
       public static final String CLASS_ITEM = IMAGE_URL + "outline/class-item.png";
+      
+      public static final String PRIVATE_METHOD = IMAGE_URL + "outline/private-method.png";
+
+      public static final String PUBLIC_METHOD = IMAGE_URL + "outline/public-method.png";
+
+      public static final String PROTECTED_METHOD = IMAGE_URL + "outline/protected-method.png";
+
+      public static final String DEFAULT_METHOD = IMAGE_URL + "outline/default-method.png";
+   
+      public static final String PRIVATE_FIELD = IMAGE_URL + "outline/private-field.png";
+
+      public static final String PUBLIC_FIELD = IMAGE_URL + "outline/public-field.png";
+
+      public static final String PROTECTED_FIELD = IMAGE_URL + "outline/protected-field.png";
+
+      public static final String DEFAULT_FIELD = IMAGE_URL + "outline/default-field.png";
    }
    
    public interface Versioning
