@@ -24,6 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -78,7 +79,7 @@ public class SearchByMimeTypeTest extends BaseTest
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       selectItemInWorkspaceTree(folder2Name);
 
