@@ -25,6 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -111,7 +112,7 @@ public class GadgetDevelopmentTest extends BaseTest
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //TODO*****change**********
       openOrCloseFolder(FOLDER_NAME);
