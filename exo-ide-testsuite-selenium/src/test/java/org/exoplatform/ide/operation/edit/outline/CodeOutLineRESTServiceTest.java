@@ -33,6 +33,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.exoplatform.ide.CloseFileUtils;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -126,7 +127,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       cleanDefaultWorkspace();
-   }
+       }
 }
