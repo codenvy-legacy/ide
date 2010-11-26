@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -218,7 +219,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
       assertEquals(fileName, getTabTitle(0));
       assertElementPresentInWorkspaceTree(fileName);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       //check file created on server
       HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER + "/" + fileName);

@@ -29,6 +29,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -100,7 +101,7 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
