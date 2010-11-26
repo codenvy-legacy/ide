@@ -27,6 +27,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -114,9 +115,8 @@ public class CodeOutlineXmlTest extends BaseTest
       checkUpdatingTreeAfterFileChanging();
       
       Thread.sleep(TestConstants.SLEEP);
-      
-      closeTab("0");
-
+     
+      CloseFileUtils.closeTab(0);
       selenium
          .click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/");
       Thread.sleep(TestConstants.SLEEP);

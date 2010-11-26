@@ -30,6 +30,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -121,7 +123,7 @@ public class CodeOutLineGroovyTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       cleanDefaultWorkspace();
    }
 }

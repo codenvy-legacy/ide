@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -205,7 +206,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       final String jsFile = "JavaScriptFile.js";
       saveAsUsingToolbarButton(jsFile);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      
+      CloseFileUtils.closeTab(0);
+      
       //text file is active, Outline panel is hidden
       assertEquals("Untitled file.txt *", getTabTitle(0));
       checkOutlineVisibility(false);
@@ -365,7 +368,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // close js file
-      closeTab("1");
+     
+      CloseFileUtils.closeTab(1);
+      
       openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       Thread.sleep(TestConstants.SLEEP);
       runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);

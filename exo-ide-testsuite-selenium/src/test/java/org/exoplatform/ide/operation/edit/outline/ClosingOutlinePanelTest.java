@@ -27,6 +27,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -142,8 +143,8 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       //----- 4 -------------
       //close code outline panel.
-      closeTab("0");
-
+      
+      CloseFileUtils.closeTab(0);
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);
       Thread.sleep(TestConstants.SLEEP);

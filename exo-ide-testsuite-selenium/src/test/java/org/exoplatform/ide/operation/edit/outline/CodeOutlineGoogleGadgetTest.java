@@ -28,6 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -154,7 +155,8 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
 
       //close file
-      closeTab("0");
+      
+      CloseFileUtils.closeTab(0);
 
       //close dialog window by pressing "No"
       selenium
