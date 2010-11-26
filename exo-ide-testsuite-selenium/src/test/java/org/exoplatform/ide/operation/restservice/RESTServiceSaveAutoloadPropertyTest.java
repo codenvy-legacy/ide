@@ -28,6 +28,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -60,7 +61,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);      
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
             
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
@@ -90,7 +91,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       selectRootOfWorkspaceTree();
       

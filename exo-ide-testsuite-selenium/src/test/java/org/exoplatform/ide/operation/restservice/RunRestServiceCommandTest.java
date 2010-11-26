@@ -29,6 +29,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -332,7 +333,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //if file is opened, close it
       if (selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon"))
       {
-         closeTab("0");
+         CloseFileUtils.closeTab(0);
       }
 
       //check is warning dialog appears

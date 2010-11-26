@@ -29,6 +29,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -121,7 +122,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
         System.out.println(text);
       assertTrue(text.endsWith(SIMPLE_FILE_NAME+ " undeployed successfully.")); 
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
    @Test
@@ -155,6 +156,6 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
         System.out.println(text);
       assertTrue(text.endsWith(FILE_NAME+ " undeployed successfully.")); 
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 }

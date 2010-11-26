@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
@@ -92,7 +93,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       assertTrue(mess
          .contains("Can't unbind script Test"+ "/" + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
       //****************************************
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       selectItemInWorkspaceTree(FILE_NAME);
 
