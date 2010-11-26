@@ -30,6 +30,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -103,8 +104,8 @@ public class HighlightEditorsTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      closeTab("0");
-      
+      CloseFileUtils.closeTab(0);
+
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
