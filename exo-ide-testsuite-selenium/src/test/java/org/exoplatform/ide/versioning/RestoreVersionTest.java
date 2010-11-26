@@ -23,6 +23,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -137,7 +138,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //Reopen file to check content:
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -225,7 +226,7 @@ public class RestoreVersionTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    @Test
@@ -306,7 +307,7 @@ public class RestoreVersionTest extends VersioningTest
       checkVersionListSize(7);
       clickCloseVersionListPanelButton();
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    private void checkAskDialogPresent(boolean isPresent)
@@ -318,6 +319,6 @@ public class RestoreVersionTest extends VersioningTest
    @After
    public void cleanResults() throws Exception
    {
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 }

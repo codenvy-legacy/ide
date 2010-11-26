@@ -23,6 +23,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -174,7 +175,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //Open file:
@@ -205,7 +206,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    @Test
@@ -316,7 +317,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    @Test
@@ -428,7 +429,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text
          + version7Text);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    @Test
@@ -521,12 +522,12 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
    @After
    public void cleanResults() throws Exception
    {
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 }

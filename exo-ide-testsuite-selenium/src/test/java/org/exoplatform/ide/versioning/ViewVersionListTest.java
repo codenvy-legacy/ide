@@ -23,6 +23,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -173,7 +174,7 @@ public class ViewVersionListTest extends VersioningTest
       checkViewVersionListButtonState(true);
       checkTextOnVersionPanel("");
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    /**
@@ -311,7 +312,7 @@ public class ViewVersionListTest extends VersioningTest
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
 }

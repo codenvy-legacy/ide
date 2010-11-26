@@ -23,6 +23,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -116,7 +117,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonState(true);
 
       //Close file:
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       //Open versioned file again:
@@ -137,7 +138,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonState(false);
 
       //Close second file, versioned file becomes active:
-      closeTab("1");
+      CloseFileUtils.closeTab(1);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Open second file (is not versioned):
@@ -158,9 +159,9 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    /**
@@ -209,7 +210,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkVersionPanelState(true);
       //Close file:
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
@@ -277,7 +278,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkVersionPanelState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
       //Close file
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
@@ -386,9 +387,9 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkVersionPanelState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      closeTab("0");
-      closeTab("0");
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
    }
 
    @AfterClass
