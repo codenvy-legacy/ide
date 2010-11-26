@@ -25,6 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -103,7 +104,7 @@ public class SaveAllFilesTest extends BaseTest
       //save file
       saveAsUsingToolbarButton(SAVED_FILE_XML);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //create new groovy file
@@ -115,7 +116,7 @@ public class SaveAllFilesTest extends BaseTest
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       saveAsByTopMenu(SAVED_FILE_GROOVY);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       //Save All command is disabled
       checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
@@ -180,13 +181,13 @@ public class SaveAllFilesTest extends BaseTest
       selectEditorTab(0);
       saveAsUsingToolbarButton(NEW_HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       //save and close txt file
       selectEditorTab(0);
       saveAsUsingToolbarButton(NEW_TEXT_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       //open files
       openFileFromNavigationTreeWithCodeEditor(NEW_TEXT_FILE_NAME, false);

@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -47,12 +48,12 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    /**
     * 
     */
-   private static final String XML_FILE = "Тестовый Файл.xml";
+   private static final String XML_FILE = "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð¤Ð°Ð¹Ð».xml";
 
    /**
     * 
     */
-   private static final String NEW_XML_FILE = "Новий тестовий файл.xml";
+   private static final String NEW_XML_FILE = "Ð�Ð¾Ð²Ð¸Ð¹ Ñ‚ÐµÑ�Ñ‚Ð¾Ð²Ð¸Ð¹ Ñ„Ð°Ð¹Ð».xml";
 
    /**
     * 
@@ -93,7 +94,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //check file properties
       showAndCheckProperties(String.valueOf(XML_CONTENT.length()+1), MimeType.TEXT_XML, XML_FILE);
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       //check file on server
       checkFileOnWebDav(XML_FILE);
@@ -123,7 +124,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       saveCurrentFile();
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
 

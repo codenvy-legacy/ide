@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -142,7 +143,7 @@ public class PreviewHtmlFileTest extends BaseTest
       
       //---- 6 -----------------
       //close tab with saved html file
-      closeTab("1");
+      CloseFileUtils.closeTab(1);
       Thread.sleep(TestConstants.SLEEP);
       
       //new html file is opened.

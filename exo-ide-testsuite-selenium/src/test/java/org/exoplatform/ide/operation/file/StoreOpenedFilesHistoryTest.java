@@ -28,6 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -126,9 +127,9 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //closing all files
-      closeTab("0");
-      closeTab("0");
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
       closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -157,7 +158,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       checkOpenedFilesHistory();
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       closeFileTab("0");
 //      closeUnsavedFileAndDoNotSave("0");
       
@@ -170,7 +171,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 //      selectItemInWorkspaceTree(htmlFile);
 //      openFileFromNavigationTreeWithCodeEditor(htmlFile, true);      
 //      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-//      closeTab("0");
+//      CloseFileUtils.closeTab(0);
             
       //delete test folder
       selectItemInWorkspaceTree(TEST_FOLDER);

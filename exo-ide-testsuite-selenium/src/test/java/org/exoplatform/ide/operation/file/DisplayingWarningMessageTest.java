@@ -29,6 +29,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -188,7 +189,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Save, close file tab and open created earlier xml file again.
       runToolbarButton(ToolbarCommands.File.SAVE);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       //After the step 9: there is saved file content in the new file tab with title without mark "*".
@@ -197,7 +198,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertEquals(XML_FILE_NAME, getTabTitle(1));
 
       assertEquals(previousContent, getTextFromCodeEditor(1));
-      closeTab("1");
+      CloseFileUtils.closeTab(1);
       
       closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);

@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -158,7 +159,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       //----- 7 ------------
       //Refresh page, go to "Test" in "Workspace" panel.
@@ -249,7 +250,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       typeTextIntoEditor(0, "X");

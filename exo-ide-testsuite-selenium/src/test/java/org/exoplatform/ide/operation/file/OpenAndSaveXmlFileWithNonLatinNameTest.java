@@ -30,6 +30,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,7 +47,7 @@ import org.junit.Test;
 public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 {
    
-   private static final String FILE_NAME = System.currentTimeMillis() + "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹Ð¤Ð°Ð¹Ð».xml";
+   private static final String FILE_NAME = System.currentTimeMillis() + "Ã�Â¢Ã�ÂµÃ‘ï¿½Ã‘â€šÃ�Â¾Ã�Â²Ã‘â€¹Ã�Â¹Ã�Â¤Ã�Â°Ã�Â¹Ã�Â».xml";
    
    private static final String FOLDER_NAME = System.currentTimeMillis() + OpenAndSaveXmlFileWithNonLatinNameTest.class.getSimpleName();
    
@@ -101,7 +102,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);

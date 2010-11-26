@@ -25,6 +25,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -123,11 +124,11 @@ public class ShowHideLineNumbersTest extends BaseTest
       //------- 11 ---------------
       saveAsByTopMenu(XML);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      closeTab("1");
+      CloseFileUtils.closeTab(1);
 
       saveAsByTopMenu(GROOVY);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       //------- 12 ---------------
       //check show/hide line numbers in saved and reopened file
