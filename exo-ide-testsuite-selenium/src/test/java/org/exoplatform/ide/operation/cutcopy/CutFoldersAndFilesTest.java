@@ -29,6 +29,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -80,7 +81,8 @@ public class CutFoldersAndFilesTest extends BaseTest
       saveAsUsingToolbarButton(FILE1);
 
       String oldText = getTextFromCodeEditor(0);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      
 
       runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -89,7 +91,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       String omg = selenium.getText("//body[@class='editbox']");
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       createFolder(FOLDER_3);
 
@@ -110,7 +112,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       saveAsUsingToolbarButton(FILE3);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
 
       //    Open Gadget window, open all created files.
       openFileFromNavigationTreeWithCodeEditor(FILE1, false);
@@ -279,8 +281,8 @@ public class CutFoldersAndFilesTest extends BaseTest
       checkPasteButton(false);
 
      //Close Tabs
-      closeTab("0");
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
    }
 
    /**
@@ -318,8 +320,8 @@ public class CutFoldersAndFilesTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeTab("0");
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
       try
       {
          VirtualFileSystemUtils.delete(URL +FOLDER_1);

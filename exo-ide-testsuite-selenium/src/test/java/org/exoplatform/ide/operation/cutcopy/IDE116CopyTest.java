@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -185,7 +186,7 @@ public class IDE116CopyTest extends BaseTest
       /* 
       * Close opened file
       */
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       /* 
@@ -204,7 +205,7 @@ public class IDE116CopyTest extends BaseTest
       assertEquals("file content", fileContent);
 
       //Close file
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
 }

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -109,7 +110,8 @@ public class IDE115CopyTest extends BaseTest
       /*
        * Close editor
        */
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      
 
       /*
        * Select "/Test1/test.groovy" file
@@ -196,7 +198,7 @@ public class IDE115CopyTest extends BaseTest
       /*
       * Close file
       */
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /*
@@ -222,8 +224,8 @@ public class IDE115CopyTest extends BaseTest
       assertEquals("hello", file2Content);
 
       // Close both files
-      closeTab("0");
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
+      CloseFileUtils.closeTab(0);
 
       /*
        * Delete files

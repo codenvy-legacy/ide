@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -110,8 +111,8 @@ public class IDE113CopyTest extends BaseTest
        */
       saveAsUsingToolbarButton("gadget_xml");
 
-      closeTab("0");
-
+      CloseFileUtils.closeTab(0);
+     
 //      /*
 //       * select element in tree
 //       */
@@ -138,8 +139,8 @@ public class IDE113CopyTest extends BaseTest
        * get file content from editor
        */
       String oldText = getTextFromCodeEditor(0);
-      closeTab("0");
-
+      CloseFileUtils.closeTab(0);
+      
       /*
        * create folder
        */

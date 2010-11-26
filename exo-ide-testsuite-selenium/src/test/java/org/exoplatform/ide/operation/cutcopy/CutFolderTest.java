@@ -30,6 +30,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -210,8 +211,9 @@ public class CutFolderTest extends BaseTest
       //step 10 - Change content of opened file "test.groovy" in Content Panel, click on "Ctrl+S" hot key, close file tab and open file "test 2/test 2/test.groovy".
       typeTextIntoEditor(0, "Content has been changed");
       saveCurrentFile();
-      closeTab("0");
       
+      CloseFileUtils.closeTab(0);
+
       checkItemsOnWebDav();
       
       Thread.sleep(TestConstants.SLEEP*3);

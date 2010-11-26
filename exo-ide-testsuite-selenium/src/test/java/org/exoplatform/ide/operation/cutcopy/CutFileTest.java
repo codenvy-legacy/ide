@@ -32,6 +32,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -180,8 +181,8 @@ public class CutFileTest extends BaseTest
 
       runToolbarButton(ToolbarCommands.File.SAVE);
       
-      closeTab("0");
-
+      CloseFileUtils.closeTab(0);
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
 
       assertEquals(oldText1, getTextFromCodeEditor(0));
@@ -215,7 +216,8 @@ public class CutFileTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_1);
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_2);
-         closeTab("0");
+        
+         CloseFileUtils.closeTab(0);
          VirtualFileSystemUtils.delete(URL + FILE_NAME_1);
       }
       catch (IOException e)
