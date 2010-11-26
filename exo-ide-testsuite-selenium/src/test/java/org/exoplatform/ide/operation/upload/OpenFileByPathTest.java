@@ -28,6 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -138,7 +139,7 @@ public class OpenFileByPathTest extends BaseTest
       // trying to open file by correct url and using "Open" key
       openFileByFilePath(fileUrl);
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       
       // return to initial workspace
       selectWorkspace(WS_NAME);
