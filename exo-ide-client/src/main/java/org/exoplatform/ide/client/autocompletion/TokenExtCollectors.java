@@ -16,15 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codeassistant;
+package org.exoplatform.ide.client.autocompletion;
+
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
+ * @version $Id: Nov 26, 2010 12:19:16 PM evgen $
  *
  */
-public enum GroovyTokenType {
-   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM
+public class TokenExtCollectors
+{
+
 }

@@ -35,7 +35,7 @@ import com.google.gwt.json.client.JSONArray;
  * @version $Id: $
  *
  */
-public class CssTokenCollector implements TokenCollector
+public class CssTokenCollector implements TokenCollector<Token>
 {
 
    private static List<Token> cssProperty;
@@ -53,7 +53,7 @@ public class CssTokenCollector implements TokenCollector
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
     */
-   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback<Token> tokensCollectedCallback)
    {
       List<Token> tokens = new ArrayList<Token>();
       if(cssProperty == null)
@@ -152,4 +152,5 @@ public class CssTokenCollector implements TokenCollector
       }
 
    }
+
 }

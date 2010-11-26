@@ -24,7 +24,8 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyClass;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.marshal.ClassDescriptionUnmarshaller;
@@ -68,7 +69,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    {
       String url = restServiceContext + FIND_URL + className;
       
-      List<GroovyToken> tokens = new ArrayList<GroovyToken>();
+      List<TokenExt> tokens = new ArrayList<TokenExt>();
       ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
@@ -84,8 +85,9 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    {
       String url = restServiceContext + GET_CLASS_URL + fqn;
       
-      ClassDescriptionReceivedEvent event = new ClassDescriptionReceivedEvent();
-      ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller();
+      GroovyClass classInfo = new GroovyClass();
+      ClassDescriptionReceivedEvent event = new ClassDescriptionReceivedEvent(classInfo);
+      ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }

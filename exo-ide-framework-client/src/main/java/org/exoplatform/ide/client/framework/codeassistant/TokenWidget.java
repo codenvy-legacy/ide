@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
+package org.exoplatform.ide.client.framework.codeassistant;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,35 +38,30 @@ import com.google.gwt.user.client.ui.Composite;
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
  *
  */
-public abstract class TokenWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers,
+public abstract class TokenWidget<T> extends Composite implements HasClickHandlers, HasMouseOverHandlers,
    HasDoubleClickHandlers
 {
 
-   private GroovyToken token;
+   private T token;
 
-   private int number;
-
-   public TokenWidget(GroovyToken token, int number)
+   public TokenWidget(T token)
    {
       this.token = token;
-      this.number = number;
    }
 
    /**
     * @return the token
     */
-   public GroovyToken getToken()
+   public T getToken()
    {
       return token;
    }
 
+   
    /**
-    * @return the number of token
+    * @return name of token
     */
-   public int getNumber()
-   {
-      return number;
-   }
+   public abstract String getTokenName();
    
    /**
     * 

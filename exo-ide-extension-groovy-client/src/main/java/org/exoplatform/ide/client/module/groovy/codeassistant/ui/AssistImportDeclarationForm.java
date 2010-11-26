@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
@@ -90,10 +90,10 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
    private HandlerRegistration keyboardManagerRegistration;
 
-   private HashMap<GroovyTokenType, ImageResource> images;
+   private HashMap<TokenExtType, ImageResource> images;
 
-   public AssistImportDeclarationForm(HandlerManager eventBus, int left, int top, List<GroovyToken> items,
-      HashMap<GroovyTokenType, ImageResource> images, AssistImportDeclarationHandler handler)
+   public AssistImportDeclarationForm(HandlerManager eventBus, int left, int top, List<TokenExt> items,
+      HashMap<TokenExtType, ImageResource> images, AssistImportDeclarationHandler handler)
    {
       absolutePanel = new AbsolutePanel();
       this.handler = handler;
@@ -150,7 +150,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
    /**
     * @param items
     */
-   private void fillTokens(List<GroovyToken> items)
+   private void fillTokens(List<TokenExt> items)
    {
       if (items.isEmpty())
       {
@@ -159,9 +159,9 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
       flowPanel.clear();
       int i = 0;
-      for (GroovyToken token : items)
+      for (TokenExt token : items)
       {
-         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token,i, images);
+         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token,images);
          widget.addClickHandler(mousHandler);
          widget.addMouseOverHandler(mousHandler);
          widget.addDoubleClickHandler(mousHandler);
@@ -274,7 +274,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
    {
       if (selectedWidget == null)
          return;
-      int i = selectedWidget.getNumber();
+      int i = flowPanel.getEntries().indexOf(selectedWidget);
       if (flowPanel.getEntries().size() - 1 > i)
       {
          selectWidget(i + 1);
@@ -289,7 +289,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       if (selectedWidget == null)
          return;
 
-      int i = selectedWidget.getNumber();
+      int i = flowPanel.getEntries().indexOf(selectedWidget);
       if (0 < i)
       {
          selectWidget(i - 1);

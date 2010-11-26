@@ -36,7 +36,7 @@ import com.google.gwt.json.client.JSONArray;
  * @version $Id: $
  *
  */
-public class HtmlTokenCollector implements TokenCollector
+public class HtmlTokenCollector implements TokenCollector<Token>
 {
 
    private static List<Token> htmlTokens;
@@ -106,7 +106,7 @@ public class HtmlTokenCollector implements TokenCollector
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenCollector#getTokens(java.lang.String, int, int, java.util.List)
     */
-   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback<Token> tokensCollectedCallback)
    {
       List<Token> token = new ArrayList<Token>();
 

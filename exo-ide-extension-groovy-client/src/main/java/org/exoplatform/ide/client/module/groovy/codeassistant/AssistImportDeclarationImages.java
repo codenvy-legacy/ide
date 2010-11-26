@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 
 import java.util.HashMap;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -34,20 +34,20 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public class AssistImportDeclarationImages
 {
-   private static HashMap<GroovyTokenType, ImageResource> images = new HashMap<GroovyTokenType, ImageResource>();
+   private static HashMap<TokenExtType, ImageResource> images = new HashMap<TokenExtType, ImageResource>();
 
    static
    {
-      images.put(GroovyTokenType.CLASS,  GroovyPluginImageBundle.INSTANCE.classItem());
-      images.put(GroovyTokenType.ANNOTATION, GroovyPluginImageBundle.INSTANCE.annotationItem());
-      images.put(GroovyTokenType.ENUM, GroovyPluginImageBundle.INSTANCE.enumItem());
-      images.put(GroovyTokenType.INTERFACE, GroovyPluginImageBundle.INSTANCE.intrfaceItem());
+      images.put(TokenExtType.CLASS,  GroovyPluginImageBundle.INSTANCE.classItem());
+      images.put(TokenExtType.ANNOTATION, GroovyPluginImageBundle.INSTANCE.annotationItem());
+      images.put(TokenExtType.ENUM, GroovyPluginImageBundle.INSTANCE.enumItem());
+      images.put(TokenExtType.INTERFACE, GroovyPluginImageBundle.INSTANCE.intrfaceItem());
    }
    
    /**
     * @return the images
     */
-   public static HashMap<GroovyTokenType, ImageResource> getImages()
+   public static HashMap<TokenExtType, ImageResource> getImages()
    {
       return images;
    }

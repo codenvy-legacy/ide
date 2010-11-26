@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.module.groovy.service.codeassistant.event;
 
 import java.util.List;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -36,12 +36,12 @@ public class ClassesNamesReceivedEvent extends GwtEvent<ClassesNamesReceivedHand
 
    public static GwtEvent.Type<ClassesNamesReceivedHandler> TYPE = new Type<ClassesNamesReceivedHandler>();
 
-   private List<GroovyToken> tokens;
+   private List<TokenExt> tokens;
 
    /**
     * @param tokens
     */
-   public ClassesNamesReceivedEvent(List<GroovyToken> tokens)
+   public ClassesNamesReceivedEvent(List<TokenExt> tokens)
    {
       this.tokens = tokens;
    }
@@ -66,9 +66,9 @@ public class ClassesNamesReceivedEvent extends GwtEvent<ClassesNamesReceivedHand
 
    /**
     * Classes FQN
-    * @return {@link List} of {@link GroovyToken}
+    * @return {@link List} of {@link TokenExt}
     */
-   public List<GroovyToken> getTokens()
+   public List<TokenExt> getTokens()
    {
       return tokens;
    }

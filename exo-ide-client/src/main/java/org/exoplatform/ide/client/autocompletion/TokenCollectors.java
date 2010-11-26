@@ -36,11 +36,11 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public final class TokenCollectors
 {
-   private HashMap<String, TokenCollector> tokenCollectors = new HashMap<String, TokenCollector>();
+   private HashMap<String, TokenCollector<?>> tokenCollectors = new HashMap<String, TokenCollector<?>>();
 
    private static TokenCollectors instance;
 
-   private TokenCollectors(HandlerManager eventBus)
+   public TokenCollectors(HandlerManager eventBus)
    {
       //tokenCollectors.put(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus));
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
@@ -50,12 +50,12 @@ public final class TokenCollectors
 
    }
 
-   private HashMap<String, TokenCollector> getTokenCollectors()
+   private HashMap<String, TokenCollector<?>> getTokenCollectors()
    {
       return tokenCollectors;
    }
    
-   public static TokenCollector getTokenCollector(HandlerManager eventBus, String mimeType)
+   public static TokenCollector<?> getTokenCollector(HandlerManager eventBus, String mimeType)
    {
       if (instance == null)
       {

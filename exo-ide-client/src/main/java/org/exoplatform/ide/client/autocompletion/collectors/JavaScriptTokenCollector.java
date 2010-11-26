@@ -40,7 +40,7 @@ import com.google.gwt.json.client.JSONArray;
  * @version $
  */
 
-public class JavaScriptTokenCollector implements TokenCollector
+public class JavaScriptTokenCollector implements TokenCollector<Token>
 {
 
    private static List<Token> defaultTokens;
@@ -61,7 +61,7 @@ public class JavaScriptTokenCollector implements TokenCollector
                                                return $wnd.javascript_tokens;
                                                }-*/;
    
-   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback)
+   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser, TokensCollectedCallback<Token> tokensCollectedCallback)
    {
 
       List<Token> tokens = new ArrayList<Token>();

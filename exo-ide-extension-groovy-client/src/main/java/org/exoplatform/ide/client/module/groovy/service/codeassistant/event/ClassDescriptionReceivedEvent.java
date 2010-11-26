@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.module.groovy.service.codeassistant.event;
 
+import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyClass;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -31,7 +33,17 @@ public class ClassDescriptionReceivedEvent extends GwtEvent<ClassDescriptionRece
 {
 
    public static GwtEvent.Type<ClassDescriptionReceivedHandler> TYPE = new Type<ClassDescriptionReceivedHandler>();
-   
+
+   private GroovyClass classInfo;
+
+   /**
+    * @param classInfo
+    */
+   public ClassDescriptionReceivedEvent(GroovyClass classInfo)
+   {
+      this.classInfo = classInfo;
+   }
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -48,6 +60,14 @@ public class ClassDescriptionReceivedEvent extends GwtEvent<ClassDescriptionRece
    protected void dispatch(ClassDescriptionReceivedHandler handler)
    {
       handler.onClassDecriptionReceived(this);
+   }
+
+   /**
+    * @return the classInfo
+    */
+   public GroovyClass getClassInfo()
+   {
+      return classInfo;
    }
 
 }

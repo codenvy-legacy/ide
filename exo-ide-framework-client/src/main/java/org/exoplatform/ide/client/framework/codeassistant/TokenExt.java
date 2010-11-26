@@ -28,19 +28,19 @@ import java.util.Map;
  * @version $Id: Nov 17, 2010 5:22:15 PM evgen $
  *
  */
-public class GroovyToken
+public class TokenExt
 {
-   private Map<GroovyTokenProperties, String> properies = new LinkedHashMap<GroovyTokenProperties, String>();
+   private Map<TokenExtProperties, String> properies = new LinkedHashMap<TokenExtProperties, String>();
 
    private String name;
    
-   private GroovyTokenType type;
+   private TokenExtType type;
    
    /**
     * @param name of token
     * @param type of token
     */
-   public GroovyToken(String name, GroovyTokenType type)
+   public TokenExt(String name, TokenExtType type)
    {
       super();
       this.name = name;
@@ -52,7 +52,7 @@ public class GroovyToken
     * @param type of token
     * @param properties {@link Map} of token properties
     */
-   public GroovyToken(String name, GroovyTokenType type, Map<GroovyTokenProperties, String> properties)
+   public TokenExt(String name, TokenExtType type, Map<TokenExtProperties, String> properties)
    {
       this.name = name;
       this.type = type;
@@ -65,11 +65,11 @@ public class GroovyToken
     * @param name
     * @return property value or <code>null</code> if property not exist
     */
-   public String getProperty(GroovyTokenProperties name)
+   public String getProperty(TokenExtProperties name)
    {
       if (properies.containsKey(name))
       {
-         for (GroovyTokenProperties key : properies.keySet())
+         for (TokenExtProperties key : properies.keySet())
          {
             if (key.equals(name))
             {
@@ -85,7 +85,7 @@ public class GroovyToken
     * @param name
     * @param value
     */
-   public void setProperty(GroovyTokenProperties name, String value)
+   public void setProperty(TokenExtProperties name, String value)
    {
       properies.put(name, value);
    }
@@ -101,7 +101,7 @@ public class GroovyToken
    /**
     * @return the type of token
     */
-   public GroovyTokenType getType()
+   public TokenExtType getType()
    {
       return type;
    }
@@ -113,7 +113,7 @@ public class GroovyToken
    public String toString()
    {
       String obj = name + " " + type.toString();
-      for(GroovyTokenProperties p : properies.keySet())
+      for(TokenExtProperties p : properies.keySet())
       {
          obj += " " + p.toString() + " " + properies.get(p);
       }

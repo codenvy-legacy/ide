@@ -16,49 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-
-import com.google.gwt.user.client.ui.FlowPanel;
+package org.exoplatform.ide.client.framework.codeassistant.api;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 19, 2010 4:41:26 PM evgen $
+ * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  *
  */
-public class AssistantImportDeclarationPanel<T extends TokenWidget<?>> extends FlowPanel
+public interface TokenSelectedHandler<T>
 {
 
-   private List<T> entries = new ArrayList<T>();
-
-   /**
-    * Add a new child widget to the panel.
-    * @param w the widget to be added
-    */
-   public void addWidget(T w)
-   {
-      entries.add(w);
-      super.add(w);
-   }
-
-   /**
-    * @see com.google.gwt.user.client.ui.FlowPanel#clear()
-    */
-   @Override
-   public void clear()
-   {
-      entries.clear();
-      super.clear();
-   }
-
-   public List<T> getEntries()
-   {
-      return entries;
-   }
+   void onTokenSelected(T token);
+   
+   void onCancelAutoComplete();
+   
 }

@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.framework.codeassistant.api;
 
 import java.util.List;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,6 +32,6 @@ import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 public interface ImportDeclarationTokenCollectorCallback
 {
 
-   void tokensCollected(List<GroovyToken> tokens);
+   void tokensCollected(List<TokenExt> tokens);
    
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant.api;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 /**
  * Created by The eXo Platform SAS.
@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
 public interface AssistImportDeclarationHandler
 {
    
-   void onImportTockenSelected(GroovyToken token);
+   void onImportTockenSelected(TokenExt token);
    
    void onImportCancel();
    

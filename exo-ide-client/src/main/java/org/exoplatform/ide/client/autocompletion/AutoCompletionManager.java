@@ -22,11 +22,13 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
-import org.exoplatform.ide.client.autocompletion.ui.NewAutoCompleteForm;
+import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
+import org.exoplatform.ide.client.autocompletion.ui.AutoCompleteForm;
 import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.AutocompleteTokenSelectedHandler;
@@ -41,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, TokensCollectedCallback,
+public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, TokensCollectedCallback<Token>,
    AutocompleteTokenSelectedHandler
 {
 
@@ -88,11 +90,13 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
+      
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
 
-      TokenCollector collector = TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
+      @SuppressWarnings("unchecked")
+      TokenCollector<Token> collector = (TokenCollector<Token>)TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)
       {
          collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event
@@ -107,7 +111,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
       int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
       int y = cursorOffsetY + 4;
-      new NewAutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
+      new AutoCompleteForm(eventBus, x, y, tokenToComplete, tokens, TokenImageResolver.getImages(), this);
    }
 
    /**

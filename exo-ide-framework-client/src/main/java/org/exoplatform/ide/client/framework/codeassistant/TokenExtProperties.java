@@ -16,49 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-
-import com.google.gwt.user.client.ui.FlowPanel;
+package org.exoplatform.ide.client.framework.codeassistant;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 19, 2010 4:41:26 PM evgen $
+ * @version $Id: Nov 17, 2010 5:31:49 PM evgen $
  *
  */
-public class AssistantImportDeclarationPanel<T extends TokenWidget<?>> extends FlowPanel
-{
-
-   private List<T> entries = new ArrayList<T>();
-
-   /**
-    * Add a new child widget to the panel.
-    * @param w the widget to be added
-    */
-   public void addWidget(T w)
-   {
-      entries.add(w);
-      super.add(w);
-   }
-
-   /**
-    * @see com.google.gwt.user.client.ui.FlowPanel#clear()
-    */
-   @Override
-   public void clear()
-   {
-      entries.clear();
-      super.clear();
-   }
-
-   public List<T> getEntries()
-   {
-      return entries;
-   }
+public enum TokenExtProperties {
+   CLASS, FQN, PACKAGE, MODIFIERS, DECLARINGCLASS, GENERICPARAMETERTYPES, TYPE, GENERICRETURNTYPE, PARAMETERTYPES, RETURNTYPE;
 }

@@ -30,9 +30,9 @@ import org.exoplatform.gwtframework.editor.api.Token;
  * @version $
  */
 
-public interface TokensCollectedCallback
+public interface TokensCollectedCallback<T>
 {
 
-   void onTokensCollected(List<Token> tokens, String beforeToken, String tokenToComplete, String afterToken);
+   void onTokensCollected(List<T> tokens, String beforeToken, String tokenToComplete, String afterToken);
 
 }

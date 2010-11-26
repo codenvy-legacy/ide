@@ -30,9 +30,9 @@ import org.exoplatform.gwtframework.editor.api.Token;
  * @version $
  */
 
-public interface TokenCollector
+public interface TokenCollector<T>
 {
 
-   void getTokens(String line, String lineMimeType, int lineNum, int cursorPos,  List<Token> tokenFromParser, TokensCollectedCallback tokensCollectedCallback);
+   void getTokens(String line, String lineMimeType, int lineNum, int cursorPos,  List<T> tokenFromParser, TokensCollectedCallback<T> tokensCollectedCallback);
    
 }

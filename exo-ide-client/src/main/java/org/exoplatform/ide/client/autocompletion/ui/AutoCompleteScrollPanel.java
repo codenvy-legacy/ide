@@ -16,49 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
+package org.exoplatform.ide.client.autocompletion.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.event.dom.client.HasMouseOutHandlers;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 19, 2010 4:41:26 PM evgen $
+ * @version $Id: Nov 25, 2010 4:31:06 PM evgen $
  *
  */
-public class AssistantImportDeclarationPanel<T extends TokenWidget<?>> extends FlowPanel
+public class AutoCompleteScrollPanel extends ScrollPanel implements HasMouseOutHandlers
 {
 
-   private List<T> entries = new ArrayList<T>();
-
    /**
-    * Add a new child widget to the panel.
-    * @param w the widget to be added
+    * @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler)
     */
-   public void addWidget(T w)
+   public HandlerRegistration addMouseOutHandler(MouseOutHandler handler)
    {
-      entries.add(w);
-      super.add(w);
+      return addDomHandler(handler, MouseOutEvent.getType());
    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.FlowPanel#clear()
-    */
-   @Override
-   public void clear()
-   {
-      entries.clear();
-      super.clear();
-   }
-
-   public List<T> getEntries()
-   {
-      return entries;
-   }
 }

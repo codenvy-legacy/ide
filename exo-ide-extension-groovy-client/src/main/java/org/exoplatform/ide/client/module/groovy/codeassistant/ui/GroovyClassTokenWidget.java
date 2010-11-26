@@ -20,9 +20,10 @@ package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
 import java.util.HashMap;
 
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.ui.Label;
  * @version $Id: Nov 19, 2010 5:00:40 PM evgen $
  *
  */
-public class GroovyClassTokenWidget extends TokenWidget
+public class GroovyClassTokenWidget extends TokenWidget<TokenExt>
 {
    
    private Grid grid;
@@ -49,9 +50,9 @@ public class GroovyClassTokenWidget extends TokenWidget
     * @param token
     * @param number
     */
-   public GroovyClassTokenWidget(GroovyToken token, int number, HashMap<GroovyTokenType, ImageResource> images)
+   public GroovyClassTokenWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
    {
-      super(token, number);
+      super(token);
       grid = new Grid(1, 3);
 //      grid.setStyleName(Style.AUTO_LIST_ITEM);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
@@ -62,7 +63,7 @@ public class GroovyClassTokenWidget extends TokenWidget
       
       grid.setWidget(0, 1, new Label(token.getName(), false));
 
-      String pack = token.getProperty(GroovyTokenProperties.FQN);
+      String pack = token.getProperty(TokenExtProperties.FQN);
       pack = pack.substring(0, pack.lastIndexOf("."));
       grid.setWidget(0, 2, new Label("-"+pack));
       
@@ -80,7 +81,7 @@ public class GroovyClassTokenWidget extends TokenWidget
 
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setSelectedStyle()
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setSelectedStyle()
     */
    @Override
    public void setSelectedStyle()
@@ -92,7 +93,7 @@ public class GroovyClassTokenWidget extends TokenWidget
 
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setOveredStyle()
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setOveredStyle()
     */
    @Override
    public void setOveredStyle()
@@ -104,13 +105,24 @@ public class GroovyClassTokenWidget extends TokenWidget
 
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.TokenWidget#setDefaultStyle()
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setDefaultStyle()
     */
    @Override
    public void setDefaultStyle()
    {
       // TODO Auto-generated method stub
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+   }
+
+
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName()
+    */
+   @Override
+   public String getTokenName()
+   {
+      return getToken().getName();
    }
 
 }

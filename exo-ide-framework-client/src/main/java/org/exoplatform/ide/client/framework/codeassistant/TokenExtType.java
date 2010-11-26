@@ -22,9 +22,9 @@ package org.exoplatform.ide.client.framework.codeassistant;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 17, 2010 5:31:49 PM evgen $
+ * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
  *
  */
-public enum GroovyTokenProperties {
-   CLASS, FQN, PACKAGE, MODIFIERS;
+public enum TokenExtType {
+   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR
 }

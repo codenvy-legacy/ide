@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.editor.api.CodeError;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorInsertImportStatmentEvent;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
@@ -89,17 +89,17 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback#tokensCollected(java.util.List)
     */
-   public void tokensCollected(List<GroovyToken> tokens)
+   public void tokensCollected(List<TokenExt> tokens)
    {
       new AssistImportDeclarationForm(eventBus, left, top, tokens, AssistImportDeclarationImages.getImages(), this);
    }
 
    /**
-    * @see org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationHandler#onImportTockenSelected(org.exoplatform.gwtframework.editor.api.codeassitant.GroovyToken)
+    * @see org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationHandler#onImportTockenSelected(org.exoplatform.gwtframework.editor.api.TokenExt.GroovyToken)
     */
-   public void onImportTockenSelected(GroovyToken token)
+   public void onImportTockenSelected(TokenExt token)
    {
-      eventBus.fireEvent(new EditorInsertImportStatmentEvent(editorId, token.getProperty(GroovyTokenProperties.FQN)));
+      eventBus.fireEvent(new EditorInsertImportStatmentEvent(editorId, token.getProperty(TokenExtProperties.FQN)));
       eventBus.fireEvent(new EditorSetFocusEvent());
    }
 

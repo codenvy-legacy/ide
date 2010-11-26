@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyToken;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenProperties;
-import org.exoplatform.ide.client.framework.codeassistant.GroovyTokenType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
@@ -49,12 +49,12 @@ public class FindClassesUnmarshaller implements Unmarshallable
 
    private static final String TYPE = "type";
 
-   private List<GroovyToken> tokens;
+   private List<TokenExt> tokens;
 
    /**
     * @param tokens
     */
-   public FindClassesUnmarshaller(List<GroovyToken> tokens)
+   public FindClassesUnmarshaller(List<TokenExt> tokens)
    {
       this.tokens = tokens;
    }
@@ -89,19 +89,19 @@ public class FindClassesUnmarshaller implements Unmarshallable
          JSONObject jObject = jArray.get(i).isObject();
          //     GroovyToken token = new GroovyToken(jObject.get("CLASS").isString().stringValue(), GroovyTokenType.CLASS);
 
-         GroovyToken token =
-            new GroovyToken(jObject.get(NAME).isString().stringValue(), GroovyTokenType.valueOf(jObject.get(TYPE)
+         TokenExt token =
+            new TokenExt(jObject.get(NAME).isString().stringValue(), TokenExtType.valueOf(jObject.get(TYPE)
                .isString().stringValue()));
 
          for (String key : jObject.keySet())
          {
             if (key.equals(FQN))
             {
-               token.setProperty(GroovyTokenProperties.FQN, jObject.get(key).isString().stringValue());
+               token.setProperty(TokenExtProperties.FQN, jObject.get(key).isString().stringValue());
             }
             if (key.equals(MODIFIERS))
             {
-               token.setProperty(GroovyTokenProperties.MODIFIERS, "" +jObject.get(key).isNumber().doubleValue());
+               token.setProperty(TokenExtProperties.MODIFIERS, "" +jObject.get(key).isNumber().doubleValue());
             }
             
          }

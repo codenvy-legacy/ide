@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallbac
  * @version $Id: $
  *
  */
-public class XmlTokenCollector implements TokenCollector
+public class XmlTokenCollector implements TokenCollector<Token>
 {
 
    private String beforeToken;
@@ -47,7 +47,7 @@ public class XmlTokenCollector implements TokenCollector
     * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenCollector#getTokens(java.lang.String, java.lang.String, int, int, java.util.List, org.exoplatform.ide.client.framework.codeassistant.api.TokensCollectedCallback)
     */
    public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser,
-      TokensCollectedCallback tokensCollectedCallback)
+      TokensCollectedCallback<Token> tokensCollectedCallback)
    {
       List<Token> token = new ArrayList<Token>();
       filteredToken.clear();
