@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -98,7 +99,7 @@ public class HighlightCKEditorTest extends BaseTest
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_PreviewForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    @AfterClass
