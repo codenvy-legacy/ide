@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -61,7 +62,8 @@ public class GeItemUrlTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+     
+      CloseFileUtils.closeTab(0);
       assertElementPresentInWorkspaceTree(file1Name);
 
       createFolder(folderName);
@@ -71,7 +73,7 @@ public class GeItemUrlTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       assertElementPresentInWorkspaceTree(file2Name);
 
       //Refresh root item

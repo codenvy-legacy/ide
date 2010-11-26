@@ -33,6 +33,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -232,13 +233,13 @@ public class UsingKeyboardTest extends BaseTest
       assertElementPresentOutlineTree("CDATA");     
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
       
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
    @After
    public void tearDown() throws Exception
    {
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       VirtualFileSystemUtils.delete(URL +TEST_FOLDER);
       selectWorkspaceTab();
    }   
