@@ -30,6 +30,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -255,7 +256,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
       checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
 
    /**
