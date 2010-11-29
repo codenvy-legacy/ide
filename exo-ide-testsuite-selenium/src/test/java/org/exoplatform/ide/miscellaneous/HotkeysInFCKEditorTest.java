@@ -150,7 +150,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check tab title is not marked by *
       assertEquals(GOOGLE_GADGET_FILE, getTabTitle(0));
       //close file
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
    }
    
    /**
