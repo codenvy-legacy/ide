@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
@@ -45,6 +47,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Timer;
@@ -95,19 +98,15 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private Handlers handlers;
 
-   private List<T> items;
-
-   private TokenWidgetFactory<T> widgetFactory;
-
    private TokenSelectedHandler<T> handler;
 
    private List<TokenWidget<T>> widgets;
 
+   private List<TokenWidget<T>> allWidgets;
+
    public AutocompletionFormExt(HandlerManager eventBus, int left, int top, String prefix, List<T> items,
       TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler<T> handler)
    {
-      this.items = items;
-      this.widgetFactory = widgetFactory;
       this.handler = handler;
 
       handlers = new Handlers(eventBus);
@@ -139,7 +138,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       flowPanel = new FlowPanel();
 
       scrollPanel = new AutoCompleteScrollPanel();
-
+//      scrollPanel.setAlwaysShowScrollBars(true);
       scrollPanel.add(flowPanel);
 
       mousHandler = new MousHandler();
@@ -149,6 +148,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       scrollPanel.setHeight("200px");
       scrollPanel.setWidth("300px");
+
       panel = new VerticalPanel();
 
       int clientHeight = Window.getClientHeight();
@@ -164,7 +164,6 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          top = top - 200;
       }
 
-
       panel.setStyleName(Style.AUTO_PANEL);
 
       lockLayer.add(panel, left, top);
@@ -173,14 +172,17 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
 
-      
       widgets = new ArrayList<TokenWidget<T>>();
-      for(T t : items)
+      allWidgets = new ArrayList<TokenWidget<T>>();
+      for (T t : items)
       {
-         widgets.add(widgetFactory.getTokenWidget(t));
+         TokenWidget<T> w = widgetFactory.getTokenWidget(t);
+         w.addClickHandler(mousHandler);
+         w.addMouseOverHandler(mousHandler);
+         w.addDoubleClickHandler(mousHandler);
+         allWidgets.add(w);
       }
-     
-      
+
       DeferredCommand.addCommand(new Command()
       {
 
@@ -202,16 +204,18 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       widgets.clear();
       flowPanel.clear();
       //widgets = widgetFactory.getWidgetsByFilter(editText, items);
-      
-
-      for (TokenWidget<T> w : widgets)
+      for (TokenWidget<T> w : allWidgets)
       {
-         w.addClickHandler(mousHandler);
-         w.addMouseOverHandler(mousHandler);
-         w.addDoubleClickHandler(mousHandler);
-         flowPanel.add(w);
+         if (w.getTokenName().startsWith(editText))
+         {
+            widgets.add(w);
+            flowPanel.add(w);
+         }
       }
-
+      if (!widgets.isEmpty())
+      {
+         selectWidget(0);
+      }
    }
 
    /**
@@ -254,11 +258,24 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       }
    }
 
+   private native void scroll(Element scroll, int pos)/*-{
+      scroll.scrollTop =  scroll.scrollTop + pos;
+   }-*/;
+
    private void selectWidget(int i)
    {
-      scrollPanel.ensureVisible(widgets.get(i));
-      //         DOM.scrollIntoView(widgets.get(i).getElement());
-      //      ensureVisibleImpl(scrollPanel.getElement(), widgets.get(i).getElement());
+
+      Element scroll = scrollPanel.getElement();
+      Element item = widgets.get(i).getElement();
+      if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
+      {
+         scroll(scroll, -item.getOffsetHeight());
+      }
+      else if (item.getAbsoluteBottom() + 15 > scroll.getAbsoluteBottom())
+      {
+         scroll(scroll, item.getAbsoluteBottom() - scroll.getAbsoluteBottom() + 20);
+      }
+
       selectToken(widgets.get(i));
    }
 
@@ -392,15 +409,23 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          NativeEvent nativeEvent = event.getNativeEvent();
 
          int type = event.getTypeInt();
-         if (type == Event.ONKEYDOWN)
+         int typeEvent = Event.ONKEYDOWN;
+         if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX))
+         {
+            typeEvent = Event.ONKEYPRESS;
+         }
+
+         if (type == typeEvent)
          {
             switch (nativeEvent.getKeyCode())
             {
                case KeyCodes.KEY_DOWN :
+                  event.cancel();
                   listBoxDown();
                   break;
 
                case KeyCodes.KEY_UP :
+                  event.cancel();
                   listBoxUP();
                   break;
 
@@ -412,6 +437,11 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
                case KeyCodes.KEY_ESCAPE :
                   cancelAutocomplete();
                   break;
+
+               case KeyCodes.KEY_LEFT :
+               case KeyCodes.KEY_RIGHT :
+                  break;
+
                default :
                   new Timer()
                   {

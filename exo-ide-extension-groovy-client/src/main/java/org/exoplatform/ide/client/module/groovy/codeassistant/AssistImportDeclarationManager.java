@@ -91,7 +91,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
     */
    public void tokensCollected(List<TokenExt> tokens)
    {
-      new AssistImportDeclarationForm(eventBus, left, top, tokens, AssistImportDeclarationImages.getImages(), this);
+      new AssistImportDeclarationForm(eventBus, left, top, tokens, CodeAssitantImages.getImages(), this);
    }
 
    /**

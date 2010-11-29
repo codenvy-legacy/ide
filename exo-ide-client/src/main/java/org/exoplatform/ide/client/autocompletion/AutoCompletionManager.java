@@ -22,12 +22,10 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
-import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
 import org.exoplatform.ide.client.autocompletion.ui.AutoCompleteForm;
 import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
@@ -94,7 +92,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-
+            
       @SuppressWarnings("unchecked")
       TokenCollector<Token> collector = (TokenCollector<Token>)TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)

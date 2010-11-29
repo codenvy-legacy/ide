@@ -5,6 +5,7 @@ import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
+import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.chromattic.ChromatticModule;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
@@ -44,6 +45,8 @@ public class IDE extends VerticalPanel
       new IDEForm(eventBus, context, controlsRegistration);
       
       new AutoCompletionManager(eventBus);
+      
+      new AutoCompletionManagerExt(eventBus);
 
       new ApplicationStateSnapshotListener(eventBus);         
       

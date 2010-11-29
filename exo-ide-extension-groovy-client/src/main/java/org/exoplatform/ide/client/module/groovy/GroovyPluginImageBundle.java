@@ -18,7 +18,6 @@ package org.exoplatform.ide.client.module.groovy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -46,6 +45,34 @@ public interface GroovyPluginImageBundle extends ClientBundle
    
    @Source("images/codeassistant/enum.gif")
    ImageResource enumItem();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/class-item.png")
+   ImageResource classItem1();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/default-field.png")
+   ImageResource defaultField();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/default-method.png")
+   ImageResource defaultMethod();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/private-field.png")
+   ImageResource privateField();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/private-method.png")
+   ImageResource privateMethod();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/protected-field.png")
+   ImageResource protectedField();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/protected-method.png")
+   ImageResource protectedMethod();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/public-field.png")
+   ImageResource publicField();
+
+   @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/public-method.png")
+   ImageResource publicMethod();
+
 
    //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
 //   ImageResource setAutoLoad();

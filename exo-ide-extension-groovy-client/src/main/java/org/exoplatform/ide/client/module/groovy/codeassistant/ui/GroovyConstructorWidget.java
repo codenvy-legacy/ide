@@ -35,39 +35,38 @@ import com.google.gwt.user.client.ui.Label;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 19, 2010 5:00:40 PM evgen $
+ * @version $Id: Nov 29, 2010 9:40:49 AM evgen $
  *
  */
-public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
+public class GroovyConstructorWidget extends GroovyTokenWidgetBase
 {
-   
+
    private Grid grid;
-   
-   
 
    /**
     * @param token
-    * @param number
     */
-   public GroovyClassTokenWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
+   public GroovyConstructorWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
    {
       super(token);
+
       grid = new Grid(1, 3);
-//      grid.setStyleName(Style.AUTO_LIST_ITEM);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-    
+      grid.setWidth("100%");
+
       Image i = new Image(images.get(token.getType()));
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      
-      grid.setWidget(0, 1, new Label(token.getName(), false));
 
-      String pack = token.getProperty(TokenExtProperties.FQN);
-      pack = pack.substring(0, pack.lastIndexOf("."));
-      grid.setWidget(0, 2, new Label("-"+pack));
-      
+      String name = token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
+
+      grid.setWidget(0, 1, new Label(name, false));
+
+      Label label = new Label("-" + token.getProperty(TokenExtProperties.DECLARINGCLASS), false);
+      label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
+      grid.setWidget(0, 2, label);
+
       grid.getCellFormatter().setWidth(0, 0, "16px");
-//      //grid.getCellFormatter().
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);

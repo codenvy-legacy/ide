@@ -16,37 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy;
+package org.exoplatform.ide.client.framework.codeassistant.events;
 
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 23, 2010 3:46:05 PM evgen $
+ * @version $Id: Nov 26, 2010 2:44:44 PM evgen $
  *
  */
-public interface GroovyCss extends CssResource
+public interface RegisterTokenCollectorHandler extends EventHandler
 {
-  @ClassName("exo-autocomplete-panel")
-  String panelStyle(); 
-  
-  @ClassName("exo-autocomplete-list-item")
-  String item();
-  
-  @ClassName("exo-autocomplete-list-item-overed")
-  String overedItem();
-  
-  @ClassName("exo-autocomplete-list-item-selected")
-  String selectedItem();
-  
-  @ClassName("exo-autocomplete-description")
-  String description();
-  
-  @ClassName("exo-autocomplete-list")
-  String listStyle();
-  
-  @ClassName("exo-autocomplete-fqn")
-  String fqnStyle();
+
+   void onRegisterTokenCollector(RegisterTokenCollectorEvent event);
+   
 }

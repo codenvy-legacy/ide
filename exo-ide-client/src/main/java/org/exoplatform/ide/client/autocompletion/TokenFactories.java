@@ -21,9 +21,9 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenWidgetFactoryEvent;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenWidgetFactoryHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -31,32 +31,31 @@ import com.google.gwt.event.shared.HandlerManager;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 26, 2010 12:19:16 PM evgen $
+ * @version $Id: Nov 26, 2010 3:55:15 PM evgen $
  *
  */
-public class TokenExtCollectors<T> implements RegisterTokenCollectorHandler
+public class TokenFactories<T> implements RegisterTokenWidgetFactoryHandler
 {
-
-   private Map<String, TokenCollector<T>> collectors = new HashMap<String, TokenCollector<T>>();
-
-   public TokenExtCollectors(HandlerManager eventBus)
+   
+   private Map<String, TokenWidgetFactory<T>> factories = new HashMap<String, TokenWidgetFactory<T>>();
+   
+   public TokenFactories(HandlerManager eventBus)
    {
-      eventBus.addHandler(RegisterTokenCollectorEvent.TYPE, this);
-
+      eventBus.addHandler(RegisterTokenWidgetFactoryEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler#onRegisterTokenCollector(org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent)
+    * @see org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenWidgetFactoryHandler#onRegisterTokenWidgetFactory(org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenWidgetFactoryEvent)
     */
    @SuppressWarnings("unchecked")
-   public void onRegisterTokenCollector(RegisterTokenCollectorEvent event)
+   public void onRegisterTokenWidgetFactory(RegisterTokenWidgetFactoryEvent event)
    {
-      collectors.put(event.getMimeType(), (TokenCollector<T>)event.getCollector());
+      factories.put(event.getMimeType(), (TokenWidgetFactory<T>)event.getFactory());      
    }
-
-   public TokenCollector<T> getTokenCollector(String mimeType)
+   
+   public TokenWidgetFactory<T> getFactory(String mimeType)
    {
-      return collectors.get(mimeType);
+      return factories.get(mimeType);
    }
 
 }

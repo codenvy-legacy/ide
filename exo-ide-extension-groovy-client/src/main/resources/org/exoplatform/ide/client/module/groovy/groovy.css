@@ -71,3 +71,8 @@
     overflow: scroll;
 }
 
+.exo-autocomplete-fqn
+{
+	color: gray;
+}
+

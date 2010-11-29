@@ -103,6 +103,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
 
    private void parseClassDescription(String json)
    {
+
       JSONObject jObject = new JSONObject(getClasses(json));
       if (jObject.containsKey(CONSTRUCTORS))
       {
@@ -208,7 +209,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
                TokenExt token = new TokenExt(name, TokenExtType.CONSTRUCTOR);
                token.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifier));
                token.setProperty(TokenExtProperties.DECLARINGCLASS, c.get(DECLARING_CLASS).isString().stringValue());
-               token.setProperty(TokenExtProperties.GENERICPARAMETERTYPES, c.get("genericParameterTypes").isString()
+               token.setProperty(TokenExtProperties.PARAMETERTYPES, c.get(PARAMETER_TYPES).isString()
                   .stringValue());
                constructors.add(token);
             }
