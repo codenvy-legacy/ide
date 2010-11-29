@@ -159,6 +159,7 @@ public class Base extends TestCase
    @After
    protected void tearDown() throws Exception
    {
+      
       if (session != null)
       {
          try
@@ -172,7 +173,7 @@ public class Base extends TestCase
                {
                   Node node = children.nextNode();
                   if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:audit")
-                     && !node.getPath().startsWith("/exo:organization"))
+                     && !node.getPath().startsWith("/exo:organization") && !node.getPath().startsWith("/dev-doc"))
                   {
                      node.remove();
                   }
@@ -258,7 +259,6 @@ public class Base extends TestCase
          child.setProperty("jcr:mimeType", "text/plain");
          child.setProperty("exoide:className", clazz.substring(clazz.lastIndexOf(".") + 1));
          child.setProperty("exoide:fqn", clazz);
-         System.out.println("Base.putClass()" + clazz);
       }
    }
    catch (ClassNotFoundException e)

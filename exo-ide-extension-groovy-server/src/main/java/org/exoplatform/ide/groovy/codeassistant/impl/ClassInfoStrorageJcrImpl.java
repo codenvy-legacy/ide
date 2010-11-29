@@ -63,23 +63,31 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    private RepositoryService repositoryService;
 
    private final String wsName;
+   
+   private final static String[] defaultPkgs = {"java.lang","java.util","java.io","java.math","java.text"}; 
 
    public ClassInfoStrorageJcrImpl(SessionProviderService sessionProvider, RepositoryService repositoryService,
       String wsName)
    {
+      this(sessionProvider, repositoryService,wsName, defaultPkgs); 
+   }
+   
+   public ClassInfoStrorageJcrImpl(SessionProviderService sessionProvider, RepositoryService repositoryService,
+      String wsName, String[] pkgs)
+   {
       this.sessionProvider = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
-      System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from java.util <<<<<<<<<<<<<<<<<<<<<<<<<,");
       try
       {
-         addClassesFromJavaUtilSource();
+         addClassesFromJavaUtilSource(pkgs);
       }
       catch (SaveClassInfoException e)
       {
          e.printStackTrace();
       }
    }
+
 
    /**
     * {@inheritDoc}
@@ -172,10 +180,7 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
     */
    
    //TODO:for prototype client side
-   @POST
-   @Path("/java-util")
-   @RolesAllowed("administrators")
-   public void addClassesFromJavaUtilSource() throws SaveClassInfoException
+   public void addClassesFromJavaUtilSource(String[] pkgs) throws SaveClassInfoException
    {
       try
       {
@@ -186,10 +191,14 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          String javaHome = System.getProperty("java.home");
          String fileSeparator = System.getProperty("file.separator");
          javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
-         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, "java.util");
-         for (String fqn : fqns)
+         for (int i = 0; i < pkgs.length; i++)
          {
-            putClass(classLoader, session, fqn);
+            System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from " + pkgs[i]);
+            List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, pkgs[i]);
+            for (String fqn : fqns)
+            {
+               putClass(classLoader, session, fqn);
+            }
          }
       }
       catch (Exception e)

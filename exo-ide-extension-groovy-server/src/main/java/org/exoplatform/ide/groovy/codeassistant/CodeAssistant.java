@@ -44,6 +44,16 @@ public interface CodeAssistant
     */
    TypeInfo getClassByFQN(String fqn) throws CodeAssistantException;
    
+   
+   /**
+    * Returns the Class object associated with the class or interface with the given string name.
+    * 
+    * @param fqn the Full Qualified Name
+    * @return {@link TypeInfo} 
+    * @throws ClassNotFoundException
+    */
+   String getClassDoc(String fqn) throws CodeAssistantException;
+   
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix})
     * Example :

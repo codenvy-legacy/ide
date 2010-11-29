@@ -24,14 +24,19 @@ import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -113,6 +118,32 @@ public class CodeAssitantTest extends Base
       ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
       assertEquals(2, types.length);
       
+   }
+   
+   @Test
+   public void testClassDoc() throws Exception
+   {
+      assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/java.math.BigDecimal/jcr:content"));
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/code-assistant/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "", null,
+            null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertNotNull(cres.getEntity());
+      String doc  =  (String)cres.getEntity();
+      assertTrue(doc.contains("Immutable, arbitrary-precision signed decimal numbers"));
+      
+   }
+   
+   @Test
+   public void testMethodDoc() throws Exception
+   {
+      assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/methods-doc"));
+      String method = BigDecimal.class.getCanonicalName() + ".add(BigDecimal)";
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/code-assistant/class-doc?fqn=" + method, "", null,
+            null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertNotNull(cres.getEntity());
    }
 
    

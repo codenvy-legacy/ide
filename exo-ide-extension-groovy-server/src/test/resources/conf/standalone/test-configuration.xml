@@ -92,6 +92,14 @@
          <name>wsname</name>
          <value>ws</value>
       </value-param>
+       <value-param>
+         <name>pkgsDoc</name>
+         <value>java/math</value>
+      </value-param>
+       <value-param>
+         <name>pkgsInfo</name>
+         <value>java.math</value>
+      </value-param>
    </init-params>
 </component>
    

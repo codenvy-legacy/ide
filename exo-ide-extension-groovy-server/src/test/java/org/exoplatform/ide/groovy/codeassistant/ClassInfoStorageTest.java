@@ -135,14 +135,14 @@ public class ClassInfoStorageTest extends Base
    }
    
    
-   @Test
-   public void testAddClassesInfoFormJavaLang() throws Exception
-   {
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java-util", "", null, null, null,ctx);
-      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
-      assertTrue(root.hasNode("classpath/java/java.util"));
-   }
+//   @Test
+//   public void testAddClassesInfoFormJavaLang() throws Exception
+//   {
+//      EnvironmentContext ctx = new EnvironmentContext();
+//      ctx.put(SecurityContext.class, adminSecurityContext);
+//      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java-util", "", null, null, null,ctx);
+//      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+//      assertTrue(root.hasNode("classpath/java/java.util"));
+//   }
 
 }

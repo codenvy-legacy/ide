@@ -225,4 +225,44 @@ public class CodeAssistantImpl implements CodeAssistant
 
    }
 
-}
+   @GET
+   @Path("/class-doc")
+   public String getClassDoc(@QueryParam("fqn") String fqn) throws CodeAssistantException
+   {
+      String sql = "SELECT * FROM exoide:javaDoc WHERE exoide:fqn='" + fqn + "'";
+      SessionProvider sp = sessionProviderService.getSessionProvider(null);
+      try
+      {
+         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
+         QueryResult result = q.execute();
+         NodeIterator nodes = result.getNodes();
+         //TODO
+         String doc = new String();
+         if (nodes.getSize() == 0)
+            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Not found"); 
+         while (nodes.hasNext())
+         {
+            Node node = (Node)nodes.next();
+            doc = node.getProperty("jcr:data").getString();
+         }
+         return doc;
+      }
+      catch (RepositoryException e)
+      {
+         e.printStackTrace();
+         //TODO:need fix status code
+         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         e.printStackTrace();
+         //TODO:need fix status code
+         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+   }
+   
+   
+   
+ }
+

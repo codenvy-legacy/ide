@@ -16,21 +16,12 @@
  */
 package org.exoplatform.ide.groovy.codeassistant.extractors;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -67,35 +58,7 @@ public class ClassNamesExtractor
     */
    public static List<String> getClassesNamesInJar(String jarPath,  String packageName) throws IOException
    {
-      ArrayList<String> classes = new ArrayList<String>();
-      JarInputStream jarFile = new JarInputStream(new FileInputStream(jarPath));
-      JarEntry jarEntry;
-      while (true)
-      {
-         jarEntry = jarFile.getNextJarEntry();
-         if (jarEntry == null)
-         {
-            break;
-         }
-         if (jarEntry.getName().endsWith(".class"))
-         {
-            String fqn = jarEntry.getName();
-            fqn = fqn.substring(0, fqn.lastIndexOf("."));
-            fqn = fqn.replaceAll("/", "\\.");
-            if (packageName != null)
-            {
-               if (fqn.startsWith(packageName))
-               {
-                  classes.add(fqn);
-               }
-            }
-            else
-            {
-               classes.add(fqn);
-            }
-         }
-      }
-      return classes;
+      return extract(jarPath, packageName, ".class");
    }
 
    /**
@@ -121,8 +84,13 @@ public class ClassNamesExtractor
     */
    public static List<String> getClassesNamesFromJavaSrc(String javaSrcPath, String packageName) throws IOException
    {
+      return extract(javaSrcPath, packageName, ".java");
+   }
+
+   private static List<String> extract(String archath, String packageName, String fileExtension) throws FileNotFoundException, IOException
+   {
       ArrayList<String> classes = new ArrayList<String>();
-      ZipInputStream zipFile = new ZipInputStream(new FileInputStream(javaSrcPath));
+      ZipInputStream zipFile = new ZipInputStream(new FileInputStream(archath));
       ZipEntry zipEntry;
       while (true)
       {
@@ -131,7 +99,7 @@ public class ClassNamesExtractor
          {
             break;
          }
-         if (zipEntry.getName().endsWith(".java"))
+         if (zipEntry.getName().endsWith(fileExtension))
          {
             String fqn = zipEntry.getName();
             fqn = fqn.substring(0, fqn.lastIndexOf("."));
