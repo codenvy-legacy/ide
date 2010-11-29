@@ -183,7 +183,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       //Close files "Test File.groovy" and "Test Groovy File.groovy".
       closeUnsavedFileAndDoNotSave(1);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      closeTab("0");
+      CloseFileUtils.closeTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
    
