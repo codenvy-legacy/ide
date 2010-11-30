@@ -42,7 +42,7 @@ public abstract class TokenWidget<T> extends Composite implements HasClickHandle
    HasDoubleClickHandlers
 {
 
-   private T token;
+   protected T token;
 
    public TokenWidget(T token)
    {
@@ -62,6 +62,12 @@ public abstract class TokenWidget<T> extends Composite implements HasClickHandle
     * @return name of token
     */
    public abstract String getTokenName();
+   
+   
+   /**
+    * @return String that will inserted in editor 
+    */
+   public abstract String getTokenValue();
    
    /**
     * 

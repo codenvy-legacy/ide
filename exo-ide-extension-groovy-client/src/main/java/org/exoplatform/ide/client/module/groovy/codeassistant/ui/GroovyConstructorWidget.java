@@ -43,6 +43,8 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
 
    private Grid grid;
 
+   private String value;
+
    /**
     * @param token
     */
@@ -58,9 +60,9 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name = token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
+      value = token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
 
-      grid.setWidget(0, 1, new Label(name, false));
+      grid.setWidget(0, 1, new Label(value, false));
 
       Label label = new Label("-" + token.getProperty(TokenExtProperties.DECLARINGCLASS), false);
       label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
@@ -74,6 +76,15 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      return value;
    }
 
 }

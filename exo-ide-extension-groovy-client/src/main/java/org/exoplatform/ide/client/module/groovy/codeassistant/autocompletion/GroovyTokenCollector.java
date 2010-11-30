@@ -21,13 +21,18 @@ package org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedHandler;
@@ -41,12 +46,23 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 26, 2010 4:56:13 PM evgen $
  *
  */
-public class GroovyTokenCollector implements TokenCollector<TokenExt>, ClassDescriptionReceivedHandler, Comparator<TokenExt>
+public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>, ExceptionThrownHandler
 {
 
+   private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
+   
    private Handlers handlers;
 
-   private TokensCollectedCallback<TokenExt> tokensCollectedCallback;
+   private TokensCollectedCallback<TokenExt> callback;
+   
+   private String beforeToken;
+   
+   private String tokenToComplete;
+   
+   private String afterToken;
+   
+   private String curentFqn;
+   
 
    public GroovyTokenCollector(HandlerManager eventBus)
    {
@@ -57,13 +73,46 @@ public class GroovyTokenCollector implements TokenCollector<TokenExt>, ClassDesc
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenCollector#getTokens(java.lang.String, java.lang.String, int, int, java.util.List, org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback)
     */
    @Override
-   public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<TokenExt> tokenFromParser,
+   public void getTokens(String line, String fqn, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
-      handlers.addHandler(ClassDescriptionReceivedEvent.TYPE, this);
-      this.tokensCollectedCallback = tokensCollectedCallback;
-      String fqn = "java.util.ArrayList";
-      CodeAssistantService.getInstance().getClassDescription(fqn);
+      this.callback = tokensCollectedCallback;
+      
+      if (line.endsWith(".") && fqn != null)
+      {
+         beforeToken = line;
+         tokenToComplete = "";
+         afterToken = "";
+         if(classes.containsKey(fqn))
+         {
+            collectPublicInterface(classes.get(fqn));
+            return;
+         }
+         
+         curentFqn = fqn;
+         handlers.addHandler(ClassDescriptionReceivedEvent.TYPE, this);
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         
+         CodeAssistantService.getInstance().getClassDescription(fqn);         
+      }
+      else
+      {
+         callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
+      }
+      
+   }
+
+   /**
+    * @param groovyClass
+    */
+   private void collectPublicInterface(GroovyClass groovyClass)
+   {
+      List<TokenExt> arrayList = new ArrayList<TokenExt>();
+      arrayList.addAll(groovyClass.getPublicFields());
+      arrayList.addAll(groovyClass.getPublicMethods());
+      Collections.sort(arrayList, this);
+      callback.onTokensCollected(arrayList, beforeToken, tokenToComplete, afterToken);
+      
    }
 
    /**
@@ -73,13 +122,10 @@ public class GroovyTokenCollector implements TokenCollector<TokenExt>, ClassDesc
    public void onClassDecriptionReceived(ClassDescriptionReceivedEvent event)
    {
       handlers.removeHandlers();
-      List<TokenExt> arrayList = new ArrayList<TokenExt>();
-      arrayList.addAll(event.getClassInfo().getPublicConstructors());
-      arrayList.addAll(event.getClassInfo().getPublicFields());
-      arrayList.addAll(event.getClassInfo().getPublicMethods());
-      Collections.sort(arrayList, this);
-      tokensCollectedCallback.onTokensCollected(arrayList, "", "", "");
-
+      
+      classes.put(curentFqn, event.getClassInfo());
+      
+      collectPublicInterface(event.getClassInfo());
    }
 
    /**
@@ -102,6 +148,15 @@ public class GroovyTokenCollector implements TokenCollector<TokenExt>, ClassDesc
       }
       
       return -1;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
+    */
+   @Override
+   public void onError(ExceptionThrownEvent event)
+   {
+      handlers.removeHandlers();
    }
 
 }

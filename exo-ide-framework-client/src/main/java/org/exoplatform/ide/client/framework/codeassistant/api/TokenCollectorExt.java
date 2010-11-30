@@ -18,18 +18,22 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant.api;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
+
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
+ * @version $Id: Nov 30, 2010 10:13:08 AM evgen $
  *
  */
-public interface TokenSelectedHandler
+public interface TokenCollectorExt 
 {
 
-   void onTokenSelected(String value);
-   
-   void onCancelAutoComplete();
+   void getTokens(String line, String fqn, int lineNum, int cursorPos,  List<Token> tokenFromParser, TokensCollectedCallback<TokenExt> tokensCollectedCallback);
    
 }

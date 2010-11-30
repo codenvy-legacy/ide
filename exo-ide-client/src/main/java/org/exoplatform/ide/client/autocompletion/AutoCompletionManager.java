@@ -88,17 +88,16 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
 
    public void onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent event)
    {
-      
+
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-            
-      @SuppressWarnings("unchecked")
-      TokenCollector<Token> collector = (TokenCollector<Token>)TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
+
+      TokenCollector<Token> collector = TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)
       {
-         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(), event
-            .getCursorPositionX(), filterTokenByMimeType(event.getTokenList(), event.getLineMimeType()), this);
+         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(),
+            event.getCursorPositionX(), filterTokenByMimeType(event.getTokenList(), event.getLineMimeType()), this);
       }
    }
 
@@ -194,10 +193,10 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    }
 
    private native int getCursorPos(String token)/*-{
-                                                   pattern = "[({]|\\n";
-                                                   d = token.search(pattern);
-                                                   return (d == -1) ? (token.length+1) : (d+2);
-                                                   }-*/;
+      pattern = "[({]|\\n";
+      d = token.search(pattern);
+      return (d == -1) ? (token.length+1) : (d+2);
+   }-*/;
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()

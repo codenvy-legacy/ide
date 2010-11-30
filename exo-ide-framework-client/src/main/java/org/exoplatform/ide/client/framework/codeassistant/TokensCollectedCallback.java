@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.framework.codeassistant;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.editor.api.Token;
-
 /**
  * Created by The eXo Platform SAS .
  * 

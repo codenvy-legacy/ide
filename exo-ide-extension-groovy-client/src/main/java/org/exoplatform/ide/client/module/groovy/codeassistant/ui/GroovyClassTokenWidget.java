@@ -77,4 +77,15 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
       setWidth("100%");
    }
 
+
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      return getToken().getProperty(TokenExtProperties.FQN);
+   }
+
 }

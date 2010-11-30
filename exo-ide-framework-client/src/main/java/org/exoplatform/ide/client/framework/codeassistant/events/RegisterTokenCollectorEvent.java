@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant.events;
 
-import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -34,14 +34,14 @@ public class RegisterTokenCollectorEvent extends GwtEvent<RegisterTokenCollector
 
    public static GwtEvent.Type<RegisterTokenCollectorHandler> TYPE = new Type<RegisterTokenCollectorHandler>();
 
-   private TokenCollector<?> collector;
+   private TokenCollectorExt collector;
    
    private String mimeType;
 
    /**
     * @param collector
     */
-   public RegisterTokenCollectorEvent(String mimeType, TokenCollector<?> collector)
+   public RegisterTokenCollectorEvent(String mimeType, TokenCollectorExt collector)
    {
       this.mimeType = mimeType;
       this.collector = collector;
@@ -68,7 +68,7 @@ public class RegisterTokenCollectorEvent extends GwtEvent<RegisterTokenCollector
    /**
     * @return the collector
     */
-   public TokenCollector<?> getCollector()
+   public TokenCollectorExt getCollector()
    {
       return collector;
    }

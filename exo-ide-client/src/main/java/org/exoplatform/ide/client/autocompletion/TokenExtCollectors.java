@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent;
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler;
 
@@ -34,10 +35,10 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 26, 2010 12:19:16 PM evgen $
  *
  */
-public class TokenExtCollectors<T> implements RegisterTokenCollectorHandler
+public class TokenExtCollectors implements RegisterTokenCollectorHandler
 {
 
-   private Map<String, TokenCollector<T>> collectors = new HashMap<String, TokenCollector<T>>();
+   private Map<String, TokenCollectorExt> collectors = new HashMap<String, TokenCollectorExt>();
 
    public TokenExtCollectors(HandlerManager eventBus)
    {
@@ -48,13 +49,12 @@ public class TokenExtCollectors<T> implements RegisterTokenCollectorHandler
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler#onRegisterTokenCollector(org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent)
     */
-   @SuppressWarnings("unchecked")
    public void onRegisterTokenCollector(RegisterTokenCollectorEvent event)
    {
-      collectors.put(event.getMimeType(), (TokenCollector<T>)event.getCollector());
+      collectors.put(event.getMimeType(), event.getCollector());
    }
 
-   public TokenCollector<T> getTokenCollector(String mimeType)
+   public TokenCollectorExt getTokenCollector(String mimeType)
    {
       return collectors.get(mimeType);
    }

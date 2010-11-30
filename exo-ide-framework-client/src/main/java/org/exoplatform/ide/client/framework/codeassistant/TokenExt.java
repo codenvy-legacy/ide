@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class TokenExt
 {
-   private Map<TokenExtProperties, String> properies = new LinkedHashMap<TokenExtProperties, String>();
+   private Map<String, String> properies = new LinkedHashMap<String, String>();
 
    private String name;
    
@@ -52,7 +52,7 @@ public class TokenExt
     * @param type of token
     * @param properties {@link Map} of token properties
     */
-   public TokenExt(String name, TokenExtType type, Map<TokenExtProperties, String> properties)
+   public TokenExt(String name, TokenExtType type, Map<String, String> properties)
    {
       this.name = name;
       this.type = type;
@@ -65,11 +65,11 @@ public class TokenExt
     * @param name
     * @return property value or <code>null</code> if property not exist
     */
-   public String getProperty(TokenExtProperties name)
+   public String getProperty(String name)
    {
       if (properies.containsKey(name))
       {
-         for (TokenExtProperties key : properies.keySet())
+         for (String key : properies.keySet())
          {
             if (key.equals(name))
             {
@@ -85,7 +85,7 @@ public class TokenExt
     * @param name
     * @param value
     */
-   public void setProperty(TokenExtProperties name, String value)
+   public void setProperty(String name, String value)
    {
       properies.put(name, value);
    }
@@ -113,7 +113,7 @@ public class TokenExt
    public String toString()
    {
       String obj = name + " " + type.toString();
-      for(TokenExtProperties p : properies.keySet())
+      for(String p : properies.keySet())
       {
          obj += " " + p.toString() + " " + properies.get(p);
       }

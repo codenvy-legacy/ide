@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ide.client.autocompletion.collectors.CssTokenCollector;
 import org.exoplatform.ide.client.autocompletion.collectors.HtmlTokenCollector;
 import org.exoplatform.ide.client.autocompletion.collectors.JavaScriptTokenCollector;
@@ -36,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public final class TokenCollectors
 {
-   private HashMap<String, TokenCollector<?>> tokenCollectors = new HashMap<String, TokenCollector<?>>();
+   private HashMap<String, TokenCollector<Token>> tokenCollectors = new HashMap<String, TokenCollector<Token>>();
 
    private static TokenCollectors instance;
 
@@ -50,12 +51,12 @@ public final class TokenCollectors
 
    }
 
-   private HashMap<String, TokenCollector<?>> getTokenCollectors()
+   private HashMap<String, TokenCollector<Token>> getTokenCollectors()
    {
       return tokenCollectors;
    }
    
-   public static TokenCollector<?> getTokenCollector(HandlerManager eventBus, String mimeType)
+   public static TokenCollector<Token> getTokenCollector(HandlerManager eventBus, String mimeType)
    {
       if (instance == null)
       {

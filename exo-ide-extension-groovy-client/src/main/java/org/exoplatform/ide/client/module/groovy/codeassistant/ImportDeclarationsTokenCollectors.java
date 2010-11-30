@@ -45,8 +45,7 @@ public final class ImportDeclarationsTokenCollectors
       GroovyImportDeclarationTokenCollector collector = new GroovyImportDeclarationTokenCollector(eventBus);
       collectors.put(MimeType.GROOVY_SERVICE, collector);
       collectors.put(MimeType.APPLICATION_GROOVY, collector);
-      collectors.put(MimeType.CHROMATTIC_DATA_OBJECT, collector);
-      collectors.put(MimeType.APPLICATION_GROOVY, collector);
+      collectors.put(MimeType.GROOVY_TEMPLATE, collector);
    }
    
    

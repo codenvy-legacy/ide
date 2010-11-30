@@ -18,29 +18,29 @@
  */
 package org.exoplatform.ide.client.autocompletion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
+import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
-import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * This class 
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 26, 2010 12:12:36 PM evgen $
  *
  */
 public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler, TokensCollectedCallback<TokenExt>,
-   TokenSelectedHandler<TokenExt>
+   TokenSelectedHandler
 {
 
    private HandlerManager eventBus;
@@ -59,13 +59,13 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
 
    private TokenFactories<TokenExt> factories;
 
-   private TokenExtCollectors<TokenExt> collectors;
+   private TokenExtCollectors collectors;
 
    public AutoCompletionManagerExt(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       factories = new TokenFactories<TokenExt>(eventBus);
-      collectors = new TokenExtCollectors<TokenExt>(eventBus);
+      collectors = new TokenExtCollectors(eventBus);
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
    }
@@ -79,11 +79,13 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-      TokenCollector<TokenExt> collector = collectors.getTokenCollector(mimeType);
+      System.out.println(event.getLineContent());
+      System.out.println(event.getFqn());
+      TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
-         collector.getTokens(event.getLineContent(), event.getLineMimeType(), event.getCursorPositionY(),
-            event.getCursorPositionX(), new ArrayList<TokenExt>(), this);
+         collector.getTokens(event.getLineContent(), event.getFqn(), event.getCursorPositionY(),
+            event.getCursorPositionX(), event.getTokenList(), this);
       }
    }
 
@@ -92,7 +94,6 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
     */
    public void onTokensCollected(List<TokenExt> tokens, String beforeToken, String tokenToComplete, String afterToken)
    {
-      System.out.println("AutoCompletionManagerExt.onTokensCollected()");
       this.beforeToken = beforeToken;
       this.afterToken = afterToken;
 
@@ -100,9 +101,11 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       int y = cursorOffsetY + 4;
       try
       {
-      new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens, factories.getFactory(mimeType), this);
+         new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens, factories.getFactory(mimeType),
+            this);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          Log.debug("Autocomplete error", e);
       }
    }
@@ -110,10 +113,16 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler#onTokenSelected(java.lang.Object)
     */
-   public void onTokenSelected(TokenExt token)
+   public void onTokenSelected(String value)
    {
-      // TODO Auto-generated method stub
+      int newCursorPos = (beforeToken + value).length() + 1;
+      if (value.contains("("))
+      {
+         newCursorPos = (beforeToken + value).lastIndexOf('(') + 2;
+      }
+      String tokenToPaste = beforeToken + value + afterToken;
 
+      eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
    }
 
    /**

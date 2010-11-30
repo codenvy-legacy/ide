@@ -62,7 +62,7 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
       grid.setWidget(0, 1, new Label(name, false));
 
       String pack = token.getProperty(TokenExtProperties.DECLARINGCLASS);
-//      pack = pack.substring(0, pack.lastIndexOf("."));
+      
       Label label = new Label("-"+pack);
       label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, label);
@@ -75,6 +75,15 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      return token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
    }
 
 }

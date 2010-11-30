@@ -25,6 +25,26 @@ package org.exoplatform.ide.client.framework.codeassistant;
  * @version $Id: Nov 17, 2010 5:31:49 PM evgen $
  *
  */
-public enum TokenExtProperties {
-   CLASS, FQN, PACKAGE, MODIFIERS, DECLARINGCLASS, GENERICPARAMETERTYPES, TYPE, GENERICRETURNTYPE, PARAMETERTYPES, RETURNTYPE;
+public interface TokenExtProperties
+{
+
+   public static String CLASS = "CLASS";
+
+   public static String FQN = "FQN";
+
+   public static String PACKAGE = "PACKAGE";
+
+   public static String MODIFIERS = "MODIFIERS";
+
+   public static String DECLARINGCLASS = "DECLARINGCLASS";
+
+   public static String GENERICPARAMETERTYPES = "GENERICPARAMETERTYPES";
+
+   public static String TYPE = "TYPE";
+
+   public static String GENERICRETURNTYPE = "GENERICRETURNTYPE";
+
+   public static String PARAMETERTYPES = "PARAMETERTYPES";
+
+   public static String RETURNTYPE = "RETURNTYPE";
 }

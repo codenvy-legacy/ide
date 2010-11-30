@@ -55,6 +55,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -98,14 +99,14 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private Handlers handlers;
 
-   private TokenSelectedHandler<T> handler;
+   private TokenSelectedHandler handler;
 
    private List<TokenWidget<T>> widgets;
 
    private List<TokenWidget<T>> allWidgets;
 
    public AutocompletionFormExt(HandlerManager eventBus, int left, int top, String prefix, List<T> items,
-      TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler<T> handler)
+      TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler handler)
    {
       this.handler = handler;
 
@@ -182,6 +183,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          w.addDoubleClickHandler(mousHandler);
          allWidgets.add(w);
       }
+      flowPanel.add(new Label("No Proposals"));
 
       DeferredCommand.addCommand(new Command()
       {
@@ -373,7 +375,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
    public void tokenSelected()
    {
       removeHandlers();
-      handler.onTokenSelected(selectedWidget.getToken());
+      handler.onTokenSelected(selectedWidget.getTokenValue());
       lockLayer.removeFromParent();
    }
 
