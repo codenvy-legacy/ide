@@ -244,7 +244,7 @@ public class DocStorageJcrImpl implements DocStorage
          {
             Node cls = child.addNode(clazz, "nt:file");
             Node content = cls.addNode("jcr:content", "exoide:classDoc");
-            content.setProperty("jcr:data", doc.getRawCommentText());
+            content.setProperty("jcr:data", doc.commentText());
             content.setProperty("jcr:lastModified", Calendar.getInstance());
             content.setProperty("jcr:mimeType", "text/plain");
             content.setProperty("exoide:fqn", clazz);

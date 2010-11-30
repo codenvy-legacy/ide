@@ -67,7 +67,7 @@ public class GroovyScriptServiceApplication extends Application
          ValueParam pkgsInfo = initParams.getValueParam("pkgsInfo");
          if (pkgsInfo != null)
          {
-            String[] pkgs = pkgsDoc.getValue().split(",");
+            String[] pkgs = pkgsInfo.getValue().split(",");
             objects.add(new ClassInfoStrorageJcrImpl(sessionProvider, repositoryService, ws.getValue(),pkgs));
          }
          else

@@ -226,11 +226,11 @@
       </value-param>                    
       <value-param>
          <name>pkgsDoc</name>
-         <value>java/math</value>
+         <value>java/lang/annotation</value>
       </value-param>
        <value-param>
          <name>pkgsInfo</name>
-         <value>java.math</value>
+         <value>java.lang.annotation</value>
       </value-param>                                                                                                                                                                       
    </init-params>
    </component>
