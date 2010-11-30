@@ -34,6 +34,7 @@ import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -75,6 +76,10 @@ public class CodeOutLineGroovyTest extends BaseTest
       }
    }
 
+
+   //TODO Issue IDE - 466
+   @Ignore 
+   
    @Test
    public void testCodeOutLineGroovy() throws Exception
    {
