@@ -31,6 +31,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -76,6 +77,9 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    }
 
    // IDE-178:Groovy Template Code Outline
+  
+   //TODO Issue IDE - 466
+   @Ignore 
    @Test
    public void testCodeOutLineGroovyTemplate() throws Exception
    {
