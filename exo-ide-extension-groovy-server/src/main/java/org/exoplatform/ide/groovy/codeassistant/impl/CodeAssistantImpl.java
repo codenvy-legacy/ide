@@ -104,7 +104,6 @@ public class CodeAssistantImpl implements CodeAssistant
          relPath += fqn;
          Node n = session.getRootNode().getNode("classpath").getNode(relPath);
          String json = n.getNode("jcr:content").getProperty("jcr:data").getString();
-         System.out.println("CodeAssistantImpl.getClassByFQN()" + json);
          return json2classInfo(json);
       }
       catch (RepositoryException e)
