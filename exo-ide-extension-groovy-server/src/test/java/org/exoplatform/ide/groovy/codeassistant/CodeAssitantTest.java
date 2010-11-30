@@ -65,7 +65,8 @@ public class CodeAssitantTest extends Base
       methods = ClassLoader.getSystemClassLoader().loadClass(Address.class.getCanonicalName()).getMethods().length;
       putClass(ClassLoader.getSystemClassLoader(), session, Address.class.getCanonicalName());
       putClass(ClassLoader.getSystemClassLoader(), session, A.class.getCanonicalName());
-   }
+      putClass(ClassLoader.getSystemClassLoader(), session, Integer.class.getCanonicalName());
+    }
    
    @Test
    public void testGetClassByFqn() throws Exception
@@ -82,6 +83,7 @@ public class CodeAssitantTest extends Base
       assertEquals(methods,cd.getMethods().length);
       assertEquals(decMethods, cd.getDeclaredMethods().length);
    }
+   
    
    @Test
    public void testGetClassByFqnError() throws Exception

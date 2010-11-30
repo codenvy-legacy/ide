@@ -21,7 +21,6 @@ import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
 import org.exoplatform.ide.groovy.codeassistant.CodeAssistantException;
 import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.bean.Types;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -105,6 +104,7 @@ public class CodeAssistantImpl implements CodeAssistant
          relPath += fqn;
          Node n = session.getRootNode().getNode("classpath").getNode(relPath);
          String json = n.getNode("jcr:content").getProperty("jcr:data").getString();
+         System.out.println("CodeAssistantImpl.getClassByFQN()" + json);
          return json2classInfo(json);
       }
       catch (RepositoryException e)
@@ -152,7 +152,7 @@ public class CodeAssistantImpl implements CodeAssistant
             
             Node node = (Node)nodes.next();
             types[i++] = new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), 
-               node.getProperty("exoide:fqn").getString(), Types.valueOf(node.getProperty("exoide:type").getString().toUpperCase())); 
+               node.getProperty("exoide:fqn").getString(), node.getProperty("exoide:type").getString()); 
          }
          return types;
       }
@@ -196,7 +196,7 @@ public class CodeAssistantImpl implements CodeAssistant
             {
                Node node = (Node)nodes.next();
                types[i++] = new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), 
-                  node.getProperty("exoide:fqn").getString(), Types.valueOf(node.getProperty("exoide:type").getString())); 
+                  node.getProperty("exoide:fqn").getString(), node.getProperty("exoide:type").getString()); 
             }
             return types;
          }

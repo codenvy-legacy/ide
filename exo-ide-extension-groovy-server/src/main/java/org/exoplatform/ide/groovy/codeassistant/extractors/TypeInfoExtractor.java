@@ -20,7 +20,6 @@ import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.FieldInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.MethodInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.RoutineInfo;
-import org.exoplatform.ide.groovy.codeassistant.bean.Types;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -38,6 +37,12 @@ import java.lang.reflect.Method;
 public class TypeInfoExtractor
 {
 
+   public static final String ANNOTATION = "ANNOTATION";
+
+   public static final String INTERFACE = "INTERFACE";
+
+   public static final String CLASS = "CLASS";
+
    public static TypeInfo extract(Class<?> clazz) throws IncompatibleClassChangeError
    {
       TypeInfo classDescription = new TypeInfo();
@@ -51,13 +56,13 @@ public class TypeInfoExtractor
       RoutineInfo[] decCds = new RoutineInfo[constructors.length];
       for (int i = 0; i < constructors.length; i++)
       {
-         decCds[i] = RoutineInfoExtractor.extractConstructorInfo(constructors[i]); 
+         decCds[i] = RoutineInfoExtractor.extractConstructorInfo(constructors[i]);
       }
       Method[] methods = clazz.getMethods();
       MethodInfo[] mds = new MethodInfo[methods.length];
       for (int i = 0; i < methods.length; i++)
       {
-        mds[i] = RoutineInfoExtractor.extractMethodInfo(methods[i]);
+         mds[i] = RoutineInfoExtractor.extractMethodInfo(methods[i]);
       }
       methods = clazz.getDeclaredMethods();
       MethodInfo[] decMds = new MethodInfo[methods.length];
@@ -69,7 +74,7 @@ public class TypeInfoExtractor
       String[] iFaces = new String[interfaces.length];
       for (int i = 0; i < interfaces.length; i++)
       {
-         iFaces[i] = interfaces[i].getCanonicalName();         
+         iFaces[i] = interfaces[i].getCanonicalName();
       }
 
       Field[] fields = clazz.getFields();
@@ -77,58 +82,52 @@ public class TypeInfoExtractor
       for (int i = 0; i < fields.length; i++)
       {
          fds[i] =
-            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(),
-               fields[i].getDeclaringClass().getCanonicalName());
+            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
+               .getDeclaringClass().getCanonicalName());
       }
       fields = clazz.getDeclaredFields();
       FieldInfo[] decFds = new FieldInfo[fields.length];
       for (int i = 0; i < fields.length; i++)
       {
          decFds[i] =
-            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(),
-               fields[i].getName(), fields[i].getDeclaringClass().getCanonicalName());
+            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
+               .getDeclaringClass().getCanonicalName());
       }
-      
+
       classDescription.setModifiers(clazz.getModifiers());
       classDescription.setInterfaces(iFaces);
-      
+
       if (clazz.getSuperclass() != null)
       {
          classDescription.setSuperClass(clazz.getSuperclass().getCanonicalName());
       }
-      
-      
-      
+
       classDescription.setConstructors(cds);
       classDescription.setDeclaredConstructors(decCds);
-      
+
       classDescription.setFields(fds);
       classDescription.setDeclaredFields(decFds);
-      
+
       classDescription.setMethods(mds);
       classDescription.setDeclaredMethods(decMds);
-     
-      
+
       classDescription.setQualifiedName(clazz.getCanonicalName());
       classDescription.setName(clazz.getSimpleName());
-      
+
       if (clazz.isAnnotation())
       {
-       classDescription.setType(Types.ANNOTATION);
+         classDescription.setType(ANNOTATION);
       }
       else if (clazz.isInterface())
       {
-         classDescription.setType(Types.INTERFACE);
+         classDescription.setType(INTERFACE);
       }
-      else 
+      else
       {
-         classDescription.setType(Types.CLASS);
+         classDescription.setType(CLASS);
       }
-      
-     
+
       return classDescription;
    }
-
-  
 
 }

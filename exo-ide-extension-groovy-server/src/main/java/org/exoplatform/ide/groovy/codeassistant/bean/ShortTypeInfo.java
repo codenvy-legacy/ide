@@ -27,13 +27,13 @@ public class ShortTypeInfo extends Member
    
    private String qualifiedName;
    
-   private Types type;
+   private String type;
    
    public ShortTypeInfo()
    {
    }
 
-   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, Types type)
+   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, String type)
    {
       super(modifiers, name);
       this.qualifiedName = qualifiedName;
@@ -50,12 +50,12 @@ public class ShortTypeInfo extends Member
       return qualifiedName;
    }
    
-   public Types getType()
+   public String getType()
    {
       return type;
    }
    
-   public void setType(Types type)
+   public void setType(String type)
    {
       this.type = type;
    }
