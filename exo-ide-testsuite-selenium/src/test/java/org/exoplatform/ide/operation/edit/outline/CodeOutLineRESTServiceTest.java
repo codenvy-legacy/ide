@@ -32,6 +32,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.exoplatform.ide.CloseFileUtils;
 
@@ -75,6 +76,9 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       }
    }
 
+      
+   //TODO Issue IDE - 466
+   @Ignore 
    @Test
    public void testCodeOutLineRestService() throws Exception
    {
