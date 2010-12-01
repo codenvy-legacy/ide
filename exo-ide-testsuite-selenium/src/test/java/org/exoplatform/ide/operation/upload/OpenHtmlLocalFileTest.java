@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -51,9 +52,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      //******change******
       createFolder(FOLDER_NAME);
-      //********************
       
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.TEXT_HTML);
@@ -75,14 +74,9 @@ public class OpenHtmlLocalFileTest extends BaseTest
 
       runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals(
-         "nt:resource",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.TEXT_HTML,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
+      assertEquals("nt:resource",selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      
+      assertEquals(MimeType.TEXT_HTML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
 
       selectItemInWorkspaceTree(FOLDER_NAME);
       deleteSelectedItems();
