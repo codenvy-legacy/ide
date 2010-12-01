@@ -173,8 +173,23 @@ public class Locators
       public static final String SC_NAME_FIELD_LOCATOR = SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR 
          + "/item[name=ideRenameItemFormRenameField]/element";
       
+      public static final String SC_MIME_TYPE_FIELD_LOCATOR = SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR 
+         + "/item[name=ideRenameItemFormMimeTypeField]/element";
+      
       public static final String SC_RENAME_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]";
       
       public static final String SC_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]";
+   }
+   
+   public interface PropertiesPanel
+   {
+      public static final String SC_DYNAMIC_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
+      
+      public static final String SC_CONTENT_TYPE_TEXT_LOCATOR = SC_DYNAMIC_FORM_LOCATOR 
+         + "/item[name=idePropertiesTextContentType]/textbox";
+      
+      public static final String SC_CONTENT_NODE_TYPE_TEXT_LOCATOR = SC_DYNAMIC_FORM_LOCATOR 
+           + "/item[name=idePropertiesTextContentNodeType]/textbox";
+      
    }
 }

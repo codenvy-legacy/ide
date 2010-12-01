@@ -17,6 +17,7 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -84,6 +85,7 @@ public class RenameFolderTest extends BaseTest
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
+      assertFalse(selenium.isElementPresent(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
       
       selenium.click(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR);
