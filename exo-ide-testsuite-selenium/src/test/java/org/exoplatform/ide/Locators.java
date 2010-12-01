@@ -163,4 +163,18 @@ public class Locators
       public static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR = ASK_FOR_VALUE_DIALOG_LOCATOR
          + "item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField]/element";
    }
+   
+   public interface RenameItemForm
+   {
+      public static final String SC_RENAME_ITEM_WINDOW_LOCATOR = "scLocator=//Window[ID=\"ideRenameItemForm\"]";
+      
+      public static final String SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]";
+      
+      public static final String SC_NAME_FIELD_LOCATOR = SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR 
+         + "/item[name=ideRenameItemFormRenameField]/element";
+      
+      public static final String SC_RENAME_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]";
+      
+      public static final String SC_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]";
+   }
 }

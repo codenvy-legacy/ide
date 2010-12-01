@@ -17,13 +17,14 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -75,36 +76,25 @@ public class RenameFolderTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
 
       runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
 
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
+      
+      selenium.click(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR);
+      
+      assertEquals(FOLDER_NAME,selenium.getValue(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
+      selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, NEW_FOLDER_NAME);
+      selenium.keyPress(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, "\\13");
+      
       Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Rename')]", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRenameItemForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRenameItemForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]"));
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||title=ideRenameItemFormRenameField]/element");
-      assertEquals(
-         FOLDER_NAME,
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||title=ideRenameItemFormRenameField]/element"));
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||title=ideRenameItemFormRenameField]/element",
-            NEW_FOLDER_NAME);
-      selenium
-         .keyPress(
-            "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||title=ideRenameItemFormRenameField]/element",
-            "\\13");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium
-         .isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=renamed]/col[fieldName=nodeTitle||0]"));
+      
+      assertElementNotPresentInWorkspaceTree(FOLDER_NAME);
       assertElementPresentInWorkspaceTree(NEW_FOLDER_NAME);
 
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
