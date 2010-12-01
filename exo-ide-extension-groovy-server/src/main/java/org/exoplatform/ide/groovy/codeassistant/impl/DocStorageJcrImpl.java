@@ -21,6 +21,7 @@ import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
 import org.codehaus.groovy.groovydoc.GroovyParameter;
 import org.codehaus.groovy.groovydoc.GroovyRootDoc;
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.GroovyScriptService;
 import org.exoplatform.ide.groovy.codeassistant.DocStorage;
 import org.exoplatform.ide.groovy.codeassistant.SaveDocException;
 import org.exoplatform.ide.groovy.codeassistant.extractors.DocExtractor;
@@ -28,6 +29,8 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import groovyjarjarantlr.RecognitionException;
 import groovyjarjarantlr.TokenStreamException;
@@ -66,14 +69,17 @@ public class DocStorageJcrImpl implements DocStorage
 
    private final String wsName;
 
-   private final static String[] defaultPkgs = {"java/lang", "java/util", "java/io", "java/math", "java/text"};
+   private final static String[] defaultPkgs = {"java.lang", "java.util", "java.io", "java.math", "java.text"};
+
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(DocStorageJcrImpl.class);
 
    public DocStorageJcrImpl(String wsName, RepositoryService repositoryService,
       SessionProviderService sessionProviderService)
    {
-      this(wsName, repositoryService,sessionProviderService, defaultPkgs); 
+      this(wsName, repositoryService, sessionProviderService, defaultPkgs);
    }
-   
+
    public DocStorageJcrImpl(String wsName, RepositoryService repositoryService,
       SessionProviderService sessionProviderService, String[] pkgs)
    {
@@ -89,7 +95,6 @@ public class DocStorageJcrImpl implements DocStorage
          e.printStackTrace();
       }
    }
-  
 
    private void addDocsFromJavaSrc(String[] pkgs) throws SaveDocException
    {
@@ -102,7 +107,7 @@ public class DocStorageJcrImpl implements DocStorage
          Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
          for (int i = 0; i < pkgs.length; i++)
          {
-            System.out.println(" >>>>>>>>>>>>>>>> Load JavaDoc from " + pkgs[i]);
+            LOG.info(">>>>>>>>>>>>>>>> Load JavaDoc from " + pkgs[i]);
             Map<String, GroovyRootDoc> roots = DocExtractor.extract(javaHome, pkgs[i]);
             Set<String> keys = roots.keySet();
             for (String key : keys)
@@ -114,34 +119,39 @@ public class DocStorageJcrImpl implements DocStorage
                }
             }
          }
-         
+
          session.save();
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (IOException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (RecognitionException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
       catch (TokenStreamException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
    }
 
@@ -157,7 +167,7 @@ public class DocStorageJcrImpl implements DocStorage
    public void addDocs(@QueryParam("jar") String jar, @QueryParam("package") String packageName)
       throws SaveDocException
    {
-      
+
       try
       {
          SessionProvider sp = sessionProviderService.getSessionProvider(null);
@@ -176,29 +186,34 @@ public class DocStorageJcrImpl implements DocStorage
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (IOException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
       catch (RecognitionException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
       catch (TokenStreamException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
    }
 
@@ -209,8 +224,9 @@ public class DocStorageJcrImpl implements DocStorage
     * @param doc
     * @param fqn
     * @throws RepositoryException
+    * @throws UnsupportedEncodingException 
     */
-   private void putDoc(Session session, GroovyClassDoc doc, String fqn) throws RepositoryException
+   private void putDoc(Session session, GroovyClassDoc doc, String fqn) throws RepositoryException, UnsupportedEncodingException
 
    {
       Node base;
@@ -220,45 +236,40 @@ public class DocStorageJcrImpl implements DocStorage
       }
       base = session.getRootNode().getNode("dev-doc");
 
-      try
+      String clazz = fqn;
+      Node child = base;
+      String[] seg = fqn.split("\\.");
+      String path = new String();
+      for (int i = 0; i < seg.length; i++)
       {
-         String clazz = fqn;
-         Node child = base;
-         String[] seg = fqn.split("\\.");
-         String path = new String();
-         for (int i = 0; i < seg.length; i++)
+         path = path + seg[i];
+         if (!child.hasNode(path))
          {
-            path = path + seg[i];
-            if (!child.hasNode(path))
-            {
-               child = child.addNode(path, "nt:folder");
-            }
-            else
-            {
-               child = child.getNode(path);
-            }
-            path = path + ".";
+            child = child.addNode(path, "nt:folder");
          }
+         else
+         {
+            child = child.getNode(path);
+         }
+         path = path + ".";
+      }
 
-         if (!child.hasNode(clazz))
-         {
-            Node cls = child.addNode(clazz, "nt:file");
-            Node content = cls.addNode("jcr:content", "exoide:classDoc");
-            content.setProperty("jcr:data", doc.commentText());
-            content.setProperty("jcr:lastModified", Calendar.getInstance());
-            content.setProperty("jcr:mimeType", "text/plain");
-            content.setProperty("exoide:fqn", clazz);
-            putMethodDoc(cls.getParent(), doc, clazz);
-         }
-         session.save();
-      }
-      catch (Exception e)
+      if (!child.hasNode(clazz))
       {
-         e.printStackTrace();
+         Node cls = child.addNode(clazz, "nt:file");
+         Node content = cls.addNode("jcr:content", "exoide:classDoc");
+         content.setProperty("jcr:data", doc.commentText());
+         content.setProperty("jcr:lastModified", Calendar.getInstance());
+         content.setProperty("jcr:mimeType", "text/plain");
+         content.setProperty("exoide:fqn", clazz);
+         putMethodDoc(cls.getParent(), doc, clazz);
       }
+      session.save();
    }
 
    /**
+    * Put methods doc
+    * 
     * @param cls
     * @param doc
     * @param clsFqn
@@ -288,12 +299,29 @@ public class DocStorageJcrImpl implements DocStorage
       for (int i = 0; i < docs.length; i++)
       {
          String methName = docs[i].name() + URLEncoder.encode(array2string(docs[i].parameters()), "UTF-8");
-         Node method = methodsDoc.addNode(methName, "nt:file");
-         Node content = method.addNode("jcr:content", "exoide:methodDoc");
-         content.setProperty("jcr:data", docs[i].getRawCommentText());
-         content.setProperty("jcr:lastModified", Calendar.getInstance());
-         content.setProperty("jcr:mimeType", "text/plain");
-         content.setProperty("exoide:fqn", clsFqn + "." + docs[i].name() + array2string(docs[i].parameters()));
+         if (!methodsDoc.hasNode(methName))
+         {
+            Node method = methodsDoc.addNode(methName, "nt:file");
+            Node content = method.addNode("jcr:content", "exoide:methodDoc");
+            content.setProperty("jcr:data", docs[i].getRawCommentText());
+            content.setProperty("jcr:lastModified", Calendar.getInstance());
+            content.setProperty("jcr:mimeType", "text/plain");
+            content.setProperty("exoide:fqn", clsFqn + "." + docs[i].name() + array2string(docs[i].parameters()));
+         }
+         else
+         {
+            //TODO: This can occurs if try add doc for method with same name same parametrs like this 
+            // 1 : newInstance(Class<?> componentType, int length)
+            // 2 : newInstance(Class<?> componentType, int... dimensions)
+            // paramets different int != int... but Groovy doc parser don't resolve this situation 
+            // in this case method signature was same
+            // newInstance(Class, int)
+            // newInstance(Class, int)
+
+            if (LOG.isDebugEnabled()) 
+             LOG.warn("Tryed ad name with same name and parametrs.");  
+         }
+
       }
    }
 

@@ -26,7 +26,6 @@ import groovyjarjarantlr.TokenStreamException;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -55,7 +54,6 @@ public class DocExtractorTest extends TestCase
    public void testExtractDocFromJavaSource() throws RecognitionException, TokenStreamException, IOException
    {
       Map<String, GroovyRootDoc> roots = DocExtractor.extract(javaHome, "java/util");
-      Set<String> set = roots.keySet();
       assertTrue(roots.containsKey("java.util"));
       GroovyRootDoc doc = roots.get("java.util");
       assertNotNull(doc);

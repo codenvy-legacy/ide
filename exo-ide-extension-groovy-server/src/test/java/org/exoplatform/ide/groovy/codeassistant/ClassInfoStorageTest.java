@@ -23,6 +23,9 @@ import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URLEncoder;
+
 import javax.jcr.Node;
 import javax.ws.rs.core.SecurityContext;
 
@@ -45,9 +48,15 @@ public class ClassInfoStorageTest extends Base
    {
       super.setUp();
       jar = "src/test/resources/jsr311-api-1.0.jar";
+      File jarFile = new File(jar);
+      assertTrue(jarFile.exists());
+      jar = URLEncoder.encode(jarFile.getAbsolutePath(),"UTF-8");
       javaHome = System.getProperty("java.home");
       String fileSeparator = System.getProperty("file.separator");
       javaHome = javaHome.substring(0,javaHome.lastIndexOf(fileSeparator)+1) + "src.zip";
+      File javaHomeFile = new File(javaHome);
+      assertTrue(javaHomeFile.exists());
+      javaHome = URLEncoder.encode(javaHomeFile.getAbsolutePath(),"UTF-8");
    }
 
    @Test

@@ -16,10 +16,10 @@
  */
 package org.exoplatform.ide.groovy.codeassistant.extractors;
 
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.FieldInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.MethodInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.RoutineInfo;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -37,12 +37,26 @@ import java.lang.reflect.Method;
 public class TypeInfoExtractor
 {
 
+   /**
+    * 
+    */
    public static final String ANNOTATION = "ANNOTATION";
 
+   /**
+    * 
+    */
    public static final String INTERFACE = "INTERFACE";
 
+   /**
+    * 
+    */
    public static final String CLASS = "CLASS";
 
+   /**
+    * @param clazz
+    * @return
+    * @throws IncompatibleClassChangeError
+    */
    public static TypeInfo extract(Class<?> clazz) throws IncompatibleClassChangeError
    {
       TypeInfo classDescription = new TypeInfo();

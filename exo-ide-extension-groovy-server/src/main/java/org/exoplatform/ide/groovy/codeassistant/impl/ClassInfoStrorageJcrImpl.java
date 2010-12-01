@@ -23,11 +23,15 @@ import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
 import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -63,15 +67,18 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
    private RepositoryService repositoryService;
 
    private final String wsName;
-   
-   private final static String[] defaultPkgs = {"java.lang","java.util","java.io","java.math","java.text"}; 
+
+   private final static String[] defaultPkgs = {"java.lang", "java.util", "java.io", "java.math", "java.text"};
+
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(ClassInfoStrorageJcrImpl.class);
 
    public ClassInfoStrorageJcrImpl(SessionProviderService sessionProvider, RepositoryService repositoryService,
       String wsName)
    {
-      this(sessionProvider, repositoryService,wsName, defaultPkgs); 
+      this(sessionProvider, repositoryService, wsName, defaultPkgs);
    }
-   
+
    public ClassInfoStrorageJcrImpl(SessionProviderService sessionProvider, RepositoryService repositoryService,
       String wsName, String[] pkgs)
    {
@@ -84,10 +91,10 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       }
       catch (SaveClassInfoException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
    }
-
 
    /**
     * {@inheritDoc}
@@ -112,10 +119,11 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-         
+
       }
    }
 
@@ -134,17 +142,14 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          Repository repository = repositoryService.getDefaultRepository();
          Session session = repository.login(wsName);
          putClass(classLoader, session, fqn);
-         session.save();
       }
       catch (Exception e)
       {
          e.printStackTrace();
-       //TODO: need think about status
+         //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
-
-  
 
    /**
     * {@inheritDoc}
@@ -167,18 +172,54 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
             putClass(classLoader, session, fqn);
          }
       }
-      catch (Exception e)
+      catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (IncompatibleClassChangeError e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (IOException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (ClassNotFoundException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
-   
+
    /**
     * {@inheritDoc}
     */
-   
+
    //TODO:for prototype client side
    public void addClassesFromJavaUtilSource(String[] pkgs) throws SaveClassInfoException
    {
@@ -193,7 +234,7 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
          for (int i = 0; i < pkgs.length; i++)
          {
-            System.out.println(" >>>>>>>>>>>>>>>> Load ClassInfo from " + pkgs[i]);
+            LOG.info(" >>>>>>>>>>>>>>>> Load ClassInfo from " + pkgs[i]);
             List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, pkgs[i]);
             for (String fqn : fqns)
             {
@@ -201,29 +242,64 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
             }
          }
       }
-      catch (Exception e)
+      catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (IOException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (IncompatibleClassChangeError e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO: need think about status
+         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (ClassNotFoundException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
-   
+
    private void putClass(ClassLoader classLoader, Session session, String fqn) throws RepositoryException,
-   ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException,
-   ConstraintViolationException, IncompatibleClassChangeError, ValueFormatException, JsonException,
-   AccessDeniedException, InvalidItemStateException
-{
-   Node base;
-   if (!session.getRootNode().hasNode("classpath"))
+      ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException,
+      ConstraintViolationException, IncompatibleClassChangeError, ValueFormatException, JsonException,
+      AccessDeniedException, InvalidItemStateException, ClassNotFoundException
    {
-      base = session.getRootNode().addNode("classpath", "nt:folder");
-   }
-   base = session.getRootNode().getNode("classpath");
-   try
-   {
+      Node base;
+      if (!session.getRootNode().hasNode("classpath"))
+      {
+         base = session.getRootNode().addNode("classpath", "nt:folder");
+      }
+      base = session.getRootNode().getNode("classpath");
+
       String clazz = fqn;
-      Class cls = classLoader.loadClass(clazz);
+      Class<?> cls = classLoader.loadClass(clazz);
       TypeInfo cd = TypeInfoExtractor.extract(cls);
       Node child = base;
       String[] seg = fqn.split("\\.");
@@ -254,11 +330,6 @@ public class ClassInfoStrorageJcrImpl implements ClassInfoStorage
          child.setProperty("exoide:type", cd.getType().toString());
          child.setProperty("exoide:modifieres", cd.getModifiers());
       }
+      session.save();
    }
-   catch (ClassNotFoundException e)
-   {
-      e.printStackTrace();
-   }
-   session.save();
-}
 }

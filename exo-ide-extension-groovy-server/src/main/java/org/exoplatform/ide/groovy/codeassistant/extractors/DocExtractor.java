@@ -24,6 +24,7 @@ import groovyjarjarantlr.TokenStreamException;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -46,16 +47,36 @@ import java.util.zip.ZipFile;
 public class DocExtractor
 {
 
+   /**
+    * Path to base folder for exctracting source archive curently it System.getProperty("java.io.tmpdir") 
+    */
    private static String extPath;
-   
+
+   /**
+    * Extract GroovyDoc (JavaDoc) for getting archive and filtered by package 
+    * 
+    * @param javaArchSrcPath
+    * @param pkgPath
+    * @return
+    * @throws RecognitionException
+    * @throws TokenStreamException
+    * @throws IOException
+    */
    public static Map<String, GroovyRootDoc> extract(String javaArchSrcPath, String pkgPath)
       throws RecognitionException, TokenStreamException, IOException
    {
-      String archName = javaArchSrcPath.substring(javaArchSrcPath.lastIndexOf(System.getProperty("file.separator"))+1);
-      extPath =   System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + "source" + System.getProperty("file.separator") + archName + System.getProperty("file.separator");
+      String fs = System.getProperty("file.separator");
+      String archName = javaArchSrcPath.substring(javaArchSrcPath.lastIndexOf(fs) + 1);
+      String tmp =
+         System.getProperty("java.io.tmpdir").endsWith(fs) ? System.getProperty("java.io.tmpdir") : System
+            .getProperty("java.io.tmpdir") + fs;
+      extPath = tmp + "source" + fs + archName + fs;
       Map<String, GroovyRootDoc> docs = new HashMap<String, GroovyRootDoc>();
       GroovyDocTool plainTool; //= new GroovyDocTool(new String[]{extPath});
-
+      if (pkgPath != null)
+      {
+         pkgPath = pkgPath.replace(".", fs);
+      }
       unzip(javaArchSrcPath);
       Map<String, List<String>> pkgMap = srcPkgMap(new File(extPath), new PkgFileFilter(pkgPath), true);
       Set<String> pkgs = pkgMap.keySet();
@@ -78,40 +99,35 @@ public class DocExtractor
    public static Map<String, GroovyRootDoc> extract(String javaArchSrcPath) throws RecognitionException,
       TokenStreamException, IOException
    {
-     
+
       return extract(javaArchSrcPath, null);
    }
 
    /**
     * @param zipPath
+    * @throws IOException 
+    * @throws FileNotFoundException 
     */
-   private static void unzip(String zipPath)
+   private static void unzip(String zipPath) throws FileNotFoundException, IOException
    {
       new File(extPath).mkdirs();
       ZipFile zipFile;
-      try
-      {
-         zipFile = new ZipFile(zipPath);
-         Enumeration<? extends ZipEntry> entries = zipFile.entries();
-         while (entries.hasMoreElements())
-         {
-            ZipEntry entry = (ZipEntry)entries.nextElement();
-            if (entry.isDirectory())
-            {
-               File file = new File(extPath + entry.getName());
-               file.mkdir();
-               continue;
-            }
-            copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(extPath
-               + entry.getName())));
-         }
-         zipFile.close();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
 
+      zipFile = new ZipFile(zipPath);
+      Enumeration<? extends ZipEntry> entries = zipFile.entries();
+      while (entries.hasMoreElements())
+      {
+         ZipEntry entry = (ZipEntry)entries.nextElement();
+         if (entry.isDirectory())
+         {
+            File file = new File(extPath + entry.getName());
+            file.mkdir();
+            continue;
+         }
+         copyInputStream(zipFile.getInputStream(entry),
+            new BufferedOutputStream(new FileOutputStream(extPath + entry.getName())));
       }
+      zipFile.close();
    }
 
    /**

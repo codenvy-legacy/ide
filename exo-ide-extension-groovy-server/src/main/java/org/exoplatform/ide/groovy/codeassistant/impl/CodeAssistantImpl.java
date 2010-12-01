@@ -25,6 +25,8 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.ws.frameworks.json.JsonHandler;
 import org.exoplatform.ws.frameworks.json.JsonParser;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
@@ -66,6 +68,9 @@ public class CodeAssistantImpl implements CodeAssistant
 
    private final String wsName;
 
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(CodeAssistantImpl.class);
+
    public CodeAssistantImpl(String wsName, RepositoryService repositoryService,
       SessionProviderService sessionProviderService)
    {
@@ -102,25 +107,38 @@ public class CodeAssistantImpl implements CodeAssistant
             relPath += p + "/";
          }
          relPath += fqn;
-         Node n = session.getRootNode().getNode("classpath").getNode(relPath);
-         String json = n.getNode("jcr:content").getProperty("jcr:data").getString();
-         return json2classInfo(json);
+         Node rootNode = session.getRootNode();
+         if (rootNode.hasNode("classpath/" + relPath))
+         {
+            Node node = rootNode.getNode("classpath/" + relPath);
+            String json = node.getNode("jcr:content").getProperty("jcr:data").getString();
+            return json2classInfo(json);
+         }
+         else
+         {
+            if (LOG.isDebugEnabled())
+               LOG.error("Class info for " + fqn + " not found");
+            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Class info for " + fqn + " not found");
+         }
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
       catch (JsonException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
@@ -136,7 +154,7 @@ public class CodeAssistantImpl implements CodeAssistant
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
-      
+
       try
       {
          Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
@@ -148,22 +166,26 @@ public class CodeAssistantImpl implements CodeAssistant
          int i = 0;
          while (nodes.hasNext())
          {
-            
+
             Node node = (Node)nodes.next();
-            types[i++] = new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), 
-               node.getProperty("exoide:fqn").getString(), node.getProperty("exoide:type").getString()); 
+            types[i++] =
+               new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty(
+                  "exoide:className").getString(), node.getProperty("exoide:fqn").getString(), node.getProperty(
+                  "exoide:type").getString());
          }
          return types;
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
@@ -194,20 +216,23 @@ public class CodeAssistantImpl implements CodeAssistant
             while (nodes.hasNext())
             {
                Node node = (Node)nodes.next();
-               types[i++] = new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), 
-                  node.getProperty("exoide:fqn").getString(), node.getProperty("exoide:type").getString()); 
+               types[i++] =
+                  new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
+                     "exoide:fqn").getString(), node.getProperty("exoide:type").getString());
             }
             return types;
          }
          catch (RepositoryException e)
          {
-            e.printStackTrace();
+            if (LOG.isDebugEnabled())
+               e.printStackTrace();
             //TODO:need fix status code
             throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
          }
          catch (RepositoryConfigurationException e)
          {
-            e.printStackTrace();
+            if (LOG.isDebugEnabled())
+               e.printStackTrace();
             //TODO:need fix status code
             throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
          }
@@ -239,7 +264,7 @@ public class CodeAssistantImpl implements CodeAssistant
          //TODO
          String doc = new String();
          if (nodes.getSize() == 0)
-            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Not found"); 
+            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Not found");
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
@@ -249,19 +274,18 @@ public class CodeAssistantImpl implements CodeAssistant
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
    }
-   
-   
-   
- }
 
+}

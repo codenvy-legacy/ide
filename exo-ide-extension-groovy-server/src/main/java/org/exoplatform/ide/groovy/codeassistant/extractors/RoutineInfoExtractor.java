@@ -23,7 +23,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-
 /**
  * 
  * Extracting meta information from given routine (methods & constructors) to the 
@@ -38,6 +37,12 @@ import java.lang.reflect.Type;
 public class RoutineInfoExtractor
 {
 
+   /**
+    * Get meta info from java.lang.reflect.Constructor
+    * 
+    * @param constructor the constructor
+    * @return RoutineInfo bean that describe getting constructor and can be transform to JSON 
+    */
    public static RoutineInfo extractConstructorInfo(Constructor<?> constructor)
    {
       Type[] types = constructor.getGenericExceptionTypes();
@@ -53,19 +58,24 @@ public class RoutineInfoExtractor
       {
          genericParameterTypes[j] = genericType2String(types[j]);
       }
-      
+
       Class[] parameterTypes = constructor.getParameterTypes();
       String[] params = new String[parameterTypes.length];
       for (int i = 0; i < parameterTypes.length; i++)
       {
          params[i] = parameterTypes[i].getSimpleName();
       }
-      
+
       return new RoutineInfo(constructor.getModifiers(), constructor.getName(), genExceptionTypes,
-         array2string(genericParameterTypes),array2string(params), constructor.toGenericString(), constructor.getDeclaringClass()
-            .getCanonicalName());
+         array2string(genericParameterTypes), array2string(params), constructor.toGenericString(), constructor
+            .getDeclaringClass().getCanonicalName());
    }
 
+   /**
+    * Get meta info from java.lang.reflect.Method
+    * @param method the Method for getting meta info
+    * @return RoutineInfo bean that describe getting Method and can be transform to JSON 
+    */
    public static MethodInfo extractMethodInfo(Method method)
    {
       Type[] types = method.getGenericExceptionTypes();
@@ -82,7 +92,7 @@ public class RoutineInfoExtractor
       {
          genericParameterTypes[j] = genericType2String(types[j]);
       }
-      
+
       Class[] parameterTypes = method.getParameterTypes();
       String[] params = new String[parameterTypes.length];
       for (int i = 0; i < parameterTypes.length; i++)
@@ -91,17 +101,27 @@ public class RoutineInfoExtractor
       }
 
       return new MethodInfo(method.getModifiers(), method.getName(), genericExceptionTypes,
-         array2string(genericParameterTypes),array2string(params), method.toGenericString(), method.getDeclaringClass().getCanonicalName(),
-         genericType2String(method.getGenericReturnType()),method.getReturnType().getSimpleName());
+         array2string(genericParameterTypes), array2string(params), method.toGenericString(), method
+            .getDeclaringClass().getCanonicalName(), genericType2String(method.getGenericReturnType()), method
+            .getReturnType().getSimpleName());
    }
 
+   /**
+    * Convert type to human readable String 
+    * 
+    * @param type
+    * @return
+    */
    private static String genericType2String(Type type)
    {
-   
+
       return ((type instanceof Class) ? getTypeName((Class)type) : type.toString());
    }
-   
- 
+
+   /**
+    * @param type
+    * @return
+    */
    private static String getTypeName(Class type)
    {
       if (type.isArray())
@@ -131,6 +151,12 @@ public class RoutineInfoExtractor
       return type.getName();
    }
 
+   /**
+    * Convert to human readeble String 
+    * 
+    * @param a
+    * @return
+    */
    private static String array2string(String[] a)
    {
       if (a == null)
