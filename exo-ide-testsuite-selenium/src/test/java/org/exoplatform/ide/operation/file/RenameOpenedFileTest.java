@@ -21,8 +21,10 @@ package org.exoplatform.ide.operation.file;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,10 +36,10 @@ import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
+ * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: Dec 1, 2010 $
  *
  */
-
-//IDE-81 Rename Opened File 
 public class RenameOpenedFileTest extends BaseTest
 {
 
@@ -46,12 +48,12 @@ public class RenameOpenedFileTest extends BaseTest
    private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
 
    private final static String FOLDER_NAME = RenameOpenedFileTest.class.getSimpleName();
+   
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
 
-   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-      + FOLDER_NAME + "/" + ORIG_FILE_NAME;
+   private final static String ORIG_URL = URL + "/" + ORIG_FILE_NAME;
 
-   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-      + FOLDER_NAME + "/" + RENAMED_FILE_NAME;
+   private final static String RENAME_URL = URL + "/" + RENAMED_FILE_NAME;
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
 
@@ -60,8 +62,7 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils
-            .mkcol(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
+         VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, ORIG_URL);
       }
       catch (IOException e)
@@ -73,61 +74,13 @@ public class RenameOpenedFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-
-   @Test
-   public void testRenameClosedFile() throws Exception
-   {
-
-      Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_NAME);
-
-      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
-
-      Thread.sleep(TestConstants.SLEEP);
-
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-
-      assertTrue(selenium.isTextPresent("Rename item"));
-      assertTrue(selenium.isTextPresent("Rename item to:"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRenameItemForm\"]/header/member"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]/"));
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]/item[name=ideRenameItemFormRenameField||Class=TextItem]/element",
-            RENAMED_FILE_NAME);
-      // ----5-------
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isTextPresent(RENAMED_FILE_NAME));
-
-      assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
-
-      typeTextIntoEditor(0, "change content");
-      saveCurrentFile();
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
-
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-      
-      typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
-      saveCurrentFile();
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
-   }
-
+   
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-            + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
       {
@@ -138,4 +91,55 @@ public class RenameOpenedFileTest extends BaseTest
          e.printStackTrace();
       }
    }
+
+   //IDE-81 Rename Opened File 
+   @Test
+   public void testRenameClosedFile() throws Exception
+   {
+
+      Thread.sleep(TestConstants.SLEEP);
+      selectItemInWorkspaceTree(WS_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      runToolbarButton(ToolbarCommands.File.REFRESH);
+
+      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+      Thread.sleep(TestConstants.SLEEP);
+
+      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
+      //check, that mime-type field is disabled
+      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.MIME_TYPE_FIELD_DISABLED_LOCATOR));
+      //check, warning message is present
+      assertTrue(selenium.isTextPresent("Can't change mime-type to opened file"));
+      
+      selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      assertElementPresentInWorkspaceTree(RENAMED_FILE_NAME);
+      assertElementNotPresentInWorkspaceTree(ORIG_FILE_NAME);
+      
+      assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
+      
+      assertEquals(RENAMED_FILE_NAME, getTabTitle(0));
+
+      typeTextIntoEditor(0, "change content");
+      saveCurrentFile();
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
+
+      refresh();
+      
+      typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
+      saveCurrentFile();
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
+   }
+
 }

@@ -37,6 +37,8 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
+ * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: Dec 1, 2010 $
  *
  */
 

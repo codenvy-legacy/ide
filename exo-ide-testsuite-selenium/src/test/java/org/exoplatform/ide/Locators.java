@@ -164,6 +164,9 @@ public class Locators
          + "item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField]/element";
    }
    
+   /**
+    * Locators for elements from Rename Item dialog window.
+    */
    public interface RenameItemForm
    {
       public static final String SC_RENAME_ITEM_WINDOW_LOCATOR = "scLocator=//Window[ID=\"ideRenameItemForm\"]";
@@ -179,6 +182,14 @@ public class Locators
       public static final String SC_RENAME_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]";
       
       public static final String SC_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]";
+      
+      public static final String RENAME_ITEN_WINDOW_LOCATOR = "//div[@eventproxy='ideRenameItemForm']";
+      
+      /**
+       * Non-smartGWT locator for mime-type field.
+       */
+      public static final String MIME_TYPE_FIELD_DISABLED_LOCATOR = RENAME_ITEN_WINDOW_LOCATOR 
+         + "//input[@class='selectItemTextDisabled' and @name='ideRenameItemFormMimeTypeField']";
    }
    
    public interface PropertiesPanel
