@@ -16,17 +16,6 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.LockToken;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -41,6 +30,17 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -53,7 +53,9 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public static final int WIDTH = 400;
 
-   public static final int HEIGHT = 160;
+   public static final int HEIGHT = 220;
+   
+   public static final int HEIGHT_SMALL = 150;
 
    private static final String ID = "ideRenameItemForm";
    
@@ -64,26 +66,33 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private static final String ID_CANCEL_BUTTON = "ideRenameItemFormCancelButton";
    
    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
+   
+   private static final String MIME_TYPE_FIELD = "ideRenameItemFormMimeTypeField";
 
    private VLayout vLayout;
 
    private TextField itemNameField;
+   
+   private ComboBoxField mimeTypesField;
 
    private IButton renameButton;
 
    private IButton cancelButton;
 
    private RenameItemPresenter presenter;
+   
+   private StaticTextItem caption3;
 
    public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(eventBus, WIDTH, (selectedItems.get(0) instanceof File) ? HEIGHT : HEIGHT_SMALL, ID);
+      
       setTitle("Rename item");
 
       vLayout = new VLayout();
       addItem(vLayout);
 
-      createFieldForm();
+      createFieldForm(selectedItems.get(0) instanceof File);
       createButtons();
 
       show();
@@ -100,15 +109,18 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       });
    }
 
-   private void createFieldForm()
+   private void createFieldForm(boolean isFile)
    {
       DynamicForm paramsForm = new DynamicForm();
       paramsForm.setID(ID_DYNAMIC_FORM);
-      paramsForm.setPadding(5);
       paramsForm.setWidth(340);
       paramsForm.setLayoutAlign(Alignment.CENTER);
-      paramsForm.setPadding(15);
+      paramsForm.setPadding(1);
       paramsForm.setAutoFocus(true);
+      
+      SpacerItem delimiter1 = new SpacerItem();
+      delimiter1.setColSpan(2);
+      delimiter1.setHeight(5);
 
       StaticTextItem caption = new StaticTextItem();
       caption.setDefaultValue("Rename item to:");
@@ -123,7 +135,39 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       itemNameField.setName(RENAME_FIELD);
       itemNameField.setShowTitle(false);
       itemNameField.setWidth(340);
-      paramsForm.setFields(caption, delimiter, itemNameField);
+      itemNameField.setColSpan(6);
+      
+      SpacerItem delimiter2 = new SpacerItem();
+      delimiter2.setHeight(6);
+      
+      if (isFile)
+      {
+         StaticTextItem caption2 = new StaticTextItem();
+         caption2.setDefaultValue("Select mime-type");
+         caption2.setShowTitle(false);
+         caption2.setColSpan(2);
+
+         SpacerItem delimiter3 = new SpacerItem();
+         delimiter3.setHeight(2);
+
+         mimeTypesField = new ComboBoxField();
+         mimeTypesField.setName(MIME_TYPE_FIELD);
+         mimeTypesField.setWidth(340);
+         mimeTypesField.setShowTitle(false);
+         mimeTypesField.setColSpan(2);
+         mimeTypesField.setCompleteOnTab(true);
+         mimeTypesField.setPickListHeight(100);
+         
+         caption3 = new StaticTextItem();
+         caption3.setShowTitle(false);
+         caption3.setColSpan(2);
+         
+         paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2, caption2, delimiter3, mimeTypesField, caption3);
+      }
+      else
+      {
+         paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2);
+      }
       paramsForm.focusInItem(itemNameField);
 
       vLayout.addMember(paramsForm);
@@ -132,8 +176,8 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private void createButtons()
    {
       DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
+      buttonsForm.setPadding(1);
+      buttonsForm.setHeight(22);
       buttonsForm.setLayoutAlign(Alignment.CENTER);
 
       renameButton = new IButton("Rename");
@@ -188,5 +232,60 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    public HasKeyPressHandlers getItemNameFieldKeyPressHandler()
    {
       return (HasKeyPressHandlers)itemNameField;
+   }
+   
+   public void setMimeTypes(String[] mimeTypes)
+   {
+      mimeTypesField.setValueMap(mimeTypes);
+   }
+
+   public HasValue<String> getMimeType()
+   {
+      return mimeTypesField;
+   }
+
+   public void disableMimeTypeSelect()
+   {
+      mimeTypesField.setDisabled(true);
+   }
+
+   public void enableMimeTypeSelect()
+   {
+      mimeTypesField.setDisabled(false);
+   }
+
+   public void setDefaultMimeType(String mimeType)
+   {
+      mimeTypesField.setDefaultValue(mimeType);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.action.RenameItemPresenter.Display#enableRenameButton()
+    */
+   public void enableRenameButton()
+   {
+      renameButton.setDisabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.action.RenameItemPresenter.Display#disableRenameButton()
+    */
+   public void disableRenameButton()
+   {
+      renameButton.setDisabled(true);
+   }
+   
+   public void addLabel(String style, String text)
+   {
+      if (text == null)
+      {
+         caption3.setValue("");
+         caption3.setHeight(0);
+      }
+      else
+      {
+         caption3.setHeight(12);
+         caption3.setValue("<font color=\"#7d7d7d\">" + text + "</font>");
+      }
    }
 }
