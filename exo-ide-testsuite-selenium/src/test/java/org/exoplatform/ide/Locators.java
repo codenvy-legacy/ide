@@ -186,10 +186,16 @@ public class Locators
       public static final String RENAME_ITEN_WINDOW_LOCATOR = "//div[@eventproxy='ideRenameItemForm']";
       
       /**
-       * Non-smartGWT locator for mime-type field.
+       * Non-smartGWT locator for disabled mime-type field.
        */
       public static final String MIME_TYPE_FIELD_DISABLED_LOCATOR = RENAME_ITEN_WINDOW_LOCATOR 
          + "//input[@class='selectItemTextDisabled' and @name='ideRenameItemFormMimeTypeField']";
+      
+      /**
+       * Non-smartGWT locator for mime-type field.
+       */
+      public static final String MIME_TYPE_FIELD_LOCATOR = RENAME_ITEN_WINDOW_LOCATOR
+         + "//input[@name='ideRenameItemFormMimeTypeField']";
    }
    
    public interface PropertiesPanel

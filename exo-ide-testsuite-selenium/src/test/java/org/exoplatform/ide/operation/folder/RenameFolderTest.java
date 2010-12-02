@@ -85,7 +85,7 @@ public class RenameFolderTest extends BaseTest
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
-      assertFalse(selenium.isElementPresent(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR));
+      assertFalse(selenium.isElementPresent(Locators.RenameItemForm.MIME_TYPE_FIELD_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
       
       selenium.click(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR);
