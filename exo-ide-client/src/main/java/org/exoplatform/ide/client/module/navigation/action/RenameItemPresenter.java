@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
+ * Presenter for renaming folders and files form.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
@@ -63,6 +63,9 @@ public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesR
 ExceptionThrownHandler, FileContentSavedHandler
 {
 
+   /**
+    * Interface for display for renaming files and folders.
+    */
    public interface Display
    {
 
