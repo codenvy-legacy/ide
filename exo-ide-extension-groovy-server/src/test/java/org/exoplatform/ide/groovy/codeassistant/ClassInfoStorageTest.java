@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
+import java.io.File;
+import java.net.URLEncoder;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
 import org.exoplatform.ide.groovy.codeassistant.impl.CodeAssistantImpl;

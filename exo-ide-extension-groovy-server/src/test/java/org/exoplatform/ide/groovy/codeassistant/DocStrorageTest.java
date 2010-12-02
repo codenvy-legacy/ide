@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLEncoder;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
 import org.exoplatform.services.rest.impl.ContainerResponse;

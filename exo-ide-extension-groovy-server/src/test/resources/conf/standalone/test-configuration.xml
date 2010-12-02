@@ -58,7 +58,6 @@
             <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG"/>
             <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG"/>
 
-            
 
          </properties-param>
       </init-params>
@@ -94,7 +93,7 @@
       </value-param>
        <value-param>
          <name>pkgsDoc</name>
-         <value>java/math</value>
+         <value>java.math</value>
       </value-param>
        <value-param>
          <name>pkgsInfo</name>

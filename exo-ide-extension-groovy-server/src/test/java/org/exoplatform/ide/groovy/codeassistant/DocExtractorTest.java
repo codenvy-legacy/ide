@@ -53,7 +53,7 @@ public class DocExtractorTest extends TestCase
 
    public void testExtractDocFromJavaSource() throws RecognitionException, TokenStreamException, IOException
    {
-      Map<String, GroovyRootDoc> roots = DocExtractor.extract(javaHome, "java/util");
+      Map<String, GroovyRootDoc> roots = DocExtractor.extract(javaHome, "java.util");
       assertTrue(roots.containsKey("java.util"));
       GroovyRootDoc doc = roots.get("java.util");
       assertNotNull(doc);

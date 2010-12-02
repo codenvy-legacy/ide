@@ -323,6 +323,7 @@ public class DocStorageJcrImpl implements DocStorage
          }
 
       }
+      cls.getSession().save();
    }
 
    /**

@@ -84,7 +84,7 @@ public class DocExtractor
       {
          plainTool = new GroovyDocTool(new String[]{extPath + pkg});
          plainTool.add(pkgMap.get(pkg));
-         docs.put(pkg.replace("/", "."), plainTool.getRootDoc());
+         docs.put(pkg.replace(fs, "."), plainTool.getRootDoc());
       }
       return docs;
    }
