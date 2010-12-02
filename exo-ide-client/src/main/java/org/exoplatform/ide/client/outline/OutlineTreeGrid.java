@@ -52,6 +52,22 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
 
    private static final String METHOD_ICON = Images.Outline.METHOD_ITEM;
 
+   private static final String PRIVATE_METHOD_ICON = Images.Outline.PRIVATE_METHOD;
+
+   private static final String PUBLIC_METHOD_ICON = Images.Outline.PUBLIC_METHOD;
+
+   private static final String PROTECTED_METHOD_ICON = Images.Outline.PROTECTED_METHOD;
+
+   private static final String DEFAULT_METHOD_ICON = Images.Outline.DEFAULT_METHOD;
+
+   private static final String PRIVATE_FIELD_ICON = Images.Outline.PRIVATE_FIELD;
+
+   private static final String PUBLIC_FIELD_ICON = Images.Outline.PUBLIC_FIELD;
+
+   private static final String PROTECTED_FIELD_ICON = Images.Outline.PROTECTED_FIELD;
+
+   private static final String DEFAULT_FIELD_ICON = Images.Outline.DEFAULT_FIELD;
+
    private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
    
    private static final String TAG_ICON = Images.Outline.TAG_ITEM;
@@ -80,6 +96,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       setCanEdit(false);
       setShowRoot(false);
       setFixedFieldWidths(false);
+      setIconSize(16);
       
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);
@@ -136,62 +153,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                newNode = new TreeNode();
                newNode.setAttribute(getValuePropertyName(), child);
-               switch (child.getType()) {
-                  case FUNCTION:
-                     newNode.setAttribute(ICON, FUNCTION_ICON);
-                     break;
-
-                  case VARIABLE:
-                     newNode.setAttribute(ICON, VAR_ICON);
-                     break;
-
-                  case METHOD:
-                     newNode.setAttribute(ICON, METHOD_ICON);
-                     break;
-                     
-                  case PROPERTY:
-                     newNode.setAttribute(ICON, PROPERTY_ICON);
-                     break;
-                     
-                  case TAG:
-                     newNode.setAttribute(ICON, TAG_ICON);
-                     break;
-                     
-                  case CDATA:
-                     newNode.setAttribute(ICON, CDATA_ICON);
-                     break;
-                     
-                  case GROOVY_TAG:
-                     newNode.setAttribute(ICON, GROOVY_TAG_ICON);
-                     break;
-
-                  case CLASS:
-                     newNode.setAttribute(ICON, CLASS_ICON);
-                     break;                     
-                     
-                  default:
-                     continue;
-               }
-               
-               String name = child.getName();
-               
-               // add info about java type, parameters and annotations
-               if (MimeType.APPLICATION_GROOVY.equals(child.getMimeType()))
-               {
-                  String annotationList = getAnnotationList(child);
-                  
-                  name = "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + name + "</span>";
-                  
-                  if (TokenType.METHOD.equals(child.getType()))
-                  {
-                     name += getParametersList(child);
-                  }
- 
-                  name += "<span title=\"" + annotationList + "\">" + getJavaType(child) + "</span>";
-               }
-               
-               newNode.setAttribute(NAME, name);
-               
+               newNode.setAttribute(ICON, getTokenItem(child));
+               newNode.setAttribute(NAME, getTokenDisplayTitle(child));
                tree.add(newNode, parentNode);
             }
             
@@ -204,14 +167,179 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    }
    
    /**
+    * Get the string to display token.
+    * 
+    * @param token token to display
+    * @return {@link String} display string of the token
+    */
+   private String getTokenDisplayTitle(Token token)
+   {
+      String name = token.getName();
+      boolean isDeprecated = isDeprecated(token);
+      // add info about java type, parameters and annotations
+      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
+      {
+         String annotationList = getAnnotationList(token);
+         String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
+         name = getModifiersContainer(token) + "<span "+deprecateSign+" title=\"" + annotationList + "\">&nbsp;&nbsp;"  + name + "</span>";
+         
+         if (TokenType.METHOD.equals(token.getType()))
+         {
+            name += getParametersList(token);
+         }
+         //Field type or method return type:
+         name += "<span style='color:#644a17;' title=\"" + annotationList + "\">" + getJavaType(token) + "</span>";
+      }
+      return name;
+   }
+   
+   
+   /**
+    * Checks, whether method has deprecated annotation.
+    * 
+    * @param token method
+    * @return boolean whether method is deprecated
+    */
+   private boolean isDeprecated(Token token)
+   {
+      if (token.getAnnotations() == null) return false;
+      
+      for (Token annotation : token.getAnnotations())
+      {
+         if ("@deprecated".equalsIgnoreCase(annotation.getName()))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+   
+   /**
+    * Get icon for token.
+    * 
+    * @param token token
+    * @return icon
+    */
+   private String getTokenItem(Token token)
+   {
+      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
+      {
+         return getIconForJavaFiles(token);
+      }
+      switch (token.getType())
+      {
+         case FUNCTION :
+            return FUNCTION_ICON;
+         case VARIABLE :
+            return VAR_ICON;
+         case METHOD :
+            return METHOD_ICON;
+         case PROPERTY :
+            return PROPERTY_ICON;
+         case TAG :
+            return TAG_ICON;
+         case CDATA :
+            return CDATA_ICON;
+         case GROOVY_TAG :
+            return GROOVY_TAG_ICON;
+         case CLASS :
+            return CLASS_ICON;
+         default :
+            return "";
+      }
+   }
+   
+   
+   /**
+    * Forms the icon for java files (groovy, POJO, etc)
+    * 
+    * @return {@link String} icon
+    */
+   private String getIconForJavaFiles(Token token)
+   {
+      boolean isPrivate = token.getModifiers().contains(Token.Modifier.PRIVATE);
+      boolean isProtected = token.getModifiers().contains(Token.Modifier.PROTECTED);
+      boolean isPublic = token.getModifiers().contains(Token.Modifier.PUBLIC);
+      
+      switch (token.getType())
+      {
+         case VARIABLE :
+         case METHOD :
+            if (isPrivate)
+            {
+               return PRIVATE_METHOD_ICON;
+            }
+            else if (isProtected)
+            {
+               return PROTECTED_METHOD_ICON;
+            }
+            else if (isPublic)
+            {
+               return PUBLIC_METHOD_ICON;
+            }
+            else
+            {
+               return DEFAULT_METHOD_ICON;
+            }
+         case PROPERTY :
+            if (isPrivate)
+            {
+               return PRIVATE_FIELD_ICON;
+            }
+            else if (isProtected)
+            {
+               return PROTECTED_FIELD_ICON;
+            }
+            else if (isPublic)
+            {
+               return PUBLIC_FIELD_ICON;
+            }
+            else
+            {
+               return DEFAULT_FIELD_ICON;
+            }
+         case CLASS :
+            return CLASS_ICON;
+         default :
+            return "";
+      }
+   }
+   
+   /**
+    * @param token {@link Token} 
+    * @return html element with modifers
+    */
+   private String getModifiersContainer(Token token){
+      //Get modifiers:
+      boolean isStatic = token.getModifiers().contains(Token.Modifier.STATIC);
+      boolean isFinal =  token.getModifiers().contains(Token.Modifier.FINAL);
+      boolean isAbstract = token.getModifiers().contains(Token.Modifier.ABSTRACT);
+      //Get annotation list like string:
+      String annotationList = getAnnotationList(token);
+      
+      //Count size for better align the html elments:
+      int size = (annotationList.length() > 0) ? 28: 22;
+      
+      String span = "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: "+size+"px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
+      span += (annotationList.length() > 0) ? "<font color ='#000000' style='float: right;'>@</font>" : "";
+      span += (isAbstract) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+      span += (isFinal) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
+      span += (isStatic) ? "<font color ='#6d0000' style='float: right;'>s</font>" : "";
+      span += "</span>";
+      return span;
+   }
+   
+   
+   
+   /**
     * @param annotationList 
     * @return HTML code to display "@" sign near the groovy token if annotationList is not empty, or "" otherwise
     */
-   private String getAnnotationSign(String annotationList)
+   private static  final String getAnnotationSign(String annotationList)
    {
-      return (! annotationList.isEmpty() ? "<small><sup>@&nbsp;</sup></small>" : "");
+      return (! annotationList.isEmpty() ? "<span style = \"font-family: symbol, 'Standard Symbols L' , Verdana; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;" : "");
    }
-
+   
    public void selectToken(Token token)
    {
       if (token.getName() == null) return;
@@ -292,7 +420,6 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       {
          return " : " + token.getJavaType();                  
       }
-     
       return "";
    }
 
