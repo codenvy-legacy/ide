@@ -24,19 +24,15 @@ import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -72,7 +68,7 @@ public class CodeAssitantTest extends Base
    public void testGetClassByFqn() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET",
+         launcher.service("POST",
             "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName(), "", null, null,
             null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
@@ -89,7 +85,7 @@ public class CodeAssitantTest extends Base
    public void testGetClassByFqnError() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET",
+         launcher.service("POST",
             "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName()+"error", "", null, null,
             null, null);
       assertEquals(500, cres.getStatus());
@@ -99,7 +95,7 @@ public class CodeAssitantTest extends Base
    public void testFindClassByName() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/find?class=" + Address.class.getSimpleName(), "", null,
+         launcher.service("POST", "/ide/code-assistant/find?class=" + Address.class.getSimpleName(), "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
@@ -113,7 +109,7 @@ public class CodeAssitantTest extends Base
    {
       String pkg = Address.class.getPackage().getName();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/find-by-prefix?prefix=" + pkg, "", null,
+         launcher.service("POST", "/ide/code-assistant/find-by-prefix?prefix=" + pkg, "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
@@ -127,7 +123,7 @@ public class CodeAssitantTest extends Base
    {
       assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/java.math.BigDecimal/jcr:content"));
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "", null,
+         launcher.service("POST", "/ide/code-assistant/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
@@ -142,7 +138,7 @@ public class CodeAssitantTest extends Base
       assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/methods-doc"));
       String method = BigDecimal.class.getCanonicalName() + ".add(BigDecimal)";
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/class-doc?fqn=" + method, "", null,
+         launcher.service("POST", "/ide/code-assistant/class-doc?fqn=" + method, "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());

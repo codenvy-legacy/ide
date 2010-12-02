@@ -43,7 +43,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -67,6 +67,7 @@ public class CodeAssistantImpl implements CodeAssistant
    private JsonHandler jsonHandler;
 
    private final String wsName;
+   
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(CodeAssistantImpl.class);
@@ -85,7 +86,7 @@ public class CodeAssistantImpl implements CodeAssistant
     * {@inheritDoc}
     * @throws CodeAssistantException 
     */
-   @GET
+   @POST //use POST for fixing cache problem
    @Path("/class-description")
    @Produces(MediaType.APPLICATION_JSON)
    public TypeInfo getClassByFQN(@QueryParam("fqn") String fqn) throws CodeAssistantException
@@ -147,7 +148,7 @@ public class CodeAssistantImpl implements CodeAssistant
    /**
     * {@inheritDoc}
     */
-   @GET
+   @POST //use POST for fixing cache problem
    @Path("/find")
    @Produces(MediaType.APPLICATION_JSON)
    public ShortTypeInfo[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
@@ -195,7 +196,7 @@ public class CodeAssistantImpl implements CodeAssistant
    /**
     * {@inheritDoc}
     */
-   @GET
+   @POST //use POST for fixing cache problem
    @Path("/find-by-prefix")
    @Produces(MediaType.APPLICATION_JSON)
    public ShortTypeInfo[] findFQNsByPrefix(@QueryParam("prefix") String prefix) throws CodeAssistantException
@@ -249,7 +250,7 @@ public class CodeAssistantImpl implements CodeAssistant
 
    }
 
-   @GET
+   @POST //use POST for fixing cache problem
    @Path("/class-doc")
    public String getClassDoc(@QueryParam("fqn") String fqn) throws CodeAssistantException
    {
