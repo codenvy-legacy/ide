@@ -59,7 +59,6 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
       this.callback = callback;
       handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
       CodeAssistantService.getInstance().findClass(className);
    }
 
@@ -68,7 +67,7 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
     */
    public void onClassesNamesReceived(ClassesNamesReceivedEvent event)
    {
-      handlers.removeHandlers();
+      handlers.removeHandlers(); 
       callback.tokensCollected(event.getTokens());
    }
 

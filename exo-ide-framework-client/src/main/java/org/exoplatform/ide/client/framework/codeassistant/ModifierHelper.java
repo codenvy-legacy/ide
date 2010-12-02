@@ -257,6 +257,18 @@ public class ModifierHelper
          return sb.toString().substring(0, len - 1);
       return "";
    }
+   
+   
+   /**
+    * Return int from {@link String}.
+    * This methods need for convert JSON format number to int 
+    * @param modifiers
+    * @return int modifiers
+    */
+   public static int getIntFromString(String modifiers)
+   {
+     return (int) Double.parseDouble(modifiers);
+   }
 
    /**
     * The <code>int</code> value representing the <code>public</code> 

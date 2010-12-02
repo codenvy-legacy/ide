@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
-import java.util.HashMap;
-
+import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
@@ -46,23 +43,22 @@ public class GroovyFieldWidget extends GroovyTokenWidgetBase
    /**
     * @param token
     */
-   public GroovyFieldWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
+   public GroovyFieldWidget(TokenExt token)
    {
       super(token);
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-
-      Image i = new Image(images.get(token.getType()));
+      Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       String name = token.getName() +":" + token.getProperty(TokenExtProperties.TYPE);
-      name += ":" +token.getProperty(TokenExtProperties.RETURNTYPE);
-
-      grid.setWidget(0, 1, new Label(name, false));
+      Label nameLabel = new Label(name, false);
+      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+      grid.setWidget(0, 1, nameLabel);
 
       String pack = token.getProperty(TokenExtProperties.DECLARINGCLASS);
-      Label l = new Label("-"+pack);
+      Label l = new Label("-"+pack, false);
       l.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
       
       grid.setWidget(0, 2, l);
@@ -75,6 +71,31 @@ public class GroovyFieldWidget extends GroovyTokenWidgetBase
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   /**
+    * @return
+    */
+   private Image getImage()
+   {
+      Image i;
+      if(ModifierHelper.isPrivate(modifieres))
+      {
+        i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
+      }
+      else if(ModifierHelper.isProtected(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.protectedField());
+      }
+      else if(ModifierHelper.isPublic(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());           
+      }
+      else
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.defaultField());
+      }
+      return i;
    }
 
    /**

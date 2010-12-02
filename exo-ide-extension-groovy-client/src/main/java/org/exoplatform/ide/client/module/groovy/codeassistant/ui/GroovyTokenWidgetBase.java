@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
+import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
@@ -31,15 +33,35 @@ import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
  */
 public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
 {
-   
+
+   protected int modifieres;
+
    /**
     * @param token
     */
    public GroovyTokenWidgetBase(TokenExt token)
    {
       super(token);
+      if (token.getProperty(TokenExtProperties.MODIFIERS) == null)
+      {
+         modifieres = 0;
+      }
+      modifieres = ModifierHelper.getIntFromString(token.getProperty(TokenExtProperties.MODIFIERS));
    }
-   
+
+   protected String getModifiers()
+   {
+
+      String span =
+         "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
+            + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
+      span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
+      span += (ModifierHelper.isStatic(modifieres)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
+      span += "</span>";
+      return span;
+   }
+
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName()
     */
@@ -58,8 +80,6 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().selectedItem());
    }
 
-
-
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setOveredStyle()
     */
@@ -69,8 +89,6 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().overedItem());
    }
 
-
-
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setDefaultStyle()
     */
@@ -79,5 +97,5 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    {
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
    }
-   
+
 }

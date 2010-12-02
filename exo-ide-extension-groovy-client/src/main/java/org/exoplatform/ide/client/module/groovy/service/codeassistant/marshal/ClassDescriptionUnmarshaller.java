@@ -91,8 +91,6 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         System.out.println(e.getMessage());
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse class description");
       }
    }

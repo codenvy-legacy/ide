@@ -90,14 +90,11 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
    private HandlerRegistration keyboardManagerRegistration;
 
-   private HashMap<TokenExtType, ImageResource> images;
-
    public AssistImportDeclarationForm(HandlerManager eventBus, int left, int top, List<TokenExt> items,
-      HashMap<TokenExtType, ImageResource> images, AssistImportDeclarationHandler handler)
+      AssistImportDeclarationHandler handler)
    {
       absolutePanel = new AbsolutePanel();
       this.handler = handler;
-      this.images = images;
 
       initWidget(absolutePanel);
 
@@ -123,28 +120,28 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
 
       FocusPanel focusPanel = new FocusPanel();
-           
+
       focusPanel.add(scrollPanel);
-      
+
       scrollPanel.add(flowPanel);
       scrollPanel.setHeight("100%");
-      
+
       mousHandler = new MousHandler();
       flowPanel.setWidth("100%");
-      
+
       scrollPanel.addMouseOutHandler(mousHandler);
 
       scrollPanel.setStylePrimaryName(GroovyPluginImageBundle.INSTANCE.css().panelStyle());
-      
+
       focusPanel.setHeight("100px");
       focusPanel.setWidth("350px");
-      
+
       lockLayer.add(focusPanel, left, top);
       flowPanel.add(new Label("No Proposals."));
 
       fillTokens(items);
       focusPanel.setFocus(true);
-      
+
    }
 
    /**
@@ -158,15 +155,13 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       }
 
       flowPanel.clear();
-      int i = 0;
       for (TokenExt token : items)
       {
-         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token,images);
+         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token);
          widget.addClickHandler(mousHandler);
          widget.addMouseOverHandler(mousHandler);
          widget.addDoubleClickHandler(mousHandler);
          flowPanel.addWidget(widget);
-         i++;
       }
 
       selectTokenWidget(flowPanel.getEntries().get(0));

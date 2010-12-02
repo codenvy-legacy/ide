@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
-import org.exoplatform.ide.client.module.groovy.codeassistant.CodeAssitantImages;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyClassTokenWidget;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyConstructorWidget;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyFieldWidget;
@@ -46,19 +45,19 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
       switch (token.getType())
       {
          case CLASS :
-            return new GroovyClassTokenWidget(token, CodeAssitantImages.getImages());
+            return new GroovyClassTokenWidget(token);
             
          case CONSTRUCTOR :
-            return new GroovyConstructorWidget(token, CodeAssitantImages.getImages());
+            return new GroovyConstructorWidget(token);
             
          case METHOD :
-            return new GroovyMethodWidget(token, CodeAssitantImages.getImages());
+            return new GroovyMethodWidget(token);
             
          case FIELD :
-            return new GroovyFieldWidget(token, CodeAssitantImages.getImages());
+            return new GroovyFieldWidget(token);
                      
          default :
-            return new GroovyConstructorWidget(token, CodeAssitantImages.getImages());
+            return new GroovyConstructorWidget(token);
             
       }
    }

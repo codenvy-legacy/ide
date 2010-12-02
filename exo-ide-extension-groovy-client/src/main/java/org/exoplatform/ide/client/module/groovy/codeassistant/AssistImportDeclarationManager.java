@@ -67,16 +67,12 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
     */
    public void onEditorErrorMarkClicked(EditorErrorMarkClickedEvent event)
    {
-      for (CodeError s : event.getCodeErrorList())
-      {
-         System.out.println(s.getIncorrectToken() + " " + s.getLineNumber());
-      }
+
       if (!event.getCodeErrorList().isEmpty())
       {
 
          left = event.getMarkOffsetY() + 4;
          top = event.getMarkOffsetX() + 4;
-         System.out.println("left - " + left + " <<<>>> top - " + top);
          editorId = event.getEditorId();
 
          ImportDeclarationTokenCollector collector =
@@ -91,7 +87,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
     */
    public void tokensCollected(List<TokenExt> tokens)
    {
-      new AssistImportDeclarationForm(eventBus, left, top, tokens, CodeAssitantImages.getImages(), this);
+      new AssistImportDeclarationForm(eventBus, left, top, tokens, this);
    }
 
    /**

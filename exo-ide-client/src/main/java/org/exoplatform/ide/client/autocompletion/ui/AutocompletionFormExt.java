@@ -139,7 +139,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       flowPanel = new FlowPanel();
 
       scrollPanel = new AutoCompleteScrollPanel();
-//      scrollPanel.setAlwaysShowScrollBars(true);
+      //      scrollPanel.setAlwaysShowScrollBars(true);
       scrollPanel.add(flowPanel);
 
       mousHandler = new MousHandler();
@@ -200,6 +200,10 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private void filterListToken()
    {
+      if (allWidgets.isEmpty())
+      {
+         return;
+      }
       String editText = textBox.getText();
       editText = editText.substring(0, textBox.getCursorPos());
 
@@ -375,7 +379,14 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
    public void tokenSelected()
    {
       removeHandlers();
-      handler.onTokenSelected(selectedWidget.getTokenValue());
+      if (selectedWidget == null)
+      {
+         handler.onTokenSelected(textBox.getText());
+      }
+      else
+      {
+         handler.onTokenSelected(selectedWidget.getTokenValue());
+      }
       lockLayer.removeFromParent();
    }
 
@@ -442,8 +453,8 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
                case KeyCodes.KEY_LEFT :
                case KeyCodes.KEY_RIGHT :
-                  break;
-
+                  if(textBox.getCursorPos() == 0) break;
+                  
                default :
                   new Timer()
                   {

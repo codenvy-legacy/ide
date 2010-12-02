@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
 import java.util.HashMap;
 
+import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
@@ -48,7 +49,7 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
    /**
     * @param token
     */
-   public GroovyConstructorWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
+   public GroovyConstructorWidget(TokenExt token)
    {
       super(token);
 
@@ -56,13 +57,14 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
-      Image i = new Image(images.get(token.getType()));
+      Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       value = token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
-
-      grid.setWidget(0, 1, new Label(value, false));
+      Label nameLabel = new Label(value, false);
+      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+      grid.setWidget(0, 1, nameLabel);
 
       Label label = new Label("-" + token.getProperty(TokenExtProperties.DECLARINGCLASS), false);
       label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
@@ -76,6 +78,32 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   /**
+    * Return {@link Image} for specific access modifier
+    * @return
+    */
+   private Image getImage()
+   {
+      Image i;
+      if (ModifierHelper.isPrivate(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
+      }
+      else if (ModifierHelper.isProtected(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.protectedField());
+      }
+      else if (ModifierHelper.isPublic(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
+      }
+      else
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.defaultField());
+      }
+      return i;
    }
 
    /**

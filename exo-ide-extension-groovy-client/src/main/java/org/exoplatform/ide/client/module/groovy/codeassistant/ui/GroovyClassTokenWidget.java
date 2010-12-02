@@ -18,14 +18,10 @@
  */
 package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
-import java.util.HashMap;
-
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
@@ -40,34 +36,34 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
 {
-   
+
    private Grid grid;
-   
-   
 
    /**
     * @param token
     * @param number
     */
-   public GroovyClassTokenWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
+   public GroovyClassTokenWidget(TokenExt token)
    {
       super(token);
       grid = new Grid(1, 3);
-//      grid.setStyleName(Style.AUTO_LIST_ITEM);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-    
-      Image i = new Image(images.get(token.getType()));
+      grid.setWidth("100%");
+
+      Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      
-      grid.setWidget(0, 1, new Label(token.getName(), false));
+
+      Label nameLabel = new Label(token.getName(), false);
+      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+
+      grid.setWidget(0, 1, nameLabel);
 
       String pack = token.getProperty(TokenExtProperties.FQN);
       pack = pack.substring(0, pack.lastIndexOf("."));
-      grid.setWidget(0, 2, new Label("-"+pack));
-      
+      grid.setWidget(0, 2, new Label("-" + pack, false));
+
       grid.getCellFormatter().setWidth(0, 0, "16px");
-//      //grid.getCellFormatter().
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
@@ -77,7 +73,30 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
       setWidth("100%");
    }
 
+   /**
+    * Image that represent current token type(Class, Interface or Annotation)
+    * 
+    * @return {@link Image}
+    */
+   private Image getImage()
+   {
+      switch (token.getType())
+      {
 
+         case INTERFACE :
+
+            return new Image(GroovyPluginImageBundle.INSTANCE.intrfaceItem());
+
+         case ANNOTATION :
+            return new Image(GroovyPluginImageBundle.INSTANCE.annotationItem());
+
+         case CLASS :
+         default :
+            return new Image(GroovyPluginImageBundle.INSTANCE.classItem());
+
+      }
+
+   }
 
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue()

@@ -76,27 +76,44 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    public void getTokens(String line, String fqn, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
-      this.callback = tokensCollectedCallback;
-      
-      if (line.endsWith(".") && fqn != null)
+      if(line== null || line.isEmpty())
       {
-         beforeToken = line;
-         tokenToComplete = "";
-         afterToken = "";
+         callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
+      }
+      
+      this.callback = tokensCollectedCallback;
+      curentFqn = fqn;
+      
+      String subToken = line.substring(0, cursorPos-1);
+      afterToken = line.substring(cursorPos - 1);
+      
+      String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
+      String token = split[split.length-1];
+      if(token.contains("."))
+      {
+         String varToken = token.substring(0, token.lastIndexOf('.'));
+         tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
+         beforeToken = subToken.substring(0,subToken.indexOf(varToken) + varToken.length() + 1);
+         if(fqn == null)
+         {
+            callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
+            return;
+         }
          if(classes.containsKey(fqn))
          {
             collectPublicInterface(classes.get(fqn));
             return;
          }
          
-         curentFqn = fqn;
+         
          handlers.addHandler(ClassDescriptionReceivedEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          
          CodeAssistantService.getInstance().getClassDescription(fqn);         
-      }
+      } 
       else
       {
+         
          callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
       }
       

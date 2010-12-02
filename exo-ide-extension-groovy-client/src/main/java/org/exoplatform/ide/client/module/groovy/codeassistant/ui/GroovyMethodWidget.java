@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
 import java.util.HashMap;
 
+import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -46,24 +48,26 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
    /**
     * @param token
     */
-   public GroovyMethodWidget(TokenExt token, HashMap<TokenExtType, ImageResource> images)
+   public GroovyMethodWidget(TokenExt token)
    {
       super(token);
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-
-      Image i = new Image(images.get(token.getType()));
+      grid.setWidth("100%");
+      
+      Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       String name = token.getName() + token.getProperty(TokenExtProperties.PARAMETERTYPES);
-      name += ":" +token.getProperty(TokenExtProperties.RETURNTYPE);
-
-      grid.setWidget(0, 1, new Label(name, false));
+      name += ":" + token.getProperty(TokenExtProperties.RETURNTYPE);
+      
+      Label nameLabel = new Label(name, false);
+      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+      grid.setWidget(0, 1, nameLabel);
 
       String pack = token.getProperty(TokenExtProperties.DECLARINGCLASS);
-      
-      Label label = new Label("-"+pack);
+      Label label = new Label("-" + pack, false);
       label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, label);
 
@@ -75,6 +79,28 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   private Image getImage()
+   {
+      Image i;
+      if(ModifierHelper.isPrivate(modifieres))
+      {
+        i = new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());
+      }
+      else if(ModifierHelper.isProtected(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.protectedMethod());
+      }
+      else if(ModifierHelper.isPublic(modifieres))
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());           
+      }
+      else
+      {
+         i = new Image(GroovyPluginImageBundle.INSTANCE.defaultMethod());
+      }
+      return i;
    }
 
    /**

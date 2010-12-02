@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.shared.HandlerManager;
@@ -84,8 +85,14 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
+         try
+         {
          collector.getTokens(event.getLineContent(), event.getFqn(), event.getCursorPositionY(),
             event.getCursorPositionX(), event.getTokenList(), this);
+         }
+         catch (Throwable e) {
+            Log.debug("Error in token collector", e);
+         }
       }
    }
 
@@ -106,7 +113,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       }
       catch (Exception e)
       {
-         Log.debug("Autocomplete error", e);
+         Log.fatal("Autocomplete error", e);
       }
    }
 
@@ -130,8 +137,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
     */
    public void onCancelAutoComplete()
    {
-      // TODO Auto-generated method stub
-
+      eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
 }
