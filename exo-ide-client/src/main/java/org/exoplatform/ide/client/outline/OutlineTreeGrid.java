@@ -385,7 +385,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     */
    private static  final String getAnnotationSign(String annotationList)
    {
-      return (! annotationList.isEmpty() ? "<span style = \"font-family: symbol, 'Standard Symbols L' , Verdana; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;" : "");
+      // font-family: Verdana,Bitstream Vera Sans,sans-serif;
+      return (! annotationList.isEmpty() ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;" : "");
    }
    
    public void selectToken(Token token)
