@@ -21,9 +21,9 @@ package org.exoplatform.ide.groovy;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.groovy.codeassistant.impl.ClassInfoStrorageJcrImpl;
-import org.exoplatform.ide.groovy.codeassistant.impl.CodeAssistantImpl;
-import org.exoplatform.ide.groovy.codeassistant.impl.DocStorageJcrImpl;
+import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorage;
+import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
+import org.exoplatform.ide.groovy.codeassistant.DocStorage;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 
@@ -57,25 +57,25 @@ public class GroovyScriptServiceApplication extends Application
          if (pkgsDoc != null)
          {
             String[] pkgs = pkgsDoc.getValue().split(",");
-            objects.add(new DocStorageJcrImpl(ws.getValue(), repositoryService, sessionProvider, pkgs));
+            objects.add(new DocStorage(ws.getValue(), repositoryService, sessionProvider, pkgs));
          }
          else
          {
-            objects.add(new DocStorageJcrImpl(ws.getValue(), repositoryService, sessionProvider));
+            objects.add(new DocStorage(ws.getValue(), repositoryService, sessionProvider));
          }
          
          ValueParam pkgsInfo = initParams.getValueParam("pkgsInfo");
          if (pkgsInfo != null)
          {
             String[] pkgs = pkgsInfo.getValue().split(",");
-            objects.add(new ClassInfoStrorageJcrImpl(sessionProvider, repositoryService, ws.getValue(),pkgs));
+            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, ws.getValue(),pkgs));
          }
          else
          {
-            objects.add(new ClassInfoStrorageJcrImpl(sessionProvider, repositoryService, ws.getValue()));
+            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, ws.getValue()));
          }
          
-         objects.add(new CodeAssistantImpl(ws.getValue(), repositoryService, sessionProvider));
+         objects.add(new CodeAssistant(ws.getValue(), repositoryService, sessionProvider));
          
       }
       objects.add(new DevelopmentResourceMethodFilter());
