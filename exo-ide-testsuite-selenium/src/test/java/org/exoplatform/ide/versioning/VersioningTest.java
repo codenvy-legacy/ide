@@ -50,33 +50,33 @@ public abstract class VersioningTest extends BaseTest
             .isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]"));
          assertTrue(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
          // View version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION, true);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, true);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_VERSION, true);
          //Restore button
-         checkToolbarButtonPresentOnRightSide(MenuCommands.File.RESTORE_VERSION, true);
-         checkToolbarButtonState(MenuCommands.File.RESTORE_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(MenuCommands.File.RESTORE_VERSION, true);
+         IDE.toolbar().checkButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
          //Newer version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
          //Older version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
       }
       else
       {
          assertFalse(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
             + ToolbarCommands.View.HIDE_VERSION_HISTORY
             + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
-         checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
          assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
          // View version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, false);
          //Restore button
-         checkToolbarButtonPresentOnRightSide(MenuCommands.File.RESTORE_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(MenuCommands.File.RESTORE_VERSION, false);
          //Newer version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
          //Older version button
-         checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
+         IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
       }
    }
 
@@ -110,8 +110,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkViewVersionHistoryButtonPresent(boolean isPresent) throws Exception
    {
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, isPresent);
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.View.VIEW_VERSION_HISTORY, isPresent);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, isPresent);
+      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, isPresent);
    }
    
    /**
@@ -122,8 +122,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkViewVersionHistoryButtonState(boolean enabled) throws Exception
    {
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, enabled);
-      checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION_HISTORY, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, enabled);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, enabled);
    }
 
    /**
@@ -134,8 +134,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkOlderVersionButtonState(boolean enabled) throws Exception
    {
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.OLDER_VERSION, enabled);
-      checkToolbarButtonState(ToolbarCommands.View.VIEW_OLDER_VERSION, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.OLDER_VERSION, enabled);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, enabled);
    }
 
    /**
@@ -146,8 +146,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkNewerVersionButtonState(boolean enabled) throws Exception
    {
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.NEWER_VERSION, enabled);
-      checkToolbarButtonState(ToolbarCommands.View.VIEW_NEWER_VERSION, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.NEWER_VERSION, enabled);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, enabled);
    }
 
    /**
@@ -158,8 +158,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkRestoreVersionButtonState(boolean enabled) throws Exception
    {
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.RESTORE_VERSION, enabled);
-      checkToolbarButtonState(MenuCommands.File.RESTORE_VERSION, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RESTORE_VERSION, enabled);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.File.RESTORE_VERSION, enabled);
    }
    
    /**
@@ -170,8 +170,8 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkViewVersionListButtonState(boolean enabled) throws Exception
    {
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST, enabled);
-      checkToolbarButtonState(ToolbarCommands.View.VIEW_VERSION, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST, enabled);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.VIEW_VERSION, enabled);
    }
 
    /**
@@ -262,8 +262,9 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void checkOpenVersion(int index, String versionContent) throws Exception
    {
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       checkViewVersionsListPanel(true);
       checkOpenVersionButtonState(false);
       selectVersionInVersionList(index);

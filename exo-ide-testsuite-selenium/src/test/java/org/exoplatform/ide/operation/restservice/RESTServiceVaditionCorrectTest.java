@@ -79,13 +79,13 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       selectFolder(FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Output]/"));
       assertEquals("[INFO] " + FILE_NAME + " validated successfully.", selenium.getText("//font[@color='#007700']"));

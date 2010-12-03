@@ -18,23 +18,20 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-36:Displaying warning message test.
@@ -92,11 +89,11 @@ public class DisplayingWarningMessageTest extends BaseTest
    public void displayingWarningMessage() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //--------- 2,3 -------------------
@@ -104,28 +101,28 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Click on "No" button in confirmation dialog.
       
       //After the step 2: You will see smartGWT Dialogs.showError dialog 
-      CloseFileUtils.closeNewFile(0, false, null);
+      IDE.editor().closeNewFile(0, false, null);
       
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
       //"Save" and "Save As" buttons, and "File->Save", "File->Save As" top menu commands 
       //will be disabled.
       checkIsTabPresentInEditorTabset("Untitled file.xml", false);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, false);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE_AS, false);
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
       
       //--------- 4 -------------------
       //Click on "File->New->XML File" top menu command to open new file on Content Panel
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //check is file opened
-      assertEquals(XML_FILE_NAME + " *", getTabTitle(0));
+      assertEquals(XML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
       
       //--------- 5 -------------------
       //Try to close file tab again.
-      CloseFileUtils.closeNewFile(0, true, null);
+      IDE.editor().closeNewFile(0, true, null);
       
       //After the step 6: new file will be saved, and file tab should be closed.
       
@@ -144,7 +141,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       changeFileContent();
       
       //open javascript file
-      runCommandFromMenuNewOnToolbar("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
       
       //--------- 8 -------------------
@@ -181,26 +178,26 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertEquals(previousContent, getTextFromCodeEditor(0));
       
       //check Save button enabled
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
       //check menu Save in File enabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       
       //---------- 9 -----------------
       //Save, close file tab and open created earlier xml file again.
-      runToolbarButton(ToolbarCommands.File.SAVE);
+      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       //After the step 9: there is saved file content in the new file tab with title without mark "*".
       
       //check file opened and title doesn't mark with *
-      assertEquals(XML_FILE_NAME, getTabTitle(1));
+      assertEquals(XML_FILE_NAME, IDE.editor().getTabTitle(1));
 
       assertEquals(previousContent, getTextFromCodeEditor(1));
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
    }
    

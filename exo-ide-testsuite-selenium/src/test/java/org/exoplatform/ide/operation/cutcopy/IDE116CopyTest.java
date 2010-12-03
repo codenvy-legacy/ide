@@ -20,18 +20,17 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -126,7 +125,7 @@ public class IDE116CopyTest extends BaseTest
       /*
        * Create new groovy script
        */
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       /*
@@ -148,33 +147,33 @@ public class IDE116CopyTest extends BaseTest
       /*
        * Check Copy must be enabled
        */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.COPY_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       /* 
        * Check Paste must be disabled
        */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /* 
       * Call "Edit/Copy" in menu
       */
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
       /* 
       * Check Paste must be enabled
       */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /* 
       * Select root in workspace tree and call "Edit/Paste"
       */
       selectRootOfWorkspaceTree();
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       typeTextIntoEditor(0, "updated");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -186,14 +185,14 @@ public class IDE116CopyTest extends BaseTest
       /* 
       * Close opened file
       */
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       /* 
       * Open "/Test 1.1/test.groovy"
       */
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       openOrCloseFolder(FOLDER_1_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -205,7 +204,7 @@ public class IDE116CopyTest extends BaseTest
       assertEquals("file content", fileContent);
 
       //Close file
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
 }

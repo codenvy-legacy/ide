@@ -82,8 +82,8 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 1]/col[0]/open");
       selenium.controlKeyDown();

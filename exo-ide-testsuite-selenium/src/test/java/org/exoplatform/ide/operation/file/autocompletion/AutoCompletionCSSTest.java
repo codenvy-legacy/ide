@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -38,14 +37,14 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testPlainCSS() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("CSS File");
+      IDE.toolbar().runCommandFromNewPopupMenu("CSS File");
       Thread.sleep(TestConstants.SLEEP);
 
       cssTest();
 
 //      closeTab("0");
 //      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -54,7 +53,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -84,7 +83,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
       @Test
@@ -93,7 +92,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -115,7 +114,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    /**

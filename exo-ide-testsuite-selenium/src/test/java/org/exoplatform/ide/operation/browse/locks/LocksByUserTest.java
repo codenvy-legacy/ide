@@ -73,7 +73,7 @@ public class LocksByUserTest extends LockFileAbstract
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 --------
       //open file
@@ -81,7 +81,7 @@ public class LocksByUserTest extends LockFileAbstract
       
       //----- 2 --------
       //lock file
-      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
       //----- 3 --------
       //logout
@@ -94,7 +94,7 @@ public class LocksByUserTest extends LockFileAbstract
       
       //----- 5 --------
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       checkFileLocking(FILE_NAME, true);
       //open file

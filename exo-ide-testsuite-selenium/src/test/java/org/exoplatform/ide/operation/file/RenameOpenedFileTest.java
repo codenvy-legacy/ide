@@ -99,14 +99,16 @@ public class RenameOpenedFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
@@ -129,7 +131,7 @@ public class RenameOpenedFileTest extends BaseTest
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
       
-      assertEquals(RENAMED_FILE_NAME, getTabTitle(0));
+      assertEquals(RENAMED_FILE_NAME, IDE.editor().getTabTitle(0));
 
       typeTextIntoEditor(0, "change content");
       saveCurrentFile();

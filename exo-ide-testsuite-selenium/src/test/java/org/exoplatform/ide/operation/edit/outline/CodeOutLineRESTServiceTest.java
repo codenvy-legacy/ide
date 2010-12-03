@@ -34,7 +34,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.exoplatform.ide.CloseFileUtils;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -51,12 +50,12 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       + "/" + FILE_NAME;
 
    private OulineTreeHelper outlineTreeHelper;
-   
+
    public CodeOutLineRESTServiceTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
-   }   
-   
+   }
+
    @BeforeClass
    public static void setUp()
    {
@@ -85,13 +84,13 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      
+
       // open outline panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline
@@ -107,7 +106,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
-      
+
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
 
@@ -115,7 +114,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       outlineTreeHelper.addOutlineItem(0, "@ TestService", 6);
       outlineTreeHelper.addOutlineItem(1, "@ post1(@ String, @ String, @ String, String) : String", 12);
       outlineTreeHelper.addOutlineItem(2, "@ post2(@ String, @ java.lang.String, @ String, java.lang.String) : java.lang.String", 24);
-      
+
       outlineTreeHelper.addOutlineItem(3, "Dep", 32);
       outlineTreeHelper.addOutlineItem(4, "name : String", 34);
       outlineTreeHelper.addOutlineItem(5, "age : int", 35);
@@ -123,15 +122,16 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       outlineTreeHelper.addOutlineItem(7, "addYear() : void", 41);
       outlineTreeHelper.addOutlineItem(8, "greet(String) : String", 46);
       outlineTreeHelper.addOutlineItem(9, "address : int", 50);
-      
+
       // check is tree created correctly
-      outlineTreeHelper.checkOutlineTree();      
+      outlineTreeHelper.checkOutlineTree();
    }
-   
+
    @AfterClass
    public static void tearDown() throws Exception
    {
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       cleanDefaultWorkspace();
-       }
+   }
+
 }

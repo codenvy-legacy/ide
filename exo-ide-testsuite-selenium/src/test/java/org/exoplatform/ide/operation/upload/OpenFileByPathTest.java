@@ -28,7 +28,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -98,7 +97,7 @@ public class OpenFileByPathTest extends BaseTest
       selectWorkspace(secondWorkspaceName);     
       
       // call Open File By Path form
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));
       assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR));      
       checkOpenButton(false);
@@ -122,7 +121,7 @@ public class OpenFileByPathTest extends BaseTest
       checkClosingFormByEscapeKey();
       
       // trying to open file by wrong url and using "Enter" key
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
       selenium.type(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR, "h");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       
@@ -139,7 +138,7 @@ public class OpenFileByPathTest extends BaseTest
       // trying to open file by correct url and using "Open" key
       openFileByFilePath(fileUrl);
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       // return to initial workspace
       selectWorkspace(WS_NAME);
@@ -148,7 +147,7 @@ public class OpenFileByPathTest extends BaseTest
    private void checkClosingFormByEscapeKey() throws Exception, InterruptedException
    {
       // close form by clicking "Esc" key 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));

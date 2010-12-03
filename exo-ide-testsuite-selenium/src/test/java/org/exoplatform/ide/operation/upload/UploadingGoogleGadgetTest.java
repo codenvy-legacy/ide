@@ -69,7 +69,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
    public void testUploadGoogleGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       uploadFile(MenuCommands.File.UPLOAD, FILE_PATH, MimeType.GOOGLE_GADGET);
@@ -82,7 +82,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("exo:googleGadget",
          selenium

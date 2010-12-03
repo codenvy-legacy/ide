@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.roles;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,8 +31,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -75,7 +74,7 @@ public class RolesWithGadgetTest extends BaseTest
    {
       try
       {
-    	  CloseFileUtils.closeTab(0);
+        IDE.editor().closeTab(0);
     	  VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
@@ -99,14 +98,14 @@ public class RolesWithGadgetTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(FILE1);
 
       Thread.sleep(TestConstants.SLEEP);
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //Logout and login as developer
       logout();
@@ -121,7 +120,7 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       Thread.sleep(TestConstants.SLEEP);
    }
@@ -151,7 +150,7 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    /**
@@ -163,18 +162,18 @@ public class RolesWithGadgetTest extends BaseTest
     */
    private void checkDeployUndeployAllowed(boolean allowed) throws Exception
    {
-      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, allowed);
-      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, allowed);
+      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, allowed);
+      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, allowed);
 
       if (allowed)
       {
-         checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
-         checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
          //Check deploy/undeploy gadget functionality only when in portal:
          if (IdeAddress.PORTAL.getApplicationUrl().equals(APPLICATION_URL))
          {
             //Deploy gadget:
-            runToolbarButton(ToolbarCommands.Run.DEPLOY_GADGET);
+            IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GADGET);
             Thread.sleep(TestConstants.SLEEP);
             //Check successfully deployed message
             assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
@@ -183,7 +182,7 @@ public class RolesWithGadgetTest extends BaseTest
             assertTrue(message.contains(FILE1 + " deployed successfully."));
 
             //Undeploy gadget
-            runToolbarButton(ToolbarCommands.Run.UNDEPLOY_GADGET);
+            IDE.toolbar().runCommand(ToolbarCommands.Run.UNDEPLOY_GADGET);
             Thread.sleep(TestConstants.SLEEP);
             //Check successfully undeployed message
             assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));

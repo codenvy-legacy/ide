@@ -80,13 +80,13 @@ public class GroovyTemplatePreviewTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       selenium.selectFrame("eXo-IDE-preview-frame");         
       assertTrue(selenium.isTextPresent("root"));

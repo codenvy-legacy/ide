@@ -20,16 +20,15 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-54:Save All Files
@@ -96,36 +95,36 @@ public class SaveAllFilesTest extends BaseTest
       selectItemInWorkspaceTree(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //create new xml file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //check Save All command is disabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //save file
       saveAsUsingToolbarButton(SAVED_FILE_XML);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //create new groovy file
       selectItemInWorkspaceTree(FOLDER_NAME_2);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //Save All command is disabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       saveAsByTopMenu(SAVED_FILE_GROOVY);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       //Save All command is disabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       
       //---- 4 ----------------
       //Click on "Test 2" folder in "Workspace" panel.
       selectItemInWorkspaceTree(FOLDER_NAME_2);
       //Save All command is disabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       
       //---- 5 ----------------
       //Click on "New->From Template" toolbar button, select "Empty HTML" template, 
@@ -139,7 +138,7 @@ public class SaveAllFilesTest extends BaseTest
       //create Empty Text file
       createFileFromTemplate("Empty TEXT", NEW_TEXT_FILE_NAME);
       //Save All command is disabled
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       
       //---- 6 ----------------
       //Open and change content of  "Saved File.xml" and "Saved File.groovy".
@@ -155,12 +154,12 @@ public class SaveAllFilesTest extends BaseTest
       
       //Until the step 6 and after the step 7 the "File->Save All" top menu command 
       //should be disabled.
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, true);
       
       //---- 7 ----------------
       //Click on "Save All" button in File menu.
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
+//      Thread.sleep(TestConstants.SLEEP);
       
       //after step 7
       /*
@@ -171,23 +170,23 @@ public class SaveAllFilesTest extends BaseTest
        * and "Saved File.groovy" in the "Test 2" folder with file tab title without "*".
        */
       
-      assertEquals(NEW_HTML_FILE_NAME + " *", getTabTitle(0));
-      assertEquals(NEW_TEXT_FILE_NAME + " *", getTabTitle(1));
-      assertEquals(SAVED_FILE_XML, getTabTitle(2));
-      assertEquals(SAVED_FILE_GROOVY, getTabTitle(3));
+      assertEquals(NEW_HTML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      assertEquals(NEW_TEXT_FILE_NAME + " *", IDE.editor().getTabTitle(1));
+      assertEquals(SAVED_FILE_XML, IDE.editor().getTabTitle(2));
+      assertEquals(SAVED_FILE_GROOVY, IDE.editor().getTabTitle(3));
       
       //---- 8 ----------------
       //Save and reopen files "Untitled file.groovy" , "Untitled file.xml".
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       saveAsUsingToolbarButton(NEW_HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //save and close txt file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       saveAsUsingToolbarButton(NEW_TEXT_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //open files
       openFileFromNavigationTreeWithCodeEditor(NEW_TEXT_FILE_NAME, false);
@@ -197,10 +196,10 @@ public class SaveAllFilesTest extends BaseTest
       
       //After the step 8: there are changed files "Saved File.xml", 
       //"Saved File.groovy", "Untitled file.html", "Untitled file.txt" in the Content Tab.
-      assertEquals(SAVED_FILE_XML, getTabTitle(0));
-      assertEquals(SAVED_FILE_GROOVY, getTabTitle(1));
-      assertEquals(NEW_TEXT_FILE_NAME, getTabTitle(2));
-      assertEquals(NEW_HTML_FILE_NAME, getTabTitle(3));
+      assertEquals(SAVED_FILE_XML, IDE.editor().getTabTitle(0));
+      assertEquals(SAVED_FILE_GROOVY, IDE.editor().getTabTitle(1));
+      assertEquals(NEW_TEXT_FILE_NAME, IDE.editor().getTabTitle(2));
+      assertEquals(NEW_HTML_FILE_NAME, IDE.editor().getTabTitle(3));
       
       //end
       selectItemInWorkspaceTree(FOLDER_NAME);

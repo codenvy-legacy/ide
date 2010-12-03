@@ -77,10 +77,10 @@ public class RenameFolderTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
 
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));

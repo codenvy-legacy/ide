@@ -91,8 +91,9 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(FOLDER_NAME);  
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(GROOVY_FILE_NAME);
@@ -105,8 +106,8 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       selectItemInWorkspaceTree(CUR_TIME + ".xml");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      checkToolbarButtonState(ToolbarCommands.File.DELETE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, false);
       
             
       selectItemInWorkspaceTree(GROOVY_FILE_NAME);
@@ -117,11 +118,12 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       selectItemInWorkspaceTree(XML_FILE_NAME);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      checkToolbarButtonState(ToolbarCommands.File.DELETE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
-      Thread.sleep(TestConstants.SLEEP_SHORT); 
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
       assertTrue(selenium.isTextPresent("Delete Item(s)"));
@@ -152,10 +154,10 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       selenium.controlKeyUp();
             
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      checkToolbarButtonState(ToolbarCommands.File.DELETE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
           
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
@@ -176,7 +178,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       assertTrue(selenium.isTextPresent(FOLDER_NAME));
       
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
       assertTrue(selenium.isTextPresent("Delete Item(s)"));
@@ -196,7 +198,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       assertTrue(selenium.isTextPresent(FOLDER_NAME));
       
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
       assertTrue(selenium.isTextPresent("Delete Item(s)"));

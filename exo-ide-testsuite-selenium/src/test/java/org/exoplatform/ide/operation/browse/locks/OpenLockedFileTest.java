@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -86,9 +85,9 @@ public class OpenLockedFileTest extends LockFileAbstract
    public void testOpenLockedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
       //open file
@@ -96,8 +95,8 @@ public class OpenLockedFileTest extends LockFileAbstract
       
       //----- 2 ----------
       //lock file
-      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
-      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -107,21 +106,21 @@ public class OpenLockedFileTest extends LockFileAbstract
       
       //----- 4 ----------
       //check that file is locked
-      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       checkCantSaveLockedFile(FILE_NAME);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       
       checkFileLocking(FILE_NAME, true);
 
       //----- 5 ----------
       //close and open file
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       checkCantSaveLockedFile(FILE_NAME);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
 }

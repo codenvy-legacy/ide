@@ -73,7 +73,7 @@ public class RESTServiceGetURLTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
 
       //TODO**********change************
@@ -82,10 +82,10 @@ public class RESTServiceGetURLTest extends BaseTest
       //****************************
 
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      runToolbarButton(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));

@@ -19,23 +19,14 @@
  */
 package org.exoplatform.ide.client.application.perspective;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.events.MouseUpEvent;
-import com.smartgwt.client.widgets.events.MouseUpHandler;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
-import org.exoplatform.gwtframework.ui.client.smartgwt.GWTMenuWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTStatusBarWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
+import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTMenuBar;
+import org.exoplatform.ide.client.application.IDEMenu;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorForm;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
@@ -67,6 +58,16 @@ import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
+import com.smartgwt.client.widgets.events.MouseUpEvent;
+import com.smartgwt.client.widgets.events.MouseUpHandler;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -111,7 +112,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    private Handlers handlers;
 
-   private GWTMenuWrapper menuWrapper;
+   //private GWTMenuWrapper menuWrapper;
 
    private GWTToolbarWrapper toolbarWrapper;
 
@@ -175,8 +176,12 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    private void buildPerspective()
    {
-      menuWrapper = new GWTMenuWrapper(eventBus);
-      addMember(menuWrapper);
+//      menuWrapper = new GWTMenuWrapper(eventBus);
+//      addMember(menuWrapper);
+      
+      SmartGWTMenuBar menuBar = new SmartGWTMenuBar();
+      addMember(menuBar);
+      new IDEMenu(eventBus).setMenu(menuBar);
 
       toolbarWrapper = new GWTToolbarWrapper(eventBus);
       addMember(toolbarWrapper);

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -38,7 +37,7 @@ public class AutoCompletionHTMLTest extends BaseTest
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -48,7 +47,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       htmlTest();
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -61,7 +60,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -72,7 +71,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       //************fixed
       GoogleGadgetTest();
       //***********
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
     @Test
@@ -81,7 +80,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");
@@ -135,7 +134,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    private void htmlTest() throws InterruptedException

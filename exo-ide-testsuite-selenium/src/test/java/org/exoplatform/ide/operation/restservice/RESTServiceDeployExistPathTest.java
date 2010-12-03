@@ -55,14 +55,14 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       //TODO*****************change**************change add folder for locked file
       createFolder("Test");
       //*************************************
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
       //createFileFromToolbar("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(FIRST_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
 
       saveAsUsingToolbarButton(SECOND_NAME);
 
@@ -71,7 +71,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
@@ -85,12 +85,12 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/");
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       mess = selenium.getText("//div[contains(@eventproxy,'Record_3')]");
@@ -98,7 +98,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       assertTrue(mess.contains("[INFO]"));
 
       assertTrue(mess.contains(SECOND_NAME + " deployed successfully."));
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
    }
    
    

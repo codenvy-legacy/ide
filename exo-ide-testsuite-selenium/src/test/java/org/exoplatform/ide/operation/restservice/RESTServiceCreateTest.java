@@ -89,15 +89,15 @@ public class RESTServiceCreateTest extends BaseTest
    public void testCreatingRESTService() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       saveAsUsingToolbarButton(FIRST_NAME);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
 
       assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 
@@ -117,7 +117,7 @@ public class RESTServiceCreateTest extends BaseTest
 
       assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
 
       assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 

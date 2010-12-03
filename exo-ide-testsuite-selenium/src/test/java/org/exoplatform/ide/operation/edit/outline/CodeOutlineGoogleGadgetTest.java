@@ -22,18 +22,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -83,7 +82,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       //---- 3 -----------------
       //open Outline Panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //press key DOWN and key UP 
       //TODO: check why code outline works incorrectly without this
@@ -154,9 +153,8 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
 
-      //close file
-      
-      CloseFileUtils.closeTab(0);
+      //close file      
+      IDE.editor().closeTab(0);
 
       //close dialog window by pressing "No"
       selenium

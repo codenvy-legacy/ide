@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -84,7 +83,7 @@ public class ItemOrderingTest extends BaseTest
 
       // test ordering within the Navigation Panel after the refreshing root folder
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);      
       
       // test ordering within the Search Panel
@@ -130,7 +129,8 @@ public class ItemOrderingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME);
-   }   
+   }
+   
 }

@@ -62,6 +62,8 @@ public class IDE extends VerticalPanel
       new GroovyModule(eventBus);
       new ChromatticModule(eventBus);
       new NetvibesModule(eventBus);
+      
+      //new TestIFrame();
    }
 
 }

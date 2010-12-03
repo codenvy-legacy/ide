@@ -45,15 +45,15 @@ public class RESTServicePropertyTest extends BaseTest
    public void testProperty() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, false);
       
       //TODO*********change********
       createFolder("TempFolder");
@@ -62,12 +62,12 @@ public class RESTServicePropertyTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
       
       selenium.mouseDownAt("//div[@title='Show Properties']//img", "");
       selenium.mouseUpAt("//div[@title='Show Properties']//img", "");

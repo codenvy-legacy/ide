@@ -68,7 +68,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -80,7 +80,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));

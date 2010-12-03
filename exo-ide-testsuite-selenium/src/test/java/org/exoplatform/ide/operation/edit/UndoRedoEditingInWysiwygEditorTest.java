@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -64,7 +63,9 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //create new html file
 
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(FolderName);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -74,10 +75,10 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       openFileFromNavigationTreeWithCkEditor(htmlFile, true);
       checkCkEditorOpened(0);
 
-      checkToolbarButtonState(ToolbarCommands.Editor.UNDO, true);
-      checkToolbarButtonState(ToolbarCommands.Editor.REDO, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNDO, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.REDO, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
       //steps 3-5
       //select iframe in first tab
@@ -100,9 +101,9 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       selectMainFrame();
 
       //step 6
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
       //select iframe in first tab
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
@@ -128,7 +129,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1", revertedText2);
 
       //step 8
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText3 = selenium.getText("//body/");
@@ -154,9 +156,9 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("", revertedText4);
 
       //step 10
-      runToolbarButton(MenuCommands.Edit.REDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.REDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(MenuCommands.Edit.REDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.REDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
@@ -165,7 +167,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1", restoredText);
 
       //step 11
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
+      
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String restoredText2 = selenium.getText("//body/");
@@ -210,9 +213,9 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1\n2\n3", restoredText4);
 
       //step 14
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
       //check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
@@ -242,7 +245,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1\n2a", restoredText5);
 
       //step 17
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       Thread.sleep(TestConstants.SLEEP);
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
@@ -255,7 +258,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       saveCurrentFile();
 
       //step 19
-      runToolbarButton(MenuCommands.Edit.REDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.REDO_TYPING);
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String restoredText6 = selenium.getText("//body/");
@@ -264,7 +267,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1\n2a", restoredText6);
 
       //step 20
-      runToolbarButton(MenuCommands.Edit.UNDO_TYPING);
+      IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText7 = selenium.getText("//body/");
@@ -292,18 +295,18 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //step 23
       //select tab with html file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       Thread.sleep(TestConstants.SLEEP);
 
       //step 24
       //select tab with google gadget file
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       Thread.sleep(TestConstants.SLEEP);
 
       //step 25
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      closeFileTab("1");
+      IDE.editor().closeTabWithNonSaving(1);
       Thread.sleep(TestConstants.SLEEP);
 
       //step 26
@@ -313,15 +316,15 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(1);
 
-      checkToolbarButtonState(ToolbarCommands.Editor.UNDO, true);
-      checkToolbarButtonState(ToolbarCommands.Editor.REDO, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNDO, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.REDO, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
       //step 27
 
       //****Todo***fix
-      closeUnsavedFileAndDoNotSave(1);
+      IDE.editor().closeUnsavedFileAndDoNotSave(1);
       //**************
 
       //step 28
@@ -329,19 +332,19 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(htmlFile, true);
 
       saveCurrentFile();
-      closeFileTab("0");
+      IDE.editor().closeTabWithNonSaving(0);
       selectItemInWorkspaceTree(htmlFile);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
       openFileFromNavigationTreeWithCodeEditor(googleGadgetFile, true);
       saveCurrentFile();
-      closeFileTab("0");
+      IDE.editor().closeTabWithNonSaving(0);
 
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.UNDO, false);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.Editor.REDO, false);
-      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
-      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
       selectItemInWorkspaceTree(googleGadgetFile);
       deleteSelectedItems();
@@ -361,19 +364,6 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //check CK editor is not present in tab 0
       assertFalse(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
          + "]//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
-   }
-
-   private void closeFileTab(String tabIndex) throws Exception
-   {
-      closeTab(tabIndex);
-
-      //check is warning dialog appears
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
-      {
-         //click No button
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-         Thread.sleep(TestConstants.SLEEP);
-      }
    }
 
 }

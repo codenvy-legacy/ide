@@ -77,13 +77,15 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       {
          Thread.sleep(TestConstants.SLEEP);
          selectItemInWorkspaceTree(WS_NAME);
-         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
          Thread.sleep(TestConstants.SLEEP);
+         
          selectItemInWorkspaceTree(FILE_NAME);
          Thread.sleep(TestConstants.SLEEP_SHORT);
-         checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
+         IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
+         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
          Thread.sleep(TestConstants.SLEEP);
+         
          selenium.keyPressNative("10");
          Thread.sleep(TestConstants.SLEEP*3); //wait for download file
          String donwloadPath = System.getProperty("java.io.tmpdir");

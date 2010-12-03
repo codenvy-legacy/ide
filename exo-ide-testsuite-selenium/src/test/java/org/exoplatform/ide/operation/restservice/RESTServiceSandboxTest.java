@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
@@ -30,8 +31,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -78,13 +77,13 @@ public class RESTServiceSandboxTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create REST Service file and save it:
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
       //Deploy service to sandbox:
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
       
       //Check deploy request:
@@ -94,7 +93,7 @@ public class RESTServiceSandboxTest extends BaseTest
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
       
       //Undeploy service from sandbox:
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
 
       //Check undeploy request:
@@ -103,14 +102,14 @@ public class RESTServiceSandboxTest extends BaseTest
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
    
       //Try undeploy undeployed service:
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
 
       mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    /**
@@ -133,4 +132,5 @@ public class RESTServiceSandboxTest extends BaseTest
          e.printStackTrace();
       }
    }
+   
 }

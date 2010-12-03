@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -37,7 +36,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    public void testDuplication() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "var a;\n \n function a() {\n}");
@@ -48,8 +47,6 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       Thread.sleep(10000);
-      
-      
       
       openAutoCompleteForm();
       Thread.sleep(TestConstants.SLEEP);
@@ -69,7 +66,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    /**

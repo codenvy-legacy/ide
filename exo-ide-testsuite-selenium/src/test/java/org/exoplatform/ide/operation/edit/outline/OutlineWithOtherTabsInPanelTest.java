@@ -110,9 +110,9 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    public void testOutlineWithOtherTabsInPanel() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 -------------
       //open xml file
@@ -121,7 +121,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 2 -------------
       //open outline panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       //check outline visible
       assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
       
@@ -146,14 +146,14 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 6 -------------
       //open version tab
-      runToolbarButton(ToolbarCommands.View.VIEW_VERSION_HISTORY);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       //check version tab is visible, outline tab is not visible
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
       //----- 7 -------------
       //go to xml file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       
       //version tab is closed, outline is visible
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
@@ -166,7 +166,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 9 -------------
       //open versions tab
-      runToolbarButton(ToolbarCommands.View.VIEW_VERSION_HISTORY);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
@@ -181,12 +181,12 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 11 -------------
       //select text file
-      selectEditorTab(2);
+      IDE.editor().selectTab(2);
       assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
       
       //----- 12 -------------
       //select html file
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
    }

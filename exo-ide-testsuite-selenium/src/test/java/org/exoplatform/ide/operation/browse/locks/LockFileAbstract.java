@@ -89,7 +89,7 @@ public abstract class LockFileAbstract extends BaseTest
    
       typeTextIntoEditor(0, "change dasda111");
    
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }
 
 }

@@ -72,7 +72,7 @@ public class UploadingHtmlFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
       assertEquals(
          "nt:resource",

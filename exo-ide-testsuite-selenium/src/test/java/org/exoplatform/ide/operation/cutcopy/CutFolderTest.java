@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -30,13 +33,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -105,15 +104,15 @@ public class CutFolderTest extends BaseTest
       //     "test 1/test 2/test.groovy" file with sample content  and "test 2" folder
 
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FOLDER_1);
       
       selectItemInWorkspaceTree(FOLDER_1);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FOLDER_2);
       
       selectItemInWorkspaceTree(FOLDER_2);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FILE_1);
       
       assertElementPresentInWorkspaceTree(FOLDER_3);
@@ -124,45 +123,45 @@ public class CutFolderTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       // check in toolbar
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, false);
-      checkToolbarButtonState(MenuCommands.Edit.CUT_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       //check in menu
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
 
       //step 3 - Select folder "test 1/test 2". Click on "Cut" toolbar button.
       selectItemInWorkspaceTree(FOLDER_2);
-      runToolbarButton(MenuCommands.Edit.CUT_TOOLBAR);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().runCommand(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       //step 4 - Select file "test 1/test 2/test.groovy" in the Workspace Panel.
       selectItemInWorkspaceTree(FOLDER_2);
       selectItemInWorkspaceTree(FILE_1);
       
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       //step5 - Select folder "test 1/test 2/" and click on "Paste" toolbar button.
       selectItemInWorkspaceTree(FOLDER_2);
-      runToolbarButton(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
       
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       
       openOrCloseFolder(FOLDER_2);
 
       //step 6 - Select root item and then click on "Paste" toolbar button.
       selectRootOfWorkspaceTree();
       
-      runToolbarButton(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
       
       //there is a message 412 Precondition Failed
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
@@ -170,8 +169,8 @@ public class CutFolderTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       // step 7 - Select folders "test 1" and "test 2".
       selectItemInWorkspaceTree(FOLDER_1);
@@ -181,18 +180,18 @@ public class CutFolderTest extends BaseTest
       selenium.keyUpNative(""+KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       // step 8 - Select file "test 1/test 2/test.groovy".
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openOrCloseFolder(FOLDER_1);
       openOrCloseFolder(FOLDER_2);
       selectItemInWorkspaceTree(FILE_1);
       
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       //step 9 - Select "test 2" item and then select "Edit->Paste Items" topmenu command.
 
@@ -201,10 +200,10 @@ public class CutFolderTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[4]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       //TODO: http://jira.exoplatform.org/browse/IDE-225
-      String newFileTabName = getTabTitle(0);
+      String newFileTabName = IDE.editor().getTabTitle(0);
       assertEquals(FILE_1, newFileTabName);
       assertElementPresentInWorkspaceTree(FOLDER_1);
 
@@ -212,7 +211,7 @@ public class CutFolderTest extends BaseTest
       typeTextIntoEditor(0, "Content has been changed");
       saveCurrentFile();
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
       checkItemsOnWebDav();
       

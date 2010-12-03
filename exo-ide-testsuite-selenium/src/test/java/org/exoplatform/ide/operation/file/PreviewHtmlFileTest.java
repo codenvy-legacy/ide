@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -27,12 +29,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -96,15 +95,15 @@ public class PreviewHtmlFileTest extends BaseTest
       //open html file
       Thread.sleep(TestConstants.SLEEP);
       
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //---- 2 -----------------
       //check is Show Preview button disabled
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      checkToolbarButtonState(ToolbarCommands.Run.SHOW_PREVIEW, false);
+      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
       
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
       
       //---- 3 -----------------
       //open file with text
@@ -112,22 +111,23 @@ public class PreviewHtmlFileTest extends BaseTest
 //      openOrCloseFolder(WS_NAME);
 //      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(TEST_FOLDER);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       Thread.sleep(TestConstants.SLEEP);
       
       //check is Show Preview menu enabled
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
       
       //check is Show Preview button enabled
-      checkToolbarButtonState(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, true);
       
       //---- 4 -----------------
       //click on button Show Preview on Toolbar
-      runToolbarButton(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.SLEEP);
       
       //"Preview" tab should be displayed and we will see formatted text "Changed Content." 
@@ -143,20 +143,20 @@ public class PreviewHtmlFileTest extends BaseTest
       
       //---- 6 -----------------
       //close tab with saved html file
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
       Thread.sleep(TestConstants.SLEEP);
       
       //new html file is opened.
       //Show Preview button is disabled
-      checkToolbarButtonPresentOnRightSide(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      checkToolbarButtonState(ToolbarCommands.Run.SHOW_PREVIEW, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
+      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
       
       //---- 7 -----------------
       //Reopen HTML-file and click on "Run->Show Preview" top menu command.
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+//      Thread.sleep(TestConstants.SLEEP);
       
       //"Preview" tab should be opened again and we will the same content as at the step 4.
       checkPreviewTab();

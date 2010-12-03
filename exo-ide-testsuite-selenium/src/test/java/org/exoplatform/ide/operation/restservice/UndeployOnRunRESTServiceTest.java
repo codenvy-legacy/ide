@@ -29,7 +29,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -100,7 +99,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
     //open file
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
@@ -108,7 +107,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
       
     //call Run Groovy Service command
-      runToolbarButton(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP * 2);
       
       //check Launch Rest Service form appears
@@ -122,7 +121,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
         System.out.println(text);
       assertTrue(text.endsWith(SIMPLE_FILE_NAME+ " undeployed successfully.")); 
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    @Test
@@ -134,7 +133,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       //open file
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
@@ -142,7 +141,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
     //call Run Groovy Service command
-      runToolbarButton(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP * 2);
       
       //check Launch Rest Service form appears
@@ -156,6 +155,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
         System.out.println(text);
       assertTrue(text.endsWith(FILE_NAME+ " undeployed successfully.")); 
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
+   
 }

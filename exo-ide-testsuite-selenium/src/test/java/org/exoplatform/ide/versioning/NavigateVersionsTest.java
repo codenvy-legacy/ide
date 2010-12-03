@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.versioning;
 
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 14, 2010 $
@@ -85,10 +84,10 @@ public class NavigateVersionsTest extends VersioningTest
    public void testNavigateOlderVersion() throws Exception
    {
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       checkViewVersionHistoryButtonPresent(false);
       
       deleteFileContent();
@@ -111,7 +110,7 @@ public class NavigateVersionsTest extends VersioningTest
       typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -120,72 +119,72 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //Open file:
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //View versions
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       //View older version button is enabled: 
       checkOlderVersionButtonState(true);
@@ -193,20 +192,20 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    @Test
@@ -218,7 +217,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_2);
       checkViewVersionHistoryButtonPresent(true);
@@ -239,7 +238,7 @@ public class NavigateVersionsTest extends VersioningTest
       saveCurrentFile();
 
       //View versions
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -248,76 +247,76 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    @Test
@@ -330,7 +329,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_3);
       checkViewVersionHistoryButtonPresent(true);
@@ -351,7 +350,7 @@ public class NavigateVersionsTest extends VersioningTest
       saveCurrentFile();
 
       //View versions
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -360,7 +359,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -381,14 +380,14 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(true);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
@@ -407,7 +406,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(true);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
@@ -415,21 +414,21 @@ public class NavigateVersionsTest extends VersioningTest
          + version7Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text
          + version7Text);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    @Test
@@ -442,7 +441,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Create new file, add text and save file:
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_4);
       checkViewVersionHistoryButtonPresent(true);
@@ -463,7 +462,7 @@ public class NavigateVersionsTest extends VersioningTest
       saveCurrentFile();
 
       //View versions
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -472,19 +471,19 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //Close version panel
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkVersionPanelState(false);
 
       //Open version panel
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -494,7 +493,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -513,7 +512,7 @@ public class NavigateVersionsTest extends VersioningTest
       saveCurrentFile();
 
       //Open version panel
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -522,12 +521,13 @@ public class NavigateVersionsTest extends VersioningTest
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    @After
    public void cleanResults() throws Exception
    {
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
+   
 }

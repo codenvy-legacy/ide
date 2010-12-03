@@ -20,9 +20,10 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.assertFalse;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,8 +31,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Check, is can open locked file in CK editor.
@@ -90,9 +89,9 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
    public void testOpenLockedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
       //open file
@@ -100,8 +99,8 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       
       //----- 2 ----------
       //lock file
-      runToolbarButton(ToolbarCommands.Editor.LOCK_FILE);
-      checkToolbarButtonState(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -111,36 +110,35 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       
       //----- 4 ----------
       //check is file locked
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      //Thread.sleep(TestConstants.SLEEP_SHORT);
       
       selectItemInWorkspaceTree(FILE_NAME);
       
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       
       checkFileLocking(FILE_NAME, true);
       
       //----- 5 ----------
       //close file
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //----- 6 ----------
       //open file in CK editor and check is file locked
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       checkFileLocking(FILE_NAME, true);
-      checkToolbarButtonState(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
 
       typeTextIntoEditor(0, "Test editor");
       
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
-      
+      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));      
    }
    
 }

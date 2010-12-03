@@ -152,15 +152,15 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       selectMainFrame();
       clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
 
       //------ 9 ---------------
       //      runHotkeyWithinCkEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(HTML_FILE, getTabTitle(0));
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(HTML_FILE, IDE.editor().getTabTitle(0));
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+//      Thread.sleep(TestConstants.SLEEP);
 
       //check is Preview tab appeared
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));

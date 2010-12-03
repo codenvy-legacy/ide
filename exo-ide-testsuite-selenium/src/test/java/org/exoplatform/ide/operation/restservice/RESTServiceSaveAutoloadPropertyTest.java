@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -28,11 +30,8 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -55,17 +54,17 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       createFolder("Autoload");
       //**********************
       
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);      
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
             
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      runTopMenuCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.menu().runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       
       String mess = selenium.getText("//font[@color='#880000']");
       
@@ -77,12 +76,12 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       //assertTrue(mess.contains("Can't unbind script " + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
       //************************
       
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
       Thread.sleep(TestConstants.SLEEP);
       
-      checkToolbarButtonState("Unset REST Service Autoload", true);
+      IDE.toolbar().checkButtonEnabled("Unset REST Service Autoload", true);
       
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("true", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
       
@@ -91,11 +90,11 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       selectRootOfWorkspaceTree();
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
      
       //TODO*********change*********
@@ -106,7 +105,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
      
     
       // selectMainFrame();

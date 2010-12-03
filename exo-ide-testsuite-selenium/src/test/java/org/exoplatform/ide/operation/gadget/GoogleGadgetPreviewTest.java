@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.gadget;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -30,8 +32,6 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -73,7 +73,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //TODO*********change****
       openOrCloseFolder(FOLDER);
@@ -83,7 +83,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
            
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       Thread.sleep(3000);
@@ -105,10 +105,12 @@ public class GoogleGadgetPreviewTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, hello);
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.SLEEP);
+
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-      closeTab("0");
+      IDE.editor().closeTab(0);
    }
    
    @AfterClass

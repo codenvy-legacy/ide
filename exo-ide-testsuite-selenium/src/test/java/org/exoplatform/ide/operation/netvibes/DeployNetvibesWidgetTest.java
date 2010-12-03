@@ -73,7 +73,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       selectItemInWorkspaceTree(TEST_FOLDER);
 
       //Create new UWA widget
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkDeployWidgetControlState(true, false);
 
@@ -83,7 +83,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:
-      runToolbarButton(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployFormPresent(true);
       checkStepOneLayout();
@@ -183,7 +183,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       selectItemInWorkspaceTree(TEST_FOLDER);
 
       //Create new UWA widget
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkDeployWidgetControlState(true, false);
 
@@ -193,7 +193,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:
-      runToolbarButton(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployFormPresent(true);
       checkStepOneLayout();
@@ -369,11 +369,11 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
    private void checkDeployWidgetControlState(boolean isVisible, boolean isEnabled) throws Exception
    {
-      checkMenuCommandPresent(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isVisible);
+      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isVisible);
       if (isVisible)
       {
-         checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
-         checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
+         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
       }
    }
 

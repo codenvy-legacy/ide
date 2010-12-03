@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +61,7 @@ public class UsingKeyboardTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
    }
    
@@ -104,7 +102,7 @@ public class UsingKeyboardTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="+TEST_SUBFOLDER+"]/col[fieldName=title]"));
       
       // test keyboard with opened Content Panel
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       selectItemInWorkspaceTree(TEST_SUBFOLDER);
@@ -114,7 +112,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);      
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="+TEST_SUBFOLDER+"]/col[fieldName=title]"));
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -195,10 +193,10 @@ public class UsingKeyboardTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
       
       // open Outline Panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       clickOnEditor();
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -233,14 +231,15 @@ public class UsingKeyboardTest extends BaseTest
       assertElementPresentOutlineTree("CDATA");     
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    @After
    public void tearDown() throws Exception
    {
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       VirtualFileSystemUtils.delete(URL +TEST_FOLDER);
       selectWorkspaceTab();
-   }   
+   }
+   
 }

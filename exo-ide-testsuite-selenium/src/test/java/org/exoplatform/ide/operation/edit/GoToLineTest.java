@@ -40,122 +40,132 @@ public class GoToLineTest extends BaseTest
    public void goToLine() throws Exception
    {
       //      Open new Groovy file in editor.
+
       //TODO***********fix
       Thread.sleep(TestConstants.SLEEP);
       //************************
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       //     Open new HTML file in editor.
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       //      Select Groovy file.
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       selenium.selectFrame("relative=top");
+
       //      Go to menu and click "View->Go To Line".
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/headerLabel/"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/headerLabel/"));      
       assertTrue(selenium.isTextPresent("Enter line number (1..13):"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "1");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
+//      selenium
+//         .type(
+//            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
+//            "1");
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.type("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element", "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertTrue(selenium.isTextPresent("Go"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isTextPresent("Cancel"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
+      selenium.click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       //     Print "abc" in input field.
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "abc");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      assertEquals(
-         "",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selenium.typeKeys("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element","abc");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      assertEquals("",selenium.getValue("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element"));
+
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //      Type "100" (above range maximum) and click "Go" button.
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "100");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      assertEquals(
-         "100",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selenium.type("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element","100");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      assertEquals("100", selenium.getValue("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element"));
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       selenium.click("scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isTextPresent("Line number out of range"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isTextPresent("OK"));
       //      Click "Ok".
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       //      Type "2" and click "Go" button.
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "2");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selenium.type("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element","2");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
       selenium.click("scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
       assertEquals("2 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       //      Select HTML file's tab.
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       selenium.selectFrame("relative=top");
       //      Go to menu and click "View->Go To Line".
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+      
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      
+      selenium.click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       //      Enter line number "1" and click "Enter".
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
-            "1");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      selenium.type("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element","1");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       selenium.click("scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      Thread.sleep(TestConstants.SLEEP);
+//      Thread.sleep(TestConstants.SLEEP);
+
       //            Go to status bar - right down corner , where row and column numbers are displayed, hover on them with the mouse and click on it.
       selenium.clickAt("//div[@class='exo-statusBar-panel']//nobr[text()='1 : 1']", "");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertTrue(selenium.isTextPresent("Go"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
       assertTrue(selenium.isTextPresent("Cancel"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isTextPresent("Enter line number (1..7):"));
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //            Print "2" and click "Go".
       selenium.type("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[index=2]/element", "2");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       selenium.click("scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/icon");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       Thread.sleep(TestConstants.SLEEP);
    }
+   
 }

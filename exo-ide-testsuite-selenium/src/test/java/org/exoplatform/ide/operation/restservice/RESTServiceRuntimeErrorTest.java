@@ -51,7 +51,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
       createFolder("RuntimeError");
       //***************************
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 10; i++)
@@ -65,10 +65,10 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      runToolbarButton(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));

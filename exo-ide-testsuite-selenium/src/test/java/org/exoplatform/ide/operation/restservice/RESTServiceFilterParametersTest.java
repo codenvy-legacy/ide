@@ -80,7 +80,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       //TODO*************change
       Thread.sleep(TestConstants.SLEEP);

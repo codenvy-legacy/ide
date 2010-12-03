@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -99,7 +98,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 4 ----
       //show Outline
-      runToolbarButton("Show Outline");
+      IDE.toolbar().runCommand("Show Outline");
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 5 ----
@@ -189,7 +188,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 8 ----
       //close file
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    private void checkTreeCorrectlyCreated() throws Exception

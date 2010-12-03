@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -45,6 +44,7 @@ import org.junit.Test;
 
 public class HighlightCurrentLineTest extends BaseTest
 {
+   
    private static final String FILE_NAME = "HtmlTemplate.html";
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
@@ -86,8 +86,9 @@ public class HighlightCurrentLineTest extends BaseTest
       //open HTML-file with required text
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
 
       // get line Position Left
@@ -142,8 +143,9 @@ public class HighlightCurrentLineTest extends BaseTest
       lineHighlighterTest(8, 0);      
 
       // remove last line
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       lineHighlighterTest(8, 0);
 
       // Press down arrow key on keyboard.
@@ -152,7 +154,7 @@ public class HighlightCurrentLineTest extends BaseTest
       lineHighlighterTest(8, 0);
 
       // Click in menu "File>New->REST Service".
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(1, 1);
       
@@ -173,17 +175,17 @@ public class HighlightCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // switch tab to previous file.
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(8, 0);      
       
       // Return to new HTML file
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(2, 1);      
      
       // switch tab to previous file.
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // goto end of first line 
@@ -265,8 +267,8 @@ public class HighlightCurrentLineTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeUnsavedFileAndDoNotSave(1);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(1);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }   
 

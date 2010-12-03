@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -33,8 +34,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -72,7 +71,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       cleanDefaultWorkspace();
    }
 
@@ -87,13 +86,13 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //---- 3 -----------------
       //open Outline Panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 4 -----------------

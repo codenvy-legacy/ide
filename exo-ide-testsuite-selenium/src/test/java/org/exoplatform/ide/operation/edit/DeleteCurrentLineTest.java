@@ -116,9 +116,9 @@ public class DeleteCurrentLineTest extends BaseTest
    public void deleteLine() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(TEST_FOLDER);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
      
       currentTextInEditor = Lines.DEFAULT_TEXT;
@@ -127,7 +127,7 @@ public class DeleteCurrentLineTest extends BaseTest
       
       //----- 1 -----------
       // Click on "Edit->Delete Current Line" top menu command.
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
       
       currentTextInEditor = Lines.LINE_2 + Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
@@ -158,14 +158,14 @@ public class DeleteCurrentLineTest extends BaseTest
       
       //----- 5 -----------
       //Click on "Edit->Delete Current Line" top menu command
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_7;
       assertEquals(currentTextInEditor, getTextFromCodeEditor(0));
       assertEquals("3 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
 
       //----- 6 -----------
       //Click on "Edit->Delete Current Line" top menu command
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
       assertEquals(currentTextInEditor, getTextFromCodeEditor(0));
       assertEquals("3 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
@@ -178,16 +178,16 @@ public class DeleteCurrentLineTest extends BaseTest
       
       //----- 8 -----------
       //Go to line 2 and click on "Edit->Delete Current Line" top menu command
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       assertEquals("", getTextFromCodeEditor(1));
       
       //----- 9 -----------
       //Press "Ctrl+D" keys
       runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
       
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));

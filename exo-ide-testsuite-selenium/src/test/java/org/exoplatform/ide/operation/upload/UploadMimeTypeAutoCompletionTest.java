@@ -46,9 +46,10 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD);
 
-      Thread.sleep(TestConstants.SLEEP);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       try
       {
          File file = new File(filePath);

@@ -110,8 +110,9 @@ public class DeletingFilesTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(FOLDER_NAME);
       
       openFile(CUR_TIME + GROOVY_FILE_NAME);

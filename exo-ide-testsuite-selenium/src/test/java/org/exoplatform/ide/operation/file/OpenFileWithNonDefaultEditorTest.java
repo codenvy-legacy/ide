@@ -87,8 +87,9 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //the "File->Open with.." topmenu command.
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
@@ -138,7 +139,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //Close file newHtmlFile.html, select this one in the Workspace Panel again, 
       //then call the "File->Open with.." topmenu command, select "WYSYWYG editor" item, 
       //check box "Use as default editor" and click "Open" button.
-      closeFileTab("0");
+      closeFileTab(0);
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
       checkOpenWithWindowCodeEditorIsDefault();
       selectEditorAndOpen(MenuCommands.CodeEditors.CK_EDITOR, true);
@@ -150,7 +151,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //---- 8 -------------------------
       //Close file newHtmlFile.html, and open this one in Content panel. 
       //Then call the "File->New->HTML file" topmenu command.
-      closeFileTab("0");
+      closeFileTab(0);
 
       // Doubleclick doesn't work under the Firefox in the Windows
       if (isRunTestUnderWindowsOS() && BROWSER_COMMAND.equals(EnumBrowserCommand.FIREFOX))
@@ -166,7 +167,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //file newHtmlFile.html and new HTML-file should be opened only in the WYSYWYG editor.
       checkCkEditorOpened(0);
@@ -189,7 +190,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       checkCkEditorOpened(0);
       
       //step 11
-      closeFileTab("0");
+      closeFileTab(0);
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
       checkOpenWithWindowCkEditorIsDefault();
       selectEditorAndOpen(MenuCommands.CodeEditors.CODE_MIRROR, true);
@@ -197,7 +198,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       checkCodeEditorOpened(0);
       
       //step 12
-      closeFileTab("0");
+      closeFileTab(0);
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);  // TODO doesn't work under the Linux
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
@@ -206,12 +207,12 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD+"");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      closeFileTab("0");
+      closeFileTab(0);
       openOrCloseFolder(FOLDER_NAME);
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
-      closeFileTab("0");
+      closeFileTab(0);
       
       //step 14
       //open gadget file with WYSWYG Editor
@@ -223,12 +224,12 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
       Thread.sleep(TestConstants.SLEEP);
-      closeFileTab("0");      
+      closeFileTab(0);      
    }
    
-   private void closeFileTab(String tabIndex) throws Exception
+   private void closeFileTab(int tabIndex) throws Exception
    {
-      closeTab(tabIndex);
+      IDE.editor().closeTab(tabIndex);
 
       //check is warning dialog appears
       if (selenium.isElementPresent(

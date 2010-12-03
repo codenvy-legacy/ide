@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -28,7 +27,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -102,7 +100,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(100);
       
       //create txt file
-      runCommandFromMenuNewOnToolbar("Text File");
+      IDE.toolbar().runCommandFromNewPopupMenu("Text File");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(textFile);
       Thread.sleep(TestConstants.SLEEP);
@@ -111,26 +109,26 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(100);
       
       //create html file
-      runCommandFromMenuNewOnToolbar("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(htmlFile);
       Thread.sleep(TestConstants.SLEEP);
       
       //create google gadget file
-      runCommandFromMenuNewOnToolbar("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
       saveAsUsingToolbarButton(gadgetFile);
       Thread.sleep(TestConstants.SLEEP);
       
       //create groovy script file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //closing all files
-      CloseFileUtils.closeTab(0);
-      CloseFileUtils.closeTab(0);
-      CloseFileUtils.closeTab(0);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeTab(0);
+      IDE.editor().closeTab(0);
+      IDE.editor().closeTab(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       openFileFromNavigationTreeWithCodeEditor(textFile, false);
@@ -158,8 +156,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       checkOpenedFilesHistory();
       
-      CloseFileUtils.closeTab(0);
-      closeFileTab("0");
+      IDE.editor().closeTab(0);
+      IDE.editor().closeTabWithNonSaving(0);
 //      closeUnsavedFileAndDoNotSave("0");
       
       //open folder to select html file
@@ -201,40 +199,14 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
       Thread.sleep(TestConstants.SLEEP);
       
-      checkMenuCommandState("Run", "Show Preview", true);
-      checkMenuCommandState("Run", "Deploy Gadget to GateIn", true);
-      checkMenuCommandState("Run", "UnDeploy Gadget from GateIn", true);
-      checkMenuCommandState("Edit", "Hide Line Numbers", true);
-      checkMenuCommandState("Edit", "Format", true);
-      checkMenuCommandState("Edit", "Undo Typing", false);
-      checkMenuCommandState("Edit", "Redo Typing", false);
+      IDE.menu().checkCommandEnabled("Run", "Show Preview", true);
+      IDE.menu().checkCommandEnabled("Run", "Deploy Gadget to GateIn", true);
+      IDE.menu().checkCommandEnabled("Run", "UnDeploy Gadget from GateIn", true);
+      IDE.menu().checkCommandEnabled("Edit", "Hide Line Numbers", true);
+      IDE.menu().checkCommandEnabled("Edit", "Format", true);
+      IDE.menu().checkCommandEnabled("Edit", "Undo Typing", false);
+      IDE.menu().checkCommandEnabled("Edit", "Redo Typing", false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-   }
-   
-   /**
-    * Close file tab.
-    * 
-    * If file is not saved and warning dialog appears,
-    * click No button.
-    * 
-    * If file is saved and no warning dialog,
-    * no exception occurs
-    * 
-    * @param tabIndex
-    * @throws Exception
-    */
-   private void closeFileTab(String tabIndex) throws Exception
-   {
-      closeTab(tabIndex);
-
-      //check is warning dialog appears
-      if (selenium.isElementPresent(
-         "scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
-      {
-         //click No button
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-         Thread.sleep(TestConstants.SLEEP);
-      }
    }
    
 }

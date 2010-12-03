@@ -64,7 +64,7 @@ public class GadgetDeployUndeployTest extends BaseTest
      
       //*********TODO******Add_and_select_folder_for_aploading_file
       VirtualFileSystemUtils.mkcol(URL);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -74,10 +74,10 @@ public class GadgetDeployUndeployTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // gadget deploy/undeploy command should be disabled
-      checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, false);
-      checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, false);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);
 
       // save gadget in the root folder by clicking on "Ctrl+S" hotkey
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
@@ -86,10 +86,10 @@ public class GadgetDeployUndeployTest extends BaseTest
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
 
       // gadget deploy/undeploy command should become enabled
-      checkToolbarButtonState(ToolbarCommands.Run.DEPLOY_GADGET, true);
-      checkToolbarButtonState(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
-      checkMenuCommandState(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
 
       if (!isRunIdeUnderPortal())
       {
@@ -97,7 +97,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       }
 
       // deploy gadget
-      runToolbarButton(ToolbarCommands.Run.DEPLOY_GADGET);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
       selenium.selectFrame("remote_iframe_0");
       String outputPanelMessage =
@@ -105,7 +105,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       assertEquals("Verify is the gadget deploy service response is appropriate.", "[INFO] " + FILE_DEPLOY_URL
          + " deployed successfully.", outputPanelMessage);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, ToolbarCommands.Run.DEPLOY_GADGET);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, ToolbarCommands.Run.DEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
       outputPanelMessage =
          java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_1\"]/"), "UTF-8");
@@ -115,14 +115,14 @@ public class GadgetDeployUndeployTest extends BaseTest
       // TODO verify gadget presence in the portal
 
       // undeploy gadget
-      runToolbarButton(ToolbarCommands.Run.UNDEPLOY_GADGET);
+      IDE.toolbar().runCommand(ToolbarCommands.Run.UNDEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
       outputPanelMessage =
          java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_2\"]/"), "UTF-8");
       assertEquals("Verify is the gadget undeploy service response is appropriate.", "[INFO] " + FILE_UNDEPLOY_URL
          + " undeployed successfully.", outputPanelMessage);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
       outputPanelMessage =
          java.net.URLDecoder.decode(selenium.getText("scLocator=//Label[ID=\"isc_OutputRecord_3\"]/"), "UTF-8");

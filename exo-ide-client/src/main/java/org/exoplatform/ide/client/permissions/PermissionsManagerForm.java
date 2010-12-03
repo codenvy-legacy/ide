@@ -104,7 +104,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       addPermissionsListGrid();
       
       addButtonForm();
-      setMargin(5);
+      //setMargin(5);
       show();
 
       UIHelper.setAsReadOnly(itemNameField.getName());

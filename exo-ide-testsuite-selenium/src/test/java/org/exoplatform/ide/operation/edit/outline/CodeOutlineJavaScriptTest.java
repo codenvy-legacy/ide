@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -44,8 +41,8 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 2 -----------------
       //Create new JavaScript file and click on Show Outline button
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 3 -----------------
@@ -175,18 +172,18 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //---- 8 -----------------
       //Create new text file.
       //new text file is active, Outline panel is hidden, Show Outline buttons on toolbar disappears
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       checkOutlineVisibility(false);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
 
       //---- 9 -----------------
       //Click on tab with JavaScript file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       //JavaScript file is active, Show Outline buttons on toolbar appears. 
       //Outline panel is shown and Outline tree has nodes with defined variables, 
       //functions, method and property
       checkOutlineVisibility(true);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.HIDE_OUTLINE, true);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.HIDE_OUTLINE, true);
 
       //check outline tree
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
@@ -207,21 +204,21 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       saveAsUsingToolbarButton(jsFile);
       Thread.sleep(TestConstants.SLEEP);
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //text file is active, Outline panel is hidden
-      assertEquals("Untitled file.txt *", getTabTitle(0));
+      assertEquals("Untitled file.txt *", IDE.editor().getTabTitle(0));
       checkOutlineVisibility(false);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
 
       //---- 11 -----------------
       //Open JavaScript file
       openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       //existed JavaScript file is active, Outline panel is shown and Outline tree has 
       //nodes with defined variables, functions, method and property
-      assertEquals(jsFile, getTabTitle(1));
+      assertEquals(jsFile, IDE.editor().getTabTitle(1));
       checkOutlineVisibility(true);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.HIDE_OUTLINE, true);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.HIDE_OUTLINE, true);
 
       //check outline tree
       Thread.sleep(TestConstants.SLEEP);
@@ -231,11 +228,11 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //---- 12 -----------------
       //Create new Google Gadget file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       //Gadget file is active. Outline panel is shown
-      assertEquals("Untitled file.xml *", getTabTitle(2));
+      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(2));
       checkOutlineVisibility(true);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.HIDE_OUTLINE, true);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.HIDE_OUTLINE, true);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("Module", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
       assertEquals("ModulePrefs", selenium
@@ -306,13 +303,13 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //---- 14 -----------------
       //Go to JavaScript file
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       Thread.sleep(TestConstants.SLEEP);
       //Outline Panel is visible, Outline tree must refresh and show varialbes, 
       //functions, method and properties from current file
-      assertEquals(jsFile, getTabTitle(1));
+      assertEquals(jsFile, IDE.editor().getTabTitle(1));
       checkOutlineVisibility(true);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.HIDE_OUTLINE, true);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.HIDE_OUTLINE, true);
 
       //check outline tree
       Thread.sleep(TestConstants.SLEEP);
@@ -351,12 +348,12 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //After clicking on Show Outline buttons, Outline Panel appears
 
 //      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");  // see bug http://jira.exoplatform.org/browse/IDE-417
-      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
       
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(false);
 
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(true);
 
@@ -364,16 +361,16 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       secondCheckJavaScriptOutlineTree();
 
       // close google gadget file
-      closeUnsavedFileAndDoNotSave(2);
+      IDE.editor().closeUnsavedFileAndDoNotSave(2);
       Thread.sleep(TestConstants.SLEEP);
 
       // close js file
      
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
       
       openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(false);
 
@@ -383,7 +380,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // close text file
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
    }
 

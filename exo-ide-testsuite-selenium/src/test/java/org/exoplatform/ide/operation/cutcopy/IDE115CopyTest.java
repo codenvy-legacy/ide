@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -91,7 +90,7 @@ public class IDE115CopyTest extends BaseTest
       /*
        * Create Groovy Script file
        */
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       /*
@@ -110,8 +109,7 @@ public class IDE115CopyTest extends BaseTest
       /*
        * Close editor
        */
-      CloseFileUtils.closeTab(0);
-      
+      IDE.editor().closeTab(0);
 
       /*
        * Select "/Test1/test.groovy" file
@@ -123,31 +121,31 @@ public class IDE115CopyTest extends BaseTest
        * Check Cut and Copy commands must be enabled
        */
 
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.COPY_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.CUT_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
 
       /*
        * Check Paste command must be disabled
        */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Click Copy command on toolbar
        */
-      runToolbarButton(MenuCommands.Edit.COPY_TOOLBAR);
+      IDE.toolbar().runCommand(MenuCommands.Edit.COPY_TOOLBAR);
 
       /*
        * Check Paste must be enabled 
        */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * Select Root in workspace panel
@@ -157,13 +155,13 @@ public class IDE115CopyTest extends BaseTest
       /*
        * Click Paste command
        */
-      runToolbarButton(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Check Paste command must be disabled
        */
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Open "Test 1" folder
@@ -198,7 +196,7 @@ public class IDE115CopyTest extends BaseTest
       /*
       * Close file
       */
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /*
@@ -210,7 +208,7 @@ public class IDE115CopyTest extends BaseTest
        * Open "/test.groovy"
        */
       selectRootOfWorkspaceTree();
-      runToolbarButton(MenuCommands.File.REFRESH_TOOLBAR);
+      IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       openFileFromNavigationTreeWithCodeEditor("test.groovy", false);
 
       /*
@@ -224,8 +222,8 @@ public class IDE115CopyTest extends BaseTest
       assertEquals("hello", file2Content);
 
       // Close both files
-      CloseFileUtils.closeTab(0);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
+      IDE.editor().closeTab(0);
 
       /*
        * Delete files

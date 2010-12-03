@@ -48,7 +48,7 @@ public class OpenLocalFileTest extends BaseTest
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       //call Open Local File form
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]"));
       checkUploadButtonEnabled(false);
       

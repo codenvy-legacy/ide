@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -78,8 +77,8 @@ public class HighlightNavigatorTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //Thread.sleep(TestConstants.SLEEP);
 
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
@@ -102,8 +101,7 @@ public class HighlightNavigatorTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      closeUnsavedFileAndDoNotSave(0);
-
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

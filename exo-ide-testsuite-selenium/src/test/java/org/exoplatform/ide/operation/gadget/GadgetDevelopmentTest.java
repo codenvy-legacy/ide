@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -61,11 +60,11 @@ public class GadgetDevelopmentTest extends BaseTest
       
       
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/headerLabel/"));
@@ -93,7 +92,7 @@ public class GadgetDevelopmentTest extends BaseTest
       //      Click on "Save As" button and save file "Test Gadget File" with default name.
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
       String url3 =
          selenium
             .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
@@ -112,7 +111,7 @@ public class GadgetDevelopmentTest extends BaseTest
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //TODO*****change**********
       openOrCloseFolder(FOLDER_NAME);

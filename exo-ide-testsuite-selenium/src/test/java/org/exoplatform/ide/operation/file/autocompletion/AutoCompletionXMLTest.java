@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -37,7 +36,7 @@ public class AutoCompletionXMLTest extends BaseTest
    public void openForm() throws Throwable
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("XML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("XML File");
       Thread.sleep(TestConstants.SLEEP);
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
@@ -84,6 +83,7 @@ public class AutoCompletionXMLTest extends BaseTest
       String textAfter = getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
-      closeUnsavedFileAndDoNotSave(0);      
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);      
    }
+
 }

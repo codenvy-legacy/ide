@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -98,7 +97,7 @@ public class IDE113CopyTest extends BaseTest
       /*
        * create gadget
        */
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       /*
        * select item in tree
@@ -111,7 +110,7 @@ public class IDE113CopyTest extends BaseTest
        */
       saveAsUsingToolbarButton("gadget_xml");
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
      
 //      /*
 //       * select element in tree
@@ -122,7 +121,7 @@ public class IDE113CopyTest extends BaseTest
       /*
        * create groovy file
        */
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
 
       /*
        * select element in tree
@@ -139,7 +138,7 @@ public class IDE113CopyTest extends BaseTest
        * get file content from editor
        */
       String oldText = getTextFromCodeEditor(0);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       /*
        * create folder
@@ -184,10 +183,10 @@ public class IDE113CopyTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // Call the "Edit->Copy Items" topmenu command.
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
       assertTrue(selenium.isElementPresent("//div[@title='Paste Selected Item(s)']/div[@elementenabled='true']"));
 
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[4]/col[0]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -203,9 +202,9 @@ public class IDE113CopyTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
       String url =
          selenium
@@ -232,11 +231,11 @@ public class IDE113CopyTest extends BaseTest
 
       assertEquals(oldText, getTextFromCodeEditor(0));
       
-      checkMenuCommandPresent(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
       
-      checkToolbarButtonPresentOnLeftSide(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      checkToolbarButtonState(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
       
       selenium.controlKeyDown();
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");

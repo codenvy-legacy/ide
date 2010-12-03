@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.operation.edit;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -30,12 +31,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -136,18 +134,19 @@ public class FindReplaceTest extends BaseTest
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_TXT, false);
       Thread.sleep(TestConstants.SLEEP);
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
-      runToolbarButton(ToolbarCommands.Editor.FIND_REPLACE);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.FIND_REPLACE);
       Thread.sleep(TestConstants.SLEEP);
       checkFindReplaceFormAppeared();
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       // Type what to find
       selenium
@@ -255,8 +254,8 @@ public class FindReplaceTest extends BaseTest
       selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
-      CloseFileUtils.closeTab(0);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.editor().closeTab(0);
    }
 
    /**
@@ -271,18 +270,19 @@ public class FindReplaceTest extends BaseTest
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       // Step 3 Click "Find/Replace" button on toolbar
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
-      runToolbarButton(ToolbarCommands.Editor.FIND_REPLACE);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.FIND_REPLACE);
       Thread.sleep(TestConstants.SLEEP);
       checkFindReplaceFormAppeared();
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       // Step 4
       // Print "panel" to find field
@@ -420,10 +420,12 @@ public class FindReplaceTest extends BaseTest
       // Step 15 Close "Find/Replace" dialog window.
       selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
       Thread.sleep(TestConstants.SLEEP);
+      
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      closeUnsavedFileAndDoNotSave(0);
+      
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
+      
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -437,8 +439,9 @@ public class FindReplaceTest extends BaseTest
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
@@ -449,13 +452,13 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //Create first rest file with content
-      selectEditorTab(0);
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.editor().selectTab(0);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      runToolbarButton(ToolbarCommands.Editor.FIND_REPLACE);
+      IDE.toolbar().runCommand(ToolbarCommands.Editor.FIND_REPLACE);
       Thread.sleep(TestConstants.SLEEP);
       checkFindReplaceFormAppeared();
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       //Step 4 Print "html" word in "Find" field, put cursot at start of document and click "Find"
       selenium
@@ -476,7 +479,7 @@ public class FindReplaceTest extends BaseTest
       checkTextFoundState();
 
       //Step 5 Go to "rest2.groovy" file.
-      selectEditorTab(2);
+      IDE.editor().selectTab(2);
       //Step 6 Click "Find" button.
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]");
       Thread.sleep(TestConstants.SLEEP);
@@ -488,7 +491,7 @@ public class FindReplaceTest extends BaseTest
       checkTextNotFoundState();
 
       //Step 7 Go to "rest.groovy" file.
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       //Step 8 
       //Print "import" in find field
       selenium
@@ -520,7 +523,7 @@ public class FindReplaceTest extends BaseTest
       checkTextFoundState();
 
       //Step 9 Go to "rest2.groovy" file.
-      selectEditorTab(2);
+      IDE.editor().selectTab(2);
       //Step 10 
       //Print "java" into the find field
       selenium
@@ -552,7 +555,7 @@ public class FindReplaceTest extends BaseTest
       assertFalse(isButtonEnabled("Replace/Find"));
 
       //Step 12 Go to "test.html" file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       //Step 13 Click "Replace/Find"
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
       //TODO check replaced
@@ -572,7 +575,7 @@ public class FindReplaceTest extends BaseTest
       checkTextNotFoundState();
 
       //Step 15 Go to "rest.groovy" file
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       //Step 16 Click "Replace All" button
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceAllButton\"]");
       //TODO check replaced
@@ -580,7 +583,7 @@ public class FindReplaceTest extends BaseTest
       selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
-      checkToolbarButtonState(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
    }
 
    /**

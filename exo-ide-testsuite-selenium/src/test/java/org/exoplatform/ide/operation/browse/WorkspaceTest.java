@@ -60,7 +60,7 @@ public class WorkspaceTest extends BaseTest
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       //check select workspace window
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       assertTrue(selenium.isTextPresent("Workspace"));

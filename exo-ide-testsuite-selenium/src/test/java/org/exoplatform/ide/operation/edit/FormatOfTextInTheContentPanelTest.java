@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.operation.edit;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -30,8 +32,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -94,15 +94,17 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
      
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       String postFormating = getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
    
@@ -111,15 +113,18 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       String postFormating = getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
    
@@ -129,15 +134,17 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
     
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       String postFormating = getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
       
    }
@@ -147,20 +154,20 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       String postFormating = getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
-      
    }
-   
-   
    
    
    @AfterClass

@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -27,12 +31,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * IDE-47: Creating and "Saving As" new XML file with non-latin name. 
@@ -76,11 +76,11 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectRootOfWorkspaceTree();
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isTextPresent("Untitled file.xml"));
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, false);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE_AS, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       deleteFileContent();
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -94,7 +94,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //check file properties
       showAndCheckProperties(String.valueOf(XML_CONTENT.length()+1), MimeType.TEXT_XML, XML_FILE);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
       //check file on server
       checkFileOnWebDav(XML_FILE);
@@ -124,7 +124,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       saveCurrentFile();
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
 

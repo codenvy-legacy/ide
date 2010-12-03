@@ -60,7 +60,7 @@ public class RootFolderTest extends BaseTest
       assertElementPresentInWorkspaceTree(folderName);
       //refresh workspace folder
       selectRootOfWorkspaceTree();
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       //check new folder is present in navigation tree
       assertElementPresentInWorkspaceTree(folderName);
    }

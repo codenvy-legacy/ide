@@ -85,11 +85,11 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
       {
          Thread.sleep(TestConstants.SLEEP);
          selectItemInWorkspaceTree(WS_NAME);
-         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
          Thread.sleep(TestConstants.SLEEP);
          selectItemInWorkspaceTree(FOLDER_NAME);
-         checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
-         runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
+         IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
+         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
          Thread.sleep(TestConstants.SLEEP);
          selenium.keyPressNative("10");
          Thread.sleep(TestConstants.SLEEP * 3); //wait for download file

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -108,7 +107,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 2 ------------
       //Check Ctrl+S
       //open new file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
@@ -131,14 +130,14 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       openFolder();
       //----- 1 ------------
       //Open several tabs (open existed documents and create some new)
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       
       //----- 2 ------------
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       
       //----- 3 ------------
       //Select "New HTML File" and bind Ctrl+H to this command 
@@ -178,7 +177,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 19 ------------
       //Try Ctrl+H and Alt+N hotkeys in several tabs
       
-      selectEditorTab(2);
+      IDE.editor().selectTab(2);
       
       //press Alt+N
       runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
@@ -190,12 +189,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
       
       //check new html file created
-      assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
+      IDE.editor().closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //select first tab
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -204,12 +203,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
       
       //check new html file created
-      assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
+      IDE.editor().closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //select second tab
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       
       checkCreateFileFromTemplateFormAndClose();
@@ -220,14 +219,14 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //check new html file created
-      assertEquals("Untitled file.html *", getTabTitle(3));
-      closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
+      IDE.editor().closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
       
       //close all tabs
-      closeUnsavedFileAndDoNotSave(0);
-      closeUnsavedFileAndDoNotSave(0);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    /**
@@ -242,7 +241,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 1 ------------
       //prepare hotkeys
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       
       //check cutomize hotkeys dialog window appears
       checkCustomizeHotkeyDialogWindow();
@@ -296,12 +295,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check new html file created
-      assertEquals("Untitled file.html *", getTabTitle(0));
-      closeUnsavedFileAndDoNotSave(0);
+      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(0));
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 3 ------------
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       checkCustomizeHotkeyDialogWindow();
       

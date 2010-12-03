@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -55,14 +55,14 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 --------------
       //open new javascript file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //no outline panel
       assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCodeHelperPanel']"));
       
       //---- 2 --------------
       //show outline
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check outline appeared
       //we can't use checkOutlineVisibility() method,
@@ -72,7 +72,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       
       //---- 3 --------------
       //open new html file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //check outline present
@@ -87,12 +87,13 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
 
       //---- 5 --------------
       //go to javascript file
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(false);
 
       //end
-      closeUnsavedFileAndDoNotSave(0);
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
+   
 }

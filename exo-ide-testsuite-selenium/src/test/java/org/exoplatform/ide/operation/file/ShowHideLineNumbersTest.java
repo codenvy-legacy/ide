@@ -19,17 +19,15 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -71,75 +69,76 @@ public class ShowHideLineNumbersTest extends BaseTest
          + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
       //------- 2 ---------------
-      runCommandFromMenuNewOnToolbar("REST Service");
+      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
 
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(true);
       //------- 3 ---------------
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 4 ---------------
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
 
       //------- 5 ---------------
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 6 ---------------
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 7 ---------------
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 8 ---------------
-      selectEditorTab(1);
+      IDE.editor().selectTab(1);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 9 ---------------
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
 
       //------- 10 ---------------
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       //------- 11 ---------------
       saveAsByTopMenu(XML);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
 
       saveAsByTopMenu(GROOVY);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
       //------- 12 ---------------
       //check show/hide line numbers in saved and reopened file
       openFileFromNavigationTreeWithCodeEditor(XML, false);
       checkLineNumbersVisible(false);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
-      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       checkLineNumbersVisible(true);
-      checkMenuCommandState(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
    }
 
    /**

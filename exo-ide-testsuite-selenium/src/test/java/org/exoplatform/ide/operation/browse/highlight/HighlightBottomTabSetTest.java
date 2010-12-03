@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -74,13 +73,14 @@ public class HighlightBottomTabSetTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      //Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       selenium.click("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=idePropertiesView]/icon");
       Thread.sleep(TestConstants.SLEEP_SHORT);     
@@ -96,7 +96,7 @@ public class HighlightBottomTabSetTest extends BaseTest
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

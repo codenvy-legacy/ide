@@ -21,19 +21,18 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.UUID;
 
 /**
  * Created by The eXo Platform SAS.
@@ -115,19 +114,19 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       
       assertElementPresentInWorkspaceTree(FOLDER_NAME);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       //----- 2 ------------
       //Click "New -> XML File" button.
-      runCommandFromMenuNewOnToolbar("XML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("XML File");
       Thread.sleep(TestConstants.SLEEP);
       
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file opened
-      assertEquals("Untitled file.xml *", getTabTitle(0));
+      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals(DEFAULT_XML_CONTENT, getTextFromCodeEditor(0));
       
@@ -144,7 +143,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       assertElementNotPresentInWorkspaceTree(FILE_NAME);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals(FILE_NAME, getTabTitle(0));
+      assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
       
       //----- 5 ------------
       //Go to server window and check that the files created on the server
@@ -159,7 +158,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //----- 7 ------------
       //Refresh page, go to "Test" in "Workspace" panel.
@@ -186,11 +185,10 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Make some changes in file content and then click on "File->Save" top menu command.
       changeOpenedFileContent();
       //The "Save" button and "File->Save" command must become enabled.
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
    }
-   
    
    
    /**
@@ -208,21 +206,21 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       assertElementPresentInWorkspaceTree(FOLDER_NAME);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(FILE_NAME + " *", getTabTitle(0));
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
+      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
    
    /**
@@ -240,24 +238,24 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       assertElementPresentInWorkspaceTree(FOLDER_NAME);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(FILE_NAME + " *", getTabTitle(0));
-      checkMenuCommandState(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      checkToolbarButtonState(ToolbarCommands.File.SAVE, true);
+      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
    
    

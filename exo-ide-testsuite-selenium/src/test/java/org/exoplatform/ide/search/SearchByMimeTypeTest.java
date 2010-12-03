@@ -24,7 +24,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -67,7 +66,7 @@ public class SearchByMimeTypeTest extends BaseTest
       createFolder(folder1Name);
 
       //Create and save 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);
@@ -79,7 +78,7 @@ public class SearchByMimeTypeTest extends BaseTest
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
       selectItemInWorkspaceTree(folder2Name);
 

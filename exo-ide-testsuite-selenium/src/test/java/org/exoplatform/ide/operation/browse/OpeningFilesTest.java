@@ -24,7 +24,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.Test;
 
 /**
@@ -52,17 +51,17 @@ public class OpeningFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folderName);
 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       assertElementPresentInWorkspaceTree(file2Name);
 
       // Delete one file  

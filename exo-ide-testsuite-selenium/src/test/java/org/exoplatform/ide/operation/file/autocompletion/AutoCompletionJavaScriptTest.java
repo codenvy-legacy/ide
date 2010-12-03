@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -38,7 +37,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    public void testPlainJS() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
       Thread.sleep(TestConstants.SLEEP);
 
       javaScriptTestVar();
@@ -46,14 +45,14 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -74,14 +73,14 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -130,14 +129,14 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.typeKeys("//body[@class='editbox']", " <script>");
@@ -184,7 +183,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       javaScriptTestJSON();
       javaScriptTestFunctions();
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    /**

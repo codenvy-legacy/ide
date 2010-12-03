@@ -18,7 +18,15 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.*;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.NAME_FIELD_LOCATOR;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.checkCreateButtonEnabled;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.checkDeleteButtonEnabled;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.checkNameFieldEnabled;
+import static org.exoplatform.ide.operation.templates.TemplateUtils.closeCreateFromTemplateForm;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
@@ -27,15 +35,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.UUID;
-
-import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -113,7 +115,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // -------- 1 ----------
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER);
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
@@ -133,7 +135,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       //---- 1 ----------
       //call create file from template form
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       
       checkNameFieldEnabled(selenium, false);
       checkCreateButtonEnabled(selenium, false);
@@ -197,7 +199,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // ---------2--------
       //Click on "New->From Template" button.
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       // -------3-------
@@ -210,16 +212,16 @@ public class CreateFileFromTemplateTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
       //new file with appropriate titles and highlighting should be opened in the Content Panel
-      assertEquals(fileName + " *", getTabTitle(0));
+      assertEquals(fileName + " *", IDE.editor().getTabTitle(0));
       // --------4------------
       //Click on "File->Save File As" top menu command and save file "Test Groovy File.groovy".
       saveAsByTopMenu(fileName);
       Thread.sleep(TestConstants.SLEEP);
       //new file with appropriate name should be appeared in the root folder of  
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
-      assertEquals(fileName, getTabTitle(0));
+      assertEquals(fileName, IDE.editor().getTabTitle(0));
       assertElementPresentInWorkspaceTree(fileName);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       
       //check file created on server
       HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER + "/" + fileName);

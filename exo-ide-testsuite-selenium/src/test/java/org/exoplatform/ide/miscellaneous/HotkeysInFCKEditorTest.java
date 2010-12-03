@@ -22,17 +22,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.
@@ -141,16 +140,16 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //----- 4 ------------
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
-      assertEquals(GOOGLE_GADGET_FILE + " *", getTabTitle(0));
+      assertEquals(GOOGLE_GADGET_FILE + " *", IDE.editor().getTabTitle(0));
       selenium.controlKeyDown();
       selenium.keyDown("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
       selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
-      assertEquals(GOOGLE_GADGET_FILE, getTabTitle(0));
-      //close file
-      CloseFileUtils.closeTab(0);
+      assertEquals(GOOGLE_GADGET_FILE, IDE.editor().getTabTitle(0));
+      //close file      
+      IDE.editor().closeTab(0);
    }
    
    /**
@@ -217,7 +216,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeFileTabIgnoreChanges(0);
+      IDE.editor().closeFileTabIgnoreChanges(0);
    }
    
    @Test
@@ -323,7 +322,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selectMainFrame();
       
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeFileTabIgnoreChanges(0);
+      
+      IDE.editor().closeFileTabIgnoreChanges(0);
    }
    
    @Test
@@ -350,7 +350,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       checkCreateFileFromTemplateFormAndClose();
       
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeFileTabIgnoreChanges(0);
+      IDE.editor().closeFileTabIgnoreChanges(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception

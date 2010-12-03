@@ -105,13 +105,14 @@ public class RenameClosedFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       selectItemInWorkspaceTree(ORIG_FILE_NAME);
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
@@ -137,13 +138,13 @@ public class RenameClosedFileTest extends BaseTest
    {
       refresh();
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       selectItemInWorkspaceTree(ORIG_FILE_NAME);
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       selenium.type(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR, MimeType.TEXT_XML);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -157,7 +158,7 @@ public class RenameClosedFileTest extends BaseTest
       
       assertEquals(FILE_CONTENT, textFromEditor);
       
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
    }
@@ -167,13 +168,13 @@ public class RenameClosedFileTest extends BaseTest
    {
       refresh();
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       selectItemInWorkspaceTree(ORIG_FILE_NAME);
       
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -192,7 +193,7 @@ public class RenameClosedFileTest extends BaseTest
       
       assertEquals(FILE_CONTENT, textFromEditor);
       
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
    }

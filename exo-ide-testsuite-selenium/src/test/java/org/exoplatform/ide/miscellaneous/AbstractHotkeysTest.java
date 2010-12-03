@@ -134,9 +134,9 @@ public abstract class AbstractHotkeysTest extends BaseTest
    
    void openFolder() throws Exception
    {
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
    }
    
    void clickButton(String buttonLocator) throws Exception

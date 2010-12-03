@@ -73,7 +73,7 @@ public class UploadingGroovyFileTest extends BaseTest
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
       assertEquals(
          "exo:groovyResourceContainer",
@@ -99,8 +99,8 @@ public class UploadingGroovyFileTest extends BaseTest
       
       //----- 1 --------------
       //open upload form
-      runTopMenuCommand(MenuCommands.File.FILE, formName);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.menu().runCommand(MenuCommands.File.FILE, formName);
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
       assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));

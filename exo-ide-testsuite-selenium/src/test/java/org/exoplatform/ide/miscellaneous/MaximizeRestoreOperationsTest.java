@@ -18,11 +18,17 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
+import static org.exoplatform.ide.Locators.CODE_HELPER_PANEL_LOCATOR;
+import static org.exoplatform.ide.Locators.CONTENT_PANEL_LOCATOR;
+import static org.exoplatform.ide.Locators.MAIN_FORM_LOCATOR;
+import static org.exoplatform.ide.Locators.NAVIGATION_PANEL_LOCATOR;
+import static org.exoplatform.ide.Locators.OPERATION_PANEL_LOCATOR;
+import static org.exoplatform.ide.Locators.VERTICAL_SPLIT_LAYOUT_LOCATOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.exoplatform.ide.Locators.*;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -34,8 +40,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-97:One-click maximize/restore for editor and actions view.
@@ -111,16 +115,16 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
       
       //---- 1 -----------------
       //Create, save and open new file in the content panel. 
       //Click on "Show Properties" button to open "Properties" Tab.
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       Thread.sleep(TestConstants.SLEEP);
       
       //store width and height of elements in default perspective
@@ -191,7 +195,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 7 -----------------
       //Click on "Show Properties" button.
-      runToolbarButton(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       Thread.sleep(TestConstants.SLEEP);
       
       //there is Properties Tab under the file tab and with horizontal delimeter between them, 
@@ -209,8 +213,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //---- 9 -----------------
       //Click on "File->Search" topmenu item and then click on 
       //"Search" button within the "Search" dialog window.
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
       
@@ -227,7 +232,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 10 -----------------
       //Click on Show Outline Panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check code helper panel visible
       assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR));
@@ -264,7 +269,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkOperationsPanelVisibility(true);
       
       //close outline
-      runToolbarButton(ToolbarCommands.View.HIDE_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
 
       //---- 13 -----------------
       //select Workspace tab
@@ -282,7 +287,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 15 -----------------
       //click Show Outline button
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       
       //outline panel is visible, content panel is visible.
@@ -294,7 +299,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //open new xml file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //check content panel is visible, outline is visible,
@@ -321,7 +326,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //Close and remove created file.
-      closeUnsavedFileAndDoNotSave(1);
+      IDE.editor().closeUnsavedFileAndDoNotSave(1);
       
       Thread.sleep(TestConstants.SLEEP);
    }

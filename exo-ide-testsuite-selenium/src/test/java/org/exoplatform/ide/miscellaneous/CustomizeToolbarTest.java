@@ -20,6 +20,7 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.*;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
@@ -30,13 +31,15 @@ import org.junit.Test;
  */
 public class CustomizeToolbarTest extends BaseTest
 {
+   
    @Test
    public void CustomizeToolbartest() throws Exception
    {
       // --------1----------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -46,8 +49,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormDeleteButton\"]/");
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormCancelButton\"]/");
       // ---------2------------
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -56,8 +60,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ------------3-----------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -69,8 +74,10 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ---------5--------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -125,8 +132,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ------6-------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -138,8 +146,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ---------7-------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -154,20 +163,27 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ----------- 8 ---------
       Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Customize Toolbar\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Customize Toolbar\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
       selenium.click("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]/body/row[2]/col[fieldName=Toolbar||0]");
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormDeleteButton\"]/");
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
+      Thread.sleep(TestConstants.SLEEP);
       // ----------9---------
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Customize Toolbar\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='Window']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Customize Toolbar\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -180,8 +196,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // ----10-----
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -191,8 +208,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // -------11------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -207,8 +225,9 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeToolbarFormOkButton\"]/");
       // -----15------
       Thread.sleep(TestConstants.SLEEP);
-      runTopMenuCommand("Window", "Customize Toolbar...");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCustomizeToolbarForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCommandItemExListGrid\"]"));
@@ -259,7 +278,8 @@ public class CustomizeToolbarTest extends BaseTest
          .isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]/body/row[CommandId=Undeploy]/col[0]"));
       assertTrue(selenium
          .isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]/body/row[CommandId=Launch REST Service]/col[0]"));
-      // Check defoult settings
+
+      // Check default settings
       assertTrue(selenium
          .isElementPresent("scLocator=//ListGrid[ID=\"ideToolbarItemListGrid\"]/body/row[CommandId=New * [Popup]]/col[0]"));
       assertTrue(selenium

@@ -43,53 +43,53 @@ public class ShowOutlineButtonTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 ------
       //open JavaScript file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 2 ------
       //open xml file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 3 ------
       //open html file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 4 ------
       //open google gadget file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 5 ------
       //open text file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 6 ------
       //open css file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.CSS_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, false);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
       
       //---- 7 ------
       //open rest service file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.REST_SERVICE_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 8 ------
       //open groovy script file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 9 ------
       //open groovy template file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_TEMPLATE_FILE);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
       //---- 10 ------
       //open select tab with xml file
-      selectEditorTab(1);
-      checkToolbarButtonPresentOnLeftSide(ToolbarCommands.View.SHOW_OUTLINE, true);
+      IDE.editor().selectTab(1);
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
       
    }
    

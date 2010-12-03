@@ -54,7 +54,7 @@ public class CreateFolderTest extends BaseTest
    {
       //****TODO********fix
       Thread.sleep(TestConstants.SLEEP);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FOLDER);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //****************
 
 

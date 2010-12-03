@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -26,7 +28,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -76,15 +77,15 @@ public class HighlightCKEditorTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       selectItemInWorkspaceTree(FOLDER_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //Thread.sleep(TestConstants.SLEEP);
 
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      runTopMenuCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      //Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_PreviewForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
@@ -99,7 +100,7 @@ public class HighlightCKEditorTest extends BaseTest
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_PreviewForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    @AfterClass

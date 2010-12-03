@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.versioning;
 
+import static org.junit.Assert.assertEquals;
+
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -82,11 +82,11 @@ public class RestoreVersionTest extends VersioningTest
    {
       Thread.sleep(10000);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
@@ -104,7 +104,7 @@ public class RestoreVersionTest extends VersioningTest
       typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -116,7 +116,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -124,7 +124,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //Restore version and check opened file has restored content
-      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      IDE.toolbar().runCommand(MenuCommands.File.RESTORE_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkAskDialogPresent(true);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
@@ -138,14 +138,14 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //Reopen file to check content:
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
 
       //Open version panel
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -157,7 +157,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -165,7 +165,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -173,7 +173,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
-      runToolbarButton(ToolbarCommands.View.VIEW_OLDER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -181,7 +181,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //Restore version and check opened file has restored content
-      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      IDE.toolbar().runCommand(MenuCommands.File.RESTORE_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkAskDialogPresent(true);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
@@ -195,7 +195,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -203,7 +203,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -211,7 +211,7 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -219,14 +219,14 @@ public class RestoreVersionTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View newer version:
-      runToolbarButton(ToolbarCommands.View.VIEW_NEWER_VERSION);
+      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkOlderVersionButtonState(true);
       checkRestoreVersionButtonState(false);
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    @Test
@@ -237,11 +237,11 @@ public class RestoreVersionTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
-      checkMenuCommandPresent(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
       deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
@@ -259,7 +259,7 @@ public class RestoreVersionTest extends VersioningTest
       typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 3);
       checkVersionPanelState(true);
       //View older version button is enabled: 
@@ -270,13 +270,13 @@ public class RestoreVersionTest extends VersioningTest
       checkRestoreVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(5);
       clickCloseVersionListPanelButton();
       checkOpenVersion(2, version1Text + version2Text);
 
       //Restore version and check opened file has restored content
-      runToolbarButton(MenuCommands.File.RESTORE_VERSION);
+      IDE.toolbar().runCommand(MenuCommands.File.RESTORE_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkAskDialogPresent(true);
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
@@ -289,7 +289,7 @@ public class RestoreVersionTest extends VersioningTest
       checkRestoreVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(6);
       clickCloseVersionListPanelButton();
 
@@ -303,11 +303,11 @@ public class RestoreVersionTest extends VersioningTest
       saveCurrentFile();
       Thread.sleep(5000);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(7);
       clickCloseVersionListPanelButton();
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
 
    private void checkAskDialogPresent(boolean isPresent)
@@ -319,6 +319,7 @@ public class RestoreVersionTest extends VersioningTest
    @After
    public void cleanResults() throws Exception
    {
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
+   
 }

@@ -21,9 +21,10 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
@@ -32,8 +33,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-10: Creating and "Saving As" new files.
@@ -95,8 +94,9 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       selectItemInWorkspaceTree(FOLDER_NAME);
       openOrCloseFolder(FOLDER_NAME);
       testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "groovy", REST_SERVICE_FILE_NAME);
@@ -116,22 +116,22 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private void testFileSaveAs(String menuTitle, String fileExtention, String fileName) throws InterruptedException,
       Exception
    {
-      runCommandFromMenuNewOnToolbar(menuTitle);
+      IDE.toolbar().runCommandFromNewPopupMenu(menuTitle);
 
       assertTrue(selenium.isTextPresent("Untitled file." + fileExtention));
-      runCommandFromMenuNewOnToolbar(menuTitle);
+      IDE.toolbar().runCommandFromNewPopupMenu(menuTitle);
 
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
       
-      runToolbarButton(ToolbarCommands.File.SAVE_AS);
+      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE_AS);
       SaveFileUtils.checkSaveAsDialogAndSave(fileName, false);
 
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
 
       //TODO***********fix***************
-      CloseFileUtils.closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       //*****************************
 
       //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");

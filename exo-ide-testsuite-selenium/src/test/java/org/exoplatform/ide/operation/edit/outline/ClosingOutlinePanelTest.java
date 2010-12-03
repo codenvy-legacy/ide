@@ -21,18 +21,17 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-170:Test closing Code Outline panel.
@@ -113,7 +112,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       //open JavaScript file.
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -122,7 +121,7 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       //----- 2 -------------
       //show Code Outline panel
-      runToolbarButton(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline present
       checkCodeHelperPanelPresent(true);
@@ -136,7 +135,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //return to the tab with JavaScript.
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       //check Code Outline present
       checkCodeHelperPanelVisibility(true);
       Thread.sleep(TestConstants.SLEEP);
@@ -144,7 +143,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       //----- 4 -------------
       //close code outline panel.
       
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);
       Thread.sleep(TestConstants.SLEEP);

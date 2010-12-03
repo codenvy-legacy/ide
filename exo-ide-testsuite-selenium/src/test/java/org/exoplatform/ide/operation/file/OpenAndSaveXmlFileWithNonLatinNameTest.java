@@ -24,15 +24,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -91,7 +87,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(FOLDER_NAME);
 //      selectItemInWorkspaceTree(WS_NAME);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isTextPresent("Untitled file.xml"));
       assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
@@ -102,7 +98,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);

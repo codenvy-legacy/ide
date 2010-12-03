@@ -20,18 +20,17 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>
@@ -74,13 +73,13 @@ public class CursorPositionStatusBarTest extends BaseTest
       selectItemInWorkspaceTree(TEST_FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
        
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.HTML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       saveAsUsingToolbarButton(FILE_1);
 
       Thread.sleep(TestConstants.SLEEP);
       //TODO****try****fix
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //****************
       
@@ -119,10 +118,10 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
 
       //	Create Css
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.CSS_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
 
       selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
@@ -133,7 +132,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 
       //			check status bar
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
    }
    
    @AfterClass

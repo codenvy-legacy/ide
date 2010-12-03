@@ -28,7 +28,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -67,7 +66,7 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folder1Name);
       //Create and save 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(14);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
@@ -87,7 +86,7 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertElementPresentInWorkspaceTree(restFileName);
 
-      closeTab("0");
+      IDE.editor().closeTab(0);
 
       selectRootOfWorkspaceTree();
 
@@ -109,12 +108,12 @@ public class SearchInRootFolderTest extends BaseTest
       //Open first file from search results
       openFileFromSearchResultsWithCodeEditor(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(restFileName, getTabTitle(0));
+      assertEquals(restFileName, IDE.editor().getTabTitle(0));
 
       //Open second file from search results
       openFileFromSearchResultsWithCodeEditor(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(copyofRestFileName, getTabTitle(1));
+      assertEquals(copyofRestFileName, IDE.editor().getTabTitle(1));
 
       selectWorkspaceTab();
       selectItemInWorkspaceTree(folder1Name);

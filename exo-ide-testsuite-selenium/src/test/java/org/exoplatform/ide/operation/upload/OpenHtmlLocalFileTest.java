@@ -72,7 +72,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
       assertEquals("nt:resource",selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
       

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -45,8 +44,8 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ------------
       //Call "Customize Hotkeys" window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+//      Thread.sleep(TestConstants.SLEEP);
       
       checkCustomizeHotkeyDialogWindow();
       
@@ -122,7 +121,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //----- 1 ------------
       //call customize hotkeys form
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
 
       //----- 2 ------------
       //select row with css file
@@ -154,14 +153,14 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //check new Css file is createed
-      assertEquals("Untitled file.css *", getTabTitle(0));
+      assertEquals("Untitled file.css *", IDE.editor().getTabTitle(0));
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 5 ------------
       //Call "Customize Hotkeys" window and select "New CSS file". Press Unbind button
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       selectRow(Commands.NEW_CSS_FILE);
       
       //check, Ctrl+M text appears near New CSS File in list grid
@@ -182,15 +181,15 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //check new Css file is createed
-      assertEquals("Untitled file.css *", getTabTitle(0));
+      assertEquals("Untitled file.css *", IDE.editor().getTabTitle(0));
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 7 ------------
       //Call "Customize Hotkeys" window and select "New CSS file". 
       //Press Unbind button and then press Save button.
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       
       selectRow(Commands.NEW_CSS_FILE);
       
@@ -227,7 +226,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       refresh();
       //----- 1 ------------
       //Call "Customize Hotkeys" window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 2 ------------
@@ -380,7 +379,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //----- 2 ------------
       //Call "Customize Hotkeys" window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 3 ------------
@@ -403,7 +402,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //----- 5 ------------
       //Call "Customize Hotkeys" window
-      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);

@@ -53,7 +53,7 @@ public class SearchAdvancedTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       String workspace = getItemNameFromWorkspaceTree(0);
 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(7);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, googleGadgetFileContent);

@@ -134,7 +134,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ----------------
       //open create project from template form
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkCreateProjectFromTemplateForm(selenium);
       
@@ -171,7 +171,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       refresh();
       //----- 1 ----------------
       //open create project from template form
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkCreateProjectFromTemplateForm(selenium);
       Thread.sleep(TestConstants.SLEEP);
@@ -208,7 +208,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       
       //----- 1 ----------------
       //open create project from template form
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkNameFieldEnabled(selenium, false);
       checkDeleteButtonEnabled(selenium, false);

@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateSt
 import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.IDEMenu;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -125,6 +126,9 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
              * Updating top menu
              */
             eventBus.fireEvent(new UpdateMainMenuEvent(controls.getRegisteredControls()));
+            
+            IDEMenu.getInstance().refreshMenu(controls.getRegisteredControls());
+            
             eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
                .getRegisteredControls()));
 

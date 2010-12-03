@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -29,7 +28,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,14 +70,14 @@ public class BigTemplateTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectRootOfWorkspaceTree();
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openOrCloseFolder(FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
 
       TemplateUtils.checkSaveAsTemplateWindow(selenium);
 
@@ -101,9 +99,9 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
 
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // check "Create file" dialog window
@@ -113,7 +111,7 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

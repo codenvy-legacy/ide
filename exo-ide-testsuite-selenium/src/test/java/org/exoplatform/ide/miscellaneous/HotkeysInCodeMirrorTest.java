@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.exoplatform.ide.CloseFileUtils.closeUnsavedFileAndDoNotSave;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -62,7 +61,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ------------
       //Create new text file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       //type text to editor
       
       final String text = "Text File";
@@ -112,8 +111,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave(0);
-
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    @Test
@@ -122,7 +120,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 1 ------------
       //Create new text file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       //type text to editor
       
       //----- 10 ------------
@@ -210,7 +208,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    @Test
@@ -219,7 +217,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 1 -------
       //Create new text file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       
       final String textToRevert = "a";
       
@@ -269,7 +267,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
    
    /**
@@ -284,7 +282,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 14 ------------
       //Create JavaScript file and press Ctrl+Space
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       runHotkeyWithinEditor(0, true, false, 32);
@@ -299,7 +297,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       //close file
-      closeUnsavedFileAndDoNotSave(0);
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
 
    }
  

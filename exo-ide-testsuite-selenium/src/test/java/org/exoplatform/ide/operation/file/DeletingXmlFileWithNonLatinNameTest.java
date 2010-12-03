@@ -78,8 +78,9 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      
       selectItemInWorkspaceTree(FILE_NAME);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);

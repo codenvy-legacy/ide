@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class GeItemUrlTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       //Create first file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
       deleteLinesInEditor(7);
       assertEquals("", getTextFromCodeEditor(0));
@@ -63,22 +63,22 @@ public class GeItemUrlTest extends BaseTest
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
      
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       assertElementPresentInWorkspaceTree(file1Name);
 
       createFolder(folderName);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("", getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       assertElementPresentInWorkspaceTree(file2Name);
 
       //Refresh root item
       selectRootOfWorkspaceTree();
-      runToolbarButton("Refresh Selected Folder");
+      IDE.toolbar().runCommand("Refresh Selected Folder");
 
       String workspaceName = getItemNameFromWorkspaceTree(0);
 
@@ -130,7 +130,7 @@ public class GeItemUrlTest extends BaseTest
    public void testGetFileUrlWithSearch() throws Exception
    {
       selectRootOfWorkspaceTree();
-      runToolbarButton("Search...");
+      IDE.toolbar().runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));

@@ -20,9 +20,10 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.CloseFileUtils;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
@@ -32,8 +33,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -91,17 +90,17 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testClosingAnsSaveAsFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      runToolbarButton(ToolbarCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       //----- 1 ----------
       //open 2 new files
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.TEXT_FILE);
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //----- 2 ----------
       //try to close xml file
-      CloseFileUtils.closeTab(1);
+      IDE.editor().closeTab(1);
       //save file as dialog appears
       SaveFileUtils.checkSaveAsDialog(true);
       //close save file as dialog
@@ -111,14 +110,14 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       
       //----- 3 ----------
       //select first file (text file)
-      selectEditorTab(0);
+      IDE.editor().selectTab(0);
       //save file from tab
       saveAsUsingToolbarButton(FILE_NAME_1);
       
       //file stays in editor panel
       checkCodeEditorOpened(0);
       checkCodeEditorOpened(1);
-      assertEquals(FILE_NAME_1, getTabTitle(0));
+      assertEquals(FILE_NAME_1, IDE.editor().getTabTitle(0));
    }
    
    @Test
@@ -129,11 +128,11 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       
       //----- 1 ----------
       //open new file
-      runCommandFromMenuNewOnToolbar(MenuCommands.New.XML_FILE);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //----- 2 ----------
       //try to close xml file
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       //save file as dialog appears
       SaveFileUtils.checkSaveAsDialog(true);
       //close save file as dialog

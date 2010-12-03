@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -26,12 +26,9 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.CloseFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-96 Go to folder test
@@ -80,11 +77,12 @@ public class GoToFolderTest extends BaseTest
    public void testGoToFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
 //      openCloseRootWorkspace();
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //Thread.sleep(TestConstants.SLEEP);
+      
       //Open first folder and file in it
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_1);
@@ -102,32 +100,32 @@ public class GoToFolderTest extends BaseTest
       selectItemInWorkspaceTree(FILE_2);
 
       //Go to folder with first file
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      //Thread.sleep(TestConstants.SLEEP);
 
       //Check file is shown in tree
       //TODO check selected state
       assertElementPresentInWorkspaceTree(FILE_1);
 
       selectRootOfWorkspaceTree();
-      runToolbarButton("Refresh Selected Folder");
+      IDE.toolbar().runCommand("Refresh Selected Folder");
 
       openOrCloseFolder(FOLDER_2);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
       Thread.sleep(TestConstants.SLEEP);
       //Go to folder with first file
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      //Thread.sleep(TestConstants.SLEEP);
       //TODO check selected state
       assertElementPresentInWorkspaceTree(FILE_2);
 
       //Close opened tabs
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      CloseFileUtils.closeTab(0);
+      IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }
 
    @Test
@@ -138,8 +136,9 @@ public class GoToFolderTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //Close root workspace folder
       selectItemInWorkspaceTree(WS_NAME);
-      runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      //Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       openOrCloseFolder(WS_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertElementNotPresentInWorkspaceTree(FILE_1);
@@ -147,7 +146,7 @@ public class GoToFolderTest extends BaseTest
       assertElementNotPresentInWorkspaceTree(FOLDER_1);
       assertElementNotPresentInWorkspaceTree(FOLDER_2);
 
-//      runToolbarButton("Search...");
+//      IDE.toolbar().runCommand("Search...");
 //      Thread.sleep(TestConstants.SLEEP);
       
       //Check search form appears
@@ -174,9 +173,10 @@ public class GoToFolderTest extends BaseTest
       openFileFromSearchResultsWithCodeEditor(FILE_2);
       //Go to folder with second file
       Thread.sleep(TestConstants.SLEEP);
-      checkMenuCommandState(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
-      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
+      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      //Thread.sleep(TestConstants.SLEEP);
+      
       //TODO check selected
       assertElementPresentInWorkspaceTree(FILE_2);
       assertElementNotPresentInWorkspaceTree(FILE_1);
