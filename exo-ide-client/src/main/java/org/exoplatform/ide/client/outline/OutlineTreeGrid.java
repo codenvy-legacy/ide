@@ -18,22 +18,23 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.vfs.File;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -179,9 +180,52 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       // add info about java type, parameters and annotations
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
       {
+         //icon, that displays in right bottom corner, if token is CLASS, 
+         //and shows access modifier
+         String modfImg = "";
+         
+         if (TokenType.CLASS.equals(token.getType()))
+         {
+            
+            boolean isPrivate = token.getModifiers().contains(Token.Modifier.PRIVATE);
+            boolean isProtected = token.getModifiers().contains(Token.Modifier.PROTECTED);
+            boolean isPublic = token.getModifiers().contains(Token.Modifier.PUBLIC);
+            
+            if (isPrivate)
+            {
+               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png" + "\" />";
+            }
+            else if (isProtected)
+            {
+               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png" + "\" />";
+            }
+            else if (isPublic)
+            {
+            }
+            else
+            {
+               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png" + "\" />";
+            }
+            
+            
+         }
+
+         final boolean isSynchronized = token.getModifiers().contains(Token.Modifier.SYNCHRONIZED);
+         String synchImg = "";
+         if (isSynchronized)
+         {
+            final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
+            synchImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft 
+               + "px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/clock.png" + "\" />";
+         }
          String annotationList = getAnnotationList(token);
          String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
-         name = getModifiersContainer(token) + "<span "+deprecateSign+" title=\"" + annotationList + "\">&nbsp;&nbsp;"  + name + "</span>";
+         name = getModifiersContainer(token) + modfImg + synchImg + "<span " + deprecateSign + " title=\"" + annotationList 
+            + "\">&nbsp;&nbsp;" + name + "</span>";
          
          if (TokenType.METHOD.equals(token.getType()))
          {
@@ -311,9 +355,11 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     */
    private String getModifiersContainer(Token token){
       //Get modifiers:
-      boolean isStatic = token.getModifiers().contains(Token.Modifier.STATIC);
-      boolean isFinal =  token.getModifiers().contains(Token.Modifier.FINAL);
-      boolean isAbstract = token.getModifiers().contains(Token.Modifier.ABSTRACT);
+      final boolean isStatic = token.getModifiers().contains(Token.Modifier.STATIC);
+      final boolean isFinal =  token.getModifiers().contains(Token.Modifier.FINAL);
+      final boolean isAbstract = token.getModifiers().contains(Token.Modifier.ABSTRACT);
+      final boolean isTransient = token.getModifiers().contains(Token.Modifier.TRANSIENT);
+      final boolean isVolatile = token.getModifiers().contains(Token.Modifier.VOLATILE);
       //Get annotation list like string:
       String annotationList = getAnnotationList(token);
       
@@ -322,9 +368,11 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       
       String span = "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: "+size+"px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
       span += (annotationList.length() > 0) ? "<font color ='#000000' style='float: right;'>@</font>" : "";
-      span += (isAbstract) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+      span += (isAbstract) ? "<font color ='#004e00' style='float: right;'>a</font>" : "";
       span += (isFinal) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
       span += (isStatic) ? "<font color ='#6d0000' style='float: right;'>s</font>" : "";
+      span += (isVolatile) ? "<font color ='#6d0000' style='float: right;'>v</font>" : "";
+      span += (isTransient) ? "<font color ='#6d0000' style='float: right;'>t</font>" : "";
       span += "</span>";
       return span;
    }
