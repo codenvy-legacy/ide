@@ -56,7 +56,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
          "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
             + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
       span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
-      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
+//      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
       span += (ModifierHelper.isStatic(modifieres)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
       span += "</span>";
       return span;

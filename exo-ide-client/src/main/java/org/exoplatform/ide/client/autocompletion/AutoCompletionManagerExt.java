@@ -33,7 +33,11 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * This class is  
+ * This class is main part of autocomplete feature.
+ * It manage logic of selection {@link TokenCollectorExt} for
+ * editor content MimeType, selection tokens and create {@link AutocompletionFormExt}.  
+ * When token selected call {@link EditorAutoCompleteEvent} to paste token string or
+ * return focus to editor if autocompletion canceled
  * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

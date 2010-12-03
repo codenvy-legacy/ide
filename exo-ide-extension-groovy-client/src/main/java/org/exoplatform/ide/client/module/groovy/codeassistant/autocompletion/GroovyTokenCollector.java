@@ -201,7 +201,8 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
       for (TokenExt t : groovyClass.getPublicMethods())
       {
-         if (ModifierHelper.isStatic(ModifierHelper.getIntFromString(t.getProperty(TokenExtProperties.MODIFIERS))))
+         int mod = ModifierHelper.getIntFromString(t.getProperty(TokenExtProperties.MODIFIERS));
+         if (ModifierHelper.isStatic(mod) || ModifierHelper.isAbstract(mod))
          {
             staticList.add(t);
          }

@@ -135,6 +135,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       textBox.setWidth("100%");
       textBox.setText(prefix);
       textBox.setStyleName(Style.AUTO_EDIT);
+      textBox.addChangeHandler(this);
 
       flowPanel = new FlowPanel();
 
