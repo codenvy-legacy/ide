@@ -16,20 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codeassistant.api;
+package org.exoplatform.ide.client.module.groovy.codeassistant;
 
-import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 /**
+ * Callback for AssistImportDeclarationForm.
+ * 
+ * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: $
+ * @version $Id: Nov 22, 2010 9:43:03 AM evgen $
  *
  */
-public interface AutocompleteTokenSelectedHandler
+public interface AssistImportDeclarationHandler
 {
    
-   void onAutocompleteTokenSelected(Token token);
+   /**
+    * Fired if user select token.
+    * 
+    * @param token that user select
+    */
+   void onImportTokenSelected(TokenExt token);
    
-   void onAutocompleteCancel();
+   /**
+    * Fired if AssistImportDeclarationForm closed without selected token.
+    * It may be click outside the  AssistImportDeclarationForm or "Esc" key  pressed.
+    * Implementor must return focus in to editor.
+    */
+   void onImportCancel();
    
 }

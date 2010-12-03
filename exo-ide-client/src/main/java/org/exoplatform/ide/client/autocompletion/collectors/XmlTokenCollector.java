@@ -44,7 +44,7 @@ public class XmlTokenCollector implements TokenCollector<Token>
    private HashMap<String, Token> filteredToken = new HashMap<String, Token>();
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenCollector#getTokens(java.lang.String, java.lang.String, int, int, java.util.List, org.exoplatform.ide.client.framework.codeassistant.api.TokensCollectedCallback)
+    * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenCollector#collectTokens(java.lang.String, Token, int, int, java.util.List, org.exoplatform.ide.client.framework.codeassistant.api.TokensCollectedCallback)
     */
    public void getTokens(String line, String lineMimeType, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback<Token> tokensCollectedCallback)

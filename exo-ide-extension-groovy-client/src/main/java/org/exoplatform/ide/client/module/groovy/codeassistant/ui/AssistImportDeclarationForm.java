@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
-import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
+import org.exoplatform.ide.client.module.groovy.codeassistant.AssistImportDeclarationHandler;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -249,7 +249,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
          keyboardManagerRegistration = null;
       }
 
-      handler.onImportTockenSelected(selectedWidget.getToken());
+      handler.onImportTokenSelected(selectedWidget.getToken());
       lockLayer.removeFromParent();
    }
 

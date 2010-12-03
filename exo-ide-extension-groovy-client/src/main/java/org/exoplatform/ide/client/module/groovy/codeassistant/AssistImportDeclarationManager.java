@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.editor.event.EditorErrorMarkClickedHandler;
 import org.exoplatform.gwtframework.editor.event.EditorInsertImportStatmentEvent;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.client.framework.codeassistant.api.AssistImportDeclarationHandler;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
@@ -77,7 +76,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
 
          ImportDeclarationTokenCollector collector =
             ImportDeclarationsTokenCollectors.getCollector(eventBus, event.getFileMimeType());
-         collector.getImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
+         collector.collectImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
          //     collector.getImportDeclarationTokens("Array", this);   
       }
    }
@@ -91,16 +90,16 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
    }
 
    /**
-    * @see org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationHandler#onImportTockenSelected(org.exoplatform.gwtframework.editor.api.TokenExt.GroovyToken)
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.codeassitant.AssistImportDeclarationHandler#onImportTokenSelected(org.exoplatform.gwtframework.editor.api.TokenExt.GroovyToken)
     */
-   public void onImportTockenSelected(TokenExt token)
+   public void onImportTokenSelected(TokenExt token)
    {
       eventBus.fireEvent(new EditorInsertImportStatmentEvent(editorId, token.getProperty(TokenExtProperties.FQN)));
       eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
    /**
-    * @see org.exoplatform.gwtframework.ui.client.component.codeassitant.AssistImportDeclarationHandler#onImportCancel()
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.codeassitant.AssistImportDeclarationHandler#onImportCancel()
     */
    public void onImportCancel()
    {

@@ -74,7 +74,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    /**
@@ -89,7 +89,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       ClassDescriptionReceivedEvent event = new ClassDescriptionReceivedEvent(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
 }

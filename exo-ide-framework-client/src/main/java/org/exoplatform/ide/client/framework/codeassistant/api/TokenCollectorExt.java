@@ -20,13 +20,19 @@ package org.exoplatform.ide.client.framework.codeassistant.api;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 
 /**
+ * General token collector.
+ * Every MimeType has own token collector.<br>
+ * (Except "composite" mimetype such as {@link MimeType#GOOGLE_GADGET}, 
+ *  that is composition of {@link MimeType#TEXT_XML},{@link MimeType#TEXT_HTML}, {@link MimeType#APPLICATION_JAVASCRIPT} 
+ *  and {@link MimeType#TEXT_CSS})
+ * <br>
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 30, 2010 10:13:08 AM evgen $
  *
@@ -34,6 +40,19 @@ import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallbac
 public interface TokenCollectorExt 
 {
 
-   void getTokens(String line, String fqn, int lineNum, int cursorPos,  List<Token> tokenFromParser, TokensCollectedCallback<TokenExt> tokensCollectedCallback);
+   /**
+    * Token Collector entry point.
+    * Calls from AutocopletionManager.
+    * Must call {@link TokensCollectedCallback#onTokensCollected(List, String, String, String)} 
+    * when tokens collected.
+    * 
+    * @param line Line where calls autocomplete;
+    * @param token Current {@link Token} ;
+    * @param lineNum Number of line;
+    * @param cursorPos Position of cursor where called autocomplete;
+    * @param tokenFromParser {@link List} of {@link Token} pased by editor;
+    * @param tokensCollectedCallback Callback for return tokens;
+    */
+   void collectTokens(String line, Token token, int lineNum, int cursorPos,  List<Token> tokenFromParser, TokensCollectedCallback<TokenExt> tokensCollectedCallback);
    
 }

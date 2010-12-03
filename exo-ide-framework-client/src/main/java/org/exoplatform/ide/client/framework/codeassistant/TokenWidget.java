@@ -56,7 +56,7 @@ public abstract class TokenWidget<T> extends Composite implements HasClickHandle
    {
       return token;
    }
-
+   
    
    /**
     * @return name of token

@@ -16,22 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codeassistant.api;
-
-import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+package org.exoplatform.ide.client.autocompletion;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 22, 2010 9:43:03 AM evgen $
+ * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  *
  */
-public interface AssistImportDeclarationHandler
+public interface TokenSelectedHandler
 {
+
+   void onTokenSelected(String value);
    
-   void onImportTockenSelected(TokenExt token);
-   
-   void onImportCancel();
+   void onCancelAutoComplete();
    
 }

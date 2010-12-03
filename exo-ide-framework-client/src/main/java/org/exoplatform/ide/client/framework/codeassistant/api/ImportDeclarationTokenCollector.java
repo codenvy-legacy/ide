@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant.api;
 
+
+
 /**
+ * An collector of class fqn by class name.
+ * 
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 22, 2010 2:41:04 PM evgen $
  *
@@ -28,6 +31,13 @@ package org.exoplatform.ide.client.framework.codeassistant.api;
 public interface ImportDeclarationTokenCollector
 {
    
-   void getImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback);
-
+   /**
+    * Collect token by class name.
+    * Must call {@link ImportDeclarationTokenCollectorCallback#tokensCollected(java.util.List)} when   
+    * tokens collected.
+    * @param className 
+    * @param callback
+    */
+   void collectImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback);
+   
 }

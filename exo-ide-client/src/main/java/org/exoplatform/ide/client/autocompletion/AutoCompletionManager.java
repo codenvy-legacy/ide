@@ -29,7 +29,6 @@ import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.ide.client.autocompletion.ui.AutoCompleteForm;
 import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
-import org.exoplatform.ide.client.framework.codeassistant.api.AutocompleteTokenSelectedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -112,7 +111,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    }
 
    /**
-    * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteTokenSelected(java.lang.String)
+    * @see org.exoplatform.ide.client.autocompletion.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteTokenSelected(java.lang.String)
     */
    public void onAutocompleteTokenSelected(Token token)
    {
@@ -199,7 +198,7 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
    }-*/;
 
    /**
-    * @see org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()
+    * @see org.exoplatform.ide.client.autocompletion.autocomlete.AutocompleteTokenSelectedHandler#onAutocompleteCancel()
     */
    public void onAutocompleteCancel()
    {

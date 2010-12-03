@@ -27,14 +27,14 @@ import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
-import org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * This class 
+ * This class is  
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 26, 2010 12:12:36 PM evgen $
@@ -80,20 +80,21 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-      System.out.println(event.getLineContent());
-      System.out.println(event.getFqn());
+      System.out.println("Line content - " + event.getLineContent());
+//      System.out.println("Current token " + event.getCurrentToken().getFqn());
       TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
          try
          {
-         collector.getTokens(event.getLineContent(), event.getFqn(), event.getCursorPositionY(),
+         collector.collectTokens(event.getLineContent(), event.getCurrentToken(), event.getCursorPositionY(),
             event.getCursorPositionX(), event.getTokenList(), this);
          }
-         catch (Throwable e) {
-            Log.debug("Error in token collector", e);
+         catch (Exception e) {
+            Log.error(e.getMessage(), e);
          }
       }
+      
    }
 
    /**
@@ -113,12 +114,12 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       }
       catch (Exception e)
       {
-         Log.fatal("Autocomplete error", e);
+         Log.error(e.getMessage(), e);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler#onTokenSelected(java.lang.Object)
+    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onTokenSelected(java.lang.Object)
     */
    public void onTokenSelected(String value)
    {
@@ -133,7 +134,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler#onCancelAutoComplete()
+    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onCancelAutoComplete()
     */
    public void onCancelAutoComplete()
    {

@@ -23,6 +23,8 @@ import java.util.List;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 /**
+ * Clallback for {@link ImportDeclarationTokenCollector}
+ * 
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -32,6 +34,11 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 public interface ImportDeclarationTokenCollectorCallback
 {
 
+   /**
+    * Fired when tokens collected.
+    * 
+    * @param List of tokens
+    */
    void tokensCollected(List<TokenExt> tokens);
    
 }

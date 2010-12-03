@@ -21,9 +21,12 @@ package org.exoplatform.ide.client.framework.codeassistant;
 
 import java.util.List;
 
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
+
 /**
- * Created by The eXo Platform SAS .
+ * Callback used by {@link TokenCollectorExt}
  * 
+ * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -31,6 +34,15 @@ import java.util.List;
 public interface TokensCollectedCallback<T>
 {
 
+   /**
+    * Fired when tokens collected.
+    * 
+    * 
+    * @param tokens {@link List} of collected tokens.
+    * @param beforeToken
+    * @param tokenToComplete
+    * @param afterToken
+    */
    void onTokensCollected(List<T> tokens, String beforeToken, String tokenToComplete, String afterToken);
 
 }

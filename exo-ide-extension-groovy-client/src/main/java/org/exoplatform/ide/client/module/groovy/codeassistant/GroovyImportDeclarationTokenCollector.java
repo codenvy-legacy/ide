@@ -54,7 +54,7 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector#getImportDeclarationTokens(java.lang.String)
     */
-   public void getImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback)
+   public void collectImportDeclarationTokens(String className, ImportDeclarationTokenCollectorCallback callback)
    {
       this.callback = callback;
       handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);

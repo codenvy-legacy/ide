@@ -29,7 +29,10 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
+import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
@@ -46,23 +49,43 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 26, 2010 4:56:13 PM evgen $
  *
  */
-public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>, ExceptionThrownHandler
+public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>,
+   ExceptionThrownHandler
 {
 
+   private enum Action {
+
+      /**
+       * Get all <b>public</b> methods and fields;
+       */
+      PUBLIC,
+
+      /**
+       * Get all <b>public static</b> methods and fields
+       */
+      PUBLIC_STATIC,
+
+      /**
+       * Get all <b>public</b> constructors 
+       */
+      PUBLIC_CONSTRUCTORS
+   }
+
    private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
-   
+
    private Handlers handlers;
 
    private TokensCollectedCallback<TokenExt> callback;
-   
+
    private String beforeToken;
-   
+
    private String tokenToComplete;
-   
+
    private String afterToken;
-   
+
    private String curentFqn;
-   
+
+   private Action action;
 
    public GroovyTokenCollector(HandlerManager eventBus)
    {
@@ -73,63 +96,133 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenCollector#getTokens(java.lang.String, java.lang.String, int, int, java.util.List, org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback)
     */
    @Override
-   public void getTokens(String line, String fqn, int lineNum, int cursorPos, List<Token> tokenFromParser,
+   public void collectTokens(String line, Token currentToken, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
-      if(line== null || line.isEmpty())
+      if (line == null || line.isEmpty())
       {
-         callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
+         callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
+         return;
       }
-      
+
       this.callback = tokensCollectedCallback;
-      curentFqn = fqn;
-      
-      String subToken = line.substring(0, cursorPos-1);
+
+      String subToken = line.substring(0, cursorPos - 1);
       afterToken = line.substring(cursorPos - 1);
-      
+
       String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
-      String token = split[split.length-1];
-      if(token.contains("."))
+      String token = split[split.length - 1];
+
+      if (token.contains("."))
       {
+
          String varToken = token.substring(0, token.lastIndexOf('.'));
          tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
-         beforeToken = subToken.substring(0,subToken.indexOf(varToken) + varToken.length() + 1);
-         if(fqn == null)
+         beforeToken = subToken.substring(0, subToken.indexOf(varToken) + varToken.length() + 1);
+
+         if (currentToken == null)
          {
             callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
             return;
          }
-         if(classes.containsKey(fqn))
+
+         if (currentToken.getType() != null && currentToken.getType() == TokenType.TYPE)
          {
-            collectPublicInterface(classes.get(fqn));
+            action = Action.PUBLIC_STATIC;
+         }
+         else
+         {
+            action = Action.PUBLIC;
+         }
+
+         curentFqn = currentToken.getFqn();
+         System.out.println(curentFqn);
+         if (classes.containsKey(curentFqn))
+         {
+            filterTokens(classes.get(curentFqn));
             return;
          }
-         
-         
+
          handlers.addHandler(ClassDescriptionReceivedEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-         
-         CodeAssistantService.getInstance().getClassDescription(fqn);         
-      } 
+
+         CodeAssistantService.getInstance().getClassDescription(curentFqn);
+      }
       else
       {
-         
+
          callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
       }
-      
+
    }
 
    /**
-    * @param groovyClass
+    * Filter {@link GroovyClass} by specific {@link Action} and 
+    * call {@link TokensCollectedCallback#onTokensCollected(List, String, String, String)}
+    * to complete collect tokens
+    * 
+    * @param gClass {@link GroovyClass} that represent current class
     */
-   private void collectPublicInterface(GroovyClass groovyClass)
+   private void filterTokens(GroovyClass gClass)
+   {
+      List<TokenExt> arrayList = new ArrayList<TokenExt>();
+      switch (action)
+      {
+         case PUBLIC_STATIC :
+            arrayList.addAll(collectPublicStaticFileldsAndMethods(gClass));
+            break;
+
+         case PUBLIC :
+         default :
+            arrayList.addAll(collectPublicFieldsAndMethods(gClass));
+            break;
+      }
+
+      Collections.sort(arrayList, this);
+      callback.onTokensCollected(arrayList, beforeToken, tokenToComplete, afterToken);
+   }
+
+   /**
+    * Get all <b><code>public static</code></b> fields and methods of Class
+    * 
+    * @param groovyClass {@link GroovyClass}
+    * @return {@link List} of {@link TokenExt} 
+    */
+   private List<TokenExt> collectPublicStaticFileldsAndMethods(GroovyClass groovyClass)
+   {
+      List<TokenExt> staticList = new ArrayList<TokenExt>();
+      for (TokenExt t : groovyClass.getPublicFields())
+      {
+         if (ModifierHelper.isStatic(ModifierHelper.getIntFromString(t.getProperty(TokenExtProperties.MODIFIERS))))
+         {
+            staticList.add(t);
+         }
+      }
+
+      for (TokenExt t : groovyClass.getPublicMethods())
+      {
+         if (ModifierHelper.isStatic(ModifierHelper.getIntFromString(t.getProperty(TokenExtProperties.MODIFIERS))))
+         {
+            staticList.add(t);
+         }
+      }
+
+      return staticList;
+   }
+
+   /**
+    * Get all <b><code>public</code></b> and <b><code>public static</code></b>
+    * fields and methods of class
+    * 
+    * @param groovyClass {@link GroovyClass}
+    * @return {@link List} of {@link TokenExt}
+    */
+   private List<TokenExt> collectPublicFieldsAndMethods(GroovyClass groovyClass)
    {
       List<TokenExt> arrayList = new ArrayList<TokenExt>();
       arrayList.addAll(groovyClass.getPublicFields());
       arrayList.addAll(groovyClass.getPublicMethods());
-      Collections.sort(arrayList, this);
-      callback.onTokensCollected(arrayList, beforeToken, tokenToComplete, afterToken);
-      
+      return arrayList;
    }
 
    /**
@@ -139,10 +232,10 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    public void onClassDecriptionReceived(ClassDescriptionReceivedEvent event)
    {
       handlers.removeHandlers();
-      
+
       classes.put(curentFqn, event.getClassInfo());
-      
-      collectPublicInterface(event.getClassInfo());
+
+      filterTokens(event.getClassInfo());
    }
 
    /**
@@ -155,15 +248,12 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       {
          return t1.getName().compareTo(t2.getName());
       }
-      if(t1.getType().equals(TokenExtType.CLASS) || 
-         t1.getType().equals(TokenExtType.CONSTRUCTOR) ||
-         t1.getType().equals(TokenExtType.FIELD) ||
-         t1.getType().equals(TokenExtType.METHOD) 
-      )
+      if (t1.getType().equals(TokenExtType.CLASS) || t1.getType().equals(TokenExtType.CONSTRUCTOR)
+         || t1.getType().equals(TokenExtType.FIELD) || t1.getType().equals(TokenExtType.METHOD))
       {
          return 1;
       }
-      
+
       return -1;
    }
 

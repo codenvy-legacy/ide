@@ -16,20 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codeassistant.api;
+package org.exoplatform.ide.client.autocompletion;
+
+import org.exoplatform.gwtframework.editor.api.Token;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
+ * @version $Id: $
  *
  */
-public interface TokenSelectedHandler
+public interface AutocompleteTokenSelectedHandler
 {
-
-   void onTokenSelected(String value);
    
-   void onCancelAutoComplete();
+   void onAutocompleteTokenSelected(Token token);
+   
+   void onAutocompleteCancel();
    
 }

@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
-import org.exoplatform.ide.client.framework.codeassistant.api.AutocompleteTokenSelectedHandler;
+import org.exoplatform.ide.client.autocompletion.AutocompleteTokenSelectedHandler;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;

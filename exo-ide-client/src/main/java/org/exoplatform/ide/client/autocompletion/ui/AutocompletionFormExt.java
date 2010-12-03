@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
+import org.exoplatform.ide.client.autocompletion.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-import org.exoplatform.ide.client.framework.codeassistant.api.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -147,7 +147,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       scrollPanel.addMouseOutHandler(mousHandler);
 
-      scrollPanel.setHeight("200px");
+      scrollPanel.setHeight("195px");
       scrollPanel.setWidth("300px");
 
       panel = new VerticalPanel();
@@ -279,7 +279,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       }
       else if (item.getAbsoluteBottom() + 15 > scroll.getAbsoluteBottom())
       {
-         scroll(scroll, item.getAbsoluteBottom() - scroll.getAbsoluteBottom() + 20);
+         scroll(scroll, item.getAbsoluteBottom() - scroll.getAbsoluteBottom() + 15);
       }
 
       selectToken(widgets.get(i));
