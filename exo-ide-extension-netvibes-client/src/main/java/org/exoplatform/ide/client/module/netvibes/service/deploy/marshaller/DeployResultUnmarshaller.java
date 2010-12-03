@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.module.netvibes.service.deploy.marshaller;
 
+import com.google.gwt.xml.client.impl.DOMParseException;
+
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -79,6 +81,7 @@ public class DeployResultUnmarshaller implements Unmarshallable
       try
       {
          Document doc = XMLParser.parse(response.getText());
+
          NodeList resultTags = doc.getElementsByTagName(RESULT);
          if (resultTags != null && resultTags.getLength() > 0)
          {
@@ -98,6 +101,11 @@ public class DeployResultUnmarshaller implements Unmarshallable
                }
             }
          }
+      }
+      catch (DOMParseException domParseException)
+      {
+         deployResult.setSuccess(false);
+         deployResult.setMessage(response.getText());
       }
       catch (Exception e)
       {

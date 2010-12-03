@@ -43,6 +43,13 @@ import org.exoplatform.ide.client.module.netvibes.service.deploy.marshaller.Depl
  */
 public class DeployWidgetServiceImpl extends DeployWidgetService
 {
+   private final String LOGIN = "login";
+
+   private final String PASSWORD = "password";
+
+   private final String APIKEY = "apikey";
+
+   private final String SECRET_KEY = "secretkey";
 
    /**
     * URL for retrieving available categories.
@@ -110,13 +117,16 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
    public void deploy(DeployWidget deployWidget, String login, String password)
    {
       String url = restContext + SERVICE_PATH + DEPLOY;
+      String params = PASSWORD + "=" + password + "&";
+      params += LOGIN + "=" + login+"&";
+      params += APIKEY + "=" + deployWidget.getApiKey()+"&";
+      params += SECRET_KEY + "=" + deployWidget.getSecretKey();
       DeployResult deployResult = new DeployResult();
       WidgetDeployResultReceivedEvent event = new WidgetDeployResultReceivedEvent(deployWidget, deployResult);
       DeployWidgetMarshaller marshaller = new DeployWidgetMarshaller(deployWidget);
       DeployResultUnmarshaller unmarshaller = new DeployResultUnmarshaller(deployResult);
-
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url+"?"+params, loader).header(LOGIN, login).header(PASSWORD, password).data(marshaller).send(callback);
    }
 
 }
