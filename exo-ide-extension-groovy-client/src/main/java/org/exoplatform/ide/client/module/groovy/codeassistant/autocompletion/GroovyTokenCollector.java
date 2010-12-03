@@ -111,7 +111,12 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       afterToken = line.substring(cursorPos - 1);
 
       String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
-      String token = split[split.length - 1];
+      
+      String token = "";
+      if(split.length != 0)
+      {
+         token = split[split.length - 1];
+      }
 
       if (token.contains("."))
       {
