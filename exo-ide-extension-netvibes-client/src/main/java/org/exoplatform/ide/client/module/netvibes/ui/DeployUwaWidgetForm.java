@@ -414,6 +414,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    private ComboBoxField createCombobox(String id, String title, int width)
    {
       ComboBoxField combobox = new ComboBoxField();
+      combobox.setName(id);
       combobox.setDefaultToFirstOption(true);
       combobox.setTitle(title);
       combobox.setTitleOrientation(TitleOrientation.TOP);

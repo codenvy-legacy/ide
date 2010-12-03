@@ -45,6 +45,8 @@ public interface MenuCommands
       public static final String REST_SERVICE_FILE = "REST Service";
 
       public static final String GROOVY_SCRIPT_FILE = "POGO";
+      
+      public static final String NETVIBES_WIDGET = "Netvibes Widget";
 
       public static final String GROOVY_TEMPLATE_FILE = "Template";
 
@@ -69,6 +71,8 @@ public interface MenuCommands
       public static final String DEPLOY_REST_SERVICE = "Deploy";
       
       public static final String DEPLOY_SANDBOX = "Deploy Sandbox";
+      
+      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
       
       public static final String UNDEPLOY_SANDBOX = "Undeploy Sandbox";
       

@@ -100,6 +100,8 @@ public interface ToolbarCommands
       
       public static final String DEPLOY_SANDBOX = "Deploy REST Service Sandbox";
       
+      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget to Ecosystem";
+      
       public static final String UNDEPLOY_SANDBOX = "Undeploy REST Service Sandbox";
       
       public static final String SET_AUTOLOAD = "Set REST Service Autoload";
