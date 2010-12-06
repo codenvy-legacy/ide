@@ -70,6 +70,8 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private static final String GROOVY_FILE_NAME = "TestGroovyScript.groovy";
 
    private static final String CHROMATTIC_FILE_NAME = "TestChromatticDataObject.groovy";
+   
+   private static final String NETVIBES_FILE_NAME = "TestNetvibes.html";
 
    @BeforeClass
    public static void setUp()
@@ -94,11 +96,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       selectItemInWorkspaceTree(FOLDER_NAME);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "groovy", REST_SERVICE_FILE_NAME);
       testFileSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
       testFileSaveAs(MenuCommands.New.XML_FILE, "xml", XML_FILE_NAME);
@@ -109,6 +110,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       testFileSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       testFileSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
       testFileSaveAs(MenuCommands.New.CHROMATTIC, "groovy", CHROMATTIC_FILE_NAME);
+      testFileSaveAs(MenuCommands.New.NETVIBES_WIDGET, "html", NETVIBES_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       testFilesCreatedOnServer();
    }
@@ -130,15 +132,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       IDE.editor().closeTab(1);
 
-      //TODO***********fix***************
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      //*****************************
-
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-      //    selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -179,12 +173,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
