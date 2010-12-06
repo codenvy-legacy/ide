@@ -246,12 +246,15 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       //select file
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      //call Open With window
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='"
-         + MenuCommands.File.OPEN_WITH + "']", "");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      
+//      //call Open With window
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      Thread.sleep(TestConstants.SLEEP);
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='"
+//         + MenuCommands.File.OPEN_WITH + "']", "");
+//      Thread.sleep(TestConstants.SLEEP);
    }
    
    private void checkOpenWithWindowCodeEditorIsDefault() throws Exception

@@ -56,18 +56,22 @@ public class ShowHideLineNumbersTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(FOLDER_NAME);
       //------- 1 ---------------
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + "Edit" + "']", "");
-      //check there is no show line number command in menu (enabled or disabled)
-      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='"
-         + MenuCommands.Edit.SHOW_LINE_NUMBERS + "']"));
-      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
-         + MenuCommands.Edit.SHOW_LINE_NUMBERS + "']"));
-      //check there is no hide line number command in menu (enabled or disabled)
-      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='"
-         + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
-      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
-         + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
-      selenium.mouseDown("//div[@class='exo-lockLayer']/");
+      
+      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, false);
+      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, false);
+      
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + "Edit" + "']", "");
+//      
+//      //check there is no show line number command in menu (enabled or disabled)
+//      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + MenuCommands.Edit.SHOW_LINE_NUMBERS + "']"));
+//      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='" + MenuCommands.Edit.SHOW_LINE_NUMBERS + "']"));
+//
+//      //check there is no hide line number command in menu (enabled or disabled)
+//      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
+//      assertFalse(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='" + MenuCommands.Edit.HIDE_LINE_NUMBERS + "']"));
+//      
+//      selenium.mouseDown("//div[@class='exo-lockLayer']/");    
+      
       //------- 2 ---------------
       IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
 

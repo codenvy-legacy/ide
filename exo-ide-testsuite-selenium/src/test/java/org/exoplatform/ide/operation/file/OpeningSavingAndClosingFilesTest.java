@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -198,16 +199,20 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       openXML();
    }
 
-   public void reopenAndChekSavedFile() throws InterruptedException
+   public void reopenAndChekSavedFile() throws Exception
    {
       // ------8-------
       // reopenFiles
       // Open Css:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -221,9 +226,12 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[2]//iframe"));
       // Open HTML:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[6]/col[1]");
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -237,9 +245,12 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[4]//iframe"));
       // Open JavaScript:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -253,9 +264,13 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[5]//iframe"));
       // Open XML:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[9]/col[1]");
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+//      Thread.sleep(TestConstants.SLEEP);
+      
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));

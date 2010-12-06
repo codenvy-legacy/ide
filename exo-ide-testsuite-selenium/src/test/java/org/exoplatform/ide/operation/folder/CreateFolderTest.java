@@ -20,17 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * Created by The eXo Platform SAS.
@@ -95,10 +94,14 @@ public class CreateFolderTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'New')]", "");
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Folder...']", "");
+
+      IDE.menu().runCommand(MenuCommands.File.FILE, "New", "Folder...");
+      
+//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+//      Thread.sleep(TestConstants.SLEEP);
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'New')]", "");
+//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Folder...']", "");
+      
       checkCreateFolderFormElements();
       selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]");
       Thread.sleep(TestConstants.SLEEP);

@@ -62,6 +62,17 @@ public class Menu
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
+   public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
+      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + menuName + "']", "");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']", "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
    /**
     * Check is command in top menu visible or hidden.
     * 
