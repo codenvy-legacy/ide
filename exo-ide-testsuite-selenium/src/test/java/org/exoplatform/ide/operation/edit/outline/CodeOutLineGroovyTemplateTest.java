@@ -48,7 +48,8 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
-   
+
+   @Ignore      //TODO Issue IDE - 466
    @BeforeClass
    public static void setUp()
    {
@@ -67,7 +68,8 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
+   @Ignore      //TODO Issue IDE - 466
    @AfterClass
    public static void tearDown() throws Exception
    {
@@ -77,8 +79,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
 
    // IDE-178:Groovy Template Code Outline
   
-   //TODO Issue IDE - 466
-   @Ignore 
+   @Ignore      //TODO Issue IDE - 466
    @Test
    public void testCodeOutLineGroovyTemplate() throws Exception
    {

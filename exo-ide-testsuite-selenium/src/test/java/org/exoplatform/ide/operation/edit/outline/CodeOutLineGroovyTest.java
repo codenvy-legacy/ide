@@ -56,6 +56,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
    
+   @Ignore      //TODO Issue IDE - 466
    @BeforeClass
    public static void setUp()
    {
@@ -74,10 +75,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       }
    }
 
-
-   //TODO Issue IDE - 466
-   @Ignore 
-   
+   @Ignore      //TODO Issue IDE - 466
    @Test
    public void testCodeOutLineGroovy() throws Exception
    {
@@ -123,6 +121,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       outlineTreeHelper.checkOutlineTree();
    }
 
+   @Ignore      //TODO Issue IDE - 466
    @AfterClass
    public static void tearDown() throws Exception
    {
