@@ -38,33 +38,58 @@
          <artifactId>exo.core.component.security.core</artifactId>
       </dependency>
       <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.script.groovy</artifactId>
-    </dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.script.groovy</artifactId>
+      </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
          <artifactId>jsr250-api</artifactId>
       </dependency>
       <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-log4j12</artifactId>
-       <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>hsqldb</groupId>
-        <artifactId>hsqldb</artifactId>
-        <version>1.8.0.7</version>
-        <scope>test</scope>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
       </dependency>
-      <dependency>                                                                                                                                                                                             
-         <groupId>junit</groupId>                                                                                                                                                                              
-         <artifactId>junit</artifactId>                                                                                                                                                                        
-         <version>4.7</version>                                                                                                                                                                                
-         <scope>test</scope>                                                                                                                                                                                   
-      </dependency> 
-       <dependency>                                                                                                                                          
-         <groupId>org.codehaus.groovy</groupId>                                                                                                                                                                
-         <artifactId>groovy-all</artifactId>                                                                                                                                                                   
+      <dependency>
+         <groupId>hsqldb</groupId>
+         <artifactId>hsqldb</artifactId>
+         <version>1.8.0.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.groovy</groupId>
+         <artifactId>groovy-all</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.apt</artifactId>
+         <scope>compile</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.spi</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.ext</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.dataobject</artifactId>
       </dependency>
    </dependencies>
    <build>

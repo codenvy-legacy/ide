@@ -4,7 +4,11 @@
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
-      <type>org.exoplatform.ide.chromattic.IDEChromatticRestService</type>
+      <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
    </component>
+   
+   <component>
+  <type>org.chromattic.dataobject.DataObjectService</type>
+  </component>
 
 </configuration>
