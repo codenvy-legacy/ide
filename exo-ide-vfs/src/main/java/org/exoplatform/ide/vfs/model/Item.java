@@ -131,4 +131,20 @@ public abstract class Item
    {
       return data.getProperty(name);
    }
+   
+   /**
+    * @return <code>true</code> if item is Document
+    */
+   public boolean isDocument()
+   {
+      return Type.DOCUMENT == getType();
+   }
+   
+   /**
+    * @return <code>true</code> if item is Folder
+    */
+   public boolean isFolder()
+   {
+      return Type.FOLDER == getType();
+   }
 }

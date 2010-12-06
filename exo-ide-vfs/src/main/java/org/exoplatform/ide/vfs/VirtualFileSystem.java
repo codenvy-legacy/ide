@@ -20,7 +20,9 @@ package org.exoplatform.ide.vfs;
 
 import org.exoplatform.ide.vfs.model.AccessControlEntry;
 import org.exoplatform.ide.vfs.model.Item;
+import org.exoplatform.ide.vfs.model.VirtualFileSystemInfo;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,13 @@ public interface VirtualFileSystem
    Content getContent(ObjectId identifier) throws ConstraintException, ObjectNotFoundException;
 
    /**
+    * Get information about virtual file system and its capabilities.
+    * 
+    * @return info about this virtual file system
+    */
+   VirtualFileSystemInfo getInfo();
+
+   /**
     * Get object by identifier.
     * 
     * @param identifier the object's identifier
@@ -82,14 +91,14 @@ public interface VirtualFileSystem
 
    ItemsIterator<Item> getVersions(ObjectId identifier) throws ObjectNotFoundException;
 
-   void lock(ObjectId identifier) throws ObjectNotFoundException, LockException;
+   LockToken lock(ObjectId identifier) throws ObjectNotFoundException, LockException;
 
    ObjectId move(ObjectId identifier, ObjectId newparent) throws ConstraintException, ObjectNotFoundException,
       LockException;
 
    ItemsIterator<Item> query(Query query);
 
-   void unlock(ObjectId identifier) throws ObjectNotFoundException, LockException;
+   void unlock(ObjectId identifier, Collection<LockToken> lockTokens) throws ObjectNotFoundException, LockException;
 
    void updateACL(ObjectId identifier, List<AccessControlEntry> acl, Boolean override) throws ConstraintException,
       ObjectNotFoundException, LockException;

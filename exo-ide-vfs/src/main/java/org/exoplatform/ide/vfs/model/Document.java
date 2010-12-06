@@ -19,7 +19,7 @@
 package org.exoplatform.ide.vfs.model;
 
 import org.exoplatform.ide.vfs.ItemData;
-
+import org.exoplatform.ide.vfs.VersionId;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -27,9 +27,12 @@ import org.exoplatform.ide.vfs.ItemData;
  */
 public class Document extends Item
 {
-   public Document(ItemData data)
+   protected final VersionId versionIdentifier;
+
+   public Document(ItemData data, VersionId versionIdentifier)
    {
       super(data);
+      this.versionIdentifier = versionIdentifier;
    }
 
    /**
@@ -39,5 +42,13 @@ public class Document extends Item
    public final Type getType()
    {
       return Type.DOCUMENT;
+   }
+
+   /**
+    * @return id of current version of Document
+    */
+   public VersionId getVersionId()
+   {
+      return versionIdentifier;
    }
 }

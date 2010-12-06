@@ -22,6 +22,6 @@ package org.exoplatform.ide.vfs;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public interface VersionId
+public interface LockToken
 {
 }

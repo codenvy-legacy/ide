@@ -22,6 +22,14 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Item data from persistent storage of virtual file system. Basically it should
+ * not give access to content if ItemData represents Document since content may
+ * be stored separately. However it is implementation specific. ItemData is
+ * immutable updating of meta information or(and) content should be done via
+ * corresponded methods of {@link VirtualFileSystem}. Some properties may be
+ * updated automatically, e.g. if content of document is updated then
+ * 'content-type' properties and so on may be updated also.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */

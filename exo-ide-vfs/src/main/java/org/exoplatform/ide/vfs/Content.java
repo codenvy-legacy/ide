@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -26,13 +27,90 @@ import java.util.Calendar;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public interface Content
+public class Content
 {
-   Calendar getLastModificationDate();
+   /** Stream. */
+   protected InputStream stream;
 
-   long getLength();
+   /** Media type of stream. */
+   protected MimeType mediaType;
 
-   MimeType getMediaType();
+   /** Length. */
+   protected long length;
 
-   InputStream getStream() throws IOException;
+   /** Last modification date. */
+   protected Calendar lastModificationDate;
+
+   /**
+    * @param bytes source bytes of content
+    * @param mediaType media type of content
+    * @param lastModificationDate last modification date
+    */
+   public Content(byte[] bytes, MimeType mediaType, Calendar lastModificationDate)
+   {
+      this(new ByteArrayInputStream(bytes), bytes.length, mediaType, lastModificationDate);
+   }
+
+   /**
+    * @param stream source stream
+    * @param length content length. Must be -1 if content length is unknown.
+    * @param mediaType media type of content
+    * @param lastModificationDate last modification date
+    */
+   public Content(InputStream stream, long length, MimeType mediaType, Calendar lastModificationDate)
+   {
+      this.stream = stream;
+      this.length = length;
+      this.mediaType = mediaType;
+      this.lastModificationDate = lastModificationDate;
+   }
+
+   /**
+    * @param stream source stream
+    * @param mediaType media type of content
+    * @param lastModificationDate last modification date
+    */
+   public Content(InputStream stream, MimeType mediaType, Calendar lastModificationDate)
+   {
+      this(stream, -1, mediaType, lastModificationDate);
+   }
+
+   protected Content()
+   {
+   }
+
+   /**
+    * @return date of last modification of content
+    */
+   public Calendar getLastModificationDate()
+   {
+      return lastModificationDate;
+   }
+
+   /**
+    * Get length of content in bytes. If length can't be determined then -1 must
+    * be returned.
+    * 
+    * @return length of content in bytes
+    */
+   public long getLength()
+   {
+      return length;
+   }
+
+   /**
+    * @return media type of content
+    */
+   public MimeType getMediaType()
+   {
+      return mediaType;
+   }
+
+   /**
+    * @return content's binary stream
+    */
+   public InputStream getStream() throws IOException
+   {
+      return stream;
+   }
 }
