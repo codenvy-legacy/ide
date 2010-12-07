@@ -185,23 +185,18 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          String modfImg = "";
          
          if (TokenType.CLASS.equals(token.getType()))
-         {
-            
-            boolean isPrivate = token.getModifiers().contains(Token.Modifier.PRIVATE);
-            boolean isProtected = token.getModifiers().contains(Token.Modifier.PROTECTED);
-            boolean isPublic = token.getModifiers().contains(Token.Modifier.PUBLIC);
-            
-            if (isPrivate)
+         {            
+            if (isPrivate(token))
             {
                modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
                   + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png" + "\" />";
             }
-            else if (isProtected)
+            else if (isProtected(token))
             {
                modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
                   + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png" + "\" />";
             }
-            else if (isPublic)
+            else if (isPublic(token))
             {
             }
             else
@@ -213,9 +208,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             
          }
 
-         final boolean isSynchronized = token.getModifiers().contains(Token.Modifier.SYNCHRONIZED);
          String synchImg = "";
-         if (isSynchronized)
+         if (isSynchronized(token))
          {
             final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
             synchImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft 
@@ -236,7 +230,6 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       }
       return name;
    }
-   
    
    /**
     * Checks, whether method has deprecated annotation.
@@ -300,24 +293,20 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     * @return {@link String} icon
     */
    private String getIconForJavaFiles(Token token)
-   {
-      boolean isPrivate = token.getModifiers().contains(Token.Modifier.PRIVATE);
-      boolean isProtected = token.getModifiers().contains(Token.Modifier.PROTECTED);
-      boolean isPublic = token.getModifiers().contains(Token.Modifier.PUBLIC);
-      
+   {      
       switch (token.getType())
       {
          case VARIABLE :
          case METHOD :
-            if (isPrivate)
+            if (isPrivate(token))
             {
                return PRIVATE_METHOD_ICON;
             }
-            else if (isProtected)
+            else if (isProtected(token))
             {
                return PROTECTED_METHOD_ICON;
             }
-            else if (isPublic)
+            else if (isPublic(token))
             {
                return PUBLIC_METHOD_ICON;
             }
@@ -325,16 +314,17 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                return DEFAULT_METHOD_ICON;
             }
+            
          case PROPERTY :
-            if (isPrivate)
+            if (isPrivate(token))
             {
                return PRIVATE_FIELD_ICON;
             }
-            else if (isProtected)
+            else if (isProtected(token))
             {
                return PROTECTED_FIELD_ICON;
             }
-            else if (isPublic)
+            else if (isPublic(token))
             {
                return PUBLIC_FIELD_ICON;
             }
@@ -342,8 +332,10 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                return DEFAULT_FIELD_ICON;
             }
+            
          case CLASS :
             return CLASS_ICON;
+            
          default :
             return "";
       }
@@ -354,12 +346,6 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     * @return html element with modifers
     */
    private String getModifiersContainer(Token token){
-      //Get modifiers:
-      final boolean isStatic = token.getModifiers().contains(Token.Modifier.STATIC);
-      final boolean isFinal =  token.getModifiers().contains(Token.Modifier.FINAL);
-      final boolean isAbstract = token.getModifiers().contains(Token.Modifier.ABSTRACT);
-      final boolean isTransient = token.getModifiers().contains(Token.Modifier.TRANSIENT);
-      final boolean isVolatile = token.getModifiers().contains(Token.Modifier.VOLATILE);
       //Get annotation list like string:
       String annotationList = getAnnotationList(token);
       
@@ -368,16 +354,59 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       
       String span = "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: "+size+"px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
       span += (annotationList.length() > 0) ? "<font color ='#000000' style='float: right;'>@</font>" : "";
-      span += (isAbstract) ? "<font color ='#004e00' style='float: right;'>a</font>" : "";
-      span += (isFinal) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
-      span += (isStatic) ? "<font color ='#6d0000' style='float: right;'>s</font>" : "";
-      span += (isVolatile) ? "<font color ='#6d0000' style='float: right;'>v</font>" : "";
-      span += (isTransient) ? "<font color ='#6d0000' style='float: right;'>t</font>" : "";
+      span += (isAbstract(token)) ? "<font color ='#004e00' style='float: right;'>a</font>" : "";
+      span += (isFinal(token)) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
+      span += (isStatic(token)) ? "<font color ='#6d0000' style='float: right;'>s</font>" : "";
+      span += (isVolative(token)) ? "<font color ='#6d0000' style='float: right;'>v</font>" : "";
+      span += (isTransient(token)) ? "<font color ='#6d0000' style='float: right;'>t</font>" : "";
       span += "</span>";
       return span;
    }
+
+   private boolean isFinal(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.FINAL);
+   }
+
+   private boolean isAbstract(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.ABSTRACT);
+   }
+
+   private boolean isTransient(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.TRANSIENT);
+   }
+
+   private boolean isVolative(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.VOLATILE);
+   }
+
+   private boolean isStatic(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.STATIC);
+   }   
+
+   private boolean isProtected(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PROTECTED);
+   }
+
+   private boolean isPrivate(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PRIVATE);
+   }
+
+   private boolean isPublic(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PUBLIC);
+   }
    
-   
+   private boolean isSynchronized(Token token)
+   {
+      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.SYNCHRONIZED);
+   }
    
    /**
     * @param annotationList 
