@@ -32,7 +32,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -56,7 +55,6 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
 
-   @Ignore
    @BeforeClass
    public static void setUp()
    {
@@ -77,8 +75,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    }
 
       
-   //TODO Issue IDE - 466
-   @Ignore 
+   //TODO Issue IDE - 466 
    @Test
    public void testCodeOutLineRestService() throws Exception
    {
@@ -99,7 +96,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
 
       // create initial outline tree map
-      outlineTreeHelper.addOutlineItem(0, "@ TestService", 6, false);
+      outlineTreeHelper.addOutlineItem(0, "@  TestService", 6, false);
       outlineTreeHelper.addOutlineItem(1, "Dep", 32, false);
 
       // check is tree created correctly
@@ -112,17 +109,18 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       outlineTreeHelper.clearOutlineTreeInfo();
 
       // TODO update content of node
-      outlineTreeHelper.addOutlineItem(0, "@ TestService", 6);
-      outlineTreeHelper.addOutlineItem(1, "@ post1(@ String, @ String, @ String, String) : String", 12);
-      outlineTreeHelper.addOutlineItem(2, "@ post2(@ String, @ java.lang.String, @ String, java.lang.String) : java.lang.String", 24);
+      outlineTreeHelper.addOutlineItem(0, "@  TestService", 6);
+      outlineTreeHelper.addOutlineItem(1, "@  post1(@   String, @   String, @   String, String) : String", 12);
+      outlineTreeHelper.addOutlineItem(2, "@  post2(@   String, @   java.lang.String, @   String, java.lang.String) : java.lang.String", 24);
 
       outlineTreeHelper.addOutlineItem(3, "Dep", 32);
       outlineTreeHelper.addOutlineItem(4, "name : String", 34);
       outlineTreeHelper.addOutlineItem(5, "age : int", 35);
       outlineTreeHelper.addOutlineItem(6, "getAge() : int", 37);
       outlineTreeHelper.addOutlineItem(7, "addYear() : void", 41);
-      outlineTreeHelper.addOutlineItem(8, "greet(String) : String", 46);
-      outlineTreeHelper.addOutlineItem(9, "address : int", 50);
+      outlineTreeHelper.addOutlineItem(8, "i : int", 42);
+      outlineTreeHelper.addOutlineItem(9, "greet(String) : String", 46);
+      outlineTreeHelper.addOutlineItem(10, "address : int", 50);
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
