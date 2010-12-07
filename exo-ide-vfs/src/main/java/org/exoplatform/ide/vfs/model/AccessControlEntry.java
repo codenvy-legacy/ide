@@ -66,6 +66,6 @@ public class AccessControlEntry
 
    public String toString()
    {
-      return "principal: " + principal + ", permissions: " + permissions;
+      return "PRINCIPAL: " + principal + ", PERMISSIONS: " + permissions;
    }
 }

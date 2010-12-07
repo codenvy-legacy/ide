@@ -19,6 +19,9 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * A lock token is a opaque token, which identifies a particular lock. Is used
+ * for replace existed lock or performing actions on locked object.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */

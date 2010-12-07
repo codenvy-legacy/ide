@@ -19,11 +19,11 @@
 package org.exoplatform.ide.vfs;
 
 /**
- * If requested action requires optional capability that is not supported by
- * repository.
+ * If requested action requires optional capability that is not supported.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: NotSupportedException.java 63633 2010-12-03 16:07:20Z andrew00x
+ *          $
  */
 @SuppressWarnings("serial")
 public class NotSupportedException extends RuntimeException

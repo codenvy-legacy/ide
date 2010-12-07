@@ -19,18 +19,18 @@
 package org.exoplatform.ide.vfs;
 
 /**
- * Thrown if requested object does not exist.
+ * Thrown if performed action is not allowed for caller.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class ObjectNotFoundException extends Exception
+public class PermissionDeniedException extends Exception
 {
    /**
     * @param message the message
     */
-   public ObjectNotFoundException(String message)
+   public PermissionDeniedException(String message)
    {
       super(message);
    }

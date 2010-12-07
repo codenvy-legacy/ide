@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.exoplatform.ide.vfs.ConstraintException;
+import org.exoplatform.ide.vfs.LockException;
+import org.exoplatform.ide.vfs.ObjectNotFoundException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Document;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -29,15 +37,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
-import org.exoplatform.ide.vfs.ConstraintException;
-import org.exoplatform.ide.vfs.ItemsIterator;
-import org.exoplatform.ide.vfs.LockException;
-import org.exoplatform.ide.vfs.ObjectNotFoundException;
-import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.Document;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Property;
 
 
 /**
@@ -108,7 +107,7 @@ public interface VirtualFileSystem
    @Path("/children/{folder}")
    @GET
    @Produces("text/json")
-   ItemsIterator<Item> getChildren(@PathParam("folder") String folderId, @QueryParam("offset") int offset, @QueryParam("numItems") int numItems) throws ConstraintException, ObjectNotFoundException;
+   List<Item> getChildren(@PathParam("folder") String folderId, @QueryParam("offset") int offset, @QueryParam("numItems") int numItems) throws ConstraintException, ObjectNotFoundException;
 
    /**
     * Get content of Document.
@@ -147,7 +146,7 @@ public interface VirtualFileSystem
    @Path("/versions/{document}")
    @GET
    @Produces("text/json")
-   ItemsIterator<Document> getVersions(@PathParam("document") String documentId) throws ObjectNotFoundException;
+   List<Document> getVersions(@PathParam("document") String documentId) throws ObjectNotFoundException;
 
    @Path("/lock/{document}")
    @POST
@@ -163,7 +162,7 @@ public interface VirtualFileSystem
    @Path("/query")
    @GET
    @Produces("text/json")
-   ItemsIterator<Item> query(@QueryParam("text") String text, @QueryParam("path") String path);
+   List<Item> query(@QueryParam("text") String text, @QueryParam("path") String path);
 
    @Path("/unlock/{document}")
    @POST

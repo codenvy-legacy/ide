@@ -20,7 +20,6 @@ package org.exoplatform.ide.vfs.model;
 
 import org.exoplatform.ide.vfs.ItemData;
 
-
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$

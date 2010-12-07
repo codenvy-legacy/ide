@@ -82,5 +82,4 @@ public class Property<T>
          values = new ArrayList<T>();
       return values;
    }
-
 }

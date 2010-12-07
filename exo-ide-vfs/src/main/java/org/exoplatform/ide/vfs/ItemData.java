@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -56,7 +55,7 @@ public interface ItemData
     * @param filter property filter
     * @return subset of properties
     */
-   Map<String, Property<?>> getProperties(Collection<String> filter);
+   Map<String, Property<?>> getProperties(PropertyFilter filter);
 
    /**
     * Get property with specified name.

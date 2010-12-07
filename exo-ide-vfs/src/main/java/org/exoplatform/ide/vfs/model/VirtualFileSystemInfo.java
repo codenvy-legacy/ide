@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.model;
 
+import org.exoplatform.ide.vfs.ObjectId;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,12 +27,24 @@ import java.util.Collection;
  * Describe virtual file system and its capabilities.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: VirtualFileSystemInfo.java 63654 2010-12-06 09:49:34Z andrew00x
+ *          $
  */
 public class VirtualFileSystemInfo
 {
+   /**
+    * ACL capabilities.
+    */
    public enum ACLCapability {
-      NONE("none"), READ("read"), WRITE("write");
+      /** ACL is not supported. */
+      NONE("none"),
+      /**
+       * ACL may be only discovered but can't be changed over virtual file
+       * system API.
+       */
+      READ("read"),
+      /** ACL may be discovered and managed. */
+      MANAGE("manage");
 
       private final String value;
 
@@ -72,9 +86,20 @@ public class VirtualFileSystemInfo
       }
    }
 
+   /**
+    * Query capabilities.
+    */
    public enum QueryCapability {
-      NONE("none"), METADATAONLY("metadataonly"), FULLTEXTONLY("fulltextonly"), BOTHSEPARATE("bothseparate"), BOTHCOMBINED(
-         "bothcombined");
+      /** Query is not supported. */
+      NONE("none"),
+      /** Query supported for properties only. */
+      PROPERTIES("properties"),
+      /** Full text search supported only. */
+      FULLTEXT("fulltext"),
+      /** Both queries are supported but not in one statement. */
+      BOTHSEPARATE("bothseparate"),
+      /** Both queries are supported in one statement. */
+      BOTHCOMBINED("bothcombined");
 
       private final String value;
 
@@ -117,8 +142,68 @@ public class VirtualFileSystemInfo
       }
    }
 
+   /**
+    * Locking capabilities.
+    */
+   public enum LockCapability {
+      /** Locking is not supported. */
+      NONE("none"),
+      /** Lock may be placed on object itself. Deep locking is not supported. */
+      OBJECT("object"),
+      /** Deep locking supported. */
+      DEEP("deep");
+
+      private final String value;
+
+      private LockCapability(String value)
+      {
+         this.value = value;
+      }
+
+      /**
+       * @return value of LockCapability
+       */
+      public String value()
+      {
+         return value;
+      }
+
+      /**
+       * Get LockCapability instance from string value.
+       * 
+       * @param value string value
+       * @return LockCapability
+       * @throws IllegalArgumentException if there is no corresponded
+       *            LockCapability for specified <code>value</code>
+       */
+      public static LockCapability fromValue(String value)
+      {
+         for (LockCapability e : LockCapability.values())
+            if (e.value.equals(value))
+               return e;
+         throw new IllegalArgumentException(value);
+      }
+
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString()
+      {
+         return value;
+      }
+   }
+
+   /**
+    * Basic permissions.
+    */
    public enum BasicPermissions {
-      READ("read"), WRITE("write"), ALL("all");
+      /** Read permission. */
+      READ("read"),
+      /** Write permission. */
+      WRITE("write"),
+      /** All. Any operation allowed. */
+      ALL("all");
 
       private final String value;
 
@@ -165,125 +250,115 @@ public class VirtualFileSystemInfo
 
    private boolean versioningSupported;
 
-   private boolean lockSupported;
-
    private String anonymousPrincipal;
 
    private Collection<String> permissions;
+
+   private LockCapability lockCapability;
 
    private ACLCapability aclCapability;
 
    private QueryCapability queryCapability;
 
-   public VirtualFileSystemInfo(boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
-      Collection<String> permissions, ACLCapability aclCapability, QueryCapability queryCapability)
+   private ObjectId rootFolderId;
+
+   private String rootFolderPath;
+
+   public VirtualFileSystemInfo(boolean versioningSupported, String anonymousPrincipal, Collection<String> permissions,
+      LockCapability lockCapability, ACLCapability aclCapability, QueryCapability queryCapability,
+      ObjectId rootFolderId, String rootFolderPath)
    {
       this.versioningSupported = versioningSupported;
-      this.lockSupported = lockSupported;
       this.anonymousPrincipal = anonymousPrincipal;
       this.permissions = permissions;
+      this.lockCapability = lockCapability;
       this.aclCapability = aclCapability;
       this.queryCapability = queryCapability;
    }
 
    public VirtualFileSystemInfo()
    {
-      this(false, false, ANONYMOUS_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE, QueryCapability.NONE);
+      this(false, ANONYMOUS_PRINCIPAL, new ArrayList<String>(), LockCapability.NONE, ACLCapability.NONE,
+         QueryCapability.NONE, null, null);
    }
 
-   /**
-    * @return the versioningSupported
-    */
    public boolean isVersioningSupported()
    {
       return versioningSupported;
    }
 
-   /**
-    * @param versioningSupported the versioningSupported to set
-    */
    public void setVersioningSupported(boolean versioningSupported)
    {
       this.versioningSupported = versioningSupported;
    }
 
-   /**
-    * @return the lockSupported
-    */
-   public boolean isLockSupported()
-   {
-      return lockSupported;
-   }
-
-   /**
-    * @param lockSupported the lockSupported to set
-    */
-   public void setLockSupported(boolean lockSupported)
-   {
-      this.lockSupported = lockSupported;
-   }
-
-   /**
-    * @return the anonymousPrincipal
-    */
    public String getAnonymousPrincipal()
    {
       return anonymousPrincipal;
    }
 
-   /**
-    * @param anonymousPrincipal the anonymousPrincipal to set
-    */
    public void setAnonymousPrincipal(String anonymousPrincipal)
    {
       this.anonymousPrincipal = anonymousPrincipal;
    }
 
-   /**
-    * @return the permissions
-    */
    public Collection<String> getPermissions()
    {
       return permissions;
    }
 
-   /**
-    * @param permissions the permissions to set
-    */
    public void setPermissions(Collection<String> permissions)
    {
       this.permissions = permissions;
    }
 
-   /**
-    * @return the aclCapability
-    */
+   public LockCapability getLockCapability()
+   {
+      return lockCapability;
+   }
+
+   public void setLockSupported(LockCapability lockCapability)
+   {
+      this.lockCapability = lockCapability;
+   }
+
    public ACLCapability getAclCapability()
    {
       return aclCapability;
    }
 
-   /**
-    * @param aclCapability the aclCapability to set
-    */
    public void setAclCapability(ACLCapability aclCapability)
    {
       this.aclCapability = aclCapability;
    }
 
-   /**
-    * @return the queryCapability
-    */
    public QueryCapability getQueryCapability()
    {
       return queryCapability;
    }
 
-   /**
-    * @param queryCapability the queryCapability to set
-    */
    public void setQueryCapability(QueryCapability queryCapability)
    {
       this.queryCapability = queryCapability;
+   }
+
+   public ObjectId getRootFolderId()
+   {
+      return rootFolderId;
+   }
+
+   public void setRootFolderId(ObjectId rootFolderId)
+   {
+      this.rootFolderId = rootFolderId;
+   }
+
+   public String getRootFolderPath()
+   {
+      return rootFolderPath;
+   }
+
+   public void setRootFolderPath(String rootFolderPath)
+   {
+      this.rootFolderPath = rootFolderPath;
    }
 }

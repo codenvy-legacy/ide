@@ -19,6 +19,8 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * Thrown if object on which the action performed is locked.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */

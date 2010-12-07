@@ -19,6 +19,8 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * Version identifier.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */

@@ -18,29 +18,18 @@
  */
 package org.exoplatform.ide.vfs;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public interface ItemsIterator<E> extends Iterator<E>
+@SuppressWarnings("serial")
+public class InvalidArgumentException extends Exception
 {
    /**
-    * Skip specified number of element in collection.
-    * 
-    * @param skip the number of items to skip
-    * @throws NoSuchElementException if skipped past the last item in the
-    *         iterator
+    * @param message the message
     */
-   void skip(int skip) throws NoSuchElementException;
-
-   /**
-    * Get total number of items in iterator. If not able determine number of
-    * items then -1 will be returned.
-    * 
-    * @return number of items or -1
-    */
-   int size();
+   public InvalidArgumentException(String message)
+   {
+      super(message);
+   }
 }

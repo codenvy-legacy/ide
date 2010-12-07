@@ -20,8 +20,6 @@ package org.exoplatform.ide.vfs.shared;
 
 import java.util.Calendar;
 
-import org.exoplatform.ide.vfs.MimeType;
-
 
 
 /**
@@ -35,7 +33,7 @@ public interface Document extends Item
 
    long getLength();
 
-   MimeType getMediaType();
+   String getMediaType();
    
    String getVersionId();
 

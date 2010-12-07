@@ -21,8 +21,8 @@ package org.exoplatform.ide.vfs.model;
 import org.exoplatform.ide.vfs.ItemData;
 import org.exoplatform.ide.vfs.ObjectId;
 import org.exoplatform.ide.vfs.Property;
+import org.exoplatform.ide.vfs.PropertyFilter;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -111,12 +111,12 @@ public abstract class Item
    }
 
    /**
-    * Get subset of properties with specified names.
+    * Get filtered subset of properties.
     * 
     * @param filter property filter
     * @return subset of properties
     */
-   public Map<String, Property<?>> getProperties(Collection<String> filter)
+   public Map<String, Property<?>> getProperties(PropertyFilter filter)
    {
       return data.getProperties(filter);
    }

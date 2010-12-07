@@ -19,19 +19,18 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * SQL query statement holder.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class Query
 {
-   private final boolean searchAllVersions;
-
    private final String statement;
 
-   public Query(String statement, boolean searchAllVersion)
+   public Query(String statement)
    {
       this.statement = statement;
-      this.searchAllVersions = searchAllVersion;
    }
 
    /**
@@ -40,14 +39,5 @@ public class Query
    public String getStatement()
    {
       return statement;
-   }
-
-   /**
-    * @return TRUE if all versions must be searched. If FALSE then only latest
-    *            versions will be searched. 
-    */
-   public boolean isSearchAllVersions()
-   {
-      return searchAllVersions;
    }
 }
