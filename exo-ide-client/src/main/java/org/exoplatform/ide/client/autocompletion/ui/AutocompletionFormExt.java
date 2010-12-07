@@ -31,12 +31,16 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
 
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -62,8 +66,11 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
+ * This class is UI component that represent autocompletion form.
+ * This form works with any bean, but also required implementation of {@link TokenWidgetFactory}
+ * to build {@link TokenWidget}
+ * 
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
  *
@@ -104,6 +111,8 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
    private List<TokenWidget<T>> widgets;
 
    private List<TokenWidget<T>> allWidgets;
+   
+   private boolean isTextBoxHasFocus = true;
 
    public AutocompletionFormExt(HandlerManager eventBus, int left, int top, String prefix, List<T> items,
       TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler handler)
@@ -135,7 +144,25 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       textBox.setWidth("100%");
       textBox.setText(prefix);
       textBox.setStyleName(Style.AUTO_EDIT);
-      textBox.addChangeHandler(this);
+
+      
+      textBox.addFocusHandler(new FocusHandler()
+      {
+         
+         public void onFocus(FocusEvent event)
+         {
+            isTextBoxHasFocus = true;
+         }
+      });
+      
+      textBox.addBlurHandler(new BlurHandler()
+      {
+         
+         public void onBlur(BlurEvent event)
+         {
+            isTextBoxHasFocus = false;
+         }
+      });
 
       flowPanel = new FlowPanel();
 
@@ -178,7 +205,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       allWidgets = new ArrayList<TokenWidget<T>>();
       for (T t : items)
       {
-         TokenWidget<T> w = widgetFactory.getTokenWidget(t);
+         TokenWidget<T> w = widgetFactory.buildTokenWidget(t);
          w.addClickHandler(mousHandler);
          w.addMouseOverHandler(mousHandler);
          w.addDoubleClickHandler(mousHandler);
@@ -213,7 +240,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       //widgets = widgetFactory.getWidgetsByFilter(editText, items);
       for (TokenWidget<T> w : allWidgets)
       {
-         if (w.getTokenName().startsWith(editText))
+         if (w.getTokenName().toLowerCase().startsWith(editText.toLowerCase()))
          {
             widgets.add(w);
             flowPanel.add(w);
@@ -454,7 +481,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
                case KeyCodes.KEY_LEFT :
                case KeyCodes.KEY_RIGHT :
-                  if(textBox.getCursorPos() == 0) break;
+                  if(!isTextBoxHasFocus) break;
                   
                default :
                   new Timer()

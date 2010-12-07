@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.codeassistant.api;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 
 /**
+ * This interface describes factory that builds 
+ * {@link TokenWidget} by specific token.<br>
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -30,6 +32,11 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 public interface TokenWidgetFactory<T>
 {
    
-   TokenWidget<T> getTokenWidget(T token);
+   /**
+    * Create new {@link TokenWidget} for token.
+    * @param token
+    * @return {@link TokenWidget} that represent token
+    */
+   TokenWidget<T> buildTokenWidget(T token);
 
 }

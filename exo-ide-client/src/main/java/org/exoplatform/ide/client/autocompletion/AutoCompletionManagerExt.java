@@ -20,11 +20,14 @@ package org.exoplatform.ide.client.autocompletion;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
 import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
@@ -62,14 +65,11 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
 
    private String mimeType;
 
-   private TokenFactories<TokenExt> factories;
-
    private TokenExtCollectors collectors;
 
    public AutoCompletionManagerExt(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      factories = new TokenFactories<TokenExt>(eventBus);
       collectors = new TokenExtCollectors(eventBus);
 
       eventBus.addHandler(EditorAutoCompleteCalledEvent.TYPE, this);
@@ -85,20 +85,14 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       System.out.println("Line content - " + event.getLineContent());
-//      System.out.println("Current token " + event.getCurrentToken().getFqn());
+      System.out.println("Current token " + event.getCurrentToken());
       TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
-         try
-         {
          collector.collectTokens(event.getLineContent(), event.getCurrentToken(), event.getCursorPositionY(),
             event.getCursorPositionX(), event.getTokenList(), this);
-         }
-         catch (Exception e) {
-            Log.error(e.getMessage(), e);
-         }
       }
-      
+      System.out.println("startsWith(String, int)".compareTo("startsWith(String)"));
    }
 
    /**
@@ -113,7 +107,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       int y = cursorOffsetY + 4;
       try
       {
-         new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens, factories.getFactory(mimeType),
+         new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens, collectors.getWodgetFactory(mimeType),
             this);
       }
       catch (Exception e)

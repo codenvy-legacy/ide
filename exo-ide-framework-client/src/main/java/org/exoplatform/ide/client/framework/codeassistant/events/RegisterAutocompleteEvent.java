@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.codeassistant.events;
 
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -26,33 +28,37 @@ import com.google.gwt.event.shared.GwtEvent;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 26, 2010 2:51:24 PM evgen $
+ * @version $Id: Dec 6, 2010 3:08:14 PM evgen $
  *
  */
-public class RegisterTokenWidgetFactoryEvent extends GwtEvent<RegisterTokenWidgetFactoryHandler>
+public class RegisterAutocompleteEvent extends GwtEvent<RegisterAutocompleteHandler>
 {
 
-   public static GwtEvent.Type<RegisterTokenWidgetFactoryHandler> TYPE = new Type<RegisterTokenWidgetFactoryHandler>();
+   public static GwtEvent.Type<RegisterAutocompleteHandler> TYPE = new Type<RegisterAutocompleteHandler>();
 
    private String mimeType;
 
-   private TokenWidgetFactory<?> factory;
+   private TokenWidgetFactory<TokenExt> factory;
+
+   private TokenCollectorExt collector;
 
    /**
-    * @param mimeType
-    * @param factory
+    * @param mimeType MimeType for add autocompletion 
+    * @param factory {@link TokenWidgetFactory}
+    * @param collector {@link TokenCollectorExt} 
     */
-   public RegisterTokenWidgetFactoryEvent(String mimeType, TokenWidgetFactory<?> factory)
+   public RegisterAutocompleteEvent(String mimeType, TokenWidgetFactory<TokenExt> factory, TokenCollectorExt collector)
    {
       this.mimeType = mimeType;
       this.factory = factory;
+      this.collector = collector;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RegisterTokenWidgetFactoryHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<RegisterAutocompleteHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -61,9 +67,9 @@ public class RegisterTokenWidgetFactoryEvent extends GwtEvent<RegisterTokenWidge
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(RegisterTokenWidgetFactoryHandler handler)
+   protected void dispatch(RegisterAutocompleteHandler handler)
    {
-      handler.onRegisterTokenWidgetFactory(this);
+      handler.onRegisterAutocomplete(this);
    }
 
    /**
@@ -77,9 +83,17 @@ public class RegisterTokenWidgetFactoryEvent extends GwtEvent<RegisterTokenWidge
    /**
     * @return the factory
     */
-   public TokenWidgetFactory<?> getFactory()
+   public TokenWidgetFactory<TokenExt> getFactory()
    {
       return factory;
+   }
+
+   /**
+    * @return the collector
+    */
+   public TokenCollectorExt getCollector()
+   {
+      return collector;
    }
 
 }

@@ -25,8 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenWidgetFactoryEvent;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
@@ -135,8 +134,8 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new UndeployGroovyCommandHandler(eventBus);
       new AssistImportDeclarationManager(eventBus);
       
-      eventBus.fireEvent(new RegisterTokenCollectorEvent(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus)));
-      eventBus.fireEvent(new RegisterTokenWidgetFactoryEvent(MimeType.GROOVY_SERVICE, new GroovyTokenWidgetFactory()));
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, new GroovyTokenWidgetFactory(), new GroovyTokenCollector(eventBus)));
+      
       
       GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
    }

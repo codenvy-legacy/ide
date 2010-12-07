@@ -21,15 +21,16 @@ package org.exoplatform.ide.client.framework.codeassistant.events;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Implement this interface if you wont to receive {@link RegisterAutocompleteEvent}
+ *  
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 26, 2010 2:51:55 PM evgen $
+ * @version $Id: Dec 6, 2010 3:08:32 PM evgen $
  *
  */
-public interface RegisterTokenWidgetFactoryHandler extends EventHandler
+public interface RegisterAutocompleteHandler extends EventHandler
 {
 
-   void onRegisterTokenWidgetFactory(RegisterTokenWidgetFactoryEvent event);
+   void onRegisterAutocomplete(RegisterAutocompleteEvent event);
    
 }

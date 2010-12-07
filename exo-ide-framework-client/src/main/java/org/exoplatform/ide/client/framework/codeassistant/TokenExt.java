@@ -42,7 +42,6 @@ public class TokenExt
     */
    public TokenExt(String name, TokenExtType type)
    {
-      super();
       this.name = name;
       this.type = type;
    }

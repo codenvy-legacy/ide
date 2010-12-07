@@ -47,7 +47,7 @@ public interface TokenCollectorExt
     * when tokens collected.
     * 
     * @param line Line where calls autocomplete;
-    * @param token Current {@link Token} ;
+    * @param token Current {@link Token} (May be Null);
     * @param lineNum Number of line;
     * @param cursorPos Position of cursor where called autocomplete;
     * @param tokenFromParser {@link List} of {@link Token} pased by editor;

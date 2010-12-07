@@ -40,7 +40,7 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
     * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory#getTokenWidget(java.lang.Object, int)
     */
    @Override
-   public TokenWidget<TokenExt> getTokenWidget(TokenExt token)
+   public TokenWidget<TokenExt> buildTokenWidget(TokenExt token)
    {
       switch (token.getType())
       {

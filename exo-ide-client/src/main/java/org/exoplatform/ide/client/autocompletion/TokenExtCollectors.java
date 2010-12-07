@@ -21,10 +21,11 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.codeassistant.TokenCollector;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler;
+import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,28 +36,46 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 26, 2010 12:19:16 PM evgen $
  *
  */
-public class TokenExtCollectors implements RegisterTokenCollectorHandler
+public class TokenExtCollectors implements RegisterAutocompleteHandler
 {
 
    private Map<String, TokenCollectorExt> collectors = new HashMap<String, TokenCollectorExt>();
 
+   private Map<String, TokenWidgetFactory<TokenExt>> factories = new HashMap<String, TokenWidgetFactory<TokenExt>>();
+
    public TokenExtCollectors(HandlerManager eventBus)
    {
-      eventBus.addHandler(RegisterTokenCollectorEvent.TYPE, this);
+      eventBus.addHandler(RegisterAutocompleteEvent.TYPE, this);
 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorHandler#onRegisterTokenCollector(org.exoplatform.ide.client.framework.codeassistant.events.RegisterTokenCollectorEvent)
+    * Get token collector for mimeType
+    * @param mimeType Content MimeType
+    * @return {@link TokenCollectorExt} or <b>null</b>, if can't find {@link TokenCollectorExt}
     */
-   public void onRegisterTokenCollector(RegisterTokenCollectorEvent event)
-   {
-      collectors.put(event.getMimeType(), event.getCollector());
-   }
-
    public TokenCollectorExt getTokenCollector(String mimeType)
    {
       return collectors.get(mimeType);
+   }
+
+   /**
+    * Get {@link TokenWidgetFactory} for MimeType
+    * @param mimeType Content MimeType
+    * @return {@link TokenWidgetFactory} or <b>null/b> if can't find {@link TokenWidgetFactory}
+    */
+   public TokenWidgetFactory<TokenExt> getWodgetFactory(String mimeType)
+   {
+      return factories.get(mimeType);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteHandler#onRegisterAutocomplete(org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent)
+    */
+   public void onRegisterAutocomplete(RegisterAutocompleteEvent event)
+   {
+      collectors.put(event.getMimeType(), event.getCollector());
+      factories.put(event.getMimeType(), event.getFactory());
    }
 
 }

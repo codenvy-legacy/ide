@@ -53,7 +53,7 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
       super(token);
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
+//      grid.setWidth("100%");
       
       Image i = getImage();
       i.setHeight("16px");
@@ -78,7 +78,7 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
       grid.getCellFormatter().setWidth(0, 2, "100%");
 
       initWidget(grid);
-      setWidth("100%");
+//      setWidth("100%");
    }
 
    private Image getImage()

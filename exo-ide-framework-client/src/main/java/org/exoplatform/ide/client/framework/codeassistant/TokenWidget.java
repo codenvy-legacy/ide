@@ -30,10 +30,12 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Base class for UI representation of token.<br>
+ *  
  * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
  *
@@ -70,18 +72,18 @@ public abstract class TokenWidget<T> extends Composite implements HasClickHandle
    public abstract String getTokenValue();
    
    /**
-    * 
+    *  Calls when user select this {@link Widget} 
     */
    public abstract void setSelectedStyle();
 
    
    /**
-    * 
+    * Calls when mouse over this {@link Widget}
     */
    public abstract void setOveredStyle();
 
    /**
-    * 
+    * Calls when clear selection or mouse blur this {@link Widget}
     */
    public abstract void setDefaultStyle();
 
