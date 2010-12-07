@@ -56,7 +56,6 @@ public class CodeOutLineGroovyTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
    
-   @Ignore      //TODO Issue IDE - 466
    @BeforeClass
    public static void setUp()
    {
@@ -75,7 +74,6 @@ public class CodeOutLineGroovyTest extends BaseTest
       }
    }
 
-   @Ignore      //TODO Issue IDE - 466
    @Test
    public void testCodeOutLineGroovy() throws Exception
    {
@@ -107,15 +105,18 @@ public class CodeOutLineGroovyTest extends BaseTest
       outlineTreeHelper.addOutlineItem(5, "b2 : java.lang.B", 8, false);
       outlineTreeHelper.addOutlineItem(6, "b3 : String", 8, false);
       outlineTreeHelper.addOutlineItem(7, "identity : Identity", 12);
-      outlineTreeHelper.addOutlineItem(8, "getValue1() : java.lang.String", 19);      
-      outlineTreeHelper.addOutlineItem(9, "d : java.lang.String", 31);      
+      outlineTreeHelper.addOutlineItem(8, "getValue1() : java.lang.String", 19); 
+      outlineTreeHelper.addOutlineItem(9, "c1 : String", 20);
+      outlineTreeHelper.addOutlineItem(10, "c2 : String", 27);
+      outlineTreeHelper.addOutlineItem(11, "d : java.lang.String", 31);      
 
       // TODO update content of node 
-      outlineTreeHelper.addOutlineItem(10, "setValue2(@ String) : void", 33);
-      
-      outlineTreeHelper.addOutlineItem(11, "printClosureOuter", 40);      
-      outlineTreeHelper.addOutlineItem(12, "hello()", 42);
-      outlineTreeHelper.addOutlineItem(13, "g : String", 47); 
+      outlineTreeHelper.addOutlineItem(12, "setValue2(@   String) : void", 33);
+      outlineTreeHelper.addOutlineItem(13, "printClosureInner", 35);
+      outlineTreeHelper.addOutlineItem(14, "printClosureOuter", 40);      
+      outlineTreeHelper.addOutlineItem(15, "hello()", 42);
+      outlineTreeHelper.addOutlineItem(16, "name4 : String", 44);
+      outlineTreeHelper.addOutlineItem(17, "g : String", 47); 
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
