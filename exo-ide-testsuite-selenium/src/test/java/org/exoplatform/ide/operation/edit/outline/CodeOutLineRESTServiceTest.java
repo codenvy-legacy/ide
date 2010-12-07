@@ -56,6 +56,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
 
+   @Ignore
    @BeforeClass
    public static void setUp()
    {
