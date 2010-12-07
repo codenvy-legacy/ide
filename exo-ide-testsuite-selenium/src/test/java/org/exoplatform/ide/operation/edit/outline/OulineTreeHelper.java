@@ -41,9 +41,9 @@ public class OulineTreeHelper extends BaseTest
  
    /**
     * Add item to into the outlineTreeInfo list
-    * @param itemRowNumber
+    * @param itemRowNumber starting from 0
     * @param itemName
-    * @param fileLineNumber number of line with this item in the code
+    * @param fileLineNumber number of line with this item in the code starting from 1
     */
    protected void addOutlineItem(int itemRowNumber, String itemName, int fileLineNumber)
    {
