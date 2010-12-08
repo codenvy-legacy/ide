@@ -290,7 +290,9 @@ public class CodeAssistant
             Node node = (Node)nodes.next();
             doc = node.getProperty("jcr:data").getString();
          }
-         return doc;
+         doc = doc.replaceAll("[ ]+\\*", "");
+         // need to return valid HTML
+         return "<html><head></head><body>" + doc +"</body></html>";
       }
       catch (RepositoryException e)
       {
