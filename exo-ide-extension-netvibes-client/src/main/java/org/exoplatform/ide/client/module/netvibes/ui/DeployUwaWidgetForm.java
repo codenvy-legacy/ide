@@ -237,7 +237,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       form.setLayoutAlign(Alignment.CENTER);
       form.setLayoutAlign(VerticalAlignment.CENTER);
 
-      urlField = createTextField(ID_URL_FIELD, "Widget URL", "http://", 390);
+      urlField = createTextField(ID_URL_FIELD, "Public widget URL", "http://", 390);
       form.setFields(urlField);
 
       vLayout.addMember(form);
