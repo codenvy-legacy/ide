@@ -35,13 +35,16 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
 {
 
    protected int modifieres;
+   
+   private String restContext;
 
    /**
     * @param token
     */
-   public GroovyTokenWidgetBase(TokenExt token)
+   public GroovyTokenWidgetBase(TokenExt token, String restContext)
    {
       super(token);
+      this.restContext = restContext;
       if (token.getProperty(TokenExtProperties.MODIFIERS) == null)
       {
          modifieres = 0;
@@ -96,6 +99,16 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    public void setDefaultStyle()
    {
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
+    */
+   @Override
+   public String getTokenDecription()
+   {
+      return restContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenExtProperties.DECLARINGCLASS)
+      +"."+ getTokenValue();
    }
 
 }

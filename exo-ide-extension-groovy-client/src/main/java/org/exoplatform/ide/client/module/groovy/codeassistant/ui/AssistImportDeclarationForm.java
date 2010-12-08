@@ -157,7 +157,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
       flowPanel.clear();
       for (TokenExt token : items)
       {
-         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token);
+         GroovyClassTokenWidget widget = new GroovyClassTokenWidget(token, "");
          widget.addClickHandler(mousHandler);
          widget.addMouseOverHandler(mousHandler);
          widget.addDoubleClickHandler(mousHandler);

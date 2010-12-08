@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.autocompletion.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
 
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -59,11 +60,15 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This class is UI component that represent autocompletion form.
@@ -82,7 +87,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private AbsolutePanel lockLayer;
 
-   private SimplePanel descriptionPanel;
+   private Widget descriptionPanel;
 
    private LockLayer blockMouseEventsPanel;
 
@@ -111,7 +116,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
    private List<TokenWidget<T>> widgets;
 
    private List<TokenWidget<T>> allWidgets;
-   
+
    private boolean isTextBoxHasFocus = true;
 
    public AutocompletionFormExt(HandlerManager eventBus, int left, int top, String prefix, List<T> items,
@@ -145,19 +150,18 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       textBox.setText(prefix);
       textBox.setStyleName(Style.AUTO_EDIT);
 
-      
       textBox.addFocusHandler(new FocusHandler()
       {
-         
+
          public void onFocus(FocusEvent event)
          {
             isTextBoxHasFocus = true;
          }
       });
-      
+
       textBox.addBlurHandler(new BlurHandler()
       {
-         
+
          public void onBlur(BlurEvent event)
          {
             isTextBoxHasFocus = false;
@@ -167,7 +171,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       flowPanel = new FlowPanel();
 
       scrollPanel = new AutoCompleteScrollPanel();
-      //      scrollPanel.setAlwaysShowScrollBars(true);
+      scrollPanel.setAlwaysShowScrollBars(true);
       scrollPanel.add(flowPanel);
 
       mousHandler = new MousHandler();
@@ -237,7 +241,6 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       widgets.clear();
       flowPanel.clear();
-      //widgets = widgetFactory.getWidgetsByFilter(editText, items);
       for (TokenWidget<T> w : allWidgets)
       {
          if (w.getTokenName().toLowerCase().startsWith(editText.toLowerCase()))
@@ -339,18 +342,45 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          selectedWidget.setSelectedStyle();
       }
 
-      //      timer.cancel();
-      //      if (descriptionPanel != null)
-      //      {
-      //         descriptionPanel.removeFromParent();
-      //         descriptionPanel = null;
-      //      }
-      //      if (selectedWidget.getToken().getFullDescription() != null)
-      //      {
-      //         timer.schedule(1000);
-      //      }
+      timer.cancel();
+      if (descriptionPanel != null)
+      {
+         descriptionPanel.removeFromParent();
+         descriptionPanel = null;
+      }
+      if (selectedWidget.getTokenDecription() != null)
+      {
+         timer.schedule(1000);
+      }
 
    }
+   
+   private Timer timer = new Timer()
+   {
+
+      @Override
+      public void run()
+      {
+         if (descriptionPanel != null)
+         {
+            descriptionPanel.removeFromParent();
+         }
+         int width = 300;
+         descriptionPanel = new Frame(selectedWidget.getTokenDecription());
+         descriptionPanel.setWidth(width + "px");
+         descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
+         
+//         descriptionPanel.getElement().setInnerText(selectedWidget.getTokenDecription());
+         descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
+         int clientWidth = Window.getClientWidth();
+
+         if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
+            lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
+         else
+            lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
+               panel.getAbsoluteTop());
+      }
+   };
 
    private void overWidget(TokenWidget<T> t)
    {
@@ -395,7 +425,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
     */
    private void cancelAutocomplete()
    {
-      //      timer.cancel();
+      timer.cancel();
       removeHandlers();
       handler.onCancelAutoComplete();
       lockLayer.removeFromParent();
@@ -406,6 +436,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
     */
    public void tokenSelected()
    {
+      timer.cancel();
       removeHandlers();
       if (selectedWidget == null)
       {
@@ -481,8 +512,9 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
                case KeyCodes.KEY_LEFT :
                case KeyCodes.KEY_RIGHT :
-                  if(!isTextBoxHasFocus) break;
-                  
+                  if (!isTextBoxHasFocus)
+                     break;
+
                default :
                   new Timer()
                   {

@@ -43,9 +43,9 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
     * @param token
     * @param number
     */
-   public GroovyClassTokenWidget(TokenExt token)
+   public GroovyClassTokenWidget(TokenExt token, String restContext)
    {
-      super(token);
+      super(token, restContext);
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
       grid.setWidth("100%");
@@ -105,6 +105,16 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
    public String getTokenValue()
    {
       return getToken().getProperty(TokenExtProperties.FQN);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
+    */
+   @Override
+   public String getTokenDecription()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

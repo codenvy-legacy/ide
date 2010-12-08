@@ -18,15 +18,11 @@
  */
 package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
-import java.util.HashMap;
-
 import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
@@ -49,9 +45,9 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
    /**
     * @param token
     */
-   public GroovyConstructorWidget(TokenExt token)
+   public GroovyConstructorWidget(TokenExt token, String restContext)
    {
-      super(token);
+      super(token, restContext);
 
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
@@ -113,6 +109,16 @@ public class GroovyConstructorWidget extends GroovyTokenWidgetBase
    public String getTokenValue()
    {
       return value;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
+    */
+   @Override
+   public String getTokenDecription()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

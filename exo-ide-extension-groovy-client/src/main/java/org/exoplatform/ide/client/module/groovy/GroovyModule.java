@@ -134,7 +134,6 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new UndeployGroovyCommandHandler(eventBus);
       new AssistImportDeclarationManager(eventBus);
       
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, new GroovyTokenWidgetFactory(), new GroovyTokenCollector(eventBus)));
       
       
       GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
@@ -146,6 +145,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
       new CodeAssistantServiceImpl(eventBus,event.getApplicationConfiguration().getContext(), event.getLoader());
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext()), new GroovyTokenCollector(eventBus)));
    }
 
    /**

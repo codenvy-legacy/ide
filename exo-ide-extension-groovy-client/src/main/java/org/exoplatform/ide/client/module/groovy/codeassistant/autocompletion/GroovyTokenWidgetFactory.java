@@ -36,6 +36,16 @@ import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyMethodWid
 public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
 {
    
+   private String restContext;
+   
+   /**
+    * @param context
+    */
+   public GroovyTokenWidgetFactory(String context)
+   {
+      restContext = context;
+   }
+
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory#getTokenWidget(java.lang.Object, int)
     */
@@ -45,19 +55,19 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
       switch (token.getType())
       {
          case CLASS :
-            return new GroovyClassTokenWidget(token);
+            return new GroovyClassTokenWidget(token, restContext);
             
          case CONSTRUCTOR :
-            return new GroovyConstructorWidget(token);
+            return new GroovyConstructorWidget(token,restContext);
             
          case METHOD :
-            return new GroovyMethodWidget(token);
+            return new GroovyMethodWidget(token, restContext);
             
          case FIELD :
-            return new GroovyFieldWidget(token);
+            return new GroovyFieldWidget(token, restContext);
                      
          default :
-            return new GroovyConstructorWidget(token);
+            return new GroovyConstructorWidget(token, restContext);
             
       }
    }

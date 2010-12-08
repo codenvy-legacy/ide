@@ -37,30 +37,30 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class GroovyFieldWidget extends GroovyTokenWidgetBase
 {
-   
+
    private Grid grid;
 
    /**
     * @param token
     */
-   public GroovyFieldWidget(TokenExt token)
+   public GroovyFieldWidget(TokenExt token, String restContext)
    {
-      super(token);
+      super(token, restContext);
       grid = new Grid(1, 3);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
       Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name = token.getName() +":" + token.getProperty(TokenExtProperties.TYPE);
+      String name = token.getName() + ":" + token.getProperty(TokenExtProperties.TYPE);
       Label nameLabel = new Label(name, false);
       nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
       grid.setWidget(0, 1, nameLabel);
 
       String pack = token.getProperty(TokenExtProperties.DECLARINGCLASS);
-      Label l = new Label("-"+pack, false);
+      Label l = new Label("-" + pack, false);
       l.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
-      
+
       grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -79,17 +79,17 @@ public class GroovyFieldWidget extends GroovyTokenWidgetBase
    private Image getImage()
    {
       Image i;
-      if(ModifierHelper.isPrivate(modifieres))
+      if (ModifierHelper.isPrivate(modifieres))
       {
-        i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
       }
-      else if(ModifierHelper.isProtected(modifieres))
+      else if (ModifierHelper.isProtected(modifieres))
       {
          i = new Image(GroovyPluginImageBundle.INSTANCE.protectedField());
       }
-      else if(ModifierHelper.isPublic(modifieres))
+      else if (ModifierHelper.isPublic(modifieres))
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());           
+         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
       }
       else
       {
