@@ -271,6 +271,7 @@ public class CodeAssistant
    @GET
    //use POST for fixing cache problem
    @Path("/class-doc")
+   @Produces("text/html")
    public String getClassDoc(@QueryParam("fqn") String fqn) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:javaDoc WHERE exoide:fqn='" + fqn + "'";
@@ -292,7 +293,7 @@ public class CodeAssistant
          }
          doc = doc.replaceAll("[ ]+\\*", "");
          // need to return valid HTML
-         return "<html><head></head><body>" + doc +"</body></html>";
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">" + doc +"</body></html>";
       }
       catch (RepositoryException e)
       {
