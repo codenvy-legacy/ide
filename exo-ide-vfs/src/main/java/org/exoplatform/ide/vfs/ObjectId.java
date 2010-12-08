@@ -38,7 +38,7 @@ public class ObjectId
    }
 
    /**
-    * @return the id object's identifier as string
+    * @return object's identifier as string
     */
    public String getId()
    {
@@ -68,5 +68,14 @@ public class ObjectId
          return false;
       ObjectId objectId = (ObjectId)obj;
       return id.equals(objectId.id);
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "[ObjectId: " + id + "]";
    }
 }
