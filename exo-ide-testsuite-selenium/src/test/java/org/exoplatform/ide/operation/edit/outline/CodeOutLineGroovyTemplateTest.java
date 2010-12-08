@@ -26,13 +26,12 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -47,9 +46,10 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
 {
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
-
-   @Ignore      //TODO Issue IDE - 466
+   private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
+   
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
    @BeforeClass
    public static void setUp()
    {
@@ -57,7 +57,8 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/GroovyTemplateCodeOutline.gtmpl";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, URL);
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, URL + TEST_FOLDER + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,27 +70,38 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       }
    }
 
-   @Ignore      //TODO Issue IDE - 466
    @AfterClass
    public static void tearDown() throws Exception
    {
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      cleanDefaultWorkspace();
+      
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    // IDE-178:Groovy Template Code Outline
-  
-   @Ignore      //TODO Issue IDE - 466
    @Test
    public void testCodeOutLineGroovyTemplate() throws Exception
    {
       //---- 1-2 -----------------
       //open file with text
+      // Open groovy file with test content
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      Thread.sleep(TestConstants.SLEEP * 2);
 
       //---- 3 -----------------
       //open Outline Panel
@@ -152,8 +164,6 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //check for presence of tab outline
       assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=isc_OutlineForm_0]/"));
       assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
-      
-      assertEquals("groovy code", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
       
       //check tree correctly created:
       assertEquals("groovy code", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
