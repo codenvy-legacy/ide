@@ -24,8 +24,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.jcr.ItemExistsException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
@@ -33,6 +40,7 @@ import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
+import org.exoplatform.services.jcr.webdav.util.TextUtil;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
@@ -112,7 +120,7 @@ public class TestAclCommand extends BaseStandaloneTest
             + "<D:grant>" + "<D:privilege><D:write/></D:privilege>" + "</D:grant>" + "</D:ace>" + "</D:acl>";
 
       ContainerResponse response =
-         launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + testNode.getPath(), "http://localhost", headers,
+         launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + testNode.getPath(), "", headers,
             request.getBytes(), null, ctx);
 
       assertEquals(HTTPStatus.OK, response.getStatus());
@@ -229,7 +237,71 @@ public class TestAclCommand extends BaseStandaloneTest
       assertEquals(HTTPStatus.BAD_REQUEST, response.getStatus());
 
    }
+   
+   @Test
+   public void testSetAclForVersioningNode() throws Exception
+   {
+      
+      String content = getFileContent();
+      String path = getFileName();
+      ContainerResponse containerResponse =
+         service("PUT", "/ide-vfs-webdav/db1/ws" + path, "", null, content.getBytes());
+      assertEquals(HTTPStatus.CREATED, containerResponse.getStatus());
+      assertTrue(session.getRootNode().hasNode(TextUtil.relativizePath(path)));
+      
+      //create new version
+      content = getFileContent();
+      containerResponse =
+         service("PUT", "/ide-vfs-webdav/db1/ws"+ path, "", null, content.getBytes());
+      assertEquals(HTTPStatus.CREATED, containerResponse.getStatus());
+      assertTrue(session.getRootNode().hasNode(TextUtil.relativizePath(path)));
 
+      //try set acl
+      String request =
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<D:acl xmlns:D=\"DAV:\">" + "<D:ace>" + "<D:principal>"
+            + "<D:all />" + "</D:principal>" + "<D:grant>" + "<D:privilege><D:all/></D:privilege>" + "</D:grant>"
+            + "</D:ace>" + "</D:acl>";
+      
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.putSingle("Depth", "0");
+      headers.putSingle("Content-Type", "text/xml; charset=\"utf-8\"");
+
+      
+      EnvironmentContext ctx = new EnvironmentContext();
+
+      Set<String> adminRoles = new HashSet<String>();
+      adminRoles.add("administrators");
+
+      DummySecurityContext adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+
+      ctx.put(SecurityContext.class, adminSecurityContext);
+      
+      RequestHandlerImpl handler = (RequestHandlerImpl)container.getComponentInstanceOfType(RequestHandlerImpl.class);
+      ResourceLauncher launcher = new ResourceLauncher(handler);
+      ContainerResponse response =
+         launcher.service("ACL", "/ide-vfs-webdav/db1/ws" + path, "", headers,
+            request.getBytes(), null, ctx);
+      
+      assertEquals(HTTPStatus.OK, response.getStatus());
+      
+   }
+
+   private static String getFileContent()
+   {
+      String content = new String();
+      for (int i = 0; i < 10; i++)
+      {
+         content += UUID.randomUUID().toString();
+      }
+      return content;
+   }
+   
+   private static String getFileName()
+   {
+      return "/test-file-" + System.currentTimeMillis() + ".txt";
+   }
+
+   
    @Override
    protected String getRepositoryName()
    {

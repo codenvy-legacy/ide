@@ -62,9 +62,22 @@ public class AclCommand
       Node node;
       try
       {
-         node = (Node)session.getItem(path);
+         node = (NodeImpl)session.getItem(path);
 
          boolean isNeedToSaveSession = false;
+
+         boolean isNeedToCheckin = false;
+         
+         if (node.isNodeType("mix:versionable")
+            && (!node.isNodeType("exo:owneable") || !node.isNodeType("exo:privilegeable")))
+         {
+            if (!node.isCheckedOut())
+            {
+               node.checkout();
+               node.getSession().save();
+               isNeedToCheckin = true;
+            }
+         }
 
          if (!node.isNodeType("exo:owneable"))
          {
@@ -80,6 +93,12 @@ public class AclCommand
 
          if (isNeedToSaveSession)
          {
+            node.getSession().save();
+         }
+
+         if (isNeedToCheckin)
+         {
+            node.checkin();
             node.getSession().save();
          }
 
@@ -179,7 +198,7 @@ public class AclCommand
          nodePermissions.put(principal, permissionList);
       }
 
-      if(nodePermissions.size() == 0)
+      if (nodePermissions.size() == 0)
       {
          node.clearACL();
          node.getSession().save();
@@ -187,7 +206,7 @@ public class AclCommand
       else
       {
          node.setPermissions(nodePermissions);
-         node.getSession().save();        
+         node.getSession().save();
       }
    }
 
