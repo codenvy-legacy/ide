@@ -55,6 +55,10 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
+import org.exoplatform.ide.client.module.navigation.event.DeleteItemEvent;
+import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
+import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
+import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
@@ -63,6 +67,9 @@ import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -160,6 +167,15 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          {
             onBrowserDoubleClicked();
          }
+      });
+      
+      display.getBrowserTree().addKeyPressHandler(new KeyPressHandler()
+      {
+         public void onKeyPress(KeyPressEvent event)
+         {
+            onKeyPressed(event.getCharCode(), event.isControlKeyDown());
+         }
+         
       });
    }
 
@@ -531,4 +547,41 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
    }
 
+   // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
+   protected void onKeyPressed(char charCode, boolean isControlKeyDown)
+   {
+      if (isControlKeyDown)
+      {
+         // "Ctrl+C" hotkey handling
+         if (String.valueOf(charCode).toUpperCase().equals("C"))
+         {
+            eventBus.fireEvent(new CopyItemsEvent());
+         }
+         
+         // "Ctrl+X" hotkey handling         
+         else if (String.valueOf(charCode).toUpperCase().equals("X"))
+         {
+            eventBus.fireEvent(new CutItemsEvent());
+         }
+
+         // "Ctrl+V" hotkey handling
+         else if (String.valueOf(charCode).toUpperCase().equals("V"))
+         {
+            eventBus.fireEvent(new PasteItemsEvent());
+         }
+      }
+      
+      // "Delete" hotkey handling
+      else if (charCode == KeyCodes.KEY_DELETE)
+      {
+         eventBus.fireEvent(new DeleteItemEvent());
+      }
+
+      // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 
+//      else if (charCode == KeyCodes.KEY_ENTER)
+//      {
+//         onBrowserDoubleClicked();
+//      }
+   }
+   
 }
