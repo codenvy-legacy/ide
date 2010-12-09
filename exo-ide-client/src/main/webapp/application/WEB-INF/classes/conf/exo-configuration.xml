@@ -74,7 +74,7 @@
       <init-params>
          <value-param>
             <name>defaultEntryPoint</name>
-            <value>/rest/private/ide-vfs-webdav/repository/dev-monit</value>
+            <value>dev-monit</value>
          </value-param>
       </init-params>
    </component>
@@ -218,8 +218,12 @@
    
 
    <component>
-      <type>org.exoplatform.ide.chromattic.IDEChromatticRestService</type>
-   </component>   
+      <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
+   </component>
+   
+   <component>
+  <type>org.chromattic.dataobject.DataObjectService</type>
+  </component>
 
    <component>
       <type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>
