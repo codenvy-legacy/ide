@@ -22,6 +22,8 @@ package org.exoplatform.ide.discovery;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,11 +32,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
@@ -49,7 +54,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
 {
 
    //private final String WEBDAV_CONTEXT = "jcr";
-   private final String WEBDAV_CONTEXT = "ide-vfs-webdav";
+   private final static String WEBDAV_CONTEXT = "ide-vfs-webdav";
    
    public static final String WEBDAV_SCHEME = "jcr-webdav";
    
@@ -85,6 +90,12 @@ public class RepositoryDiscoveryService implements ResourceContainer
          defaultEntryPoint = "";
    }
    
+   
+   public final static String getWebDavConetxt()
+   {
+      return WEBDAV_CONTEXT;
+   }
+   
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
@@ -115,9 +126,14 @@ public class RepositoryDiscoveryService implements ResourceContainer
    
    @GET
    @Path("/defaultEntrypoint/")
-   public String getDefaultEntryPoint()
+   public String getDefaultEntryPoint(@Context UriInfo uriInfo) throws RepositoryException, RepositoryConfigurationException
    {
-      return defaultEntryPoint;
+      ManageableRepository repository = repositoryService.getCurrentRepository();
+      if (repository == null)
+         repository =  repositoryService.getDefaultRepository();
+      
+      String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), defaultEntryPoint, "/").build().toString();
+      return href;
    }
 
 }

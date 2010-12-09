@@ -166,6 +166,7 @@ public class CodeAssistant
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
+      
 
       try
       {

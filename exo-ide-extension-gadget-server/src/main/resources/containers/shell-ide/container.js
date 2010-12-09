@@ -44,6 +44,8 @@
 
 // Container must be an array; this allows multiple containers
 // to share configuration.
+
+
 {"gadgets.container" : ["default"],
 
 // Set of regular expressions to validate the parent parameter. This is
@@ -178,3 +180,4 @@
     "library": ""
   }
 }}
+

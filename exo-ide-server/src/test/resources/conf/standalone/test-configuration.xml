@@ -136,7 +136,7 @@
       <init-params>
          <value-param>
             <name>defaultEntryPoint</name>
-            <value>/rest/private/jcr/repository/dev-monit</value>
+            <value>dev-monit</value>
          </value-param>
       </init-params>
    </component>

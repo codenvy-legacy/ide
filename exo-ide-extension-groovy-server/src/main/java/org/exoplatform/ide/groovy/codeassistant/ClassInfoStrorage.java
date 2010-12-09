@@ -124,7 +124,6 @@ public class ClassInfoStrorage
     */
    @POST
    @Path("/jar")
-   @RolesAllowed("administrators")
    public void addClassesFormJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
       throws SaveClassInfoException
    {
@@ -159,7 +158,6 @@ public class ClassInfoStrorage
     */
    @POST
    @Path("/class")
-   @RolesAllowed("administrators")
    public void addClass(@QueryParam("fqn") String fqn) throws SaveClassInfoException
    {
       try
@@ -190,7 +188,6 @@ public class ClassInfoStrorage
     */
    @POST
    @Path("/java")
-   @RolesAllowed("administrators")
    public void addClassesFromJavaSource(@QueryParam("java-source-path") String javaSrcPath,
       @QueryParam("package") String packageName) throws SaveClassInfoException
    {

@@ -75,7 +75,7 @@
       <init-params>
          <value-param>
             <name>defaultEntryPoint</name>
-            <value>/rest/private/ide-vfs-webdav/repository/dev-monit</value>
+            <value>dev-monit</value>
          </value-param>
       </init-params>
    </component>

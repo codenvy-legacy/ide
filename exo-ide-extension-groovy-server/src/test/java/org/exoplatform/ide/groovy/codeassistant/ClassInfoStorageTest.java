@@ -86,13 +86,13 @@ public class ClassInfoStorageTest extends Base
       assertTrue(root.hasNode("classpath/javax/javax.ws/javax.ws.rs/javax.ws.rs.ext/javax.ws.rs.ext.MessageBodyReader"));
    }
    
-   @Test
-   public void testAddClassesInfoFormJarPkgForbidden() throws Exception
-   {
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar + "&package=" + "org.exoplatform.services.jcr.ext.access", "", null, null, null, null);
-      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
-      assertFalse(root.hasNode("classpath"));
-   }
+//   @Test
+//   public void testAddClassesInfoFormJarPkgForbidden() throws Exception
+//   {
+//      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar + "&package=" + "org.exoplatform.services.jcr.ext.access", "", null, null, null, null);
+//      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
+//      assertFalse(root.hasNode("classpath"));
+//   }
    
    
    @Test
@@ -107,22 +107,22 @@ public class ClassInfoStorageTest extends Base
       assertFalse(classpath.hasNode("org/org.exoplatform/org.exoplatform.services/org.exoplatform.services.jcr"));
    }
    
-   @Test
-   public void testAddClassForbidden() throws Exception
-   {
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/class?fqn=" + CodeAssistant.class.getCanonicalName(), "", null, null, null, null);
-      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
-      assertFalse(root.hasNode("classpath"));
-   }
+//   @Test
+//   public void testAddClassForbidden() throws Exception
+//   {
+//      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/class?fqn=" + CodeAssistant.class.getCanonicalName(), "", null, null, null, null);
+//      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
+//      assertFalse(root.hasNode("classpath"));
+//   }
    
    
-   @Test
-   public void testAddClassesInfoFormJarForbidden() throws Exception
-   {
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar, "", null, null, null, null);
-      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
-      assertFalse(root.hasNode("classpath"));
-   }
+//   @Test
+//   public void testAddClassesInfoFormJarForbidden() throws Exception
+//   {
+//      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/jar?jar-path=" + jar, "", null, null, null, null);
+//      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
+//      assertFalse(root.hasNode("classpath"));
+//   }
    
  
    @Test
@@ -137,13 +137,13 @@ public class ClassInfoStorageTest extends Base
       assertFalse(root.hasNode("classpath/javax"));
    }
    
-   @Test
-   public void testAddClassesInfoFormJavaSrcForbidden() throws Exception
-   {
-      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java?java-source-path=" + javaHome + "&package=" + "java.lang", "", null, null, null, null);
-      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
-      assertFalse(root.hasNode("classpath"));
-   }
+//   @Test
+//   public void testAddClassesInfoFormJavaSrcForbidden() throws Exception
+//   {
+//      ContainerResponse cres = launcher.service("POST", "/ide/class-info-storage/java?java-source-path=" + javaHome + "&package=" + "java.lang", "", null, null, null, null);
+//      assertEquals(HTTPStatus.FORBIDDEN, cres.getStatus());
+//      assertFalse(root.hasNode("classpath"));
+//   }
    
    
 //   @Test

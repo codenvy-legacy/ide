@@ -16,8 +16,12 @@
  */
 package org.exoplatform.ide.discovery;
 
+import static org.junit.Assert.assertEquals;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.rest.RequestHandler;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
@@ -25,6 +29,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import javax.jcr.Repository;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
@@ -34,21 +39,35 @@ import javax.ws.rs.core.MultivaluedMap;
 */
 public class TestRepositoryDiscoveryService extends BaseTest
 {
+   private RepositoryService repositoryService;
+   
+   private String repoName;
+   
+   @Override
+   public void setUp() throws Exception
+   {
+      super.setUp();
+      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      ManageableRepository repository = repositoryService.getDefaultRepository();
+      repoName = repository.getConfiguration().getName();
+      repositoryService.setCurrentRepositoryName(repoName);
+      
+   }
    
    @Test
    public void testDefaultEntryPoint() throws Exception
    {
-      EnvironmentContext ctx = new EnvironmentContext();
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       
       ContainerResponse cres =
-         launcher.service("GET", "/ide/discovery/defaultEntrypoint", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/discovery/defaultEntrypoint", "", headers, null, null, null);
       
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
       assertTrue(cres.getEntity() instanceof String);
       String defaultEntryPoint = (String)cres.getEntity();
-      assertEquals("/rest/private/jcr/repository/dev-monit", defaultEntryPoint);
+      System.out.println("TestRepositoryDiscoveryService.testDefaultEntryPoint()" + defaultEntryPoint);
+      assertEquals(RepositoryDiscoveryService.getWebDavConetxt() + "/" + repoName + "/dev-monit/", defaultEntryPoint);
    }
    
    @Test

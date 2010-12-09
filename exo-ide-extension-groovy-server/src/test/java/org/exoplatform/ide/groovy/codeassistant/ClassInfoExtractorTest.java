@@ -25,8 +25,11 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 
@@ -38,7 +41,7 @@ import junit.framework.TestCase;
 public class ClassInfoExtractorTest extends TestCase
 {
 
-   public void testExctractClass()
+   public void testExctractClass() throws ClassFormatError, ClassNotFoundException
    {
       TypeInfo cd = TypeInfoExtractor.extract(A.class);
       assertEquals(A.class.getDeclaredConstructors().length, cd.getDeclaredConstructors().length);
@@ -49,6 +52,23 @@ public class ClassInfoExtractorTest extends TestCase
       assertEquals(A.class.getDeclaredFields().length, cd.getDeclaredFields().length); 
       assertEquals(A.class.getCanonicalName(), cd.getQualifiedName());
       assertEquals(A.class.getSimpleName(), cd.getName());
+      
+      
+      
+      
+      
+      Method[] c = Collections.class.getMethods();
+      for (int i = 0; i < c.length; i++)
+      {
+         System.out.print(c[i].getName() + "(");
+         Type[] types = c[i].getParameterTypes();
+         for (int j = 0; j < types.length; j++)
+         {
+            System.out.print(types[j] + ",");
+         }
+         System.out.print(")");
+         System.out.println();
+      }
    }
    
    
