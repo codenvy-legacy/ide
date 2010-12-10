@@ -249,6 +249,15 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       {
          selectWidget(0);
       }
+      else
+      {
+         selectedWidget = null;
+         if (descriptionPanel != null)
+         {
+            descriptionPanel.removeFromParent();
+            descriptionPanel = null;
+         }
+      }
    }
 
    /**
@@ -344,7 +353,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          descriptionPanel.removeFromParent();
          descriptionPanel = null;
       }
-      if (selectedWidget.getTokenDecription() != null)
+      if ( selectedWidget!= null && selectedWidget.getTokenDecription() != null)
       {
          timer.schedule(1000);
       }
