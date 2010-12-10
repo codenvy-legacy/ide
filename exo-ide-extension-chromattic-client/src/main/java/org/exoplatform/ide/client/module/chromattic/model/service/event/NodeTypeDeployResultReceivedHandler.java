@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -15,36 +15,24 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
+package org.exoplatform.ide.client.module.chromattic.model.service.event;
 
-package org.exoplatform.ide.client.module.chromattic.model;
-
-import org.exoplatform.ide.client.framework.vfs.File;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link NodeTypeDeployResultReceivedEvent} event.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Dec 6, 2010 $
+ *
  */
-
-public abstract class ChrommaticService
+public interface NodeTypeDeployResultReceivedHandler extends EventHandler
 {
-
-   private static ChrommaticService instance;
-
-   public static ChrommaticService getInstance()
-   {
-      return instance;
-   }
-
-   protected ChrommaticService()
-   {
-      instance = this;
-   }
-
-   public abstract void compile(File file);
-
+   /**
+    * Perform actions on node type deploy result received from server.
+    * 
+    * @param event
+    */
+   void onNodeTypeDeployResultReceived(NodeTypeDeployResultReceivedEvent event);
 }

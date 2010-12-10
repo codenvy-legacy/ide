@@ -29,15 +29,29 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  */
 public interface Images
 {
-   
+
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
+
    public interface FileType
    {
-      
+
       public static final String CHROMATTIC = IMAGE_URL + "module/chromattic/filetype/chromattic.png";
    }
-
-   public static final String COMPILE_GROOVY = IMAGE_URL + "module/chromattic/compile.png";
    
+   public interface Buttons
+   {
+      public static final String OK = IMAGE_URL + "module/chromattic/buttons/ok.png";
+      
+      public static final String CANCEL = IMAGE_URL + "module/chromattic/buttons/cancel.png";
+      
+   }
+
+   public interface Controls
+   {
+      public static final String COMPILE_GROOVY = IMAGE_URL + "module/chromattic/controls/compile.png";
+
+      public static final String PREVIEW_NODE_TYPE = IMAGE_URL + "module/chromattic/controls/preview-node-type.png";
+
+      public static final String DEPLOY_NODE_TYPE = IMAGE_URL + "module/chromattic/controls/deploy-node-type.png";
+   }
 }

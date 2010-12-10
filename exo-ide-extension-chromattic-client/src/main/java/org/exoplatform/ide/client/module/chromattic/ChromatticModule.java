@@ -25,8 +25,12 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.chromattic.controls.CompileGroovyControl;
+import org.exoplatform.ide.client.module.chromattic.controls.DeployNodeTypeControl;
+import org.exoplatform.ide.client.module.chromattic.controls.GenerateNodeTypeControl;
 import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommandHandler;
-import org.exoplatform.ide.client.module.chromattic.model.ChrommaticServiceImpl;
+import org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticServiceImpl;
+import org.exoplatform.ide.client.module.chromattic.ui.DeployNodeTypePresenter;
+import org.exoplatform.ide.client.module.chromattic.ui.GenerateNodeTypePresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -57,9 +61,12 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
          MimeType.CHROMATTIC_DATA_OBJECT)));
 
       eventBus.fireEvent(new RegisterControlEvent(new CompileGroovyControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), true, true));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-
+      new GenerateNodeTypePresenter(eventBus);
+      new DeployNodeTypePresenter(eventBus);
       new CompileGroovyCommandHandler(eventBus);
    }
 

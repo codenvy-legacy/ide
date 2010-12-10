@@ -26,9 +26,9 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.chromattic.event.CompileGroovyEvent;
 import org.exoplatform.ide.client.module.chromattic.event.CompileGroovyHandler;
-import org.exoplatform.ide.client.module.chromattic.model.ChrommaticService;
-import org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedEvent;
-import org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedHandler;
+import org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticService;
+import org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedEvent;
+import org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -69,7 +69,7 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler, Compil
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedHandler#onCompileGroovyResultReceived(org.exoplatform.ide.client.module.chromattic.model.event.CompileGroovyResultReceivedEvent)
+    * @see org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedHandler#onCompileGroovyResultReceived(org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedEvent)
     */
    public void onCompileGroovyResultReceived(CompileGroovyResultReceivedEvent event)
    {

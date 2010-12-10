@@ -18,13 +18,14 @@
  *
  */
 
-package org.exoplatform.ide.client.module.chromattic.model.event;
+package org.exoplatform.ide.client.module.chromattic.model.service.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event is fired, when the result of the goovy compilation is received for server.
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -35,11 +36,20 @@ import com.google.gwt.event.shared.GwtEvent;
 public class CompileGroovyResultReceivedEvent extends ServerExceptionEvent<CompileGroovyResultReceivedHandler>
 {
 
+   /**
+    * Type used to register this event.
+    */
    public static final GwtEvent.Type<CompileGroovyResultReceivedHandler> TYPE =
       new GwtEvent.Type<CompileGroovyResultReceivedHandler>();
 
+   /**
+    * Sever exception while compiling groovy file.
+    */
    private Throwable exception;
 
+   /**
+    * Grrovy location.
+    */
    private String url;
 
    public CompileGroovyResultReceivedEvent(String url)
@@ -47,28 +57,43 @@ public class CompileGroovyResultReceivedEvent extends ServerExceptionEvent<Compi
       this.url = url;
    }
 
+   /**
+    * @return {@link String}
+    */
    public String getUrl()
    {
       return url;
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent#setException(java.lang.Throwable)
+    */
    @Override
    public void setException(Throwable exception)
    {
       this.exception = exception;
    }
 
+   /**
+    * @return {@link Throwable}
+    */
    public Throwable getException()
    {
       return exception;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<CompileGroovyResultReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
    protected void dispatch(CompileGroovyResultReceivedHandler handler)
    {
