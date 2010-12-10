@@ -150,6 +150,9 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      //----fix----
+      refresh();
+      //----------
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
       checkCkEditorOpened(1);

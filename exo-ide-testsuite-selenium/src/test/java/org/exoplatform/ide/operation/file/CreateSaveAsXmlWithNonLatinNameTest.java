@@ -99,7 +99,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //check file on server
       checkFileOnWebDav(XML_FILE);
 
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP*3);
       assertElementPresentInWorkspaceTree(XML_FILE);
 
       openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
@@ -150,23 +150,24 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
    private void checkFileOnWebDav(String fileName) throws Exception
    {
-      selenium.open(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
-      selenium.waitForPageToLoad("10000");
-      Thread.sleep(TestConstants.SLEEP);
+//      selenium.open(BASE_URL + "rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/");
+      selenium.open(URL);
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       assertTrue(selenium.isElementPresent("link=" + fileName));
       selenium.click("link=" + fileName);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isElementPresent("//test"));
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.goBack();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
 
-      selenium.waitForPageToLoad("10000");
-
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       selenium.goBack();
-      selenium.waitForPageToLoad("20000");
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      refresh();
    }
 
    private void checkTwoFilesOnWebDav(String fileName1, String fileName2) throws Exception

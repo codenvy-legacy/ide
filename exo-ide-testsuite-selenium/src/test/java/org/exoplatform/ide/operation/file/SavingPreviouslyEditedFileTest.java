@@ -297,7 +297,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       typeTextIntoEditor(0, XML_TEXT);
    }
    
-   private void checkFileOnWebDav()
+   private void checkFileOnWebDav() throws Exception
    {
       selenium.open(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       selenium.waitForPageToLoad("10000");
@@ -317,6 +317,9 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       selenium.waitForPageToLoad("10000");
       selenium.goBack();
       selenium.waitForPageToLoad("30000");
+      //--------fix---------
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      refresh();
    }
      
 
