@@ -104,7 +104,7 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
    @Override
    public String getTokenValue()
    {
-      return getToken().getProperty(TokenExtProperties.FQN);
+      return token.getName();
    }
 
    /**
@@ -113,8 +113,7 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
    @Override
    public String getTokenDecription()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return restContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenExtProperties.FQN);
    }
 
 }

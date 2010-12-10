@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.autocompletion.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
 
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -61,11 +60,8 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,7 +107,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private Handlers handlers;
 
-   private TokenSelectedHandler handler;
+   private TokenSelectedHandler<T> handler;
 
    private List<TokenWidget<T>> widgets;
 
@@ -120,7 +116,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
    private boolean isTextBoxHasFocus = true;
 
    public AutocompletionFormExt(HandlerManager eventBus, int left, int top, String prefix, List<T> items,
-      TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler handler)
+      TokenWidgetFactory<T> widgetFactory, TokenSelectedHandler<T> handler)
    {
       this.handler = handler;
 
@@ -440,11 +436,11 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       removeHandlers();
       if (selectedWidget == null)
       {
-         handler.onTokenSelected(textBox.getText());
+         handler.onStringSelected(textBox.getText());
       }
       else
       {
-         handler.onTokenSelected(selectedWidget.getTokenValue());
+         handler.onTokenSelected(selectedWidget);
       }
       lockLayer.removeFromParent();
    }

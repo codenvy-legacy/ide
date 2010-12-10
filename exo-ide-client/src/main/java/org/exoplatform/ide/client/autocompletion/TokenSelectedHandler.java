@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.autocompletion;
 
+import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
+
 /**
  * Created by The eXo Platform SAS.
  *
@@ -25,11 +27,13 @@ package org.exoplatform.ide.client.autocompletion;
  * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  *
  */
-public interface TokenSelectedHandler
+public interface TokenSelectedHandler<T>
 {
 
-   void onTokenSelected(String value);
-   
+   void onStringSelected(String value);
+
+   void onTokenSelected(TokenWidget<T> value);
+
    void onCancelAutoComplete();
-   
+
 }

@@ -39,6 +39,8 @@ import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedHandler;
+import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -50,7 +52,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>,
-   ExceptionThrownHandler
+   ExceptionThrownHandler, ClassesNamesReceivedHandler
 {
 
    private enum Action {
@@ -68,7 +70,12 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       /**
        * Get all <b>public</b> constructors 
        */
-      PUBLIC_CONSTRUCTORS
+      PUBLIC_CONSTRUCTORS,
+
+      /**
+       * Get class names
+       */
+      CLASS_NAME
    }
 
    private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
@@ -111,9 +118,9 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       afterToken = line.substring(cursorPos - 1);
 
       String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
-      
+
       String token = "";
-      if(split.length != 0)
+      if (split.length != 0)
       {
          token = split[split.length - 1];
       }
@@ -155,8 +162,18 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       }
       else
       {
+         beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
+         tokenToComplete = token;
 
-         callback.onTokensCollected(new ArrayList<TokenExt>(), line, "", "");
+         //if token to complete is only whitespace string
+         if (tokenToComplete.matches("^[ ]+&") || "".equals(tokenToComplete))
+         {
+            callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
+            return;
+         }
+         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+         handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
+         CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete);
       }
 
    }
@@ -242,6 +259,19 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       classes.put(curentFqn, event.getClassInfo());
 
       filterTokens(event.getClassInfo());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedHandler#onClassesNamesReceived(org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent)
+    */
+   @Override
+   public void onClassesNamesReceived(ClassesNamesReceivedEvent event)
+   {
+      handlers.removeHandlers();
+
+      List<TokenExt> arrayList = event.getTokens();
+      Collections.sort(arrayList, this);
+      callback.onTokensCollected(arrayList, beforeToken, tokenToComplete, afterToken);
    }
 
    /**

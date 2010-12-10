@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.module.groovy.codeassistant.ui;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
@@ -26,7 +25,6 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
-import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.module.groovy.GroovyPluginImageBundle;
 import org.exoplatform.ide.client.module.groovy.codeassistant.AssistImportDeclarationHandler;
 
@@ -46,7 +44,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;

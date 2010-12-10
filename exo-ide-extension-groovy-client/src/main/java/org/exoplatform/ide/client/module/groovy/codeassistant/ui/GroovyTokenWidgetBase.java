@@ -36,7 +36,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
 
    protected int modifieres;
    
-   private String restContext;
+   protected String restContext;
 
    /**
     * @param token

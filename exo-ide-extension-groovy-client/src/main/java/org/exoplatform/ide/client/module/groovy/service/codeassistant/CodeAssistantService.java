@@ -60,4 +60,9 @@ public abstract class CodeAssistantService
     */
    public abstract void getClassDescription(String fqn);
    
+   /**
+    * @param prefix the first letters of class name 
+    */
+   public abstract void findClassesByPrefix(String prefix);
+   
 }

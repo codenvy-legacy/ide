@@ -35,6 +35,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
 /**
+ * Implementation of {@link CodeAssistantService}
+ * <br>
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,6 +49,8 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    private static final String FIND_URL = "/ide/code-assistant/find?class=";
    
    private static final String GET_CLASS_URL = "/ide/code-assistant/class-description?fqn=";
+   
+   private static final String FIND_CLASS_BY_PREFIX = "/ide/code-assistant/find-by-prefix/";
 
    private HandlerManager eventBus;
 
@@ -88,6 +92,22 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       GroovyClass classInfo = new GroovyClass();
       ClassDescriptionReceivedEvent event = new ClassDescriptionReceivedEvent(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#findClassesByPrefix(java.lang.String)
+    */
+   @Override
+   public void findClassesByPrefix(String prefix)
+   {
+      String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
+      
+      List<TokenExt> tokens = new ArrayList<TokenExt>();
+      ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
+      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
+      
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }

@@ -124,7 +124,7 @@ public class CodeAssitantTest extends Base
    {
       String pkg = Address.class.getPackage().getName();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/find-by-prefix?prefix=" + pkg, "", null,
+         launcher.service("GET", "/ide/code-assistant/find-by-prefix/" + pkg + "?where=fqn", "", null,
             null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
@@ -132,6 +132,21 @@ public class CodeAssitantTest extends Base
       assertEquals(2, types.length);
       
    }
+
+   @Test
+   public void testFindClassByPartName() throws Exception
+   {
+      String name = "A";
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/code-assistant/find-by-prefix/" + name + "?where=className", "", null,
+            null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertTrue(cres.getEntity().getClass().isArray());
+      ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
+      assertEquals(2, types.length);
+      
+   }
+
    
    @Test
    public void testClassDoc() throws Exception

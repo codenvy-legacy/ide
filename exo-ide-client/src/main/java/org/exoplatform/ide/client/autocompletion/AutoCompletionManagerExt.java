@@ -20,14 +20,15 @@ package org.exoplatform.ide.client.autocompletion;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteEvent;
+import org.exoplatform.gwtframework.editor.event.EditorInsertImportStatmentEvent;
 import org.exoplatform.ide.client.autocompletion.ui.AutocompletionFormExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
+import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
@@ -48,7 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler, TokensCollectedCallback<TokenExt>,
-   TokenSelectedHandler
+   TokenSelectedHandler<TokenExt>
 {
 
    private HandlerManager eventBus;
@@ -85,14 +86,12 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
       System.out.println("Line content - " + event.getLineContent());
-      System.out.println("Current token " + event.getCurrentToken());
       TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
          collector.collectTokens(event.getLineContent(), event.getCurrentToken(), event.getCursorPositionY(),
             event.getCursorPositionX(), event.getTokenList(), this);
       }
-      System.out.println("startsWith(String, int)".compareTo("startsWith(String)"));
    }
 
    /**
@@ -107,8 +106,8 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       int y = cursorOffsetY + 4;
       try
       {
-         new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens, collectors.getWodgetFactory(mimeType),
-            this);
+         new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens,
+            collectors.getWodgetFactory(mimeType), this);
       }
       catch (Exception e)
       {
@@ -117,9 +116,17 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onTokenSelected(java.lang.Object)
+    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onCancelAutoComplete()
     */
-   public void onTokenSelected(String value)
+   public void onCancelAutoComplete()
+   {
+      eventBus.fireEvent(new EditorSetFocusEvent());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onStringSelected(java.lang.String)
+    */
+   public void onStringSelected(String value)
    {
       int newCursorPos = (beforeToken + value).length() + 1;
       if (value.contains("("))
@@ -132,11 +139,34 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onCancelAutoComplete()
+    * @see org.exoplatform.ide.client.autocompletion.TokenSelectedHandler#onTokenSelected(org.exoplatform.ide.client.framework.codeassistant.TokenWidget)
     */
-   public void onCancelAutoComplete()
+   public void onTokenSelected(TokenWidget<TokenExt> value)
    {
-      eventBus.fireEvent(new EditorSetFocusEvent());
+      try
+      {
+         int newCursorPos = (beforeToken + value.getTokenValue()).length() + 1;
+         if (value.getTokenValue().contains("("))
+         {
+            newCursorPos = (beforeToken + value.getTokenValue()).lastIndexOf('(') + 2;
+         }
+         String tokenToPaste = beforeToken + value.getTokenValue() + afterToken;
+         
+         eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         Log.error(e.getMessage(), e);
+      }
+
+      TokenExtType type = value.getToken().getType();
+      // if token is class, interface or annotation then add import declaration
+      if (type == TokenExtType.CLASS || type == TokenExtType.ANNOTATION || type == TokenExtType.INTERFACE)
+      {
+         eventBus.fireEvent(new EditorInsertImportStatmentEvent(editorId, value.getToken().getProperty(
+            TokenExtProperties.FQN)));
+      }
    }
 
 }
