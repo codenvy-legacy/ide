@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,6 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.tab.Tab;
 
 /**
  * This class is base pane of all UI components.
@@ -45,28 +46,49 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class View extends Layout implements ActivateViewHandler
 {
-
    private ArrayList<Canvas> buttons = new ArrayList<Canvas>();
 
    /**
-    * White border style  
+    * White border style.
     */
    private static final String CLEAR_HIGLIGTH_STYLE = "3px solid #FFFFFF";
 
    /**
-    * Blue border style
+    * Blue border style.
     */
    private static final String HIGLIDTH_STYLE = "3px solid #7AADE0";
 
    /**
-    * Id if view
+    * Id of view.
     */
    private final String id;
+   
+   /**
+    * View's image.
+    */
+   private Image image;
+   
+   /**
+    * View's title.
+    */
+   private String title;
+   
+   /**
+    * View's type.
+    */
+   private String type;
 
    private HandlerRegistration mouseDownHandler;
 
+   /**
+    * Handlers.
+    */
    private Handlers handlers;
-
+   
+   /**
+    * @param id view's id
+    * @param eventBus handler manager
+    */
    public View(final String id, HandlerManager eventBus)
    {
       this.id = id;
@@ -85,7 +107,6 @@ public class View extends Layout implements ActivateViewHandler
          }
       });
    }
-
    
    /**
     * Activate this view.
@@ -157,7 +178,7 @@ public class View extends Layout implements ActivateViewHandler
    @Override
    public String getTitle()
    {
-      return id;
+      return title;
    }
 
    /**
@@ -176,4 +197,45 @@ public class View extends Layout implements ActivateViewHandler
          activateView();
    }
 
+
+   /**
+    * @return the type
+    */
+   public String getType()
+   {
+      return type;
+   }
+
+
+   /**
+    * @param type the type to set
+    */
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+
+   /**
+    * @return the image
+    */
+   public Image getImage()
+   {
+      return image;
+   }
+
+   /**
+    * @param image the image to set
+    */
+   public void setImage(Image image)
+   {
+      this.image = image;
+   }
+
+   /**
+    * @param title the title to set
+    */
+   public void setTitle(String title)
+   {
+      this.title = title;
+   }
 }
