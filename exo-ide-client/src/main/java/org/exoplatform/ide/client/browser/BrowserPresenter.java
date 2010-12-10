@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -61,7 +62,6 @@ import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
@@ -313,7 +313,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       //      }
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      eventBus.fireEvent(new SelectPanelEvent(BrowserPanel.ID));
+      eventBus.fireEvent(new SelectViewEvent(BrowserPanel.ID));
 
       if (itemToSelect != null)
       {
@@ -495,7 +495,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
 
-      eventBus.fireEvent(new SelectPanelEvent(BrowserForm.ID));
+      eventBus.fireEvent(new SelectViewEvent(BrowserForm.ID));
       eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
 
       display.getBrowserTree().setValue(event.getItem());

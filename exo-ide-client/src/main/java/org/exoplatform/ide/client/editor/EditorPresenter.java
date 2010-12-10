@@ -96,9 +96,9 @@ import com.google.gwt.user.client.Timer;
  * @version @version $Id: $
  */
 
-public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler, EditorCursorActivityHandler,
-   EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
-   EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler,
+public class EditorPresenter implements EditorContentChangedHandler, EditorInitializedHandler,
+   EditorCursorActivityHandler, EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler,
+   EditorUndoTypingHandler, EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler,
    EditorFindAndReplaceTextHandler, EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler,
@@ -277,6 +277,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
    {
       String editorId = event.getEditorId();
       String path = display.getPathByEditorId(editorId);
+      if (path == null)
+      {
+         return;
+      }
 
       if (ignoreContentChangedList.contains(path))
       {

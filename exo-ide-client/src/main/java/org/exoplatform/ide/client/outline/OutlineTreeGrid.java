@@ -259,6 +259,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     */
    private String getTokenItem(Token token)
    {
+      System.out.println("OutlineTreeGrid.getTokenItem()"+token.getType());
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
       {
          return getIconForJavaFiles(token);

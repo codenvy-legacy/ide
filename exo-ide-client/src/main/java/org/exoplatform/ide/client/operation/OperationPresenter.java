@@ -27,6 +27,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
@@ -40,6 +43,8 @@ import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecie
 import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
+
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
@@ -58,7 +63,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    public interface Display
    {
-
+      
       void showOutput();
 
       void showProperties(File file);
@@ -74,6 +79,8 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration);
 
       void closeGadgetPreviewTab();
+      
+      List<String> getViewTypes();
 
    }
 

@@ -19,23 +19,9 @@
  */
 package org.exoplatform.ide.client.panel;
 
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.user.client.Command;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.editor.MinMaxControlButton;
-import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
-import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
-import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
-import org.exoplatform.ide.client.panel.event.ChangePanelTitleHandler;
-import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.SelectPanelEvent;
-import org.exoplatform.ide.client.panel.event.SelectPanelHandler;
+import com.google.gwt.user.client.DeferredCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -53,6 +39,30 @@ import com.smartgwt.client.widgets.tab.events.TabDeselectedHandler;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ide.client.ImageUtil;
+import org.exoplatform.ide.client.editor.MinMaxControlButton;
+import org.exoplatform.ide.client.event.perspective.MaximizeOperationPanelEvent;
+import org.exoplatform.ide.client.event.perspective.RestoreOperationPanelEvent;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewHandler;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewHandler;
+import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.SelectViewHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
+import org.exoplatform.ide.client.panel.event.ChangePanelTitleHandler;
+import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
+import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -60,43 +70,51 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @version $
  */
 
-public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitleHandler
+public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitleHandler, OpenViewHandler,
+   CloseViewHandler
 {
 
-   private HandlerManager eventBus;
+   protected HandlerManager eventBus;
 
-   private Handlers handlers;
-   
+   protected Handlers handlers;
+
    private HashMap<String, List<Canvas>> tabColtrolButtons = new HashMap<String, List<Canvas>>();
-   
+
+   /**
+    * The list of view types, that can be shown in this panel.
+    */
+   private List<String> viewTypes = new ArrayList<String>();
+
    protected String previousTab = null;
-   
+
    protected MinMaxControlButton minMaxControlButton;
-   
+
    private Layout tabBarColtrols;
 
    private Tab selectedTab;
-   
+
    public Panel(HandlerManager eventBus, String id)
    {
       setID(id);
       setAttribute("paneMargin", 1, false);
-            
+
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-            
-      handlers.addHandler(SelectPanelEvent.TYPE, this);
+
+      handlers.addHandler(SelectViewEvent.TYPE, this);
       handlers.addHandler(ChangePanelTitleEvent.TYPE, this);
-      
+      handlers.addHandler(OpenViewEvent.TYPE, this);
+      handlers.addHandler(CloseViewEvent.TYPE, this);
+
       addTabSelectedHandler(tabSelectedHandler);
       addTabDeselectedHandler(tabDeselectedHandler);
       addCloseClickHandler(closeClickhandler);
       addClickHandler(new ClickHandler()
       {
-         
+
          public void onClick(ClickEvent event)
          {
-            if(selectedTab != null)
+            if (selectedTab != null)
             {
                View view = (View)selectedTab.getPane();
                ViewHighlightManager.getInstance().selectView(view);
@@ -117,7 +135,7 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
       return getTab(tabID) != null;
    }
 
-   public void openView(View view, String title, Image image, boolean canClose)
+   public void openView(final View view, String title, Image image, boolean canClose)
    {
       for (String tabTitle : tabColtrolButtons.keySet())
       {
@@ -127,7 +145,6 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
             button.hide();
          }
       }
-
       tabColtrolButtons.put(view.getTitle(), view.getColtrolButtons());
       int position = 0;
       for (Canvas button : tabColtrolButtons.get(view.getTitle()))
@@ -135,13 +152,22 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
          tabBarColtrols.addMember(button, position);
          position++;
       }
-      
+
       String imageHTML = ImageUtil.getHTML(image);
-      Tab tab = new Tab("<span>" + imageHTML + "&nbsp;" + title);
+
+      final Tab tab = new Tab("<span>" + imageHTML + "&nbsp;" + title);
       tab.setID(view.getViewId());
-      tab.setPane(view);
       tab.setCanClose(canClose);
-      addTab(tab);
+
+      DeferredCommand.addCommand(new Command()
+      {
+         public void execute()
+         {
+            tab.setPane(view);
+            addTab(tab);
+         }
+      });
+
    }
 
    public void closeView(String viewId)
@@ -149,7 +175,7 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
       if (isViewIsOpened(viewId))
       {
          removeTab(viewId);
-         eventBus.fireEvent(new PanelClosedEvent(viewId));
+         eventBus.fireEvent(new ViewClosedEvent(viewId));
       }
    }
 
@@ -180,7 +206,7 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
 
          previousTab = event.getTab().getPane().getTitle();
          selectedTab = event.getTab();
-         
+
          for (Canvas c : getChildren())
          {
             if (c.getID().equals(getID() + "_tabBar"))
@@ -191,7 +217,7 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
                }
             }
          }
-         
+
          View view = (View)event.getTab().getPane();
          ViewHighlightManager.getInstance().selectView(view);
          eventBus.fireEvent(new PanelSelectedEvent(view.getViewId()));
@@ -219,21 +245,21 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
          {
             tabBarColtrols.removeMember(button);
          }
-         
+
          View view = (View)event.getTab().getPane();
-//         event.getTab().getPane().destroy();
-//         removeTab(event.getTab());
-         eventBus.fireEvent(new PanelClosedEvent(view.getViewId()));
+         //         event.getTab().getPane().destroy();
+         //         removeTab(event.getTab());
+         eventBus.fireEvent(new ViewClosedEvent(view.getViewId()));
       }
    };
 
-   public void onSelectPanel(SelectPanelEvent event)
+   public void onSelectView(SelectViewEvent event)
    {
-      if (event.getPanelId() == null)
+      if (event.getViewId() == null)
       {
          return;
       }
-      selectTab(event.getPanelId());
+      selectTab(event.getViewId());
    }
 
    /**
@@ -241,11 +267,12 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
     */
    public void onChangePanelTitle(ChangePanelTitleEvent event)
    {
-      if (isViewIsOpened(event.getPanelId())){
+      if (isViewIsOpened(event.getPanelId()))
+      {
          setTabTitle(event.getPanelId(), event.getTitle());
       }
    }
-   
+
    public void createButtons()
    {
       tabBarColtrols = new Layout();
@@ -259,4 +286,40 @@ public class Panel extends TabSet implements SelectPanelHandler, ChangePanelTitl
       setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, tabBarColtrols);
    }
 
+   /**
+    * @return the viewTypes
+    */
+   public List<String> getViewTypes()
+   {
+      return viewTypes;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.OpenViewHandler#onOpenView(org.exoplatform.ide.client.framework.ui.event.OpenViewEvent)
+    */
+   public void onOpenView(final OpenViewEvent event)
+   {
+      final View view = event.getView();
+      if (view.getType() != null && viewTypes.contains(view.getType()))
+      {
+         show();
+         openView(event.getView(), event.getView().getTitle(), event.getView().getImage(), event.isCanClose());
+         DeferredCommand.addCommand(new Command()
+         {
+            public void execute()
+            {
+               selectTab(event.getView().getViewId());
+               eventBus.fireEvent(new ViewOpenedEvent(view.getViewId()));
+            }
+         });
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.CloseViewHandler#onCloseView(org.exoplatform.ide.client.framework.ui.event.CloseViewEvent)
+    */
+   public void onCloseView(CloseViewEvent event)
+   {
+      closeView(event.getViewId());
+   }
 }

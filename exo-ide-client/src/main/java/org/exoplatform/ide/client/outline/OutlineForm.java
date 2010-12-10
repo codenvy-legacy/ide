@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.SelectionStyle;
@@ -102,7 +102,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
    @Override
    protected void onDraw()
    {
-      eventBus.fireEvent(new PanelOpenedEvent(ID));
+      eventBus.fireEvent(new ViewOpenedEvent(ID));
       super.onDraw();
    }
 

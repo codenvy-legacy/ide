@@ -20,8 +20,8 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 
@@ -62,9 +62,9 @@ public class ViewVersionListControl extends VersionControl
       }
    }
 
-   public void onPanelOpened(PanelOpenedEvent event)
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          setVisible(true);
          setEnabled(true);

@@ -28,8 +28,11 @@ import org.exoplatform.ide.client.framework.form.FormClosedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
+import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.panel.Panel;
+
+import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -69,6 +72,9 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
       new Handlers(eventBus);
 
       tabSet = new Panel(eventBus, TAB_SET_ID);
+      tabSet.getViewTypes().add(ViewType.OUTLINE);
+      tabSet.getViewTypes().add(ViewType.VERSIONS);
+      
       createButtons();
       addMember(tabSet);
       tabSet.addCloseClickHandler(closeClickHandler);
@@ -172,6 +178,14 @@ public class CodeHelperForm extends Layout implements CodeHelperPresenter.Displa
    public boolean isShown()
    {
       return isVisible();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.outline.CodeHelperPresenter.Display#getViewTypes()
+    */
+   public List<String> getViewTypes()
+   {
+      return tabSet.getViewTypes();
    }
    
 }

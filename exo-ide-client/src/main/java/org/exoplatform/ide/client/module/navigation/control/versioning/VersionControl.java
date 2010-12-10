@@ -22,12 +22,12 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
-import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  * @version $Id: Oct 13, 2010 $
  *
  */
-public class VersionControl extends SimpleControl implements IDEControl, PanelClosedHandler, PanelOpenedHandler,
+public class VersionControl extends SimpleControl implements IDEControl, ViewClosedHandler, ViewOpenedHandler,
    PanelDeselectedHandler, PanelSelectedHandler
 {
 
@@ -55,8 +55,8 @@ public class VersionControl extends SimpleControl implements IDEControl, PanelCl
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(PanelClosedEvent.TYPE, this);
-      eventBus.addHandler(PanelOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
       eventBus.addHandler(PanelSelectedEvent.TYPE, this);
    }
@@ -86,20 +86,20 @@ public class VersionControl extends SimpleControl implements IDEControl, PanelCl
    /**
     * @see org.exoplatform.ide.client.panel.event.PanelOpenedHandler#onPanelOpened(org.exoplatform.ide.client.panel.event.PanelOpenedEvent)
     */
-   public void onPanelOpened(PanelOpenedEvent event)
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          setVisible(true);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
     */
-   public void onPanelClosed(PanelClosedEvent event)
+   public void onViewClosed(ViewClosedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          setVisible(false);
       }

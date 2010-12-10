@@ -29,13 +29,15 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
 import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
-import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
-import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -45,19 +47,19 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler,
-EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler
 {
-   
+
    private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
-   
+
    private Handlers handlers;
-   
+
    private HandlerManager eventBus;
 
    private ApplicationSettings applicationSettings;
-   
+
    private TextEditor activeTextEditor;
-   
+
    private File activeFile;
 
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
@@ -80,14 +82,18 @@ EditorActiveFileChangedHandler
    public void onShowOutline(ShowOutlineEvent event)
    {
       applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-//      eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version)));
+      //      eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version)));
       if (event.isShow())
-      {        
-         eventBus.fireEvent(new OpenPanelEvent(new OutlineForm(eventBus, activeTextEditor, activeFile), OUTLINE_TAB_ICON, "Outline"));
+      {
+         View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
+         view.setImage(OUTLINE_TAB_ICON);
+         view.setTitle("Outline");
+         view.setType(ViewType.OUTLINE);
+         eventBus.fireEvent(new OpenViewEvent(view));
       }
       else
       {
-         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+         eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
       }
    }
 
@@ -99,61 +105,65 @@ EditorActiveFileChangedHandler
       //check, was outline opened
       //to know, to create new OutlineForm
       boolean wasOutlineOpened = outlineOpened(activeTextEditor, activeFile);
-      
+
       activeTextEditor = event.getEditor();
       activeFile = event.getFile();
-      
+
       boolean openOutline = outlineOpened(activeTextEditor, activeFile);
-      
+
       //if outline was closed, but must be opened, open it
       if (openOutline && !wasOutlineOpened)
       {
-         eventBus.fireEvent(new OpenPanelEvent(new OutlineForm(eventBus, activeTextEditor, activeFile), OUTLINE_TAB_ICON, "Outline"));
+         View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
+         view.setImage(OUTLINE_TAB_ICON);
+         view.setTitle("Outline");
+         view.setType(ViewType.OUTLINE);
+         eventBus.fireEvent(new OpenViewEvent(view));
          return;
       }
-      
+
       //if outline was opened, but must be closed, close it
       if (!openOutline && wasOutlineOpened)
       {
-         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+         eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
       }
-      
-//      if (activeFile == null || activeFile.getContentType() == null)
-//      {
-//         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
-//         return;
-//      }
-//      
-//      if(!activeTextEditor.canCreateTokenList())
-//      {
-//         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
-//         return;
-//      }
-//      
-//      if (OutlineTreeGrid.haveOutline(activeFile))
-//      {
-//         //check is outline panel must be opened (is outline stored in cookies)
-//         boolean doOpenOutline =
-//            applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
-//         
-//         //if outline panel must be opened in new file, but was closed in previous, open it
-//         if (doOpenOutline && !wasOutlineOpened)
-//         {
-//            eventBus.fireEvent(new OpenPanelEvent(new OutlineForm(eventBus, activeTextEditor), OUTLINE_TAB_ICON, "Outline"));
-//            return;
-//         }
-//         //if outline panel must be closed, but it was opene, close it
-//         if (!doOpenOutline && wasOutlineOpened)
-//         {
-//            eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
-//         }
-//      }
-//      else
-//      {
-//         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
-//      }
+
+      //      if (activeFile == null || activeFile.getContentType() == null)
+      //      {
+      //         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+      //         return;
+      //      }
+      //      
+      //      if(!activeTextEditor.canCreateTokenList())
+      //      {
+      //         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+      //         return;
+      //      }
+      //      
+      //      if (OutlineTreeGrid.haveOutline(activeFile))
+      //      {
+      //         //check is outline panel must be opened (is outline stored in cookies)
+      //         boolean doOpenOutline =
+      //            applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
+      //         
+      //         //if outline panel must be opened in new file, but was closed in previous, open it
+      //         if (doOpenOutline && !wasOutlineOpened)
+      //         {
+      //            eventBus.fireEvent(new OpenPanelEvent(new OutlineForm(eventBus, activeTextEditor), OUTLINE_TAB_ICON, "Outline"));
+      //            return;
+      //         }
+      //         //if outline panel must be closed, but it was opene, close it
+      //         if (!doOpenOutline && wasOutlineOpened)
+      //         {
+      //            eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+      //         }
+      //      }
+      //      else
+      //      {
+      //         eventBus.fireEvent(new ClosePanelEvent(OutlineForm.ID));
+      //      }
    }
-   
+
    /**
     * Determine the state of outline panel 
     * by text editor (can have outline or not), 
@@ -167,10 +177,12 @@ EditorActiveFileChangedHandler
    private boolean outlineOpened(TextEditor textEditor, File file)
    {
       boolean storedOutlineState =
-         applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings.getValueAsBoolean("outline");
+         applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings
+            .getValueAsBoolean("outline");
       boolean canEditorHasOutline = textEditor != null && textEditor.canCreateTokenList();
-      boolean canFileHasOutline = file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
-      
+      boolean canFileHasOutline =
+         file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
+
       return storedOutlineState && canEditorHasOutline && canFileHasOutline;
    }
 

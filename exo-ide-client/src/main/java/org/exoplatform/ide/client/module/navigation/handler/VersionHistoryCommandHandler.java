@@ -39,6 +39,14 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVer
 import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -48,12 +56,6 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedHandler;
-import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
-import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
-import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
-import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
@@ -67,7 +69,7 @@ import java.util.List;
  */
 public class VersionHistoryCommandHandler implements OpenVersionHandler, ExceptionThrownHandler,
    ItemVersionsReceivedHandler, EditorActiveFileChangedHandler, ShowPreviousVersionHandler, ShowNextVersionHandler,
-   FileContentReceivedHandler, PanelClosedHandler, PanelOpenedHandler, FileContentSavedHandler
+   FileContentReceivedHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
@@ -93,8 +95,8 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ShowNextVersionEvent.TYPE, this);
       handlers.addHandler(ShowPreviousVersionEvent.TYPE, this);
-      handlers.addHandler(PanelOpenedEvent.TYPE, this);
-      handlers.addHandler(PanelClosedEvent.TYPE, this);
+      handlers.addHandler(ViewOpenedEvent.TYPE, this);
+      handlers.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -110,7 +112,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
       {
          if (event.getVersion() == null)
          {
-            eventBus.fireEvent(new ClosePanelEvent(VersionContentForm.ID));
+            eventBus.fireEvent(new CloseViewEvent(VersionContentForm.ID));
          }
          else
          {
@@ -185,7 +187,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      eventBus.fireEvent(new ClosePanelEvent(VersionContentForm.ID));
+      eventBus.fireEvent(new CloseViewEvent(VersionContentForm.ID));
    }
 
    /**
@@ -244,8 +246,11 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
          version = (Version)event.getFile();
          if (!isVersionPanelOpened)
          {
-            Image tabIcon = new Image(IDEImageBundle.INSTANCE.viewVersions());
-            eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version), tabIcon, "Version"));
+            View view = new VersionContentForm(eventBus, version);
+            view.setImage(new Image(IDEImageBundle.INSTANCE.viewVersions()));
+            view.setTitle("Version");
+            view.setType(ViewType.VERSIONS);
+            eventBus.fireEvent(new OpenViewEvent(view));
             Timer timer = new Timer()
             {
                @Override
@@ -293,11 +298,11 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
     */
-   public void onPanelClosed(PanelClosedEvent event)
+   public void onViewClosed(ViewClosedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          isVersionPanelOpened = false;
          version = null;
@@ -308,9 +313,9 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
    /**
     * @see org.exoplatform.ide.client.panel.event.PanelOpenedHandler#onPanelOpened(org.exoplatform.ide.client.panel.event.PanelOpenedEvent)
     */
-   public void onPanelOpened(PanelOpenedEvent event)
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          isVersionPanelOpened = true;
          handlers.addHandler(FileContentSavedEvent.TYPE, this);

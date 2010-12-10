@@ -23,10 +23,12 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.panel.event.ClosePanelEvent;
-import org.exoplatform.ide.client.panel.event.ClosePanelHandler;
-import org.exoplatform.ide.client.panel.event.OpenPanelEvent;
-import org.exoplatform.ide.client.panel.event.OpenPanelHandler;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewHandler;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewHandler;
+
+import java.util.List;
 
 /**
  * Presenter for CodeHelper panel, that displays in
@@ -38,7 +40,7 @@ import org.exoplatform.ide.client.panel.event.OpenPanelHandler;
  * @version $Id:
  *
  */
-public class CodeHelperPresenter implements OpenPanelHandler, ClosePanelHandler
+public class CodeHelperPresenter implements OpenViewHandler, CloseViewHandler
 {
    interface Display
    {
@@ -51,6 +53,8 @@ public class CodeHelperPresenter implements OpenPanelHandler, ClosePanelHandler
       void addView(View view, Image tabIcon, String title);
       
       void closePanel(String panelId);
+      
+      List<String> getViewTypes();
    }
 
    private HandlerManager eventBus;
@@ -63,8 +67,8 @@ public class CodeHelperPresenter implements OpenPanelHandler, ClosePanelHandler
    {
       eventBus = bus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(OpenPanelEvent.TYPE, this);
-      handlers.addHandler(ClosePanelEvent.TYPE, this);
+      handlers.addHandler(OpenViewEvent.TYPE, this);
+      handlers.addHandler(CloseViewEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -75,21 +79,25 @@ public class CodeHelperPresenter implements OpenPanelHandler, ClosePanelHandler
    /**
     * @see org.exoplatform.ide.client.panel.event.OpenPanelHandler#onOpenPanel(org.exoplatform.ide.client.panel.event.OpenPanelEvent)
     */
-   public void onOpenPanel(OpenPanelEvent event)
+   public void onOpenView(OpenViewEvent event)
    {
-      if (!display.isShown())
+      View view = event.getView();
+      if (view.getType() != null && display.getViewTypes().contains(view.getType()))
       {
-         display.show();
+         if (!display.isShown())
+         {
+            display.show();
+         }
+         display.addView(event.getView(), event.getView().getImage(), event.getView().getTitle());
       }
-      display.addView(event.getView(), event.getTabIcon(), event.getTitle());
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.ClosePanelHandler#onClosePanel(org.exoplatform.ide.client.panel.event.ClosePanelEvent)
+    * @see org.exoplatform.ide.client.framework.ui.event.CloseViewHandler#onCloseViewl(org.exoplatform.ide.client.framework.ui.event.CloseViewEvent)
     */
-   public void onClosePanel(ClosePanelEvent event)
+   public void onCloseView(CloseViewEvent event)
    {
-      display.closePanel(event.getPanelId());
+      display.closePanel(event.getViewId());
    }
 
 }

@@ -26,13 +26,13 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
-import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
-import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   PanelClosedHandler, PanelOpenedHandler
+   ViewClosedHandler, ViewOpenedHandler
 {
 
    public static final String ID = "View/Show \\ Hide Outline";
@@ -71,8 +71,8 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(PanelClosedEvent.TYPE, this);
-      eventBus.addHandler(PanelOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
    }
    
    /**
@@ -110,9 +110,9 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
-   public void onPanelOpened(PanelOpenedEvent event)
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (OutlineForm.ID.equals(event.getPanelId()))
+      if (OutlineForm.ID.equals(event.getViewId()))
       {
          setSelected(true);
          outLineFormOpened = true;
@@ -121,11 +121,11 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
     */
-   public void onPanelClosed(PanelClosedEvent event)
+   public void onViewClosed(ViewClosedEvent event)
    {
-      if (OutlineForm.ID.equals(event.getPanelId()))
+      if (OutlineForm.ID.equals(event.getViewId()))
       {
          setSelected(false);
          outLineFormOpened = false;

@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -107,10 +107,6 @@ public class VersionContentForm extends View implements VersionContentPresenter.
 
                Element iFrameElement = iframes.getItem(0);
                setHandler(iFrameElement);
-//
-//               Document doc = getIFrameDocument(IFrameElement.as(iFrameElement));
-//               BodyElement body = doc.getBody();
-//               setHandler(body);
             }
          }
       }.schedule(1000);
@@ -122,7 +118,7 @@ public class VersionContentForm extends View implements VersionContentPresenter.
    @Override
    protected void onDraw()
    {
-      eventBus.fireEvent(new PanelOpenedEvent(ID));
+      eventBus.fireEvent(new ViewOpenedEvent(ID));
       super.onDraw();
    }
 
@@ -180,14 +176,6 @@ public class VersionContentForm extends View implements VersionContentPresenter.
          e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
       }
 
-      //      if(typeof e.addEventListener != "undefined")
-      //      {
-      //         e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
-      //      }
-      //      else
-      //      {
-      //         e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
-      //      }
    }-*/;
 
    private native Document getIFrameDocument(IFrameElement iframe)/*-{

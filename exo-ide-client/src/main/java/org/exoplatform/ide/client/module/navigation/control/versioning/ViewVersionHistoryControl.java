@@ -30,12 +30,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.panel.event.PanelClosedEvent;
-import org.exoplatform.ide.client.panel.event.PanelClosedHandler;
-import org.exoplatform.ide.client.panel.event.PanelOpenedEvent;
-import org.exoplatform.ide.client.panel.event.PanelOpenedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 
 /**
@@ -44,7 +44,7 @@ import org.exoplatform.ide.client.versioning.VersionContentForm;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class ViewVersionHistoryControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, PanelClosedHandler, PanelOpenedHandler, FileSavedHandler
+public class ViewVersionHistoryControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewClosedHandler, ViewOpenedHandler, FileSavedHandler
 {
 
    private static final String ID = "View/Version History...";
@@ -79,8 +79,8 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(PanelClosedEvent.TYPE, this);
-      eventBus.addHandler(PanelOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(FileSavedEvent.TYPE, this);
    }
@@ -117,9 +117,9 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       }
    }
 
-   public void onPanelOpened(PanelOpenedEvent event)
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          setSelected(true);
          versionPanelOpened = true;
@@ -128,11 +128,11 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelClosedHandler#onPanelClosed(org.exoplatform.ide.client.panel.event.PanelClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
     */
-   public void onPanelClosed(PanelClosedEvent event)
+   public void onViewClosed(ViewClosedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (VersionContentForm.ID.equals(event.getViewId()))
       {
          setSelected(false);
          versionPanelOpened = false;
