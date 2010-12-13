@@ -123,8 +123,7 @@
                   <configuration>
                      <tasks>
                         <echo file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
-                           buildNumber =
-                           ${buildNumber}
+                           buildNumber = ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
