@@ -29,7 +29,7 @@ public class TestService {
   }
 }
 
-class Dep extends String 
+class Dep extends String
 {
    private String name;
    private int age;
@@ -38,14 +38,14 @@ class Dep extends String
      return age;
    }
    
-   public void addYear(){
-     int i = 1;
+   public void addYear()
+   { int i = 1;
      age += i;
    }
    
-   public String greet(String begin){
-     return begin+", " + name + "!";
-   }
+   public String greet(
+   String begin) {
+     return begin+", " + name + "!";  }
 
    private int address;   
  }
