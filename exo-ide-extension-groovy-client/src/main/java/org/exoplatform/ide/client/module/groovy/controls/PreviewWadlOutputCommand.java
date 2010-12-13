@@ -33,7 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"administrators"})
 public class PreviewWadlOutputCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
    private static final String ID = "Run/Launch REST Service";
