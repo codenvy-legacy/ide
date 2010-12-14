@@ -85,7 +85,7 @@ public class Locators
     */
    public interface OperationForm
    {
-      public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]";
+      public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationPanel\"]";
       
       public static final String PROPERTIES_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
       

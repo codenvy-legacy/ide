@@ -138,7 +138,7 @@ public class PreviewHtmlFileTest extends BaseTest
       
       //---- 5 -----------------
       //close preview tab
-      selenium.click("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/icon");
+      selenium.click("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Preview]/icon");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //---- 6 -----------------
@@ -166,7 +166,7 @@ public class PreviewHtmlFileTest extends BaseTest
    private void checkPreviewTab() throws Exception
    {
     //is Preview Tab present
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Preview]/"));
       
       selenium.selectFrame("//iframe[@src='" + URL+TEST_FOLDER+"/"+FILE_NAME + "']");
       

@@ -140,12 +140,12 @@ public class RunRestServiceCommandTest extends BaseTest
       assertEquals(
          "[INFO] " + SIMPLE_FILE_NAME + " validated successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
          "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + SIMPLE_FILE_NAME
             + " deployed successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
 
       //---- 6 -----------------
       //check, that hanlders removed, and after validation and deploying 
@@ -215,7 +215,7 @@ public class RunRestServiceCommandTest extends BaseTest
       assertEquals(
          "[INFO] " + NON_VALID_FILE_NAME + " validated successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
 
       //check Launch Rest Service form doesn't appear
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
@@ -265,12 +265,12 @@ public class RunRestServiceCommandTest extends BaseTest
       assertEquals(
          "[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
          "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/"
             + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
 
    }
 
@@ -319,12 +319,12 @@ public class RunRestServiceCommandTest extends BaseTest
       assertEquals(
          "[INFO] " + NEW_FILE_NAME + " validated successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
       assertEquals(
          "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + NEW_FILE_NAME
             + " deployed successfully.",
          selenium
-            .getText("//div[@eventproxy='ideOperationFormTabSet']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
 
    }
 

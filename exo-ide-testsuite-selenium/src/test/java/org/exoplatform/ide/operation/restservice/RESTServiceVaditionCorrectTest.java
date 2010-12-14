@@ -87,7 +87,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Output]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Output]/"));
       assertEquals("[INFO] " + FILE_NAME + " validated successfully.", selenium.getText("//font[@color='#007700']"));
    }
 

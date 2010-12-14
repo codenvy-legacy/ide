@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.client.operation;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
@@ -30,6 +33,7 @@ import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandle
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
 import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
@@ -175,13 +179,20 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
          openView(propertiesForm, propertiesForm.getTitle(), propertiesForm.getImage(), true);
          propertiesTab = getTab(propertiesForm.getViewId());
       }
-
-      selectTab(propertiesTab.getID());
+      DeferredCommand.addCommand(new Command()
+      {
+         public void execute()
+         {
+            selectTab(propertiesForm.getViewId());
+            eventBus.fireEvent(new ViewOpenedEvent(propertiesForm.getViewId()));
+         }
+      });
+    
 
       propertiesForm.refreshProperties(file);
 
    }
-
+   
    public void closePropertiesTab()
    {
       if (getTab(propertiesForm.getViewId()) != null)
@@ -190,7 +201,7 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
       }
    }
 
-   public void showPreview(String path)
+   public void showPreview(final String path)
    {
       show();
 
@@ -200,9 +211,16 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
       {
          openView(previewForm, previewForm.getTitle(), previewForm.getImage(), true);
       }
-
-      selectTab(previewForm.getViewId());
-      previewForm.showPreview(path);
+      
+      DeferredCommand.addCommand(new Command()
+      {
+         public void execute()
+         {
+            selectTab(previewForm.getViewId());
+            eventBus.fireEvent(new ViewOpenedEvent(previewForm.getViewId()));
+            previewForm.showPreview(path);
+         }
+      });
    }
 
    public void closePreviewTab()
@@ -225,8 +243,17 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
       {
          openView(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
       }
-      selectTab(gadgetPreviewPane.getViewId());
-      gadgetPreviewPane.onOpenTab();
+      DeferredCommand.addCommand(new Command()
+      {
+         public void execute()
+         {
+            selectTab(gadgetPreviewPane.getViewId());
+            eventBus.fireEvent(new ViewOpenedEvent(gadgetPreviewPane.getViewId()));
+            gadgetPreviewPane.onOpenTab();
+         }
+      });
+      
+      
    }
 
    public void onOperationPanelRestored(OperationPanelRestoredEvent event)

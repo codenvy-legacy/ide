@@ -163,7 +163,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 //      Thread.sleep(TestConstants.SLEEP);
 
       //check is Preview tab appeared
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Preview]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Preview]/"));
 
       //select iframe in Preview tab
       selenium.selectFrame("//iframe[@src='" + URL + HTML_FILE + "']");

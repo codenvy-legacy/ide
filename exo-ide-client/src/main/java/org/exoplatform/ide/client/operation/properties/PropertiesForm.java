@@ -49,7 +49,10 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 
 public class PropertiesForm extends View implements PropertiesPresenter.Display
 {
-
+   public final static String ID = "idePropertiesView";
+   
+   public final static String FORM_ID = "ideDynamicPropertiesForm";
+   
    private Canvas content;
 
    private PropertiesPresenter presenter;
@@ -58,7 +61,7 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
 
    public PropertiesForm(HandlerManager eventBus)
    {
-      super("idePropertiesView", eventBus);
+      super(ID, eventBus);
       image = new Image(IDEImageBundle.INSTANCE.properties());
 
       presenter = new PropertiesPresenter(eventBus);
@@ -90,8 +93,7 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
       else
       {
          content = getPropertiesForm(file.getProperties());
-         String ID = "ideDynamicPropertiesForm";
-         content.setID(ID);
+         content.setID(FORM_ID);
          content.setPadding(10);
          //         content.setTitleWidth(200);
          content.setLayoutAlign(VerticalAlignment.TOP);

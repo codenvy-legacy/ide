@@ -53,7 +53,7 @@ public class RESTServiceVaditionWrongTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Output]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Output]/"));
 
       String mess = selenium.getText("//font[@color='#880000']");
       assertTrue(mess.contains("[ERROR] Untitled file.groovy validation failed. Error (400: Bad Request)"));
