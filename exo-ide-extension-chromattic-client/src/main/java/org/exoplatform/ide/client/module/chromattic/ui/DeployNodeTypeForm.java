@@ -41,6 +41,8 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.module.chromattic.Images;
 
 import java.util.LinkedHashMap;
 
@@ -53,9 +55,9 @@ import java.util.LinkedHashMap;
  */
 public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePresenter.Display
 {
-   public static final int WIDTH = 650;
+   public static final int WIDTH = 570;
 
-   public static final int HEIGHT = 320;
+   public static final int HEIGHT = 230;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -73,15 +75,9 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
 
    private final String ID_DEPLOY_BUTTON = "ideDeployNodeTypeFormDeployButton";
 
-   private final String ID_DEPENDENCY_FORM = "ideDeployNodeTypeFormDependendyDynamicForm";
-
-   private final String ID_RESULT_FORM = "ideDeployNodeTypeFormResultDynamicForm";
-
-   private final String ID_CHOICE_FORM = "ideDeployNodeTypeFormChoiceDynamicForm";
+   private final String ID_DYNAMIC_FORM = "ideDeployNodeTypeFormDynamicForm";
 
    private final String ID_LOCATION_FIELD = "ideDeployNodeTypeFormLocationField";
-
-   private final String ID_GENERATION_RESULT_FIELD = "ideDeployNodeTypeFormGenerationResultField";
 
    private final String ID_DEPENDENCY_FIELD = "ideDeployNodeTypeFormDependencyField";
 
@@ -98,11 +94,6 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
     * Dependency location text field.
     */
    private TextField dependencyField;
-
-   /**
-    * Generation result text field.
-    */
-   private TextField generationResultField;
 
    /**
     * Node type format select field.
@@ -142,24 +133,13 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       mainLayout.setWidth100();
       mainLayout.setHeight100();
       mainLayout.setPadding(20);
-      mainLayout.setMembersMargin(10);
+      mainLayout.setMembersMargin(20);
 
       mainLayout.addMember(createDependencyForm());
-
-      HLayout centerLayout = new HLayout();
-      centerLayout.setWidth100();
-      centerLayout.setHeight100();
-      centerLayout.setMembersMargin(5);
-      centerLayout.addMember(createLeftLayout());
-      centerLayout.addMember(createResultForm());
-
-      mainLayout.addMember(centerLayout);
-
       mainLayout.addMember(createButtonLayout());
 
       addCloseClickHandler(new CloseClickHandler()
       {
-
          @Override
          public void onCloseClick(CloseClientEvent event)
          {
@@ -179,92 +159,29 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    private DynamicForm createDependencyForm()
    {
       DynamicForm form = new DynamicForm();
-      form.setID(ID_DEPENDENCY_FORM);
+      form.setID(ID_DYNAMIC_FORM);
       form.setWrapItemTitles(true);
       form.setAutoWidth();
-      form.setNumCols(1);
+      form.setNumCols(2);
       form.setLayoutAlign(Alignment.CENTER);
 
       locationField = new TextField(ID_LOCATION_FIELD, "<nobr>" + "Location" + "</nobr>");
-      locationField.setTitleAlign(Alignment.LEFT);
+      locationField.setTitleOrientation(TitleOrientation.TOP);
       locationField.setWidth(500);
+      locationField.setColSpan(2);
       locationField.setShowDisabled(false);
       locationField.setDisabled(true);
 
       dependencyField = new TextField(ID_DEPENDENCY_FIELD, "<nobr>" + "Dependency URL" + "</nobr>");
-      dependencyField.setTitleAlign(Alignment.LEFT);
+      dependencyField.setTitleOrientation(TitleOrientation.TOP);
       dependencyField.setWidth(500);
+      dependencyField.setColSpan(2);
 
-      form.setItems(locationField, dependencyField);
+      formatField = createSelectItem(ID_FORMAT_FIELD, "Node type format", 250);
+      alreadyExistBehaviorField = createSelectItem(ID_ALREADY_EXIST_BEHAVIOR_FIELD, "What to do if node exists?", 250);
+
+      form.setItems(locationField, dependencyField, formatField, alreadyExistBehaviorField);
       return form;
-   }
-
-   /**
-    * Create form for node type and already exist behavior select fields.
-    * 
-    * @return {@link DynamicForm}
-    */
-   private DynamicForm createChoiceForm()
-   {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_CHOICE_FORM);
-      form.setAutoWidth();
-      form.setNumCols(1);
-      form.setLayoutAlign(Alignment.LEFT);
-
-      formatField = createSelectItem(ID_FORMAT_FIELD, "Node type format", 200);
-      alreadyExistBehaviorField = createSelectItem(ID_ALREADY_EXIST_BEHAVIOR_FIELD, "What to do if node exists?", 200);
-
-      form.setItems(formatField, alreadyExistBehaviorField);
-
-      return form;
-   }
-
-   /**
-    * Create form for result field.
-    * 
-    * @return {@link DynamicForm}
-    */
-   private DynamicForm createResultForm()
-   {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_RESULT_FORM);
-      form.setAutoWidth();
-      form.setNumCols(1);
-      form.setLayoutAlign(Alignment.RIGHT);
-
-      generationResultField = new TextField(ID_GENERATION_RESULT_FIELD, "Node type");
-      generationResultField.setTitleOrientation(TitleOrientation.TOP);
-      generationResultField.setWidth(390);
-      generationResultField.setHeight(130);
-
-      form.setItems(generationResultField);
-
-      return form;
-   }
-
-   /**
-    * @return {@link VLayout}
-    */
-   private VLayout createLeftLayout()
-   {
-      VLayout vLayout = new VLayout();
-      vLayout.setAutoWidth();
-      vLayout.setHeight100();
-      vLayout.setMembersMargin(20);
-
-      vLayout.addMember(createChoiceForm());
-
-      HLayout hLayout = new HLayout();
-      hLayout.setAutoWidth();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setLayoutAlign(Alignment.CENTER);
-
-      generateButton = createButton(ID_GENERATE_BUTTON, "Generate", "");
-      hLayout.addMember(generateButton);
-
-      vLayout.addMember(hLayout);
-      return vLayout;
    }
 
    /**
@@ -280,7 +197,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       SelectItem selectItem = new SelectItem();
       selectItem.setTitleOrientation(TitleOrientation.TOP);
       selectItem.setName(id);
-      selectItem.setTitle(title);
+      selectItem.setTitle("<nobr>" + title + "</nobr>");
       selectItem.setWidth(width);
       return selectItem;
    }
@@ -296,9 +213,11 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       hLayout.setHeight(BUTTON_HEIGHT);
       hLayout.setLayoutAlign(Alignment.CENTER);
 
-      deployButton = createButton(ID_DEPLOY_BUTTON, "Deploy", "");
-      cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", "");
+      generateButton = createButton(ID_GENERATE_BUTTON, "Generate", Images.Controls.PREVIEW_NODE_TYPE);
+      deployButton = createButton(ID_DEPLOY_BUTTON, "Deploy", Images.Buttons.OK);
+      cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.CANCEL);
 
+      hLayout.addMember(generateButton);
       hLayout.addMember(deployButton);
       hLayout.addMember(cancelButton);
       return hLayout;
@@ -386,20 +305,12 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.chromattic.ui.DeployNodeTypePresenter.Display#getGenerationResult()
-    */
-   @Override
-   public HasValue<String> getGenerationResult()
-   {
-      return generationResultField;
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.chromattic.ui.DeployNodeTypePresenter.Display#closeView()
     */
    @Override
    public void closeView()
    {
+      eventBus.fireEvent(new ViewClosedEvent(ID));
       destroy();
    }
 

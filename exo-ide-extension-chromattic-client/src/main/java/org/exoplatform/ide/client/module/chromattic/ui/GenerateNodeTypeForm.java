@@ -42,6 +42,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.module.chromattic.Images;
 
 /**
@@ -59,7 +60,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
    private final int BUTTON_HEIGHT = 22;
 
-   private static final String ID = "ideGenerateNodeTypeForm";
+   public static final String ID = "ideGenerateNodeTypeForm";
 
    private final String TITLE = "Generate Node Type";
 
@@ -113,6 +114,16 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
       addItem(mainLayout);
       show();
+   }
+   
+   /**
+    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    */
+   @Override
+   protected void onDestroy()
+   {
+      eventBus.fireEvent(new ViewClosedEvent(ID));
+      super.onDestroy();
    }
 
    private DynamicForm createMainForm()

@@ -31,6 +31,8 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.chromattic.event.DeployNodeTypeEvent;
 import org.exoplatform.ide.client.module.chromattic.event.DeployNodeTypeHandler;
@@ -64,7 +66,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeD
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getDeployButton();
-      
+
       /**
        * Get cancel button.
        * 
@@ -85,7 +87,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeD
        * @return {@link TextFieldItem}
        */
       TextFieldItem getDependencyLocation();
-      
+
       /**
        * Get groovy location.
        * 
@@ -99,21 +101,14 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeD
        * @return {@link HasValue}
        */
       HasValue<String> getNodeTypeFormat();
-      
+
       /**
        * Get action if node type exist.
        * 
        * @return {@link HasValue}
        */
       HasValue<String> getActionIfExist();
-      
-      /**
-       * Get node type generation result.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getGenerationResult();
-      
+
       /**
        * Set available values of node type format.
        * 
@@ -255,13 +250,21 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeD
       handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
       if (event.getException() != null)
       {
-         Dialogs.getInstance().showError(getErrorMessage(event.getException()));
-         return;
+         if (event.getException().getMessage() != null
+            && event.getException().getMessage().startsWith("startup failed"))
+         {
+            showErrorInOutput(event.getException().getMessage());
+            return;
+         }
+         else
+         {
+            Dialogs.getInstance().showError(getErrorMessage(event.getException()));
+            return;
+         }
       }
 
       display.updateDeployButtonState(true);
       generatedNodeType = event.getGenerateNodeTypeResult().getNodeTypeDefinition();
-      display.getGenerationResult().setValue(generatedNodeType);
    }
 
    private String getErrorMessage(Throwable exception)
@@ -291,7 +294,17 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeD
       {
          return exception.getMessage();
       }
+   }
 
+   /**
+    * 
+    * 
+    * @param errorMessage message with error
+    */
+   private void showErrorInOutput(String errorMessage)
+   {
+      errorMessage =  errorMessage.replace("\n", "<br>");
+      eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
    }
 
    /**

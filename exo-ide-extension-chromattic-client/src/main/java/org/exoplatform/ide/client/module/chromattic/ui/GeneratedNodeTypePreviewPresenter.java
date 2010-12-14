@@ -30,6 +30,8 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
@@ -37,6 +39,8 @@ import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeEvent;
+import org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
@@ -48,7 +52,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandler, EditorActiveFileChangedHandler,
-   ViewClosedHandler, NodeTypeGenerationResultReceivedHandler, ViewOpenedHandler
+   ViewClosedHandler, NodeTypeGenerationResultReceivedHandler, ViewOpenedHandler, GenerateNodeTypeHandler
 {
    interface Display
    {
@@ -73,8 +77,9 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    {
       this.eventBus = eventBus;
 
-      eventBus.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
 
       handlers = new Handlers(eventBus);
    }
@@ -122,8 +127,11 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
       {
          isOpened = false;
-         display.closeView();
          handlers.removeHandlers();
+      }
+      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
+      {
+         handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
       }
    }
 
@@ -133,10 +141,21 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event)
    {
+      handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
       if (event.getException() != null)
       {
-         Dialogs.getInstance().showError(getErrorMessage(event.getException()));
-         return;
+         if (event.getException().getMessage() != null
+            && event.getException().getMessage().startsWith("startup failed"))
+         {
+            showErrorInOutput(event.getException().getMessage());
+            return;
+         }
+         else
+         {
+            Dialogs.getInstance().showError(getErrorMessage(event.getException()));
+            return;
+         }
+
       }
       generatedNodeType = event.getGenerateNodeTypeResult().getNodeTypeDefinition();
       if (isOpened)
@@ -182,7 +201,12 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       {
          return exception.getMessage();
       }
+   }
 
+   private void showErrorInOutput(String errorMessage)
+   {
+      errorMessage = errorMessage.replace("\n", "<br>");
+      eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
    }
 
    /**
@@ -197,4 +221,12 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeHandler#onGenerateNodeType(org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeEvent)
+    */
+   @Override
+   public void onGenerateNodeType(GenerateNodeTypeEvent event)
+   {
+      handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
+   }
 }

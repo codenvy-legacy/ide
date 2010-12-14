@@ -41,8 +41,8 @@ import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.module.chromattic.Images;
-
 
 /**
  * 
@@ -77,6 +77,16 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
       createEditor();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.View#onDestroy()
+    */
+   @Override
+   protected void onDestroy()
+   {
+      eventBus.fireEvent(new ViewClosedEvent(ID));
+      super.onDestroy();
+   }
+
    private void createEditor()
    {
       Editor editor = null;
@@ -99,21 +109,22 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
 
       new Timer()
       {
-         
+
          @Override
          public void run()
          {
             Element editorWraper =
                Document.get().getElementById(smartGWTTextEditor.getTextEditor().getEditorWrapperID());
 
-            NodeList<Element> iframes =   editorWraper.getElementsByTagName("iframe");
+            NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
             {
 
                Element iFrameElement = iframes.getItem(0);
                setHandler(iFrameElement);
+            }
          }
-      }}.schedule(2000);
+      }.schedule(2000);
 
    }
 
