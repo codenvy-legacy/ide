@@ -87,8 +87,6 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       {
          View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
          view.setImage(OUTLINE_TAB_ICON);
-         view.setTitle("Outline");
-         view.setType(ViewType.OUTLINE);
          eventBus.fireEvent(new OpenViewEvent(view));
       }
       else

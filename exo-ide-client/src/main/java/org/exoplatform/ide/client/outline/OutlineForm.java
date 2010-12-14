@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 
@@ -57,6 +58,9 @@ public class OutlineForm extends View implements OutlinePresenter.Display
    public OutlineForm(HandlerManager bus, TextEditor activeTextEditor, File activeFile)
    {
       super(ID, bus);
+      setTitle("Outline");
+      setType(ViewType.OUTLINE);
+      
       eventBus = bus;
 
       createTreeGrid();

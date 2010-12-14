@@ -176,6 +176,11 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
       {
          removeTab(viewId);
          eventBus.fireEvent(new ViewClosedEvent(viewId));
+         if (getTabs().length <= 0)
+         {
+            hide();
+            //TODO maybe some event to notify
+         }
       }
    }
 
@@ -250,6 +255,11 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
          //         event.getTab().getPane().destroy();
          //         removeTab(event.getTab());
          eventBus.fireEvent(new ViewClosedEvent(view.getViewId()));
+         if (getTabs().length == 1)
+         {
+            hide();
+            //TODO panel hidden event
+         }
       }
    };
 
@@ -322,4 +332,5 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
    {
       closeView(event.getViewId());
    }
+
 }
