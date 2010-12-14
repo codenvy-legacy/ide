@@ -29,10 +29,14 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
@@ -47,7 +51,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ViewClosedHandler
 {
 
    private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
@@ -69,6 +73,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(ShowOutlineEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -82,7 +87,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
    public void onShowOutline(ShowOutlineEvent event)
    {
       applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-      //      eventBus.fireEvent(new OpenPanelEvent(new VersionContentForm(eventBus, version)));
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
       if (event.isShow())
       {
          View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
@@ -182,6 +187,18 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
          file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
 
       return storedOutlineState && canEditorHasOutline && canFileHasOutline;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    */
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (OutlineForm.ID.equals(event.getViewId()))
+      {
+         applicationSettings.setValue("outline", new Boolean(false), Store.COOKIES);
+         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      }
    }
 
 }
