@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.user.client.Command;
+
+import com.google.gwt.user.client.DeferredCommand;
+
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserForm;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -93,7 +97,13 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
       SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, context, folder);
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.search());
       tabContainer.openView(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
-      tabContainer.selectTabPanel(SearchResultsForm.ID);
+      DeferredCommand.addCommand(new Command()
+      {
+         public void execute()
+         {
+            tabContainer.selectTabPanel(SearchResultsForm.ID);
+         }
+      });
    }
 
    public void selectBrowserPanel()
