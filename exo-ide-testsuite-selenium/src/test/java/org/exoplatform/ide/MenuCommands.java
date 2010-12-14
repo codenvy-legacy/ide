@@ -45,19 +45,19 @@ public interface MenuCommands
       public static final String REST_SERVICE_FILE = "REST Service";
 
       public static final String GROOVY_SCRIPT_FILE = "POGO";
-      
+
       public static final String NETVIBES_WIDGET = "Netvibes Widget";
 
       public static final String GROOVY_TEMPLATE_FILE = "Template";
 
       public static final String FILE_FROM_TEMPLATE = "File From Template...";
-      
+
       public static final String PROJECT_FROM_TEMPLATE = "Project From Template...";
 
       public static final String FOLDER = "Folder...";
-      
+
       public static final String CHROMATTIC = "Data Object";
-      
+
       public static final String PROJECT_TEMPLATE = "Project Template...";
    }
 
@@ -69,28 +69,31 @@ public interface MenuCommands
       public static final String UNDEPLOY_REST_SERVICE = "Undeploy";
 
       public static final String DEPLOY_REST_SERVICE = "Deploy";
-      
+
       public static final String DEPLOY_SANDBOX = "Deploy Sandbox";
-      
+
       public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
-      
+
       public static final String UNDEPLOY_SANDBOX = "Undeploy Sandbox";
-      
+
       public static final String SET_AUTOLOAD = "Set Autoload";
 
       public static final String UNSET_AUTOLOAD = "Unset Autoload";
 
       public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
-      
+
       public static final String RUN_GROOVY_SERVICE = "Run Groovy Service...";
-      
+
       public static final String SHOW_PREVIEW = "Show Preview";
-      
+
       public static final String VALIDATE = "Validate";
-      
-      
+
+      public static final String PREVIEW_NODE_TYPE = "Preview node type";
+
+      public static final String DEPLOY_NODE_TYPE = "Deploy node type";
+
       public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
-      
+
       public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
    }
 
@@ -103,13 +106,13 @@ public interface MenuCommands
       public static final String GET_URL = "Get URL...";
 
       public static final String SHOW_PROPERTIES = "Properties";
-      
+
       public static final String VERSION_HISTORY = "Version History...";
-      
+
       public static final String VERSION_LIST = "Version...";
-      
+
       public static final String NEWER_VERSION = "Newer Version";
-      
+
       public static final String OLDER_VERSION = "Older Version";
 
    }
@@ -123,8 +126,8 @@ public interface MenuCommands
       public static final String UPLOAD = "Upload...";
 
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
-      
-      public static final String OPEN_FILE_BY_PATH = "Open File By Path...";      
+
+      public static final String OPEN_FILE_BY_PATH = "Open File By Path...";
 
       public static final String DOWNLOAD = "Download...";
 
@@ -145,46 +148,46 @@ public interface MenuCommands
       public static final String SEARCH = "Search...";
 
       public static final String REFRESH = "Refresh";
-      
+
       public static final String RESTORE_VERSION = "Restore To Version";
-      
+
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
    }
 
    public interface Edit
    {
       public static final String EDIT_MENU = "Edit";
-      
+
       public static final String UNDO_TYPING = "Undo Typing";
 
       public static final String REDO_TYPING = "Redo Typing";
-      
+
       public static final String CUT_TOOLBAR = "Cut Selected Item(s)";
-      
+
       public static final String COPY_TOOLBAR = "Copy Selected Item(s)";
-      
+
       public static final String PASTE_TOOLBAR = "Paste Selected Item(s)";
-      
+
       public static final String CUT_MENU = "Cut Item(s)";
-      
+
       public static final String COPY_MENU = "Copy Item(s)";
-      
+
       public static final String PASTE_MENU = "Paste Item(s)";
-      
+
       public static final String HIDE_LINE_NUMBERS = "Hide Line Numbers";
-      
+
       public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
-      
+
       public static final String FORMAT = "Format";
-      
+
       public static final String GO_TO_LINE = "Go to Line...";
-      
+
       public static final String DELETE_CURRENT_LINE = "Delete Current Line";
-      
+
       public static final String FIND_REPLACE = "Find/Replace...";
-      
+
       public static final String LOCK_FILE = "Lock File";
-      
+
       public static final String UNLOCK_FILE = "Unlock File";
    }
 
@@ -194,24 +197,24 @@ public interface MenuCommands
 
       public static final String CK_EDITOR = "WYSWYG Editor";
    }
-   
+
    public interface Help
    {
       public static final String HELP = "Help";
-      
+
       public static final String ABOUT = "About...";
    }
-   
+
    public interface Window
    {
       public static final String WINDOW = "Window";
-      
+
       public static final String SELECT_WORKSPACE = "Select Workspace...";
-      
+
       public static final String CUSTOMIZE_HOTKEYS = "Customize Hotkeys...";
-      
+
       public static final String CUSTOMIZE_TOOLBAR = "Customize Toolbar...";
-      
+
    }
-   
+
 }

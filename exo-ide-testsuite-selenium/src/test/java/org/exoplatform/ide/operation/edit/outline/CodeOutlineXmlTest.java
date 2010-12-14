@@ -103,7 +103,7 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check Outline Panel appeared
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=isc_OutlineForm_0]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=isc_OutlineForm_0]/"));
       
       checkTreeCorrectlyCreated();
       

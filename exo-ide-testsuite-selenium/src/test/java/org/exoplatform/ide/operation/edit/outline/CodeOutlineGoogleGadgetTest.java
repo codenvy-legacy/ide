@@ -168,8 +168,8 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
    private void checkTreeCreatedCorrectly() throws Exception
    {
       //check for presence of tab outline
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=isc_OutlineForm_0]/"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=isc_OutlineForm_0]/"));
+      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
 
       //check tree correctly created:
       //all nodes closed, except root

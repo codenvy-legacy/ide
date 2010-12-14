@@ -92,8 +92,8 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
+      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
 
       // create initial outline tree map
       outlineTreeHelper.addOutlineItem(0, "@  TestService", 6, false);

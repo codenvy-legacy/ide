@@ -81,7 +81,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       
       //---- 4 --------------
       //Close Outline tab 
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");
+      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/icon");
       Thread.sleep(TestConstants.SLEEP);
       checkOutlineVisibility(false);
 

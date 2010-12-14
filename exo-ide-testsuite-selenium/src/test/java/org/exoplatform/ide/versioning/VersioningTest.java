@@ -47,7 +47,7 @@ public abstract class VersioningTest extends BaseTest
             + ToolbarCommands.View.HIDE_VERSION_HISTORY
             + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
          assertTrue(selenium
-            .isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]"));
+            .isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideVersionContentPanel]"));
          assertTrue(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
          // View version button
          IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, true);
@@ -99,7 +99,7 @@ public abstract class VersioningTest extends BaseTest
     */
    protected void closeVersionPanel()
    {
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideVersionContentPanel]/icon");
+      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideVersionContentPanel]/icon");
    }
 
    /**

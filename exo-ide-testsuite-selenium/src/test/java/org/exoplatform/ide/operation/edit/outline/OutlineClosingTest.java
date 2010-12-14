@@ -60,13 +60,13 @@ public class OutlineClosingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // check for presence of tab outline
-      assertTrue(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
+      assertTrue(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
+      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
       
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideOutlineForm]/icon");
+      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideOutlineForm]/icon");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertFalse(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]"));
+      assertFalse(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
    }
    
 }

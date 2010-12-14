@@ -90,8 +90,8 @@ public class CodeOutLineGroovyTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/title"));
+      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
+      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
 
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();

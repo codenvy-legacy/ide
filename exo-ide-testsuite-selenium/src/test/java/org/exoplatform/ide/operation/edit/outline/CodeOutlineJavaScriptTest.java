@@ -347,7 +347,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //After closing Outline tab, Outline Panel hides. 
       //After clicking on Show Outline buttons, Outline Panel appears
 
-//      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[index=0]/icon");  // see bug http://jira.exoplatform.org/browse/IDE-417
+//      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/icon");  // see bug http://jira.exoplatform.org/browse/IDE-417
       IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
       
       Thread.sleep(TestConstants.SLEEP);

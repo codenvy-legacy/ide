@@ -110,7 +110,7 @@ public class Locators
       /**
        * SmartGWT locator for code helper tabset.
        */
-      public static final String SC_CODE_HELPER_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]";
+      public static final String SC_CODE_HELPER_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]";
       
       /**
        * SmartGWT locator for outline tab.

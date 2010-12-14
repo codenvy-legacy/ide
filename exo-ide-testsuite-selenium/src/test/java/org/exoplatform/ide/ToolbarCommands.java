@@ -106,5 +106,8 @@ public interface ToolbarCommands
       
       public static final String SET_AUTOLOAD = "Set REST Service Autoload";
       
+      public static final String PREVIEW_NODE_TYPE  = "Preview node type";
+      
+      public static final String DEPLOY_NODE_TYPE = "Deploy node type";
    }
 }

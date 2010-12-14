@@ -95,7 +95,7 @@ public class HighlightEditorsTabTest extends BaseTest
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperTabSet\"]/tab[ID=ideOutlineForm]/icon");
+      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideOutlineForm]/icon");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertFalse(selenium
