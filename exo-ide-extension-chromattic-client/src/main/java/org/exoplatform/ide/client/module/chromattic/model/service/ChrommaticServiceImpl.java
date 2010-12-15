@@ -50,7 +50,7 @@ public class ChrommaticServiceImpl extends ChrommaticService
 
    public static final String GENERATE_NODE_TYPE_METHOD_CONTEXT = "/ide/chromattic/generate-nodetype-definition";
 
-   public static final String DEPLOY_NODE_TYPE_METHOD_CONTEXT = "/ide/chromattic/registre-nodetype/";
+   public static final String DEPLOY_NODE_TYPE_METHOD_CONTEXT = "/ide/chromattic/register-nodetype/";
 
    public static final String COMPILE_METHOD_CONTEXT = "/ide/chromattic/compile";
 

@@ -61,7 +61,7 @@ public class RestDataObjectService implements ResourceContainer
    }
 
    /**
-    * Compile Data Object Service and return Node Type definition 
+    * Compile Data Object Service and return Node Type definition.
     * 
     * @param uriInfo - UriInfo
     * @param location - Resource URL 
@@ -76,7 +76,7 @@ public class RestDataObjectService implements ResourceContainer
       String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (location == null)
       {
-         throw new IllegalArgumentException("You must specified location of script source.");
+         throw new IllegalArgumentException("You must specify location of the source script.");
       }
       if (jcrLocation == null)
       {
@@ -111,8 +111,8 @@ public class RestDataObjectService implements ResourceContainer
    }
 
    @POST
-   @Path("/registre-nodetype/{format}/{alreadyExistsBehaviour}")
-   public void registreNodeType(@PathParam("format") NodeTypeFormat format,
+   @Path("/register-nodetype/{format}/{alreadyExistsBehaviour}")
+   public void registerNodeType(@PathParam("format") NodeTypeFormat format,
       @PathParam("alreadyExistsBehaviour") Integer alreadyExistsBehaviour, InputStream nodeTypeDefinition)
       throws RepositoryException, RepositoryConfigurationException
 

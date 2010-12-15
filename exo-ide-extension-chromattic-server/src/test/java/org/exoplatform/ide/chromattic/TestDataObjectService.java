@@ -129,7 +129,7 @@ public class TestDataObjectService extends BaseTest
 //      String location = "/ide-vfs-webdav/" + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
          launcher.service("POST",
-            "/ide/chromattic/registre-nodetype/EXO/4", "", null, ntd.getBytes(),
+            "/ide/chromattic/register-nodetype/EXO/4", "", null, ntd.getBytes(),
             null, null);
       assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
     
