@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.client.module.navigation;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -86,6 +83,7 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopup
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenFileByPathCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.upload.UploadFileCommand;
+import org.exoplatform.ide.client.module.navigation.control.upload.UploadFolderControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.RestoreToVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewNextVersionControl;
 import org.exoplatform.ide.client.module.navigation.control.versioning.ViewPreviousVersionControl;
@@ -134,9 +132,14 @@ import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplateForm;
 import org.exoplatform.ide.client.upload.OpenFileByPathForm;
+import org.exoplatform.ide.client.upload.OpenLocalFileForm;
+import org.exoplatform.ide.client.upload.UploadFileForm;
 import org.exoplatform.ide.client.upload.UploadForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -202,6 +205,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), true, true));
 
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new UploadFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
@@ -294,7 +298,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         if (!event.isOpenFile())
+         if (UploadFileEvent.UploadType.FILE.equals(event.getUploadType())
+                  || UploadFileEvent.UploadType.FOLDER.equals(event.getUploadType()))
          {
             Dialogs.getInstance().showInfo(
                "Please, select target folder in the Workspace Panel before calling this command !");
@@ -312,7 +317,19 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
          }
       }
       eventBus.fireEvent(new ClearFocusEvent());
-      new UploadForm(eventBus, selectedItems, path, event.isOpenFile(), applicationConfiguration);
+      if (UploadFileEvent.UploadType.OPEN_FILE.equals(event.getUploadType()))
+      {
+         new OpenLocalFileForm(eventBus, selectedItems, path, applicationConfiguration);
+      }
+      else if (UploadFileEvent.UploadType.FILE.equals(event.getUploadType()))
+      {
+         new UploadFileForm(eventBus, selectedItems, path, applicationConfiguration);
+      }
+      else if (UploadFileEvent.UploadType.FOLDER.equals(event.getUploadType()))
+      {
+         new UploadForm(eventBus, selectedItems, path, applicationConfiguration);
+      }
+      
    }
 
    public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)

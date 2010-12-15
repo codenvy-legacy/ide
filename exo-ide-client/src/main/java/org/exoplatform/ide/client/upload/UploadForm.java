@@ -17,15 +17,7 @@
 
 package org.exoplatform.ide.client.upload;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -48,12 +40,28 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 
-public class UploadForm extends DialogWindow implements UploadPresenter.Display
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
+import java.util.List;
+
+/**
+ * Class for uploading zip file.
+ * 
+ * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: Dec 10, 2010 $
+ *
+ */
+public class UploadForm extends DialogWindow implements UploadPresenter.UploadDisplay
 {
 
    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 225;
+   public static final int HEIGHT = 170;
 
    private static final String ID = "ideUploadForm";
 
@@ -65,8 +73,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    private static final String FILE_NAME_FIELD = "ideUploadFormFilenameField";
 
-   private static final String MIME_TYPE_FIELD = "ideUploadFormMimeTypeField";
-
    private static final String ID_BROWSE_BUTTON = "ideUploadFormBrowseButton";
 
    private FormPanel uploadForm;
@@ -77,44 +83,41 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
    private IButton closeButton;
 
-   private ComboBoxField mimeTypesField;
+   protected UploadPresenter presenter;
 
-   private UploadPresenter presenter;
+   protected String title;
 
-   private String title;
+   protected String buttonTitle;
 
-   private String buttonTitle;
+   protected String labelTitle;
 
-   private String labelTitle;
+   protected VerticalPanel postFieldsPanel;
 
-   private boolean openFile;
-
-   private VerticalPanel postFieldsPanel;
-
-   private IDEConfiguration applicationConfiguration;
+   protected IDEConfiguration applicationConfiguration;
    
-   private FileUploadInput fileUploadInput;
+   protected FileUploadInput fileUploadInput;
 
-   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openFile,
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
       IDEConfiguration applicationConfiguration)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
+      initialize(eventBus, selectedItems, path, applicationConfiguration);
+   }
+   
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
+      IDEConfiguration applicationConfiguration, int width, int height)
+   {
+      super(eventBus, width, height, ID);
+      initialize(eventBus, selectedItems, path, applicationConfiguration);
+   }
+   
+   private void initialize(HandlerManager eventBus, List<Item> selectedItems, String path, 
+      IDEConfiguration applicationConfiguration)
+   {
       this.eventBus = eventBus;
-      this.openFile = openFile;
       this.applicationConfiguration = applicationConfiguration;
-
-      if (openFile)
-      {
-         title = "Open file";
-         buttonTitle = "Open";
-         labelTitle = "File to open";
-      }
-      else
-      {
-         title = "File upload";
-         buttonTitle = "Upload";
-         labelTitle = "File to upload";
-      }
+      
+      initTitles();
 
       setTitle(title);
 
@@ -131,9 +134,21 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
-      presenter = new UploadPresenter(eventBus, selectedItems, path, openFile);
+      presenter = createPresenter(eventBus, selectedItems, path);
       fileUploadInput.setFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
+   }
+   
+   protected void initTitles()
+   {
+      title = "Upload folder";
+      buttonTitle = "Upload";
+      labelTitle = "Folder to upload (zip)";
+   }
+   
+   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   {
+      return new UploadPresenter(eventBus, selectedItems, path);
    }
 
    private void createFileUploadForm()
@@ -142,6 +157,15 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadForm.setLayoutAlign(Alignment.CENTER);
       uploadForm.setMargin(15);
 
+      uploadForm.setItems(createUploadFormItems());
+
+      uploadForm.setAutoWidth();
+
+      addItem(uploadForm);
+   }
+   
+   protected FormItem[] createUploadFormItems()
+   {
       StaticTextItem promptItem = new StaticTextItem();
       promptItem.setWidth(250);
       promptItem.setTitleAlign(Alignment.LEFT);
@@ -159,28 +183,14 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       SpacerItem spacer2 = new SpacerItem();
       spacer2.setHeight(5);
-
-      StaticTextItem mimeTypePromptItem = new StaticTextItem();
-      mimeTypePromptItem.setValue("Mime Type:");
-      mimeTypePromptItem.setShowTitle(false);
-      mimeTypePromptItem.setColSpan(2);
-
-      SpacerItem spacer3 = new SpacerItem();
-      spacer3.setHeight(2);
-
-      mimeTypesField = new ComboBoxField();
-      mimeTypesField.setName(MIME_TYPE_FIELD);
-      mimeTypesField.setWidth(334);
-      mimeTypesField.setShowTitle(false);
-      mimeTypesField.setColSpan(2);
-      mimeTypesField.setCompleteOnTab(true);
-      mimeTypesField.setPickListHeight(100);
       
-      uploadForm.setItems(promptItem, spacer, canvasItem, spacer2, mimeTypePromptItem, spacer3, mimeTypesField);
-
-      uploadForm.setAutoWidth();
-
-      addItem(uploadForm);
+      FormItem[] items = new FormItem[4];
+      items[0] = promptItem;
+      items[1] = spacer;
+      items[2] = canvasItem;
+      items[3] = spacer2;
+      
+      return items;
    }
 
    private void createButtons()
@@ -194,15 +204,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
       uploadButton = new IButton(buttonTitle);
       uploadButton.setID(ID_UPLOAD_BUTTON);
       uploadButton.setHeight(22);
-      // uploadButton.setIcon(Configuration.getInstance().getGadgetURL() + "images/upload/UploadFile.png");
-      if (openFile)
-      {
-         uploadButton.setIcon(Images.MainMenu.File.OPEN_LOCAL_FILE);
-      }
-      else
-      {
-         uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
-      }
+      uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
 
       StatefulCanvas buttonSpacer = new StatefulCanvas();
       buttonSpacer.setWidth(5);
@@ -281,32 +283,29 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
 
       //uploadForm.setEncoding(encodingType)
 
-      if (openFile)
-      {
-         uploadForm.setAction(applicationConfiguration.getLoopbackServiceContext() + "/");
-      }
-      else
-      {
-         uploadForm.setAction(applicationConfiguration.getUploadServiceContext() + "/");
-         
-      }
+      uploadForm.setAction(buildUploadPath());
 
       uploadForm.setWidget(postFieldsPanel);
 
       return uploadLayout;
    }
+   
+   protected String buildUploadPath()
+   {
+      return applicationConfiguration.getUploadServiceContext() + "/folder/";
+   }
 
    public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
    {
       Hidden locationField = new Hidden(FormFields.LOCATION, location);
-      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
-      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
-      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
+//      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
+//      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
+//      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
 
       postFieldsPanel.add(locationField);
-      postFieldsPanel.add(mimeTypeField);
-      postFieldsPanel.add(nodeTypeField);
-      postFieldsPanel.add(jcrContentNodeTypeField);
+//      postFieldsPanel.add(mimeTypeField);
+//      postFieldsPanel.add(nodeTypeField);
+//      postFieldsPanel.add(jcrContentNodeTypeField);
    }
 
    public FormPanel getUploadForm()
@@ -338,6 +337,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public void destroy()
    {
       presenter.destroy();
+      System.out.println("UploadForm.destroy()");
       super.destroy();
    }
 
@@ -349,32 +349,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.Display
    public void enableUploadButton()
    {
       uploadButton.enable();
-   }
-
-   public void setMimeTypes(String[] mimeTypes)
-   {
-//      mimeTypesField.clearValue();
-      mimeTypesField.setValueMap(mimeTypes);
-   }
-
-   public HasValue<String> getMimeType()
-   {
-      return mimeTypesField;
-   }
-
-   public void disableMimeTypeSelect()
-   {
-      mimeTypesField.setDisabled(true);
-   }
-
-   public void enableMimeTypeSelect()
-   {
-      mimeTypesField.setDisabled(false);
-   }
-
-   public void setDefaultMimeType(String mimeType)
-   {
-      mimeTypesField.setDefaultValue(mimeType);
    }
 
 }

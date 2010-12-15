@@ -21,7 +21,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FileUpload;
 
 /**
- * Created by The eXo Platform SAS .
+ * A widget that wraps the HTML &lt;input type='file'&gt; element.
+ * 
+ * When file selected, calls onFileSelected method from {@link FileSelectedHandler}
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -46,8 +48,9 @@ public class FileUploadInput extends FileUpload
       this();
       this.fileSelectedHandler = fileSelectedHandler;
    }
-   
-   public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler) {
+
+   public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler)
+   {
       this.fileSelectedHandler = fileSelectedHandler;
    }
 
@@ -60,7 +63,8 @@ public class FileUploadInput extends FileUpload
          return;
       }
 
-      if (fileSelectedHandler != null) {
+      if (fileSelectedHandler != null)
+      {
          fileSelectedHandler.onFileSelected(fileName);
       }
    }

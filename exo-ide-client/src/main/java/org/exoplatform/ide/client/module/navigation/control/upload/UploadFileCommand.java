@@ -53,7 +53,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
 
    private final static String ID = "File/Upload File...";
 
-   private final static String TITLE = "Upload...";
+   private final static String TITLE = "Upload File...";
 
    private final static String PROMPT = "Upload File...";
 
@@ -67,9 +67,8 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
       setTitle(TITLE);
       setPrompt(PROMPT);
       setDelimiterBefore(true);
-      //setIcon(Images.MainMenu.UPLOAD);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      setEvent(new UploadFileEvent(false));
+      setEvent(new UploadFileEvent(UploadFileEvent.UploadType.FILE));
    }
 
    /**

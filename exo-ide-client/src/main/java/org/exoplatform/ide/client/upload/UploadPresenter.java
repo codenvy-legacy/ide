@@ -16,37 +16,29 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
-import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.smartgwt.client.widgets.events.HasClickHandlers;
+
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
+
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
+import java.util.List;
 
 /**
- * Presenter for commands upload file and open local file.
+ * Presenter for uploading file
  * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -54,8 +46,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
  */
 public class UploadPresenter implements FileSelectedHandler
 {
-
-   interface Display
+   interface UploadDisplay
    {
 
       HasClickHandlers getUploadButton();
@@ -72,68 +63,36 @@ public class UploadPresenter implements FileSelectedHandler
 
       HasValue<String> getFileNameField();
 
-      HasValue<String> getMimeType();
-
-      void setMimeTypes(String[] mimeTypes);
-
-      void enableMimeTypeSelect();
-
-      void disableMimeTypeSelect();
-
-      void setDefaultMimeType(String mimeType);
-
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
 
    }
 
-   private HandlerManager eventBus;
+   protected HandlerManager eventBus;
 
-   //private ApplicationContext context;
+   protected UploadDisplay display;
 
-   private Display display;
+   protected String path;
 
-   private String path;
+   protected List<Item> selectedItems;
 
-   private boolean openLocalFile;
-
-   private List<Item> selectedItems;
-
-   private String fileType;
-
-   private boolean isSetAll = false;
-
-   public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path, boolean openLocalFile)
+   public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.path = path;
-      this.openLocalFile = openLocalFile;
    }
 
-   void bindDisplay(Display d)
+   protected void bindDisplay(UploadDisplay d)
    {
       display = d;
 
-      if (openLocalFile)
+      display.getUploadButton().addClickHandler(new ClickHandler()
       {
-         display.getUploadButton().addClickHandler(new ClickHandler()
+         public void onClick(ClickEvent event)
          {
-            public void onClick(ClickEvent event)
-            {
-               openLocalFile();
-            }
-         });
-      }
-      else
-      {
-         display.getUploadButton().addClickHandler(new ClickHandler()
-         {
-            public void onClick(ClickEvent event)
-            {
-               uploadFile();
-            }
-         });
-      }
+            uploadFileToForm();
+         }
+      });
 
       display.getCloseButton().addClickHandler(new ClickHandler()
       {
@@ -159,43 +118,7 @@ public class UploadPresenter implements FileSelectedHandler
          }
       });
 
-      if (openLocalFile)
-      {
-         display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
-         {
-            public void onValueChange(ValueChangeEvent<String> event)
-            {
-               if (display.getMimeType().getValue() != null && display.getMimeType().getValue().length() > 0)
-               {
-                  display.enableUploadButton();
-               }
-               else
-               {
-                  display.disableUploadButton();
-               }
-            }
-         });
-      }
-      else
-      {
-         display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
-         {
-
-            public void onValueChange(ValueChangeEvent<String> event)
-            {
-               if (!isSetAll)
-               {
-                  String[] allMimeTypes = MimeTypeResolver.getAllMimeTypes().toArray(new String[0]);
-                  Arrays.sort(allMimeTypes);
-                  display.setMimeTypes(allMimeTypes);
-                  isSetAll = true;
-               }
-            }
-         });
-      }
-
       display.disableUploadButton();
-      display.disableMimeTypeSelect();
    }
 
    /**
@@ -206,17 +129,8 @@ public class UploadPresenter implements FileSelectedHandler
                                                      return encodeURI(url);
                                                      }-*/;
 
-   private void uploadFile()
+   protected void uploadFileToForm()
    {
-      String mimeType = display.getMimeType().getValue();
-
-      if (mimeType == null || "".equals(mimeType))
-      {
-         return;
-      }
-
-      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
-
       String fileName = display.getFileNameField().getValue();
       if (fileName.contains("/"))
       {
@@ -232,96 +146,12 @@ public class UploadPresenter implements FileSelectedHandler
       href += fileName;
       href = encodeURI(href);
 
-      display.setHiddenFields(href, mimeType, "", contentNodeType);
+      display.setHiddenFields(href, "", "", "");
       display.getUploadForm().submit();
    }
 
    void destroy()
    {
-   }
-
-   /**
-    * Extract uploaded file content from upload service response.
-    * File content is included in tag <filecontent>
-    * 
-    * @param uploadServiceResponse response from server
-    * @return extracted content of submitted file.
-    */
-   private String extractRecievedContent(String uploadServiceResponse)
-   {
-      String content = uploadServiceResponse.substring("<filecontent>".length());
-      content = content.substring(0, content.length() - "</filecontent>".length());
-
-      return Utils.urlDecode_decode(content); // to unescape end of lines
-   }
-
-   private void openInEditor(String fileName)
-   {
-      String file = fileName;
-      file = file.replace('\\', '/');
-
-      if (file.indexOf('/') >= 0)
-      {
-         file = file.substring(file.lastIndexOf("/") + 1);
-      }
-
-      display.getFileNameField().setValue(file);
-      display.enableMimeTypeSelect();
-
-      List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
-      Collections.sort(mimeTypes);
-
-      List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(fileName);
-
-      String[] valueMap = mimeTypes.toArray(new String[0]);
-
-      display.setMimeTypes(valueMap);
-
-      if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
-      {
-         String mimeTYpe = proposalMimeTypes.get(0);
-         display.setDefaultMimeType(mimeTYpe);
-         display.enableUploadButton();
-      }
-   }
-
-   private void uploadFileToServer(String fileName)
-   {
-      String file = fileName;
-      file = file.replace('\\', '/');
-
-      if (file.indexOf('/') >= 0)
-      {
-         file = file.substring(file.lastIndexOf("/") + 1);
-      }
-
-      display.getFileNameField().setValue(file);
-      display.enableUploadButton();
-      display.enableMimeTypeSelect();
-
-      fileType = file.substring(file.lastIndexOf(".") + 1).toLowerCase();
-
-      List<String> mimeTypes = MimeTypeResolver.getMimeTypes(fileType);
-
-      String[] valueMap = mimeTypes.toArray(new String[mimeTypes.size()]);
-      //      int i = 0;
-      //      for (String mimeType : mimeTypes)
-      //      {
-      //         valueMap[i++] = mimeType;
-      //      }
-      display.setMimeTypes(valueMap);
-
-      if (mimeTypes != null && mimeTypes.size() > 0)
-      {
-         String mimeTYpe = mimeTypes.get(0);
-         display.setDefaultMimeType(mimeTYpe);
-      }
-
-   }
-
-   protected void openLocalFile()
-   {
-      display.getUploadForm().submit();
    }
 
    protected void submit(SubmitEvent event)
@@ -339,17 +169,7 @@ public class UploadPresenter implements FileSelectedHandler
          Dialogs.getInstance().showError(responseOk);
          return;
       }
-
-      //if uploadServiceResponse is correct, than continue uploading (or opening) file
-      if (openLocalFile)
-      {
-         completeOpenLocalFile(uploadServiceResponse);
-      }
-      else
-      {
-         completeUpload(uploadServiceResponse);
-      }
-
+      completeUpload(uploadServiceResponse);
    }
    
    /**
@@ -365,20 +185,7 @@ public class UploadPresenter implements FileSelectedHandler
       boolean matches = 
          uploadServiceResponse.matches("^<ERROR>(.*)</ERROR>$") || uploadServiceResponse.matches("^<error>(.*)</error>$");
       
-      boolean gotError;
-      
-      if (openLocalFile)
-      {
-         boolean getFileContent = uploadServiceResponse.matches("^<FILECONTENT>(.*)</FILECONTENT>$") 
-            || uploadServiceResponse.matches("^<filecontent>(.*)</filecontent>$");
-         gotError = uploadServiceResponse == null || (uploadServiceResponse.length() > 0 && ! getFileContent) || matches;
-      }
-      else
-      {
-         gotError = uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
-      }
-      
-      if (!gotError)
+      if (!gotError(uploadServiceResponse, matches))
       {
          return null;
       }
@@ -392,54 +199,21 @@ public class UploadPresenter implements FileSelectedHandler
       }
       else
       {
-         return openLocalFile ? "Can not open local file!" : "Can not upload file!";
+         return errorMessage();
       }
    }
-
-   /**
-    * Opening local file.
-    * 
-    * @param uploadServiceResponse is checked in parent method, so we sure that it is not null,
-    * and data is enclose in tag <filecontent></filecontent> (or <FILECONTENT></FILECONTENT>)
-    */
-   private void completeOpenLocalFile(String uploadServiceResponse)
+   
+   protected String errorMessage()
    {
-      // extract uploaded file content from response
-      final String submittedFileContent = extractRecievedContent(uploadServiceResponse);
-      if (submittedFileContent == null)
-      {
-         Dialogs.getInstance().showError(
-            "There is an error of parsing of loopback service response with file '"
-               + display.getFileNameField().getValue() + "' content.");
-         // error - displaying behind the window
-         return;
-      }
-
-      display.closeDisplay();
-      openFile(submittedFileContent);
+      return "Can not upload folder!";
+   }
+   
+   protected boolean gotError(String uploadServiceResponse, boolean matches)
+   {
+      return uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
    }
 
-   /**
-    * Open new file in editor with known content.
-    * 
-    * @param submittedFileContent content of new file
-    */
-   private void openFile(String submittedFileContent)
-   {
-      String fileName = display.getFileNameField().getValue();
-
-      String mimeType = display.getMimeType().getValue();
-      File submittedFile = new File(path + "/" + fileName);
-      submittedFile.setNewFile(true);
-      submittedFile.setContentChanged(true);
-      submittedFile.setContent(submittedFileContent);
-      submittedFile.setContentType(mimeType);
-      submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
-
-      eventBus.fireEvent(new OpenFileEvent(submittedFile));
-   }
-
-   private void completeUpload(String response)
+   protected void completeUpload(String response)
    {
       display.closeDisplay();
 
@@ -456,14 +230,16 @@ public class UploadPresenter implements FileSelectedHandler
 
    public void onFileSelected(String fileName)
    {
-      if (openLocalFile)
+      String file = fileName;
+      file = file.replace('\\', '/');
+
+      if (file.indexOf('/') >= 0)
       {
-         openInEditor(fileName);
-         return;
+         file = file.substring(file.lastIndexOf("/") + 1);
       }
 
-      uploadFileToServer(fileName);
-      isSetAll = false;
+      display.getFileNameField().setValue(file);
+      display.enableUploadButton();
    }
 
 }

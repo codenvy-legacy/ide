@@ -30,19 +30,30 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class UploadFileEvent extends GwtEvent<UploadFileHandler>
 {
+   public enum UploadType
+   {
+      FOLDER,
+      FILE,
+      OPEN_FILE
+   }
 
    public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
 
-   private boolean openFile;
+   private UploadType uploadType;
 
-   public UploadFileEvent(boolean openFile)
+   public UploadFileEvent(UploadType type)
    {
-      this.openFile = openFile;
+      uploadType = type;
    }
-
-   public boolean isOpenFile()
+   
+   /**
+    * Type of uploading form.
+    * 
+    * @return the uploadType
+    */
+   public UploadType getUploadType()
    {
-      return openFile;
+      return uploadType;
    }
 
    @Override

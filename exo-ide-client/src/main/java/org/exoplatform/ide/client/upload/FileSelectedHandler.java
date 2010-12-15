@@ -22,7 +22,7 @@ package org.exoplatform.ide.client.upload;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Handler for process browse event in &lt;input type='file'&gt; element.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
