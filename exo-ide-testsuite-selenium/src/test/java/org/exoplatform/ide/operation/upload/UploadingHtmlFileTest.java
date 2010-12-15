@@ -26,10 +26,13 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,53 +42,54 @@ import org.junit.Test;
  */
 public class UploadingHtmlFileTest extends BaseTest
 {
+   private static final String FOLDER_NAME = UploadingHtmlFileTest.class.getSimpleName();
 
    private static String HTML_NAME = "Example.html";
    
-   private static String FOLDER=UploadingHtmlFileTest.class.getSimpleName();
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + HTML_NAME;
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testUploadingHtml() throws Exception
    {
-
       Thread.sleep(TestConstants.SLEEP);
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
-      //TODO******change******change add folder for locked file
-      createFolder(FOLDER);
-      //******************
-      Thread.sleep(TestConstants.SLEEP);
-      uploadFile(MenuCommands.File.UPLOAD, filePath, MimeType.TEXT_HTML);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
       checkCodeEditorOpened(0);
 
-      
-      String text = selenium.getText("//body[@class='editbox']");
-
+      String text = getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(filePath);
+      String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      Thread.sleep(TestConstants.SLEEP);
-
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
-      assertEquals(
-         "nt:resource",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.TEXT_HTML,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
-
-      selectItemInWorkspaceTree(FOLDER);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.TEXT_HTML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      
    }
    
    @AfterClass

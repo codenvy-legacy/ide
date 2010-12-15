@@ -116,7 +116,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       assertElementPresentInWorkspaceTree(restFileName);
@@ -140,7 +140,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
       IDE.editor().closeTab(0);
 
@@ -180,7 +180,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, false);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       assertElementPresentInWorkspaceTree(restFileName);
@@ -204,7 +204,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, true);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
       selenium.controlKeyDown();
       selectItemInWorkspaceTree(restFileName);

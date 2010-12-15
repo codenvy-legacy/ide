@@ -26,10 +26,13 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,29 +42,48 @@ import org.junit.Test;
  */
 public class OpenGroovyLocalFileTest extends BaseTest
 {
+   
+   private static String FOLDER_NAME = OpenGroovyLocalFileTest.class.getSimpleName();
 
    private static String GROOVY_NAME = "Приклад.groovy";
-   private static String FOLDER = OpenGroovyLocalFileTest.class.getSimpleName();
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
    
    @Test
    public void testOpenGroovy() throws Exception
    {
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
       Thread.sleep(TestConstants.SLEEP);
-      //******change****
-      createFolder(FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
-      //****************
-      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GROOVY_SERVICE);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(filePath);
+      String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
@@ -70,19 +92,9 @@ public class OpenGroovyLocalFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
-      assertEquals(
-         "exo:groovyResourceContainer",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.GROOVY_SERVICE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
-
-      selectItemInWorkspaceTree(GROOVY_NAME);
-      deleteSelectedItems();
-
+      
+      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
    }
    
    

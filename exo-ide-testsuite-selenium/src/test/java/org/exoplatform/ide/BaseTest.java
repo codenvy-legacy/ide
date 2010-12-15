@@ -1065,9 +1065,9 @@ public abstract class BaseTest
     */
    protected void uploadFile(String formName, String filePath, String mimeType) throws Exception
    {
-      if (!MenuCommands.File.OPEN_LOCAL_FILE.equals(formName) && !MenuCommands.File.UPLOAD.equals(formName))
+      if (!MenuCommands.File.OPEN_LOCAL_FILE.equals(formName) && !MenuCommands.File.UPLOAD_FILE.equals(formName))
       {
-         Assert.fail("Form name must be - " + MenuCommands.File.OPEN_LOCAL_FILE + " or - " + MenuCommands.File.UPLOAD);
+         Assert.fail("Form name must be - " + MenuCommands.File.OPEN_LOCAL_FILE + " or - " + MenuCommands.File.UPLOAD_FILE);
       }
       
       //runTopMenuCommand(MenuCommands.File.FILE, formName);

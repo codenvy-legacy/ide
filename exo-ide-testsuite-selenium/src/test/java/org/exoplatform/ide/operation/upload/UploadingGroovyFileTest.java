@@ -25,10 +25,13 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,51 +44,58 @@ import java.io.IOException;
  */
 public class UploadingGroovyFileTest extends BaseTest 
 {
+   private static final String FOLDER_NAME = UploadingGroovyFileTest.class.getSimpleName();
+   
    private static String GROOVY_NAME = "Приклад.groovy";
    
-   private static String FOLDER = UploadingGroovyFileTest.class.getSimpleName();
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + GROOVY_NAME;
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    @Test
    public void testUploadingGroovy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
       
-      
-      //TODO*********change****change add folder for locked file
-      createFolder(FOLDER);
-      //******************
-      
-      uploadFile(MenuCommands.File.UPLOAD, filePath, MimeType.GROOVY_SERVICE);
+      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       checkCodeEditorOpened(0);
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(filePath);
+      String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals(
-         "exo:groovyResourceContainer",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.GROOVY_SERVICE,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
+      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
 
-      selectItemInWorkspaceTree(GROOVY_NAME);
-      deleteSelectedItems();
    }
    
    //IDE-322 Issue
@@ -93,14 +103,12 @@ public class UploadingGroovyFileTest extends BaseTest
    public void testAllMimeTypesArePresent() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
       
-      String formName = MenuCommands.File.UPLOAD;
+      String formName = MenuCommands.File.UPLOAD_FILE;
       
       //----- 1 --------------
       //open upload form
       IDE.menu().runCommand(MenuCommands.File.FILE, formName);
-//      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
       assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));
@@ -109,7 +117,7 @@ public class UploadingGroovyFileTest extends BaseTest
       //type path to file on local system to upload
       try
       {
-         File file = new File(filePath);
+         File file = new File(FILE_PATH);
          selenium.type("//input[@type='file']", file.getCanonicalPath());
       }
       catch (Exception e)
@@ -117,7 +125,7 @@ public class UploadingGroovyFileTest extends BaseTest
       }
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
+      assertEquals(FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length()),
          selenium.getValue(
             "scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
       

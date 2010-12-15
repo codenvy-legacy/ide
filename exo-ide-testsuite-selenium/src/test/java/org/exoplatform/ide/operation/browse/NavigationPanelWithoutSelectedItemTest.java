@@ -64,7 +64,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, true);  
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);  
       
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, true);
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, true);
@@ -111,7 +111,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, false);  
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);  
       
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, true);
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, true);
@@ -154,7 +154,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, false);  
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);  
       
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, true);
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, true);
@@ -209,7 +209,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, true);  
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);  
       
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, true);
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, true);
@@ -256,7 +256,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD, false);  
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);  
       
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.CSS_FILE, true);
 //      checkMenuCommandState(MenuCommands.New.NEW, MenuCommands.New.GOOGLE_GADGET_FILE, true);

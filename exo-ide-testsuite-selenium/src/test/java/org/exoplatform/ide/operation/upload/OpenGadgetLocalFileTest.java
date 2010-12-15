@@ -26,10 +26,13 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -45,27 +48,43 @@ public class OpenGadgetLocalFileTest extends BaseTest
    private static String GADGET_NAME = "gadget.xml";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    @Test
    public void testOpenGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
       
-      //TODO*********change********change add folder for locked file
-      createFolder(FOLDER_NAME);
-      //**********************
-      
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
-      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
+      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(filePath);
+      String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
@@ -74,17 +93,8 @@ public class OpenGadgetLocalFileTest extends BaseTest
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals(
-         "exo:googleGadget",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType||title=%3Cb%3EContent%20Node%20Type%3C%24fs%24b%3E||index=2||Class=StaticTextItem]/textbox"));
-      assertEquals(
-         MimeType.GOOGLE_GADGET,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType||title=%3Cb%3EContent%20Type%3C%24fs%24b%3E||index=3||Class=StaticTextItem]/textbox"));
-
-      selectItemInWorkspaceTree(FOLDER_NAME);
-      deleteSelectedItems();
+      assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
    }
 
    @AfterClass

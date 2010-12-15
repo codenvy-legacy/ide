@@ -18,11 +18,10 @@ package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 
 /**
@@ -72,7 +73,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
-      uploadFile(MenuCommands.File.UPLOAD, FILE_PATH, MimeType.GOOGLE_GADGET);
+      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(FILE_NAME);
@@ -84,12 +85,8 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
-      assertEquals("exo:googleGadget",
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentNodeType]/textbox"));
-      assertEquals(MimeType.GOOGLE_GADGET,
-         selenium
-            .getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextContentType]/textbox"));
+      assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
       
     }
    

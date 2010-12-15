@@ -123,7 +123,9 @@ public interface MenuCommands
 
       public static final String OPEN_WITH = "Open With...";
 
-      public static final String UPLOAD = "Upload...";
+      public static final String UPLOAD_FILE = "Upload File...";
+      
+      public static final String UPLOAD_FOLDER = "Upload Zipped Folder...";
 
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
 

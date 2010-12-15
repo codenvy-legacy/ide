@@ -29,8 +29,10 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -47,24 +49,42 @@ public class OpenHtmlLocalFileTest extends BaseTest
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testOpenHtml() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_NAME);
       
-      createFolder(FOLDER_NAME);
-      
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
-      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.TEXT_HTML);
+      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(filePath);
+      String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
@@ -77,10 +97,6 @@ public class OpenHtmlLocalFileTest extends BaseTest
       assertEquals("nt:resource",selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
       
       assertEquals(MimeType.TEXT_HTML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
-
-      selectItemInWorkspaceTree(FOLDER_NAME);
-      deleteSelectedItems();
-
    }
    
    @AfterClass

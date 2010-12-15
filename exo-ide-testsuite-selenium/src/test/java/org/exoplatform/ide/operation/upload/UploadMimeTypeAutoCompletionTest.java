@@ -21,14 +21,14 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.io.File;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
+
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,20 +39,18 @@ import org.junit.Test;
  */
 public class UploadMimeTypeAutoCompletionTest extends BaseTest
 {
+   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
    @Test
    public void testMimeTypeAutoCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
 
-//      Thread.sleep(TestConstants.SLEEP);
-      
       try
       {
-         File file = new File(filePath);
+         File file = new File(FILE_PATH);
          selenium.type("//input[@type='file']", file.getCanonicalPath());
       }
       catch (Exception e)
