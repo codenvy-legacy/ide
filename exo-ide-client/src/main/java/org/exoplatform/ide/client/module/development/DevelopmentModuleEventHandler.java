@@ -66,6 +66,8 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
 
    private File activeFile;
 
+   private boolean isClosedByUser = true;
+
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -128,6 +130,8 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       //if outline was opened, but must be closed, close it
       if (!openOutline && wasOutlineOpened)
       {
+         isClosedByUser = false;
+         System.out.println("DevelopmentModuleEventHandler.onEditorActiveFileChanged()"+isClosedByUser);
          eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
       }
 
@@ -194,11 +198,12 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
     */
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (OutlineForm.ID.equals(event.getViewId()))
+      if (OutlineForm.ID.equals(event.getViewId()) && isClosedByUser)
       {
          applicationSettings.setValue("outline", new Boolean(false), Store.COOKIES);
          eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
       }
+      isClosedByUser = true;
    }
 
 }
