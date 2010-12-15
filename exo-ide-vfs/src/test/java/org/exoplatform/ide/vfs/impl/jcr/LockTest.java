@@ -29,15 +29,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.lock.Lock;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class DeleteTest extends JcrFileSystemTest
+public class LockTest extends JcrFileSystemTest
 {
-   private Node deleteTestNode;
+   private Node lockTestNode;
 
    private String folder;
 
@@ -51,20 +50,13 @@ public class DeleteTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      deleteTestNode = testRoot.addNode(name, "nt:unstructured");
-      deleteTestNode.addMixin("mix:lockable");
-      deleteTestNode.addMixin("exo:privilegeable");
+      lockTestNode = testRoot.addNode(name, "nt:unstructured");
+      lockTestNode.addMixin("exo:privilegeable");
 
-      Node folderNode = deleteTestNode.addNode("DeleteTest_FOLDER", "nt:folder");
-      // add child in folder
-      Node childDocumentNode = folderNode.addNode("document", "nt:file");
-      Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
-      childContentNode.setProperty("jcr:mimeType", "text/plain");
-      childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      childContentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      Node folderNode = lockTestNode.addNode("LockTest_FOLDER", "nt:folder");
       folder = folderNode.getPath();
 
-      Node documentNode = deleteTestNode.addNode("DeleteTest_DOCUMENT", "nt:file");
+      Node documentNode = lockTestNode.addNode("LockTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -74,79 +66,57 @@ public class DeleteTest extends JcrFileSystemTest
       session.save();
    }
 
-   public void testDeleteDocument() throws Exception
+   public void testLockDocument() throws Exception
    {
-      String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      assertFalse("Document must be removed. ", session.itemExists(document));
-   }
-
-   public void testDeleteDocumentLockedParent() throws Exception
-   {
-      Lock lock = deleteTestNode.lock(true, false);
-      String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
-         .append(document) //
-         .append("?") //
-         .append("lockTokens=") //
-         .append(lock.getLockToken()) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      assertFalse("Document must be removed. ", session.itemExists(document));
-   }
-
-   public void testDeleteDocumentLockedParent_NoLockToken() throws Exception
-   {
-      deleteTestNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/db1/ws/lock") //
+         .append(document).toString();
+      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testLockDocumentAlreadyLocked() throws Exception
+   {
+      Node node = ((Node)session.getItem(document));
+      node.addMixin("mix:lockable");
+      session.save();
+      node.lock(true, false);
+      
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append("/vfs/db1/ws/lock") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue("Document must not be removed since locked parent. ", session.itemExists(document));
    }
 
-   public void testDeleteDocumentNoPermissions() throws Exception
+   public void testLockDocumentNoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)deleteTestNode).setPermissions(permissions);
+      ((ExtendedNode)lockTestNode).setPermissions(permissions);
       session.save();
-
+      
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/db1/ws/lock") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue("Document must not be removed since permissions restriction. ", session.itemExists(document));
    }
 
-   public void testDeleteDocumentWrongPath() throws Exception
+   public void testLockFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
-         .append(document + "_WRONG_PATH").toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(404, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
-
-   public void testDeleteFolder() throws Exception
-   {
-      String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/db1/ws/lock") //
          .append(folder).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      assertFalse("Folder must be removed. ", session.itemExists(folder));
+      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      log.info(new String(writer.getBody()));
    }
 }

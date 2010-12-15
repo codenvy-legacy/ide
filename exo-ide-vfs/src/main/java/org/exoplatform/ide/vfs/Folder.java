@@ -18,21 +18,22 @@
  */
 package org.exoplatform.ide.vfs;
 
+import java.util.List;
+
 /**
- * If requested action requires optional capability that is not supported.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: NotSupportedException.java 63633 2010-12-03 16:07:20Z andrew00x
- *          $
+ * @version $Id$
  */
-@SuppressWarnings("serial")
-public class NotSupportedException extends RuntimeException
+public class Folder extends Item
 {
-   /**
-    * @param message message
-    */
-   public NotSupportedException(String message)
+   public Folder(String id, String path, long creationDate, long lastModificationDate, boolean locked,
+      List<OutputProperty> properties)
    {
-      super(message);
+      super(id, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
+   }
+
+   public Folder()
+   {
+      super();
    }
 }

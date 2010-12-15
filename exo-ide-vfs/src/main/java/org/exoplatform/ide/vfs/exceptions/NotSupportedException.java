@@ -16,39 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
- * If operation fails cause to any constraints.
+ * If requested action requires optional capability that is not supported.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: NotSupportedException.java 63633 2010-12-03 16:07:20Z andrew00x
+ *          $
  */
 @SuppressWarnings("serial")
-public class ConstraintException extends Exception
+public class NotSupportedException extends VirtualFileSystemRuntimeException
 {
    /**
-    * @param message the message
+    * @param message message
     */
-   public ConstraintException(String message)
+   public NotSupportedException(String message)
    {
       super(message);
-   }
-
-   /**
-    * @param message the message
-    * @param cause the cause
-    */
-   public ConstraintException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
-
-   /**
-    * @param cause the cause
-    */
-   public ConstraintException(Throwable cause)
-   {
-      super(cause);
    }
 }

@@ -18,24 +18,46 @@
  */
 package org.exoplatform.ide.vfs;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+public enum Type {
+   DOCUMENT("document"), FOLDER("folder");
 
-/**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
- */
-@Provider
-public class InvalidArgumentExceptionMapper implements ExceptionMapper<InvalidArgumentException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   public Response toResponse(InvalidArgumentException exception)
+   private final String value;
+
+   private Type(String value)
    {
-      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      this.value = value;
+   }
+
+   /**
+    * @return value of Type
+    */
+   public String value()
+   {
+      return value;
+   }
+
+   /**
+    * Get Type instance from string value.
+    * 
+    * @param value string value
+    * @return Type
+    * @throws IllegalArgumentException if there is no corresponded Type for
+    *            specified <code>value</code>
+    */
+   public static Type fromValue(String value)
+   {
+      for (Type e : Type.values())
+         if (e.value.equals(value))
+            return e;
+      throw new IllegalArgumentException(value);
+   }
+
+   /**
+    * @see java.lang.Enum#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return value;
    }
 }

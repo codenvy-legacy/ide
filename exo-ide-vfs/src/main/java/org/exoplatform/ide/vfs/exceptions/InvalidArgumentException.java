@@ -16,27 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.model;
-
-import org.exoplatform.ide.vfs.ItemData;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Folder extends Item
+@SuppressWarnings("serial")
+public class InvalidArgumentException extends VirtualFileSystemException
 {
-   public Folder(ItemData data)
-   {
-      super(data);
-   }
-
    /**
-    * @see org.exoplatform.ide.vfs.model.Item#getType()
+    * @param message the message
     */
-   @Override
-   public final Type getType()
+   public InvalidArgumentException(String message)
    {
-      return Type.FOLDER;
+      super(message);
    }
 }

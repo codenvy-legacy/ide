@@ -16,39 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.model;
+package org.exoplatform.ide.vfs.exceptions;
 
-import org.exoplatform.ide.vfs.ItemData;
-import org.exoplatform.ide.vfs.VersionId;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Document extends Item
+@Provider
+public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>
 {
-   protected final VersionId versionIdentifier;
-
-   public Document(ItemData data, VersionId versionIdentifier)
-   {
-      super(data);
-      this.versionIdentifier = versionIdentifier;
-   }
-
    /**
-    * @see org.exoplatform.ide.vfs.model.Item#getType()
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public final Type getType()
+   public Response toResponse(PermissionDeniedException exception)
    {
-      return Type.DOCUMENT;
-   }
-
-   /**
-    * @return id of current version of Document
-    */
-   public VersionId getVersionId()
-   {
-      return versionIdentifier;
+      return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .build();
    }
 }

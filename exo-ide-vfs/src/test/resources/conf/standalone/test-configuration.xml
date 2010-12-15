@@ -5,16 +5,16 @@
 		<type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory</type>
 	</component>
    <component>
-      <type>org.exoplatform.ide.vfs.InvalidArgumentExceptionMapper</type>
+      <type>org.exoplatform.ide.vfs.exceptions.InvalidArgumentExceptionMapper</type>
    </component>
    <component>
-      <type>org.exoplatform.ide.vfs.LockExceptionMapper</type>
+      <type>org.exoplatform.ide.vfs.exceptions.LockExceptionMapper</type>
    </component>
    <component>
-      <type>org.exoplatform.ide.vfs.ObjectNotFoundExceptionMapper</type>
+      <type>org.exoplatform.ide.vfs.exceptions.ObjectNotFoundExceptionMapper</type>
    </component>
    <component>
-      <type>org.exoplatform.ide.vfs.PermissionDeniedExceptionMapper</type>
+      <type>org.exoplatform.ide.vfs.exceptions.PermissionDeniedExceptionMapper</type>
    </component>
 
 	<component>
@@ -41,7 +41,7 @@
 				<property name="log4j.appender.file.File" value="target/jcr.log" />
 				<property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
 				<property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-<!--            <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />-->
+            <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
 <!--            <property name="log4j.category.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />-->
 			</properties-param>
 		</init-params>

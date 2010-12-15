@@ -16,27 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
+ * If operation fails cause to any constraints.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class ObjectNotFoundExceptionMapper implements ExceptionMapper<ObjectNotFoundException>
+@SuppressWarnings("serial")
+public class ConstraintException extends VirtualFileSystemException
 {
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @param message the message
     */
-   @Override
-   public Response toResponse(ObjectNotFoundException exception)
+   public ConstraintException(String message)
    {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+      super(message);
+   }
+
+   /**
+    * @param message the message
+    * @param cause the cause
+    */
+   public ConstraintException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
+
+   /**
+    * @param cause the cause
+    */
+   public ConstraintException(Throwable cause)
+   {
+      super(cause);
    }
 }

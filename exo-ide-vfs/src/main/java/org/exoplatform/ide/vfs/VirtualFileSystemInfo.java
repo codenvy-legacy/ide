@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.model;
-
-import org.exoplatform.ide.vfs.ObjectId;
+package org.exoplatform.ide.vfs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -248,9 +246,13 @@ public class VirtualFileSystemInfo
 
    public static final String ANONYMOUS_PRINCIPAL = "anonymous";
 
+   public static final String ANY_PRINCIPAL = "any";
+
    private boolean versioningSupported;
 
    private String anonymousPrincipal;
+
+   private String anyPrincipal;
 
    private Collection<String> permissions;
 
@@ -260,13 +262,13 @@ public class VirtualFileSystemInfo
 
    private QueryCapability queryCapability;
 
-   private ObjectId rootFolderId;
+   private String rootFolderId;
 
    private String rootFolderPath;
 
-   public VirtualFileSystemInfo(boolean versioningSupported, String anonymousPrincipal, Collection<String> permissions,
-      LockCapability lockCapability, ACLCapability aclCapability, QueryCapability queryCapability,
-      ObjectId rootFolderId, String rootFolderPath)
+   public VirtualFileSystemInfo(boolean versioningSupported, String anonymousPrincipal, String anyPrincipal,
+      Collection<String> permissions, LockCapability lockCapability, ACLCapability aclCapability,
+      QueryCapability queryCapability, String rootFolderId, String rootFolderPath)
    {
       this.versioningSupported = versioningSupported;
       this.anonymousPrincipal = anonymousPrincipal;
@@ -278,7 +280,7 @@ public class VirtualFileSystemInfo
 
    public VirtualFileSystemInfo()
    {
-      this(false, ANONYMOUS_PRINCIPAL, new ArrayList<String>(), LockCapability.NONE, ACLCapability.NONE,
+      this(false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), LockCapability.NONE, ACLCapability.NONE,
          QueryCapability.NONE, null, null);
    }
 
@@ -295,6 +297,16 @@ public class VirtualFileSystemInfo
    public String getAnonymousPrincipal()
    {
       return anonymousPrincipal;
+   }
+
+   public void setAnyPrincipal(String anyPrincipal)
+   {
+      this.anyPrincipal = anyPrincipal;
+   }
+
+   public String getAnyPrincipal()
+   {
+      return anyPrincipal;
    }
 
    public void setAnonymousPrincipal(String anonymousPrincipal)
@@ -342,12 +354,12 @@ public class VirtualFileSystemInfo
       this.queryCapability = queryCapability;
    }
 
-   public ObjectId getRootFolderId()
+   public String getRootFolderId()
    {
       return rootFolderId;
    }
 
-   public void setRootFolderId(ObjectId rootFolderId)
+   public void setRootFolderId(String rootFolderId)
    {
       this.rootFolderId = rootFolderId;
    }

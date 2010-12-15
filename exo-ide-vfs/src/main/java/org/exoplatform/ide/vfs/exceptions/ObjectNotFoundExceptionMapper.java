@@ -16,56 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.model;
+package org.exoplatform.ide.vfs.exceptions;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class AccessControlEntry
+@Provider
+public class ObjectNotFoundExceptionMapper implements ExceptionMapper<ObjectNotFoundException>
 {
-   private String principal;
-
-   private Set<String> permissions;
-
-   public AccessControlEntry()
-   {
-   }
-
-   public AccessControlEntry(String principal, Set<String> permissions)
-   {
-      this.principal = principal;
-      this.permissions = permissions;
-   }
    /**
-    * @return principal's permissions
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public Collection<String> getPermissions()
+   @Override
+   public Response toResponse(ObjectNotFoundException exception)
    {
-      if (permissions == null)
-         permissions = new HashSet<String>();
-      return permissions;
-   }
-
-   /**
-    * @return user principal
-    */
-   public String getPrincipal()
-   {
-      return principal;
-   }
-
-   public void setPrincipal(String principal)
-   {
-      this.principal = principal;
-   }
-
-   public String toString()
-   {
-      return "PRINCIPAL: " + principal + ", PERMISSIONS: " + permissions;
+      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .build();
    }
 }

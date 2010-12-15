@@ -18,68 +18,46 @@
  */
 package org.exoplatform.ide.vfs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Property<T>
+public class OutputProperty
 {
-   protected final String name;
+   protected String name;
 
-   protected final String displayName;
+   protected Object[] value;
 
-   protected List<T> values;
-
-   /**
-    * @param name
-    * @param displayName
-    * @param values
-    */
-   public Property(String name, String displayName, List<T> values)
+   public OutputProperty(String name, Object[] value)
    {
       this.name = name;
-      this.displayName = displayName;
-      if (values != null)
-         this.values = new ArrayList<T>(values);
+      this.value = value;
    }
 
-   public Property(String name, String displayName, T value)
+   public OutputProperty(String name, Object value)
    {
       this.name = name;
-      this.displayName = displayName;
       if (value != null)
-      {
-         this.values = new ArrayList<T>(1);
-         this.values.add(value);
-      }
+         this.value = new Object[]{value};
    }
 
-   /**
-    * @return the name
-    */
+   public OutputProperty(String name)
+   {
+      this.name = name;
+   }
+
    public String getName()
    {
       return name;
    }
 
-   /**
-    * @return the displayName
-    */
-   public String getDisplayName()
+   public Object[] getValue()
    {
-      return displayName;
+      return value;
    }
 
-   /**
-    * @return the values
-    */
-   public List<T> getValues()
+   public String toString()
    {
-      if (values == null)
-         values = new ArrayList<T>();
-      return values;
+      return "[name: " + name + " values: " + java.util.Arrays.toString(value) + "]";
    }
 }

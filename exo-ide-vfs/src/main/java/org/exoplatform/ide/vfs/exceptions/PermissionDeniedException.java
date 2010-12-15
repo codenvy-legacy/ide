@@ -16,25 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
+ * Thrown if performed action is not allowed for caller.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class LockExceptionMapper implements ExceptionMapper<LockException>
+@SuppressWarnings("serial")
+public class PermissionDeniedException extends VirtualFileSystemException
 {
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @param message the message
     */
-   public Response toResponse(LockException exception)
+   public PermissionDeniedException(String message)
    {
-      return Response.status(423).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      super(message);
    }
 }

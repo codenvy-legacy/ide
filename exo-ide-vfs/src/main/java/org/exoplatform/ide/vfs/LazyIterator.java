@@ -27,6 +27,37 @@ import java.util.NoSuchElementException;
  */
 public abstract class LazyIterator<T> implements Iterator<T>
 {
+   
+   public static LazyIterator<Object> EMPTY_ITEMS_ITERATOR = new EmptyIterator();
+
+   private static class EmptyIterator extends LazyIterator<Object>
+   {
+      /**
+       * @see org.exoplatform.ide.vfs.LazyIterator#fetchNext()
+       */
+      @Override
+      protected void fetchNext() 
+      {
+      }
+
+      /**
+       * @see org.exoplatform.ide.vfs.LazyIterator#size()
+       */
+      @Override
+      public int size()
+      {
+         return 0;
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <T> LazyIterator<T> emptyItemsIterator()
+   {
+      return (LazyIterator<T>)EMPTY_ITEMS_ITERATOR;
+   }
+   
+   // -----------------------------------
+   
    protected T next;
 
    /**

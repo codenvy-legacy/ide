@@ -16,27 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
+ * Thrown if requested object does not exist.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>
+@SuppressWarnings("serial")
+public class ObjectNotFoundException extends VirtualFileSystemException
 {
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @param message the message
     */
-   @Override
-   public Response toResponse(PermissionDeniedException exception)
+   public ObjectNotFoundException(String message)
    {
-      return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+      super(message);
    }
 }

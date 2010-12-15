@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs;
 
+import org.exoplatform.ide.vfs.exceptions.InvalidArgumentException;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;

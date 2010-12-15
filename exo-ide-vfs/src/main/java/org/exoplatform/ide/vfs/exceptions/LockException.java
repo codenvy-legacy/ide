@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.exceptions;
 
 /**
  * Thrown if object on which the action performed is locked.
@@ -25,7 +25,7 @@ package org.exoplatform.ide.vfs;
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class LockException extends Exception
+public class LockException extends VirtualFileSystemException
 {
    /**
     * @param message
