@@ -76,13 +76,4 @@ public class GroovyObjectCompletionTest extends BaseTest
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
-   /**
-    * @throws Exception 
-    */
-   private void openAutoCompleteForm() throws Exception
-   {
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
-   }
 }

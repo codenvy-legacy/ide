@@ -320,12 +320,4 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);      
    }
 
-   /**
-    * @throws Exception 
-    */
-   private void openAutoCompleteForm() throws Exception
-   {
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-   }
 }

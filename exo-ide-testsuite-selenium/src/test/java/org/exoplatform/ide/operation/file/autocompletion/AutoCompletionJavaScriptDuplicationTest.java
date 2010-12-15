@@ -68,18 +68,5 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
-   
-   /**
-    * @throws InterruptedException
-    */
-   private void openAutoCompleteForm() throws InterruptedException
-   {
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
-      selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//input[@class='exo-autocomplete-edit']"));
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-   }
+
 }

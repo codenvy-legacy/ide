@@ -75,7 +75,7 @@ public class AutoCompletionHTMLTest extends BaseTest
    }
 
     @Test
-   public void testGroovyTemplate() throws InterruptedException, Exception
+   public void testGroovyTemplate() throws Exception
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
@@ -137,7 +137,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
-   private void htmlTest() throws InterruptedException
+   private void htmlTest() throws Exception
    {
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyDown("//body[@class='editbox']", "\\13");
@@ -181,7 +181,7 @@ public class AutoCompletionHTMLTest extends BaseTest
    }
 
  //************fixed**********
-   private void GoogleGadgetTest() throws InterruptedException
+   private void GoogleGadgetTest() throws Exception
    {
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyDown("//body[@class='editbox']", "\\13");
@@ -229,17 +229,5 @@ public class AutoCompletionHTMLTest extends BaseTest
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.contains("<p class=\"\"></p>"));
       //****************************
-   }
-
-   /**
-    * @throws InterruptedException
-    */
-   private void openAutoCompleteForm() throws InterruptedException
-   {
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
-      selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
    }
 }

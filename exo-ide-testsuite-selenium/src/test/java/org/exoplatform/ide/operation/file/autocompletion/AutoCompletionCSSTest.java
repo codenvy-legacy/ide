@@ -120,7 +120,7 @@ public class AutoCompletionCSSTest extends BaseTest
    /**
     * @throws InterruptedException
     */
-   private void cssTest() throws InterruptedException
+   private void cssTest() throws Exception
    {
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
       selenium.typeKeys("//body[@class='editbox']", "main{");
@@ -147,17 +147,4 @@ public class AutoCompletionCSSTest extends BaseTest
       assertTrue(text.contains("list-style-type:"));
 
    }
-
-   /**
-    * @throws InterruptedException
-    */
-   private void openAutoCompleteForm() throws InterruptedException
-   {
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']//br", "\\32");
-      selenium.keyUp("//body[@class='editbox']//br", "\\32");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
 }
