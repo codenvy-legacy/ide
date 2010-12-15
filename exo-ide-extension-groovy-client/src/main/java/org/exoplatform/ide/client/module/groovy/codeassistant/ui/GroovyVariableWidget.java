@@ -31,74 +31,37 @@ import com.google.gwt.user.client.ui.Label;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 19, 2010 5:00:40 PM evgen $
+ * @version $Id: Dec 13, 2010 4:06:10 PM evgen $
  *
  */
-public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
+public class GroovyVariableWidget extends GroovyTokenWidgetBase
 {
 
    private Grid grid;
-
+   
    /**
     * @param token
-    * @param number
+    * @param restContext
     */
-   public GroovyClassTokenWidget(TokenExt token, String restContext)
+   public GroovyVariableWidget(TokenExt token, String restContext)
    {
       super(token, restContext);
-      grid = new Grid(1, 3);
+      grid = new Grid(1, 2);
       grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
-
-      Image i = getImage();
+      Image i = new Image(GroovyPluginImageBundle.INSTANCE.variable());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(token.getName(), false);
-      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
-
+      String name = token.getName() + ":" + token.getProperty(TokenExtProperties.TYPE);
+      Label nameLabel = new Label(name, false);
       grid.setWidget(0, 1, nameLabel);
-
-      String pack = token.getProperty(TokenExtProperties.FQN);
-      if (pack.contains("."))
-         pack = pack.substring(0, pack.lastIndexOf("."));
-      Label l = new Label("-" + pack, false);
-      l.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
-      grid.setWidget(0, 2, l);
-
+      
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
+      grid.getCellFormatter().setWidth(0, 1, "100%");
 
       initWidget(grid);
-      setWidth("100%");
-   }
-
-   /**
-    * Image that represent current token type(Class, Interface or Annotation)
-    * 
-    * @return {@link Image}
-    */
-   private Image getImage()
-   {
-      switch (token.getType())
-      {
-
-         case INTERFACE :
-
-            return new Image(GroovyPluginImageBundle.INSTANCE.intrfaceItem());
-
-         case ANNOTATION :
-            return new Image(GroovyPluginImageBundle.INSTANCE.annotationItem());
-
-         case CLASS :
-         default :
-            return new Image(GroovyPluginImageBundle.INSTANCE.classItem());
-
-      }
-
    }
 
    /**
@@ -109,14 +72,14 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
    {
       return token.getName();
    }
-
+   
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyTokenWidgetBase#getTokenDecription()
     */
    @Override
    public String getTokenDecription()
    {
-      return restContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenExtProperties.FQN);
+      return null;
    }
 
 }

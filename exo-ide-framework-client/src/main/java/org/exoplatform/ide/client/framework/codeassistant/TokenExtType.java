@@ -26,5 +26,5 @@ package org.exoplatform.ide.client.framework.codeassistant;
  *
  */
 public enum TokenExtType {
-   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEY_WORD, TEMPLATE
+   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEY_WORD, TEMPLATE, VARIABLE;
 }

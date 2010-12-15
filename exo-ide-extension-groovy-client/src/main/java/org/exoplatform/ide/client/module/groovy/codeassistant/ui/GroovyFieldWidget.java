@@ -81,7 +81,7 @@ public class GroovyFieldWidget extends GroovyTokenWidgetBase
       Image i;
       if (ModifierHelper.isPrivate(modifieres))
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.publicField());
+         i = new Image(GroovyPluginImageBundle.INSTANCE.privateField());
       }
       else if (ModifierHelper.isProtected(modifieres))
       {

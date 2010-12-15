@@ -79,24 +79,24 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
 
    private Image getImage()
    {
-      Image i;
+     
       if (ModifierHelper.isPrivate(modifieres))
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());
+         return new Image(GroovyPluginImageBundle.INSTANCE.privateMethod());
       }
       else if (ModifierHelper.isProtected(modifieres))
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.protectedMethod());
+         return new Image(GroovyPluginImageBundle.INSTANCE.protectedMethod());
       }
       else if (ModifierHelper.isPublic(modifieres))
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());
+         return new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());
       }
       else
       {
-         i = new Image(GroovyPluginImageBundle.INSTANCE.defaultMethod());
+         return new Image(GroovyPluginImageBundle.INSTANCE.defaultMethod());
       }
-      return i;
+     
    }
 
    /**

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.editor.api.Token;
+import org.exoplatform.gwtframework.editor.api.Token.Modifier;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
@@ -75,7 +77,18 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       /**
        * Get class names
        */
-      CLASS_NAME
+      CLASS_NAME,
+
+      /**
+       * Get Classes names and local variables
+       */
+      CLASS_NAME_AND_LOCAL_VAR,
+
+      /**
+       * Get local var and parameters
+       */
+      LOCAL_VAR;
+
    }
 
    private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
@@ -94,6 +107,10 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
    private Action action;
 
+   private List<TokenExt> tokenFromParser;
+
+   private int currentLineNumber;
+
    public GroovyTokenCollector(HandlerManager eventBus)
    {
       handlers = new Handlers(eventBus);
@@ -106,13 +123,17 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    public void collectTokens(String line, Token currentToken, int lineNum, int cursorPos, List<Token> tokenFromParser,
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
+
       if (line == null || line.isEmpty())
       {
          callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
          return;
       }
 
+      printTokens(tokenFromParser);
+
       this.callback = tokensCollectedCallback;
+      currentLineNumber = lineNum;
 
       String subToken = line.substring(0, cursorPos - 1);
       afterToken = line.substring(cursorPos - 1);
@@ -148,7 +169,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          }
 
          curentFqn = currentToken.getFqn();
-         System.out.println(curentFqn);
          if (classes.containsKey(curentFqn))
          {
             filterTokens(classes.get(curentFqn));
@@ -162,15 +182,19 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       }
       else
       {
+
          beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
          tokenToComplete = token;
-
+         this.tokenFromParser = filterTokenFromParser(tokenFromParser);
+         action = Action.CLASS_NAME_AND_LOCAL_VAR;
          //if token to complete is only whitespace string
          if (tokenToComplete.matches("^[ ]+&") || "".equals(tokenToComplete))
          {
-            callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
+            action = Action.LOCAL_VAR;
+            filterTokens(new ArrayList<TokenExt>());
             return;
          }
+
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
          CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete);
@@ -268,10 +292,30 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    public void onClassesNamesReceived(ClassesNamesReceivedEvent event)
    {
       handlers.removeHandlers();
+      filterTokens(event.getTokens());
+   }
 
-      List<TokenExt> arrayList = event.getTokens();
-      Collections.sort(arrayList, this);
-      callback.onTokensCollected(arrayList, beforeToken, tokenToComplete, afterToken);
+   /**
+    * @param arrayList
+    */
+   private void filterTokens(List<TokenExt> classNames)
+   {
+      List<TokenExt> token = new ArrayList<TokenExt>();
+
+      token.addAll(tokenFromParser);
+      if (action == Action.CLASS_NAME_AND_LOCAL_VAR)
+      {
+         for (TokenExt t : classNames)
+         {
+            if (t.getType() != TokenExtType.ANNOTATION)
+            {
+               token.add(t);
+            }
+         }
+      }
+
+      Collections.sort(token, this);
+      callback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
    }
 
    /**
@@ -280,17 +324,31 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    @Override
    public int compare(TokenExt t1, TokenExt t2)
    {
-      if (t1.getType().equals(t1.getType()))
+      if (t1.getType() == t2.getType())
       {
          return t1.getName().compareTo(t2.getName());
       }
-      if (t1.getType().equals(TokenExtType.CLASS) || t1.getType().equals(TokenExtType.CONSTRUCTOR)
-         || t1.getType().equals(TokenExtType.FIELD) || t1.getType().equals(TokenExtType.METHOD))
+
+      if (t2.getType() == TokenExtType.VARIABLE)
+      {
+         return 1;
+      }
+      if (t1.getType() == TokenExtType.VARIABLE)
+      {
+         return -1;
+      }
+
+      if (t1.getType() == TokenExtType.METHOD || t1.getType() == TokenExtType.FIELD)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenExtType.METHOD || t2.getType() == TokenExtType.FIELD)
       {
          return 1;
       }
 
-      return -1;
+      return t1.getName().compareTo(t2.getName());
    }
 
    /**
@@ -302,4 +360,278 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       handlers.removeHandlers();
    }
 
+   private List<TokenExt> convertTokens(List<Token> tokensFromParser)
+   {
+      List<TokenExt> tokens = new ArrayList<TokenExt>();
+      for (Token t : tokensFromParser)
+      {
+         final TokenExt tex;
+         int modifires = 0;
+         String cl = "";
+         switch (t.getType())
+         {
+            case CLASS :
+               tex = new TokenExt(t.getName(), TokenExtType.CLASS);
+               tex.setProperty(TokenExtProperties.FQN, t.getName());
+               modifires = getModifires(t.getModifiers());
+               tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
+               tokens.add(tex);
+               break;
+            case METHOD :
+               tex = new TokenExt(t.getName(), TokenExtType.METHOD);
+               tex.setProperty(TokenExtProperties.RETURNTYPE, t.getJavaType());
+               String param = "(";
+               if (t.getParameters() != null)
+               {
+                  for (Token p : t.getParameters())
+                  {
+                     param += p.getJavaType() + ", ";
+                  }
+                  if (param.endsWith(", "))
+                  {
+                     param = param.substring(0, param.lastIndexOf(", "));
+                  }
+               }
+               param += ")";
+               tex.setProperty(TokenExtProperties.PARAMETERTYPES, param);
+               modifires = getModifires(t.getModifiers());
+               tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
+               cl = t.getParentToken().getName();
+               tex.setProperty(TokenExtProperties.DECLARINGCLASS, cl);
+               tokens.add(tex);
+
+               break;
+
+            case PROPERTY :
+               tex = new TokenExt(t.getName(), TokenExtType.FIELD);
+               tex.setProperty(TokenExtProperties.FQN, t.getFqn());
+               tex.setProperty(TokenExtProperties.TYPE, t.getJavaType());
+               modifires = getModifires(t.getModifiers());
+               tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
+               cl = t.getParentToken().getName();
+               tex.setProperty(TokenExtProperties.DECLARINGCLASS, cl);
+               tokens.add(tex);
+               break;
+
+            case VARIABLE :
+            case PARAMETER :
+               tex = new TokenExt(t.getName(), TokenExtType.VARIABLE);
+               tex.setProperty(TokenExtProperties.FQN, t.getFqn());
+               tex.setProperty(TokenExtProperties.TYPE, t.getJavaType());
+               modifires = t.getModifiers() == null ? 0 : getModifires(t.getModifiers());
+               tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
+               tokens.add(tex);
+               break;
+
+            default :
+               break;
+         }
+      }
+
+      return tokens;
+   }
+
+   List<TokenExt> filterTokenFromParser(List<Token> tokenFromParser)
+   {
+      List<Token> tokens = new ArrayList<Token>();
+
+      Token currentClass = getCurrentClassToken(tokenFromParser);
+      if (currentClass != null)
+      {
+         tokens.add(currentClass);
+         tokens.addAll(getOtherClasses(currentClass, tokenFromParser));
+         Token currentToken = getCurrentTokenInClass(currentClass);
+         if (currentToken != null)
+         {
+            switch (currentToken.getType())
+            {
+               case METHOD :
+                  tokens.addAll(getTokensForCurrentMethod(currentToken));
+                  tokens.addAll(currentClass.getSubTokenList());
+                  break;
+               case CLASS :
+               case PROPERTY :
+                  tokens.addAll(getAllMethodsFromClass(currentClass));
+                  break;
+               default :
+                  break;
+            }
+         }
+         else
+         {
+            if(currentClass.getSubTokenList() != null)
+            {
+               tokens.addAll(getAllMethodsFromClass(currentClass));
+            }
+         }
+      }
+
+      return convertTokens(tokens);
+   }
+
+   /**
+    * @param currentClass
+    * @return
+    */
+   private Collection<? extends Token> getAllMethodsFromClass(Token currentClass)
+   {
+      List<Token> tokens = new ArrayList<Token>();
+      if(currentClass.getSubTokenList() != null)
+      {
+         for(Token t : currentClass.getSubTokenList())
+         {
+            if(t.getType() == TokenType.METHOD || t.getType() == TokenType.CLASS)
+            {
+               tokens.add(t);
+            }
+         }
+      }
+      return tokens;
+   }
+
+   /**
+    * @param currentMethod
+    * @return
+    */
+   private Collection<? extends Token> getTokensForCurrentMethod(Token currentMethod)
+   {
+      List<Token> tokens = new ArrayList<Token>();
+      if (currentMethod.getParameters() != null)
+      {
+         tokens.addAll(currentMethod.getParameters());
+      }
+      if (currentMethod.getSubTokenList() != null)
+      {
+         for (Token t : currentMethod.getSubTokenList())
+         {
+            if (t.getLineNumber() < currentLineNumber)
+            {
+               tokens.add(t);
+            }
+         }
+      }
+
+      return tokens;
+   }
+
+   /**
+    * @param currentClass
+    * @return
+    */
+   private Token getCurrentTokenInClass(Token currentClass)
+   {
+      Token currentToken = null;
+      if (currentClass.getSubTokenList() != null)
+      {
+         for (Token t : currentClass.getSubTokenList())
+         {
+
+            if (t.getLineNumber() < currentLineNumber)
+            {
+               if (currentToken == null)
+               {
+                  currentToken = t;
+                  continue;
+               }
+               if (t.getLineNumber() > currentToken.getLineNumber())
+               {
+                  currentToken = t;
+               }
+            }
+
+         }
+      }
+      return currentToken;
+   }
+
+   /**
+    * @param currentClass
+    * @param tokenFromParser2
+    * @return
+    */
+   private List<Token> getOtherClasses(Token currentClass, List<Token> tokens)
+   {
+      List<Token> classes = new ArrayList<Token>();
+      for (Token t : tokens)
+      {
+         if (t.getType() == TokenType.CLASS)
+         {
+            if (!t.equals(currentClass))
+            {
+               classes.add(t);
+            }
+         }
+      }
+      return classes;
+   }
+
+   /**
+    * @param t
+    * @param tokenFromParser2
+    * @return
+    */
+   private Token getCurrentClassToken(List<Token> tokens)
+   {
+      Token current = null;
+
+      for (Token tt : tokens)
+      {
+         if (tt.getType() == TokenType.CLASS)
+         {
+            if (tt.getLineNumber() < currentLineNumber)
+            {
+               if (current == null)
+               {
+                  current = tt;
+                  continue;
+               }
+               if (tt.getLineNumber() > current.getLineNumber())
+               {
+                  current = tt;
+               }
+            }
+         }
+      }
+
+      return current;
+   }
+
+   /**
+    * @param modifiers
+    * @return
+    */
+   private int getModifires(List<Modifier> modifiers)
+   {
+      int i = 0;
+      for (Modifier m : modifiers)
+      {
+         i = i | m.value();
+      }
+      return i;
+   }
+
+   /**
+    * Print recursively all tokens
+    * 
+    * @param token {@link List} of {@link Token} to print
+    */
+   private void printTokens(List<Token> token)
+   {
+
+      for (Token t : token)
+      {
+         System.out.println(t.getName() + " " + t.getType());
+         System.out.println("FQN - " + t.getFqn());
+         System.out.println("JAVATYPE - " + t.getJavaType());
+//         if (t.getSubTokenList() != null)
+//         {
+//            printTokens(t.getSubTokenList());
+//         }
+//         if (t.getParameters() != null)
+//         {
+//            printTokens(t.getParameters());
+//         }
+      }
+      System.out.println("+++++++++++++++++++++++++");
+   }
 }

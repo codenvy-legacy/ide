@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyClassToke
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyConstructorWidget;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyFieldWidget;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyMethodWidget;
+import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyVariableWidget;
 
 /**
  * Created by The eXo Platform SAS.
@@ -67,7 +68,9 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
 
          case FIELD :
             return new GroovyFieldWidget(token, restContext);
-            
+         case VARIABLE :
+             return new GroovyVariableWidget(token, restContext);
+         
          default :
             return new GroovyClassTokenWidget(token, restContext);
 

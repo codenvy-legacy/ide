@@ -85,12 +85,18 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-      System.out.println("Line content - " + event.getLineContent());
       TokenCollectorExt collector = collectors.getTokenCollector(mimeType);
       if (collector != null)
       {
-         collector.collectTokens(event.getLineContent(), event.getCurrentToken(), event.getCursorPositionY(),
-            event.getCursorPositionX(), event.getTokenList(), this);
+         try
+         {
+            collector.collectTokens(event.getLineContent(), event.getCurrentToken(), event.getCursorPositionY(),
+               event.getCursorPositionX(), event.getTokenList(), this);
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 
@@ -151,7 +157,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
             newCursorPos = (beforeToken + value.getTokenValue()).lastIndexOf('(') + 2;
          }
          String tokenToPaste = beforeToken + value.getTokenValue() + afterToken;
-         
+
          eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));
       }
       catch (Exception e)
