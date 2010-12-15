@@ -145,7 +145,10 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
       new CodeAssistantServiceImpl(eventBus,event.getApplicationConfiguration().getContext(), event.getLoader());
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext()), new GroovyTokenCollector(eventBus)));
+      GroovyTokenWidgetFactory groovyTokenWidgetFactory = new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext());
+      GroovyTokenCollector groovyTokenCollector = new GroovyTokenCollector(eventBus);
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, groovyTokenWidgetFactory, groovyTokenCollector));
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.APPLICATION_GROOVY, groovyTokenWidgetFactory, groovyTokenCollector));
    }
 
    /**

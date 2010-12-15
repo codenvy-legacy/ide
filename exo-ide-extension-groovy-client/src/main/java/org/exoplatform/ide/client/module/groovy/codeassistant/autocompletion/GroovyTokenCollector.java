@@ -124,6 +124,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
 
+      this.callback = tokensCollectedCallback;
       if (line == null || line.isEmpty())
       {
          callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
@@ -132,7 +133,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
       printTokens(tokenFromParser);
 
-      this.callback = tokensCollectedCallback;
       currentLineNumber = lineNum;
 
       String subToken = line.substring(0, cursorPos - 1);
@@ -459,7 +459,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          }
          else
          {
-            if(currentClass.getSubTokenList() != null)
+            if (currentClass.getSubTokenList() != null)
             {
                tokens.addAll(getAllMethodsFromClass(currentClass));
             }
@@ -476,11 +476,11 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    private Collection<? extends Token> getAllMethodsFromClass(Token currentClass)
    {
       List<Token> tokens = new ArrayList<Token>();
-      if(currentClass.getSubTokenList() != null)
+      if (currentClass.getSubTokenList() != null)
       {
-         for(Token t : currentClass.getSubTokenList())
+         for (Token t : currentClass.getSubTokenList())
          {
-            if(t.getType() == TokenType.METHOD || t.getType() == TokenType.CLASS)
+            if (t.getType() == TokenType.METHOD || t.getType() == TokenType.CLASS)
             {
                tokens.add(t);
             }
@@ -623,14 +623,14 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          System.out.println(t.getName() + " " + t.getType());
          System.out.println("FQN - " + t.getFqn());
          System.out.println("JAVATYPE - " + t.getJavaType());
-//         if (t.getSubTokenList() != null)
-//         {
-//            printTokens(t.getSubTokenList());
-//         }
-//         if (t.getParameters() != null)
-//         {
-//            printTokens(t.getParameters());
-//         }
+         //         if (t.getSubTokenList() != null)
+         //         {
+         //            printTokens(t.getSubTokenList());
+         //         }
+         //         if (t.getParameters() != null)
+         //         {
+         //            printTokens(t.getParameters());
+         //         }
       }
       System.out.println("+++++++++++++++++++++++++");
    }
