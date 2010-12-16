@@ -35,7 +35,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
 {
 
    protected int modifieres;
-   
+
    protected String restContext;
 
    /**
@@ -49,7 +49,8 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
       {
          modifieres = 0;
       }
-      modifieres = ModifierHelper.getIntFromString(token.getProperty(TokenExtProperties.MODIFIERS));
+      else
+         modifieres = ModifierHelper.getIntFromString(token.getProperty(TokenExtProperties.MODIFIERS));
    }
 
    protected String getModifiers()
@@ -59,7 +60,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
          "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
             + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
       span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
-//      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
+      //      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
       span += (ModifierHelper.isStatic(modifieres)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
       span += "</span>";
       return span;
@@ -100,7 +101,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    {
       setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
     */
@@ -108,7 +109,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    public String getTokenDecription()
    {
       return restContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenExtProperties.DECLARINGCLASS)
-      +"."+ getTokenValue();
+         + "." + getTokenValue();
    }
 
 }

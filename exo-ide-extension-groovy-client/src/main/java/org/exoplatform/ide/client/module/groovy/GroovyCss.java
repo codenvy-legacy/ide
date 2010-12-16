@@ -49,4 +49,7 @@ public interface GroovyCss extends CssResource
   
   @ClassName("exo-autocomplete-fqn")
   String fqnStyle();
+  
+  @ClassName("exo-autocomplete-keyword")
+  String keywordStyle();
 }

@@ -97,6 +97,69 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
    }
 
+   private static List<TokenExt> keywords = new ArrayList<TokenExt>();
+
+   static
+   {
+      keywords.add(new TokenExt("abstract", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("as", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("assert", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("boolean", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("break", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("byte", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("case", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("catch", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("char", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("class", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("const", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("continue", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("def", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("default", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("do", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("double", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("else", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("enum", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("extends", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("false", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("final", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("finally", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("float", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("for", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("goto", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("if", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("implements", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("import", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("in", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("instanceof", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("int", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("interface", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("long", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("native", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("new", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("null", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("package", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("private", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("protected", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("public", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("return", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("short", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("static", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("strictfp", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("super", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("switch", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("synchronized", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("this", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("threadsafe", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("throw", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("throws", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("transient", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("true", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("try", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("void", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("volatile", TokenExtType.KEY_WORD));
+      keywords.add(new TokenExt("while", TokenExtType.KEY_WORD));
+   }
+
    private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
 
    private Handlers handlers;
@@ -141,13 +204,16 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
       String subToken = line.substring(0, cursorPos - 1);
       afterToken = line.substring(cursorPos - 1);
-
-      String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
-
+      
       String token = "";
-      if (split.length != 0)
+      if(!subToken.endsWith(" "))
       {
-         token = split[split.length - 1];
+         String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
+         
+         if (split.length != 0)
+         {
+            token = split[split.length - 1];
+         }         
       }
 
       if (token.contains("."))
@@ -200,7 +266,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          }
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
-         
+
          //if annotation
          if (token.startsWith("@"))
          {
@@ -211,7 +277,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
             return;
          }
 
-         
          CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete);
       }
 
@@ -319,9 +384,9 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
       if (action == Action.ANNOTATION)
       {
-         for(TokenExt t : classNames)
+         for (TokenExt t : classNames)
          {
-            if(t.getType() == TokenExtType.ANNOTATION)
+            if (t.getType() == TokenExtType.ANNOTATION)
             {
                token.add(t);
             }
@@ -331,6 +396,10 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       {
          token.addAll(tokenFromParser);
          token.addAll(classNames);
+         if (!tokenToComplete.isEmpty())
+         {
+            token.addAll(keywords);
+         }
       }
       Collections.sort(token, this);
       callback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
@@ -628,28 +697,28 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       return i;
    }
 
-//   /**
-//    * Print recursively all tokens
-//    * 
-//    * @param token {@link List} of {@link Token} to print
-//    */
-//   private void printTokens(List<Token> token)
-//   {
-//
-//      for (Token t : token)
-//      {
-//         System.out.println(t.getName() + " " + t.getType());
-//         System.out.println("FQN - " + t.getFqn());
-//         System.out.println("JAVATYPE - " + t.getJavaType());
-//         //         if (t.getSubTokenList() != null)
-//         //         {
-//         //            printTokens(t.getSubTokenList());
-//         //         }
-//         //         if (t.getParameters() != null)
-//         //         {
-//         //            printTokens(t.getParameters());
-//         //         }
-//      }
-//      System.out.println("+++++++++++++++++++++++++");
-//   }
+   //   /**
+   //    * Print recursively all tokens
+   //    * 
+   //    * @param token {@link List} of {@link Token} to print
+   //    */
+   //   private void printTokens(List<Token> token)
+   //   {
+   //
+   //      for (Token t : token)
+   //      {
+   //         System.out.println(t.getName() + " " + t.getType());
+   //         System.out.println("FQN - " + t.getFqn());
+   //         System.out.println("JAVATYPE - " + t.getJavaType());
+   //         //         if (t.getSubTokenList() != null)
+   //         //         {
+   //         //            printTokens(t.getSubTokenList());
+   //         //         }
+   //         //         if (t.getParameters() != null)
+   //         //         {
+   //         //            printTokens(t.getParameters());
+   //         //         }
+   //      }
+   //      System.out.println("+++++++++++++++++++++++++");
+   //   }
 }

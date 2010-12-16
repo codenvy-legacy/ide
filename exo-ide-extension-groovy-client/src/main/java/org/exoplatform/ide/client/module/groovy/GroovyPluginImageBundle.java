@@ -76,6 +76,8 @@ public interface GroovyPluginImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/module/groovy/images/codeassistant/local.png")
    ImageResource variable();
 
+   @Source("org/exoplatform/ide/client/module/groovy/images/blank.png")
+   ImageResource blankImage();
 
    //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
 //   ImageResource setAutoLoad();
