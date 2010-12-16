@@ -577,11 +577,12 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, WidgetC
    {
       handlers.removeHandler(WidgetDeployResultReceivedEvent.TYPE);
       display.closeForm();
+
       OutputMessage.Type responseType =
          event.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
       String message =
-         event.getDeployResult().isSuccess() ? "<b>"+event.getDeployWidget().getUrl()+"</b>" + " deployed successfully." : event
-            .getDeployResult().getMessage();
+         event.getDeployResult().isSuccess() ? "<b>" + event.getDeployWidget().getUrl() + "</b>"
+            + " deployed successfully." : event.getDeployResult().getMessage();
       eventBus.fireEvent(new OutputEvent(message, responseType));
    }
 }

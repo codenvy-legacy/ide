@@ -178,6 +178,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public DeployUwaWidgetForm(HandlerManager eventBus)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
+      setCanDragResize(true);
 
       setTitle(TITLE);
       
@@ -506,8 +507,8 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    {
       if (isShow)
       {
-         setHeight(400);
-         setWidth(370);
+         setHeight(410);
+         setWidth(375);
          detailsLayout.show();
       }
       else
