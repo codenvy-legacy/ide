@@ -19,21 +19,47 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * Output property. It will be serialized to JSON format. Example :
+ * 
+ * <pre>
+ * OutputProperty property = new OutputProperty(&quot;name&quot;, new String[]{&quot;value_1&quot;, &quot;value_2&quot;});
+ * </pre>
+ * 
+ * will be serialized to:
+ * 
+ * <pre>
+ * {"name":"name", "value":["value_1", "value_2"]}
+ * </pre>
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class OutputProperty
 {
-   protected String name;
+   /** Name of property. */
+   private String name;
 
-   protected Object[] value;
+   /** Value of property. */
+   private Object[] value;
 
+   /**
+    * Multiple property.
+    * 
+    * @param name the name of property
+    * @param value the multiple value
+    */
    public OutputProperty(String name, Object[] value)
    {
       this.name = name;
       this.value = value;
    }
 
+   /**
+    * Property with single value.
+    * 
+    * @param name the name of property
+    * @param value the value of property
+    */
    public OutputProperty(String name, Object value)
    {
       this.name = name;
@@ -41,21 +67,35 @@ public class OutputProperty
          this.value = new Object[]{value};
    }
 
+   /**
+    * Property without value.
+    * 
+    * @param name the name of property
+    */
    public OutputProperty(String name)
    {
       this.name = name;
    }
 
+   /**
+    * @return name of property
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @return value of property
+    */
    public Object[] getValue()
    {
       return value;
    }
 
+   /**
+    * @see java.lang.Object#toString()
+    */
    public String toString()
    {
       return "[name: " + name + " values: " + java.util.Arrays.toString(value) + "]";

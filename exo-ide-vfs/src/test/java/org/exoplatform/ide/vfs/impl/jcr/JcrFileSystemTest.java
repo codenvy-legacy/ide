@@ -44,6 +44,8 @@ import javax.jcr.Session;
  */
 public abstract class JcrFileSystemTest extends TestCase
 {
+   protected final String DEFAULT_CONTENT = "__TEST__";
+   
    protected Log log = ExoLogger.getExoLogger(getClass());
 
    protected String REPOSITORY_NAME = "db1";

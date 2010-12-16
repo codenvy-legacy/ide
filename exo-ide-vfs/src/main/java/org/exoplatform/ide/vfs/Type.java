@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.vfs;
 
+/**
+ * Object types.
+ * 
+ * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id$
+ */
 public enum Type {
    DOCUMENT("document"), FOLDER("folder");
 

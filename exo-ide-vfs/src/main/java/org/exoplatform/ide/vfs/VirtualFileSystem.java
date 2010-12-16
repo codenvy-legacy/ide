@@ -27,7 +27,6 @@ import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -52,7 +51,7 @@ public interface VirtualFileSystem
    /**
     * Create copy of object <code>source</code> in <code>parent</code> folder.
     * 
-    * @param source identifier of source object
+    * @param identifier identifier of source object
     * @param parent parent for new copy
     * @param lockTokens lock tokens. This lock tokens will be used if
     *           <code>parent</code> is locked. Pass <code>null</code> or empty
@@ -60,7 +59,7 @@ public interface VirtualFileSystem
     * @return identifier of newly created object
     * @throws ObjectNotFoundException if <code>source</code> or
     *            <code>parent</code> does not exist
-    * @throws InvalidArgumentException if any of following conditions are met:
+    * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li><code>parent</code> if not a folder</li>
     *            <li><code>parent</code> already contains item with the same
@@ -71,12 +70,13 @@ public interface VirtualFileSystem
     *            contains matched lock tokens
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
+    * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("copy")
    @Produces({MediaType.APPLICATION_JSON})
-   ObjectId copy(String source, String parent, List<String> lockTokens) throws ObjectNotFoundException,
-      InvalidArgumentException, LockException, PermissionDeniedException;
+   ObjectId copy(String identifier, String parent, List<String> lockTokens) throws ObjectNotFoundException,
+      ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Create new document in specified folder.
@@ -255,7 +255,7 @@ public interface VirtualFileSystem
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @GET
-   @Path("properties")
+   @Path("item")
    @Produces({MediaType.APPLICATION_JSON})
    Item getItem(String identifier, PropertyFilter propertyFilter) throws ObjectNotFoundException,
       PermissionDeniedException, VirtualFileSystemException;
@@ -346,7 +346,7 @@ public interface VirtualFileSystem
     * @return identifier of moved object
     * @throws ObjectNotFoundException if <code>identifier</code> or
     *            <code>newparent</code> does not exist
-    * @throws InvalidArgumentException if any of following conditions are met:
+    * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li><code>parent</code> if not a folder</li>
     *            <li><code>parent</code> already contains item with the same
@@ -363,7 +363,37 @@ public interface VirtualFileSystem
    @Path("move")
    @Produces({MediaType.APPLICATION_JSON})
    ObjectId move(String identifier, String newparent, List<String> lockTokens) throws ObjectNotFoundException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+      ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Rename and(or) set content type for document object.
+    * 
+    * @param identifier identifier of document to be updated
+    * @param mediaType new media type. May be not specified if not need to
+    *           change content type, e.g. need rename only
+    * @param newname new name of document. May be not specified if not need to
+    *           change name, e.g. need update content type only
+    * @param lockTokens lock tokens. This lock tokens will be used if
+    *           <code>identifier</code> is locked. Pass <code>null</code> or
+    *           empty list if there is no lock tokens
+    * @return identifier of updated object
+    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @throws InvalidArgumentException if <code>identifier</code> is not
+    *            document
+    * @throws LockException if object <code>identifier</code> is locked
+    *            (directly or indirectly) and <code>lockTokens</code> is
+    *            <code>null</code> or does not contains matched lock tokens
+    * @throws ConstraintException if property can't be updated cause to any
+    *            constraint, e.g. property is read only
+    * @throws PermissionDeniedException if user which perform operation has not
+    *            permissions to do it
+    */
+   @POST
+   @Path("rename")
+   @Produces({MediaType.APPLICATION_JSON})
+   ObjectId rename(String identifier, MediaType mediaType, String newname, List<String> lockTokens)
+      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Executes a SQL query statement against the contents of virtual file
@@ -389,15 +419,15 @@ public interface VirtualFileSystem
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @POST
-   @Path("query")
+   @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Item> query(MultivaluedMap<String, String> query, int maxItems, int skipCount)
+   ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount)
       throws NotSupportedException, InvalidArgumentException;
 
    /**
     * Execute a SQL query statement against the contents of virtual file system.
     * 
-    * @param query query
+    * @param statement query statement
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater the 0
@@ -414,34 +444,10 @@ public interface VirtualFileSystem
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @GET
-   @Path("query")
+   @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Item> query(Query query, int maxItems, int skipCount) throws NotSupportedException,
+   ItemList<Item> search(String statement, int maxItems, int skipCount) throws NotSupportedException,
       InvalidArgumentException;
-
-   /**
-    * Set content type for document object.
-    * 
-    * @param identifier identifier of document to be updated
-    * @param mediaType new media type
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not
-    *            document
-    * @throws LockException if object <code>identifier</code> is locked
-    *            (directly or indirectly) and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
-    * @throws ConstraintException if property can't be updated cause to any
-    *            constraint, e.g. property is read only
-    * @throws PermissionDeniedException if user which perform operation has not
-    *            permissions to do it
-    */
-   @POST
-   @Path("mediatype")
-   void setContentType(String identifier, MediaType mediaType, List<String> lockTokens) throws ObjectNotFoundException,
-      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Remove lock from object.
@@ -465,7 +471,7 @@ public interface VirtualFileSystem
     * Update ACL of object.
     * 
     * @param identifier identifier of object for ACL updates
-    * @param acl ACL to be applied to object
+    * @param acl ACL to be applied to object.
     * @param override if <code>true</code> then previous ACL will be overridden,
     *           if <code>false</code> then specified ACL will be merged with
     *           previous if any. If such parameters is not specified then
@@ -525,9 +531,9 @@ public interface VirtualFileSystem
     *           <code>identifier</code> is locked. Pass <code>null</code> or
     *           empty list if there is no lock tokens
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws LockException if object <code>identifier</code> is locked
-    *            (directly or indirectly) and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @throws LockException if object <code>identifier</code> is locked and
+    *            <code>lockTokens</code> is <code>null</code> or does not
+    *            contains matched lock tokens
     * @throws ConstraintException if property can't be updated cause to any
     *            constraint, e.g. property is read only
     * @throws PermissionDeniedException if user which perform operation has not
@@ -537,6 +543,6 @@ public interface VirtualFileSystem
    @POST
    @Path("properties")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateProperties(String identifier, Collection<InputProperty> properties, List<String> lockTokens)
+   void updateProperties(String identifier, List<InputProperty> properties, List<String> lockTokens)
       throws ObjectNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException;
 }

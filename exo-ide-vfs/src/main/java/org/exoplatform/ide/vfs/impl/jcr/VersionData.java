@@ -89,22 +89,22 @@ class VersionData extends DocumentData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of document " + getPath()
+         throw new PermissionDeniedException("Unable get versions of document " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get versions of document " + getPath() + ". ", e);
+         throw new VirtualFileSystemException("Unable get versions of document " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.DocumentData#setContentType(javax.ws.rs.core.MediaType,
-    *      java.util.List)
+    * @see org.exoplatform.ide.vfs.impl.jcr.DocumentData#rename(java.lang.String,
+    *      javax.ws.rs.core.MediaType, java.util.List)
     */
    @Override
-   void setContentType(MediaType mediaType, List<String> lockTokens) throws LockException, PermissionDeniedException,
-      VirtualFileSystemException
+   void rename(String newname, MediaType mediaType, List<String> lockTokens) throws LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       throw new NotSupportedException("Unable update not current version of document. ");
    }
@@ -119,7 +119,7 @@ class VersionData extends DocumentData
    {
       throw new NotSupportedException("Unable update not current version of document. ");
    }
-   
+
    private DocumentData getCurrentVersion() throws RepositoryException
    {
       Version versionNode = (Version)node.getParent();

@@ -29,30 +29,57 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 
 /**
+ * Input property. It will be restored from JSON source.To simplify JSON
+ * structure we accept all values as array of String. It is implementation
+ * specific how to transform it to required types. Values may be transformed to
+ * required type via method {@link #valueAs(Class)}.
+ * <p>
+ * Here is example of JSON source for input property:
+ * 
+ * <pre>
+ * {"name":"mediaType", "value":["text/plain;charset=utf8"]}"
+ * </pre>
+ * 
+ * @see #valueAs(Class)
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class InputProperty
 {
+   /** Name of property. */
    private String name;
 
+   /** Value of property. */
    private String[] value;
 
+   /**
+    * @return name of property
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @param name the name of property
+    */
    public void setName(String name)
    {
       this.name = name;
    }
 
+   /**
+    * @return value of property
+    */
    public String[] getValue()
    {
       return value;
    }
 
+   /**
+    * @param value the value of property
+    */
    public void setValue(String[] value)
    {
       this.value = value;
@@ -73,7 +100,7 @@ public class InputProperty
     * <pre>
     * InputProperty in = new InputProperty();
     * in.setValue(new String[]{&quot;123&quot;, &quot;456&quot;});
-    * Integer[] res = in.as(Integer[].class);
+    * Integer[] res = in.valueAs(Integer[].class);
     * System.out.println(java.util.Arrays.toString(res));
     * </pre>
     * 
@@ -85,8 +112,10 @@ public class InputProperty
     *            described above
     */
    @SuppressWarnings("unchecked")
-   public <O> O[] as(Class<? extends O[]> toType)
+   public <O> O[] valueAs(Class<? extends O[]> toType)
    {
+      if (value == null)
+         return null;
       final Class<?> componentType = toType.getComponentType();
       // If String then just copy array.
       if (componentType == String.class)
@@ -205,8 +234,11 @@ public class InputProperty
          + ". Must have Constructor with one String argument or static method 'valueOf' with String argument. ");
    }
 
+   /**
+    * @see java.lang.Object#toString()
+    */
    public String toString()
    {
-      return "[" + name + ": " + Arrays.toString(value) + "]";
+      return "<" + name + ": " + Arrays.toString(value) + ">";
    }
 }

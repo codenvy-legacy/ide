@@ -19,18 +19,21 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.AccessControlEntry;
+import org.exoplatform.ide.vfs.InputProperty;
 import org.exoplatform.ide.vfs.OutputProperty;
 import org.exoplatform.ide.vfs.PropertyFilter;
 import org.exoplatform.ide.vfs.Type;
 import org.exoplatform.ide.vfs.VirtualFileSystemInfo.BasicPermissions;
-import org.exoplatform.ide.vfs.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,17 +52,24 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 import javax.jcr.lock.Lock;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 
 /**
+ * Wrapper around node node to simplify interaction with JCR.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 abstract class ItemData
 {
+   /**
+    * Empty stream. Need it for value of property "jcr:data" of sub-node
+    * "jcr:content" of "nt:file" nodes.
+    */
    static InputStream EMPTY = new InputStream() {
       public int read()
       {
@@ -76,6 +86,7 @@ abstract class ItemData
       return new FolderData(node);
    }
 
+   /** Set of known JCR properties that should be skipped. */
    static final Set<String> SKIPPED_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:primaryType", "jcr:created",
       "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory", "jcr:mixinTypes",
       "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid"));
@@ -90,11 +101,19 @@ abstract class ItemData
       this.type = type;
    }
 
+   /**
+    * @return unified identifier of this item
+    * @throws VirtualFileSystemException if any errors occurs
+    */
    String getId() throws VirtualFileSystemException
    {
       return getPath();
    }
 
+   /**
+    * @return name of this item
+    * @throws VirtualFileSystemException if any errors occurs
+    */
    String getName() throws VirtualFileSystemException
    {
       try
@@ -107,11 +126,19 @@ abstract class ItemData
       }
    }
 
+   /**
+    * @return type of this item
+    * @see Type
+    */
    Type getType()
    {
       return type;
    }
 
+   /**
+    * @return path of this item
+    * @throws VirtualFileSystemException if any errors occurs
+    */
    String getPath() throws VirtualFileSystemException
    {
       try
@@ -124,6 +151,10 @@ abstract class ItemData
       }
    }
 
+   /**
+    * @return creation date of this item in long format
+    * @throws VirtualFileSystemException if any errors occurs
+    */
    long getCreationDate() throws VirtualFileSystemException
    {
       try
@@ -140,14 +171,29 @@ abstract class ItemData
       }
    }
 
+   /**
+    * @return last modification date of this item
+    * @throws VirtualFileSystemException if any errors occurs
+    */
    long getLastModificationDate() throws VirtualFileSystemException
    {
       return getCreationDate();
    }
 
+   /**
+    * Get set of properties that acceptable by specified <code>filter</code>.
+    * 
+    * @param filter filter
+    * @return properties
+    * @throws PermissionDeniedException if properties can't be retrieved cause
+    *            to security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
    List<OutputProperty> getProperties(PropertyFilter filter) throws PermissionDeniedException,
       VirtualFileSystemException
    {
+      // TODO : property name mapping ?
+      // jcr:blabla -> vfs:blabla
       try
       {
          List<OutputProperty> properties = new ArrayList<OutputProperty>();
@@ -162,11 +208,12 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Operation not permitted.");
+         throw new PermissionDeniedException("Unable get properties of object " + getId()
+            + ". Operation not permitted.");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get properties of object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
@@ -239,6 +286,158 @@ abstract class ItemData
       }
    }
 
+   /**
+    * Update properties.
+    * 
+    * @param properties set of properties that should be updated.
+    * @param lockTokens lock tokens. This lock tokens will be used if object is
+    *           locked. Pass <code>null</code> or empty list if there is no lock
+    *           tokens
+    * @throws ConstraintException if any of following conditions are met:
+    *            <ul>
+    *            <li>at least one of updated properties is read-only</li>
+    *            <li>value of any updated properties is not acceptable</li>
+    *            </ul>
+    * @throws LockException if object is locked and <code>lockTokens</code> is
+    *            <code>null</code> or does not contains matched lock tokens
+    * @throws PermissionDeniedException if properties can't be updated cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   void updateProperties(List<InputProperty> properties, List<String> lockTokens) throws ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException
+   {
+      // TODO : property name mapping ?
+      // vfs:blabla -> jcr:blabla
+      try
+      {
+         Session session = node.getSession();
+         if (lockTokens != null && lockTokens.size() > 0)
+         {
+            for (String lt : lockTokens)
+               session.addLockToken(lt);
+         }
+         NodeType nodeType =
+            node.isNodeType("nt:frozenNode") ? session.getWorkspace().getNodeTypeManager()
+               .getNodeType(node.getProperty("jcr:frozenPrimaryType").getString()) : node.getPrimaryNodeType();
+         PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
+         Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
+         for (int i = 0; i < propertyDefinitions.length; i++)
+            cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+         for (InputProperty property : properties)
+         {
+            String name = property.getName();
+            String[] value = property.getValue();
+            PropertyDefinition pd = cache.get(name);
+            try
+            {
+               if (pd != null)
+               {
+                  if (pd.isProtected())
+                     throw new ConstraintException("Property " + name + " is read-only. ");
+
+                  if (value == null || value.length == 0)
+                  {
+                     if (pd.isMandatory())
+                        throw new ConstraintException("Property " + name + " can't have null value. ");
+                     removeProperty(name);
+                  }
+                  else
+                  {
+                     boolean multiple = pd.isMultiple();
+                     if (multiple)
+                        updateProperty(name, value);
+                     else
+                        updateProperty(name, value[0]);
+                  }
+               }
+               else
+               {
+                  // Try to set property even there is no definition for that.
+                  if (value == null || value.length == 0)
+                     removeProperty(name);
+                  else if (value.length == 1)
+                     updateProperty(name, value[0]);
+                  else
+                     updateProperty(name, value);
+               }
+            }
+            catch (IOException e)
+            {
+               throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+            }
+            catch (ValueFormatException e)
+            {
+               throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+            }
+         }
+         session.save();
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable to update properties of object " + getId() + ". Object is locked. ");
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable to update properties of object " + getId()
+            + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable update properties of object " + getId() + ". " + e.getMessage(),
+            e);
+      }
+   }
+
+   private void updateProperty(String name, String value) throws RepositoryException, IOException
+   {
+      node.setProperty(name, new StringValue(value));
+   }
+
+   private void updateProperty(String name, String[] value) throws RepositoryException, IOException
+   {
+      Value[] jcrValue = new Value[value.length];
+      for (int i = 0; i < value.length; i++)
+         jcrValue[i] = new StringValue(value[i]);
+      node.setProperty(name, jcrValue);
+   }
+
+   private void removeProperty(String name) throws RepositoryException
+   {
+      node.setProperty(name, (Value)null);
+   }
+
+   /**
+    * Check is object locked or not.
+    * 
+    * @return <code>true</code> if object is locked and <code>false</code>
+    *         otherwise
+    * @throws VirtualFileSystemException if any errors occurs
+    */
+   boolean isLocked() throws VirtualFileSystemException
+   {
+      try
+      {
+         return node.isLocked();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Place lock to current object.
+    * 
+    * @param isDeep if <code>true</code> this lock will apply to this object and
+    *           all its descendants (if any). If <code>false</code> , it applies
+    *           only to this object.
+    * @return lock token
+    * @throws LockException if object already locked
+    * @throws PermissionDeniedException if object can't be locked cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
    String lock(boolean isDeep) throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (isLocked())
@@ -254,26 +453,34 @@ abstract class ItemData
          Lock lock = node.lock(isDeep, false);
          return lock.getLockToken();
       }
-      catch (UnsupportedRepositoryOperationException e)
-      {
-         throw new NotSupportedException("Locking is not supported. ");
-      }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable add place lock to object. " + e.getMessage());
+         throw new LockException("Unable place lock to object " + getId() + ". " + e.getMessage());
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable place lock to object " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable place lock to object " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable place lock to object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
+   /**
+    * Remove lock from object.
+    * 
+    * @param lockTokens set of lock tokens
+    * @throws LockException if object is not locked or <code>lockTokens</code>
+    *            is <code>null</code> or does not contains matched lock tokens
+    * @throws PermissionDeniedException if lock can't be removed cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
    void unlock(List<String> lockTokens) throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
+      if (!isLocked())
+         throw new LockException("Object is not locked. ");
       try
       {
          Session session = node.getSession();
@@ -284,499 +491,33 @@ abstract class ItemData
          }
          node.unlock();
       }
-      catch (UnsupportedRepositoryOperationException e)
-      {
-         throw new NotSupportedException("Locking is not supported. ");
-      }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable remove lock from object. " + e.getMessage());
+         throw new LockException("Unable remove lock from object " + getId() + ". " + e.getMessage());
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable remove lock from object " + getPath()
+         throw new PermissionDeniedException("Unable remove lock from object " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable remove lock from object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
-   boolean isLocked() throws VirtualFileSystemException
-   {
-      try
-      {
-         return node.isLocked();
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);
-      }
-   }
-
-   //   Boolean getBoolean(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         return node.getProperty(name).getBoolean();
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Boolean[] getBooleans(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] values = node.getProperty(name).getValues();
-   //         Boolean[] res = new Boolean[values.length];
-   //         for (int i = 0; i < values.length; i++)
-   //            res[i] = values[i].getBoolean();
-   //         return res;
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Calendar getDate(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         return node.getProperty(name).getDate();
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Calendar[] getDates(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] values = node.getProperty(name).getValues();
-   //         Calendar[] res = new Calendar[values.length];
-   //         for (int i = 0; i < values.length; i++)
-   //            res[i] = values[i].getDate();
-   //         return res;
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Double getDouble(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         return node.getProperty(name).getDouble();
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Double[] getDoubles(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] values = node.getProperty(name).getValues();
-   //         Double[] res = new Double[values.length];
-   //         for (int i = 0; i < values.length; i++)
-   //            res[i] = values[i].getDouble();
-   //         return res;
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Long getLong(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         return node.getProperty(name).getLong();
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   Long[] getLongs(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] values = node.getProperty(name).getValues();
-   //         Long[] res = new Long[values.length];
-   //         for (int i = 0; i < values.length; i++)
-   //            res[i] = values[i].getLong();
-   //         return res;
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   String getString(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         return node.getProperty(name).getString();
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   String[] getStrings(String name) throws PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] values = node.getProperty(name).getValues();
-   //         String[] res = new String[values.length];
-   //         for (int i = 0; i < values.length; i++)
-   //            res[i] = values[i].getString();
-   //         return res;
-   //      }
-   //      catch (PathNotFoundException e)
-   //      {
-   //         return null;
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable get property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValue(String name, boolean value) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         node.setProperty(name, value);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException re)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + re.getMessage(), re);
-   //      }
-   //   }
-   //
-   //   void setValues(String name, boolean[] values) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] jcrValue = new Value[values.length];
-   //         for (int i = 0; i < jcrValue.length; i++)
-   //            jcrValue[i] = new BooleanValue(values[i]);
-   //         node.setProperty(name, jcrValue);
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValue(String name, Calendar value) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         node.setProperty(name, value);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValues(String name, Calendar[] values) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] jcrValue = new Value[values.length];
-   //         for (int i = 0; i < jcrValue.length; i++)
-   //            jcrValue[i] = new DateValue(values[i]);
-   //         node.setProperty(name, jcrValue);
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValue(String name, double value) throws LockException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         node.setProperty(name, value);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValues(String name, double[] values) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] jcrValue = new Value[values.length];
-   //         for (int i = 0; i < jcrValue.length; i++)
-   //            jcrValue[i] = new DoubleValue(values[i]);
-   //         node.setProperty(name, jcrValue);
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValue(String name, long value) throws LockException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         node.setProperty(name, value);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValues(String name, long[] values) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] jcrValue = new Value[values.length];
-   //         for (int i = 0; i < jcrValue.length; i++)
-   //            jcrValue[i] = new LongValue(values[i]);
-   //         node.setProperty(name, jcrValue);
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValue(String name, String value) throws LockException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         node.setProperty(name, value);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-   //
-   //   void setValues(String name, String[] strings) throws LockException, PermissionDeniedException,
-   //      VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Value[] jcrValue = new Value[strings.length];
-   //         for (int i = 0; i < jcrValue.length; i++)
-   //            jcrValue[i] = new StringValue(strings[i]);
-   //         node.setProperty(name, jcrValue);
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         throw new VirtualFileSystemException("Failed set or update property " + name + ". " + e.getMessage(), e);
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Access denied to property " + name + " of object " + getPath());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException("Unable set property " + name + ". " + e.getMessage(), e);
-   //      }
-   //   }
-
+   /**
+    * Delete item.
+    * 
+    * @param lockTokens lock tokens. This lock tokens will be used if object is
+    *           locked. Pass <code>null</code> or empty list if there is no lock
+    *           tokens
+    * @throws LockException if object is locked and <code>lockTokens</code> is
+    *            <code>null</code> or does not contains matched lock tokens
+    * @throws PermissionDeniedException if object can't be removed cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
    void delete(List<String> lockTokens) throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       try
@@ -793,45 +534,89 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable delete object " + getPath() + ". Object is locked. ");
+         throw new LockException("Unable delete object " + getId() + ". Object is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable delete object " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable delete object " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable delete object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
-   //   @Deprecated
-   //   void save() throws LockException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      try
-   //      {
-   //         Session session = node.getSession();
-   //         session.save();
-   //      }
-   //      catch (AccessDeniedException e)
-   //      {
-   //         throw new PermissionDeniedException("Operation not permitted. " + e.getMessage());
-   //      }
-   //      catch (javax.jcr.lock.LockException e)
-   //      {
-   //         throw new LockException("Object " + getPath() + " is locked. ");
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         throw new VirtualFileSystemException(e.getMessage(), e);
-   //      }
-   //   }
-
-   Node getNode()
+   /**
+    * Get ACL applied to object.
+    * 
+    * @return ACL applied to object
+    * @throws PermissionDeniedException if ACL can't be retrieved cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   List<AccessControlEntry> getACL() throws PermissionDeniedException, VirtualFileSystemException
    {
-      return node;
+      try
+      {
+         if (!node.isNodeType("exo:privilegeable"))
+            return Collections.emptyList();
+
+         ExtendedNode extNode = (ExtendedNode)node;
+         Map<String, Set<String>> tmp = new HashMap<String, Set<String>>();
+         for (org.exoplatform.services.jcr.access.AccessControlEntry ace : extNode.getACL().getPermissionEntries())
+         {
+            String principal = ace.getIdentity();
+            Set<String> permissions = tmp.get(principal);
+            if (permissions == null)
+            {
+               permissions = new HashSet<String>();
+               tmp.put(principal, permissions);
+            }
+            permissions.add(ace.getPermission());
+         }
+
+         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(tmp.size());
+         for (String principal : tmp.keySet())
+         {
+            AccessControlEntry ace = new AccessControlEntry();
+            ace.setPrincipal(principal);
+            Set<String> values = tmp.get(principal);
+            if (values.size() == PermissionType.ALL.length)
+               ace.getPermissions().add(BasicPermissions.ALL.value());
+            else if (values.contains(PermissionType.READ) && values.contains(PermissionType.ADD_NODE))
+               ace.getPermissions().add(BasicPermissions.READ.value());
+            else if (values.contains(PermissionType.SET_PROPERTY) && values.contains(PermissionType.REMOVE))
+               ace.getPermissions().add(BasicPermissions.WRITE.value());
+            acl.add(ace);
+         }
+         return acl;
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable get ACL of object " + getId() + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable get ACL of object " + getId() + ". " + e.getMessage(), e);
+      }
    }
 
+   /**
+    * Update ACL applied to object.
+    * 
+    * @param acl ACL
+    * @param override if <code>true</code> then previous ACL replaced by
+    *           specified. If <code>false</code> then specified ACL will be
+    *           merged with existed
+    * @param lockTokens lock tokens. This lock tokens will be used if object is
+    *           locked. Pass <code>null</code> or empty list if there is no lock
+    *           tokens
+    * @throws LockException if object is locked and <code>lockTokens</code> is
+    *            <code>null</code> or does not contains matched lock tokens
+    * @throws PermissionDeniedException if ACL can't be updated cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
    void updateACL(List<AccessControlEntry> acl, boolean override, List<String> lockTokens) throws LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -895,66 +680,91 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update ACL of object " + getPath() + ". Object is locked. ");
+         throw new LockException("Unable update ACL of object " + getId() + ". Object is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update ACL of object " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update ACL of object " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update ACL of object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
-   List<AccessControlEntry> getACL() throws LockException, PermissionDeniedException, VirtualFileSystemException
+   /**
+    * Create copy of current item in specified folder.
+    * 
+    * @param folder parent
+    * @param lockTokens lock tokens. This lock tokens will be used if
+    *           <code>folder</folder> is locked. Pass <code>null</code> or empty
+    *           list if there is no lock tokens
+    * @return newly create copy
+    * @throws ConstraintException if destination folder already contains object
+    *            with the same name as current
+    * @throws LockException if <code>folder</folder> is locked and
+    *            <code>lockTokens</code> is <code>null</code> or does not
+    *            contains matched lock tokens
+    * @throws PermissionDeniedException if new copy can't be created cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   ItemData copyTo(FolderData folder, List<String> lockTokens) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
-         if (!node.isNodeType("exo:privilegeable"))
-            return Collections.emptyList();
-
-         ExtendedNode extNode = (ExtendedNode)node;
-         Map<String, Set<String>> tmp = new HashMap<String, Set<String>>();
-         for (org.exoplatform.services.jcr.access.AccessControlEntry ace : extNode.getACL().getPermissionEntries())
+         Session session = node.getSession();
+         if (lockTokens != null && lockTokens.size() > 0)
          {
-            String principal = ace.getIdentity();
-            Set<String> permissions = tmp.get(principal);
-            if (permissions == null)
-            {
-               permissions = new HashSet<String>();
-               tmp.put(principal, permissions);
-            }
-            permissions.add(ace.getPermission());
+            for (String lt : lockTokens)
+               session.addLockToken(lt);
          }
-
-         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(tmp.size());
-         for (String principal : tmp.keySet())
-         {
-            AccessControlEntry ace = new AccessControlEntry();
-            ace.setPrincipal(principal);
-            Set<String> values = tmp.get(principal);
-            if (values.size() == PermissionType.ALL.length)
-               ace.getPermissions().add(BasicPermissions.ALL.value());
-            else if (values.contains(PermissionType.READ) && values.contains(PermissionType.ADD_NODE))
-               ace.getPermissions().add(BasicPermissions.READ.value());
-            else if (values.contains(PermissionType.SET_PROPERTY) && values.contains(PermissionType.REMOVE))
-               ace.getPermissions().add(BasicPermissions.WRITE.value());
-            acl.add(ace);
-         }
-         return acl;
+         String objectPath = getPath();
+         String destinationPath = folder.getPath();
+         destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
+         session.getWorkspace().copy(objectPath, destinationPath);
+         return fromNode((Node)session.getItem(destinationPath));
+      }
+      catch (ItemExistsException e)
+      {
+         throw new ConstraintException("Destination folder already contains object with the same name. ");
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable copy object " + getId() + " to " + folder.getId()
+            + ". Destination folder is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get ACL of object " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable copy object " + getId() + " to " + folder.getId()
+            + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable copy object " + getId() + " to " + folder.getId() + ". "
+            + e.getMessage(), e);
       }
    }
 
-   String moveTo(FolderData folder, List<String> lockTokens) throws InvalidArgumentException, LockException,
+   /**
+    * Move current item in specified folder.
+    * 
+    * @param folder new parent
+    * @param lockTokens lock tokens. This lock tokens will be used if
+    *           <code>folder</folder> is locked. Pass <code>null</code> or empty
+    *           list if there is no lock tokens
+    * @return identifier moved object
+    * @throws ConstraintException if destination folder already contains object
+    *            with the same name as current
+    * @throws LockException if <code>folder</folder> is locked and
+    *            <code>lockTokens</code> is <code>null</code> or does not
+    *            contains matched lock tokens
+    * @throws PermissionDeniedException if object can't be moved cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   String moveTo(FolderData folder, List<String> lockTokens) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
       try
@@ -969,25 +779,32 @@ abstract class ItemData
          String destinationPath = folder.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
          session.getWorkspace().move(objectPath, destinationPath);
-         return destinationPath;
+         node = (Node)session.getItem(destinationPath);
+         return getId();
       }
       catch (ItemExistsException e)
       {
-         throw new InvalidArgumentException("Destination folder already contains object with the same name. ");
+         throw new ConstraintException("Destination folder already contains object with the same name. ");
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable move object " + getPath() + " to " + folder.getPath()
+         throw new LockException("Unable move object " + getId() + " to " + folder.getId()
             + ". Source object or destination folder is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable move object " + getPath() + " to " + folder.getPath()
+         throw new PermissionDeniedException("Unable move object " + getId() + " to " + folder.getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable move object " + getId() + " to " + folder.getId() + ". "
+            + e.getMessage(), e);
       }
+   }
+
+   Node getNode()
+   {
+      return node;
    }
 }

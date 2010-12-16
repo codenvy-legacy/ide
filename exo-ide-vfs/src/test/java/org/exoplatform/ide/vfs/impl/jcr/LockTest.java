@@ -70,7 +70,7 @@ public class LockTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/lock") //
+         .append("/vfs/jcr/db1/ws/lock") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -86,7 +86,7 @@ public class LockTest extends JcrFileSystemTest
       
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/lock") //
+         .append("/vfs/jcr/db1/ws/lock") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(423, response.getStatus());
@@ -102,7 +102,7 @@ public class LockTest extends JcrFileSystemTest
       
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/lock") //
+         .append("/vfs/jcr/db1/ws/lock") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(403, response.getStatus());
@@ -113,7 +113,7 @@ public class LockTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/lock") //
+         .append("/vfs/jcr/db1/ws/lock") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());

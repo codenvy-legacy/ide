@@ -99,7 +99,7 @@ public class FolderData extends ItemData
       }
    }
 
-   String createDocument(String name, String nodeType, String contentNodeType, MediaType mediaType,
+   DocumentData createDocument(String name, String nodeType, String contentNodeType, MediaType mediaType,
       InputStream content, List<String> lockTokens) throws InvalidArgumentException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -118,7 +118,7 @@ public class FolderData extends ItemData
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
          contentNode.setProperty("jcr:data", content == null ? EMPTY : content);
          session.save();
-         return documentNode.getPath();
+         return (DocumentData)fromNode(documentNode);
       }
       catch (ItemExistsException e)
       {
@@ -139,7 +139,7 @@ public class FolderData extends ItemData
       }
    }
 
-   String createFolder(String name, String nodeType, List<String> lockTokens) throws InvalidArgumentException,
+   FolderData createFolder(String name, String nodeType, List<String> lockTokens) throws InvalidArgumentException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
       try
@@ -152,7 +152,7 @@ public class FolderData extends ItemData
          }
          Node folderNode = node.addNode(name, nodeType);
          session.save();
-         return folderNode.getPath();
+         return (FolderData)fromNode(folderNode);
       }
       catch (ItemExistsException e)
       {

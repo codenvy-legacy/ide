@@ -49,7 +49,7 @@ public class JcrFileSystemFactory implements ResourceContainer
       this.sessionFactory = sessionFactory;
    }
 
-   @Path("{repository}/{workspace}")
+   @Path("jcr/{repository}/{workspace}")
    public VirtualFileSystem getVFS(@PathParam("repository") String repository, @PathParam("workspace") String workspace)
    {
       Session session = null;

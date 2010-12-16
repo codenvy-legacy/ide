@@ -51,7 +51,7 @@ public class VersionsTest extends JcrFileSystemTest
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST__".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       documentNode.addMixin("mix:versionable");
       session.save();
 
@@ -72,7 +72,7 @@ public class VersionsTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/versions") //
+         .append("/vfs/jcr/db1/ws/versions") //
          .append(document) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
@@ -85,7 +85,7 @@ public class VersionsTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/version") //
+         .append("/vfs/jcr/db1/ws/version") //
          .append(document) //
          .append("/2") //
          .toString();

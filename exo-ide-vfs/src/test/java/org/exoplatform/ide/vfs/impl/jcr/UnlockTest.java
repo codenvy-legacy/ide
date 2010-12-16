@@ -74,7 +74,7 @@ public class UnlockTest extends JcrFileSystemTest
    public void testUnlockDocument() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/unlock") //
+         .append("/vfs/jcr/db1/ws/unlock") //
          .append(document) //
          .append("?") //
          .append("lockTokens=") //
@@ -90,7 +90,7 @@ public class UnlockTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/unlock") //
+         .append("/vfs/jcr/db1/ws/unlock") //
          .append(document) //
          .append("?") //
          .append("lockTokens=") //
@@ -104,7 +104,7 @@ public class UnlockTest extends JcrFileSystemTest
    public void testUnlockFolder() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/unlock") //
+         .append("/vfs/jcr/db1/ws/unlock") //
          .append(folder) //
          .append("?") //
          .append("lockTokens=") //

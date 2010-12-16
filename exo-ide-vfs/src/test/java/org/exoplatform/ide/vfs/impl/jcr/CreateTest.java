@@ -60,7 +60,7 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateDocument";
       String content = "test create document";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
@@ -93,7 +93,7 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateDocumentInLockedParent";
       String content = "test create document in locked parent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
@@ -125,12 +125,12 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateDocumentInLockedParent_NoLockToken";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, "__TEST__".getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -140,7 +140,7 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateDocumentNoContent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
@@ -165,7 +165,7 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateDocumentNoMediaType";
       String content = "test create document without media type";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
@@ -188,9 +188,9 @@ public class CreateTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(CREATE_TEST_PATH).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, "__TEST__".getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -208,12 +208,12 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateDocumentNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, "__TEST__".getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -223,12 +223,12 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateDocumentWrongParent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/document") //
+         .append("/vfs/jcr/db1/ws/document") //
          .append(CREATE_TEST_PATH + "_WRONG_PATH") //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, "__TEST__".getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -238,7 +238,7 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolder";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
@@ -265,7 +265,7 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderInLockedParent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
@@ -295,7 +295,7 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderInLockedParent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
@@ -309,7 +309,7 @@ public class CreateTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(CREATE_TEST_PATH).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(400, response.getStatus());
@@ -329,7 +329,7 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFolderNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
@@ -344,7 +344,7 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderWrongParent";
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/folder") //
+         .append("/vfs/jcr/db1/ws/folder") //
          .append(CREATE_TEST_PATH + "_WRONG_PATH") //
          .append("?") //
          .append("name=") //

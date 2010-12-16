@@ -68,7 +68,7 @@ public class ACLTest extends JcrFileSystemTest
    public void testUpdateAclDocument() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/acl") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document).toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
@@ -79,7 +79,7 @@ public class ACLTest extends JcrFileSystemTest
 
       ExtendedNode node = (ExtendedNode)session.getItem(document);
       AccessControlList jcrAcl = node.getACL();
-System.out.println(">>>>>>>>> "+jcrAcl.dump());
+
       List<String> root = jcrAcl.getPermissions("root");
       assertTrue(root.contains(PermissionType.READ));
       assertTrue(root.contains(PermissionType.SET_PROPERTY));
@@ -102,7 +102,7 @@ System.out.println(">>>>>>>>> "+jcrAcl.dump());
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/acl") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document) //
          .append("?") //
          .append("override=") //
@@ -142,7 +142,7 @@ System.out.println(">>>>>>>>> "+jcrAcl.dump());
       session.save();
 
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/acl") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document) //
          .toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
@@ -180,7 +180,7 @@ System.out.println(">>>>>>>>> "+jcrAcl.dump());
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/acl") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document) //
          .append("?") //
          .append("lockTokens=") //
@@ -214,7 +214,7 @@ System.out.println(">>>>>>>>> "+jcrAcl.dump());
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/acl") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document).toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";

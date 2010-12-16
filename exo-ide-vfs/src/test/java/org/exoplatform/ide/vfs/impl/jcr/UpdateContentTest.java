@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.lock.Lock;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -54,12 +55,13 @@ public class UpdateContentTest extends JcrFileSystemTest
       String name = getClass().getName();
       updateContentTestNode = testRoot.addNode(name, "nt:unstructured");
       updateContentTestNode.addMixin("exo:privilegeable");
+      updateContentTestNode.addMixin("mix:lockable");
 
       Node documentNode = updateContentTestNode.addNode("UpdateContentTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST__".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       document = documentNode.getPath();
 
       Node folderNode = updateContentTestNode.addNode("UpdateContentTest_FOLDER", "nt:folder");
@@ -71,7 +73,7 @@ public class UpdateContentTest extends JcrFileSystemTest
    public void testUpdateContent() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/content") //
+         .append("/vfs/jcr/db1/ws/content") //
          .append(document) //
          .append("?") //
          .append("mediaType=") //
@@ -89,14 +91,14 @@ public class UpdateContentTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/content") //
+         .append("/vfs/jcr/db1/ws/content") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
-   
-   public void testGetContentNoPermissions() throws Exception
+
+   public void testUpdateContentNoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
@@ -105,10 +107,43 @@ public class UpdateContentTest extends JcrFileSystemTest
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/content") //
+         .append("/vfs/jcr/db1/ws/content") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testUpdateContentLockedParent() throws Exception
+   {
+      Lock lock = updateContentTestNode.lock(true, false);
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/content") //
+         .append(document) //
+         .append("?") //
+         .append("mediaType=") //
+         .append("text/plain;charset=utf8") //
+         .append("&") //
+         .append("lockTokens=") //
+         .append(lock.getLockToken()) //
+         .toString();
+      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), null);
+      assertEquals(204, response.getStatus());
+      Node doc = (Node)session.getItem(document);
+      assertEquals(content, doc.getProperty("jcr:content/jcr:data").getString());
+      assertEquals("text/plain", doc.getProperty("jcr:content/jcr:mimeType").getString());
+      assertEquals("utf8", doc.getProperty("jcr:content/jcr:encoding").getString());
+   }
+
+   public void testUpdateContentLockedParent_NoLockTokens() throws Exception
+   {
+      updateContentTestNode.lock(true, false);
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/content") //
+         .append(document).toString();
+      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 }

@@ -22,19 +22,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Representation of Access Control Entry used to interaction with client via
+ * JSON.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class AccessControlEntry
 {
+   /** Principal name. */
    private String principal;
 
+   /** Permissions. */
    private Set<String> permissions;
 
+   /**
+    * Empty AccessControlEntry instance. Both principal and permissions are not set.
+    */
    public AccessControlEntry()
    {
    }
 
+   /**
+    * AccessControlEntry instance with specified principal and permissions.
+    * 
+    * @param principal principal
+    * @param permissions permissions
+    */
    public AccessControlEntry(String principal, Set<String> permissions)
    {
       this.principal = principal;
@@ -51,6 +65,9 @@ public class AccessControlEntry
       return permissions;
    }
 
+   /**
+    * @param permissions new set of permissions
+    */
    public void setPermissions(Set<String> permissions)
    {
       this.permissions = permissions;
@@ -64,11 +81,17 @@ public class AccessControlEntry
       return principal;
    }
 
+   /**
+    * @param principal principla name
+    */
    public void setPrincipal(String principal)
    {
       this.principal = principal;
    }
 
+   /**
+    * @see java.lang.Object#toString()
+    */
    public String toString()
    {
       return "PRINCIPAL: " + principal + ", PERMISSIONS: " + permissions;

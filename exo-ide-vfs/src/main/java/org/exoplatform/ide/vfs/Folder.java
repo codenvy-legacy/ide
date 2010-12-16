@@ -21,17 +21,32 @@ package org.exoplatform.ide.vfs;
 import java.util.List;
 
 /**
+ * Representation of Folder object used to interaction with client via JSON.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class Folder extends Item
 {
+   /**
+    * Instance of Folder with specified attributes.
+    * 
+    * @param id identifier of object
+    * @param path path of object
+    * @param creationDate creation date in long format
+    * @param lastModificationDate date of last modification in long format
+    * @param locked is folder locked or not
+    * @param properties other properties of folder
+    */
    public Folder(String id, String path, long creationDate, long lastModificationDate, boolean locked,
       List<OutputProperty> properties)
    {
       super(id, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
    }
 
+   /**
+    * Empty instance of Folder.
+    */
    public Folder()
    {
       super();

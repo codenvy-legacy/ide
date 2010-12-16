@@ -19,6 +19,8 @@
 package org.exoplatform.ide.vfs;
 
 /**
+ * Representation of object's identifier used to interaction with client via JSON.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */

@@ -16,28 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.exceptions;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * SQL query statement holder.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Query
+public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintException>
 {
-   private final String statement;
-
-   public Query(String statement)
-   {
-      this.statement = statement;
-   }
-
    /**
-    * @return SQL statement
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public String getStatement()
+   @Override
+   public Response toResponse(ConstraintException exception)
    {
-      return statement;
+      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }

@@ -22,15 +22,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Set of abstract items for paging view.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class ItemList<T>
 {
+   /**
+    * Total number of items.
+    * 
+    * @see #getNumItems()
+    */
    private int numItems = -1;
 
+   /** Has more items in result set. */
    private boolean hasMoreItems;
 
+   /** Current range of items. */
    private List<T> list;
 
    public ItemList()

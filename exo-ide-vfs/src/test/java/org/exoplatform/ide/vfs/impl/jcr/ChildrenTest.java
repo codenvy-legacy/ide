@@ -64,10 +64,11 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/children") //
+         .append("/vfs/jcr/db1/ws/children") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
+      // TODO
       log.info(new String(writer.getBody()));
    }
 }

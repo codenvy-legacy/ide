@@ -70,7 +70,7 @@ public class GetObjectTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/properties") //
+         .append("/vfs/jcr/db1/ws/item") //
          .append(document).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -81,7 +81,7 @@ public class GetObjectTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/properties") //
+         .append("/vfs/jcr/db1/ws/item") //
          .append(document + "_WRONG_IDENTIFIER").toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(404, response.getStatus());
@@ -96,7 +96,7 @@ public class GetObjectTest extends JcrFileSystemTest
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/properties") //
+         .append("/vfs/jcr/db1/ws/item") //
          .append(document).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(403, response.getStatus());
@@ -107,7 +107,7 @@ public class GetObjectTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/properties") //
+         .append("/vfs/jcr/db1/ws/item") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());

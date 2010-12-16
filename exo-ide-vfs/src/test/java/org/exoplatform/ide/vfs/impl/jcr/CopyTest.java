@@ -36,11 +36,11 @@ import javax.jcr.lock.Lock;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class MoveTest extends JcrFileSystemTest
+public class CopyTest extends JcrFileSystemTest
 {
-   private Node moveTestNode;
+   private Node copyTestNode;
 
-   private Node moveTestDestinationNode;
+   private Node copyTestDestinationNode;
 
    private String folder;
 
@@ -54,11 +54,9 @@ public class MoveTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      moveTestNode = testRoot.addNode(name, "nt:unstructured");
-      moveTestNode.addMixin("mix:lockable");
-      moveTestNode.addMixin("exo:privilegeable");
+      copyTestNode = testRoot.addNode(name, "nt:unstructured");
 
-      Node folderNode = moveTestNode.addNode("MoveTest_FOLDER", "nt:folder");
+      Node folderNode = copyTestNode.addNode("CopyTest_FOLDER", "nt:folder");
       // add child in folder
       Node childDocumentNode = folderNode.addNode("document", "nt:file");
       Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
@@ -67,11 +65,11 @@ public class MoveTest extends JcrFileSystemTest
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       folder = folderNode.getPath();
 
-      moveTestDestinationNode = testRoot.addNode("MoveTest_DESTINATION_FOLDER", "nt:folder");
-      moveTestDestinationNode.addMixin("mix:lockable");
-      moveTestDestinationNode.addMixin("exo:privilegeable");
+      copyTestDestinationNode = testRoot.addNode("CopyTest_DESTINATION_FOLDER", "nt:folder");
+      copyTestDestinationNode.addMixin("mix:lockable");
+      copyTestDestinationNode.addMixin("exo:privilegeable");
 
-      Node documentNode = moveTestNode.addNode("MoveTest_DOCUMENT", "nt:file");
+      Node documentNode = copyTestNode.addNode("CopyTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -81,33 +79,33 @@ public class MoveTest extends JcrFileSystemTest
       session.save();
    }
 
-   public void testMoveDocument() throws Exception
+   public void testCopyDocument() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
+         .append("/vfs/jcr/db1/ws/copy") //
          .append(document) //
          .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append("parent=") //
+         .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       ObjectId id = (ObjectId)response.getEntity();
-      assertFalse("Document must be moved. ", session.itemExists(document));
+      assertTrue("Source document not found. ", session.itemExists(document));
       assertTrue("Not found document in destination location. ", session.itemExists(id.getId()));
    }
 
-   public void testMoveLockedDocument() throws Exception
+   public void testCopyDocumentLockedDestination() throws Exception
    {
-      Lock lock = moveTestNode.lock(true, false);
+      Lock lock = copyTestDestinationNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
+         .append("/vfs/jcr/db1/ws/copy") //
          .append(document) //
          .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()) //
+         .append("parent=") //
+         .append(copyTestDestinationNode.getPath()) //
          .append("&") //
          .append("lockTokens=") //
          .append(lock.getLockToken()) //
@@ -116,125 +114,66 @@ public class MoveTest extends JcrFileSystemTest
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       ObjectId id = (ObjectId)response.getEntity();
-      assertFalse("Document must be moved. ", session.itemExists(document));
+      assertTrue("Source document not found. ", session.itemExists(document));
       assertTrue("Not found document in destination location. ", session.itemExists(id.getId()));
    }
 
-   public void testMoveLockedDocument_NoLockToken() throws Exception
+   public void testCopyDocumentLockedDestination_NoLockToken() throws Exception
    {
-      moveTestNode.lock(true, false);
+      copyTestDestinationNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
+         .append("/vfs/jcr/db1/ws/copy") //
          .append(document) //
          .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      log.info(new String(writer.getBody()));
-      assertEquals(423, response.getStatus());
-      assertTrue("Document must not be moved since its parent is locked. ", session.itemExists(document));
-   }
-
-   public void testMoveDocumentNoPermissions() throws Exception
-   {
-      Map<String, String[]> permissions = new HashMap<String, String[]>(2);
-      permissions.put("root", PermissionType.ALL);
-      permissions.put("john", new String[]{PermissionType.READ});
-      ((ExtendedNode)moveTestNode).setPermissions(permissions);
-      session.save();
-
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
-         .append(document) //
-         .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      log.info(new String(writer.getBody()));
-      assertEquals(403, response.getStatus());
-      assertTrue("Document must not be moved since permissions restriction. ", session.itemExists(document));
-   }
-
-   public void testMoveDocumentLockedDestination() throws Exception
-   {
-      Lock lock = moveTestDestinationNode.lock(true, false);
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
-         .append(document) //
-         .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()) //
-         .append("&") //
-         .append("lockTokens=") //
-         .append(lock.getLockToken()) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      //log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
-      ObjectId id = (ObjectId)response.getEntity();
-      assertFalse("Source document must be moved. ", session.itemExists(document));
-      assertTrue("Not found document in destination location. ", session.itemExists(id.getId()));
-   }
-
-   public void testMoveDocumentLockedDestination_NoLockToken() throws Exception
-   {
-      moveTestDestinationNode.lock(true, false);
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
-         .append(document) //
-         .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append("parent=") //
+         .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(423, response.getStatus());
       assertTrue("Source document not found. ", session.itemExists(document));
-      assertFalse("Document must not be moved since destination folder is locked. ",
-         session.itemExists(moveTestDestinationNode.getPath() + "/MoveTest_DOCUMENT"));
+      assertFalse("Document must not be copied since destination folder is locked. ",
+         session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_DOCUMENT"));
    }
 
-   public void testMoveDocumentDestination_NoPermissions() throws Exception
+   public void testCopyDocumentDestination_NoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(2);
       permissions.put("root", PermissionType.ALL);
       permissions.put("john", new String[]{PermissionType.READ});
-      ((ExtendedNode)moveTestDestinationNode).setPermissions(permissions);
+      ((ExtendedNode)copyTestDestinationNode).setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
+         .append("/vfs/jcr/db1/ws/copy") //
          .append(document) //
          .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append("parent=") //
+         .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
       assertTrue("Source document not found. ", session.itemExists(document));
-      assertFalse("Document must not be moved since destination folder is locked. ",
-         session.itemExists(moveTestDestinationNode.getPath() + "/MoveTest_DOCUMENT"));
+      assertFalse("Document must not be copied since destination folder is locked. ",
+         session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_DOCUMENT"));
    }
 
-   public void testMoveFolder() throws Exception
+   public void testCopyFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/move") //
+         .append("/vfs/jcr/db1/ws/copy") //
          .append(folder) //
          .append("?") //
-         .append("newparent=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append("parent=") //
+         .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       ObjectId id = (ObjectId)response.getEntity();
-      assertFalse("Folder must be moved. ", session.itemExists(folder));
+      assertTrue("Source folder not found. ", session.itemExists(folder));
       assertTrue("Not found folder in destination location. ", session.itemExists(id.getId()));
-      assertTrue("Children of folder missing after moving. ", session.itemExists(id.getId() + "/document"));
+      assertTrue("Children of folder missing after coping. ", session.itemExists(id.getId() + "/document"));
    }
 }

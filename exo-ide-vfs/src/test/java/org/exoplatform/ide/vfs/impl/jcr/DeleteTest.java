@@ -77,7 +77,7 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteDocument() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, null);
       assertEquals(204, response.getStatus());
@@ -88,7 +88,7 @@ public class DeleteTest extends JcrFileSystemTest
    {
       Lock lock = deleteTestNode.lock(true, false);
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(document) //
          .append("?") //
          .append("lockTokens=") //
@@ -104,7 +104,7 @@ public class DeleteTest extends JcrFileSystemTest
       deleteTestNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(423, response.getStatus());
@@ -116,12 +116,13 @@ public class DeleteTest extends JcrFileSystemTest
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
+      permissions.put("john", new String[]{PermissionType.READ});
       ((ExtendedNode)deleteTestNode).setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(document).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(403, response.getStatus());
@@ -133,7 +134,7 @@ public class DeleteTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(document + "_WRONG_PATH").toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(404, response.getStatus());
@@ -143,7 +144,7 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteFolder() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/db1/ws/delete") //
+         .append("/vfs/jcr/db1/ws/delete") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, null);
       assertEquals(204, response.getStatus());
