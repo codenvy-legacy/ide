@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
+import org.exoplatform.ide.client.module.groovy.service.codeassistant.Types;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
@@ -87,7 +88,12 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       /**
        * Get local var and parameters
        */
-      LOCAL_VAR;
+      LOCAL_VAR,
+
+      /**
+       *  Get annotations
+       */
+      ANNOTATION;
 
    }
 
@@ -130,8 +136,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
          return;
       }
-
-      printTokens(tokenFromParser);
 
       currentLineNumber = lineNum;
 
@@ -194,9 +198,20 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
             filterTokens(new ArrayList<TokenExt>());
             return;
          }
-
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
+         
+         //if annotation
+         if (token.startsWith("@"))
+         {
+            action = Action.ANNOTATION;
+            beforeToken += "@";
+            tokenToComplete = tokenToComplete.substring(1);
+            CodeAssistantService.getInstance().fintType(Types.ANNOTATION, tokenToComplete);
+            return;
+         }
+
+         
          CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete);
       }
 
@@ -302,18 +317,21 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    {
       List<TokenExt> token = new ArrayList<TokenExt>();
 
-      token.addAll(tokenFromParser);
-      if (action == Action.CLASS_NAME_AND_LOCAL_VAR)
+      if (action == Action.ANNOTATION)
       {
-         for (TokenExt t : classNames)
+         for(TokenExt t : classNames)
          {
-            if (t.getType() != TokenExtType.ANNOTATION)
+            if(t.getType() == TokenExtType.ANNOTATION)
             {
                token.add(t);
             }
          }
       }
-
+      else
+      {
+         token.addAll(tokenFromParser);
+         token.addAll(classNames);
+      }
       Collections.sort(token, this);
       callback.onTokensCollected(token, beforeToken, tokenToComplete, afterToken);
    }
@@ -610,28 +628,28 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       return i;
    }
 
-   /**
-    * Print recursively all tokens
-    * 
-    * @param token {@link List} of {@link Token} to print
-    */
-   private void printTokens(List<Token> token)
-   {
-
-      for (Token t : token)
-      {
-         System.out.println(t.getName() + " " + t.getType());
-         System.out.println("FQN - " + t.getFqn());
-         System.out.println("JAVATYPE - " + t.getJavaType());
-         //         if (t.getSubTokenList() != null)
-         //         {
-         //            printTokens(t.getSubTokenList());
-         //         }
-         //         if (t.getParameters() != null)
-         //         {
-         //            printTokens(t.getParameters());
-         //         }
-      }
-      System.out.println("+++++++++++++++++++++++++");
-   }
+//   /**
+//    * Print recursively all tokens
+//    * 
+//    * @param token {@link List} of {@link Token} to print
+//    */
+//   private void printTokens(List<Token> token)
+//   {
+//
+//      for (Token t : token)
+//      {
+//         System.out.println(t.getName() + " " + t.getType());
+//         System.out.println("FQN - " + t.getFqn());
+//         System.out.println("JAVATYPE - " + t.getJavaType());
+//         //         if (t.getSubTokenList() != null)
+//         //         {
+//         //            printTokens(t.getSubTokenList());
+//         //         }
+//         //         if (t.getParameters() != null)
+//         //         {
+//         //            printTokens(t.getParameters());
+//         //         }
+//      }
+//      System.out.println("+++++++++++++++++++++++++");
+//   }
 }

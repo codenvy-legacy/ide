@@ -113,7 +113,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       try
       {
          new AutocompletionFormExt<TokenExt>(eventBus, x, y, tokenToComplete, tokens,
-            collectors.getWodgetFactory(mimeType), this);
+            collectors.getWidgetFactory(mimeType), this);
       }
       catch (Exception e)
       {

@@ -51,6 +51,8 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    private static final String GET_CLASS_URL = "/ide/code-assistant/class-description?fqn=";
    
    private static final String FIND_CLASS_BY_PREFIX = "/ide/code-assistant/find-by-prefix/";
+   
+   private static final String FIND_TYPE = "/ide/code-assistant/find-by-type/";
 
    private HandlerManager eventBus;
 
@@ -104,6 +106,25 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    {
       String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
       
+      List<TokenExt> tokens = new ArrayList<TokenExt>();
+      ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
+      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#fintType(org.exoplatform.ide.client.module.groovy.service.codeassistant.Types)
+    */
+   @Override
+   public void fintType(Types type, String prefix)
+   {
+      String url = restServiceContext + FIND_TYPE + type.toString();
+      if(prefix != null && !prefix.isEmpty())
+      {
+       url += "?prefix=" + prefix;
+      }
       List<TokenExt> tokens = new ArrayList<TokenExt>();
       ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);

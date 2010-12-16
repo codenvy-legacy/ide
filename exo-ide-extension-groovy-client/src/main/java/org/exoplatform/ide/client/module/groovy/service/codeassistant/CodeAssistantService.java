@@ -61,8 +61,17 @@ public abstract class CodeAssistantService
    public abstract void getClassDescription(String fqn);
    
    /**
+    * Find classes by prefix
     * @param prefix the first letters of class name 
     */
    public abstract void findClassesByPrefix(String prefix);
+   
+   /**
+    * Find all classes or annotations or interfaces
+    * 
+    * @param type class type
+    * @param prefix the prefix with type name starts (can be null)
+    */
+   public abstract void fintType(Types type, String prefix);
    
 }

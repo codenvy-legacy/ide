@@ -69,6 +69,8 @@ public class CodeAssitantTest extends Base
       putClass(ClassLoader.getSystemClassLoader(), session, Address.class.getCanonicalName());
       putClass(ClassLoader.getSystemClassLoader(), session, A.class.getCanonicalName());
       putClass(ClassLoader.getSystemClassLoader(), session, Integer.class.getCanonicalName());
+      putClass(ClassLoader.getSystemClassLoader(), session, C.class.getCanonicalName());
+      putClass(ClassLoader.getSystemClassLoader(), session, Foo.class.getCanonicalName());
     }
    
    @Test
@@ -129,7 +131,7 @@ public class CodeAssitantTest extends Base
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertTrue(cres.getEntity().getClass().isArray());
       ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
-      assertEquals(2, types.length);
+      assertEquals(4, types.length);
       
    }
 
@@ -147,6 +149,31 @@ public class CodeAssitantTest extends Base
       
    }
 
+   @Test
+   public  void testFindAnnotations() throws Exception
+   {
+      String type = "ANNOTATION";
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/code-assistant/find-by-type/" + type, "", null,
+            null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertTrue(cres.getEntity().getClass().isArray());
+      ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
+      assertEquals(2, types.length);
+   }
+   
+   @Test
+   public  void testFindAnnotationsWithPrefix() throws Exception
+   {
+      String type = "ANNOTATION";
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/code-assistant/find-by-type/" + type + "?prefix=Fo", "", null,
+            null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertTrue(cres.getEntity().getClass().isArray());
+      ShortTypeInfo[] types =  (ShortTypeInfo[])cres.getEntity();
+      assertEquals(1, types.length);
+   }
    
    @Test
    public void testClassDoc() throws Exception

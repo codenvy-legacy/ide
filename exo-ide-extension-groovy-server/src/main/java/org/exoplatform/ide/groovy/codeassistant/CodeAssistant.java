@@ -159,7 +159,6 @@ public class CodeAssistant
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
-      
 
       try
       {
@@ -225,7 +224,7 @@ public class CodeAssistant
       throws CodeAssistantException
    {
       //by default search in className
-      if(where == null || "".equals(where))
+      if (where == null || "".equals(where))
       {
          where = "className";
       }
@@ -233,7 +232,7 @@ public class CodeAssistant
       {
          throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, "\"where\" parameter must be className or fqn");
       }
-      
+
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where + " LIKE '" + prefix + "%'";
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
@@ -244,6 +243,62 @@ public class CodeAssistant
          NodeIterator nodes = result.getNodes();
          //TODO
          //TODO
+         ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
+         int i = 0;
+         while (nodes.hasNext())
+         {
+            Node node = (Node)nodes.next();
+            types[i++] =
+               new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
+                  "exoide:fqn").getString(), node.getProperty("exoide:type").getString());
+         }
+         return types;
+      }
+      catch (RepositoryException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO:need fix status code
+         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         //TODO:need fix status code
+         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+
+   }
+
+   /**
+    * Find all classes or annotations or interfaces
+    *   
+    * @param type the string that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
+    * @param prefix optional parameter that matching first letter of type name
+    * @return Returns set of FQNs matched to class type
+    * @throws CodeAssistantException
+    */
+   @GET
+   @Path("/find-by-type/{type}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public ShortTypeInfo[] findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix)
+      throws CodeAssistantException
+   {
+      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:type = '" + type.toUpperCase() + "'";
+      if (prefix != null && !prefix.isEmpty())
+      {
+         sql += " AND exoide:className LIKE '" + prefix + "%'";
+      }
+
+      SessionProvider sp = sessionProviderService.getSessionProvider(null);
+      try
+      {
+         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
+         QueryResult result = q.execute();
+         NodeIterator nodes = result.getNodes();
+
          ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
          int i = 0;
          while (nodes.hasNext())

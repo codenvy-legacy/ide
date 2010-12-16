@@ -64,7 +64,7 @@ public class TokenExtCollectors implements RegisterAutocompleteHandler
     * @param mimeType Content MimeType
     * @return {@link TokenWidgetFactory} or <b>null/b> if can't find {@link TokenWidgetFactory}
     */
-   public TokenWidgetFactory<TokenExt> getWodgetFactory(String mimeType)
+   public TokenWidgetFactory<TokenExt> getWidgetFactory(String mimeType)
    {
       return factories.get(mimeType);
    }
