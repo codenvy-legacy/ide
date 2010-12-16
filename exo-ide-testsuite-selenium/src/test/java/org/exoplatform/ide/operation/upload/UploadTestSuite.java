@@ -28,8 +28,9 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({OpenGadgetLocalFileTest.class, OpenGroovyLocalFileTest.class, OpenHtmlLocalFileTest.class, UploadingGoogleGadgetTest.class,
-   UploadingGroovyFileTest.class, UploadingHtmlFileTest.class, OpenLocalFileTest.class})
+@SuiteClasses({OpenGadgetLocalFileTest.class, OpenGroovyLocalFileTest.class, OpenHtmlLocalFileTest.class, 
+   UploadingGoogleGadgetTest.class, UploadingGroovyFileTest.class, UploadingHtmlFileTest.class, OpenLocalFileTest.class, 
+   UploadingZippedFolderTest.class, UploadMimeTypeAutoCompletionTest.class})
 public class UploadTestSuite
 {
 
