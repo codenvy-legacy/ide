@@ -44,14 +44,14 @@ import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.module.chromattic.Images;
 
-/**
- * 
- * Form with version content, that displayed in Version Tab.
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
 
+/**
+ * View for preview the generated node type definition.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Dec 17, 2010 $
+ *
+ */
 public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeTypePreviewPresenter.Display
 {
    public static final String ID = "ideGeneratedTypePreviewPanel";
@@ -60,10 +60,19 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
 
    public static final String TITLE = "Node Type Preview";
 
+   /**
+    * Handlers manager.
+    */
    private HandlerManager eventBus;
 
+   /**
+    * Editor to display the content of node type definition.
+    */
    private SmartGWTTextEditor smartGWTTextEditor;
 
+   /**
+    * @param eventBus handler manager
+    */
    public GeneratedNodeTypePreviewForm(HandlerManager eventBus)
    {
       super(ID, eventBus);
@@ -87,6 +96,9 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
       super.onDestroy();
    }
 
+   /**
+    * Create editor to display the content of node type definition.
+    */
    private void createEditor()
    {
       Editor editor = null;
@@ -169,6 +181,12 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
       }
    }-*/;
 
+   /**
+    * Get editor's iframe content.
+    * 
+    * @param iframe
+    * @return {@link Document}
+    */
    private native Document getIFrameDocument(IFrameElement iframe)/*-{
       return iframe.contentDocument || iframe.contentWindow.document;
    }-*/;

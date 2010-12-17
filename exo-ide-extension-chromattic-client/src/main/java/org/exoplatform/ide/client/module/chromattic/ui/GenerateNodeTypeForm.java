@@ -25,8 +25,6 @@ import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
-import com.smartgwt.client.types.TitleOrientation;
-
 import com.smartgwt.client.types.Alignment;
 
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -37,24 +35,24 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.module.chromattic.Images;
 
 /**
+ * View for generating node type definition.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
  *
  */
 public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTypePresenter.Display
 {
-   public static final int WIDTH = 505;
+   public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 215;
+   public static final int HEIGHT = 150;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -72,15 +70,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
    private final String ID_DYNAMIC_FORM = "ideGenerateNodeTypeFormDynamicForm";
 
-   private final String ID_LOCATION_FIELD = "ideGenerateNodeTypeFormLocationField";
-
-   private final String ID_DEPENDENCY_FIELD = "ideGenerateNodeTypeFormDependencyField";
-
    private final String ID_FORMAT_FIELD = "ideGenerateNodeTypeFormFormatField";
-
-   private TextField locationField;
-
-   private TextField dependencyField;
 
    private SelectItem formatField;
 
@@ -88,16 +78,20 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
    private IButton cancelButton;
 
+   /**
+    * @param eventBus handler manager
+    */
    public GenerateNodeTypeForm(HandlerManager eventBus)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
+      setCanDragResize(true);
 
       VLayout mainLayout = new VLayout();
       mainLayout.setWidth100();
       mainLayout.setHeight100();
-      mainLayout.setPadding(20);
-      mainLayout.setMembersMargin(20);
+      mainLayout.setPadding(25);
+      mainLayout.setMembersMargin(25);
 
       mainLayout.addMember(createMainForm());
       mainLayout.addMember(createButtonLayout());
@@ -126,37 +120,33 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       super.onDestroy();
    }
 
+   /**
+    * Creates main form.
+    * 
+    * @return {@link DynamicForm}
+    */
    private DynamicForm createMainForm()
    {
       DynamicForm form = new DynamicForm();
-      form.setWrapItemTitles(true);
       form.setID(ID_DYNAMIC_FORM);
-      form.setNumCols(2);
       form.setAutoWidth();
       form.setLayoutAlign(Alignment.CENTER);
 
-      locationField = new TextField(ID_LOCATION_FIELD, "Location");
-      locationField.setWidth(450);
-      locationField.setColSpan(2);
-      locationField.setTitleOrientation(TitleOrientation.TOP);
-      locationField.setShowDisabled(false);
-      locationField.setDisabled(true);
-
-      dependencyField = new TextField(ID_DEPENDENCY_FIELD, "<nobr>"+"Dependency URL"+"</nobr>");
-      dependencyField.setTitleOrientation(TitleOrientation.TOP);
-      dependencyField.setColSpan(2);
-      dependencyField.setWidth(450);
-
       formatField = new SelectItem();
       formatField.setName(ID_FORMAT_FIELD);
-      formatField.setTitle("Node type format");
+      formatField.setTitle("<nobr>" + "Node type format" + "</nobr>");
       formatField.setTitleAlign(Alignment.LEFT);
-      formatField.setWidth(350);
+      formatField.setWidth(290);
 
-      form.setItems(locationField, dependencyField, formatField);
+      form.setItems(formatField);
       return form;
    }
 
+   /**
+    * Creates button's layout.
+    * 
+    * @return {@link HLayout} layout with buttons
+    */
    private HLayout createButtonLayout()
    {
       HLayout hLayout = new HLayout();
@@ -216,24 +206,6 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
    public HasClickHandlers getGenerateButton()
    {
       return generateButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.chromattic.ui.GenerateNodeTypePresenter.Display#getLocation()
-    */
-   @Override
-   public TextFieldItem getLocation()
-   {
-      return locationField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.chromattic.ui.GenerateNodeTypePresenter.Display#getDependencyLocation()
-    */
-   @Override
-   public TextFieldItem getDependencyLocation()
-   {
-      return dependencyField;
    }
 
    /**

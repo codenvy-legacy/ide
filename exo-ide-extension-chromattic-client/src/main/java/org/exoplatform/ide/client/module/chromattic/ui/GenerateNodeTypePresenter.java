@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -40,6 +39,8 @@ import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeType
 import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
 /**
+ * Presenter for generating new node type definition view.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
  *
@@ -49,29 +50,63 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
 {
    interface Display
    {
+      /**
+       * Close view.
+       */
       void closeView();
 
+      /**
+       * Get cancel button.
+       * 
+       * @return {@link HasClickHandlers} cancel button
+       */
       HasClickHandlers getCancelButton();
 
+      /**
+       * Get generate button.
+       * 
+       * @return {@link HasClickHandlers} generate button
+       */
       HasClickHandlers getGenerateButton();
 
-      TextFieldItem getLocation();
-
-      TextFieldItem getDependencyLocation();
-
+      /**
+       * Get node type definition field.
+       * 
+       * @return {@link HasValue} node type format field
+       */
       HasValue<String> getNodeTypeFormat();
 
+      /**
+       * Set values for node type format field.
+       * 
+       * @param values
+       */
       void setNodeTypeFormatValues(String[] values);
    }
 
+   /**
+    * Display.
+    */
    private Display display;
 
+   /**
+    * Handler manager.
+    */
    private HandlerManager eventBus;
 
+   /**
+    * Handlers of this presenter.
+    */
    private Handlers handlers;
 
+   /**
+    * Active file in editor.
+    */
    private File activeFile;
 
+   /**
+    * @param eventBus handler manager
+    */
    public GenerateNodeTypePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -81,6 +116,11 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
       new GeneratedNodeTypePreviewPresenter(eventBus);
    }
 
+   /**
+    * Bind view with presenter.
+    * 
+    * @param d 
+    */
    public void bindDisplay(Display d)
    {
       display = d;
@@ -112,9 +152,9 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
    public void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event)
    {
       handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
-      display.closeView(); 
+      display.closeView();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeHandler#onGenerateNodeType(org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeEvent)
     */
@@ -124,17 +164,19 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
       if (activeFile == null)
          return;
       bindDisplay(new GenerateNodeTypeForm(eventBus));
-      display.getLocation().setValue(activeFile.getHref());
       display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
    }
 
+   /**
+    * Generate node type definition.
+    */
    private void doGenerateNodeType()
    {
+      if (activeFile == null)
+         return;
       handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
-      String dependencyLocation = display.getDependencyLocation().getValue();
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(display.getLocation().getValue(), dependencyLocation,
-         nodeTypeFormat);
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), "", nodeTypeFormat);
    }
 
    /**

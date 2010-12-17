@@ -69,7 +69,7 @@ public class RestDataObjectService implements ResourceContainer
     */
    @POST
    @Path("/generate-nodetype-definition")
-   public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("dependecyPath") String dependecyPath,
+   public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("dependencyPath") String dependencyPath,
       @QueryParam("do-location") String location, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
       throws PathNotFoundException
    {
@@ -94,12 +94,12 @@ public class RestDataObjectService implements ResourceContainer
 
       //TODO: 
       CompilationSource compilationSource;
-      if (dependecyPath != null)
+      if (dependencyPath != null)
       {
-         String[] depJcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), dependecyPath);
+         String[] depJcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), dependencyPath);
          if (depJcrLocation == null)
          {
-            throw new PathNotFoundException("Location of dependency  " + dependecyPath + " not found. ");
+            throw new PathNotFoundException("Location of dependency  " + dependencyPath + " not found. ");
          }
          compilationSource = new CompilationSource(depJcrLocation[0], depJcrLocation[1], depJcrLocation[3]);
       }

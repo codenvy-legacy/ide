@@ -21,18 +21,18 @@ package org.exoplatform.ide.client.module.chromattic.model.service.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link NodeTypeDeployResultReceivedEvent} event.
+ * Handler for {@link NodeTypeCreationResultReceivedEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
  *
  */
-public interface NodeTypeDeployResultReceivedHandler extends EventHandler
+public interface NodeTypeCreationResultReceivedHandler extends EventHandler
 {
    /**
     * Perform actions on node type deploy result received from server.
     * 
     * @param event
     */
-   void onNodeTypeDeployResultReceived(NodeTypeDeployResultReceivedEvent event);
+   void onNodeTypeCreationResultReceived(NodeTypeCreationResultReceivedEvent event);
 }

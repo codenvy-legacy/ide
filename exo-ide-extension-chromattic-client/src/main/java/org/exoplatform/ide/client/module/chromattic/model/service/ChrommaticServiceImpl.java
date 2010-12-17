@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.module.chromattic.model.EnumAlreadyExistsBehav
 import org.exoplatform.ide.client.module.chromattic.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.client.module.chromattic.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedEvent;
-import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeDeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeCreationResultReceivedEvent;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.client.module.chromattic.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
 
@@ -104,7 +104,7 @@ public class ChrommaticServiceImpl extends ChrommaticService
       GenerateNodeTypeResultUnmarshaller unmarshaller = new GenerateNodeTypeResultUnmarshaller(result);
       String params = "do-location=" + location + "&";
       params +=
-         (dependencyLocation != null && dependencyLocation.length() > 0) ? "dependecyPath=" + dependencyLocation + "&"
+         (dependencyLocation != null && dependencyLocation.length() > 0) ? "dependencyPath=" + dependencyLocation + "&"
             : "";
       params += "nodeTypeFormat=" + nodeTypeFormat.value();
 
@@ -120,7 +120,7 @@ public class ChrommaticServiceImpl extends ChrommaticService
       EnumAlreadyExistsBehaviour alreadyExistsBehaviour)
    {
       String url = restServiceContext + DEPLOY_NODE_TYPE_METHOD_CONTEXT;
-      NodeTypeDeployResultReceivedEvent event = new NodeTypeDeployResultReceivedEvent();
+      NodeTypeCreationResultReceivedEvent event = new NodeTypeCreationResultReceivedEvent();
       String path = (nodeTypeFormat == null) ? EnumNodeTypeFormat.EXO.value() : nodeTypeFormat.value();
       path += "/";
       path +=

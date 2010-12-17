@@ -47,6 +47,8 @@ import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeType
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * Presenter for the preview of the generated node type definition.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 8, 2010 $
  *
@@ -56,23 +58,54 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 {
    interface Display
    {
+      /**
+       * Close the view.
+       */
       void closeView();
 
+      /**
+       * Set content to be displayed in editor. 
+       * 
+       * @param content
+       */
       void setContent(String content);
 
+      /**
+       * Get editor.
+       * 
+       * @return {@link TextEditor} editor
+       */
       TextEditor getEditor();
    }
 
+   /**
+    * Display.
+    */
    private Display display;
 
+   /**
+    * Handler manager.
+    */
    private HandlerManager eventBus;
 
+   /**
+    * The content of generated node type definition.
+    */
    private String generatedNodeType;
 
+   /**
+    * Handlers of this presenter.
+    */
    private Handlers handlers;
 
+   /**
+    * The view state : opened or not.
+    */
    private boolean isOpened = false;
 
+   /**
+    * @param eventBus handler manager
+    */
    public GeneratedNodeTypePreviewPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -83,7 +116,12 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 
       handlers = new Handlers(eventBus);
    }
-
+   
+   /**
+    * Bind view with presenter.
+    * 
+    * @param d display
+    */
    public void bindDisplay(Display d)
    {
       display = d;
@@ -174,6 +212,13 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       }
    }
 
+   /**
+   * Forms the error message to be displayed 
+   * for user.
+   * 
+   * @param exception exception
+   * @return {@link String} formed message to display
+   */
    private String getErrorMessage(Throwable exception)
    {
       if (exception instanceof ServerException)
@@ -189,11 +234,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
          else
          {
             String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-
-            if (serverException != null)
-            {
-               html += "<br><hr><br>Possible reasons:<br>" + serverException.getMessage();
-            }
             return html;
          }
       }
@@ -203,6 +243,11 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       }
    }
 
+   /**
+    * Show error message in output form.
+    * 
+    * @param errorMessage error message
+    */
    private void showErrorInOutput(String errorMessage)
    {
       errorMessage = errorMessage.replace("\n", "<br>");

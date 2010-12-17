@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.chromattic.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.client.module.chromattic.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedEvent;
-import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeDeployResultReceivedEvent;
+import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeCreationResultReceivedEvent;
 import org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedEvent;
 
 /**
@@ -79,7 +79,7 @@ public abstract class ChrommaticService
    
    /**
     * Create (deploy) new node type.
-    * {@link NodeTypeDeployResultReceivedEvent} event is fired, when 
+    * {@link NodeTypeCreationResultReceivedEvent} event is fired, when 
     * the result of the deploy operation is received.
     * 
     * @param nodeType XML node type definition

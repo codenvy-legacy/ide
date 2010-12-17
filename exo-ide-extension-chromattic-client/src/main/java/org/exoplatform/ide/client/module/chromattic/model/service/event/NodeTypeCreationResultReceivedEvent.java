@@ -29,12 +29,12 @@ import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class NodeTypeDeployResultReceivedEvent extends ServerExceptionEvent<NodeTypeDeployResultReceivedHandler>
+public class NodeTypeCreationResultReceivedEvent extends ServerExceptionEvent<NodeTypeCreationResultReceivedHandler>
 {
    /**
     * Type used to register this event
     */
-   public static final GwtEvent.Type<NodeTypeDeployResultReceivedHandler> TYPE = new GwtEvent.Type<NodeTypeDeployResultReceivedHandler>();
+   public static final GwtEvent.Type<NodeTypeCreationResultReceivedHandler> TYPE = new GwtEvent.Type<NodeTypeCreationResultReceivedHandler>();
    
    /**
     * Error while deploying node type.
@@ -62,7 +62,7 @@ public class NodeTypeDeployResultReceivedEvent extends ServerExceptionEvent<Node
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<NodeTypeDeployResultReceivedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<NodeTypeCreationResultReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -71,9 +71,9 @@ public class NodeTypeDeployResultReceivedEvent extends ServerExceptionEvent<Node
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(NodeTypeDeployResultReceivedHandler handler)
+   protected void dispatch(NodeTypeCreationResultReceivedHandler handler)
    {
-      handler.onNodeTypeDeployResultReceived(this);
+      handler.onNodeTypeCreationResultReceived(this);
    }
 
 }
