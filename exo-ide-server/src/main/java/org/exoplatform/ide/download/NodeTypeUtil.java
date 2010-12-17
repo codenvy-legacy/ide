@@ -31,17 +31,17 @@ import javax.jcr.RepositoryException;
 
 public class NodeTypeUtil
 {
-   static final String NT_FILE = "nt:file";
+   public static final String NT_FILE = "nt:file";
 
-   static final String NT_RESOURCE = "nt:resource";
+   public static final String NT_RESOURCE = "nt:resource";
 
-   static final String JCR_CONTENT = "jcr:content";
+   public static final String JCR_CONTENT = "jcr:content";
 
-   static final String JCR_DATA = "jcr:data";
+   public static final String JCR_DATA = "jcr:data";
 
-   static final String JCR_MIMETYPE = "jcr:mimeType";
+   public static final String JCR_MIMETYPE = "jcr:mimeType";
 
-   static final String JCR_LASTMODIFIED = "jcr:lastModified";
+   public static final String JCR_LASTMODIFIED = "jcr:lastModified";
 
    /**
     * If the node is file.

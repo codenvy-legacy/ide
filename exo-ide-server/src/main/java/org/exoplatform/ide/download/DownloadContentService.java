@@ -19,6 +19,17 @@
  */
 package org.exoplatform.ide.download;
 
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -41,18 +52,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 /**
- * Created by The eXo Platform SAS .
+ * Service for downloading folders and files to local drive.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -221,8 +222,11 @@ public class DownloadContentService implements ResourceContainer
       try
       {
          Session session = getSession(repoName, repoPath);
+         
+         String nodePath = path(repoPath);
+         System.out.println(">>>>>>>>node path: " + nodePath);
 
-         Node node = (Node)session.getItem(path(repoPath));
+         Node node = (Node)session.getItem(nodePath);
 
          if (NodeTypeUtil.isFile(node))
          {
@@ -230,7 +234,7 @@ public class DownloadContentService implements ResourceContainer
          }
          else
          {
-            return getFolder(node, repoPath);
+            return getFolder(node);
          }
       }
       catch (PathNotFoundException exc)
@@ -275,11 +279,11 @@ public class DownloadContentService implements ResourceContainer
     * Download resource as zipped folder.
     * 
     * @param node node
-    * @param repoPath path to resource
     * @return {@link Response}
     * @throws RepositoryException
+    * @throws FileNotFoundException 
     */
-   private Response getFolder(Node node, String repoPath) throws RepositoryException
+   private Response getFolder(Node node) throws RepositoryException, FileNotFoundException
    {
       String contentDisposition = "attachment";
 
