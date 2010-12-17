@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.module.chromattic;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
@@ -31,6 +32,8 @@ import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommand
 import org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticServiceImpl;
 import org.exoplatform.ide.client.module.chromattic.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.client.module.chromattic.ui.GenerateNodeTypePresenter;
+import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenCollector;
+import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenWidgetFactory;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -78,6 +81,7 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.CHROMATTIC_DATA_OBJECT,new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext()) ,new GroovyTokenCollector(eventBus)));
    }
 
 }
