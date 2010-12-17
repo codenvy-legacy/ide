@@ -12,29 +12,13 @@
    <name>eXo IDE :: vfs :: JCR</name>
    <dependencies>
       <dependency>
-      <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-vfs</artifactId>
-      <version>1.1.0-SNAPSHOT</version>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+         <version>1.1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <version>2.5</version>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
@@ -45,9 +29,25 @@
          <artifactId>exo.jcr.component.ext</artifactId>
       </dependency>
       <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.5</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
          <groupId>hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
          <version>1.8.0.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
    </dependencies>
