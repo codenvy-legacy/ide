@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.LazyIterator;
-import org.exoplatform.ide.vfs.Type;
-import org.exoplatform.ide.vfs.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.Type;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -59,7 +59,7 @@ class DocumentData extends ItemData
       }
 
       /**
-       * @see org.exoplatform.ide.vfs.LazyIterator#fetchNext()
+       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
        */
       @Override
       protected void fetchNext()
@@ -90,7 +90,7 @@ class DocumentData extends ItemData
       private boolean currentSeen;
 
       /**
-       * @see org.exoplatform.ide.vfs.LazyIterator#fetchNext()
+       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
        */
       @Override
       protected void fetchNext()

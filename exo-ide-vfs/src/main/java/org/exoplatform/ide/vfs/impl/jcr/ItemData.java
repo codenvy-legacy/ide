@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.AccessControlEntry;
-import org.exoplatform.ide.vfs.InputProperty;
-import org.exoplatform.ide.vfs.OutputProperty;
-import org.exoplatform.ide.vfs.PropertyFilter;
-import org.exoplatform.ide.vfs.Type;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo.BasicPermissions;
-import org.exoplatform.ide.vfs.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.server.AccessControlEntry;
+import org.exoplatform.ide.vfs.server.InputProperty;
+import org.exoplatform.ide.vfs.server.OutputProperty;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.Type;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.BasicPermissions;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;

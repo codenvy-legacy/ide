@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.server;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,7 +33,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
    private static class EmptyIterator extends LazyIterator<Object>
    {
       /**
-       * @see org.exoplatform.ide.vfs.LazyIterator#fetchNext()
+       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
        */
       @Override
       protected void fetchNext() 
@@ -41,7 +41,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
       }
 
       /**
-       * @see org.exoplatform.ide.vfs.LazyIterator#size()
+       * @see org.exoplatform.ide.vfs.server.LazyIterator#size()
        */
       @Override
       public int size()

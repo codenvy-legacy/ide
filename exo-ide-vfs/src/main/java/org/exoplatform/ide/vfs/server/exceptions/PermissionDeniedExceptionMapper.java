@@ -16,23 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * If requested action requires optional capability that is not supported.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: NotSupportedException.java 63633 2010-12-03 16:07:20Z andrew00x
- *          $
+ * @version $Id$
  */
-@SuppressWarnings("serial")
-public class NotSupportedException extends VirtualFileSystemRuntimeException
+@Provider
+public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>
 {
    /**
-    * @param message message
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public NotSupportedException(String message)
+   @Override
+   public Response toResponse(PermissionDeniedException exception)
    {
-      super(message);
+      return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .build();
    }
 }

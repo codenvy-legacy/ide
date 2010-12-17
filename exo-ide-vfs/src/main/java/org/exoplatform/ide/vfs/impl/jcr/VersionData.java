@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.LazyIterator;
-import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
 import java.util.List;

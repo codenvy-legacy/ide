@@ -16,10 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
@@ -28,15 +29,13 @@ import javax.ws.rs.ext.Provider;
  * @version $Id$
  */
 @Provider
-public class ObjectNotFoundExceptionMapper implements ExceptionMapper<ObjectNotFoundException>
+public class InvalidArgumentExceptionMapper implements ExceptionMapper<InvalidArgumentException>
 {
    /**
     * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   @Override
-   public Response toResponse(ObjectNotFoundException exception)
+   public Response toResponse(InvalidArgumentException exception)
    {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }

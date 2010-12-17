@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.Document;
-import org.exoplatform.ide.vfs.ItemList;
+import org.exoplatform.ide.vfs.server.Document;
+import org.exoplatform.ide.vfs.server.ItemList;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 

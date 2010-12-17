@@ -16,22 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * Thrown if performed action is not allowed for caller.
+ * Should be thrown for any errors that are not expressible by another VFS
+ * (Virtual File System) exception. Used as base class for any VFS unchecked
+ * exceptions.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class PermissionDeniedException extends VirtualFileSystemException
+public class VirtualFileSystemRuntimeException extends RuntimeException
 {
    /**
-    * @param message the message
+    * @param message the detail message
+    * @param cause the cause
     */
-   public PermissionDeniedException(String message)
+   public VirtualFileSystemRuntimeException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
+
+   /**
+    * @param message the detail message
+    */
+   public VirtualFileSystemRuntimeException(String message)
    {
       super(message);
+   }
+
+   /**
+    * @param cause the cause
+    */
+   public VirtualFileSystemRuntimeException(Throwable cause)
+   {
+      super(cause);
    }
 }

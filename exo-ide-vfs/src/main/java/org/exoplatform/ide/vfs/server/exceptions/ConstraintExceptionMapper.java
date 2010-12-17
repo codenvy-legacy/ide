@@ -16,27 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>
+public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintException>
 {
    /**
     * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Response toResponse(PermissionDeniedException exception)
+   public Response toResponse(ConstraintException exception)
    {
-      return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }

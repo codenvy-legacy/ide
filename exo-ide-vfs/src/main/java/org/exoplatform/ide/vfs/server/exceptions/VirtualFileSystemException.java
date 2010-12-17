@@ -16,22 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * Thrown if requested object does not exist.
+ * Should be used as base class for any VFS (Virtual File System) checked
+ * exception.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class ObjectNotFoundException extends VirtualFileSystemException
+public class VirtualFileSystemException extends Exception
 {
    /**
-    * @param message the message
+    * @param message the detail message
+    * @param cause the cause
     */
-   public ObjectNotFoundException(String message)
+   public VirtualFileSystemException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
+
+   /**
+    * @param message the detail message
+    */
+   public VirtualFileSystemException(String message)
    {
       super(message);
+   }
+
+   /**
+    * @param cause the cause
+    */
+   public VirtualFileSystemException(Throwable cause)
+   {
+      super(cause);
    }
 }

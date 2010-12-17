@@ -18,30 +18,30 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.AccessControlEntry;
-import org.exoplatform.ide.vfs.Document;
-import org.exoplatform.ide.vfs.Folder;
-import org.exoplatform.ide.vfs.InputProperty;
-import org.exoplatform.ide.vfs.Item;
-import org.exoplatform.ide.vfs.ItemList;
-import org.exoplatform.ide.vfs.LazyIterator;
-import org.exoplatform.ide.vfs.LockToken;
-import org.exoplatform.ide.vfs.ObjectId;
-import org.exoplatform.ide.vfs.PropertyFilter;
-import org.exoplatform.ide.vfs.Type;
-import org.exoplatform.ide.vfs.VirtualFileSystem;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo.ACLCapability;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo.BasicPermissions;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo.LockCapability;
-import org.exoplatform.ide.vfs.VirtualFileSystemInfo.QueryCapability;
-import org.exoplatform.ide.vfs.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.exceptions.ObjectNotFoundException;
-import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.AccessControlEntry;
+import org.exoplatform.ide.vfs.server.Document;
+import org.exoplatform.ide.vfs.server.Folder;
+import org.exoplatform.ide.vfs.server.InputProperty;
+import org.exoplatform.ide.vfs.server.Item;
+import org.exoplatform.ide.vfs.server.ItemList;
+import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.LockToken;
+import org.exoplatform.ide.vfs.server.ObjectId;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.Type;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.ACLCapability;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.BasicPermissions;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.LockCapability;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.QueryCapability;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
+import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class JcrFileSystem implements VirtualFileSystem
    // ------------------- VirtualFileSystem ---------------------
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#copy(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String,
     *      java.lang.String, java.util.List)
     */
    @Path("copy/{identifier:.*}")
@@ -153,7 +153,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#createDocument(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createDocument(java.lang.String,
     *      java.lang.String, javax.ws.rs.core.MediaType, java.io.InputStream,
     *      java.util.List, javax.ws.rs.core.UriInfo)
     */
@@ -176,7 +176,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#createFolder(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String,
     *      java.lang.String, java.util.List, javax.ws.rs.core.UriInfo)
     */
    @Path("folder/{parent:.*}")
@@ -195,7 +195,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#delete(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#delete(java.lang.String,
     *      java.util.List)
     */
    @Path("delete/{identifier:.*}")
@@ -207,7 +207,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getACL(java.lang.String)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getACL(java.lang.String)
     */
    @Path("acl/{identifier:.*}")
    public List<AccessControlEntry> getACL(@PathParam("identifier") String identifier) throws NotSupportedException,
@@ -217,8 +217,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getChildren(java.lang.String,
-    *      int, int, org.exoplatform.ide.vfs.PropertyFilter)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String,
+    *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Path("children/{identifier:.*}")
    public ItemList<Item> getChildren(@PathParam("identifier") String parent,
@@ -257,7 +257,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getContent(java.lang.String)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String)
     */
    @Path("content/{identifier:.*}")
    public Response getContent(@PathParam("identifier") String identifier) throws ObjectNotFoundException,
@@ -272,7 +272,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getVfsInfo(javax.ws.rs.core.UriInfo)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVfsInfo(javax.ws.rs.core.UriInfo)
     */
    public VirtualFileSystemInfo getVfsInfo(@Context UriInfo uriInfo)
    {
@@ -291,8 +291,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getItem(java.lang.String,
-    *      org.exoplatform.ide.vfs.PropertyFilter)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItem(java.lang.String,
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Path("item/{identifier:.*}")
    public Item getItem(@PathParam("identifier") String identifier,
@@ -303,7 +303,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getVersion(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersion(java.lang.String,
     *      org.exoplatform.ide.vfs.VersionId)
     */
    @Path("version/{identifier:.*}/{versionIdentifier}")
@@ -317,8 +317,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#getVersions(java.lang.String,
-    *      int, int, org.exoplatform.ide.vfs.PropertyFilter)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String,
+    *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Path("versions/{identifier:.*}")
    public ItemList<Document> getVersions(@PathParam("identifier") String identifier,
@@ -357,7 +357,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#lock(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String,
     *      java.lang.Boolean)
     */
    @Path("lock/{identifier:.*}")
@@ -369,7 +369,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#move(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#move(java.lang.String,
     *      java.lang.String, java.util.List)
     */
    @Path("move/{identifier:.*}")
@@ -386,7 +386,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#rename(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#rename(java.lang.String,
     *      javax.ws.rs.core.MediaType, java.lang.String, java.util.List)
     */
    @Override
@@ -404,7 +404,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap,
     *      int, int)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -466,7 +466,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#search(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(java.lang.String,
     *      int, int)
     */
    public ItemList<Item> search(@QueryParam("statement") String statement,
@@ -520,7 +520,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#unlock(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#unlock(java.lang.String,
     *      java.util.List)
     */
    @Path("unlock/{identifier:.*}")
@@ -532,7 +532,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#updateACL(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateACL(java.lang.String,
     *      java.util.List, java.lang.Boolean, java.util.List)
     */
    @Path("acl/{identifier:.*}")
@@ -545,7 +545,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#updateContent(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateContent(java.lang.String,
     *      javax.ws.rs.core.MediaType, java.io.InputStream, java.util.List)
     */
    @Path("content/{identifier:.*}")
@@ -561,7 +561,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.VirtualFileSystem#updateProperties(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateProperties(java.lang.String,
     *      java.util.Collection, java.util.List)
     */
    @Path("properties/{identifier:.*}")

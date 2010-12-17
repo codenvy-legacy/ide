@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -37,7 +36,7 @@ import javax.ws.rs.WebApplicationException;
  * @version $Id$
  */
 @Path("vfs/jcr")
-public class JcrFileSystemFactory implements ResourceContainer
+public class JcrFileSystemFactory
 {
    private final RepositoryService repositoryService;
 

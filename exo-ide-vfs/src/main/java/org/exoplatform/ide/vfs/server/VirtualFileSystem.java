@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.exceptions.LockException;
-import org.exoplatform.ide.vfs.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.exceptions.ObjectNotFoundException;
-import org.exoplatform.ide.vfs.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
+import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
 import java.util.List;

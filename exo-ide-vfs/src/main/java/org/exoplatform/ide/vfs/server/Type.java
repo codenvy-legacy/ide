@@ -16,22 +16,54 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server;
 
 /**
- * Thrown if object on which the action performed is locked.
+ * Object types.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@SuppressWarnings("serial")
-public class LockException extends VirtualFileSystemException
-{
-   /**
-    * @param message
-    */
-   public LockException(String message)
+public enum Type {
+   DOCUMENT("document"), FOLDER("folder");
+
+   private final String value;
+
+   private Type(String value)
    {
-      super(message);
+      this.value = value;
+   }
+
+   /**
+    * @return value of Type
+    */
+   public String value()
+   {
+      return value;
+   }
+
+   /**
+    * Get Type instance from string value.
+    * 
+    * @param value string value
+    * @return Type
+    * @throws IllegalArgumentException if there is no corresponded Type for
+    *            specified <code>value</code>
+    */
+   public static Type fromValue(String value)
+   {
+      for (Type e : Type.values())
+         if (e.value.equals(value))
+            return e;
+      throw new IllegalArgumentException(value);
+   }
+
+   /**
+    * @see java.lang.Enum#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return value;
    }
 }

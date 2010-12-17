@@ -16,54 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * Object types.
+ * Thrown if requested object does not exist.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public enum Type {
-   DOCUMENT("document"), FOLDER("folder");
-
-   private final String value;
-
-   private Type(String value)
-   {
-      this.value = value;
-   }
-
+@SuppressWarnings("serial")
+public class ObjectNotFoundException extends VirtualFileSystemException
+{
    /**
-    * @return value of Type
+    * @param message the message
     */
-   public String value()
+   public ObjectNotFoundException(String message)
    {
-      return value;
-   }
-
-   /**
-    * Get Type instance from string value.
-    * 
-    * @param value string value
-    * @return Type
-    * @throws IllegalArgumentException if there is no corresponded Type for
-    *            specified <code>value</code>
-    */
-   public static Type fromValue(String value)
-   {
-      for (Type e : Type.values())
-         if (e.value.equals(value))
-            return e;
-      throw new IllegalArgumentException(value);
-   }
-
-   /**
-    * @see java.lang.Enum#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return value;
+      super(message);
    }
 }

@@ -16,39 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * If operation fails cause to any constraints.
+ * Thrown if performed action is not allowed for caller.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class ConstraintException extends VirtualFileSystemException
+public class PermissionDeniedException extends VirtualFileSystemException
 {
    /**
     * @param message the message
     */
-   public ConstraintException(String message)
+   public PermissionDeniedException(String message)
    {
       super(message);
-   }
-
-   /**
-    * @param message the message
-    * @param cause the cause
-    */
-   public ConstraintException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
-
-   /**
-    * @param cause the cause
-    */
-   public ConstraintException(Throwable cause)
-   {
-      super(cause);
    }
 }

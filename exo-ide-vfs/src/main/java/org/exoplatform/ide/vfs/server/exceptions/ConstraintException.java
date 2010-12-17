@@ -16,26 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
+ * If operation fails cause to any constraints.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class InvalidArgumentExceptionMapper implements ExceptionMapper<InvalidArgumentException>
+@SuppressWarnings("serial")
+public class ConstraintException extends VirtualFileSystemException
 {
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @param message the message
     */
-   public Response toResponse(InvalidArgumentException exception)
+   public ConstraintException(String message)
    {
-      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      super(message);
+   }
+
+   /**
+    * @param message the message
+    * @param cause the cause
+    */
+   public ConstraintException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
+
+   /**
+    * @param cause the cause
+    */
+   public ConstraintException(Throwable cause)
+   {
+      super(cause);
    }
 }

@@ -16,40 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server;
+
+import java.util.List;
 
 /**
- * Should be used as base class for any VFS (Virtual File System) checked
- * exception.
+ * Representation of Folder object used to interaction with client via JSON.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@SuppressWarnings("serial")
-public class VirtualFileSystemException extends Exception
+public class Folder extends Item
 {
    /**
-    * @param message the detail message
-    * @param cause the cause
+    * Instance of Folder with specified attributes.
+    * 
+    * @param id identifier of object
+    * @param name the name of object
+    * @param path path of object
+    * @param creationDate creation date in long format
+    * @param lastModificationDate date of last modification in long format
+    * @param locked is folder locked or not
+    * @param properties other properties of folder
     */
-   public VirtualFileSystemException(String message, Throwable cause)
+   public Folder(String id, String name, String path, long creationDate, long lastModificationDate, boolean locked,
+      List<OutputProperty> properties)
    {
-      super(message, cause);
+      super(id, name, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
    }
 
    /**
-    * @param message the detail message
+    * Empty instance of Folder.
     */
-   public VirtualFileSystemException(String message)
+   public Folder()
    {
-      super(message);
-   }
-
-   /**
-    * @param cause the cause
-    */
-   public VirtualFileSystemException(Throwable cause)
-   {
-      super(cause);
+      super();
    }
 }

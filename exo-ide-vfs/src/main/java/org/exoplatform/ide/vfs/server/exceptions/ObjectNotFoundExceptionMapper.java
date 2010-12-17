@@ -16,40 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.server.exceptions;
 
-import java.util.List;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * Representation of Folder object used to interaction with client via JSON.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Folder extends Item
+@Provider
+public class ObjectNotFoundExceptionMapper implements ExceptionMapper<ObjectNotFoundException>
 {
    /**
-    * Instance of Folder with specified attributes.
-    * 
-    * @param id identifier of object
-    * @param name the name of object
-    * @param path path of object
-    * @param creationDate creation date in long format
-    * @param lastModificationDate date of last modification in long format
-    * @param locked is folder locked or not
-    * @param properties other properties of folder
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public Folder(String id, String name, String path, long creationDate, long lastModificationDate, boolean locked,
-      List<OutputProperty> properties)
+   @Override
+   public Response toResponse(ObjectNotFoundException exception)
    {
-      super(id, name, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
-   }
-
-   /**
-    * Empty instance of Folder.
-    */
-   public Folder()
-   {
-      super();
+      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .build();
    }
 }

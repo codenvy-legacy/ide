@@ -16,41 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.exceptions;
+package org.exoplatform.ide.vfs.server.exceptions;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * Should be thrown for any errors that are not expressible by another VFS
- * (Virtual File System) exception. Used as base class for any VFS unchecked
- * exceptions.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@SuppressWarnings("serial")
-public class VirtualFileSystemRuntimeException extends RuntimeException
+public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>
 {
    /**
-    * @param message the detail message
-    * @param cause the cause
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public VirtualFileSystemRuntimeException(String message, Throwable cause)
+   @Override
+   public Response toResponse(NotSupportedException exception)
    {
-      super(message, cause);
-   }
-
-   /**
-    * @param message the detail message
-    */
-   public VirtualFileSystemRuntimeException(String message)
-   {
-      super(message);
-   }
-
-   /**
-    * @param cause the cause
-    */
-   public VirtualFileSystemRuntimeException(Throwable cause)
-   {
-      super(cause);
+      return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }
