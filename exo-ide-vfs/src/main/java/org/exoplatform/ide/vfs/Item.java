@@ -32,6 +32,9 @@ public class Item
    /** Identifier of object. */
    private String id;
 
+   /** Name of object. */
+   private String name;
+
    /** Type of object. */
    private Type type;
 
@@ -51,16 +54,18 @@ public class Item
 
    /**
     * @param id identifier of object
+    * @param name the name of object
     * @param path path of object
     * @param creationDate creation date in long format
     * @param lastModificationDate date of last modification in long format
     * @param locked is object locked or not
     * @param properties other properties of object
     */
-   public Item(String id, Type type, String path, long creationDate, long lastModificationDate, boolean locked,
-      List<OutputProperty> properties)
+   public Item(String id, String name, Type type, String path, long creationDate, long lastModificationDate,
+      boolean locked, List<OutputProperty> properties)
    {
       this.id = id;
+      this.name = name;
       this.type = type;
       this.path = path;
       this.creationDate = creationDate;
@@ -87,6 +92,22 @@ public class Item
    public void setId(String id)
    {
       this.id = id;
+   }
+
+   /**
+    * @return name of object
+    */
+   public String getName()
+   {
+      return name;
+   }
+
+   /**
+    * @param name the name of object
+    */
+   public void setName(String name)
+   {
+      this.name = name;
    }
 
    /**

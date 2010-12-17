@@ -60,7 +60,7 @@ public class LockTest extends JcrFileSystemTest
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       document = documentNode.getPath();
 
       session.save();
@@ -75,6 +75,8 @@ public class LockTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
+      Node doc = (Node)session.getItem(document);
+      assertTrue("Document must be locked. ", doc.isLocked());
    }
 
    public void testLockDocumentAlreadyLocked() throws Exception
@@ -118,5 +120,7 @@ public class LockTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
+      Node folder = (Node)session.getItem(this.folder);
+      assertTrue("Folder must be locked. ", folder.isLocked());
    }
 }

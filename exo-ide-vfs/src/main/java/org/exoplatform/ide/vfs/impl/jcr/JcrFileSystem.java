@@ -45,15 +45,24 @@ import org.exoplatform.ide.vfs.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.query.InvalidQueryException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -72,6 +81,8 @@ import javax.ws.rs.core.UriInfo;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
+   static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
+
    protected final Session session;
 
    private VirtualFileSystemInfo vfsInfo;
@@ -396,22 +407,116 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap,
     *      int, int)
     */
-   public ItemList<Item> search(MultivaluedMap<String, String> query, @QueryParam("maxItems") int maxItems,
-      @QueryParam("skipCount") int skipCount) throws NotSupportedException, InvalidArgumentException
+   @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+   public ItemList<Item> search(MultivaluedMap<String, String> query,
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount)
+      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
-      // TODO
-      throw new NotSupportedException("search");
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT ");
+      List<String> properties = query.get("properties");
+      if (properties == null || properties.size() == 0)
+      {
+         sql.append('*');
+      }
+      else
+      {
+         for (int i = 0; i < properties.size(); i++)
+         {
+            if (i > 0)
+               sql.append(',');
+            sql.append(properties.get(i));
+         }
+      }
+
+      sql.append(" FROM ");
+      List<String> types = query.get("types");
+      if (types == null || types.size() == 0)
+      {
+         sql.append("nt:base");
+      }
+      else
+      {
+         // TODO : type mapping
+         for (int i = 0; i < types.size(); i++)
+         {
+            if (i > 0)
+               sql.append(',');
+            sql.append(types.get(i));
+         }
+      }
+      String path = query.getFirst("path");
+      String contains = query.getFirst("contains");
+      boolean isPath = (path != null && path.length() > 0);
+      boolean isContains = (contains != null && contains.length() > 0);
+      if (isPath || isContains)
+      {
+         sql.append(" WHERE");
+         if (isPath)
+            sql.append(" jcr:path LIKE '").append(path).append("/%'");
+         if (isContains)
+         {
+            if (isPath)
+               sql.append(" AND");
+            sql.append(" CONTAINS(., \'").append(contains).append("\')");
+         }
+      }
+      //System.out.println(">>>>> SQL: " + sql.toString());
+      return search(sql.toString(), maxItems, skipCount);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.VirtualFileSystem#search(java.lang.String,
     *      int, int)
     */
-   public ItemList<Item> search(@QueryParam("statement") String statement, @QueryParam("maxItems") int maxItems,
-      @QueryParam("skipCount") int skipCount) throws NotSupportedException, InvalidArgumentException
+   public ItemList<Item> search(@QueryParam("statement") String statement,
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount)
+      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
-      // TODO
-      throw new NotSupportedException("search");
+      if (skipCount < 0)
+         throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      try
+      {
+         QueryManager queryManager = session.getWorkspace().getQueryManager();
+         Query query = queryManager.createQuery(statement, Query.SQL);
+         QueryResult result = query.execute();
+         StringBuilder propertyFilter = new StringBuilder();
+         for (String n : result.getColumnNames())
+         {
+            if (SKIPPED_QUERY_PROPERTIES.contains(n))
+               continue;
+            if (propertyFilter.length() > 0)
+               propertyFilter.append(',');
+            propertyFilter.append(n);
+         }
+         NodeIterator nodes = result.getNodes();
+         try
+         {
+            if (skipCount > 0)
+               nodes.skip(skipCount);
+         }
+         catch (NoSuchElementException nse)
+         {
+            throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
+         }
+         List<Item> l = new ArrayList<Item>();
+         for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
+            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), new PropertyFilter(propertyFilter.toString())));
+
+         ItemList<Item> il = new ItemList<Item>(l);
+         il.setNumItems((int)nodes.getSize());
+         il.setHasMoreItems(nodes.hasNext());
+
+         return il;
+      }
+      catch (InvalidQueryException e)
+      {
+         throw new InvalidArgumentException(e.getMessage());
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
    }
 
    /**
@@ -463,7 +568,8 @@ public class JcrFileSystem implements VirtualFileSystem
    public void updateProperties(@PathParam("identifier") String identifier, List<InputProperty> properties,
       @QueryParam("lockTokens") List<String> lockTokens) throws ObjectNotFoundException, LockException,
       PermissionDeniedException, VirtualFileSystemException
-   {System.out.println(">>>>>>>>> "+properties);
+   {
+      //System.out.println(">>>>>>>>> " + properties);
       if (properties == null || properties.size() == 0)
          return;
       ItemData data = getItemData(identifier);
@@ -484,12 +590,12 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data.getType() == Type.DOCUMENT)
       {
          DocumentData docData = (DocumentData)data;
-         return new Document(docData.getId(), docData.getPath(), docData.getCreationDate(),
+         return new Document(docData.getId(), docData.getName(), docData.getPath(), docData.getCreationDate(),
             docData.getLastModificationDate(), docData.getVersionId(), docData.getContenType(),
             docData.getContenLength(), docData.isLocked(), docData.getProperties(propertyFilter));
       }
-      return new Folder(data.getId(), data.getPath(), data.getCreationDate(), data.getLastModificationDate(),
-         data.isLocked(), data.getProperties(propertyFilter));
+      return new Folder(data.getId(), data.getName(), data.getPath(), data.getCreationDate(),
+         data.getLastModificationDate(), data.isLocked(), data.getProperties(propertyFilter));
    }
 
    private ItemData getItemData(String identifier) throws ObjectNotFoundException, PermissionDeniedException,

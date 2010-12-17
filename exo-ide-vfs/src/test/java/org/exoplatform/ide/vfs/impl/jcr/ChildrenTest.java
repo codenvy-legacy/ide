@@ -18,11 +18,20 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.Item;
+import org.exoplatform.ide.vfs.ItemList;
+import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 
@@ -48,19 +57,39 @@ public class ChildrenTest extends JcrFileSystemTest
       childrenTestNode.addMixin("exo:privilegeable");
 
       Node folderNode = childrenTestNode.addNode("ChildrenTest_FOLDER", "nt:folder");
-      // add child in folder
-      Node childDocumentNode = folderNode.addNode("ChildrenTest_DOCUMENT01", "nt:file");
 
+      Node childDocumentNode = folderNode.addNode("ChildrenTest_DOCUMENT01", "nt:file");
       Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      childContentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
-      folder = folderNode.getPath();
+      childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+
+      folderNode.addNode("ChildrenTest_FOLDER01", "nt:folder");
+
+      folderNode.addNode("ChildrenTest_FOLDER02", "nt:folder");
 
       session.save();
+
+      folder = folderNode.getPath();
    }
 
    public void testGetChildren() throws Exception
+   {
+      Map<String, String[]> permissions = new HashMap<String, String[]>(1);
+      permissions.put("root", PermissionType.ALL);
+      ((ExtendedNode)childrenTestNode).setPermissions(permissions);
+      session.save();
+      
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/children") //
+         .append(folder).toString();
+      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testGetChildrenNoPermissions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
@@ -68,7 +97,85 @@ public class ChildrenTest extends JcrFileSystemTest
          .append(folder).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
-      // TODO
-      log.info(new String(writer.getBody()));
+      //log.info(new String(writer.getBody()));
+      @SuppressWarnings("unchecked")
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      List<String> list = new ArrayList<String>(3);
+      for (Item i : children.getItems())
+         list.add(i.getName());
+      assertEquals(3, list.size());
+      assertTrue(list.contains("ChildrenTest_FOLDER01"));
+      assertTrue(list.contains("ChildrenTest_FOLDER02"));
+      assertTrue(list.contains("ChildrenTest_DOCUMENT01"));
+   }
+
+   @SuppressWarnings("unchecked")
+   public void testGetChildrenPagingSkipCount() throws Exception
+   {
+      // Get all children.
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/children") //
+         .append(folder).toString();
+      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      List<String> all = new ArrayList<String>(3);
+      for (Item i : children.getItems())
+         all.add(i.getName());
+
+      // Skip first item in result.
+      path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/children") //
+         .append(folder) //
+         .append("?") //
+         .append("skipCount=") //
+         .append("1") //
+         .toString();
+      response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      children = (ItemList<Item>)response.getEntity();
+      List<String> page = new ArrayList<String>(2);
+      for (Item i : children.getItems())
+         page.add(i.getName());
+
+      Iterator<String> iteratorAll = all.iterator();
+      iteratorAll.next();
+      iteratorAll.remove();
+
+      assertEquals(all, page);
+   }
+
+   @SuppressWarnings("unchecked")
+   public void testGetChildrenPagingMaxItems() throws Exception
+   {
+      // Get all children.
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/children") //
+         .append(folder).toString();
+      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      List<String> all = new ArrayList<String>(3);
+      for (Item i : children.getItems())
+         all.add(i.getName());
+
+      // Exclude last item from result.
+      path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/children") //
+         .append(folder) //
+         .append("?") //
+         .append("maxItems=") //
+         .append("2") //
+         .toString();
+      response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      children = (ItemList<Item>)response.getEntity();
+      List<String> page = new ArrayList<String>(2);
+      for (Item i : children.getItems())
+         page.add(i.getName());
+
+      all.remove(2);
+      
+      assertEquals(all, page);
    }
 }

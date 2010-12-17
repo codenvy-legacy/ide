@@ -79,7 +79,11 @@ public interface VirtualFileSystem
       ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Create new document in specified folder.
+    * Create new document in specified folder. Example of JSON response:
+    * 
+    * <pre>
+    * {"id":"/TESTROOT/folder01/DOCUMENT01.txt"}
+    * </pre>
     * 
     * @param parent parent for new document
     * @param name name of document
@@ -113,7 +117,11 @@ public interface VirtualFileSystem
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Create new folder in specified folder.
+    * Create new folder in specified folder. Example of JSON response:
+    * 
+    * <pre>
+    * {"id":"/TESTROOT/folder01/NEW_FOLDER"}
+    * </pre>
     * 
     * @param parent parent for new folder
     * @param name name of new folder
@@ -170,7 +178,17 @@ public interface VirtualFileSystem
 
    /**
     * Get ACL applied to <code>identifier</code>. If there is no any ACL applied
-    * to object this method must return empty list.
+    * to object this method must return empty list. Example of JSON response:
+    * 
+    * <pre>
+    * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
+    * </pre>
+    * 
+    * Such JSON message means:
+    * <ul>
+    * <li>principal "john" has "all" permissions</li>
+    * <li>principal "marry" has "read" permission only</li>
+    * </ul>
     * 
     * @param identifier identifier of object
     * @return ACL applied to object or(and) inherited from its parent
@@ -188,7 +206,29 @@ public interface VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get children of specified folder.
+    * Get children of specified folder. Example of JSON response:
+    * 
+    * <pre>
+    * {
+    *   "hasMoreItems":false,
+    *   "items":[
+    *       {
+    *          "id":"/folder01/DOCUMENT01.txt",
+    *          "type":"DOCUMENT",
+    *          "path":"/folder01/DOCUMENT01.txt",
+    *          "versionId":"current",
+    *          "creationDate":1292574268440,
+    *          "contentType":"text/plain",
+    *          "length":100,
+    *          "lastModificationDate":1292574268440
+    *          "locked":false,
+    *          "properties":[],
+    *       }
+    *   ],
+    *   "numItems":1
+    * }
+    * 
+    * </pre>
     * 
     * @param parent identifier of parent folder
     * @param maxItems max number of items in response. If -1 then no limit of
@@ -242,7 +282,22 @@ public interface VirtualFileSystem
    VirtualFileSystemInfo getVfsInfo(@javax.ws.rs.core.Context UriInfo uriInfo);
 
    /**
-    * Get object by identifier.
+    * Get object by identifier. Example of JSON response:
+    * 
+    * <pre>
+    * {
+    *   "id":"/folder01/DOCUMENT01.txt",
+    *   "type":"DOCUMENT",
+    *   "path":"/folder01/DOCUMENT01.txt",
+    *   "versionId":"current",
+    *   "creationDate":1292574268440,
+    *   "contentType":"text/plain",
+    *   "length":100,
+    *   "lastModificationDate":1292574268440
+    *   "locked":false,
+    *   "properties":[],
+    * }
+    * </pre>
     * 
     * @param identifier identifier of object
     * @param propertyFilter only properties which are accepted by filter should
@@ -285,6 +340,52 @@ public interface VirtualFileSystem
    /**
     * Get list of versions of document. Even if document is not versionable
     * result must contain at least one item (current version of document).
+    * Example of JSON response:
+    * 
+    * <pre>
+    * {
+    *   "hasMoreItems":false,
+    *   "items":[
+    *       {
+    *          "id":"/folder01/DOCUMENT01.txt",
+    *          "type":"DOCUMENT",
+    *          "path":"/folder01/DOCUMENT01.txt",
+    *          "versionId":"1",
+    *          "creationDate":1292574263440,
+    *          "contentType":"text/plain",
+    *          "length":56,
+    *          "lastModificationDate":1292574263440
+    *          "locked":false,
+    *          "properties":[],
+    *       }
+    *       {
+    *          "id":"/folder01/DOCUMENT01.txt",
+    *          "type":"DOCUMENT",
+    *          "path":"/folder01/DOCUMENT01.txt",
+    *          "versionId":"2",
+    *          "creationDate":1292574265640,
+    *          "contentType":"text/plain",
+    *          "length":83,
+    *          "lastModificationDate":1292574265640
+    *          "locked":false,
+    *          "properties":[],
+    *       }
+    *       {
+    *          "id":"/folder01/DOCUMENT01.txt",
+    *          "type":"DOCUMENT",
+    *          "path":"/folder01/DOCUMENT01.txt",
+    *          "versionId":"current",
+    *          "creationDate":1292574267340,
+    *          "contentType":"text/plain",
+    *          "length":100,
+    *          "lastModificationDate":1292574268440
+    *          "locked":false,
+    *          "properties":[],
+    *       }
+    *   ],
+    *   "numItems":1
+    * }
+    * </pre>
     * 
     * @param identifier identifier of document
     * @param maxItems max number of items in response. If -1 then no limit of
@@ -312,7 +413,11 @@ public interface VirtualFileSystem
       throws ObjectNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Place lock on object.
+    * Place lock on object. Example of JSON response if locking is successful:
+    * 
+    * <pre>
+    * {"lockToken":"f37ed0b2c0a8006600afbefda74c2dac"}
+    * </pre>
     * 
     * @param identifier object to be locked
     * @param isDeep if <code>true</code> this lock will apply to this object and
@@ -337,6 +442,11 @@ public interface VirtualFileSystem
 
    /**
     * Move object <code>identifier</code> in <code>newparent</code> folder.
+    * Example of JSON response:
+    * 
+    * <pre>
+    * {"id":"/TESTROOT/NEW_PARENT/DOCUMENT01.txt"}
+    * </pre>
     * 
     * @param identifier identifier of object to be moved
     * @param newparent parent
@@ -416,13 +526,14 @@ public interface VirtualFileSystem
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
+    * @throws VirtualFileSystemException if any other errors occurs
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @POST
    @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
    ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount)
-      throws NotSupportedException, InvalidArgumentException;
+      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException;
 
    /**
     * Execute a SQL query statement against the contents of virtual file system.
@@ -441,13 +552,14 @@ public interface VirtualFileSystem
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
+    * @throws VirtualFileSystemException if any other errors occurs
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @GET
    @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
    ItemList<Item> search(String statement, int maxItems, int skipCount) throws NotSupportedException,
-      InvalidArgumentException;
+      InvalidArgumentException, VirtualFileSystemException;
 
    /**
     * Remove lock from object.
@@ -468,10 +580,20 @@ public interface VirtualFileSystem
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Update ACL of object.
+    * Update ACL of object. Example of JSON message:
+    * 
+    * <pre>
+    * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
+    * </pre>
+    * 
+    * JSON message as above will set "all" permissions for principal "john" and
+    * "read" permission only for principal "marry".
     * 
     * @param identifier identifier of object for ACL updates
-    * @param acl ACL to be applied to object.
+    * @param acl ACL to be applied to object. If method
+    *           {@link AccessControlEntry#getPermissions()} for any principal
+    *           return empty set of permissions then all permissions for this
+    *           principal will be removed.
     * @param override if <code>true</code> then previous ACL will be overridden,
     *           if <code>false</code> then specified ACL will be merged with
     *           previous if any. If such parameters is not specified then

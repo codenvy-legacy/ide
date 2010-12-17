@@ -61,14 +61,14 @@ public class DeleteTest extends JcrFileSystemTest
       Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      childContentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       folder = folderNode.getPath();
 
       Node documentNode = deleteTestNode.addNode("DeleteTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       document = documentNode.getPath();
 
       session.save();
@@ -114,7 +114,7 @@ public class DeleteTest extends JcrFileSystemTest
 
    public void testDeleteDocumentNoPermissions() throws Exception
    {
-      Map<String, String[]> permissions = new HashMap<String, String[]>(1);
+      Map<String, String[]> permissions = new HashMap<String, String[]>(2);
       permissions.put("root", PermissionType.ALL);
       permissions.put("john", new String[]{PermissionType.READ});
       ((ExtendedNode)deleteTestNode).setPermissions(permissions);

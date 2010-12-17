@@ -18,11 +18,17 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.AccessControlEntry;
+import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 
@@ -30,17 +36,11 @@ import javax.jcr.Node;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class UnlockTest extends JcrFileSystemTest
+public class GetACLTest extends JcrFileSystemTest
 {
-   private Node unlockTestNode;
-
-   private String folder;
+   private Node getAclTestNode;
 
    private String document;
-
-   private String documentLockToken;
-
-   private String folderLockToken;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -50,69 +50,55 @@ public class UnlockTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      unlockTestNode = testRoot.addNode(name, "nt:unstructured");
-      unlockTestNode.addMixin("exo:privilegeable");
+      getAclTestNode = testRoot.addNode(name, "nt:unstructured");
+      getAclTestNode.addMixin("exo:privilegeable");
 
-      Node folderNode = unlockTestNode.addNode("UnlockTest_FOLDER", "nt:folder");
-      folderNode.addMixin("mix:lockable");
-      folder = folderNode.getPath();
-
-      Node documentNode = unlockTestNode.addNode("UnlockTest_DOCUMENT", "nt:file");
+      Node documentNode = getAclTestNode.addNode("GetACLTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("mix:lockable");
+      documentNode.addMixin("exo:privilegeable");
+      ((ExtendedNode)documentNode).setPermission("root", PermissionType.ALL);
+      ((ExtendedNode)documentNode).setPermission("john", new String[]{PermissionType.READ});
       document = documentNode.getPath();
 
       session.save();
-      
-      folderLockToken = folderNode.lock(true, false).getLockToken();
-      documentLockToken = documentNode.lock(true, false).getLockToken();
-   }
-   
-   public void testUnlockDocument() throws Exception
-   {
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
-         .append(document) //
-         .append("?") //
-         .append("lockTokens=") //
-         .append(documentLockToken) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      Node node = (Node)session.getItem(document);
-      assertFalse("Lock must be removed. ", node.isLocked());
    }
 
-   public void testUnlockDocumentWrongLockTokens() throws Exception
+   public void testGetACL() throws Exception
    {
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/acl") //
+         .append(document) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
+      for (AccessControlEntry ace : acl)
+      {
+         if ("root".equals(ace.getPrincipal()))
+            ace.getPermissions().contains("all");
+         if ("john".equals(ace.getPrincipal()))
+            ace.getPermissions().contains("read");
+      }
+   }
+
+   public void testGetACLNoPermissions() throws Exception
+   {
+      Map<String, String[]> permissions = new HashMap<String, String[]>(2);
+      permissions.put("root", PermissionType.ALL);
+      ((ExtendedNode)session.getItem(document)).setPermissions(permissions);
+      session.save();
+
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
+         .append("/vfs/jcr/db1/ws/acl") //
          .append(document) //
-         .append("?") //
-         .append("lockTokens=") //
-         .append(documentLockToken + "_WRONG") //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(423, response.getStatus());
+      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
-   }
-
-   public void testUnlockFolder() throws Exception
-   {
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
-         .append(folder) //
-         .append("?") //
-         .append("lockTokens=") //
-         .append(folderLockToken) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      Node node = (Node)session.getItem(folder);
-      assertFalse("Lock must be removed. ", node.isLocked());
    }
 }

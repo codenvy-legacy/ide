@@ -41,6 +41,7 @@ public class Document extends Item
     * Instance of Document with specified attributes.
     * 
     * @param id identifier of object
+    * @param name the name of object
     * @param path path of object
     * @param creationDate creation date in long format
     * @param lastModificationDate date of last modification in long format
@@ -50,10 +51,10 @@ public class Document extends Item
     * @param locked is document locked or not
     * @param properties other properties of document
     */
-   public Document(String id, String path, long creationDate, long lastModificationDate, String versionId,
+   public Document(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
       String contentType, long length, boolean locked, List<OutputProperty> properties)
    {
-      super(id, Type.DOCUMENT, path, creationDate, lastModificationDate, locked, properties);
+      super(id, name, Type.DOCUMENT, path, creationDate, lastModificationDate, locked, properties);
       this.versionId = versionId;
       this.contentType = contentType;
       this.length = length;

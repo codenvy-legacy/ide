@@ -38,9 +38,9 @@ import javax.jcr.lock.Lock;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class ACLTest extends JcrFileSystemTest
+public class UpdateACLTest extends JcrFileSystemTest
 {
-   private Node aclTestNode;
+   private Node updateAclTestNode;
 
    private String document;
 
@@ -52,14 +52,14 @@ public class ACLTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      aclTestNode = testRoot.addNode(name, "nt:unstructured");
-      aclTestNode.addMixin("mix:lockable");
+      updateAclTestNode = testRoot.addNode(name, "nt:unstructured");
+      updateAclTestNode.addMixin("mix:lockable");
 
-      Node documentNode = aclTestNode.addNode("ACLTest_DOCUMENT", "nt:file");
+      Node documentNode = updateAclTestNode.addNode("UpdateACLTest_DOCUMENT", "nt:file");
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       document = documentNode.getPath();
 
       session.save();
@@ -176,7 +176,7 @@ public class ACLTest extends JcrFileSystemTest
 
    public void testUpdateAclDocumentLocked() throws Exception
    {
-      Lock lock = aclTestNode.lock(true, false);
+      Lock lock = updateAclTestNode.lock(true, false);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
@@ -210,7 +210,7 @@ public class ACLTest extends JcrFileSystemTest
 
    public void testUpdateAclDocumentLocked_NoLockToken() throws Exception
    {
-      aclTestNode.lock(true, false);
+      updateAclTestNode.lock(true, false);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //

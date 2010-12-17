@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.Document;
+import org.exoplatform.ide.vfs.ItemList;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.jcr.Node;
 
@@ -68,6 +72,7 @@ public class VersionsTest extends JcrFileSystemTest
       document = documentNode.getPath();
    }
    
+   @SuppressWarnings("unchecked")
    public void testGetVersions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -77,8 +82,15 @@ public class VersionsTest extends JcrFileSystemTest
          .toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
-      // TODO
-      log.info(">>>>>> "+new String(writer.getBody()));
+      List<Document> items = ((ItemList<Document>)response.getEntity()).getItems();
+      List<String> all = new ArrayList<String>(3);
+      for (Document i : items)
+         all.add(i.getVersionId());
+      assertEquals(3, all.size());
+      assertEquals("1", all.get(0));
+      assertEquals("2", all.get(1));
+      assertEquals("current", all.get(2));
+      //log.info(new String(writer.getBody()));
    }
 
    public void testGetVersionById() throws Exception
@@ -91,7 +103,6 @@ public class VersionsTest extends JcrFileSystemTest
          .toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
-      // TODO
-      log.info(">>>>>> "+new String(writer.getBody()));
+      assertEquals("__TEST__001", new String(writer.getBody()));
    }
 }

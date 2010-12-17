@@ -81,6 +81,8 @@ abstract class ItemData
    {
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
          return new DocumentData(node);
+      if (node.isNodeType("nt:resource") && "jcr:content".equals(node.getName()))
+         return new DocumentData(node.getParent());
       if (node.isNodeType("nt:frozenNode"))
          return new VersionData(node);
       return new FolderData(node);

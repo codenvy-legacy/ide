@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.Item;
+import org.exoplatform.ide.vfs.OutputProperty;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -26,6 +28,7 @@ import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -60,7 +63,10 @@ public class GetObjectTest extends JcrFileSystemTest
       Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST_".getBytes()));
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      documentNode.addMixin("exo:unstructuredMixin");
+      documentNode.setProperty("MyProperty01", "hello world");
+      documentNode.setProperty("MyProperty02", "to be or not to be");
       document = documentNode.getPath();
 
       session.save();
@@ -74,7 +80,45 @@ public class GetObjectTest extends JcrFileSystemTest
          .append(document).toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
-      log.info(new String(writer.getBody()));
+      //log.info(new String(writer.getBody()));
+      assertEquals(document, ((Item)response.getEntity()).getPath());
+   }
+
+   public void testGetDocumentPropertyFilter() throws Exception
+   {
+      // No filter - all properties
+      String path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/item") //
+         .append(document) //
+         .toString();
+
+      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      List<OutputProperty> properties = ((Item)response.getEntity()).getProperties();
+      Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
+      for (OutputProperty p : properties)
+         m.put(p.getName(), p.getValue());
+      assertEquals(2, m.size());
+      assertEquals("hello world", m.get("MyProperty01")[0]);
+      assertEquals("to be or not to be", m.get("MyProperty02")[0]);
+
+      // With filter
+      path = new StringBuilder() //
+         .append("/vfs/jcr/db1/ws/item") //
+         .append(document) //
+         .append("?") //
+         .append("propertyFilter=") //
+         .append("MyProperty02") //
+         .toString();
+
+      response = launcher.service("GET", path, "", null, null, null);
+      assertEquals(200, response.getStatus());
+      m.clear();
+      properties = ((Item)response.getEntity()).getProperties();
+      for (OutputProperty p : properties)
+         m.put(p.getName(), p.getValue());
+      assertEquals(1, m.size());
+      assertEquals("to be or not to be", m.get("MyProperty02")[0]);
    }
 
    public void testGetDocumentNotFound() throws Exception

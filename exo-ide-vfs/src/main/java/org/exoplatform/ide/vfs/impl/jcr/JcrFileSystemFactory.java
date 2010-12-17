@@ -36,7 +36,7 @@ import javax.ws.rs.WebApplicationException;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Path("vfs")
+@Path("vfs/jcr")
 public class JcrFileSystemFactory implements ResourceContainer
 {
    private final RepositoryService repositoryService;
@@ -49,13 +49,12 @@ public class JcrFileSystemFactory implements ResourceContainer
       this.sessionFactory = sessionFactory;
    }
 
-   @Path("jcr/{repository}/{workspace}")
+   @Path("{repository}/{workspace}")
    public VirtualFileSystem getVFS(@PathParam("repository") String repository, @PathParam("workspace") String workspace)
    {
-      Session session = null;
       try
       {
-         session = getSession(repository, workspace);
+         return new JcrFileSystem(getSession(repository, workspace));
       }
       catch (RepositoryException e)
       {
@@ -65,7 +64,6 @@ public class JcrFileSystemFactory implements ResourceContainer
       {
          throw new WebApplicationException(e);
       }
-      return new JcrFileSystem(session);
    }
 
    protected Session getSession(String repository, String workspace) throws RepositoryException,

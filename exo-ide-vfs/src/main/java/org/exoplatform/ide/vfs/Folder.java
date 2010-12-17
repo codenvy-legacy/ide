@@ -32,16 +32,17 @@ public class Folder extends Item
     * Instance of Folder with specified attributes.
     * 
     * @param id identifier of object
+    * @param name the name of object
     * @param path path of object
     * @param creationDate creation date in long format
     * @param lastModificationDate date of last modification in long format
     * @param locked is folder locked or not
     * @param properties other properties of folder
     */
-   public Folder(String id, String path, long creationDate, long lastModificationDate, boolean locked,
+   public Folder(String id, String name, String path, long creationDate, long lastModificationDate, boolean locked,
       List<OutputProperty> properties)
    {
-      super(id, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
+      super(id, name, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
    }
 
    /**
