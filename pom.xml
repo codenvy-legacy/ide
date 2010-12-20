@@ -157,12 +157,6 @@
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-webdav-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-groovy-server</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -436,7 +430,6 @@
       <module>exo-ide-testframework</module>
       
       <module>exo-ide-vfs-webdav-client</module>
-      <module>exo-ide-vfs-webdav-server</module>
       
       <module>exo-ide-framework-client</module>
 
