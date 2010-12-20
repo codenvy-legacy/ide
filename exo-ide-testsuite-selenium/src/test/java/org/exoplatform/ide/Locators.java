@@ -44,7 +44,7 @@ public class Locators
    /**
     * XPath locator for content (editor) panel of IDE. Non-smartGWt.
     */
-   public final static String CONTENT_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
+   public final static String EDITOR_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
    
    /**
     * XPath locator for navigation panel of IDE. Non-smartGWt.
@@ -61,7 +61,7 @@ public class Locators
    /**
     * SmartGWT locator for editor tabset.
     */
-   public static final String EDITOR_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/";
+   public static final String SC_EDITOR_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/";
    
    /**
     * XPath locator for status bar of IDE. Non-smartGWt.
@@ -142,7 +142,7 @@ public class Locators
     */
    public static String getTabCloseButtonLocator(int index)
    {
-      return EDITOR_TABSET_LOCATOR + "tab[index=" + index + "]/icon";
+      return SC_EDITOR_TABSET_LOCATOR + "tab[index=" + index + "]/icon";
    }
    
    /**

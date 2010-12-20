@@ -1168,15 +1168,13 @@ public abstract class BaseTest
    {
       if (isSelected)
       {
-         assertTrue(selenium
-            .isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), '"
-               + tabTitle + "')]"));
+         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
+            + "//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), '" + tabTitle + "')]"));
       }
       else
       {
-         assertTrue(selenium
-            .isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '"
-               + tabTitle + "')]"));
+         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
+            + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '" + tabTitle + "')]"));
       }
 
    }
