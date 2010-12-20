@@ -97,10 +97,6 @@
                <artifactId>exo.jcr.component.webdav</artifactId>
             </dependency>
             <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-vfs-webdav-server</artifactId>
-            </dependency>
-            <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
                <version>${org.exoplatform.jcr.version}</version>

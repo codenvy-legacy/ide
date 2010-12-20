@@ -112,7 +112,7 @@ public class TestLoopbackContentService extends BaseTest
          +"Content-Type: text/plain\r\n\r\ntest file content\r\n" 
          +"-------abcdef\r\n"
          +"Content-Disposition: form-data; name=\"location\"\r\n\r\n"
-         +"http://localhost/ide-vfs-webdav/db1/dev-monit/test.txt\r\n"
+         +"http://localhost/jcr/db1/dev-monit/test.txt\r\n"
          +"-------abcdef\r\n"
          +"Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" 
          +"-------abcdef\r\n"

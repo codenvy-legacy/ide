@@ -72,7 +72,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
    public static final String DEVELOPER_ID = "ide.developer.id";
    
-   public static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
+   public static final String WEBDAV_CONTEXT = "/jcr/";
 
    /**
     * Resource live time. Resource will be expired after this if it is deployed

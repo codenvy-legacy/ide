@@ -126,8 +126,6 @@ import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandl
 import org.exoplatform.ide.client.module.navigation.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
-import org.exoplatform.ide.client.permissions.ShowPermissionsCommandHandler;
-import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
 import org.exoplatform.ide.client.search.file.SearchForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplateForm;
@@ -225,7 +223,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowPermissionsControl()));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -266,7 +263,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
       new CreateProjectTemplateCommandHandler(eventBus);
-      new ShowPermissionsCommandHandler(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

@@ -20,13 +20,10 @@
 
 package org.exoplatform.ide.chromattic;
 
-import org.chromattic.dataobject.NodeTypeFormat;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.junit.Before;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
 import javax.jcr.Node;
@@ -41,6 +38,8 @@ import javax.jcr.Node;
 
 public class TestDataObjectService extends BaseTest
 {
+   
+   private static final String WEBDAV_CONTEXT = "/jcr/";
    
    /** . */
    private static final String dataObjectGroovy =
@@ -82,7 +81,7 @@ public class TestDataObjectService extends BaseTest
    
    
    public void testNodeTypeGenration() throws Exception {
-      String location = "/ide-vfs-webdav/" + "db1/ws/dependencies/DataObject.groovy";
+      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
@@ -93,7 +92,7 @@ public class TestDataObjectService extends BaseTest
     }
    
    public void testNodeTypeGenrationDOScriptNotFound() throws Exception {
-      String location = "/ide-vfs-webdav/" + "db1/ws/dependencies/DataObjectNotFound.groovy";
+      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObjectNotFound.groovy";
       ContainerResponse cres =
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
@@ -115,7 +114,7 @@ public class TestDataObjectService extends BaseTest
     }
    
    public void testNodeTypeGenrationCND() throws Exception {
-      String location = "/ide-vfs-webdav/" + "db1/ws/dependencies/DataObject.groovy";
+      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=CND", "", null, null,
@@ -126,7 +125,7 @@ public class TestDataObjectService extends BaseTest
     }
    
    public void testNodeType() throws Exception {
-//      String location = "/ide-vfs-webdav/" + "db1/ws/dependencies/DataObject.groovy";
+//      String location = "/jcr/" + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
          launcher.service("POST",
             "/ide/chromattic/register-nodetype/EXO/4", "", null, ntd.getBytes(),

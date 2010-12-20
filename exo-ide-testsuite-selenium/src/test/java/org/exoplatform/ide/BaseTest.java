@@ -80,7 +80,7 @@ public abstract class BaseTest
 
    protected static final String REPO_NAME = "repository";
 
-   protected static final String WEBDAV_CONTEXT = "ide-vfs-webdav";
+   protected static final String WEBDAV_CONTEXT = "jcr";
 
    protected static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
       + "/";

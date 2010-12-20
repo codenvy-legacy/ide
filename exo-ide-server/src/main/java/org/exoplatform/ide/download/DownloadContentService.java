@@ -69,7 +69,7 @@ public class DownloadContentService implements ResourceContainer
 
    private static final String APPLICATION_OCTETSTREAM = "application/octet-stream";
 
-   private final String WEBDAV_CONTEXT = "ide-vfs-webdav";
+   private final String WEBDAV_CONTEXT = "jcr";
 
    private static Log log = ExoLogger.getLogger(DownloadContentService.class);
 

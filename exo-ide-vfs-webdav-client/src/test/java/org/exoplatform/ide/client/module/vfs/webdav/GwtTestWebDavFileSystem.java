@@ -71,7 +71,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 
    private final int DELAY_TEST = 5000;
    
-   private static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
+   private static final String WEBDAV_CONTEXT = "/jcr/";
 
    @Override
    @Before

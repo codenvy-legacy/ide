@@ -64,7 +64,7 @@ public class GroovyTemplateService implements ResourceContainer
 
    private ThreadLocalSessionProviderService sessionProviderService;
    
-   private String WEBDAV_CONTEXT = "ide-vfs-webdav";
+   private String WEBDAV_CONTEXT = "jcr";
 
    /**
     * Underlying template engine used to evaluate template source files.

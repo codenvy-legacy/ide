@@ -56,6 +56,7 @@ import javax.ws.rs.core.MultivaluedMap;
 */
 public class TestUploadService extends BaseTest
 {
+   private static final String WS_URL = "http://localhost/jcr/db1/dev-monit/";
 
    private static Log log = ExoLogger.getLogger(TestUploadService.class);
 
@@ -108,7 +109,7 @@ public class TestUploadService extends BaseTest
       PrintWriter w = new PrintWriter(out);
       
       String source = getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", 
-         "http://localhost/ide-vfs-webdav/db1/dev-monit/test.txt");
+         WS_URL + "test.txt");
       
       w.write(source);
       w.flush();
@@ -137,7 +138,7 @@ public class TestUploadService extends BaseTest
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
       
-      String source = getRequestSource("", "http://localhost/ide-vfs-webdav/db1/dev-monit/test.txt");
+      String source = getRequestSource("", WS_URL + "test.txt");
       
       w.write(source);
       w.flush();
@@ -171,7 +172,7 @@ public class TestUploadService extends BaseTest
       PrintWriter w = new PrintWriter(out);
       
       String source = getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", 
-         "http://localhost/jcr/db1/dev-monit/test.txt");
+         "http://localhost/ide-webdav-jcr/db1/dev-monit/test.txt");
       
       w.write(source);
       w.flush();

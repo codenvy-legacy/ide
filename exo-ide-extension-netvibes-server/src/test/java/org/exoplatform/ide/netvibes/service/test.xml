@@ -3,7 +3,7 @@
 <title type="text"><![CDATA[Test eXo ]]></title>
 <summary type="text"><![CDATA[Test eXo]]></summary>
 <content type="text"><![CDATA[TTest eXo service Test eXo service Test eXo service]]></content>
-<link rel="source" href="http://78.137.4.16:53081/rest/ide-vfs-webdav/repository/dev-monit/nfile.html"/>
+<link rel="source" href="http://78.137.4.16:53081/rest/jcr/repository/dev-monit/nfile.html"/>
 <link rel="thumbnail" href="http://downloads.exoplatform.org/ide/chrysler.logo.jpg"/>
 <widget:version>1.0</widget:version>
 <widget:originalAuthor>vitaly.parfonov@gmail.com</widget:originalAuthor>

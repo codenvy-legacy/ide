@@ -167,10 +167,10 @@
 
    <component>
    <!-- 
-      <key>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</key>
+      <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
        -->
 
-      <type>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</type>
+      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
       <init-params>
 
          <value-param>

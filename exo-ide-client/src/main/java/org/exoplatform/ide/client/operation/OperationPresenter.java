@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ide.client.operation;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -27,9 +30,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
@@ -45,9 +45,6 @@ import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesE
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
 
 import java.util.List;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
 
 /**
  * Created by The eXo Platform SAS .
@@ -182,7 +179,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    private void previewUWAWidget(File file)
    {
       String href = file.getHref();
-      href = href.replace("ide-vfs-webdav", "ide/netvibes");
+      href = href.replace("jcr", "ide/netvibes");
       display.showPreview(href);
    }
    

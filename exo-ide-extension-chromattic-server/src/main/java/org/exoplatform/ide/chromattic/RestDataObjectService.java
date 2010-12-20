@@ -48,7 +48,7 @@ public class RestDataObjectService implements ResourceContainer
     * WebDav context uses for selecting jcr path of resource which is 
     * adressed via WebDav or IDE Virtual File System service (server)
     */
-   public static final String WEBDAV_CONTEXT = "/ide-vfs-webdav/";
+   public static final String WEBDAV_CONTEXT = "/jcr/";
 
    private DataObjectService dataObjectService;
 
