@@ -46,6 +46,22 @@ class VersionData extends DocumentData
    }
 
    /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getName()
+    */
+   @Override
+   String getName() throws VirtualFileSystemException
+   {
+      try
+      {
+         return getCurrentVersion().getName();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
     * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getPath()
     */
    @Override

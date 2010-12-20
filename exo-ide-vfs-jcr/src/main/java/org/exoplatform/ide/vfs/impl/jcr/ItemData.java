@@ -59,7 +59,7 @@ import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 
 /**
- * Wrapper around node node to simplify interaction with JCR.
+ * Wrapper around node to simplify interaction with JCR.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$

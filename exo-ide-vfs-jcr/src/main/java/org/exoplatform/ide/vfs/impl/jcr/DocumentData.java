@@ -306,9 +306,11 @@ class DocumentData extends ItemData
    }
 
    /**
-    * Update content of document.
+    * Update content of document. Previous state of JCR node saved in version
+    * history.
     * 
-    * @param content new content
+    * @param content new content. If <code>content</code> then content of
+    *           document will be removed.
     * @param mediaType new content type
     * @param lockTokens lock tokens. This lock tokens will be used if document
     *           is locked. Pass <code>null</code> or empty list if there is no
@@ -330,6 +332,15 @@ class DocumentData extends ItemData
             for (String lt : lockTokens)
                session.addLockToken(lt);
          }
+
+         if (!node.isNodeType("mix:versionable"))
+         {
+            node.addMixin("mix:versionable");
+            session.save();
+         }
+         node.checkin();
+         node.checkout();
+
          Node contentNode = node.getNode("jcr:content");
          if (content != null)
          {

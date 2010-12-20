@@ -85,11 +85,14 @@ public class JcrFileSystem implements VirtualFileSystem
 
    protected final Session session;
 
+   protected final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
+
    private VirtualFileSystemInfo vfsInfo;
 
-   public JcrFileSystem(Session session)
+   public JcrFileSystem(Session session, ItemType2NodeTypeResolver mediaType2NodeTypeResolver)
    {
       this.session = session;
+      this.itemType2NodeTypeResolver = mediaType2NodeTypeResolver;
    }
 
    /*
@@ -169,9 +172,9 @@ public class JcrFileSystem implements VirtualFileSystem
       ItemData parentData = getItemData(parent);
       if (Type.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Item specified as parent is not a folder. ");
-      // TODO customize node types
       DocumentData newdoc =
-         ((FolderData)parentData).createDocument(name, "nt:file", "nt:resource", mediaType, content, lockTokens);
+         ((FolderData)parentData).createDocument(name, itemType2NodeTypeResolver.getDocumentNodeTypeName(mediaType),
+            itemType2NodeTypeResolver.getDocumentContentNodeTypeName(mediaType), mediaType, content, lockTokens);
       return new ObjectId(newdoc.getId());
    }
 
@@ -189,8 +192,8 @@ public class JcrFileSystem implements VirtualFileSystem
       ItemData parentData = getItemData(parent);
       if (Type.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Item specified as parent is not a folder. ");
-      // TODO customize node type
-      FolderData newfolder = ((FolderData)parentData).createFolder(name, "nt:folder", lockTokens);
+      FolderData newfolder =
+         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeTypeName(), lockTokens);
       return new ObjectId(newfolder.getId());
    }
 

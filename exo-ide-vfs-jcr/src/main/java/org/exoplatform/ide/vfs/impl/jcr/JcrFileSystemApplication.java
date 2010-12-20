@@ -35,21 +35,28 @@ import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: JcrFileSystemApplication.java 64090 2010-12-17 14:53:30Z
+ *          andrew00x $
  */
 public class JcrFileSystemApplication extends Application
 {
    private final Set<Object> singletons = new HashSet<Object>();
 
-   public JcrFileSystemApplication(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory)
+   public JcrFileSystemApplication(RepositoryService repositoryService,
+      ThreadLocalSessionProviderService sessionFactory, ItemType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-      singletons.add(new JcrFileSystemFactory(repositoryService, sessionFactory));
+      singletons.add(new JcrFileSystemFactory(repositoryService, sessionFactory, itemType2NodeTypeResolver));
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
       singletons.add(new ObjectNotFoundExceptionMapper());
       singletons.add(new NotSupportedExceptionMapper());
       singletons.add(new PermissionDeniedExceptionMapper());
+   }
+
+   public JcrFileSystemApplication(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory)
+   {
+      this(repositoryService, sessionFactory, new ItemType2NodeTypeResolver());
    }
 
    /**

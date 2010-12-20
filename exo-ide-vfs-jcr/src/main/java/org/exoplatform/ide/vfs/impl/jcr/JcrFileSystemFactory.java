@@ -33,7 +33,8 @@ import javax.ws.rs.WebApplicationException;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: JcrFileSystemFactory.java 64090 2010-12-17 14:53:30Z andrew00x
+ *          $
  */
 @Path("vfs/jcr")
 public class JcrFileSystemFactory
@@ -42,10 +43,14 @@ public class JcrFileSystemFactory
 
    private final ThreadLocalSessionProviderService sessionFactory;
 
-   public JcrFileSystemFactory(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory)
+   private final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
+
+   public JcrFileSystemFactory(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory,
+      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
    {
       this.repositoryService = repositoryService;
       this.sessionFactory = sessionFactory;
+      this.itemType2NodeTypeResolver = itemType2NodeTypeResolver;
    }
 
    @Path("{repository}/{workspace}")
@@ -53,7 +58,7 @@ public class JcrFileSystemFactory
    {
       try
       {
-         return new JcrFileSystem(getSession(repository, workspace));
+         return new JcrFileSystem(getSession(repository, workspace), itemType2NodeTypeResolver);
       }
       catch (RepositoryException e)
       {
