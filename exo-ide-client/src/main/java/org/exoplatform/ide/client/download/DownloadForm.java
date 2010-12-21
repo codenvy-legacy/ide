@@ -33,8 +33,8 @@ import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippe
 import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.smartgwt.client.widgets.HTMLPane;
 
 /**
  * Created by The eXo Platform SAS .
@@ -51,7 +51,9 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    private Handlers handlers;
 
-   private HTMLPane htmlPane;
+   //private HTMLPane htmlPane;
+
+   private FlowPanel htmlPane;
 
    private Item selectedItem;
 
@@ -65,9 +67,9 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       handlers.addHandler(DownloadZippedFolderEvent.TYPE, this);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
 
-      htmlPane = new HTMLPane();
-      htmlPane.setWidth(1);
-      htmlPane.setHeight(1);
+      htmlPane = new FlowPanel();
+      htmlPane.setWidth("1px");
+      htmlPane.setHeight("1px");
       RootPanel.get().add(htmlPane, -100, -100);
    }
 
@@ -92,7 +94,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
-      htmlPane.setContents(iframe);
+      htmlPane.getElement().setInnerHTML(iframe);
    }
 
    public void onDownloadFile(DownloadFileEvent event)

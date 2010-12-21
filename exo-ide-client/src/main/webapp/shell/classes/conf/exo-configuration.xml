@@ -166,9 +166,7 @@
 
 
    <component>
-   <!-- 
-      <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
-       -->
+      <!-- <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key> -->
 
       <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
       <init-params>
@@ -229,18 +227,59 @@
    <component>
       <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
       <init-params>
-         <value-param>
-            <name>wsname</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>pkgsDoc</name>
-            <value>java/lang/annotation</value>
-         </value-param>
-         <value-param>
-            <name>pkgsInfo</name>
-            <value>java.lang.annotation</value>
-         </value-param>
+         <object-param>
+            <name>autocompletion.configuration</name>
+            <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>production</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>true</boolean>
+               </field>
+               <field name="jarEntries">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                           <field name="jarPath">
+                              <string>${env.JAVA_HOME}${file.separator}src.zip</string>
+                           </field>
+                           <field name="includePkj">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.lang</string>
+                                 </value>
+                                 <value>
+                                    <string>java.util</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+               <field name="jarDocs">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                           <field name="jarPath">
+                              <string>${env.JAVA_HOME}${file.separator}src.zip</string>
+                           </field>
+                           <field name="includePkj">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.lang</string>
+                                 </value>
+                                 <value>
+                                    <string>java.util</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+            </object>
+         </object-param>
       </init-params>
    </component>
 
