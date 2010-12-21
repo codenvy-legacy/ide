@@ -29,7 +29,7 @@
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->
       <gwt.version>2.0.4</gwt.version>
-      <smartgwt.version>2.2-exo01</smartgwt.version>
+      <smartgwt.version>2.3-nb01</smartgwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
       <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
       <maven.compiler.source>1.5</maven.compiler.source>
@@ -415,6 +415,15 @@
    <build>
       <pluginManagement>
          <plugins>
+	    <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-surefire-plugin</artifactId>
+               <configuration>
+                  <systemPropertyVariables>
+                     <java.src>${env.JAVA_HOME}${file.separator}src.zip</java.src>
+                  </systemPropertyVariables>
+               </configuration>
+            </plugin>
             <plugin>
                <groupId>org.codehaus.mojo</groupId>
                <artifactId>gwt-maven-plugin</artifactId>
