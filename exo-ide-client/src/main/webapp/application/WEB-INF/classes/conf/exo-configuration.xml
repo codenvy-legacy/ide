@@ -99,7 +99,7 @@
                            <field name="jarPath">
                               <string>${javasrc}</string>
                            </field>
-                           <field name="includePkj">
+                           <field name="includePkg">
                               <collection type="java.util.ArrayList">
                                  <value>
                                     <string>java.lang</string>
@@ -120,7 +120,7 @@
                            <field name="jarPath">
                               <string>${javasrc}</string>
                            </field>
-                           <field name="includePkj">
+                           <field name="includePkg">
                               <collection type="java.util.ArrayList">
                                  <value>
                                     <string>java.lang</string>
