@@ -98,6 +98,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 4 ----
       //show Outline
+      Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand("Show Outline");
       Thread.sleep(TestConstants.SLEEP);
 
@@ -213,10 +214,9 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
       assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
       assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
-      
-      //open body node
+      Thread.sleep(TestConstants.SLEEP*2);
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP*2);
       //check new nodes appeard
       assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
       assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
