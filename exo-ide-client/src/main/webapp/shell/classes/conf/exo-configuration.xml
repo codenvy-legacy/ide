@@ -81,8 +81,8 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.netvibes.service.NetvibesWidgetPreviewService</key>
-      <type>org.exoplatform.ide.netvibes.service.NetvibesWidgetPreviewService</type>
+      <key>org.exoplatform.ide.netvibes.service.NetvibesWidgetService</key>
+      <type>org.exoplatform.ide.netvibes.service.NetvibesWidgetService</type>
    </component>
 
    <component>
