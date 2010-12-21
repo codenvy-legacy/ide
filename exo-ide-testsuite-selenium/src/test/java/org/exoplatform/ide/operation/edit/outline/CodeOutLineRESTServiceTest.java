@@ -74,7 +74,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       }
    }
 
-      
+   //TODO Issue IDE - 486    
    //TODO Issue IDE - 466 
    @Test
    public void testCodeOutLineRestService() throws Exception
