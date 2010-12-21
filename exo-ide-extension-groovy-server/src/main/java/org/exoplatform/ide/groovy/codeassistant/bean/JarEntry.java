@@ -33,7 +33,7 @@ public class JarEntry
 
    private String jarPath;
 
-   private List<String> includePkj = new ArrayList<String>();
+   private List<String> includePkg = new ArrayList<String>();
 
    public JarEntry()
    {
@@ -60,15 +60,15 @@ public class JarEntry
     */
    public List<String> getIncludePkgs()
    {
-      return includePkj;
+      return includePkg;
    }
 
    /**
-    * @param includePkj the includePkj to set
+    * @param includePkg the includePkj to set
     */
-   public void setIncludePkj(String includePkj)
+   public void setIncludePkg(String includePkg)
    {
-      this.includePkj.add(includePkj);
+      this.includePkg.add(includePkg);
    }
 
 }
